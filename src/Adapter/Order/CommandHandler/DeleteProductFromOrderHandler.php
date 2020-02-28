@@ -32,6 +32,9 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Invoice\DTO\InvoiceTotalNumbers;
+use PrestaShop\PrestaShop\Adapter\Order\DTO\OrderTotalNumbers;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
@@ -80,14 +83,23 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     private function updateOrderInvoice(OrderDetail $orderDetail)
     {
         if ($orderDetail->id_order_invoice != 0) {
-            $order_invoice = new OrderInvoice($orderDetail->id_order_invoice);
-            // @todo: use https://github.com/PrestaShop/decimal for price computations
-            $order_invoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
-            $order_invoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
-            $order_invoice->total_products -= $orderDetail->total_price_tax_excl;
-            $order_invoice->total_products_wt -= $orderDetail->total_price_tax_incl;
+            $orderInvoice = new OrderInvoice($orderDetail->id_order_invoice);
+            $invoiceTotals = InvoiceTotalNumbers::buildFromInvoice($orderInvoice);
 
-            return $order_invoice->update();
+            $orderInvoice->total_paid_tax_excl = (float) (string) $invoiceTotals->getTotalPaidTaxExcl()
+                ->minus(new Number((string) $orderDetail->total_price_tax_excl))
+            ;
+            $orderInvoice->total_paid_tax_incl = (float) (string) $invoiceTotals->getTotalPaidTaxIncl()
+                ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+            ;
+            $orderInvoice->total_products = (float) (string) $invoiceTotals->getTotalProducts()
+                ->minus(new Number((string) $orderDetail->total_price_tax_excl))
+            ;
+            $orderInvoice->total_products_wt = (float) (string) $invoiceTotals->getTotalProductsWt()
+                ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+            ;
+
+            return $orderInvoice->update();
         }
 
         return true;
@@ -101,12 +113,23 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      */
     private function updateOrder(Order $order, OrderDetail $orderDetail)
     {
-        // @todo: use https://github.com/PrestaShop/decimal for price computations
-        $order->total_paid -= $orderDetail->total_price_tax_incl;
-        $order->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
-        $order->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
-        $order->total_products -= $orderDetail->total_price_tax_excl;
-        $order->total_products_wt -= $orderDetail->total_price_tax_incl;
+        $orderTotals = OrderTotalNumbers::buildFromOrder($order);
+
+        $order->total_paid = (float) (string) $orderTotals->getTotalPaid()
+            ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+        ;
+        $order->total_paid_tax_incl = (float) (string) $orderTotals->getTotalPaidTaxIncl()
+            ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+        ;
+        $order->total_paid_tax_excl = (float) (string) $orderTotals->getTotalPaidTaxExcl()
+            ->minus(new Number((string) $orderDetail->total_price_tax_excl))
+        ;
+        $order->total_products = (float) (string) $orderTotals->getTotalProducts()
+            ->minus(new Number((string) $orderDetail->total_price_tax_excl))
+        ;
+        $order->total_products_wt = (float) (string) $orderTotals->getTotalProductsWt()
+            ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+        ;
 
         return $order->update();
     }
