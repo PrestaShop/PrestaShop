@@ -24,7 +24,7 @@
  */
 
 import PerfectScrollbar from 'perfect-scrollbar';
-import '@node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import getAnimationEvent from './app/utils/animations';
 import NavbarTransitionHandler from './components/navbar-transition-handler';
 
@@ -41,7 +41,7 @@ export default class NavBar {
         $navBar,
         $mainMenu,
         getAnimationEvent('transition', 'end'),
-        $body
+        $body,
       );
 
       $('.nav-bar-overflow').on('scroll', () => {
@@ -61,7 +61,7 @@ export default class NavBar {
         },
         function onMouseLeave() {
           $(this).removeClass('.link-hover');
-        }
+        },
       );
 
       $('.nav-bar li.link-levelone.has_submenu > a').on('click', function onNavBarClick(e) {
@@ -86,7 +86,7 @@ export default class NavBar {
                 .parent()
                 .removeClass('ul-open open');
               $(this).removeAttr('style');
-            }
+            },
           });
         }
 
@@ -104,7 +104,7 @@ export default class NavBar {
             complete: function slideDownIsComplete() {
               $submenu.addClass('open');
               $(this).removeAttr('style');
-            }
+            },
           });
         }
         $submenu.find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
@@ -128,7 +128,7 @@ export default class NavBar {
             .text('keyboard_arrow_down');
           addMobileBodyClickListener();
         } else {
-          $('nav.nav-bar ul.main-menu > li.-active')
+          $('nav.nav-bar ul.main-menu > li.link-active')
             .addClass('ul-open open')
             .find('a > i.material-icons.sub-tabs-arrow')
             .text('keyboard_arrow_up');
@@ -139,8 +139,8 @@ export default class NavBar {
           url: $(this).data('toggle-url'),
           cache: false,
           data: {
-            shouldCollapse: Number($('body').hasClass('page-sidebar-closed'))
-          }
+            shouldCollapse: Number($('body').hasClass('page-sidebar-closed')),
+          },
         });
       });
 
@@ -184,7 +184,7 @@ export default class NavBar {
     const $mainMenu = $('.main-menu');
 
     $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text(
-      'keyboard_arrow_down'
+      'keyboard_arrow_down',
     );
     $('body').addClass('mobile');
     $('.nav-bar')
@@ -207,13 +207,13 @@ export default class NavBar {
     $mainMenu.prepend(`<li class='link-levelone'>${$employee}</li>`);
 
     $('.collapse').collapse({
-      toggle: false
+      toggle: false,
     });
 
     $mainMenu.find('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href='${profileLink}'></a>`);
     $('.js-mobile-menu').on('click', expand);
     $('.js-notifs_dropdown').css({
-      height: window.innerHeight
+      height: window.innerHeight,
     });
 
     function expand() {
@@ -228,8 +228,8 @@ export default class NavBar {
             complete: () => {
               $('.nav-bar, .mobile-layer').removeClass('expanded');
               $('.nav-bar, .mobile-layer').addClass('d-none');
-            }
-          }
+            },
+          },
         );
         $('.mobile-layer').off();
         return;
