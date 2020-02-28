@@ -32,7 +32,9 @@ use Order;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Invoice\DTO\InvoiceTotalNumbers;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\DTO\OrderTotalNumbers;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\PercentageDiscount;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
@@ -79,19 +81,22 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     private function getReductionValues(string $cartRuleType, Order $order, ?Number $discountValue): array
     {
-        $totalPaidTaxIncl = new Number((string) $order->total_paid_tax_incl);
-        $totalPaidTaxExcl = new Number((string) $order->total_paid_tax_excl);
+        $orderTotals = OrderTotalNumbers::buildFromOrder($order);
 
         switch ($cartRuleType) {
             case OrderDiscountType::DISCOUNT_PERCENT:
                 if ($discountValue->isGreaterThan(new Number((string) PercentageDiscount::MAX_PERCENTAGE))) {
                     throw new OrderException('Percentage discount value cannot be higher than 100%.');
                 }
-                $reductionValues = $this->calculatePercentReduction($discountValue, $totalPaidTaxIncl, $totalPaidTaxExcl);
+                $reductionValues = $this->calculatePercentReduction(
+                    $discountValue,
+                    $orderTotals->getTotalPaidTaxIncl(),
+                    $orderTotals->getTotalPaidTaxExcl()
+                );
 
                 break;
             case OrderDiscountType::DISCOUNT_AMOUNT:
-                if ($discountValue->isGreaterThan($totalPaidTaxIncl)) {
+                if ($discountValue->isGreaterThan($orderTotals->getTotalPaidTaxIncl())) {
                     throw new OrderException('The discount value is greater than the order total.');
                 }
                 $reductionValues = $this->calculateAmountReduction($discountValue, new Number((string) $order->getTaxesAverageUsed()));
@@ -99,8 +104,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 break;
             case OrderDiscountType::FREE_SHIPPING:
                 $reductionValues = $this->calculateFreeShippingReduction(
-                    new Number((string) $order->total_shipping_tax_incl),
-                    new Number((string) $order->total_shipping_tax_excl)
+                    $orderTotals->getTotalShippingTaxIncl(),
+                    $orderTotals->getTotalShippingTaxExcl()
                 );
 
                 break;
@@ -119,11 +124,13 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     private function updateInvoiceDiscount(OrderInvoice $orderInvoice, string $cartRuleType, array $reductionValues): void
     {
-        $orderTotalPaidTaxExcl = new Number((string) $orderInvoice->total_paid_tax_excl);
+        $valueTaxIncl = $reductionValues['value_tax_incl'];
+        $valueTaxExcl = $reductionValues['value_tax_excl'];
+        $invoiceTotals = InvoiceTotalNumbers::buildFromInvoice($orderInvoice);
 
-        $isAlreadyFreeShipping = OrderDiscountType::FREE_SHIPPING === $cartRuleType && $orderInvoice->total_shipping_tax_incl <= 0;
+        $isAlreadyFreeShipping = OrderDiscountType::FREE_SHIPPING === $cartRuleType && $invoiceTotals->getTotalShippingTaxIncl() <= 0;
         $discountAmountIsTooBig = OrderDiscountType::DISCOUNT_AMOUNT === $cartRuleType &&
-            $reductionValues['value_tax_incl']->isGreaterThan($orderTotalPaidTaxExcl)
+            $reductionValues['value_tax_incl']->isGreaterThan($invoiceTotals->getTotalPaidTaxExcl())
         ;
 
         if ($isAlreadyFreeShipping) {
@@ -132,23 +139,16 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             throw new OrderException('The discount value is greater than the order invoice total.');
         }
 
-        $orderTotalDiscountTaxIncl = new Number((string) $orderInvoice->total_discount_tax_incl);
-        $orderTotalDiscountTaxExcl = new Number((string) $orderInvoice->total_discount_tax_excl);
-        $orderTotalPaidTaxIncl = new Number((string) $orderInvoice->total_paid_tax_incl);
-
-        $valueTaxIncl = $reductionValues['value_tax_incl'];
-        $valueTaxExcl = $reductionValues['value_tax_excl'];
-
-        $orderInvoice->total_discount_tax_incl = (float) (string) $orderTotalDiscountTaxIncl
+        $orderInvoice->total_discount_tax_incl = (float) (string) $invoiceTotals->getTotalDiscountTaxIncl()
             ->plus($valueTaxIncl)
         ;
-        $orderInvoice->total_discount_tax_excl = (float) (string) $orderTotalDiscountTaxExcl
+        $orderInvoice->total_discount_tax_excl = (float) (string) $invoiceTotals->getTotalDiscountTaxExcl()
             ->plus($valueTaxExcl)
         ;
-        $orderInvoice->total_paid_tax_incl = (float) (string) $orderTotalPaidTaxIncl
+        $orderInvoice->total_paid_tax_incl = (float) (string) $invoiceTotals->getTotalPaidTaxIncl()
             ->minus($valueTaxIncl)
         ;
-        $orderInvoice->total_paid_tax_excl = (float) (string) $orderTotalPaidTaxExcl
+        $orderInvoice->total_paid_tax_excl = (float) (string) $invoiceTotals->getTotalPaidTaxExcl()
             ->minus($valueTaxExcl)
         ;
 
@@ -328,29 +328,24 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     private function applyReductionToOrder(Order $order, array $reductionValues): void
     {
-        $orderTotalDiscounts = new Number((string) $order->total_discounts);
-        $orderTotalDiscountsTaxExcl = new Number((string) $order->total_discounts_tax_excl);
-        $orderTotalDiscountsTaxIncl = new Number((string) $order->total_discounts_tax_incl);
-        $orderTotalPaid = new Number((string) $order->total_paid);
-        $orderTotalPaidTaxIncl = new Number((string) $order->total_paid_tax_incl);
-        $orderTotalPaidTaxExcl = new Number((string) $order->total_paid_tax_excl);
+        $orderTotals = OrderTotalNumbers::buildFromOrder($order);
 
-        $order->total_discounts = (float) (string) $orderTotalDiscounts
+        $order->total_discounts = (float) (string) $orderTotals->getTotalDiscounts()
             ->plus($reductionValues['value_tax_incl'])
         ;
-        $order->total_discounts_tax_incl = (float) (string) $orderTotalDiscountsTaxIncl
+        $order->total_discounts_tax_incl = (float) (string) $orderTotals->getTotalDiscountTaxIncl()
             ->plus($reductionValues['value_tax_incl'])
         ;
-        $order->total_discounts_tax_excl = (float) (string) $orderTotalDiscountsTaxExcl
+        $order->total_discounts_tax_excl = (float) (string) $orderTotals->getTotalDiscountTaxExcl()
             ->plus($reductionValues['value_tax_excl'])
         ;
-        $order->total_paid = (float) (string) $orderTotalPaid
+        $order->total_paid = (float) (string) $orderTotals->getTotalPaid()
             ->minus($reductionValues['value_tax_incl'])
         ;
-        $order->total_paid_tax_incl = (float) (string) $orderTotalPaidTaxIncl
+        $order->total_paid_tax_incl = (float) (string) $orderTotals->getTotalPaidTaxIncl()
             ->minus($reductionValues['value_tax_incl'])
         ;
-        $order->total_paid_tax_excl = (float) (string) $orderTotalPaidTaxExcl
+        $order->total_paid_tax_excl = (float) (string) $orderTotals->getTotalPaidTaxExcl()
             ->minus($reductionValues['value_tax_excl'])
         ;
 
