@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\BadCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
@@ -71,6 +72,20 @@ abstract class AbstractCustomerHandler
                 sprintf(
                     'One or more required fields for customer are missing. Missing fields are: %s',
                     implode(',', $missingFields)
+                )
+            );
+        }
+
+        $checkboxErrors = $customer->validateCheckboxRequiredFields();
+
+        if (!empty($checkboxErrors)) {
+            $badFields = array_keys($checkboxErrors);
+
+            throw new BadCustomerRequiredFieldsException(
+                $badFields,
+                sprintf(
+                    'One or more required checkboxes for customer are not checked. Faulty fields are: %s',
+                    implode(',', $badFields)
                 )
             );
         }

@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\SetPrivateNoteAboutCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\BadCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerDefaultGroupAccessException;
@@ -835,6 +836,16 @@ class CustomerController extends AbstractAdminController
                     implode(
                         ',',
                         $e instanceof MissingCustomerRequiredFieldsException ? $e->getMissingRequiredFields() : []
+                    ),
+                ]
+            ),
+            BadCustomerRequiredFieldsException::class => $this->trans(
+                'The required field %s is not valid.',
+                'Admin.Notifications.Error',
+                [
+                    implode(
+                        ',',
+                        $e instanceof BadCustomerRequiredFieldsException ? $e->getBadRequiredFields() : []
                     ),
                 ]
             ),

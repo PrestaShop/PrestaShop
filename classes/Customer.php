@@ -774,6 +774,45 @@ class CustomerCore extends ObjectModel
     }
 
     /**
+     * Validate that fields from Customer that are
+     * - required
+     * - boolean
+     * Must be true
+     *
+     * @return array of errors
+     *
+     * @throws PrestaShopException
+     */
+    public function validateCheckboxRequiredFields()
+    {
+        $this->cacheFieldsRequiredDatabase();
+        $errors = [];
+        $requiredFields = $this->getCachedFieldsRequiredDatabase();
+
+        foreach ($this->def['fields'] as $field => $fieldConfiguration) {
+            if (!in_array($field, $requiredFields)) {
+                continue;
+            }
+            if ($fieldConfiguration['type'] !== self::TYPE_BOOL) {
+                continue;
+            }
+
+            $value = Tools::getValue($field, null);
+
+
+            if ($value === false) {
+                $errors[$field] = $this->trans(
+                    'The field %s is required.',
+                    [self::displayFieldName($field, get_class($this), true)],
+                    'Admin.Notifications.Error'
+                );
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
      * Light back office search for customers.
      *
      * @param string $query Searched string
