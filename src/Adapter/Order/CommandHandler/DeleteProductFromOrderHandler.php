@@ -52,7 +52,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     public function handle(DeleteProductFromOrderCommand $command)
     {
         $orderDetail = new OrderDetail($command->getOrderDetailId());
-        $order = new Order($command->getOrderId()->getValue());
+        $order = $this->getOrderObject($command->getOrderId());
 
         $this->assertProductCanBeDeleted($order, $orderDetail);
 
