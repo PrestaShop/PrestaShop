@@ -644,7 +644,7 @@ class CartPresenter implements PresenterInterface
      */
     private function cartVoucherHasGiftProductReduction($cartVoucher)
     {
-        return array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product'];
+        return !empty($cartVoucher['gift_product']);
     }
 
     /**
