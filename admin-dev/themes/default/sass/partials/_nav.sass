@@ -184,7 +184,7 @@
 					.sub-tabs-arrow
 						visibility: visible
 
-		&.-active
+		&.link-active
 			+media-breakpoint-down(md)
 				border-right: none
 
@@ -227,7 +227,7 @@
 				line-height: inherit
 
 		&.ul-open,
-		&.-active,
+		&.link-active,
 		&.-hover
 			& > .link
 				background: #202226
@@ -271,7 +271,7 @@
 							padding-bottom: 1.5rem
 
 		&.ul-open,
-		&.-active
+		&.link-active
 			.link
 				background: #202226
 
@@ -282,7 +282,7 @@
 	.link-leveltwo
 		@extend .link-levelone
 
-		&.-active
+		&.link-active
 			> .link
 				padding-left: 0
 				border-left: none
