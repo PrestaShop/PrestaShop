@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -87,8 +88,8 @@ final class CatalogPriceRuleGridDataFactory implements GridDataFactoryInterface
                     $value = '--';
                 }
             }
-            //@todo: take amount from Reduction VO. PR #13716
-            $priceRule['reduction_type'] === 'amount' ?
+
+            Reduction::TYPE_AMOUNT === $priceRule['reduction_type'] ?
                 $priceRule['reduction_type'] = $this->translator->trans('Amount', [], 'Admin.Global') :
                 $priceRule['reduction_type'] = $this->translator->trans('Percentage', [], 'Admin.Global');
         }
