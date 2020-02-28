@@ -23,8 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
-
 import PreviewOpener from '../../../components/form/preview-opener';
 import ChoiceTree from '../../../components/form/choice-tree';
 import TaggableField from '../../../components/taggable-field';
@@ -34,6 +32,8 @@ import TranslatableField from '../../../components/translatable-field';
 import TinyMCEEditor from '../../../components/tinymce-editor';
 import Serp from '../../../app/utils/serp/index';
 
+const $ = window.$;
+
 $(() => {
   new ChoiceTree('#cms_page_page_category_id');
 
@@ -42,15 +42,15 @@ $(() => {
   new Serp(
     {
       container: '#serp-app',
-      defaultTitle: 'input[name^="cms_page[title]',
-      watchedTitle: 'input[name^="cms_page[meta_title]',
-      defaultDescription: 'input[name^="cms_page[description]',
-      watchedDescription: 'input[name^="cms_page[meta_description]',
-      watchedMetaUrl: 'input[name^="cms_page[friendly_url]',
+      defaultTitle: 'input[name^="cms_page[title]"]',
+      watchedTitle: 'input[name^="cms_page[meta_title]"]',
+      defaultDescription: 'input[name^="cms_page[description]"]',
+      watchedDescription: 'input[name^="cms_page[meta_description]"]',
+      watchedMetaUrl: 'input[name^="cms_page[friendly_url]"]',
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-      multiLanguageItem: translatorInput.localeItemSelector,
+      multiLanguageItem: translatorInput.localeItemSelector
     },
-    $('#serp-app').data('cms-url'),
+    $('#serp-app').data('cms-url')
   );
 
   new TranslatableField();
@@ -59,15 +59,15 @@ $(() => {
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
-      createTokensOnBlur: true,
-    },
+      createTokensOnBlur: true
+    }
   });
 
   new PreviewOpener('.js-preview-url');
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input.js-copier-source-title',
-    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input.js-copier-destination-friendly-url`,
+    destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input.js-copier-destination-friendly-url`
   });
 
   new ChoiceTree('#cms_page_shop_association').enableAutoCheckChildren();
