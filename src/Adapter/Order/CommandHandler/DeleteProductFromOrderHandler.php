@@ -32,7 +32,6 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Invoice\DTO\InvoiceTotalNumbers;
 use PrestaShop\PrestaShop\Adapter\Order\DTO\OrderTotalNumbers;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -87,16 +86,16 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             $invoiceTotals = InvoiceTotalNumbers::buildFromInvoice($orderInvoice);
 
             $orderInvoice->total_paid_tax_excl = (float) (string) $invoiceTotals->getTotalPaidTaxExcl()
-                ->minus(new Number((string) $orderDetail->total_price_tax_excl))
+                ->minus($this->number($orderDetail->total_price_tax_excl))
             ;
             $orderInvoice->total_paid_tax_incl = (float) (string) $invoiceTotals->getTotalPaidTaxIncl()
-                ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+                ->minus($this->number($orderDetail->total_price_tax_incl))
             ;
             $orderInvoice->total_products = (float) (string) $invoiceTotals->getTotalProducts()
-                ->minus(new Number((string) $orderDetail->total_price_tax_excl))
+                ->minus($this->number($orderDetail->total_price_tax_excl))
             ;
             $orderInvoice->total_products_wt = (float) (string) $invoiceTotals->getTotalProductsWt()
-                ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+                ->minus($this->number($orderDetail->total_price_tax_incl))
             ;
 
             return $orderInvoice->update();
@@ -116,19 +115,19 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         $orderTotals = OrderTotalNumbers::buildFromOrder($order);
 
         $order->total_paid = (float) (string) $orderTotals->getTotalPaid()
-            ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+            ->minus($this->number($orderDetail->total_price_tax_incl))
         ;
         $order->total_paid_tax_incl = (float) (string) $orderTotals->getTotalPaidTaxIncl()
-            ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+            ->minus($this->number($orderDetail->total_price_tax_incl))
         ;
         $order->total_paid_tax_excl = (float) (string) $orderTotals->getTotalPaidTaxExcl()
-            ->minus(new Number((string) $orderDetail->total_price_tax_excl))
+            ->minus($this->number($orderDetail->total_price_tax_excl))
         ;
         $order->total_products = (float) (string) $orderTotals->getTotalProducts()
-            ->minus(new Number((string) $orderDetail->total_price_tax_excl))
+            ->minus($this->number($orderDetail->total_price_tax_excl))
         ;
         $order->total_products_wt = (float) (string) $orderTotals->getTotalProductsWt()
-            ->minus(new Number((string) $orderDetail->total_price_tax_incl))
+            ->minus($this->number($orderDetail->total_price_tax_incl))
         ;
 
         return $order->update();

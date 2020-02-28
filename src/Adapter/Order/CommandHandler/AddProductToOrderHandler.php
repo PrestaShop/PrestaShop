@@ -41,7 +41,6 @@ use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Invoice\DTO\InvoiceTotalNumbers;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\DTO\OrderTotalNumbers;
@@ -494,41 +493,41 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         // update totals amount of order
         $order->total_products = (float) (string) $orderTotals->getTotalProducts()
-            ->plus(new Number((string) $cart->getOrderTotal(true, $totalMethod)))
+            ->plus($this->number($cart->getOrderTotal(true, $totalMethod)))
         ;
         $order->total_products_wt = (float) (string) $orderTotals->getTotalProductsWt()
-            ->plus(new Number((string) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)))
+            ->plus($this->number($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS)))
         ;
 
-        $paidWithTaxes = new Number((string) $cart->getOrderTotal(true, $totalMethod));
+        $paidWithTaxes = $this->number($cart->getOrderTotal(true, $totalMethod));
         $order->total_paid = (float) (string) $orderTotals->getTotalPaid()->plus($paidWithTaxes);
         $order->total_paid_tax_incl = (float) (string) $orderTotals->getTotalPaidTaxIncl()->plus($paidWithTaxes);
         $order->total_paid_tax_excl = (float) (string) $orderTotals->getTotalPaidTaxExcl()
-            ->plus(new Number((string) $cart->getOrderTotal(false, $totalMethod)))
+            ->plus($this->number($cart->getOrderTotal(false, $totalMethod)))
         ;
 
         // discount
-        $discountWithTaxes = new Number((string) $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+        $discountWithTaxes = $this->number($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
         $order->total_discounts = (float) (string) $orderTotals->getTotalDiscounts()->plus($discountWithTaxes);
         $order->total_discounts_tax_incl = (float) (string) $orderTotals->getTotalDiscountTaxIncl()->plus($discountWithTaxes);
         $order->total_discounts_tax_excl = (float) (string) $orderTotals->getTotalDiscountTaxExcl()
-            ->plus(new Number((string) $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS)))
+            ->plus($this->number($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS)))
         ;
 
         //wrapping
-        $wrappingWithTaxes = new Number((string) $cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
+        $wrappingWithTaxes = $this->number($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
         $order->total_wrapping_tax_incl = (float) (string) $orderTotals->getTotalWrappingTaxIncl()->plus($wrappingWithTaxes);
         $order->total_wrapping = (float) (string) $orderTotals->getTotalWrapping()->plus($wrappingWithTaxes);
         $order->total_wrapping_tax_excl = (float) (string) $orderTotals->getTotalWrappingTaxExcl()
-            ->plus(new Number((string) $cart->getOrderTotal(false, Cart::ONLY_WRAPPING)))
+            ->plus($this->number($cart->getOrderTotal(false, Cart::ONLY_WRAPPING)))
         ;
 
         //shipping
-        $shippingWithTaxes = new Number((string) $cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+        $shippingWithTaxes = $this->number($cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
         $order->total_shipping = (float) (string) $orderTotals->getTotalShipping()->plus($shippingWithTaxes);
         $order->total_shipping_tax_incl = (float) (string) $orderTotals->getTotalShippingTaxIncl()->plus($shippingWithTaxes);
         $order->total_shipping_tax_excl = $orderTotals->getTotalShippingTaxExcl()
-            ->plus(new Number((string) $cart->getOrderTotal(false, Cart::ONLY_SHIPPING)))
+            ->plus($this->number($cart->getOrderTotal(false, Cart::ONLY_SHIPPING)))
         ;
     }
 
