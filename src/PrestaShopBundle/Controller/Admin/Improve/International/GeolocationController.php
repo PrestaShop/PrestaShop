@@ -84,14 +84,10 @@ class GeolocationController extends FrameworkBundleAdminController
      */
     public function processByIpAddressFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessSmartyBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getGeolocationByIpAddressFormHandler()
+            $this->getGeolocationByIpAddressFormHandler(),
+            'ByIpAddress'
         );
     }
 
@@ -111,14 +107,10 @@ class GeolocationController extends FrameworkBundleAdminController
      */
     public function processWhitelistFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessSmartyBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getGeolocationWhitelistFormHandler()
+            $this->getGeolocationWhitelistFormHandler(),
+            'Whitelist'
         );
     }
 
@@ -138,14 +130,10 @@ class GeolocationController extends FrameworkBundleAdminController
      */
     public function processOptionsFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminPerformanceControllerPostProcessSmartyBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getGeolocationOptionsFormHandler()
+            $this->getGeolocationOptionsFormHandler(),
+            'Options'
         );
     }
 
@@ -154,12 +142,18 @@ class GeolocationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param FormHandlerInterface $formHandler
+     * @param string $hookName
      *
      * @return RedirectResponse
      */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler)
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
-        $this->dispatchHook('actionAdminGeolocationControllerPostProcessBefore', ['controller' => $this]);
+        $this->dispatchHook(
+            'actionAdminInternationalGeolocationControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminInternationalGeolocationControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
