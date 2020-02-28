@@ -428,17 +428,14 @@ class OrderController extends FrameworkBundleAdminController
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $backOfficeOrderButtons = new ActionsBarButtonsCollection();
-        $hookParameters = [
-            'controller' => $this,
-            'id_order' => $orderId,
-            'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-        ];
 
         try {
             $this->dispatchHook(
-                'actionGetAdminOrderButtons',
-                $hookParameters
-            );
+                'actionGetAdminOrderButtons', [
+                'controller' => $this,
+                'id_order' => $orderId,
+                'actions_bar_buttons_collection' => $backOfficeOrderButtons,
+            ]);
 
             $cancelProductForm = $formBuilder->getFormFor($orderId);
         } catch (Exception $e) {
