@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,9 +51,10 @@ $(() => {
   orderViewPage.listenForProductAdd();
   orderViewPage.listenForProductPagination();
   orderViewPage.listenForRefund();
+  orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
+  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
@@ -66,6 +67,13 @@ $(() => {
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();
+  });
+
+  $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
+    const tempTitle = document.title;
+    document.title = $(OrderViewPageMap.mainDiv).data('orderTitle');
+    window.print();
+    document.title = tempTitle;
   });
 
   initAddCartRuleFormHandler();
@@ -163,7 +171,7 @@ $(() => {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
 
     $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
-      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
+      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($(event.currentTarget).data('addressType'));
     });
   }
 });

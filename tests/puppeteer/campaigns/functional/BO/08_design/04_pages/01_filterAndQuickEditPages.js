@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login/index');
 const DashboardPage = require('@pages/BO/dashboard/index');
 const PagesPage = require('@pages/BO/design/pages/index');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_pages_filterAndQuickEditPages';
 
 let browser;
 let page;
@@ -40,6 +44,7 @@ describe('Filter And Quick Edit Pages', async () => {
 
   // Go to Design>Pages page
   it('should go to "Design>Pages" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.designParentLink,
       this.pageObjects.boBasePage.pagesLink,
@@ -50,6 +55,7 @@ describe('Filter And Quick Edit Pages', async () => {
   });
 
   it('should reset all filters and get number of pages in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
     numberOfPages = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
     await expect(numberOfPages).to.be.above(0);
   });
@@ -57,14 +63,56 @@ describe('Filter And Quick Edit Pages', async () => {
   // 1 : Filter Pages with all inputs and selects in grid table
   describe('Filter Pages', async () => {
     const tests = [
-      {args: {filterType: 'input', filterBy: 'id_cms', filterValue: Pages.delivery.id}},
-      {args: {filterType: 'input', filterBy: 'link_rewrite', filterValue: Pages.aboutUs.url}},
-      {args: {filterType: 'input', filterBy: 'meta_title', filterValue: Pages.termsAndCondition.title}},
-      {args: {filterType: 'input', filterBy: 'position', filterValue: Pages.securePayment.position}},
-      {args: {filterType: 'select', filterBy: 'active', filterValue: Pages.securePayment.displayed}, expected: 'check'},
+      {
+        args:
+          {
+            testIdentifier: 'filterById',
+            filterType: 'input',
+            filterBy: 'id_cms',
+            filterValue: Pages.delivery.id,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByLink',
+            filterType: 'input',
+            filterBy: 'link_rewrite',
+            filterValue: Pages.aboutUs.url,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByMetaTitle',
+            filterType: 'input',
+            filterBy: 'meta_title',
+            filterValue: Pages.termsAndCondition.title,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByPosition',
+            filterType: 'input',
+            filterBy: 'position',
+            filterValue: Pages.securePayment.position,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterByActive',
+            filterType: 'select',
+            filterBy: 'active',
+            filterValue: Pages.securePayment.displayed,
+          },
+        expected: 'check',
+      },
     ];
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         await this.pageObjects.pagesPage.filterTable(
           'cms_page',
           test.args.filterType,
@@ -84,6 +132,7 @@ describe('Filter And Quick Edit Pages', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `reset_${test.args.testIdentifier}`, baseContext);
         const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
         await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
       });
@@ -93,6 +142,7 @@ describe('Filter And Quick Edit Pages', async () => {
   // 2 : Editing Pages from grid table
   describe('Quick Edit Pages', async () => {
     it('should filter by Title \'Terms and conditions of use\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickEditFilter', baseContext);
       await this.pageObjects.pagesPage.filterTable(
         'cms_page',
         'input',
@@ -117,6 +167,7 @@ describe('Filter And Quick Edit Pages', async () => {
     ];
     statuses.forEach((pageStatus) => {
       it(`should ${pageStatus.args.status} the page`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${pageStatus.args.status}Page`, baseContext);
         const isActionPerformed = await this.pageObjects.pagesPage.updateToggleColumnValue(
           'cms_page',
           1,
@@ -134,6 +185,7 @@ describe('Filter And Quick Edit Pages', async () => {
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset', baseContext);
       const numberOfPagesAfterReset = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
       await expect(numberOfPagesAfterReset).to.be.equal(numberOfPages);
     });

@@ -21,7 +21,7 @@ module.exports = class Taxes extends BOBasePage {
     this.enableSelectionButton = `${this.taxesGridPanelDiv} #tax_grid_bulk_action_enable_selection`;
     this.disableSelectionButton = `${this.taxesGridPanelDiv} #tax_grid_bulk_action_disable_selection`;
     this.deleteSelectionButton = `${this.taxesGridPanelDiv} #tax_grid_bulk_action_delete_selection`;
-    this.selectAllLabel = `${this.taxesGridPanelDiv} #tax_grid .md-checkbox label`;
+    this.selectAllLabel = `${this.taxesGridPanelDiv} #tax_grid tr.column-filters .md-checkbox i`;
     this.taxesGridTable = `${this.taxesGridPanelDiv} #tax_grid_table`;
     this.confirmDeleteModal = '#tax_grid_confirm_modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
@@ -44,6 +44,11 @@ module.exports = class Taxes extends BOBasePage {
     this.useEcoTaxSwitchlabel = 'label[for=\'form_options_use_eco_tax_%ID\']';
     this.ecoTaxSelect = '#form_options_eco_tax_rule_group';
     this.saveTaxOptionButton = '.card-footer button';
+
+    // Sort Selectors
+    this.tableHead = `${this.taxesGridTable} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
   }
 
   /*
@@ -140,6 +145,21 @@ module.exports = class Taxes extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableTaxes(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -285,5 +305,23 @@ module.exports = class Taxes extends BOBasePage {
    */
   async goToTaxRulesPage() {
     await this.clickAndWaitForNavigation(this.taxRulesSubTab);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.page.waitForSelector(sortColumnDiv, {visible: true});
   }
 };

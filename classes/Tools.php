@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -47,6 +48,7 @@ class ToolsCore
     protected static $_user_browser;
     protected static $request;
     protected static $cldr_cache = [];
+    protected static $colorBrightnessCalculator;
 
     public static $round_mode = null;
 
@@ -2342,6 +2344,15 @@ class ToolsCore
         $b = hexdec(substr($hex, 4, 2));
 
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+    }
+
+    public static function isBright($hex)
+    {
+        if (null === self::$colorBrightnessCalculator) {
+            self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
+        }
+
+        return self::$colorBrightnessCalculator->isBright($hex);
     }
 
     public static function parserSQL($sql)

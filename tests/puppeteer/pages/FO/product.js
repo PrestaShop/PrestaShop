@@ -12,6 +12,9 @@ module.exports = class Product extends FOBasePage {
     this.productDescription = '#description';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.proceedToCheckoutButton = '#blockcart-modal div.cart-content-btn a';
+    this.productQuantitySpan = '#product-details div.product-quantities label';
+    this.productDetail = 'div.product-information  a[href=\'#product-details\']';
+    this.productAvailabilityIcon = '#product-availability i';
   }
 
   /**
@@ -33,5 +36,22 @@ module.exports = class Product extends FOBasePage {
   async addProductToTheCart() {
     await this.waitForSelectorAndClick(this.addToCartButton);
     await this.waitForSelectorAndClick(this.proceedToCheckoutButton);
+  }
+
+  /**
+   * Is quantity displayed
+   * @returns {Promise<boolean|true>}
+   */
+  async isQuantityDisplayed() {
+    await this.waitForSelectorAndClick(this.productDetail);
+    return this.elementVisible(this.productQuantitySpan, 1000);
+  }
+
+  /**
+   * Is availability product displayed
+   * @returns {boolean}
+   */
+  isAvailabilityQuantityDisplayed() {
+    return this.elementVisible(this.productAvailabilityIcon, 1000);
   }
 };

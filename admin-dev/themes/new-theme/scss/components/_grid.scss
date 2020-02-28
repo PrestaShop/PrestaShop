@@ -157,7 +157,7 @@ table .column-filters td:last-child .grid-reset-button {
           &.choice-type {
             @mixin display-dropdown-arrow() {
               &::after {
-                display: inline-block;
+                visibility: visible;
               }
             }
 
@@ -175,7 +175,7 @@ table .column-filters td:last-child .grid-reset-button {
                 }
 
                 &::after {
-                  display: none;
+                  visibility: hidden;
                 }
 
                 &:hover {
@@ -205,6 +205,14 @@ table .column-filters td:last-child .grid-reset-button {
               &:focus {
                 background-color: transparent;
               }
+            }
+          }
+
+          &.order_price-type {
+            .badge {
+              font-size: 100%;
+              font-weight: 600;
+              padding: 5px;
             }
           }
         }

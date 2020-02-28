@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\FreeShippingCartRuleAlreadyExistException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
@@ -289,10 +288,6 @@ class CartController extends FrameworkBundleAdminController
     {
         $cartRuleId = $request->request->getInt('cartRuleId');
         try {
-            $cartInfo = $this->getCartInfo($cartId)->getShipping();
-            if ($cartInfo->hasFreeShippingCartRule() || $cartInfo->isFreeShipping()) {
-                throw new FreeShippingCartRuleAlreadyExistException('Free shipping cart rule already exist!');
-            }
             $this->getCommandBus()->handle(new AddCartRuleToCartCommand($cartId, $cartRuleId));
 
             return $this->json($this->getCartInfo($cartId));

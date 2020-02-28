@@ -11,7 +11,7 @@ module.exports = class Employee {
     this.password = employeeToCreate.password || 'prestashop_demo';
     this.defaultPage = employeeToCreate.defaultPage || faker.random.arrayElement(Pages);
     this.language = employeeToCreate.language
-      || faker.random.arrayElement(Object.values(Languages).map(lang => lang.name));
+      || faker.random.arrayElement((Object.values(Languages).map(lang => lang.name)).slice(0, 2));
     this.active = employeeToCreate.active === undefined ? true : employeeToCreate.active;
     this.permissionProfile = employeeToCreate.permissionProfile || faker.random.arrayElement(Profiles);
   }

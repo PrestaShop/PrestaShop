@@ -22,6 +22,10 @@ const {PaymentMethods} = require('@data/demo/orders');
 const {DefaultAccount} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orders');
 const InvoiceOptionFaker = require('@data/faker/invoice');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_invoices_invoiceOptions_otherOptions';
 
 let browser;
 let page;
@@ -47,12 +51,12 @@ const init = async function () {
 };
 
 /*
-Edit Invoice number, Legal free text, Footer text
+Edit Invoice number, Footer text
 Create order
 Change the Order status to Shipped
 Check the invoice file name
  */
-describe('Edit \'Invoice number, Legal free text, Footer text\' and check the generated invoice file', async () => {
+describe('Edit \'Invoice number, Footer text\' and check the generated invoice file', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -70,8 +74,9 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
   // Login into BO
   loginCommon.loginBO();
 
-  describe('Edit the Invoice number, Legal free text and Footer text', async () => {
+  describe('Edit the Invoice number and Footer text', async () => {
     it('should go to invoices page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToEditOptions', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.invoicesLink,
@@ -81,7 +86,8 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
       await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
     });
 
-    it('should change the Invoice number, Legal free text, Footer text', async function () {
+    it('should change the Invoice numberFooter text', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOptions', baseContext);
       await this.pageObjects.invoicesPage.setInputOptions(invoiceData);
       const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
       await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
@@ -90,6 +96,7 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
 
   describe('Create new order in FO', async () => {
     it('should go to FO and create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
       // Click on view my shop
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -125,6 +132,7 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
 
   describe('Create an invoice and check the edited data', async () => {
     it('should go to the orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageUpdatedOptions', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
@@ -134,17 +142,20 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
     });
 
     it('should go to the first order page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageUpdatedOptions', baseContext);
       await this.pageObjects.ordersPage.goToOrder(1);
       const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateStatusUpdatedOptions', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
       await expect(result).to.be.true;
     });
 
     it('should download the invoice', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceUpdatedOptions', baseContext);
       fileName = await this.pageObjects.viewOrderPage.getFileName();
       await this.pageObjects.viewOrderPage.downloadInvoice();
       const exist = await files.checkFileExistence(`${fileName}.pdf`);
@@ -152,20 +163,16 @@ describe('Edit \'Invoice number, Legal free text, Footer text\' and check the ge
     });
 
     it('should check that the invoice file name contain the \'Invoice number\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedInvoiceNumber', baseContext);
       fileName = await this.pageObjects.viewOrderPage.getFileName();
       expect(fileName).to.contains(invoiceData.invoiceNumber);
     });
 
-    it('should check that the invoice contain the \'legal free text\'', async () => {
-      // Check the existence of the legal free text
-      const exist = await files.checkTextInPDF(`${fileName}.pdf`, invoiceData.legalFreeText);
-      await expect(exist).to.be.true;
-    });
-
-    it('should check that the invoice contain the \'Footer text\'', async () => {
+    it('should check that the invoice contain the \'Footer text\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedFooterText', baseContext);
       // Check the existence of the Footer text
       const exist = await files.checkTextInPDF(`${fileName}.pdf`, invoiceData.footerText);
-      await expect(exist).to.be.true;
+      await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
     });
   });
 });
