@@ -30,9 +30,10 @@ let browser;
 let page;
 const today = new Date();
 // Create a future date that there is no credit slips (yyy-mm-dd)
-const day = (`0${today.getDate()}`).slice(-2); // Current day
-const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const year = today.getFullYear() + 4; // // Future year
+today.setFullYear(today.getFullYear() + 1);
+const day = (`0${today.getDate()}`).slice(-2);
+const month = (`0${today.getMonth() + 1}`).slice(-2);
+const year = today.getFullYear();
 const futureDate = `${year}-${month}-${day}`;
 const creditSlipsFileName = 'order-slips.pdf';
 const creditSlipDocumentName = 'Credit Slip';
