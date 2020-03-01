@@ -715,7 +715,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     private function getQuantityWanted()
     {
-        return (int) Tools::getValue('quantity_wanted', 1);
+        return (int) Tools::getValue('quantity_wanted', (int) $this->product['minimal_quantity']);
     }
 
     /**
