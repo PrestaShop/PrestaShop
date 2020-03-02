@@ -123,8 +123,8 @@ describe('Choose quantity discount based on', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProductAndCheckPriceTTC', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
-    await this.pageObjects.foProductPage.addProductToTheCart(firstAttributeToChoose, false);
-    await this.pageObjects.foProductPage.addProductToTheCart(secondAttributeToChoose, true);
+    await this.pageObjects.foProductPage.addProductToTheCart(1, firstAttributeToChoose, false);
+    await this.pageObjects.foProductPage.addProductToTheCart(1, secondAttributeToChoose, true);
     const priceTTC = await this.pageObjects.cartPage.getTTCPrice();
     await expect(priceTTC).to.equal(firstCartTotalTTC);
     page = await this.pageObjects.cartPage.closePage(browser, 1);
