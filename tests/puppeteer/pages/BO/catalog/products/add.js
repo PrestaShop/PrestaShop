@@ -92,18 +92,18 @@ module.exports = class AddProduct extends BOBasePage {
       await this.page.type(this.productQuantityInput, productData.quantity.toString());
     }
     await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
+    if (productData.withSpecificPrice) {
+      await this.reloadPage();
+      // Go to pricing tab : id = 2
+      await this.goToFormStep(2);
+      await this.addSpecificPrices(productData.specificPrice);
+    }
     // Switch product online before save
     if (switchProductOnline) {
       await Promise.all([
         this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
         this.page.click(this.productOnlineSwitch),
       ]);
-    }
-    if (productData.withSpecificPrice) {
-      await this.reloadPage();
-      // Go to pricing tab : id = 2
-      await this.goToFormStep(2);
-      await this.addSpecificPrices(productData.specificPrice);
     }
     // Save created product
     await Promise.all([

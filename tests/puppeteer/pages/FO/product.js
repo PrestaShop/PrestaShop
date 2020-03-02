@@ -12,10 +12,11 @@ module.exports = class Product extends FOBasePage {
     this.productDescription = '#description';
     this.colorInput = '#group_2 li input[title=%COLOR]';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
-    this.proceedToCheckoutButton = '#blockcart-modal div.cart-content-btn a';
+    this.blockCartModal = '#blockcart-modal';
+    this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
     this.productQuantitySpan = '#product-details div.product-quantities label';
-    this.productDetail = 'div.product-information  a[href=\'#product-details\']';
-    this.continueShoppingButton = '#blockcart-modal div.cart-content-btn button';
+    this.productDetail = 'div.product-information a[href=\'#product-details\']';
+    this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailabilityIcon = '#product-availability i';
   }
 
@@ -34,11 +35,12 @@ module.exports = class Product extends FOBasePage {
 
   /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
+   * @param quantity
    * @param attributeToChoose
    * @param proceedToCheckout
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(attributeToChoose = '', proceedToCheckout = true) {
+  async addProductToTheCart(quantity = 1, attributeToChoose = '', proceedToCheckout = true) {
     await this.page.waitFor(1000);
     if (attributeToChoose.color) {
       await Promise.all([
@@ -46,12 +48,18 @@ module.exports = class Product extends FOBasePage {
         this.page.click(this.colorInput.replace('%COLOR', attributeToChoose.color)),
       ]);
     }
-    if (attributeToChoose.quantity) {
+    if (quantity !== 1) {
       await this.setValue(this.productQuantity, attributeToChoose.quantity.toString());
     }
     await this.waitForSelectorAndClick(this.addToCartButton);
-    if (proceedToCheckout) await this.waitForSelectorAndClick(this.proceedToCheckoutButton);
-    else await this.waitForSelectorAndClick(this.continueShoppingButton);
+    await this.page.waitForSelector(`${this.blockCartModal}[style*='display: block;']`);
+    if (proceedToCheckout) {
+      await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
+      await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
+    } else {
+      await this.waitForSelectorAndClick(this.continueShoppingButton);
+      await this.page.waitForSelector(this.continueShoppingButton, {hidden: true});
+    }
   }
 
   /**
