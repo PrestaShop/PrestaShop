@@ -69,6 +69,7 @@ export default class OrderProductAdd {
       this.locationText.html($(event.currentTarget).find(':selected').data('location'));
       this.available = $(event.currentTarget).find(':selected').data('stock');
       this.quantityInput.trigger('change');
+      this.orderProductRenderer.toggleColumnLocation(OrderViewPageMap.productsCellLocation);
     });
     this.quantityInput.on('change keyup', (event) => {
       if (this.available !== null) {
@@ -131,6 +132,7 @@ export default class OrderProductAdd {
     this.quantityInput.val(1);
     this.quantityInput.trigger('change');
     this.setCombinations(product.combinations);
+    this.orderProductRenderer.toggleColumnLocation(OrderViewPageMap.productsCellLocation);
   }
 
   setCombinations(combinations) {

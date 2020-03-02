@@ -197,8 +197,8 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productAddBtn).on(
       'click',
       event => {
-        this.orderProductRenderer.toggleProductAddNewInvoiceInfo()
-        this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput)
+        this.orderProductRenderer.toggleProductAddNewInvoiceInfo();
+        this.orderProductRenderer.moveProductsPanelToModificationPosition(OrderViewPageMap.productSearchInput);
       }
     );
     $(OrderViewPageMap.productCancelAddBtn).on(
