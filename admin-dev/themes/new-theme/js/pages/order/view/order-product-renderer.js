@@ -92,8 +92,9 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsPanel).detach().appendTo($modificationPosition);
     $modificationPosition.closest('.row').removeClass('d-none');
 
-    // Show column location
-    this.toggleColumnLocation(OrderViewPageMap.productsCellLocation);
+    // Show column location & refunded
+    this.toggleColumn(OrderViewPageMap.productsCellLocation);
+    this.toggleColumn(OrderViewPageMap.productsCellRefunded);
 
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
@@ -173,8 +174,9 @@ export default class OrderProductRenderer {
     // Remove all edition rows (careful not to remove the template)
     $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).remove();
 
-    // Toggle Column Location
-    this.toggleColumnLocation(OrderViewPageMap.productsCellLocationDisplayed);
+    // Toggle Column Location & Refunded
+    this.toggleColumn(OrderViewPageMap.productsCellLocationDisplayed);
+    this.toggleColumn(OrderViewPageMap.productsCellRefundedDisplayed);
   }
 
   paginateUpdateControls(numPage) {
@@ -225,18 +227,18 @@ export default class OrderProductRenderer {
     }
   }
 
-  toggleColumnLocation(target, forceDisplay = null) {
-    let isColumnLocationDisplayed = false;
+  toggleColumn(target, forceDisplay = null) {
+    let isColumnDisplayed = false;
     if (forceDisplay === null) {
       $(target).filter('td').each(function() {
-        if ($(this).html() !== '') {
-          isColumnLocationDisplayed = true;
+        if ($(this).html().trim() !== '') {
+          isColumnDisplayed = true;
           return false;
         }
       });
     } else {
-      isColumnLocationDisplayed = forceDisplay;
+      isColumnDisplayed = forceDisplay;
     }
-    $(target).toggleClass('d-none', !isColumnLocationDisplayed);
+    $(target).toggleClass('d-none', !isColumnDisplayed);
   }
 }
