@@ -49,10 +49,10 @@ class ImageTypeExtension extends AbstractTypeExtension
             }
         }
         if (isset($options['id_property'])) {
-            $deleteActionRouteProperty = $form->getParent()->get('id');
-            if ($deleteActionRouteProperty) {
-                $deleteActionRoute = $deleteActionRouteProperty->getViewData();
-                $view->vars['id'] = $deleteActionRoute;
+            $idProperty = $form->getParent()->get('id');
+            if ($idProperty) {
+                $id = $idProperty->getViewData();
+                $view->vars['id'] = $id;
             }
         }
     }
