@@ -581,7 +581,7 @@ class CartController extends FrameworkBundleAdminController
             ],
             FreeShippingCartRuleAlreadyExistException::class => $this->trans(
                 'Free shipping voucher is already in your cart',
-                'Admin.Notifications.Error'
+                'Admin.Orderscustomers.Help'
             ),
         ];
     }
