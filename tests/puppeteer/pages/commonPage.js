@@ -336,4 +336,13 @@ module.exports = class CommonPage {
     await this.page.hover(selectorWhereToDrop);
     await this.page.mouse.up();
   }
+
+  /**
+   * Uppercase the first character of the word
+   * @param word
+   * @returns {string}
+   */
+  uppercaseFirstCharacter(word) {
+    return word[0].toUpperCase() + word.slice(1);
+  }
 };

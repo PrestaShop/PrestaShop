@@ -110,7 +110,7 @@ describe('Enable/Disable display unavailable product attributes on the product p
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `checkUnavailableAttribute_${test.args.action}`,
+        `checkUnavailableAttribute${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
       page = await this.pageObjects.productSettingsPage.viewMyShop();
