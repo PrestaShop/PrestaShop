@@ -47,6 +47,10 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
         $order = $this->getOrderObject($command->getOrderId());
         $orderCartRule = new OrderCartRule($command->getOrderCartRuleId());
 
+        $computingPrecision = new ComputingPrecision();
+        $currency = new Currency((int) $order->id_currency);
+        $precision = $computingPrecision->getPrecision($currency->precision);
+
         if (!Validate::isLoadedObject($orderCartRule) || $orderCartRule->id_order != $order->id) {
             throw new OrderException('Invalid order cart rule provided.');
         }
@@ -58,24 +62,54 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
             }
 
             // Update amounts of Order Invoice
-            $orderInvoice->total_discount_tax_excl -= $orderCartRule->value_tax_excl;
-            $orderInvoice->total_discount_tax_incl -= $orderCartRule->value;
-
-            $orderInvoice->total_paid_tax_excl += $orderCartRule->value_tax_excl;
-            $orderInvoice->total_paid_tax_incl += $orderCartRule->value;
+            $orderInvoice->total_discount_tax_excl = Tools::ps_round(
+                $orderInvoice->total_discount_tax_excl - $orderCartRule->value_tax_excl,
+                $precision
+            );
+            $orderInvoice->total_discount_tax_incl = Tools::ps_round(
+                $orderInvoice->total_discount_tax_incl - $orderCartRule->value,
+                $precision
+            );
+            
+            $orderInvoice->total_paid_tax_excl = Tools::ps_round(
+                $orderInvoice->total_discount_tax_excl + $orderCartRule->value_tax_excl,
+                $precision
+            );
+            $orderInvoice->total_paid_tax_incl = Tools::ps_round(
+                $orderInvoice->total_paid_tax_incl + $orderCartRule->value,
+                $precision
+            );
 
             // Update Order Invoice
             $orderInvoice->update();
         }
 
         // Update amounts of order
-        $order->total_discounts -= $orderCartRule->value;
-        $order->total_discounts_tax_incl -= $orderCartRule->value;
-        $order->total_discounts_tax_excl -= $orderCartRule->value_tax_excl;
+        $order->total_discounts = Tools::ps_round(
+            $order->total_discounts - $orderCartRule->value,
+            $precision
+        );
+        $order->total_discounts_tax_incl = Tools::ps_round(
+            $order->total_discounts_tax_incl - $orderCartRule->value,
+            $precision
+        );
+        $order->total_discounts_tax_excl = Tools::ps_round(
+            $order->total_discounts_tax_excl - $orderCartRule->value_tax_excl,
+            $precision
+        );
 
-        $order->total_paid += $orderCartRule->value;
-        $order->total_paid_tax_incl += $orderCartRule->value;
-        $order->total_paid_tax_excl += $orderCartRule->value_tax_excl;
+        $order->total_paid = Tools::ps_round(
+            $order->total_paid + $orderCartRule->value,
+            $precision
+        );
+        $order->total_paid_tax_incl = Tools::ps_round(
+            $order->total_paid_tax_incl + $orderCartRule->value,
+            $precision
+        );
+        $order->total_paid_tax_excl = Tools::ps_round(
+            $order->total_paid_tax_excl + $orderCartRule->value_tax_excl,
+            $precision
+        );
 
         // Delete Order Cart Rule and update Order
         $orderCartRule->delete();
