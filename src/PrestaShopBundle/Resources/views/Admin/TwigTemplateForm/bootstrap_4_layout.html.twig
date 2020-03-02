@@ -736,17 +736,20 @@
       <div class="col-sm">
         <figure class="figure">
           <img src="{{ image_url }}" class="figure-img img-fluid img-thumbnail">
+          {% if delete_action_route is defined and id is defined %}
         </figure>
-        {% if delete_action_route is defined and id is defined %}
-        <button class="btn btn-outline-danger btn-sm"
-                type="submit"
-                formaction="{{ path(delete_action_route, {'id': id}) }}"
-        >
-          <i class="material-icons">delete_forever</i>{{ 'Delete'|trans({}, 'Admin.Actions') }}
-        </button>
+        <div class="d-block">
+          <button class="btn btn-outline-danger btn-sm"
+                  type="submit"
+                  formaction="{{ path(delete_action_route, {'id': id}) }}"
+          >
+            <i class="material-icons">delete_forever</i>{{ 'Delete'|trans({}, 'Admin.Actions') }}
+          </button>
+        </div>
         {% endif %}
       </div>
     </div>
+
   {% endif %}
 {% endblock file_widget %}
 
