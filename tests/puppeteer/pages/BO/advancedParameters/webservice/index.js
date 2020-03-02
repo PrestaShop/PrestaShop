@@ -156,4 +156,12 @@ module.exports = class WebService extends BOBasePage {
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
+
+  /**
+   * Get validation message
+   * @returns {Promise<string>}
+   */
+  getValidationMessage() {
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
 };
