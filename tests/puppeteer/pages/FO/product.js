@@ -52,7 +52,7 @@ module.exports = class Product extends FOBasePage {
       await this.setValue(this.productQuantity, attributeToChoose.quantity.toString());
     }
     await this.waitForSelectorAndClick(this.addToCartButton);
-    await this.page.waitForSelector(`${this.blockCartModal}[style*="display: block;"]`);
+    await this.page.waitForSelector(`${this.blockCartModal}[style*='display: block;']`);
     if (proceedToCheckout) {
       await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
       await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
