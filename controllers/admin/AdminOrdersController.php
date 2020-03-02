@@ -178,6 +178,7 @@ class AdminOrdersControllerCore extends AdminController
             $order = new Order((int) Tools::getValue('id_order'));
             $this->context->cart = new Cart($order->id_cart);
             $this->context->customer = new Customer($order->id_customer);
+            $this->context->currency = new Currency($order->id_currency);
         }
 
         $this->bulk_actions = [
