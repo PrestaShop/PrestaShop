@@ -793,4 +793,6 @@ VALUES (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post
        (NULL, 'actionAddressGridPresenterModifier', 'Modify address grid template data',
         'This hook allows to modify data which is about to be used in template for address grid', '1'),
        (NULL, 'actionCreditSlipGridPresenterModifier', 'Modify credit slip grid template data',
-        'This hook allows to modify data which is about to be used in template for credit slip grid', '1');
+        'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
+       (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields',
+        'This hook allows to display the extra field values added in an address from using hook ''additionalCustomerAddressFields''', '1');
