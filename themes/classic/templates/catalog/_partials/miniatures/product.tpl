@@ -28,14 +28,12 @@
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemprop="item" itemscope itemtype="http://schema.org/Product">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
-        {if $product.cover}
-          {assign var='coverImage' value=Product::getCover($product->id)}
-          {assign var='coverImageId' value="{$product->id}-{$coverImage.id_image}"}
+        {if $product.catalogCover}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img
               src="{$link->getImageLink($product.link_rewrite, $coverImageId)}"
-              alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
-              data-full-size-image-url="{$product.cover.large.url}"
+              alt="{if !empty($product.catalogCover.legend)}{$product.catalogCover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
+              data-full-size-image-url="{$product.catalogCover.large.url}"
               />
           </a>
         {else}

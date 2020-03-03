@@ -592,7 +592,7 @@ class ProductLazyArray extends AbstractLazyArray
 
         if (isset($product['id_product_attribute'])) {
             foreach ($this->product['images'] as $image) {
-                if (isset($image['cover']) && null !== $image['cover']) {
+                if (in_array($product['id_product_attribute'], $image['associatedVariants'])) {
                     $this->product['cover'] = $image;
 
                     break;
@@ -603,9 +603,28 @@ class ProductLazyArray extends AbstractLazyArray
         if (!isset($this->product['cover'])) {
             if (count($this->product['images']) > 0) {
                 $this->product['cover'] = array_values($this->product['images'])[0];
+                foreach ($this->product['images'] as $image) {
+                    if (isset($image['cover']) && null !== $image['cover']) {
+                        $this->product['cover'] = $image;
+    
+                        break;
+                    }
+                }
             } else {
                 $this->product['cover'] = null;
             }
+        }
+
+        if (count($this->product['images']) > 0) {
+            foreach ($this->product['images'] as $image) {
+                if (isset($image['cover']) && null !== $image['cover']) {
+                    $this->product['catalogCover'] = $image;
+
+                    break;
+                }
+            }
+        } else {
+            $this->product['catalogCover'] = null;
         }
     }
 

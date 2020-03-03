@@ -99,15 +99,7 @@ class ImageRetriever
             return $image;
         }, $images);
 
-        $filteredImages = [];
-
-        foreach ($images as $image) {
-            if (in_array($productAttributeId, $image['associatedVariants'])) {
-                $filteredImages[] = $image;
-            }
-        }
-
-        return (0 === count($filteredImages)) ? $images : $filteredImages;
+        return $images;
     }
 
     /**
