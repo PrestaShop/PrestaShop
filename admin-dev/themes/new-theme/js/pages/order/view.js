@@ -158,9 +158,15 @@ $(() => {
 
   function handleUpdateOrderStatusButton() {
     const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
+    const $wrapper = $(OrderViewPageMap.updateOrderStatusActionInputWrapper);
 
     $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
-      const selectedOrderStatusId = $(event.currentTarget).val();
+      const $element = $(event.currentTarget);
+      const $option = $('option:selected', $element);
+      const selectedOrderStatusId = $element.val();
+
+      $element.css('background-color', $option.data('background-color'));
+      $wrapper.toggleClass('is-bright', $option.data('is-bright') !== undefined);
 
       $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
     });
