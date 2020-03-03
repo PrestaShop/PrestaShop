@@ -55,12 +55,13 @@
       {if $contact_infos.email && $display_email}
         <br>
           {l s='Email us:' d='Shop.Theme.Global'}
-          {mailto address={$contact_infos.email} encode="javascript"}
+          {mailto address=$contact_infos.email encode="javascript"}
       {/if}
   </div>
   <div class="hidden-md-up">
     <div class="title">
       <a class="h3" href="{$urls.pages.stores}">{l s='Store information' d='Shop.Theme.Global'}</a>
+
     </div>
   </div>
 </div>

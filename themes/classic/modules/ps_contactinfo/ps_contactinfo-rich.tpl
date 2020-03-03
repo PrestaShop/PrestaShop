@@ -56,7 +56,7 @@
       <div class="data email">
         {l s='Email us:' d='Shop.Theme.Global'}<br/>
       </div>
-      {mailto address={$contact_infos.email} encode="javascript"}
+      {mailto address=$contact_infos.email encode="javascript"}
     </div>
   {/if}
 </div>
