@@ -8,6 +8,7 @@ rm -rf var/cache/*
 # Remove logs
 rm -rf var/logs/*
 
+# Install PrestaShop
 echo "* Installing PrestaShop, this may take a while ...";
 php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
 if test ! $? -eq 0; then
@@ -16,3 +17,14 @@ if test ! $? -eq 0; then
   cat var/logs/* | grep -v error
   exit 1
 fi
+
+# Check mandatory modules were installed successfully
+mandatory_modules=( ps_legalcompliance psgdpr )
+for module in "${mandatory_modules[@]}"
+do
+	if [ ! -d "modules/$module" ]
+    then
+      echo "Module $module cannot be found in modules folder"
+      exit 1
+    fi
+done
