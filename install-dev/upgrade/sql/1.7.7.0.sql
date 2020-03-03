@@ -536,7 +536,10 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayAdminOrderMain', 'Admin Order Main Column', 'This hook displays content in the order view page at the end of the main column', '1'),
   (NULL, 'displayAdminOrderTabLink', 'Admin Order Tab Link', 'This hook displays new tab links on the order view page', '1'),
   (NULL, 'displayAdminOrderTabContent', 'Admin Order Tab Content', 'This hook displays new tab contents on the order view page', '1'),
-  (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)', '1')
+  (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)', '1'),
+  (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields', 'This hook allows to display the extra field values added in an address from using hook ''additionalCustomerAddressFields''', '1')
+  (NULL, 'displayFooterCategory', 'Display additional content at the end of product listing', 'This hook allows to display extra content at the end of product listing including category pages', '1'),
+  (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences', 'This hook is called on Admin Preferences post-process before processing the form', '1')
 ;
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');
@@ -559,11 +562,10 @@ SET
         WHERE `osd`.`id_order_detail` = `od`.`id_order_detail`
     ), 0)
 ;
+
+/* These are hooks dynamically generated for grid or form building */
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`)
-VALUES (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences',
-        'This hook is called on Admin Preferences post-process before processing the form',
-        '1'),
-       (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message identifiable object form',
+VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message identifiable object form',
         'This hook allows to modify order message identifiable object forms content by modifying form builder data or FormBuilder itself',
         '1'),
        (NULL, 'actionCatalogPriceRuleFormBuilderModifier', 'Modify catalog price rule identifiable object form',
@@ -793,6 +795,5 @@ VALUES (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post
        (NULL, 'actionAddressGridPresenterModifier', 'Modify address grid template data',
         'This hook allows to modify data which is about to be used in template for address grid', '1'),
        (NULL, 'actionCreditSlipGridPresenterModifier', 'Modify credit slip grid template data',
-        'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
-       (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields',
-        'This hook allows to display the extra field values added in an address from using hook ''additionalCustomerAddressFields''', '1');
+        'This hook allows to modify data which is about to be used in template for credit slip grid', '1')
+;

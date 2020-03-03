@@ -2718,5 +2718,10 @@
       <title>Display additional customer address fields</title>
       <description>This hook allows to display the extra field values added in an address from using hook 'additionalCustomerAddressFields'</description>
     </hook>
+    <hook id="displayFooterCategory">
+      <name>displayFooterCategory</name>
+      <title>Display additional content at the end of product listing</title>
+      <description>This hook allows to display extra content at the end of product listing including category pages</description>
+    </hook>
   </entities>
 </entity_hook>
