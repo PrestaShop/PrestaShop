@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -39,11 +40,19 @@ class UpdateOrderStatusType extends AbstractType
     private $orderStatusChoiceProvider;
 
     /**
+     * @var FormChoiceAttributeProviderInterface
+     */
+    private $orderStatusChoiceAttributeProvider;
+
+    /**
      * @param FormChoiceProviderInterface $orderStatusChoiceProvider
      */
-    public function __construct(FormChoiceProviderInterface $orderStatusChoiceProvider)
-    {
+    public function __construct(
+        FormChoiceProviderInterface $orderStatusChoiceProvider,
+        FormChoiceAttributeProviderInterface $orderStatusChoiceAttributeProvider
+    ) {
         $this->orderStatusChoiceProvider = $orderStatusChoiceProvider;
+        $this->orderStatusChoiceAttributeProvider = $orderStatusChoiceAttributeProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -53,6 +62,7 @@ class UpdateOrderStatusType extends AbstractType
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $this->orderStatusChoiceProvider->getChoices(),
+                'choice_attr' => $this->orderStatusChoiceAttributeProvider->getChoicesAttributes(),
                 'translation_domain' => false,
             ])
         ;

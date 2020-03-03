@@ -31,8 +31,22 @@
   }) }}
 
   <div class="input-group">
-    <div class="select-status">
-        {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1 select-status-purple'}, 'id': 'update_order_status_action_input'}) }}
+    {% set backgroundColor = 'white' %}
+    {% set isBright = true %}
+    {% for choice in updateOrderStatusActionBarForm.new_order_status_id.vars.choices %}
+      {% if choice.value == updateOrderStatusActionBarForm.new_order_status_id.vars.data %}
+        {% set backgroundColor = choice.attr['data-background-color'] %}
+        {% set isBright = choice.attr['data-is-bright'] %}
+      {% endif %}
+    {% endfor %}
+    <div class="select-status{% if isBright %} is-bright{% endif %}" id="update_order_status_action_input_wrapper">
+        {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {
+          'attr': {
+            'class': 'mr-1 select-status-colored',
+            'style': 'background-color: ' ~ backgroundColor
+          },
+          'id': 'update_order_status_action_input',
+        }) }}
     </div>
 
     <button class="btn btn-action ml-2"

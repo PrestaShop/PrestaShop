@@ -36,8 +36,8 @@
   .select-status {
     position: relative;
 
-    .select-status-purple {
-      background: $purple;
+    .select-status-colored {
+      background: white;
       color: white;
       border-radius: 4px;
       border: none;
@@ -56,6 +56,11 @@
       transform: translateY(-50%);
       right: 10px;
       pointer-events: none;
+    }
+
+    &.is-bright .select-status-colored,
+    &.is-bright::after {
+      color: $bright-status-text;
     }
   }
 
@@ -294,7 +299,7 @@
       }
 
       .select-status {
-        .select-status-purple {
+        .select-status-colored {
           margin-right: 0 !important;
           max-width: inherit;
         }
