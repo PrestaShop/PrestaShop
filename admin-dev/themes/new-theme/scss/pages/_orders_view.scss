@@ -215,6 +215,12 @@
 }
 
 .adminorders {
+  .alert .alert-text {
+    ol {
+      margin-top: 5px;
+      margin-bottom: 0;
+    }
+  }
   @media print {
     display: block;
 
