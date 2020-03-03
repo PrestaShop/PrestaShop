@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as ValueObjectEmail;
+
 /**
  * @deprecated since version 1.7.6.4 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email instead
  */
-class Email
+class Email extends ValueObjectEmail
 {
     public function __construct($email)
     {
