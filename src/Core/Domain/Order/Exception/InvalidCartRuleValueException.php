@@ -29,17 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
 /**
- * Thrown when a discount is added with a negative amount/percentage
+ * Thrown when a discount is added with an invalid amount/percentage
  */
-class NegativeCartRuleValueException extends OrderException
+class InvalidCartRuleValueException extends OrderException
 {
-    /**
-     * Used when discount amount value is negative
-     */
-    public const NEGATIVE_AMOUNT = 1;
-
-    /**
-     * Used when discount percentage is negative
-     */
-    public const NEGATIVE_PERCENTAGE = 2;
 }
