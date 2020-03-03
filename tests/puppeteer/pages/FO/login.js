@@ -58,7 +58,9 @@ module.exports = class Login extends FOBasePage {
     await this.setValue(this.newPasswordInput, customer.password);
     await this.setValue(this.birthdateInput, `${customer.monthOfBirth}/${customer.dayOfBirth}/${customer.yearOfBirth}`);
     await this.page.click(this.customerPrivacyCheckbox);
-    await this.page.click(this.psgdprCheckbox);
+    if (await this.elementVisible(this.psgdprCheckbox, 500)) {
+      await this.page.click(this.psgdprCheckbox);
+    }
     await this.page.click(this.saveButton);
   }
 };
