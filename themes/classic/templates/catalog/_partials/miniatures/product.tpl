@@ -31,7 +31,7 @@
         {if $product.catalogCover}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img
-              src="{$link->getImageLink($product.link_rewrite, $coverImageId)}"
+              src="{$product.catalogCover.bySize.home_default.url}"
               alt="{if !empty($product.catalogCover.legend)}{$product.catalogCover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
               data-full-size-image-url="{$product.catalogCover.large.url}"
               />
