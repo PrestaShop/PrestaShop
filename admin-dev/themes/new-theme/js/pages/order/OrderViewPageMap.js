@@ -42,6 +42,7 @@ export default {
   cartRuleHelpText: '.js-cart-rule-value-help',
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
+  updateOrderStatusActionInputWrapper: '#update_order_status_action_input_wrapper',
   updateOrderStatusActionForm: '#update_order_status_action_form',
   showOrderShippingUpdateModalBtn: '.js-update-shipping-btn',
   updateOrderShippingTrackingNumberInput: '#update_order_shipping_tracking_number',
