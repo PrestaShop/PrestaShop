@@ -69,6 +69,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockExcepti
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
+use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -385,13 +386,20 @@ class OrderController extends FrameworkBundleAdminController
         $changeOrderCurrencyForm = $this->createForm(ChangeOrderCurrencyType::class, [], [
             'current_currency_id' => $orderForViewing->getCurrencyId(),
         ]);
-        $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
-            'customer_id' => $orderForViewing->getCustomer()->getId(),
-        ]);
 
-        $privateNoteForm = $this->createForm(PrivateNoteType::class, [
-            'note' => $orderForViewing->getCustomer()->getPrivateNote(),
-        ]);
+        $changeOrderAddressForm = null;
+        $privateNoteForm = null;
+
+        if (null !== $orderForViewing->getCustomer()) {
+            $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
+                'customer_id' => $orderForViewing->getCustomer()->getId(),
+            ]);
+
+            $privateNoteForm = $this->createForm(PrivateNoteType::class, [
+                'note' => $orderForViewing->getCustomer()->getPrivateNote(),
+            ]);
+        }
+
         $updateOrderShippingForm = $this->createForm(UpdateOrderShippingType::class, [
             'new_carrier_id' => $orderForViewing->getCarrierId(),
         ], [
@@ -429,6 +437,9 @@ class OrderController extends FrameworkBundleAdminController
 
         $merchandiseReturnEnabled = (bool) $this->configuration->get('PS_ORDER_RETURN');
 
+        /** @var OrderSiblingProviderInterface $orderSiblingProvider */
+        $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'orderCurrency' => $orderCurrency,
@@ -440,17 +451,19 @@ class OrderController extends FrameworkBundleAdminController
             'updateOrderStatusActionBarForm' => $updateOrderStatusActionBarForm->createView(),
             'addOrderPaymentForm' => $addOrderPaymentForm->createView(),
             'changeOrderCurrencyForm' => $changeOrderCurrencyForm->createView(),
-            'privateNoteForm' => $privateNoteForm->createView(),
+            'privateNoteForm' => $privateNoteForm ? $privateNoteForm->createView() : null,
             'updateOrderShippingForm' => $updateOrderShippingForm->createView(),
             'cancelProductForm' => $cancelProductForm->createView(),
             'invoiceManagementIsEnabled' => $orderForViewing->isInvoiceManagementIsEnabled(),
-            'changeOrderAddressForm' => $changeOrderAddressForm->createView(),
+            'changeOrderAddressForm' => $changeOrderAddressForm ? $changeOrderAddressForm->createView() : null,
             'orderMessageForm' => $orderMessageForm->createView(),
             'addProductRowForm' => $addProductRowForm->createView(),
             'editProductRowForm' => $editProductRowForm->createView(),
             'backOfficeOrderButtons' => $backOfficeOrderButtons,
             'merchandiseReturnEnabled' => $merchandiseReturnEnabled,
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
+            'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
+            'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
         ]);
     }
 
@@ -1266,7 +1279,7 @@ class OrderController extends FrameworkBundleAdminController
 
         $products = $orderForViewing->getProducts()->getProducts();
         if (null !== $limit && null !== $offset) {
-            // @todo Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
+            // @todo: Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
             $products = array_slice($products, (int) $offset, (int) $limit);
         }
 

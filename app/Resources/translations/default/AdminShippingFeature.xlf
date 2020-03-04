@@ -130,7 +130,7 @@
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 1438</note>
+        <note>Line: 1444</note>
       </trans-unit>
     </body>
   </file>
@@ -303,11 +303,6 @@
         <target>Name:</target>
         <note>Line: 707</note>
       </trans-unit>
-      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
-        <source>Carriers</source>
-        <target>Carriers</target>
-        <note>Line: 165</note>
-      </trans-unit>
       <trans-unit id="dde695268ea519ababd83f0ca3d274fc">
         <source>Transit time</source>
         <target>Transit time</target>
@@ -365,6 +360,15 @@
         <source>Handling</source>
         <target>Handling</target>
         <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/details.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d6af794b2599c1407a83029a09d1ecf">
+        <source>Carriers</source>
+        <target>Carriers</target>
+        <note>Line: 35</note>
       </trans-unit>
     </body>
   </file>

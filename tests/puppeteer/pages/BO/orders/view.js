@@ -123,7 +123,7 @@ module.exports = class Order extends BOBasePage {
     await this.setValue(this.refundProductAmount.replace('%ID', productID), amount.toString());
     await this.setValue(this.refundShippingCost, shipping.toString());
     await this.page.click(this.partialRefundSubmitButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**

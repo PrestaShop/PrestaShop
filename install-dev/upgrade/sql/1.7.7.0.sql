@@ -530,13 +530,13 @@ ALTER TABLE `PREFIX_tab` ADD enabled TINYINT(1) NOT NULL;
 /* PHP:ps_1770_update_order_status_colors(); */;
 
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
-  (NULL, 'displayAdminOrderTop', 'Admin Order Top', 'This hook displays content at the top of the order view page', '1 '),
-  (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page in the side column under the customer view', '1 '),
-  (NULL, 'displayAdminOrderSide', 'Admin Order Side Column', 'This hook displays content in the order view page at the end of the side column', '1 '),
-  (NULL, 'displayAdminOrderMain', 'Admin Order Main Column', 'This hook displays content in the order view page at the end of the main column', '1 '),
-  (NULL, 'displayAdminOrderTabLink', 'Admin Order Tab Link', 'This hook displays new tab links on the order view page', '1 '),
-  (NULL, 'displayAdminOrderTabContent', 'Admin Order Tab Content', 'This hook displays new tab contents on the order view page', '1 '),
-  (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)', '1 '),
+  (NULL, 'displayAdminOrderTop', 'Admin Order Top', 'This hook displays content at the top of the order view page', '1'),
+  (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page in the side column under the customer view', '1'),
+  (NULL, 'displayAdminOrderSide', 'Admin Order Side Column', 'This hook displays content in the order view page at the end of the side column', '1'),
+  (NULL, 'displayAdminOrderMain', 'Admin Order Main Column', 'This hook displays content in the order view page at the end of the main column', '1'),
+  (NULL, 'displayAdminOrderTabLink', 'Admin Order Tab Link', 'This hook displays new tab links on the order view page', '1'),
+  (NULL, 'displayAdminOrderTabContent', 'Admin Order Tab Content', 'This hook displays new tab contents on the order view page', '1'),
+  (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)', '1')
 ;
 
 INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');
@@ -793,4 +793,6 @@ VALUES (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post
        (NULL, 'actionAddressGridPresenterModifier', 'Modify address grid template data',
         'This hook allows to modify data which is about to be used in template for address grid', '1'),
        (NULL, 'actionCreditSlipGridPresenterModifier', 'Modify credit slip grid template data',
-        'This hook allows to modify data which is about to be used in template for credit slip grid', '1');
+        'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
+       (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields',
+        'This hook allows to display the extra field values added in an address from using hook ''additionalCustomerAddressFields''', '1');

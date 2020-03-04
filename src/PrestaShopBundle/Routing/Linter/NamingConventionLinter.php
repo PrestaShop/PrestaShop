@@ -66,7 +66,12 @@ final class NamingConventionLinter implements RouteLinterInterface
         ]);
 
         if ($routeName !== $expectedRouteName) {
-            throw new NamingConventionException(sprintf('Route "%s" does not follow naming convention.', $routeName));
+            throw new NamingConventionException(
+                sprintf('Route "%s" does not follow naming convention.', $routeName),
+                0,
+                null,
+                $expectedRouteName
+            );
         }
     }
 

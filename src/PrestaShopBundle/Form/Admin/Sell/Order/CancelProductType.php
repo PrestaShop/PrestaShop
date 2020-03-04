@@ -55,7 +55,7 @@ class CancelProductType extends TranslatorAwareType
                 )
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $this->trans('Quantity', 'Global', []),
+                    'label' => $this->trans('Quantity', 'Admin.Global', []),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
