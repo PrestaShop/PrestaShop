@@ -7,6 +7,8 @@ services:
 
     form.type.date_picker:
         class: PrestaShopBundle\Form\Admin\Type\DatePickerType
+        arguments:
+          - '@prestashop.bundle.form.data_transformer.arabic_to_latin_digit'
         tags:
           - { name: form.type }
 
@@ -1135,3 +1137,5 @@ services:
         - '@translator'
       tags:
         - { name: form.type }
+
+
