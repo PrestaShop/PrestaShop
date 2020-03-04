@@ -100,7 +100,7 @@ describe('Enable/Disable display unavailable product attributes on the product p
         `${test.args.action}DisplayUnavailableProductAttributes`,
         baseContext,
       );
-      const result = await this.pageObjects.productSettingsPage.setDisplayUnavailableProductAttributes(
+      const result = await this.pageObjects.productSettingsPage.setDisplayUnavailableProductAttributesStatus(
         test.args.enable,
       );
       await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
@@ -148,7 +148,7 @@ describe('Enable/Disable display unavailable product attributes on the product p
   });
 
   it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
     await this.pageObjects.productsPage.resetFilterCategory();
     const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
