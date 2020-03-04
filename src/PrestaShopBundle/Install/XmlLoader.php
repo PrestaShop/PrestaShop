@@ -406,7 +406,8 @@ class XmlLoader
     /**
      * Load an entity XML file.
      *
-     * @param string $entity
+     * @param string $entity Name of the entity to load (eg. 'tab')
+     * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
      *
      * @return \SimpleXMLElement
      */
@@ -594,6 +595,15 @@ class XmlLoader
         $stock_available->updateQuantity($data['id_product'], $data['id_product_attribute'], $data['quantity'], $data['id_shop']);
     }
 
+    /**
+     * Called from self::populateEntity
+     *
+     * @param string $identifier Tab id
+     * @param array $data Attributes + children of tab element
+     * @param array $data_lang Translated attributes
+     *
+     * @throws PrestashopInstallerException
+     */
     public function createEntityTab($identifier, array $data, array $data_lang)
     {
         static $position = [];
