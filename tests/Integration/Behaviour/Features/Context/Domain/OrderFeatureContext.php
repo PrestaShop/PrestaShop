@@ -32,6 +32,7 @@ use Cart;
 use Context;
 use FrontController;
 use Order;
+use OrderDetail;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -42,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -583,9 +585,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
     {
+        $expectedDetails = $table->getRowsHash();
         $productId = (int) $this->getProductIdByName($productName);
         $order = new Order(SharedStorage::getStorage()->get($orderReference));
         $orderDetails = $order->getProducts();
+
         $productOrderDetail = null;
         foreach ($orderDetails as $orderDetail) {
             if ((int) $orderDetail['product_id'] === $productId) {
@@ -598,7 +602,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Cannot find product details for product %s in order %s', $productName, $orderReference));
         }
 
-        $expectedDetails = $table->getRowsHash();
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             Assert::assertEquals(
                 (float) $expectedDetailValue,
@@ -652,6 +655,49 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Invalid difference for product %s expected %s, got %s instead', $productName, $expectedDifference, $nbProduct - $initialQuantity));
         }
         $this->productStock[$productName] = $expectedQuantity;
+    }
+
+    /**
+     * @When I delete product :productName from order :orderReference
+     *
+     * @param string $productName
+     * @param string $orderReference
+     */
+    public function deleteProductFromOrder(string $productName, string $orderReference): void
+    {
+        $orderDetail = $this->getOrderDetailForProduct($productName, $orderReference);
+        $orderId = (int) $orderDetail->id_order;
+        $orderDetailId = (int) $orderDetail->id_order_detail;
+
+        $this->getCommandBus()->handle(new DeleteProductFromOrderCommand($orderId, $orderDetailId));
+    }
+
+    /**
+     * @param string $productName
+     * @param string $orderReference
+     *
+     * @return OrderDetail
+     */
+    private function getOrderDetailForProduct(string $productName, string $orderReference): OrderDetail
+    {
+        $productId = (int) $this->getProductIdByName($productName);
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+
+        $orderDetails = $order->getOrderDetailList();
+
+        $productOrderDetail = null;
+        foreach ($orderDetails as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === $productId) {
+                $productOrderDetail = new OrderDetail($orderDetail['id_order_detail']);
+                break;
+            }
+        }
+
+        if (null === $productOrderDetail) {
+            throw new RuntimeException(sprintf('Cannot find OrderDetail for product %s in order %s', $productName, $orderReference));
+        }
+
+        return $productOrderDetail;
     }
 
     /**

@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Cart;
 use Configuration;
 use Hook;
 use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\PrestaShop\Adapter\Invoice\DTO\InvoiceTotalNumbers;
 use PrestaShop\PrestaShop\Adapter\Order\DTO\OrderTotalNumbers;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -53,55 +53,47 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     {
         $orderDetail = new OrderDetail($command->getOrderDetailId());
         $order = $this->getOrderObject($command->getOrderId());
-
         $this->assertProductCanBeDeleted($order, $orderDetail);
+        $invoiceId = (int) $orderDetail->id_order_invoice;
 
-        $result = true;
-        $result &= $this->updateOrderInvoice($orderDetail);
-        $result &= $this->updateOrder($order, $orderDetail);
-
-        // Reinject quantity in stock
-        $this->reinjectQuantity($orderDetail, $orderDetail->product_quantity, true);
-
-        $result &= $this->updateOrderWeight($order);
-
-        if (!$result) {
+        if (!$this->updateOrder($order, $orderDetail)) {
             throw new OrderException('An error occurred while attempting to delete product from order.');
         }
+        if (!$this->updateOrderWeight($order)) {
+            throw new OrderException('An error occurred while updating order weight after product deletion from order.');
+        }
 
+        $this->reinjectQuantity($orderDetail, $orderDetail->product_quantity, true);
         $order = $order->refreshShippingCost();
+
+        if ($invoiceId != 0 && !$this->updateOrderInvoice($order, $invoiceId)) {
+            throw new OrderException('An error occurred while updating order invoice after product deletion from order.');
+        }
 
         Hook::exec('actionOrderEdited', ['order' => $order]);
     }
 
     /**
-     * @param OrderDetail $orderDetail
+     * @param Order $order
+     * @param int $invoiceId
      *
      * @return bool
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
-    private function updateOrderInvoice(OrderDetail $orderDetail)
+    private function updateOrderInvoice(Order $order, int $invoiceId): bool
     {
-        if ($orderDetail->id_order_invoice != 0) {
-            $orderInvoice = new OrderInvoice($orderDetail->id_order_invoice);
-            $invoiceTotals = InvoiceTotalNumbers::buildFromInvoice($orderInvoice);
+        $orderInvoice = new OrderInvoice($invoiceId);
 
-            $orderInvoice->total_paid_tax_excl = (float) (string) $invoiceTotals->getTotalPaidTaxExcl()
-                ->minus($this->number($orderDetail->total_price_tax_excl))
-            ;
-            $orderInvoice->total_paid_tax_incl = (float) (string) $invoiceTotals->getTotalPaidTaxIncl()
-                ->minus($this->number($orderDetail->total_price_tax_incl))
-            ;
-            $orderInvoice->total_products = (float) (string) $invoiceTotals->getTotalProducts()
-                ->minus($this->number($orderDetail->total_price_tax_excl))
-            ;
-            $orderInvoice->total_products_wt = (float) (string) $invoiceTotals->getTotalProductsWt()
-                ->minus($this->number($orderDetail->total_price_tax_incl))
-            ;
+        $orderInvoice->total_paid_tax_excl = $order->total_paid_tax_excl;
+        $orderInvoice->total_paid_tax_incl = $order->total_paid_tax_incl;
+        $orderInvoice->total_products = $order->total_products;
+        $orderInvoice->total_products_wt = $order->total_products_wt;
+        $orderInvoice->total_shipping_tax_excl = $order->total_shipping_tax_excl;
+        $orderInvoice->total_shipping_tax_incl = $order->total_shipping_tax_incl;
 
-            return $orderInvoice->update();
-        }
-
-        return true;
+        return $orderInvoice->update();
     }
 
     /**
