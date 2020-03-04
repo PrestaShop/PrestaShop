@@ -64,7 +64,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         }
 
         $this->reinjectQuantity($orderDetail, $orderDetail->product_quantity, true);
-        $order = $order->refreshShippingCost();
+        $order->refreshShippingCost();
 
         if ($invoiceId != 0 && !$this->updateOrderInvoice($order, $invoiceId)) {
             throw new OrderException('An error occurred while updating order invoice after product deletion from order.');
