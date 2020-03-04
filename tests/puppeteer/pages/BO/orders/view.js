@@ -9,12 +9,13 @@ module.exports = class Order extends BOBasePage {
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
 
     // Order page
-    this.orderProductsTable = '#orderProducts';
-    this.orderProductsRowTable = `${this.orderProductsTable} tr:nth-child(%ID)`;
-    this.editProductButton = `${this.orderProductsRowTable} .edit_product_change_link`;
-    this.editProductQuantityInput = `${this.orderProductsRowTable} span.product_quantity_edit > input`;
-    this.productQuantitySpan = `${this.orderProductsRowTable} span.product_quantity_show.badge`;
-    this.UpdateProductButton = `${this.orderProductsRowTable} .submitProductChange`;
+    this.orderProductsTable = '#orderProductsTable';
+    this.orderProductsRowTable = `${this.orderProductsTable} tbody tr:nth-child(%ROW)`;
+    this.editProductButton = `${this.orderProductsRowTable} button[data-original-title='Edit']`;
+    this.productQuantitySpan = `${this.orderProductsRowTable} td.cellProductQuantity span`;
+    this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
+    this.editProductQuantityInput = `${this.orderProductsEditRowTable} input#edit_product_row_quantity`;
+    this.UpdateProductButton = `${this.orderProductsEditRowTable} button#edit_product_row_save`;
     this.partialRefundButton = '#desc-order-partial_refund';
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -38,16 +39,22 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Modify the product quantity
-   * @param id, product id
+   * @param row, product row
    * @param quantity, new quantity
    * @returns {Promise<void>}
    */
-  async modifyProductQuantity(id, quantity) {
-    await this.dialogListener();
-    await this.waitForSelectorAndClick(this.editProductButton.replace('%ID', id));
-    await this.setValue(this.editProductQuantityInput.replace('%ID', id), quantity);
-    await this.waitForSelectorAndClick(this.UpdateProductButton.replace('%ID', id));
-    return this.checkTextValue(this.productQuantitySpan.replace('%ID', id), quantity);
+  async modifyProductQuantity(row, quantity) {
+    this.dialogListener();
+    await Promise.all([
+      this.page.click(this.editProductButton.replace('%ROW', row)),
+      this.page.waitForSelector(this.editProductQuantityInput, {visible: true}),
+    ]);
+    await this.setValue(this.editProductQuantityInput, quantity.toString());
+    await Promise.all([
+      this.page.click(this.UpdateProductButton),
+      this.page.waitForSelector(this.editProductQuantityInput, {hidden: true}),
+    ]);
+    return parseFloat(await this.getTextContent(this.productQuantitySpan.replace('%ROW', row)));
   }
 
   /**
