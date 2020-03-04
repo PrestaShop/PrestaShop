@@ -251,7 +251,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             new DateTimeImmutable($customer->date_add),
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
-            $customer->note
+            $customer->note,
+            (bool) $customer->is_guest
         );
     }
 

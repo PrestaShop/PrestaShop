@@ -44,6 +44,9 @@
 
             <strong class="text-muted ml-2">#{{ orderForViewing.customer.id }}</strong>
           </h2>
+          {%  if orderForViewing.customer.isGuest %}
+            <strong class="text-muted">Guest</strong>
+          {% endif %}
         </div>
         <div class="col-md-6 text-right">
           <a class="d-print-none" href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
@@ -69,10 +72,12 @@
           </a>
         </p>
 
-        <p class="mb-1">
-          <strong>{{ 'Account registered:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
-        </p>
-        <p>{{ orderForViewing.customer.accountRegistrationDate|date("m/d/Y H:i:s") }}</p>
+        {%  if orderForViewing.customer.isGuest == false %}
+          <p class="mb-1">
+            <strong>{{ 'Account registered:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p>{{ orderForViewing.customer.accountRegistrationDate|date("m/d/Y H:i:s") }}</p>
+        {% endif %}
       </div>
       <div class="col-md-6">
         <p class="mb-1">
@@ -82,12 +87,14 @@
           <span class="badge rounded badge-dark">{{ orderForViewing.customer.validOrdersPlaced }}</span>
         </p>
 
-        <p class="mb-1">
-          <strong>{{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
-        </p>
-        <p>
-          <span class="badge rounded badge-dark">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
-        </p>
+        {%  if orderForViewing.customer.isGuest == false %}
+          <p class="mb-1">
+            <strong>{{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p>
+            <span class="badge rounded badge-dark">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
+          </p>
+        {% endif %}
       </div>
     </div>
     {% endif %}
