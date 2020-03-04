@@ -103,11 +103,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         ;
 
         try {
-            if ($this->context->cart !== null) {
-                $oldCartRules = $this->context->cart->getCartRules();
-            } else {
-                $oldCartRules = [];
-            }
+            $oldCartRules = (new Cart($order->id_cart))->getCartRules();
 
             $this->assertOrderWasNotShipped($order);
 
