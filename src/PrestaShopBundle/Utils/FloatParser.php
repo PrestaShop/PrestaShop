@@ -26,35 +26,22 @@
 
 namespace PrestaShopBundle\Utils;
 
+use PrestaShop\PrestaShop\Core\Util\ArabicToLatinDigitConverter;
+
 /**
  * Converts strings into floats.
  */
 class FloatParser
 {
-    private static $translationTable = [
-        // arabic numbers
-        '٠' => '0',
-        '١' => '1',
-        '٢' => '2',
-        '٣' => '3',
-        '٤' => '4',
-        '٥' => '5',
-        '٦' => '6',
-        '٧' => '7',
-        '٨' => '8',
-        '٩' => '9',
-        // persian numbers (NOT the same UTF codes!)
-        '۰' => '0',
-        '۱' => '1',
-        '۲' => '2',
-        '۳' => '3',
-        '۴' => '4',
-        '۵' => '5',
-        '۶' => '6',
-        '۷' => '7',
-        '۸' => '8',
-        '۹' => '9',
-    ];
+    /**
+     * @var ArabicToLatinDigitConverter
+     */
+    private $arabicToLatinNumberConverter;
+
+    public function __construct(ArabicToLatinDigitConverter $arabicToLatinDigitConverter)
+    {
+        $this->arabicToLatinNumberConverter = $arabicToLatinDigitConverter;
+    }
 
     /**
      * Constructs a float value from an arbitrarily-formatted string.
@@ -89,10 +76,7 @@ class FloatParser
         }
 
         // replace arabic numbers by latin
-        $value = strtr(
-            $value,
-            self::$translationTable
-        );
+        $value = $this->arabicToLatinNumberConverter->convert($value);
 
         // remove all non-digit characters
         $split = preg_split('/[^\dE-]+/', $value);
