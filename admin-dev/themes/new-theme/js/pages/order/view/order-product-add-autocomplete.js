@@ -44,7 +44,7 @@ export default class OrderProductAutocomplete {
       event.stopImmediatePropagation();
       this.updateResults(this.results);
     });
-    this.input.on('keyup', event => this.search(event.target.value, $(event.target).data('currency')));
+    this.input.on('keyup', event => this.search(event.currentTarget.value, $(event.currentTarget).data('currency')));
     $(document).on('click', () => this.dropdownMenu.hide());
   }
 
