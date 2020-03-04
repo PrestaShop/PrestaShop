@@ -1342,39 +1342,16 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return Cache::retrieve($key);
     }
 
-    public static function updateModulesTranslations(array $modules_list)
+    /**
+     * Updates multilanguage tables in all languages using DataLang
+     *
+     * @param array $modules_list [deprecated since 1.7.7] Not used anymore
+     */
+    public static function updateModulesTranslations(array $modules_list = [])
     {
-        $languages = Language::getLanguages(false);
+        $languages = static::getLanguages(false);
         foreach ($languages as $lang) {
-            $gz = false;
-            $files_listing = [];
-            $filegz = _PS_TRANSLATIONS_DIR_ . $lang['iso_code'] . '.gzip';
-
-            clearstatcache();
-            if (@filemtime($filegz) < (time() - (24 * 3600))) {
-                if (Language::downloadAndInstallLanguagePack($lang['iso_code'], null, null, false) !== true) {
-                    break;
-                }
-            }
-
-            $gz = new Archive_Tar($filegz, true);
-            if (!$gz) {
-                continue;
-            }
-            $files_list = Language::getLanguagePackListContent($lang['iso_code'], $gz);
-            foreach ($modules_list as $module_name) {
-                foreach ($files_list as $i => $file) {
-                    if (strpos($file['filename'], 'modules/' . $module_name . '/') !== 0) {
-                        unset($files_list[$i]);
-                    }
-                }
-            }
-            foreach ($files_list as $file) {
-                if (isset($file['filename']) && is_string($file['filename'])) {
-                    $files_listing[] = $file['filename'];
-                }
-            }
-            $gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_ . '../', '');
+            static::updateMultilangTable($lang['iso_code']);
         }
     }
 
