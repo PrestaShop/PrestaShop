@@ -522,7 +522,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         ;
 
         //shipping
-        $order->refreshShippingCost();
+        // couldn't use Order::refreshShippingCost() because it recalculates whole cart shipping
+        // and then total numbers doesn't fit together.
+        //    e.g initial shipping was $7 and discounts $0
+        //        we add product with free shipping (behind the scenes it adds a discount of shipping price ($7))
+        //        so for total prices to fit - shipping should be $14 and discounts $7
+        if (Configuration::get('PS_ORDER_RECALCULATE_SHIPPING')) {
+            $shippingWithTaxes = $this->number($cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+            $order->total_shipping = (float) (string) $orderTotals->getTotalShipping()->plus($shippingWithTaxes);
+            $order->total_shipping_tax_incl = (float) (string) $orderTotals->getTotalShippingTaxIncl()->plus($shippingWithTaxes);
+            $order->total_shipping_tax_excl = $orderTotals->getTotalShippingTaxExcl()
+                ->plus($this->number($cart->getOrderTotal(false, Cart::ONLY_SHIPPING)))
+            ;
+        }
     }
 
     /**
