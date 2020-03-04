@@ -20,6 +20,9 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
 
+    // Header links
+    this.openHelpButton = '#product_form_open_help';
+
     // left navbar
     // SELL
     // Orders
@@ -134,6 +137,11 @@ module.exports = class BOBasePage extends CommonPage {
     // Symfony Toolbar
     this.sfToolbarMainContentDiv = 'div[id*=\'sfToolbarMainContent\']';
     this.sfCloseToolbarLink = 'a[id*=\'sfToolbarHideButton\']';
+
+    // Sidebar
+    this.rightSidebar = '#right-sidebar.sidebar-open';
+    this.helpSidebar = '#ps-quicknav-sidebar';
+    this.closeHelpSidebarButton = `${this.helpSidebar} div.quicknav-header a`;
   }
 
   /*
@@ -235,5 +243,23 @@ module.exports = class BOBasePage extends CommonPage {
   async deleteFile(file, wait = 0) {
     fs.unlinkSync(file);
     await this.page.waitFor(wait);
+  }
+
+  /**
+   * Open help side bar
+   * @returns {Promise<boolean>}
+   */
+  async openHelpSideBar() {
+    await this.waitForSelectorAndClick(this.openHelpButton);
+    return this.elementVisible(this.helpSidebar, 1000);
+  }
+
+  /**
+   * Close help side bar
+   * @returns {Promise<boolean>}
+   */
+  async closeHelpSideBar() {
+    await this.waitForSelectorAndClick(this.closeHelpSidebarButton);
+    return this.elementNotVisible(this.rightSidebar, 1000);
   }
 };
