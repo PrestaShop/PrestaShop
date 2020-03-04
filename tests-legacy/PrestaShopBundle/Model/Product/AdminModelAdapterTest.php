@@ -193,7 +193,8 @@ class AdminModelAdapterTest extends KernelTestCase
             $this->container->get('prestashop.adapter.data_provider.pack'),
             $this->container->get('prestashop.adapter.shop.context'),
             $this->container->get('prestashop.adapter.data_provider.tax'),
-            $this->container->get('router')
+            $this->container->get('router'),
+            $this->container->get('prestashop.utils.float_parser')
         );
     }
 
