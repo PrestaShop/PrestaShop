@@ -82,6 +82,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $warehouseAdapter;
     /** @var Router */
     private $router;
+
+    /**
+     * @var FloatParser
+     */
+    private $floatParser;
+
     /** @var array */
     private $multiShopKeys = [
         'category_box',
@@ -180,8 +186,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param PackDataProvider $packDataProvider
      * @param ShopContext $shopContext
      * @param TaxRuleDataProvider $taxRuleDataProvider
-     *
-     * @throws \PrestaShopException
+     * @param Router $router
+     * @param FloatParser $floatParser
      */
     public function __construct(
         LegacyContext $legacyContext,
@@ -194,7 +200,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         PackDataProvider $packDataProvider,
         ShopContext $shopContext,
         TaxRuleDataProvider $taxRuleDataProvider,
-        Router $router
+        Router $router,
+        FloatParser $floatParser
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -211,6 +218,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
         $this->router = $router;
+        $this->floatParser = $floatParser;
     }
 
     /**
@@ -304,34 +312,32 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['combinations'][$k]['attribute_weight_impact'] = 0;
             $form_data['combinations'][$k]['attribute_unit_impact'] = 0;
 
-            $floatParser = new FloatParser();
-
-            if ($floatParser->fromString($combination['attribute_price']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_price']) > 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_price']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_price']) < 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = -1;
             }
 
-            if ($floatParser->fromString($combination['attribute_weight']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_weight']) > 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_weight']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_weight']) < 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = -1;
             }
 
-            if ($floatParser->fromString($combination['attribute_unity']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_unity']) > 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_unity']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_unity']) < 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
             }
 
             $form_data['combinations'][$k]['attribute_price'] = abs(
-                $floatParser->fromString($combination['attribute_price'])
+                $this->floatParser->fromString($combination['attribute_price'])
             );
             $form_data['combinations'][$k]['attribute_weight'] = abs(
-                $floatParser->fromString($combination['attribute_weight'])
+                $this->floatParser->fromString($combination['attribute_weight'])
             );
             $form_data['combinations'][$k]['attribute_unity'] = abs(
-                $floatParser->fromString($combination['attribute_unity'])
+                $this->floatParser->fromString($combination['attribute_unity'])
             );
         }
 
