@@ -16,18 +16,20 @@ module.exports = class Order extends BOBasePage {
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input#edit_product_row_quantity`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button#edit_product_row_save`;
-    this.partialRefundButton = '#desc-order-partial_refund';
+    this.partialRefundButton = 'button.partial-refund-display';
     // Status tab
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
     // Document tab
-    this.documentTab = '#tabOrder a[href=\'#documents\']';
-    this.documentNumberLink = '#documents_table tr:nth-child(%ID) td:nth-child(3) a';
-    this.documentName = '#documents_table tr:nth-child(%ID) td:nth-child(2)';
+    this.documentTab = 'a#orderDocumentsTab';
+    this.documentsTableDiv = '#orderDocumentsTabContent';
+    this.documentsTableRow = `${this.documentsTableDiv} table tbody tr:nth-child(%ROW)`;
+    this.documentNumberLink = `${this.documentsTableRow} td:nth-child(3) a`;
+    this.documentName = `${this.documentsTableRow} td:nth-child(2)`;
     // Refund form
-    this.refundProductQuantity = `${this.orderProductsTable} tr:nth-child(%ID)
+    this.refundProductQuantity = `${this.orderProductsTable} tr:nth-child(%ROW)
     input[onchange*='checkPartialRefundProductQuantity']`;
-    this.refundProductAmount = `${this.orderProductsTable} tr:nth-child(%ID)
+    this.refundProductAmount = `${this.orderProductsTable} tr:nth-child(%ROW)
     input[onchange*='checkPartialRefundProductAmount']`;
     this.refundShippingCost = 'input[name="partialRefundShippingCost"]';
     this.partialRefundSubmitButton = '[name=\'partialRefund\']';
@@ -60,12 +62,16 @@ module.exports = class Order extends BOBasePage {
   /**
    * Modify the order status
    * @param status
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
   async modifyOrderStatus(status) {
-    await this.selectByVisibleText(this.orderStatusesSelect, status);
-    await this.clickAndWaitForNavigation(this.updateStatusButton);
-    return this.getOrderStatus();
+    const actualStatus = await this.getOrderStatus();
+    if(status !== actualStatus) {
+      await this.selectByVisibleText(this.orderStatusesSelect, status);
+      await this.clickAndWaitForNavigation(this.updateStatusButton);
+      return this.getOrderStatus();
+    }
+    return actualStatus;
   }
 
   /**
@@ -82,8 +88,11 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async getDocumentName(rowChild = 1) {
-    await this.page.click(this.documentTab);
-    return this.getTextContent(this.documentName.replace('%ID', rowChild));
+    await Promise.all([
+      this.page.click(this.documentTab),
+      this.page.waitForSelector(`${this.documentTab}.active`)
+    ]);
+    return this.getTextContent(this.documentName.replace('%ROW', rowChild));
   }
 
   /**
@@ -92,8 +101,11 @@ module.exports = class Order extends BOBasePage {
    * @returns fileName
    */
   async getFileName(rowChild = 1) {
-    await this.page.click(this.documentTab);
-    const fileName = await this.getTextContent(this.documentNumberLink.replace('%ID', rowChild));
+    await Promise.all([
+      this.page.click(this.documentTab),
+      this.page.waitForSelector(`${this.documentTab}.active`)
+    ]);
+    const fileName = await this.getTextContent(this.documentNumberLink.replace('%ROW', rowChild));
     return fileName.replace('#', '').trim();
   }
 
@@ -104,8 +116,8 @@ module.exports = class Order extends BOBasePage {
   async downloadInvoice() {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink.replace('%ID', 1), el => el.target = '');
-    await this.page.click(this.documentNumberLink.replace('%ID', 1));
+    await this.page.$eval(this.documentNumberLink.replace('%ROW', 1), el => el.target = '');
+    await this.page.click(this.documentNumberLink.replace('%ROW', 1));
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 
@@ -119,15 +131,15 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Add partial refund product
-   * @param productID
+   * @param productRow
    * @param quantity
    * @param amount
    * @param shipping
    * @returns {Promise<textContent>}
    */
-  async addPartialRefundProduct(productID, quantity = 0, amount = 0, shipping = 0) {
-    await this.setValue(this.refundProductQuantity.replace('%ID', productID), quantity.toString());
-    await this.setValue(this.refundProductAmount.replace('%ID', productID), amount.toString());
+  async addPartialRefundProduct(productRow, quantity = 0, amount = 0, shipping = 0) {
+    await this.setValue(this.refundProductQuantity.replace('%ROW', productRow), quantity.toString());
+    await this.setValue(this.refundProductAmount.replace('%ROW', productRow), amount.toString());
     await this.setValue(this.refundShippingCost, shipping.toString());
     await this.page.click(this.partialRefundSubmitButton);
     return this.getTextContent(this.alertSuccessBlock);
@@ -140,8 +152,8 @@ module.exports = class Order extends BOBasePage {
   async downloadDeliverySlip() {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink.replace('%ID', 3), el => el.target = '');
-    await this.page.click(this.documentNumberLink.replace('%ID', 3));
+    await this.page.$eval(this.documentNumberLink, el => el.target = '');
+    await this.page.click(this.documentNumberLink);
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 };
