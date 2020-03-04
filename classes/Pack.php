@@ -165,7 +165,7 @@ class PackCore extends Product
             $p->pack_quantity = $row['quantity'];
             $p->id_pack_product_attribute = (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item'] ? $row['id_product_attribute_item'] : 0);
             if (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item']) {
-                $sql = 'SELECT agl.`name` AS group_name, al.`name` AS attribute_name
+                $sql = 'SELECT agl.`name` AS group_name, al.`name` AS attribute_name, pa.`reference` AS attribute_reference
 					FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 					' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 					LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
@@ -180,6 +180,7 @@ class PackCore extends Product
                 $combinations = Db::getInstance()->executeS($sql);
                 foreach ($combinations as $k => $combination) {
                     $p->name .= ' ' . $combination['group_name'] . '-' . $combination['attribute_name'];
+                    $p->reference = $combination['attribute_reference'];
                 }
             }
             $array_result[] = $p;
