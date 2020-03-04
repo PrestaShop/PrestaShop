@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use AdminController;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
+use Configuration;
 use Context;
 use FrontController;
 use Order;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeComman
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
@@ -58,9 +60,12 @@ use RuntimeException;
 use stdClass;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
+    use StringToBooleanTransform;
+
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
 
     /**
@@ -669,7 +674,47 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = (int) $orderDetail->id_order;
         $orderDetailId = (int) $orderDetail->id_order_detail;
 
-        $this->getCommandBus()->handle(new DeleteProductFromOrderCommand($orderId, $orderDetailId));
+        try {
+            $this->getCommandBus()->handle(new DeleteProductFromOrderCommand($orderId, $orderDetailId));
+        } catch (OrderException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then /^I should get error message "(.+)"$/
+     *
+     * @param $expectedErrorMessage
+     */
+    public function assertLastErrorMessage($expectedErrorMessage)
+    {
+        if ($this->lastException) {
+            Assert::assertEquals($expectedErrorMessage, $this->lastException->getMessage());
+        }
+
+        throw new RuntimeException(sprintf('Expected exception (%s), but none was thrown', $expectedErrorMessage));
+    }
+
+    /**
+     * @Given /^shipping recalculation config is (enabled|disabled)$/
+     */
+    public function assertShippingRecalculationConfig(bool $status): void
+    {
+        $shippingRecalculationIsOn = (bool) Configuration::get('PS_ORDER_RECALCULATE_SHIPPING');
+
+        if ($shippingRecalculationIsOn !== $status) {
+            throw new RuntimeException('"PS_ORDER_RECALCULATE_SHIPPING" configuration was expected to be enabled, but is disabled');
+        }
+    }
+
+    /**
+     * @Given /^I (enable|disable) shipping recalculation config$/
+     */
+    public function setShippingRecalculationConfig(bool $status): void
+    {
+        $configName = 'PS_ORDER_RECALCULATE_SHIPPING';
+
+        Configuration::set($configName, $status);
     }
 
     /**

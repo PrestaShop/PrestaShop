@@ -30,8 +30,15 @@ Feature: Delete products from order in Back Office (BO)
       | total         | $49.70   |
 
   @delete-product-from-order
-  Scenario: Delete product from order without invoice
+  Scenario: I should not be able to delete product from delivered order
+    When I update order "bo_order1" status to "Delivered"
+    When I delete product "Mug The best is yet to come" from order "bo_order1"
+    Then I should get error message "Delivered order cannot be modified."
+
+  @delete-product-from-order
+  Scenario: Delete product from order without invoice when shipping recalculation config is enabled
     Given Order "bo_order1" does not have any invoices
+    And shipping recalculation config is enabled
     When I delete product "Mug The best is yet to come" from order "bo_order1"
     Then order "bo_order1" should contain 0 products "Mug The best is yet to come"
     And Order "bo_order1" should have following prices:
@@ -42,8 +49,9 @@ Feature: Delete products from order in Back Office (BO)
       | total         | $25.90  |
 
   @delete-product-from-order
-  Scenario: Delete multiple products from order without invoice
+  Scenario: Delete multiple products from order without invoice when shipping recalculation config is enabled
     Given Order "bo_order1" does not have any invoices
+    And shipping recalculation config is enabled
     When I delete product "Mug The best is yet to come" from order "bo_order1"
     When I delete product "Brown bear cushion" from order "bo_order1"
     Then order "bo_order1" should contain 0 products "Mug The best is yet to come"
@@ -56,7 +64,8 @@ Feature: Delete products from order in Back Office (BO)
       | total         | $0.00  |
 
   @delete-product-from-order
-  Scenario: Delete product from order with invoice
+  Scenario: Delete product from order with invoice when shipping recalculation config is enabled
+    Given shipping recalculation config is enabled
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
     When I delete product "Mug The best is yet to come" from order "bo_order1"
@@ -77,14 +86,14 @@ Feature: Delete products from order in Back Office (BO)
       | total paid tax included   | 25.90     |
 
   @delete-product-from-order
-  Scenario: Delete multiple products from order with invoice
+  Scenario: Delete multiple products from order with invoice when shipping recalculation config is enabled
+    Given shipping recalculation config is enabled
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
     When I delete product "Mug The best is yet to come" from order "bo_order1"
     When I delete product "Brown bear cushion" from order "bo_order1"
     Then order "bo_order1" should contain 0 products "Mug The best is yet to come"
     Then order "bo_order1" should contain 0 products "Brown bear cushion"
-#TODO: shipping depends on Configuration::get('PS_ORDER_RECALCULATE_SHIPPING'). $order->refreshShippingCost()
     And Order "bo_order1" should have following prices:
       | products      | $0.00  |
       | discounts     | $0.00  |
@@ -99,3 +108,28 @@ Feature: Delete products from order in Back Office (BO)
       | shipping tax included     | 0.00     |
       | total paid tax excluded   | 0.00     |
       | total paid tax included   | 0.00     |
+
+  @delete-product-from-order
+  Scenario: Delete multiple products from order with invoice when shipping recalculation config is disabled
+    When I disable shipping recalculation config
+    Then shipping recalculation config is disabled
+    When I generate invoice for "bo_order1" order
+    Then order "bo_order1" should have invoice
+    When I delete product "Mug The best is yet to come" from order "bo_order1"
+    When I delete product "Brown bear cushion" from order "bo_order1"
+    Then order "bo_order1" should contain 0 products "Mug The best is yet to come"
+    Then order "bo_order1" should contain 0 products "Brown bear cushion"
+    And Order "bo_order1" should have following prices:
+      | products      | $0.00  |
+      | discounts     | $0.00  |
+      | shipping      | $7.00  |
+      | taxes         | $0.00  |
+      | total         | $7.00  |
+    And invoice for order "bo_order1" should have following prices:
+      | products                  | 0.00     |
+      | discounts tax excluded    | 0.00     |
+      | discounts tax included    | 0.00     |
+      | shipping tax excluded     | 7.00     |
+      | shipping tax included     | 7.00     |
+      | total paid tax excluded   | 7.00     |
+      | total paid tax included   | 7.00     |

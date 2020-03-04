@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-from-bo
 @reset-database-before-feature
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
@@ -33,16 +33,26 @@ Feature: Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    Then Order "bo_order1" should have following prices:
+      | products      | $23.80   |
+      | discounts     | $0.00    |
+      | shipping      | $7.00    |
+      | taxes         | $0.00    |
+      | total         | $30.80   |
 
+  @order-from-bo
   Scenario: Update order status
     When I update order "bo_order1" status to "Awaiting Cash On Delivery validation"
     Then order "bo_order1" has status "Awaiting Cash On Delivery validation"
 
+  @order-from-bo
   Scenario: Update order shipping details
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "2 - My carrier (Delivery next day!)"
     Then order "bo_order1" has Tracking number "TEST1234"
     And order "bo_order1" has Carrier "2 - My carrier (Delivery next day!)"
 
+  @order-from-bo
   Scenario: pay order with negative amount and see it is not valid
     When order "bo_order1" has 0 payments
     And I pay order "bo_order1" with the invalid following details:
@@ -54,6 +64,7 @@ Feature: Order from Back Office (BO)
     Then I should get error that payment amount is negative
     And order "bo_order1" has 0 payments
 
+  @order-from-bo
   Scenario: pay for order
     When I pay order "bo_order1" with the following details:
       | date           | 2019-11-26 13:56:23 |
@@ -67,16 +78,19 @@ Feature: Order from Back Office (BO)
       | transaction_id | test123             |
       | amount         | $6.00               |
 
+  @order-from-bo
   Scenario: Change order state to Delivered to be able to add valid invoice to new Payment
     When order "bo_order1" has 0 payments
     And I update order "bo_order1" status to "Delivered"
     Then order "bo_order1" payments should have invoice
 
+  @order-from-bo
   Scenario: Duplicate order cart
     When I duplicate order "bo_order1" cart "dummy_cart" with reference "duplicated_dummy_cart"
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
 
-  Scenario: Add product to an existing Order with free shipping and new invoice
+  @order-from-bo
+  Scenario: Add product to an existing Order with free shipping and new invoice when shipping recalculation config is enabled
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
@@ -84,6 +98,13 @@ Feature: Order from Back Office (BO)
       | price         | 16                      |
       | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And Order "bo_order1" should have following prices:
+      | products      | $55.80   |
+      | discounts     | $7.00    |
+      | shipping      | $14.00   |
+      | taxes         | $0.00    |
+      | total         | $62.80   |
     # no exception is thrown when zero/negative amount is passed and nothing changes in the db`
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
@@ -104,10 +125,12 @@ Feature: Order from Back Office (BO)
       | free_shipping | true                    |
     Then order "bo_order1" should contain 3 products "Mug Today is a good day"
 
+  @order-from-bo
   Scenario: Generating invoice for Order
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
 
+  @order-from-bo
   Scenario: Add order from Back Office with free shipping
     And I set Free shipping to the cart "dummy_cart"
     And I add order "bo_order2" with the following details:
@@ -119,6 +142,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order2" should have free shipping
     And order "bo_order2" should have "dummy_payment" payment method
 
+  @order-from-bo
   Scenario: Update multiple orders statuses using Bulk actions
     And I add order "bo_order2" with the following details:
       | cart                | dummy_cart          |
@@ -129,6 +153,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" has status "Delivered"
     And order "bo_order2" has status "Delivered"
 
+  @order-from-bo
   Scenario: Change order shipping address
     Given I create customer "testFirstName" with following details:
       | firstName        | testFirstName                      |
