@@ -149,7 +149,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         Hook::exec('actionOrderEdited', ['order' => $order]);
 
         if (isset($freeShippingCartRule)) {
-            $orderCartRule = $this->createOrderCartRule($freeShippingCartRule, $order, !empty($invoice->id) ? $invoice->id : 0);
+            $this->createOrderCartRule($freeShippingCartRule, $order, !empty($invoice->id) ? $invoice->id : 0);
         }
 
         $order->update();
