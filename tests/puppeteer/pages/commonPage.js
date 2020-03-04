@@ -343,6 +343,6 @@ module.exports = class CommonPage {
    * @returns {string}
    */
   uppercaseFirstCharacter(word) {
-    return word[0].toUpperCase() + word.slice(1);
+    return `${word[0].toUpperCase()}${word.slice(1)}`;
   }
 };
