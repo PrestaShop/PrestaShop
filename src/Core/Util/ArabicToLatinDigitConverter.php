@@ -33,7 +33,11 @@ namespace PrestaShop\PrestaShop\Core\Util;
  */
 class ArabicToLatinDigitConverter
 {
-    private static $translationTable = [
+    public const ARABIC = 1;
+
+    public const PERSIAN = 2;
+
+    private const TRANSLATION_TABLE = [
         // arabic numbers
         '٠' => '0',
         '١' => '1',
@@ -67,20 +71,21 @@ class ArabicToLatinDigitConverter
      */
     public function convert(string $str): string
     {
-        return strtr($str, self::$translationTable);
+        return strtr($str, self::TRANSLATION_TABLE);
     }
 
     /**
-     * Convert from latin digits to arabic digits
+     * Convert from latin digits to arabic or persian digits
      *
      * @param string $str
+     * @param int $lang
      *
      * @return string
      */
-    public function reverseConvert(string $str): string
+    public function reverseConvert(string $str, int $lang = self::ARABIC): string
     {
-        $arabic = array_slice(self::$translationTable, 0, 10, true);
+        $table = array_slice(self::TRANSLATION_TABLE, $lang === self::ARABIC ? 0 : 10, 10, true);
 
-        return strtr($str, array_flip($arabic));
+        return strtr($str, array_flip($table));
     }
 }
