@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
@@ -87,6 +88,29 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         );
 
         SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
+    }
+
+    /**
+     * @When I update the cart :cartReference currency to :currencyReference
+     *
+     * @param string $cartReference
+     * @param string $currencyReference
+     */
+    public function updateCartCurrency(string $cartReference, string $currencyReference)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($currencyReference);
+
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+
+        $this->getCommandBus()->handle(
+            new UpdateCartCurrencyCommand(
+                $cartId,
+                (int) $currency->id
+            )
+        );
+
+        Cart::resetStaticCache();
     }
 
     /**

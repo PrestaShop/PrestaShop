@@ -1848,11 +1848,35 @@ class OrderCore extends ObjectModel
             $order_payment->date_add .= ' ' . date('H:i:s');
         }
 
+        /*
+         * 4 cases
+         *
+         * Order is in default_currency + Payment is in Order currency
+         *    for example default = 1, order = 1, payment = 1
+         *    ==> NO conversion to do
+         * Order is in default_currency + Payment is NOT in Order currency
+         *    for example default = 1, order = 1, payment = 2
+         *    ==> convert payment in order's currency
+         * Order is NOT in default_currency + Payment is in Order currency
+         *    for example default = 1, order = 2, payment = 2
+         *    ==> NO conversion to do
+         * Order is NOT in default_currency + Payment is NOT in Order currency
+         *    for example default = 1, order = 2, payment = 3
+         *    ==> As conversion rates are set regarding the default currency,
+         *        convert payment to default and from default to order's currency
+         */
+
         // Update total_paid_real value for backward compatibility reasons
         if ($order_payment->id_currency == $this->id_currency) {
             $this->total_paid_real += $order_payment->amount;
         } else {
-            $this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $this->id_currency, false), 2);
+            $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+            if ($this->id_currency === $default_currency) {
+                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $this->id_currency, false), 2);
+            } else {
+                $amountInDefaultCurrency = Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false);
+                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, false), 2);
+            }
         }
 
         // We put autodate parameter of add method to true if date_add field is null
