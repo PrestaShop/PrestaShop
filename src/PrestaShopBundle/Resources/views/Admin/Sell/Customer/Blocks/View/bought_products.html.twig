@@ -24,7 +24,7 @@
  *#}
 
 {% if customerInformation.productsInformation.boughtProductsInformation is not empty %}
-<div class="card">
+<div id="customer-bought-products-card" class="card">
   <h3 class="card-header">
     <i class="material-icons">attach_money</i>
     {{ 'Purchased products'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -42,13 +42,13 @@
         <tbody>
         {% for product in customerInformation.productsInformation.boughtProductsInformation %}
           <tr>
-            <td>{{ product.boughtDate }}</td>
-            <td>
+            <td class="customer-bought-product-date">{{ product.boughtDate }}</td>
+            <td class="customer-bought-product-name">
               <a href="{{ getAdminLink('AdminOrders', true, {'id_order': product.orderId, 'vieworder': 1}) }}">
                 {{ product.productName }}
               </a>
             </td>
-            <td>{{ product.boughtQuantity }}</td>
+            <td class="customer-bought-product-quantity">{{ product.boughtQuantity }}</td>
           </tr>
         {% endfor %}
         </tbody>
