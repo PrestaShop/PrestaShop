@@ -64,7 +64,6 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.deliverySlipslink,
       );
-
       await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.deliverySlipsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.deliverySlipsPage.pageTitle);
@@ -100,7 +99,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it(`should check that the delivery slip file name contain '${deliverySlipData.prefix}'`, async function () {

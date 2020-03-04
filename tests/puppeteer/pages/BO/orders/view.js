@@ -27,12 +27,10 @@ module.exports = class Order extends BOBasePage {
     this.documentNumberLink = `${this.documentsTableRow} td:nth-child(3) a`;
     this.documentName = `${this.documentsTableRow} td:nth-child(2)`;
     // Refund form
-    this.refundProductQuantity = `${this.orderProductsTable} tr:nth-child(%ROW)
-    input[onchange*='checkPartialRefundProductQuantity']`;
-    this.refundProductAmount = `${this.orderProductsTable} tr:nth-child(%ROW)
-    input[onchange*='checkPartialRefundProductAmount']`;
-    this.refundShippingCost = 'input[name="partialRefundShippingCost"]';
-    this.partialRefundSubmitButton = '[name=\'partialRefund\']';
+    this.refundProductQuantity = `${this.orderProductsRowTable} input[id*='cancel_product_quantity']`;
+    this.refundProductAmount = `${this.orderProductsRowTable} input[id*='cancel_product_amount']`;
+    this.refundShippingCost = `${this.orderProductsRowTable} input[id*='cancel_product_shipping_amount']`;
+    this.partialRefundSubmitButton = 'button#cancel_product_save';
   }
 
   /*
@@ -66,7 +64,7 @@ module.exports = class Order extends BOBasePage {
    */
   async modifyOrderStatus(status) {
     const actualStatus = await this.getOrderStatus();
-    if(status !== actualStatus) {
+    if (status !== actualStatus) {
       await this.selectByVisibleText(this.orderStatusesSelect, status);
       await this.clickAndWaitForNavigation(this.updateStatusButton);
       return this.getOrderStatus();
@@ -90,7 +88,7 @@ module.exports = class Order extends BOBasePage {
   async getDocumentName(rowChild = 1) {
     await Promise.all([
       this.page.click(this.documentTab),
-      this.page.waitForSelector(`${this.documentTab}.active`)
+      this.page.waitForSelector(`${this.documentTab}.active`),
     ]);
     return this.getTextContent(this.documentName.replace('%ROW', rowChild));
   }
@@ -103,7 +101,7 @@ module.exports = class Order extends BOBasePage {
   async getFileName(rowChild = 1) {
     await Promise.all([
       this.page.click(this.documentTab),
-      this.page.waitForSelector(`${this.documentTab}.active`)
+      this.page.waitForSelector(`${this.documentTab}.active`),
     ]);
     const fileName = await this.getTextContent(this.documentNumberLink.replace('%ROW', rowChild));
     return fileName.replace('#', '').trim();
@@ -127,6 +125,7 @@ module.exports = class Order extends BOBasePage {
    */
   async clickOnPartialRefund() {
     await this.page.click(this.partialRefundButton);
+    await this.page.waitForSelector(this.refundProductQuantity.replace('%ROW', 1), {visible: true});
   }
 
   /**
@@ -139,10 +138,14 @@ module.exports = class Order extends BOBasePage {
    */
   async addPartialRefundProduct(productRow, quantity = 0, amount = 0, shipping = 0) {
     await this.setValue(this.refundProductQuantity.replace('%ROW', productRow), quantity.toString());
-    await this.setValue(this.refundProductAmount.replace('%ROW', productRow), amount.toString());
-    await this.setValue(this.refundShippingCost, shipping.toString());
-    await this.page.click(this.partialRefundSubmitButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    if (amount !== 0) {
+      await this.setValue(this.refundProductAmount.replace('%ROW', productRow), amount.toString());
+    }
+    if (shipping !== 0) {
+      await this.setValue(this.refundShippingCost.replace('%ROW', productRow), shipping.toString());
+    }
+    await this.clickAndWaitForNavigation(this.partialRefundSubmitButton.replace('%ROW', productRow));
+    return this.getTextContent(this.alertTextBlock);
   }
 
   /**
@@ -152,8 +155,8 @@ module.exports = class Order extends BOBasePage {
   async downloadDeliverySlip() {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink, el => el.target = '');
-    await this.page.click(this.documentNumberLink);
+    await this.page.$eval(this.documentNumberLink.replace('%ROW', 3), el => el.target = '');
+    await this.page.click(this.documentNumberLink.replace('%ROW', 3));
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 };
