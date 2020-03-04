@@ -33,7 +33,6 @@
 @import "components/modulescards";
 @import "components/notifications";
 @import "components/datepicker";
-@import "components/help_box";
 @import "components/ps_dropdown";
 @import "components/ps_number";
 @import "components/ps_radio";
@@ -98,7 +97,7 @@ body {
   }
   > .nav-item > .nav-link {
     &.active {
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid #ffffff;
     }
   }
 }
@@ -144,7 +143,7 @@ span.twitter-typeahead {
 }
 
 table.table {
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 // Needed to override the default inline style of modal header in translations-app
