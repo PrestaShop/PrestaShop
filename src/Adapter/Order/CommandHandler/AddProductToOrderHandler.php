@@ -36,6 +36,7 @@ use Configuration;
 use Context;
 use Currency;
 use Customer;
+use Exception;
 use Hook;
 use Order;
 use OrderCarrier;
@@ -98,6 +99,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
+            ->setCustomer(new Customer($order->id_customer))
         ;
 
         try {
@@ -145,7 +147,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // update totals amount of order
             // @todo: use https://github.com/PrestaShop/decimal for prices computations
             $order->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-            $order->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+            $order->total_products_wt += Tools::ps_round((float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 2);
 
             $order->total_paid += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
             $order->total_paid_tax_excl += Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
@@ -225,7 +227,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             }
 
             $order->update();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->contextStateManager->restoreContext();
 
             throw $e;

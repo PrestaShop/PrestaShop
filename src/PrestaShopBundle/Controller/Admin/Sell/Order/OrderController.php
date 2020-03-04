@@ -411,6 +411,7 @@ class OrderController extends FrameworkBundleAdminController
 
         $addProductRowForm = $this->createForm(AddProductRowType::class, [], [
             'order_id' => $orderId,
+            'currency_id' => $orderForViewing->getCurrencyId(),
             'symbol' => $orderCurrency->symbol,
         ]);
         $editProductRowForm = $this->createForm(EditProductRowType::class, [], [
