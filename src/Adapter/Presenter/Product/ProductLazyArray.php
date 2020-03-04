@@ -702,7 +702,8 @@ class ProductLazyArray extends AbstractLazyArray
         if ($settings->stock_management_enabled
             && !$product['allow_oosp']
             && ($product['quantity'] <= 0
-            || $product['quantity'] - $this->getQuantityWanted() < 0)
+            || $product['quantity'] - $this->getQuantityWanted() < 0
+            || $product['quantity'] - $this->getMinimalQuantity() < 0)
         ) {
             $shouldEnable = false;
         }
@@ -715,7 +716,15 @@ class ProductLazyArray extends AbstractLazyArray
      */
     private function getQuantityWanted()
     {
-        return (int) Tools::getValue('quantity_wanted', (int) $this->product['minimal_quantity']);
+        return (int) Tools::getValue('quantity_wanted', $this->getMinimalQuantity());
+    }
+
+    /**
+     * @return int Minimal quantity of product requested by the customer
+     */
+    private function getMinimalQuantity()
+    {
+        return (int) $this->product['minimal_quantity'];
     }
 
     /**
