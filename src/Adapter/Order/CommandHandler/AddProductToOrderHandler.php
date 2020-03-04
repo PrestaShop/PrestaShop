@@ -89,7 +89,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     public function handle(AddProductToOrderCommand $command)
     {
         $order = $this->getOrderObject($command->getOrderId());
-
         $this->assertOrderWasNotShipped($order);
 
         $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
@@ -523,12 +522,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         ;
 
         //shipping
-        $shippingWithTaxes = $this->number($cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
-        $order->total_shipping = (float) (string) $orderTotals->getTotalShipping()->plus($shippingWithTaxes);
-        $order->total_shipping_tax_incl = (float) (string) $orderTotals->getTotalShippingTaxIncl()->plus($shippingWithTaxes);
-        $order->total_shipping_tax_excl = $orderTotals->getTotalShippingTaxExcl()
-            ->plus($this->number($cart->getOrderTotal(false, Cart::ONLY_SHIPPING)))
-        ;
+        $order->refreshShippingCost();
     }
 
     /**
