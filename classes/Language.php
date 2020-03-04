@@ -1485,15 +1485,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     private static function updateMultilangFromClassForShop($tableName, $classObject, $lang, $shop, $keys, $fieldsToUpdate)
     {
-        $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
-        $shopDefaultLanguage = new Language($shopDefaultLangId);
-
-        $translator = SymfonyContainer::getInstance()->get('translator');
-        if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
-            (new TranslatorLanguageLoader(true))->loadLanguage($translator, $shopDefaultLanguage->locale);
-        }
-
-        $shopFieldExists = $primary_key_exists = false;
+        $shopFieldExists = false;
         $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $tableName . '`');
         foreach ($columns as $column) {
             $fields[] = '`' . $column['Field'] . '`';
@@ -1512,6 +1504,15 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         );
 
         if (!empty($tableData)) {
+
+            $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+            $shopDefaultLanguage = new Language($shopDefaultLangId);
+
+            $translator = SymfonyContainer::getInstance()->get('translator');
+            if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
+                (new TranslatorLanguageLoader(true))->loadLanguage($translator, $shopDefaultLanguage->locale);
+            }
+
             foreach ($tableData as $data) {
                 $updateWhere = '';
                 $updateField = '';
