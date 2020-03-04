@@ -52,13 +52,17 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 
         $data = $table->getRowsHash();
 
+        $currencyId = is_numeric($data['id_currency']) ?
+            (int) $data['id_currency'] :
+            SharedStorage::getStorage()->get($data['id_currency'])->id;
+
         $this->getCommandBus()->handle(
             new AddPaymentCommand(
                 $orderId,
                 $data['date'],
                 $data['payment_method'],
                 $data['amount'],
-                (int) $data['id_currency'],
+                $currencyId,
                 isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                 $data['transaction_id']
             )

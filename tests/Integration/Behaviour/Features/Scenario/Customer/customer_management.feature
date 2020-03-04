@@ -4,6 +4,9 @@ Feature: Customer Management
   As a BO user
   I must be able to create, save and edit customers
 
+  Background:
+    Given groups feature is activated
+
   Scenario: Create a simple customer and edit it
     When I create a customer "CUST-1" with following properties:
       | firstName | Mathieu                    |
