@@ -31,10 +31,7 @@ let page;
 const today = new Date();
 // Create a future date that there is no credit slips (yyy-mm-dd)
 today.setFullYear(today.getFullYear() + 1);
-const day = (`0${today.getDate()}`).slice(-2);
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-const year = today.getFullYear();
-const futureDate = `${year}-${month}-${day}`;
+const futureDate = today.toISOString().slice(0, 10);
 const creditSlipsFileName = 'order-slips.pdf';
 const creditSlipDocumentName = 'Credit Slip';
 
