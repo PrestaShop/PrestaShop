@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
- <li class="mb-2{% if message.employeeId %} messages-block-employee{% else %} messages-block-customer{% endif %}">
+ <li class="mb-2 {% if message.employeeId %}messages-block-employee{% else %}messages-block-customer{% endif %}">
   <div class="row no-gutters">
     {% if not message.employeeId %}
       <div class="messages-block-icon">
