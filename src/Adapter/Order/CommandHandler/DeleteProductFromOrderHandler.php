@@ -66,6 +66,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      */
     public function handle(DeleteProductFromOrderCommand $command)
     {
+        //@todo: what if its the last product, should order stay with zero prices or be cancelled?
         $orderDetail = new OrderDetail($command->getOrderDetailId());
         $order = $this->getOrderObject($command->getOrderId());
         $this->assertProductCanBeDeleted($order, $orderDetail);
