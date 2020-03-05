@@ -1453,7 +1453,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $tableName
      * @param DataLang $classObject
-     * @param string $lang
+     * @param Language $lang
      * @param Shop $shop
      * @param array $keys
      * @param array $fieldsToUpdate
