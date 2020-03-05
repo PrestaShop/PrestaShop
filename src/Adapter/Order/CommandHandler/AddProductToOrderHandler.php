@@ -106,11 +106,12 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
-        if ($command->isFreeShipping()) {
+        $isFreeShipping = $command->isFreeShipping();
+        if ($isFreeShipping) {
             $freeShippingCartRule = $this->createFreeShippingCartRule($cart, $order);
         }
 
-        $this->updateOrderTotals($order, $cart, $command->getOrderInvoiceId());
+        $this->updateOrderTotals($order, $cart, $command->getOrderInvoiceId(), $isFreeShipping);
         $invoice = $this->createNewOrEditExistingInvoice($command, $cart, $order);
 
         // Create Order detail information
@@ -484,8 +485,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Order $order
      * @param Cart $cart
      * @param int|null $invoiceId
+     * @param bool $isFreeShipping
      */
-    private function updateOrderTotals(Order $order, Cart $cart, ?int $invoiceId): void
+    private function updateOrderTotals(Order $order, Cart $cart, ?int $invoiceId, bool $isFreeShipping): void
     {
         $totalMethod = $invoiceId ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
         $orderTotals = OrderTotalNumbers::buildFromOrder($order);
@@ -522,11 +524,27 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         ;
 
         //shipping
-        // couldn't use Order::refreshShippingCost() because it recalculates whole cart shipping
-        // and then total numbers doesn't fit together.
-        //    e.g initial shipping was $7 and discounts $0
-        //        we add product with free shipping (behind the scenes it adds a discount of shipping price ($7))
-        //        so for total prices to fit - shipping should be $14 and discounts $7
+        if ($isFreeShipping) {
+            $this->updateShippingManually($order, $cart, $orderTotals);
+        } else {
+            $order->refreshShippingCost();
+        }
+    }
+
+    /**
+     * couldn't use Order::refreshShippingCost() with free shipping because it recalculates whole cart shipping
+     *  and then total numbers doesn't fit together.
+     *  e.g initial shipping was $7 and discounts $0
+     *  we add product with free shipping (behind the scenes it adds a discount of shipping price ($7))
+     *  so for total prices to fit - shipping should be $14 and discounts $7
+     *  using  Order::refreshShippingCost() would end up shipping being $7
+     *
+     * @param Order $order
+     * @param Cart $cart
+     * @param OrderTotalNumbers $orderTotals
+     */
+    private function updateShippingManually(Order $order, Cart $cart, OrderTotalNumbers $orderTotals): void
+    {
         if (Configuration::get('PS_ORDER_RECALCULATE_SHIPPING')) {
             $shippingWithTaxes = $this->number($cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
             $order->total_shipping = (float) (string) $orderTotals->getTotalShipping()->plus($shippingWithTaxes);
