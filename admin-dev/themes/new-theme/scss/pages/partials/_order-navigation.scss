@@ -8,8 +8,12 @@
     margin: 0 7px;
   }
 
-  a {
+  .btn {
     padding: 0.375rem 0.45rem;
+
+    > .material-icons {
+      margin: 0;
+    }
   }
 }
 

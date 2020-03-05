@@ -162,7 +162,7 @@
         </div>
       {% endif %}
       {% for customization in product.customizations.textCustomizations %}
-        <p><strong>{{ customization.name }} :</strong> {{ customization.value }}</p>
+      <p><strong>{{ '%name%:'|trans({'%name%': customization.name}, 'Admin.Ordercustomers.Feature') }} </strong> {{ customization.value }}</p>
       {% endfor %}
       {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
         <div class="btn-product-pack-modal mb-3 d-print-none" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
