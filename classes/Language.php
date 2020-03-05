@@ -748,7 +748,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param string $iso_code Iso code
      * @param bool $no_cache
      *
-     * @return int|false|null
+     * @return int|null Language id, or null if not found
      */
     public static function getIdByIso($iso_code, $no_cache = false)
     {
@@ -762,7 +762,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             Cache::store($key, $id_lang);
 
-            return $id_lang;
+            return $id_lang ?: null;
         }
 
         return Cache::retrieve($key);
