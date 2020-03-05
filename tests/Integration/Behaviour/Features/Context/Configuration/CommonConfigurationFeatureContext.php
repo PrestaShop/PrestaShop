@@ -26,8 +26,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
-use Tools;
 use Configuration;
+use Tools;
 
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
