@@ -72,7 +72,7 @@
           </a>
         </p>
 
-        {%  if orderForViewing.customer.isGuest == false %}
+        {%  if orderForViewing.customer.isGuest is same as(false) %}
           <p class="mb-1">
             <strong>{{ 'Account registered:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
           </p>
@@ -87,7 +87,7 @@
           <span class="badge rounded badge-dark">{{ orderForViewing.customer.validOrdersPlaced }}</span>
         </p>
 
-        {%  if orderForViewing.customer.isGuest == false %}
+        {%  if orderForViewing.customer.isGuest is same as(false) %}
           <p class="mb-1">
             <strong>{{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
           </p>
