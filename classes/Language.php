@@ -291,7 +291,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getFilesList($iso_from, $theme_from, $iso_to = false, $theme_to = false, $select = false, $check = false, $modules = false)
     {
         if (empty($iso_from)) {
-            die(Tools::displayError());
+            throw new PrestaShopException(sprintf("Invalid language ISO code: %s", $iso_from));
         }
 
         $copy = ($iso_to && $theme_to) ? true : false;
@@ -753,7 +753,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getIdByIso($iso_code, $no_cache = false)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', [], 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
+            throw new PrestaShopException(sprintf("Invalid language ISO code: %s", $iso_code));
         }
 
         $key = 'Language::getIdByIso_' . $iso_code;
@@ -888,7 +888,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getLanguageByIETFCode($code)
     {
         if (!Validate::isLanguageCode($code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: IETF code %s is not correct', [Tools::safeOutput($code)], 'Admin.International.Notification')));
+            throw new PrestaShopException(sprintf("Invalid IETF language tag: %s", $code));
         }
 
         // $code is in the form of 'xx-YY' where xx is the language code
