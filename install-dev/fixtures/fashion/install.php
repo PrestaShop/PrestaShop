@@ -49,6 +49,10 @@ class InstallFixturesFashion extends XmlLoader
      */
     public function populateFromXmlFiles()
     {
+        // US and FL match John's address in the fixtures, if the XML is modified this should be updated as well
+        $taxRulesGroupId = $this->getTaxRulesGroupId('US', 'FL');
+        $this->storeId('tax_rules_group', 'default_tax_rule_group', $taxRulesGroupId);
+
         parent::populateFromXmlFiles();
 
         /**
@@ -59,5 +63,19 @@ class InstallFixturesFashion extends XmlLoader
         if ($moduleManager->isInstalled('ps_facetedsearch')) {
             $moduleManager->reset('ps_facetedsearch');
         }
+    }
+
+    private function getTaxRulesGroupId(string $country, string $state)
+    {
+        $stateId = $this->retrieveId('state', $state);
+        $countryId = $this->retrieveId('country', $country);
+
+        return Db::getInstance()->getValue(
+            '
+		SELECT id_tax_rules_group
+		FROM ' . _DB_PREFIX_ . 'tax_rule
+		WHERE
+			id_country=' . (int) $countryId . ' AND id_state=' . (int) $stateId
+        );
     }
 }
