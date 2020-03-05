@@ -86,7 +86,7 @@ Feature: Delete products from order in Back Office (BO)
       | total paid tax included   | 25.90     |
 
   @delete-product-from-order
-  Scenario: Delete multiple products from order with invoice when shipping recalculation config is enabled
+  Scenario: Delete all products from order with invoice when shipping recalculation config is enabled
     Given shipping recalculation config is enabled
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
@@ -110,7 +110,7 @@ Feature: Delete products from order in Back Office (BO)
       | total paid tax included   | 0.00     |
 
   @delete-product-from-order
-  Scenario: Delete multiple products from order with invoice when shipping recalculation config is disabled
+  Scenario: Delete all products from order with invoice when shipping recalculation config is disabled.
     When I disable shipping recalculation config
     Then shipping recalculation config is disabled
     When I generate invoice for "bo_order1" order

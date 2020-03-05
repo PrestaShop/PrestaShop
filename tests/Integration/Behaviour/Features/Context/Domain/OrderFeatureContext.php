@@ -688,11 +688,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorMessage($expectedErrorMessage)
     {
-        if ($this->lastException) {
-            Assert::assertEquals($expectedErrorMessage, $this->lastException->getMessage());
+        if (!$this->lastException) {
+            throw new RuntimeException(sprintf('Expected exception (%s), but none was thrown', $expectedErrorMessage));
         }
 
-        throw new RuntimeException(sprintf('Expected exception (%s), but none was thrown', $expectedErrorMessage));
+        Assert::assertEquals($expectedErrorMessage, $this->lastException->getMessage());
     }
 
     /**
