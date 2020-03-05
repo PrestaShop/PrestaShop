@@ -2123,17 +2123,27 @@
     <hook id="displayBackOfficeOrderActions">
       <name>displayBackOfficeOrderActions</name>
       <title>Admin Order Actions</title>
-      <description>This hook displays content in the order view page in the side column under the customer view</description>
+      <description>This hook displays content in the order view page after action buttons (or aliased to side column in migrated page)</description>
     </hook>
     <hook id="displayAdminOrderSide">
       <name>displayAdminOrderSide</name>
       <title>Admin Order Side Column</title>
-      <description>This hook displays content in the order view page at the end of the side column</description>
+      <description>This hook displays content in the order view page in the side column under the customer view</description>
+    </hook>
+    <hook id="displayAdminOrderBottom">
+      <name>displayAdminOrderBottom</name>
+      <title>Admin Order Side Column Bottom</title>
+      <description>This hook displays content in the order view page at the bottom of the side column</description>
     </hook>
     <hook id="displayAdminOrderMain">
       <name>displayAdminOrderMain</name>
       <title>Admin Order Main Column</title>
-      <description>This hook displays content in the order view page at the end of the main column</description>
+      <description>This hook displays content in the order view page in the main column under the details view</description>
+    </hook>
+    <hook id="displayAdminOrderMainBottom">
+      <name>displayAdminOrderMainBottom</name>
+      <title>Admin Order Main Column Bottom</title>
+      <description>This hook displays content in the order view page at the bottom of the main column</description>
     </hook>
     <hook id="displayAdminOrderTabLink">
       <name>displayAdminOrderTabLink</name>
