@@ -69,13 +69,18 @@ describe('Enable/Disable final summary', async () => {
   ];
   tests.forEach((test, index) => {
     it(`should ${test.args.action} final summary`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Shop`, baseContext);
-      const result = await this.pageObjects.orderSettingsPage.setFinalSummary(test.args.exist);
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}FinalSummary`, baseContext);
+      const result = await this.pageObjects.orderSettingsPage.setFinalSummaryStatus(test.args.exist);
       await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
     });
 
     it('should go to FO and check the final summary after checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary_${test.args.action}`, baseContext);
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        `checkFinalSummary${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
+        baseContext,
+      );
       // Click on view my shop
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();

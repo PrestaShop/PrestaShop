@@ -23,7 +23,7 @@ module.exports = class orderSettings extends BOBasePage {
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async setFinalSummary(toEnable = true) {
+  async setFinalSummaryStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.enableFinalSummaryLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
