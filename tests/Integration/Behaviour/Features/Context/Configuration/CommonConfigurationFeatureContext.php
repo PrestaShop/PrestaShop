@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Tools;
+use Configuration;
 
 class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureContext
 {
@@ -55,5 +56,13 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     public function setShippingHandlingFees($value)
     {
         $this->setConfiguration('PS_SHIPPING_HANDLING', $value);
+    }
+
+    /**
+     * @Given /^groups feature is activated$/
+     */
+    public function activateGroupFeature()
+    {
+        Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', '1');
     }
 }

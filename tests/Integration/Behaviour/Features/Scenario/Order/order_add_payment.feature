@@ -12,7 +12,7 @@ Feature: Add payment to Order from Back Office (BO)
     And country "US" is enabled
     And country "FR" is enabled
     And language "French" with locale "fr-FR" exists
-    And I add new currency "currency1" with following properties:
+    And I add new currency "currencyEUR" with following properties:
       | iso_code         | EUR       |
       | exchange_rate    | 0.88      |
       | name             | My Euros  |
@@ -20,9 +20,9 @@ Feature: Add payment to Order from Back Office (BO)
       | is_enabled       | 1         |
       | is_unofficial    | 0         |
       | shop_association | shop1     |
-    And I set the pattern "€#,##0.00" for currency "currency1" in locale "fr-FR"
-    And I set the pattern "€#,##0.00" for currency "currency1" in locale "en-US"
-    And I add new currency "currency2" with following properties:
+    And I set the pattern "€#,##0.00" for currency "currencyEUR" in locale "fr-FR"
+    And I set the pattern "€#,##0.00" for currency "currencyEUR" in locale "en-US"
+    And I add new currency "currencyJPY" with following properties:
       | iso_code         | JPY               |
       | exchange_rate    | 107.52            |
       | name             | My Japaneses Yen  |
@@ -30,8 +30,8 @@ Feature: Add payment to Order from Back Office (BO)
       | is_enabled       | 1                 |
       | is_unofficial    | 0                 |
       | shop_association | shop1             |
-    And I set the pattern "¥#,##0.00" for currency "currency2" in locale "fr-FR"
-    And I set the pattern "¥#,##0.00" for currency "currency2" in locale "en-US"
+    And I set the pattern "¥#,##0.00" for currency "currencyJPY" in locale "fr-FR"
+    And I set the pattern "¥#,##0.00" for currency "currencyJPY" in locale "en-US"
     And the module "dummy_payment" is installed
     And I am logged in as "test@prestashop.com" employee
     And there is customer "testCustomer" with email "pub@prestashop.com"
@@ -94,7 +94,7 @@ Feature: Add payment to Order from Back Office (BO)
       | total_paid_real           | 6.820000 |
 
   Scenario: Add a payment when Order is NOT in default_currency and Payment is in Order currency
-    Given I update the cart "dummy_cart" currency to "currency1"
+    Given I update the cart "dummy_cart" currency to "currencyEUR"
     And I add order "bo_order2" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -116,7 +116,7 @@ Feature: Add payment to Order from Back Office (BO)
       | total_paid_real           | 6.000000 |
 
   Scenario: Add a payment when Order is NOT in default_currency and Payment is NOT in Order currency
-    Given I update the cart "dummy_cart" currency to "currency1"
+    Given I update the cart "dummy_cart" currency to "currencyEUR"
     And I add order "bo_order2" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -135,4 +135,4 @@ Feature: Add payment to Order from Back Office (BO)
       | transaction_id | test123             |
       | amount         | ¥6               |
     And order "bo_order2" should have the following details:
-      | total_paid_real           | 0.060000 |
+      | total_paid_real           | 0.050000 |

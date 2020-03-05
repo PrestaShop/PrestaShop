@@ -20,6 +20,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
         category:
             paths:
                 features: Features/Scenario/Category
