@@ -112,7 +112,7 @@ module.exports = class productSettings extends BOBasePage {
    * @param toEnable
    * @returns {Promise<string|*>}
    */
-  async setDisplayAvailableQuantities(toEnable = true) {
+  async setDisplayAvailableQuantitiesStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchDisplayAvailableQuantities.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
     return this.getTextContent(this.alertSuccessBlock);
