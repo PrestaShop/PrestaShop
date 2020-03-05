@@ -43,8 +43,8 @@ use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
@@ -112,9 +112,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
             $combination = $this->getCombination($command->getCombinationId());
 
-        $this->checkProductInStock($command->getProductId()->getValue(), $command->getCombinationId(), $command->getProductQuantity());
+            $this->checkProductInStock($command->getProductId()->getValue(), $command->getCombinationId(), $command->getProductQuantity());
 
-        $cart = $this->createNewCart($order);
+            $cart = $this->createNewCart($order);
 
             $specificPrice = $this->createSpecificPriceIfNeeded(
                 $command,
@@ -147,7 +147,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // update totals amount of order
             // @todo: use https://github.com/PrestaShop/decimal for prices computations
             $order->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-            $order->total_products_wt += Tools::ps_round((float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS), 2);
+            $order->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 
             $order->total_paid += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
             $order->total_paid_tax_excl += Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
