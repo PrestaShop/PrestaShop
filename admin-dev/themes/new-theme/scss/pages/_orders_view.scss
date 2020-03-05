@@ -35,14 +35,29 @@
   // Todo: Looks like we don't have any custom select without JS to add in a form
   .select-status {
     position: relative;
+    transition: 0.25s ease-out;
+    border-radius: 4px;
+
+    &:hover {
+      opacity: 0.7;
+    }
 
     .select-status-colored {
-      background: white;
       color: white;
-      border-radius: 4px;
       border: none;
       max-width: 280px;
       box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+      background: transparent;
+
+      &:hover {
+        &:not(:disabled) {
+          opacity: 1;
+        }
+      }
+
+      option {
+        color: initial;
+      }
     }
 
     &::after {
@@ -56,6 +71,13 @@
       transform: translateY(-50%);
       right: 10px;
       pointer-events: none;
+      transition: 0.4s ease-out;
+    }
+
+    &-opened {
+      &::after {
+        transform: translateY(-50%) rotate(180deg);
+      }
     }
 
     &.is-bright .select-status-colored,
