@@ -1385,7 +1385,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * Translates translatable content in the requested database tables
      *
      * @param Language $language Language to translate to
-     * @param string[] $tablesToUpdate Tables to update (including datbase prefix)
+     * @param string[] $tablesToUpdate Tables to update (including datbase prefix, ending in _lang)
      *
      * @throws PrestaShopException
      */
