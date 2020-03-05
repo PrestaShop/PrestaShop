@@ -46,7 +46,7 @@ module.exports = class productSettings extends BOBasePage {
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async changeShowPricesStatus(toEnable = true) {
+  async setShowPricesStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchShowPricesLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);

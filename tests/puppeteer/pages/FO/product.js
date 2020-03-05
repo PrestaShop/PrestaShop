@@ -78,4 +78,20 @@ module.exports = class Product extends FOBasePage {
   isAvailabilityQuantityDisplayed() {
     return this.elementVisible(this.productAvailabilityIcon, 1000);
   }
+
+  /**
+   * Is price displayed
+   * @returns {boolean}
+   */
+  isPriceDisplayed() {
+    return this.elementVisible(this.productPrice, 1000);
+  }
+
+  /**
+   * Is add to cart button displayed
+   * @returns {boolean}
+   */
+  isAddToCartButtonDisplayed() {
+    return this.elementVisible(this.addToCartButton, 1000);
+  }
 };
