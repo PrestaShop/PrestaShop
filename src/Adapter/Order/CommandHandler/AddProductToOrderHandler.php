@@ -538,7 +538,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *  we add product with free shipping (behind the scenes it adds a discount of shipping price ($7))
      *  so for total prices to fit - shipping should be $14 and discounts $7
      *  using  Order::refreshShippingCost() would end up shipping being $7
-     *
+     * @todo: If i do it manually, i don't update OrderCarrier shipping price.
+     *      Difference occurs between order shipping price and carrier shipping price
+     *      That might introduce problems. How To fix it?
      * @param Order $order
      * @param Cart $cart
      * @param OrderTotalNumbers $orderTotals
