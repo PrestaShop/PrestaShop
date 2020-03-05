@@ -1424,7 +1424,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $table
      * @param string $className
-     * @param string $lang
+     * @param Language $lang
      *
      * @throws PrestaShopDatabaseException
      */
