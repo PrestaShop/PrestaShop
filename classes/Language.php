@@ -862,14 +862,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $iso_code 2-letter iso code
      *
-     * @return string|false
+     * @return string|false Returns the language code, or false if it doesn't exist
      *
      * @throws PrestaShopException
      */
     public static function getLanguageCodeByIso($iso_code)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            die(Tools::displayError(Context::getContext()->getTranslator()->trans('Fatal error: ISO code is not correct', [], 'Admin.International.Notification') . ' ' . Tools::safeOutput($iso_code)));
+            throw new PrestaShopException(sprintf("Invalid language ISO code: %s", $iso_code));
         }
 
         return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
