@@ -1358,34 +1358,50 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * Update all table_lang from xlf & DataLang.
      *
-     * @param $iso_code
+     * @param string $iso_code 2-letter language code
      *
      * @return bool
      */
     public static function updateMultilangTable($iso_code)
     {
-        $useLang = Db::getInstance()->getRow('SELECT * FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = "' . pSQL($iso_code) . '" ', true, false);
+        $langId = Language::getIdByIso($iso_code);
 
-        if (!empty($useLang)) {
-            $lang = new Language($useLang['id_lang']);
+        if (!empty($langId)) {
+            $lang = new Language($langId);
 
-            $tables = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
-            foreach ($tables as $table) {
-                foreach ($table as $t) {
-                    $className = ucfirst(Tools::toCamelCase(str_replace(_DB_PREFIX_, '', $t)));
-
-                    if (_DB_PREFIX_ . 'country_lang' == $t) {
-                        self::updateMultilangFromCldr($lang);
-                    } else {
-                        self::updateMultilangFromClass($t, $className, $lang);
-                    }
-                }
+            $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
+            if (!empty($rows)) {
+                // get all values
+                $tableNames = array_map('reset', $rows);
+                static::updateMultilangTables($lang, $tableNames);
             }
 
-            Hook::exec('actionUpdateLangAfter', ['lang' => $lang]);
         }
 
         return true;
+    }
+
+    /**
+     * Translates translatable content in the requested database tables
+     *
+     * @param Language $language Language to translate to
+     * @param string[] $tablesToUpdate Tables to update (including datbase prefix)
+     *
+     * @throws PrestaShopException
+     */
+    public function updateMultilangTables(Language $language, array $tablesToUpdate)
+    {
+        foreach ($tablesToUpdate as $tableName) {
+            $className = ucfirst(Tools::toCamelCase(str_replace(_DB_PREFIX_, '', $tableName)));
+
+            if (_DB_PREFIX_ . 'country_lang' === $tableName) {
+                self::updateMultilangFromCldr($language);
+            } else {
+                self::updateMultilangFromClass($tableName, $className, $language);
+            }
+        }
+
+        Hook::exec('actionUpdateLangAfter', ['lang' => $language]);
     }
 
     public static function updateMultilangFromCldr($lang)
