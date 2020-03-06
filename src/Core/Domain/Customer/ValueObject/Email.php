@@ -35,7 +35,7 @@ class Email extends ValueObjectEmail
 {
     public function __construct($email)
     {
-        @trigger_error(self::class . ' is deprecated. Use ' . BaseEmail::class . ' instead', E_USER_DEPRECATED);
+        @trigger_error(self::class . ' is deprecated. Use ' . ValueObjectEmail::class . ' instead', E_USER_DEPRECATED);
         parent::__construct($email);
     }
 }
