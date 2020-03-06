@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use Cart;
 use Configuration;
 use Hook;
 use Order;
@@ -46,21 +45,6 @@ use Validate;
  */
 final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler implements DeleteProductFromOrderHandlerInterface
 {
-
-    /**
-     * @var UpdateOrderStatusHandler
-     */
-    private $updateOrderStatusHandler;
-
-    /**
-     * @param UpdateOrderStatusHandler $updateOrderStatusHandler
-     */
-    public function __construct(
-        UpdateOrderStatusHandler $updateOrderStatusHandler
-    ) {
-        $this->updateOrderStatusHandler = $updateOrderStatusHandler;
-    }
-
     /**
      * {@inheritdoc}
      */
