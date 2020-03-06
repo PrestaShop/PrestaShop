@@ -216,7 +216,7 @@ export default class OrderProductRenderer {
   }
 
   toggleProductAddNewInvoiceInfo() {
-    if ($(OrderViewPageMap.productAddInvoiceSelect).val() === 0) {
+    if (parseInt($(OrderViewPageMap.productAddInvoiceSelect).val()) === 0) {
       $(OrderViewPageMap.productAddNewInvoiceInfo).removeClass('d-none');
     } else {
       $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
