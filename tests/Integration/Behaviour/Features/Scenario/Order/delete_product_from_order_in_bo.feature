@@ -110,6 +110,8 @@ Feature: Delete products from order in Back Office (BO)
       | total paid tax included   | 0.00     |
 
   @delete-product-from-order
+  #@todo: RECALCULATE_SHIPPING config Feature doesn't make sense in this scenario and should be reconsidered
+  #@todo: or it shouldn't be allowed to remove last product of order
   Scenario: Delete all products from order with invoice when shipping recalculation config is disabled.
     When I disable shipping recalculation config
     Then shipping recalculation config is disabled
