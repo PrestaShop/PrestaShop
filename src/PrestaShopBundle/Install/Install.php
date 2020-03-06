@@ -454,6 +454,10 @@ class Install extends AbstractInstall
     /**
      * PROCESS : populateDatabase
      * Populate database with default data.
+     *
+     * @param string|null $entity [default=null] If provided, entity to populate
+     *
+     * @return bool
      */
     public function populateDatabase($entity = null)
     {
