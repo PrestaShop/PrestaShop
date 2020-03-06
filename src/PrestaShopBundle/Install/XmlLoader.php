@@ -246,8 +246,9 @@ class XmlLoader
      */
     public function populateEntity($entity)
     {
-        if (method_exists($this, 'populateEntity' . Tools::toCamelCase($entity))) {
-            $this->{'populateEntity' . Tools::toCamelCase($entity)}();
+        $populateEntityMethod = 'populateEntity' . Tools::toCamelCase($entity);
+        if (method_exists($this, $populateEntityMethod)) {
+            $this->$populateEntityMethod();
 
             return;
         }
@@ -326,17 +327,18 @@ class XmlLoader
             }
 
             $data = $this->rewriteRelationedData($entity, $data);
-            if (method_exists($this, 'createEntity' . Tools::toCamelCase($entity))) {
+            $createEntityMethod = 'createEntity' . Tools::toCamelCase($entity);
+            if (method_exists($this, $createEntityMethod)) {
                 // Create entity with custom method in current class
-                $method = 'createEntity' . Tools::toCamelCase($entity);
-                $this->$method($identifier, $data, $data_lang);
+                $this->$createEntityMethod($identifier, $data, $data_lang);
             } else {
                 $this->createEntity($entity, $identifier, (string) $xml->fields['class'], $data, $data_lang);
             }
 
             if ($xml->fields['image']) {
-                if (method_exists($this, 'copyImages' . Tools::toCamelCase($entity))) {
-                    $this->{'copyImages' . Tools::toCamelCase($entity)}($identifier, $data);
+                $copyImagesMethod = 'copyImages' . Tools::toCamelCase($entity);
+                if (method_exists($this, $copyImagesMethod)) {
+                    $this->{$copyImagesMethod}($identifier, $data);
                 } else {
                     $this->copyImages($entity, $identifier, (string) $xml->fields['image'], $data);
                 }
