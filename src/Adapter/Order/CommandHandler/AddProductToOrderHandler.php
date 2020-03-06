@@ -41,7 +41,6 @@ use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\PrestaShop\Adapter\Invoice\DTO\InvoiceTotalNumbers;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\DTO\OrderTotalNumbers;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
