@@ -72,14 +72,16 @@ describe('Enable/Disable force update friendly URL', async () => {
   });
   const tests = [
     {
-      args: {
-        action: 'enable', enable: true, editProduct: editProductData, friendlyURL: editProductData.name,
-      },
+      args:
+        {
+          action: 'enable', enable: true, editProduct: editProductData, friendlyURL: editProductData.name,
+        },
     },
     {
-      args: {
-        action: 'disable', enable: false, editProduct: productData, friendlyURL: editProductData.name,
-      },
+      args:
+        {
+          action: 'disable', enable: false, editProduct: productData, friendlyURL: editProductData.name,
+        },
     },
   ];
   tests.forEach((test) => {
@@ -104,7 +106,7 @@ describe('Enable/Disable force update friendly URL', async () => {
         `${test.args.action}ForceUpdateFriendlyURL`,
         baseContext,
       );
-      const result = await this.pageObjects.productSettingsPage.setForceUpdateFriendlyURL(test.args.enable);
+      const result = await this.pageObjects.productSettingsPage.setForceUpdateFriendlyURLStatus(test.args.enable);
       await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
     });
 

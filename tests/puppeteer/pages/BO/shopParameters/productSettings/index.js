@@ -79,7 +79,7 @@ module.exports = class productSettings extends BOBasePage {
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setForceUpdateFriendlyURL(toEnable = true) {
+  async setForceUpdateFriendlyURLStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchForceUpdateFriendlyURLLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
