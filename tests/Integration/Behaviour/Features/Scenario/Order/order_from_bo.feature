@@ -98,11 +98,10 @@ Feature: Order from Back Office (BO)
       | price         | 16                      |
       | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And Order "bo_order1" should have following prices:
       | products      | $55.80   |
       | discounts     | $7.00    |
-      | shipping      | $14.00   |
+      | shipping      | $7.00   |
       | taxes         | $0.00    |
       | total         | $62.80   |
     # no exception is thrown when zero/negative amount is passed and nothing changes in the db`

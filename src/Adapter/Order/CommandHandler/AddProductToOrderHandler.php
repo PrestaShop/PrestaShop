@@ -106,12 +106,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
-        $isFreeShipping = $command->isFreeShipping();
-        if ($isFreeShipping) {
+        if ($command->isFreeShipping()) {
             $freeShippingCartRule = $this->createFreeShippingCartRule($cart, $order);
         }
 
-        $this->updateOrderTotals($order, $cart, $command->getOrderInvoiceId(), $isFreeShipping);
+        $this->updateOrderTotals($order, $cart, $command->getOrderInvoiceId());
         $invoice = $this->createNewOrEditExistingInvoice($command, $cart, $order);
 
         // Create Order detail information
@@ -419,7 +418,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $invoice->total_shipping_tax_incl = $order->total_shipping_tax_incl;
 
         $invoice->total_wrapping_tax_excl = $order->total_wrapping_tax_excl;
-        $invoice->total_wrapping_tax_incl = $order->total_shipping_tax_incl;
+        $invoice->total_wrapping_tax_incl = $order->total_wrapping_tax_incl;
         $invoice->shipping_tax_computation_method = (int) $taxCalculator->computation_method;
 
         $invoice->add();
@@ -448,33 +447,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         $invoice = new OrderInvoice($orderInvoiceId);
 
-        $invoiceTotals = InvoiceTotalNumbers::buildFromInvoice($invoice);
-        $orderTotals = OrderTotalNumbers::buildFromOrder($order);
-
-        $invoice->total_paid_tax_excl = (float) (string) $invoiceTotals->getTotalPaidTaxExcl()
-            ->plus($orderTotals->getTotalPaidTaxExcl())
-        ;
-        $invoice->total_paid_tax_incl = (float) (string) $invoiceTotals->getTotalPaidTaxIncl()
-            ->plus($orderTotals->getTotalPaidTaxIncl())
-        ;
-        $invoice->total_products = (float) (string) $invoiceTotals->getTotalProducts()
-            ->plus($orderTotals->getTotalProducts())
-        ;
-        $invoice->total_products_wt = (float) (string) $invoiceTotals->getTotalProductsWt()
-            ->plus($orderTotals->getTotalProductsWt())
-        ;
-        $invoice->total_wrapping_tax_excl = (float) (string) $invoiceTotals->getTotalWrappingTaxExcl()
-            ->plus($orderTotals->getTotalWrappingTaxExcl())
-        ;
-        $invoice->total_wrapping_tax_incl = (float) (string) $invoiceTotals->getTotalWrappingTaxIncl()
-            ->plus($orderTotals->getTotalWrappingTaxIncl())
-        ;
-        $invoice->total_discount_tax_excl = (float) (string) $invoiceTotals->getTotalDiscountTaxExcl()
-            ->plus($orderTotals->getTotalDiscountTaxExcl())
-        ;
-        $invoice->total_discount_tax_incl = (float) (string) $invoiceTotals->getTotalDiscountTaxIncl()
-            ->plus($orderTotals->getTotalDiscountTaxIncl())
-        ;
+        $invoice->total_paid_tax_excl = $order->total_paid_tax_excl;
+        $invoice->total_paid_tax_incl = $order->total_paid_tax_incl;
+        $invoice->total_products = $order->total_products;
+        $invoice->total_products_wt = $order->total_products_wt;
+        $invoice->total_wrapping_tax_excl = $order->total_wrapping_tax_excl;
+        $invoice->total_wrapping_tax_incl = $order->total_wrapping_tax_incl;
+        $invoice->total_discount_tax_excl = $order->total_discounts_tax_excl;
+        $invoice->total_discount_tax_incl = $order->total_discounts_tax_incl;
 
         $invoice->update();
 
@@ -485,9 +465,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Order $order
      * @param Cart $cart
      * @param int|null $invoiceId
-     * @param bool $isFreeShipping
      */
-    private function updateOrderTotals(Order $order, Cart $cart, ?int $invoiceId, bool $isFreeShipping): void
+    private function updateOrderTotals(Order $order, Cart $cart, ?int $invoiceId): void
     {
         $totalMethod = $invoiceId ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
         $orderTotals = OrderTotalNumbers::buildFromOrder($order);
@@ -524,37 +503,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         ;
 
         //shipping
-        if ($isFreeShipping) {
-            $this->updateShippingManually($order, $cart, $orderTotals);
-        } else {
-            $order->refreshShippingCost();
-        }
-    }
-
-    /**
-     * couldn't use Order::refreshShippingCost() with free shipping because it recalculates whole cart shipping
-     *  and then total numbers doesn't fit together.
-     *  e.g initial shipping was $7 and discounts $0
-     *  we add product with free shipping (behind the scenes it adds a discount of shipping price ($7))
-     *  so for total prices to fit - shipping should be $14 and discounts $7
-     *  using  Order::refreshShippingCost() would end up shipping being $7
-     * @todo: If i do it manually, i don't update OrderCarrier shipping price.
-     *      Difference occurs between order shipping price and carrier shipping price
-     *      That might introduce problems. How To fix it?
-     * @param Order $order
-     * @param Cart $cart
-     * @param OrderTotalNumbers $orderTotals
-     */
-    private function updateShippingManually(Order $order, Cart $cart, OrderTotalNumbers $orderTotals): void
-    {
-        if (Configuration::get('PS_ORDER_RECALCULATE_SHIPPING')) {
-            $shippingWithTaxes = $this->number($cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
-            $order->total_shipping = (float) (string) $orderTotals->getTotalShipping()->plus($shippingWithTaxes);
-            $order->total_shipping_tax_incl = (float) (string) $orderTotals->getTotalShippingTaxIncl()->plus($shippingWithTaxes);
-            $order->total_shipping_tax_excl = $orderTotals->getTotalShippingTaxExcl()
-                ->plus($this->number($cart->getOrderTotal(false, Cart::ONLY_SHIPPING)))
-            ;
-        }
+        $order->refreshShippingCost();
     }
 
     /**
