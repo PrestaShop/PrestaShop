@@ -33,7 +33,13 @@ module.exports = class AddProduct extends BOBasePage {
     // Form nav
     this.formNavList = '#form-nav';
     this.forNavlistItemLink = `${this.formNavList} #tab_step%ID a`;
-
+    // Selectors of Step 2 : Pricing
+    this.addSpecificPriceButton = '#js-open-create-specific-price-form';
+    this.combinationSelect = '#form_step2_specific_price_sp_id_product_attribute';
+    this.startingAtInput = '#form_step2_specific_price_sp_from_quantity';
+    this.applyDiscountOfInput = '#form_step2_specific_price_sp_reduction';
+    this.reductionType = '#form_step2_specific_price_sp_reduction_type';
+    this.applyButton = '#form_step2_specific_price_save';
     // Selector of Step 3 : Combinations
     this.addCombinationsInput = '#form_step3_attributes-tokenfield';
     this.generateCombinationsButton = '#create-combinations';
@@ -70,7 +76,7 @@ module.exports = class AddProduct extends BOBasePage {
     await this.page.click(this.productReferenceInput, {clickCount: 3});
     await this.page.type(this.productReferenceInput, productData.reference);
     await this.page.click(this.productPriceTtcInput, {clickCount: 3});
-    await this.page.type(this.productPriceTtcInput, productData.price);
+    await this.page.type(this.productPriceTtcInput, productData.price.toString());
     // Set description value
     await this.page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
@@ -83,9 +89,15 @@ module.exports = class AddProduct extends BOBasePage {
       await this.setCombinationsInProduct(productData);
     } else {
       await this.page.click(this.productQuantityInput, {clickCount: 3});
-      await this.page.type(this.productQuantityInput, productData.quantity);
+      await this.page.type(this.productQuantityInput, productData.quantity.toString());
     }
     await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
+    if (productData.withSpecificPrice) {
+      await this.reloadPage();
+      // Go to pricing tab : id = 2
+      await this.goToFormStep(2);
+      await this.addSpecificPrices(productData.specificPrice);
+    }
     // Switch product online before save
     if (switchProductOnline) {
       await Promise.all([
@@ -172,10 +184,9 @@ module.exports = class AddProduct extends BOBasePage {
     // Edit quantity
     await this.page.waitForSelector(this.applyOnCombinationsButton, {visible: true});
     await this.scrollTo(this.productCombinationBulkQuantityInput);
-    await this.page.type(this.productCombinationBulkQuantityInput, quantity);
+    await this.page.type(this.productCombinationBulkQuantityInput, quantity.toString());
     await this.scrollTo(this.applyOnCombinationsButton);
     await this.page.click(this.applyOnCombinationsButton);
-    await this.closeCombinationsForm();
   }
 
   /**
@@ -295,6 +306,26 @@ module.exports = class AddProduct extends BOBasePage {
     await this.reloadPage();
     await this.goToFormStep(5);
     return this.getAttributeContent(this.friendlyUrlInput, 'value');
+  }
+
+  async addSpecificPrices(specificPriceData) {
+    await this.waitForSelectorAndClick(this.addSpecificPriceButton);
+    // Choose combinations if exist
+    if (specificPriceData.combinations) {
+      await this.page.waitFor(2000);
+      await this.page.waitForSelector(this.combinationSelect, {visible: true});
+      await this.scrollTo(this.combinationSelect);
+      await this.selectByVisibleText(this.combinationSelect, specificPriceData.combinations);
+    }
+    await this.setValue(this.startingAtInput, specificPriceData.startingAt.toString());
+    await this.setValue(this.applyDiscountOfInput, specificPriceData.discount.toString());
+    await this.selectByVisibleText(this.reductionType, specificPriceData.reductionType);
+    // Apply specific price
+    await Promise.all([
+      this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
+      this.scrollTo(this.applyButton),
+      this.page.click(this.applyButton),
+    ]);
   }
 
   /**

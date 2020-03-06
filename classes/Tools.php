@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -47,6 +48,7 @@ class ToolsCore
     protected static $_user_browser;
     protected static $request;
     protected static $cldr_cache = [];
+    protected static $colorBrightnessCalculator;
 
     public static $round_mode = null;
 
@@ -2342,6 +2344,15 @@ class ToolsCore
         $b = hexdec(substr($hex, 4, 2));
 
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+    }
+
+    public static function isBright($hex)
+    {
+        if (null === self::$colorBrightnessCalculator) {
+            self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
+        }
+
+        return self::$colorBrightnessCalculator->isBright($hex);
     }
 
     public static function parserSQL($sql)

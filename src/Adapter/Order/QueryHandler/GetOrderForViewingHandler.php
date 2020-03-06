@@ -79,6 +79,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use Product;
 use Shop;
 use State;
 use StockAvailable;
@@ -220,12 +221,17 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     /**
      * @param Order $order
      *
-     * @return OrderCustomerForViewing
+     * @return OrderCustomerForViewing|null
      */
-    private function getOrderCustomer(Order $order): OrderCustomerForViewing
+    private function getOrderCustomer(Order $order): ?OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
+
+        if (!Validate::isLoadedObject($customer)) {
+            return null;
+        }
+
         $gender = new Gender($customer->id_gender);
         $genderName = '';
 
@@ -477,7 +483,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     $pack_item['location'],
                     null,
                     '',
-                    $packItemType
+                    $packItemType,
+                    (bool) Product::isAvailableWhenOutOfStock($pack_item['out_of_stock'])
                 );
             }
 
@@ -509,6 +516,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
                 !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
                 $productType,
+                (bool) Product::isAvailableWhenOutOfStock($product['out_of_stock']),
                 $packItems,
                 $product['customizations']
             );

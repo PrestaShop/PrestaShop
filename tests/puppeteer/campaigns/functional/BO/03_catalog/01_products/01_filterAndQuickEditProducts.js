@@ -68,7 +68,7 @@ describe('Filter Products', async () => {
           {
             testIdentifier: 'filterId',
             filterType: 'input',
-            filterBy: 'product_id',
+            filterBy: 'id_product',
             filterValue: {min: Products.demo_1.id, max: Products.demo_6.id},
           },
       },
@@ -111,7 +111,7 @@ describe('Filter Products', async () => {
         args: {
           testIdentifier: 'filterQuantity',
           filterType: 'input',
-          filterBy: 'quantity',
+          filterBy: 'sav_quantity',
           filterValue: {min: Products.demo_6.quantity, max: Products.demo_1.quantity},
         },
       },
