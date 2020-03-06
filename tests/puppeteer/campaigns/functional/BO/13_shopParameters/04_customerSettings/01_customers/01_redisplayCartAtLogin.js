@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerSettings_customer_enableDisableRedisplayCartAtLogin';
+const baseContext = 'functional_BO_customerSettings_customer_redisplayCartAtLogin';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -77,7 +77,7 @@ describe('Enable/Disable re-display cart at login', async () => {
         `${test.args.action}RedisplayCartAtLogin`,
         baseContext,
       );
-      const result = await this.pageObjects.customerSettingsPage.setRedisplayCartAtLogin(test.args.enable);
+      const result = await this.pageObjects.customerSettingsPage.setRedisplayCartAtLoginStatus(test.args.enable);
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 
