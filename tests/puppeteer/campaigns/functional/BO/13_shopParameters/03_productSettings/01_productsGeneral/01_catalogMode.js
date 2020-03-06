@@ -16,7 +16,7 @@ const ProductData = require('@data/FO/product');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParams_productSetting_enableDisableCatalogMode';
+const baseContext = 'functional_BO_shopParams_productSetting_catalogMode';
 
 let browser;
 let page;
@@ -85,14 +85,16 @@ describe('Enable/Disable catalog mode', async () => {
     if (test.args.actionCatalogMode === 'enable') {
       const testShowPrices = [
         {
-          args: {
-            action: 'disable', enable: false, isPriceExist: false, isAddToCartExist: false,
-          },
+          args:
+            {
+              action: 'disable', enable: false, isPriceExist: false, isAddToCartExist: false,
+            },
         },
         {
-          args: {
-            action: 'enable', enable: true, isPriceExist: true, isAddToCartExist: false,
-          },
+          args:
+            {
+              action: 'enable', enable: true, isPriceExist: true, isAddToCartExist: false,
+            },
         },
       ];
       testShowPrices.forEach((showPrices, index) => {
