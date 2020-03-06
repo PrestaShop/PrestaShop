@@ -175,6 +175,11 @@ class XmlLoader
         $this->ids = $ids;
     }
 
+    /**
+     * @return string[] Entity names
+     *
+     * @throws PrestashopInstallerException
+     */
     public function getSortedEntities()
     {
         // Browse all XML files from data/xml directory
@@ -229,6 +234,8 @@ class XmlLoader
 
     /**
      * Read all XML files from data folder and populate tables.
+     *
+     * @throws PrestashopInstallerException
      */
     public function populateFromXmlFiles()
     {
@@ -243,7 +250,9 @@ class XmlLoader
     /**
      * Populate an entity.
      *
-     * @param string $entity
+     * @param string $entity Entity name to populate
+     *
+     * @throws PrestashopInstallerException
      */
     public function populateEntity($entity)
     {
@@ -268,6 +277,7 @@ class XmlLoader
         $is_multi_lang_entity = $this->isMultilang($entity);
         $xml_langs = $multilang_columns = [];
         $default_lang = null;
+
         if ($is_multi_lang_entity) {
             $multilang_columns = $this->getColumns($entity, true);
             foreach ($this->languages as $id_lang => $iso) {
@@ -464,6 +474,8 @@ class XmlLoader
      * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
      *
      * @return \SimpleXMLElement|null
+     *
+     * @throws PrestashopInstallerException
      */
     protected function loadEntity($entity, $iso = null)
     {
@@ -671,17 +683,19 @@ class XmlLoader
         $data['position'] = $position[$data['id_parent']]++;
 
         // Generate primary key manually
-        $primary = '';
-        $entity_id = 0;
         if (!$xml->fields['primary']) {
             $primary = 'id_' . $entity;
         } elseif (strpos((string) $xml->fields['primary'], ',') === false) {
             $primary = (string) $xml->fields['primary'];
+        } else {
+            $primary = '';
         }
 
         if ($primary) {
             $entity_id = $this->generatePrimary($entity, $primary);
             $data[$primary] = $entity_id;
+        } else {
+            $entity_id = 0;
         }
 
         // Store INSERT queries in order to optimize install with grouped inserts
