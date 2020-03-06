@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Service;
 
 use Exception;
+use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Provider\UseModuleInterface;
@@ -55,7 +56,7 @@ class TranslationService
     /**
      * @param string $locale
      *
-     * @return mixed
+     * @return Lang
      *
      * @throws Exception
      */
@@ -63,6 +64,7 @@ class TranslationService
     {
         $doctrine = $this->container->get('doctrine');
 
+        /** @var Lang $lang */
         $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
 
         if (!$lang) {
