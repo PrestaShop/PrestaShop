@@ -520,7 +520,6 @@ GitHub contributors:
 - pilothuy
 - Piotr Kaczor
 - Piotr Moćko
-- PK André
 - Pliciweb - Nicolas
 - Praneeth Nidarshan
 - Presta Module
@@ -539,6 +538,7 @@ GitHub contributors:
 - Pronux
 - proydsl
 - psandmore
+- PululuK
 - pxls
 - quadrateam
 - Quentin Delecroix
