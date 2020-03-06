@@ -42,6 +42,10 @@ class Theme implements AddonInterface
             $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
             $attributes = array_merge($parentAttributes, $attributes);
+
+            if (isset($attributes['assets']['use_parent_assets']) && $attributes['assets']['use_parent_assets'] && isset($parentAttributes['assets']) {
+                $attributes['assets'] = array_merge_recursive($parentAttributes['assets'], $attributes['assets']);
+            }
         }
 
         $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
