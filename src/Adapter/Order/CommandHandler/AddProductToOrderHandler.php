@@ -106,7 +106,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
         if ($command->isFreeShipping()) {
-            $freeShippingCartRule = $this->createFreeShippingCartRule($cart, $order);
+            $this->createFreeShippingCartRule($cart, $order);
         }
 
         $this->updateOrderTotals($order, $cart, $command->getOrderInvoiceId());
@@ -145,10 +145,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         Hook::exec('actionOrderEdited', ['order' => $order]);
-
-        if (isset($freeShippingCartRule)) {
-            $this->createOrderCartRule($freeShippingCartRule, $order, !empty($invoice->id) ? $invoice->id : 0);
-        }
 
         $order->update();
     }
