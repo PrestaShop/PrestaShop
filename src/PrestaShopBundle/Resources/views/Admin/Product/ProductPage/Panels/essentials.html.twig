@@ -169,7 +169,7 @@
                         <div id="product_type_combinations_shortcut">
                           <span class="small font-secondary">
                             {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
-                            {{ "Advanced settings in [1][2]Combinations[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                            {{ "Advanced settings in [1][2]Combinations[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').click();" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                           </span>
                         </div>
                       </div>
@@ -205,7 +205,7 @@
                       </div>
                       <span class="small font-secondary">
                         {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
-                        {{ "Advanced settings in [1][2]Quantities[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').tab(\'show\');" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                        {{ "Advanced settings in [1][2]Quantities[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').click();" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                       </span>
                     </div>
                   {% endif %}
@@ -243,7 +243,7 @@
                       <div class="col-md-12">
                         <span class="small font-secondary">
                           {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
-                          {{ "Advanced settings in [1][2]Pricing[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step2" onclick="$(\'a[href=\\\'#step2\\\']\').tab(\'show\');" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                          {{ "Advanced settings in [1][2]Pricing[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step2" onclick="$(\'a[href=\\\'#step2\\\']\').click();" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
                         </span>
                       </div>
                     </div>
