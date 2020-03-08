@@ -229,7 +229,7 @@ class ProductInformation extends CommonAbstractType
                     'data-minimumResultsForSearch' => '7',
                 ],
                 'label' => $this->translator->trans('Brand', [], 'Admin.Catalog.Feature'),
-                'placeholder' => $this->translator->trans('Choose a manufacturer', [], 'Admin.Global'),
+                'placeholder' => $this->translator->trans('Choose a manufacturer', [], 'Admin.Catalog.Feature'),
             ])
             //RIGHT COL
             ->add('active', FormType\CheckboxType::class, [
