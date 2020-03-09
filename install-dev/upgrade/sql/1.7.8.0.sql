@@ -10,7 +10,7 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionModuleUninstallBefore', 'Module uninstall before', 'This hook is called before module uninstall process', '1'),
   (NULL, 'actionModuleUninstallAfter', 'Module uninstall after', 'This hook is called at the end of module uninstall process', '1'),
   (NULL, 'displayCartModalContent', 'Cart Presenter', 'This hook displays content in the middle of the window that appears after adding product to cart', '1'),
-  (NULL, 'displayCartModalFooter', 'Cart Presenter', 'This hook displays content in the bottom of window that appears after adding product to cart', '1')
+  (NULL, 'displayCartModalFooter', 'Cart Presenter', 'This hook displays content in the bottom of window that appears after adding product to cart', '1'),
   (NULL, 'actionCheckoutRender', 'Checkout process render', 'This hook is called when checkout process is constructed', '1'),
   (NULL, 'actionPresentProductListing', 'Product Listing Presenter', 'This hook is called before a product listing is presented', '1'),
   (NULL, 'actionGetProductPropertiesAfterUnitPrice', 'Product Properties', 'This hook is called after defining the properties of a product', '1'),
@@ -39,3 +39,6 @@ ALTER TABLE `PREFIX_log`
   ADD `id_lang` INT(10) NULL DEFAULT NULL after `id_shop_group`,
   ADD `in_all_shops` TINYINT(1) unsigned NOT NULL DEFAULT '0'
 ;
+
+ALTER TABLE `PREFIX_tab` ADD `wording` VARCHAR(196) NOT NULL  DEFAULT '' AFTER `icon`;
+ALTER TABLE `PREFIX_tab` ADD `wording_domain` VARCHAR(196) NOT NULL DEFAULT '' AFTER `wording`;
