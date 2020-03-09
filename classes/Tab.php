@@ -58,6 +58,12 @@ class TabCore extends ObjectModel
     /** @var string Icon font */
     public $icon;
 
+    /** @var string Translatable wording to use */
+    public $wording;
+
+    /** @var string domain name for the wording */
+    public $wording_domain;
+
     const TAB_MODULE_LIST_URL = _PS_TAB_MODULE_LIST_URL_;
 
     /**
@@ -77,6 +83,8 @@ class TabCore extends ObjectModel
             'enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'hide_host_mode' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'icon' => ['type' => self::TYPE_STRING, 'size' => 64],
+            'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 194],
+            'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 194],
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64],
         ],
