@@ -113,7 +113,7 @@
     <tab id="Stats" name="Stats" />
     <tab id="Statuses" name="Statuses" />
     <tab id="Stock_Coverage" name="Stock Coverage" />
-    <tab id="Stock_Management" name="Stock Management" />
+    <tab id="Stock_Management_Parent" name="Stock Management" />
     <tab id="Stock_Movement" name="Stock Movement" />
     <tab id="Stock" name="Stocks" />
     <tab id="Store_Contacts" name="Stores" />
