@@ -110,5 +110,6 @@ services:
       class: 'PrestaShopBundle\Twig\Extension\LocalizationExtension'
       arguments:
         - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
       tags:
         - { name: twig.extension }

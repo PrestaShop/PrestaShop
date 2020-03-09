@@ -39,7 +39,7 @@
     <tbody>
       {% for carrier in orderForViewing.shipping.carriers %}
         <tr>
-          <td>{{ carrier.date|date('Y-m-d') }}</td>
+          <td>{{ carrier.date|date_format_lite }}</td>
           <td>&nbsp;</td>
           <td>{{ carrier.name }}</td>
           <td>{{ carrier.weight }}</td>
