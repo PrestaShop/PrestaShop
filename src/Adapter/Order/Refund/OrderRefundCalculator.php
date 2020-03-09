@@ -74,12 +74,10 @@ class OrderRefundCalculator
         $precision = $this->getPrecision($order);
 
         $orderDetailList = $this->getOrderDetailList($orderDetailRefunds);
-        $taxCalculator = $this->getOrderTaxCalculator($order);
         $productRefunds = $this->flattenCheckedProductRefunds(
             $orderDetailRefunds,
             $isTaxIncluded,
             $orderDetailList,
-            $taxCalculator,
             $precision
         );
         $refundedAmount = 0;
@@ -107,6 +105,7 @@ class OrderRefundCalculator
             }
             if (!$isTaxIncluded) {
                 // @todo: use https://github.com/PrestaShop/decimal for price computations
+                $taxCalculator = $this->getCarrierTaxCalculator($order);
                 $refundedAmount += $taxCalculator->addTaxes($shippingCostAmount);
             } else {
                 $refundedAmount += $shippingCostAmount;
@@ -164,7 +163,6 @@ class OrderRefundCalculator
         array $orderDetailRefunds,
         bool $isTaxIncluded,
         array $orderDetails,
-        TaxCalculator $taxCalculator,
         int $precision
     ) {
         $productRefunds = [];
@@ -206,6 +204,9 @@ class OrderRefundCalculator
             $productRefunds[$orderDetailId]['unit_price'] =
                 $productRefunds[$orderDetailId]['amount'] / $productRefunds[$orderDetailId]['quantity'];
 
+            // We get the tax calculator from the OrderDetail which will make it use the tax rate at the moment the order was placed
+            $taxCalculator = $orderDetail->getTaxCalculator();
+
             // Add data for OrderDetail updates, it's important to round because too many decimals will fail in Validate::isPrice
             if ($isTaxIncluded) {
                 $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($productRefundAmount, $precision);
@@ -246,7 +247,7 @@ class OrderRefundCalculator
      *
      * @throws PrestaShopException
      */
-    private function getOrderTaxCalculator(Order $order): TaxCalculator
+    private function getCarrierTaxCalculator(Order $order): TaxCalculator
     {
         $carrier = new Carrier((int) $order->id_carrier);
         // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
