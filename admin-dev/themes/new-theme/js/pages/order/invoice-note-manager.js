@@ -42,9 +42,8 @@ export default class InvoiceNoteManager {
   _initShowNoteFormEventHandler() {
     $('.js-open-invoice-note-btn').on('click', (event) => {
       event.preventDefault();
-
       const $btn = $(event.currentTarget);
-      const $noteRow = $btn.closest('tr').siblings('tr:first');
+      const $noteRow = $btn.closest('tr').next();
 
       $noteRow.removeClass('d-none');
     });
