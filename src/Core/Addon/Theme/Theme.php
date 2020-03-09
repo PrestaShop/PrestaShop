@@ -43,7 +43,7 @@ class Theme implements AddonInterface
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
             $attributes = array_merge($parentAttributes, $attributes);
 
-            if (isset($attributes['assets']['use_parent_assets']) && $attributes['assets']['use_parent_assets'] && isset($parentAttributes['assets']) {
+            if (!empty($attributes['assets']['use_parent_assets']) && isset($parentAttributes['assets'])) {
                 $attributes['assets'] = array_merge_recursive($parentAttributes['assets'], $attributes['assets']);
             }
         }
