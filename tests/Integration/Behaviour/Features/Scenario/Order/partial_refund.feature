@@ -28,6 +28,18 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
+    Then order "bo_order_refund" should have following details:
+      | total_products           | 35.7   |
+      | total_products_wt        | 37.842 |
+      | total_shipping           | 7.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 42.7   |
+      | total_paid_tax_incl      | 44.842 |
+      | total_paid               | 44.842 |
+      | total_paid_real          | 44.842 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
@@ -40,24 +52,36 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1                        | 3.5    |
     Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
-      | amount                  | 14.0 |
-      | shipping_cost_amount    | 0.0  |
-      | total_products_tax_excl | 14.0 |
-      | total_products_tax_incl | 14.0 |
+      | amount                  | 14.0  |
+      | shipping_cost_amount    | 0.0   |
+      | total_products_tax_excl | 14.0  |
+      | total_products_tax_incl | 14.84 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2    |
+      | product_quantity            | 2     |
+      | product_quantity_refunded   | 1     |
+      | product_quantity_reinjected | 0     |
+      | total_refunded_tax_excl     | 10.5  |
+      | total_refunded_tax_incl     | 11.13 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1    |
       | product_quantity_refunded   | 1    |
       | product_quantity_reinjected | 0    |
-      | total_refunded_tax_excl     | 10.5 |
-      | total_refunded_tax_incl     | 10.5 |
-    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1   |
-      | product_quantity_refunded   | 1   |
-      | product_quantity_reinjected | 0   |
-      | total_refunded_tax_excl     | 3.5 |
-      | total_refunded_tax_incl     | 3.5 |
+      | total_refunded_tax_excl     | 3.5  |
+      | total_refunded_tax_incl     | 3.71 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
+    And order "bo_order_refund" should have following details:
+      | total_products           | 35.7   |
+      | total_products_wt        | 37.842 |
+      | total_shipping           | 7.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 42.7   |
+      | total_paid_tax_incl      | 44.842 |
+      | total_paid               | 44.842 |
+      | total_paid_real          | 44.842 |
 
   @order-refund
   @order-partial-refund
@@ -81,13 +105,13 @@ Feature: Refund Order from Back Office (BO)
       | amount                  | 7.5  |
       | shipping_cost_amount    | 0.0  |
       | total_products_tax_excl | 7.5  |
-      | total_products_tax_incl | 7.5  |
+      | total_products_tax_incl | 7.95 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2   |
-      | product_quantity_refunded   | 2   |
-      | product_quantity_reinjected | 2   |
-      | total_refunded_tax_excl     | 7.5 |
-      | total_refunded_tax_incl     | 7.5 |
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 2    |
+      | product_quantity_reinjected | 2    |
+      | total_refunded_tax_excl     | 7.5  |
+      | total_refunded_tax_incl     | 7.95 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
       | product_quantity_refunded   | 0 |
@@ -119,13 +143,13 @@ Feature: Refund Order from Back Office (BO)
       | amount                  | 7.5  |
       | shipping_cost_amount    | 0.0  |
       | total_products_tax_excl | 7.5  |
-      | total_products_tax_incl | 7.5  |
+      | total_products_tax_incl | 7.95 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2   |
-      | product_quantity_refunded   | 2   |
-      | product_quantity_reinjected | 2   |
-      | total_refunded_tax_excl     | 7.5 |
-      | total_refunded_tax_incl     | 7.5 |
+      | product_quantity            | 2    |
+      | product_quantity_refunded   | 2    |
+      | product_quantity_reinjected | 2    |
+      | total_refunded_tax_excl     | 7.5  |
+      | total_refunded_tax_incl     | 7.95 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1 |
       | product_quantity_refunded   | 0 |
@@ -143,6 +167,18 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
+    Then order "bo_order_refund" should have following details:
+      | total_products           | 35.7   |
+      | total_products_wt        | 37.842 |
+      | total_shipping           | 7.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 42.7   |
+      | total_paid_tax_incl      | 44.842 |
+      | total_paid               | 44.842 |
+      | total_paid_real          | 44.842 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
@@ -158,7 +194,7 @@ Feature: Refund Order from Back Office (BO)
       | amount                  | 8.0  |
       | shipping_cost_amount    | 5.5  |
       | total_products_tax_excl | 8.0  |
-      | total_products_tax_incl | 8.0  |
+      | total_products_tax_incl | 8.48 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
       | product_quantity_refunded   | 0 |
@@ -166,13 +202,25 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_excl     | 0 |
       | total_refunded_tax_incl     | 0 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1   |
-      | product_quantity_refunded   | 1   |
-      | product_quantity_reinjected | 1   |
-      | total_refunded_tax_excl     | 8.0 |
-      | total_refunded_tax_incl     | 8.0 |
+      | product_quantity            | 1    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 1    |
+      | total_refunded_tax_excl     | 8.0  |
+      | total_refunded_tax_incl     | 8.48 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
+    And order "bo_order_refund" should have following details:
+      | total_products           | 35.7   |
+      | total_products_wt        | 37.842 |
+      | total_shipping           | 7.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 42.7   |
+      | total_paid_tax_incl      | 44.842 |
+      | total_paid               | 44.842 |
+      | total_paid_real          | 44.842 |
 
   @order-refund
   @order-partial-refund
@@ -183,6 +231,18 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
+    Then order "bo_order_refund" should have following details:
+      | total_products           | 35.7   |
+      | total_products_wt        | 37.842 |
+      | total_shipping           | 7.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+      | total_discounts_tax_excl | 5.0    |
+      | total_discounts_tax_incl | 5.3    |
+      | total_paid_tax_excl      | 37.7   |
+      | total_paid_tax_incl      | 39.542 |
+      | total_paid               | 39.542 |
+      | total_paid_real          | 39.542 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
@@ -198,10 +258,10 @@ Feature: Refund Order from Back Office (BO)
     # amount, and total_products_tax_incl the real one (minus voucher) If we had been in tax INCLUDED display
     # it would have been the opposite
     Then "bo_order_refund" last credit slip is:
-      | amount                  | 8.0 |
-      | shipping_cost_amount    | 5.5 |
-      | total_products_tax_excl | 8.0 |
-      | total_products_tax_incl | 3.0 |
+      | amount                  | 8.0  |
+      | shipping_cost_amount    | 5.5  |
+      | total_products_tax_excl | 8.0  |
+      | total_products_tax_incl | 3.18 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
       | product_quantity_refunded   | 0 |
@@ -209,13 +269,25 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_excl     | 0 |
       | total_refunded_tax_incl     | 0 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1   |
-      | product_quantity_refunded   | 1   |
-      | product_quantity_reinjected | 0   |
-      | total_refunded_tax_excl     | 8.0 |
-      | total_refunded_tax_incl     | 8.0 |
+      | product_quantity            | 1    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 0    |
+      | total_refunded_tax_excl     | 8.0  |
+      | total_refunded_tax_incl     | 8.48 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
+    And order "bo_order_refund" should have following details:
+      | total_products           | 35.7   |
+      | total_products_wt        | 37.842 |
+      | total_shipping           | 7.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+      | total_discounts_tax_excl | 5.0    |
+      | total_discounts_tax_incl | 5.3    |
+      | total_paid_tax_excl      | 37.7   |
+      | total_paid_tax_incl      | 39.542 |
+      | total_paid               | 39.542 |
+      | total_paid_real          | 39.542 |
 
   @order-refund
   @order-partial-refund
@@ -225,6 +297,18 @@ Feature: Refund Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Processing in progress     |
+    Then order "bo_order_refund" should have following details:
+      | total_products           | 35.7   |
+      | total_products_wt        | 37.842 |
+      | total_shipping           | 7.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 42.7   |
+      | total_paid_tax_incl      | 44.842 |
+      | total_paid               | 44.842 |
+      | total_paid_real          | 44.842 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
@@ -237,10 +321,10 @@ Feature: Refund Order from Back Office (BO)
       | shipping_refund             |                          | 5.5    |
     Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
-      | amount                  | 8.0 |
-      | shipping_cost_amount    | 5.5 |
-      | total_products_tax_excl | 8.0 |
-      | total_products_tax_incl | 8.0 |
+      | amount                  | 8.0  |
+      | shipping_cost_amount    | 5.5  |
+      | total_products_tax_excl | 8.0  |
+      | total_products_tax_incl | 8.48 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2 |
       | product_quantity_refunded   | 0 |
@@ -248,14 +332,26 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_excl     | 0 |
       | total_refunded_tax_incl     | 0 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1   |
-      | product_quantity_refunded   | 1   |
-      | product_quantity_reinjected | 0   |
-      | total_refunded_tax_excl     | 8.0 |
-      | total_refunded_tax_incl     | 8.0 |
+      | product_quantity            | 1    |
+      | product_quantity_refunded   | 1    |
+      | product_quantity_reinjected | 0    |
+      | total_refunded_tax_excl     | 8.0  |
+      | total_refunded_tax_incl     | 8.48 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
     And customer "testCustomer" last voucher is 13.5
+    And order "bo_order_refund" should have following details:
+      | total_products           | 35.7   |
+      | total_products_wt        | 37.842 |
+      | total_shipping           | 7.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 42.7   |
+      | total_paid_tax_incl      | 44.842 |
+      | total_paid               | 44.842 |
+      | total_paid_real          | 44.842 |
 
   @order-refund
   @order-partial-refund
@@ -278,22 +374,22 @@ Feature: Refund Order from Back Office (BO)
       | shipping_refund             |                          | 51     |
     Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
-      | amount                  | 23.8 |
-      | shipping_cost_amount    | 7.0  |
-      | total_products_tax_excl | 23.8 |
-      | total_products_tax_incl | 23.8 |
+      | amount                  | 23.8   |
+      | shipping_cost_amount    | 7.0    |
+      | total_products_tax_excl | 23.8   |
+      | total_products_tax_incl | 25.228 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2    |
-      | product_quantity_refunded   | 1    |
-      | product_quantity_reinjected | 0    |
-      | total_refunded_tax_excl     | 11.9 |
-      | total_refunded_tax_incl     | 11.9 |
+      | product_quantity            | 2      |
+      | product_quantity_refunded   | 1      |
+      | product_quantity_reinjected | 0      |
+      | total_refunded_tax_excl     | 11.9   |
+      | total_refunded_tax_incl     | 12.614 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1    |
-      | product_quantity_refunded   | 1    |
-      | product_quantity_reinjected | 0    |
-      | total_refunded_tax_excl     | 11.9 |
-      | total_refunded_tax_incl     | 11.9 |
+      | product_quantity            | 1      |
+      | product_quantity_refunded   | 1      |
+      | product_quantity_reinjected | 0      |
+      | total_refunded_tax_excl     | 11.9   |
+      | total_refunded_tax_incl     | 12.614 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -317,17 +413,17 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1                        | 3.5    |
     Then "bo_order_refund" has 0 credit slips
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2    |
+      | product_quantity            | 2     |
+      | product_quantity_refunded   | 1     |
+      | product_quantity_reinjected | 1     |
+      | total_refunded_tax_excl     | 10.5  |
+      | total_refunded_tax_incl     | 11.13 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1    |
       | product_quantity_refunded   | 1    |
       | product_quantity_reinjected | 1    |
-      | total_refunded_tax_excl     | 10.5 |
-      | total_refunded_tax_incl     | 10.5 |
-    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1   |
-      | product_quantity_refunded   | 1   |
-      | product_quantity_reinjected | 1   |
-      | total_refunded_tax_excl     | 3.5 |
-      | total_refunded_tax_incl     | 3.5 |
+      | total_refunded_tax_excl     | 3.5  |
+      | total_refunded_tax_incl     | 3.71 |
     And there are 1 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
     And customer "testCustomer" last voucher is 14.0
@@ -355,19 +451,19 @@ Feature: Refund Order from Back Office (BO)
       | amount                  | 14.09     |
       | shipping_cost_amount    | 0.0       |
       | total_products_tax_excl | 14.091378 |
-      | total_products_tax_incl | 14.091378 |
+      | total_products_tax_incl | 14.936860 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
       | product_quantity            | 2         |
       | product_quantity_refunded   | 1         |
       | product_quantity_reinjected | 0         |
       | total_refunded_tax_excl     | 10.545689 |
-      | total_refunded_tax_incl     | 10.545689 |
+      | total_refunded_tax_incl     | 11.178430 |
     And product "Mug Today is a good day" in order "bo_order_refund" has following details:
       | product_quantity            | 1        |
       | product_quantity_refunded   | 1        |
       | product_quantity_reinjected | 0        |
       | total_refunded_tax_excl     | 3.545689 |
-      | total_refunded_tax_incl     | 3.545689 |
+      | total_refunded_tax_incl     | 3.758430 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -594,24 +690,24 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1                        | 3.5    |
     Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
-      | amount                  | 14.0 |
-      | shipping_cost_amount    | 0.0  |
-      | total_products_tax_excl | 14.0 |
-      | total_products_tax_incl | 14.0 |
+      | amount                  | 14.0  |
+      | shipping_cost_amount    | 0.0   |
+      | total_products_tax_excl | 14.0  |
+      | total_products_tax_incl | 14.84 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2    |
+      | product_quantity            | 2     |
+      | product_quantity_refunded   | 0     |
+      | product_quantity_return     | 1     |
+      | product_quantity_reinjected | 0     |
+      | total_refunded_tax_excl     | 10.5  |
+      | total_refunded_tax_incl     | 11.13 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1    |
       | product_quantity_refunded   | 0    |
       | product_quantity_return     | 1    |
       | product_quantity_reinjected | 0    |
-      | total_refunded_tax_excl     | 10.5 |
-      | total_refunded_tax_incl     | 10.5 |
-    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1   |
-      | product_quantity_refunded   | 0   |
-      | product_quantity_return     | 1   |
-      | product_quantity_reinjected | 0   |
-      | total_refunded_tax_excl     | 3.5 |
-      | total_refunded_tax_incl     | 3.5 |
+      | total_refunded_tax_excl     | 3.5  |
+      | total_refunded_tax_incl     | 3.71 |
     And there are 0 more "Mug The best is yet to come" in stock
     And there are 0 more "Mug Today is a good day" in stock
 
@@ -636,23 +732,23 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1                        | 3.5    |
     Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
-      | amount                  | 14.0 |
-      | shipping_cost_amount    | 0.0  |
-      | total_products_tax_excl | 14.0 |
-      | total_products_tax_incl | 14.0 |
+      | amount                  | 14.0  |
+      | shipping_cost_amount    | 0.0   |
+      | total_products_tax_excl | 14.0  |
+      | total_products_tax_incl | 14.84 |
     And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
-      | product_quantity            | 2    |
+      | product_quantity            | 2     |
+      | product_quantity_refunded   | 1     |
+      | product_quantity_return     | 0     |
+      | product_quantity_reinjected | 1     |
+      | total_refunded_tax_excl     | 10.5  |
+      | total_refunded_tax_incl     | 11.13 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1    |
       | product_quantity_refunded   | 1    |
       | product_quantity_return     | 0    |
       | product_quantity_reinjected | 1    |
-      | total_refunded_tax_excl     | 10.5 |
-      | total_refunded_tax_incl     | 10.5 |
-    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
-      | product_quantity            | 1   |
-      | product_quantity_refunded   | 1   |
-      | product_quantity_return     | 0   |
-      | product_quantity_reinjected | 1   |
-      | total_refunded_tax_excl     | 3.5 |
-      | total_refunded_tax_incl     | 3.5 |
+      | total_refunded_tax_excl     | 3.5  |
+      | total_refunded_tax_incl     | 3.71 |
     And there are 1 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
