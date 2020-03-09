@@ -97,8 +97,8 @@ describe('Sort Languages', async () => {
       await this.pageObjects.languagesPage.sortTable(test.args.sortBy, test.args.sortDirection);
       let sortedTable = await this.pageObjects.languagesPage.getAllRowsColumnContent(test.args.sortBy);
       if (test.args.isFloat) {
-        nonSortedTable = await nonSortedTable.map(text => parseFloat(text, 10));
-        sortedTable = await sortedTable.map(text => parseFloat(text, 10));
+        nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+        sortedTable = await sortedTable.map(text => parseFloat(text));
       }
       const expectedResult = await this.pageObjects.languagesPage.sortArray(nonSortedTable, test.args.isFloat);
       if (test.args.sortDirection === 'asc') {

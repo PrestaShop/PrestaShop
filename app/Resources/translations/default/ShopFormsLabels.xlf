@@ -69,7 +69,7 @@
       <trans-unit id="ccd41dac2cc2284362975a05bd9ce363">
         <source>Birthdate</source>
         <target>Birthdate</target>
-        <note>Line: 203</note>
+        <note>Line: 211</note>
       </trans-unit>
       <trans-unit id="20db0bfeecd8fe60533206a2b5e9891a">
         <source>First name</source>
@@ -79,17 +79,17 @@
       <trans-unit id="8d3f5eff9c40ee315d452392bed5309b">
         <source>Last name</source>
         <target>Last name</target>
-        <note>Line: 131</note>
+        <note>Line: 135</note>
       </trans-unit>
       <trans-unit id="1c76cbfe21c6f44c1d1e59d54f3e4420">
         <source>Company</source>
         <target>Company</target>
-        <note>Line: 143</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
         <source>Identification number</source>
         <target>Identification number</target>
-        <note>Line: 152
+        <note>Line: 160
 Comment: Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.</note>
       </trans-unit>
     </body>
@@ -153,12 +153,12 @@ File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:64</no
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/modules/ps_emailsubscription/views/templates/hook/ps_emailsubscription-column.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="198584454b0ce1101ff5b50323325aa8">
         <source>Your email address</source>
         <target>Your email address</target>
-        <note>Line: 50</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>

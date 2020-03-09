@@ -61,6 +61,19 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Update checkbox value
+   * @param selector
+   * @param expectedValue
+   * @return {Promise<void>}
+   */
+  async updateCheckboxValue(selector, expectedValue) {
+    const actualValue = await this.elementChecked(selector);
+    if (actualValue !== expectedValue) {
+      await this.page.click(selector);
+    }
+  }
+
+  /**
    * Is element visible
    * @param selector, element to check
    * @return boolean, true if visible, false if not
@@ -309,5 +322,27 @@ module.exports = class CommonPage {
       return arrayToSort.sort((a, b) => a - b);
     }
     return arrayToSort.sort((a, b) => a.localeCompare(b));
+  }
+
+  /**
+   * Drag and drop element
+   * @param selectorToDrag
+   * @param selectorWhereToDrop
+   * @return {Promise<void>}
+   */
+  async dragAndDrop(selectorToDrag, selectorWhereToDrop) {
+    await this.page.hover(selectorToDrag);
+    await this.page.mouse.down();
+    await this.page.hover(selectorWhereToDrop);
+    await this.page.mouse.up();
+  }
+
+  /**
+   * Uppercase the first character of the word
+   * @param word
+   * @returns {string}
+   */
+  uppercaseFirstCharacter(word) {
+    return `${word[0].toUpperCase()}${word.slice(1)}`;
   }
 };

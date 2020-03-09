@@ -169,10 +169,9 @@ $(() => {
 
   function initChangeAddressFormHandler() {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
-    const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
 
-    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', () => {
-      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
+      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($(event.currentTarget).data('addressType'));
     });
   }
 });

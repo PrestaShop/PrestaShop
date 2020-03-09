@@ -256,4 +256,12 @@ module.exports = class Suppliers extends BOBasePage {
     await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
+
+  /**
+   * Get alert text message
+   * @returns {Promise<string>|*}
+   */
+  getAlertTextMessage() {
+    return this.getTextContent(this.alertTextBlock);
+  }
 };

@@ -22,10 +22,8 @@ let browser;
 let page;
 const today = new Date();
 // Create a future date that there is no delivery slips (yyy-mm-dd)
-const day = (`0${today.getDate()}`).slice(-2); // Current day
-const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const year = today.getFullYear() + 1; // Next year
-const futureDate = `${year}-${month}-${day}`;
+today.setFullYear(today.getFullYear() + 1);
+const futureDate = today.toISOString().slice(0, 10);
 const fileName = 'deliveries.pdf';
 
 // Init objects needed

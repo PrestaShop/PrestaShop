@@ -41,8 +41,9 @@
         {{ displayAdminOrderTopHookContent|raw }}
       </div>
     {% endif %}
-      <div class="col-md-12">
+      <div class="row col-md-12">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_navigation.html.twig' %}
       </div>
     </div>
 
@@ -86,7 +87,9 @@
     {{ renderhook('displayAdminOrder', {'id_order': orderForViewing.id}) }}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_shipping_modal.html.twig' %}
-    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig' %}
+    {% if orderForViewing.customer is not null %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig' %}
+    {% endif %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_all_messages_modal.html.twig' %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_product_pack_modal.html.twig' %}
   </div>
