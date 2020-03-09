@@ -1389,7 +1389,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @throws PrestaShopException
      */
-    public function updateMultilangTables(Language $language, array $tablesToUpdate)
+    public static function updateMultilangTables(Language $language, array $tablesToUpdate)
     {
         foreach ($tablesToUpdate as $tableName) {
             $className = ucfirst(Tools::toCamelCase(str_replace(_DB_PREFIX_, '', $tableName)));
