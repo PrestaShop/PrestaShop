@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
 use PrestaShop\PrestaShop\Adapter\Entity\Tag;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+use PrestaShopBundle\Install\EntityLoader\FileLoader;
 use PrestaShopDatabaseException;
 use PrestashopInstallerException;
 
@@ -58,11 +59,6 @@ class XmlLoader
     protected $languages = [];
 
     /**
-     * @var array Store in cache all loaded XML files
-     */
-    protected $cache_xml_entity = [];
-
-    /**
      * @var array List of errors
      */
     protected $errors = [];
@@ -77,6 +73,11 @@ class XmlLoader
     protected $primaries = [];
 
     protected $delayed_inserts = [];
+
+    /**
+     * @var FileLoader
+     */
+    private $fileLoader;
 
     public function __construct()
     {
@@ -107,6 +108,7 @@ class XmlLoader
         $this->data_path = _PS_INSTALL_DATA_PATH_ . 'xml/';
         $this->lang_path = _PS_INSTALL_LANGS_PATH_;
         $this->img_path = _PS_INSTALL_DATA_PATH_ . 'img/';
+        $this->fileLoader = new FileLoader($this->data_path, $this->lang_path);
     }
 
     public function setFixturesPath($path = null)
@@ -119,6 +121,7 @@ class XmlLoader
         $this->data_path = $path . 'data/';
         $this->lang_path = $path . 'langs/';
         $this->img_path = $path . 'img/';
+        $this->fileLoader = new FileLoader($this->data_path, $this->lang_path);
     }
 
     /**
@@ -187,7 +190,7 @@ class XmlLoader
         foreach (scandir($this->data_path) as $file) {
             if (preg_match('#^(.+)\.xml$#', $file, $m)) {
                 $entity = $m[1];
-                $xml = $this->loadEntity($entity);
+                $xml = $this->fileLoader->load($entity);
 
                 // Store entities dependencies (with field type="relation")
                 if ($xml->fields) {
@@ -266,7 +269,7 @@ class XmlLoader
             return;
         }
 
-        $xml = $this->loadEntity($entity);
+        $xml = $this->fileLoader->load($entity);
 
         // Read list of fields
         if (!$xml instanceof \SimpleXMLElement || !$xml->fields) {
@@ -286,7 +289,7 @@ class XmlLoader
                 }
 
                 try {
-                    $xml_langs[$id_lang] = $this->loadEntity($entity, $iso);
+                    $xml_langs[$id_lang] = $this->fileLoader->load($entity, $iso);
                 } catch (PrestashopInstallerException $e) {
                     $xml_langs[$id_lang] = null;
                 }
@@ -363,7 +366,7 @@ class XmlLoader
         }
 
         $this->flushDelayedInserts();
-        unset($this->cache_xml_entity[$this->path_type][$entity]);
+        $this->fileLoader->flushCache($entity);
     }
 
     protected function getFallBackToDefaultLanguage($iso)
@@ -390,7 +393,7 @@ class XmlLoader
                 continue;
             }
 
-            $xml = $this->loadEntity('tag', $this->getFallBackToDefaultLanguage($iso));
+            $xml = $this->fileLoader->load('tag', $this->getFallBackToDefaultLanguage($iso));
             $tags = [];
             foreach ($xml->tag as $tag_node) {
                 $products = trim((string) $tag_node['products']);
@@ -415,41 +418,6 @@ class XmlLoader
     }
 
     /**
-     * Load an entity XML file.
-     *
-     * @param string $entity Name of the entity to load (eg. 'tab')
-     * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
-     *
-     * @return \SimpleXMLElement
-     *
-     * @throws PrestashopInstallerException
-     */
-    protected function loadEntity($entity, $iso = null)
-    {
-        if (!isset($this->cache_xml_entity[$this->path_type][$entity][$iso])) {
-            if (substr($entity, 0, 1) == '.' || substr($entity, 0, 1) == '_') {
-                return;
-            }
-
-            $path = $this->data_path . $entity . '.xml';
-            if ($iso) {
-                $path = $this->lang_path . $this->getFallBackToDefaultEntityLanguage($iso, $entity) . '/data/' . $entity . '.xml';
-            }
-
-            if (!file_exists($path)) {
-                throw new PrestashopInstallerException('XML data file ' . $entity . '.xml not found');
-            }
-
-            $this->cache_xml_entity[$this->path_type][$entity][$iso] = @simplexml_load_file($path, 'SimplexmlElement');
-            if (!$this->cache_xml_entity[$this->path_type][$entity][$iso]) {
-                throw new PrestashopInstallerException('XML data file ' . $entity . '.xml invalid');
-            }
-        }
-
-        return $this->cache_xml_entity[$this->path_type][$entity][$iso];
-    }
-
-    /**
      * Check fields related to an other entity, and replace their values by the ID created by the other entity.
      *
      * @param string $entity
@@ -457,7 +425,7 @@ class XmlLoader
      */
     protected function rewriteRelationedData($entity, array $data)
     {
-        $xml = $this->loadEntity($entity);
+        $xml = $this->fileLoader->load($entity);
         foreach ($xml->fields->field as $field) {
             if ($field['relation']) {
                 $id = $this->retrieveId((string) $field['relation'], $data[(string) $field['name']]);
@@ -498,7 +466,7 @@ class XmlLoader
      */
     public function createEntity($entity, $identifier, $classname, array $data, array $data_lang = [])
     {
-        $xml = $this->loadEntity($entity);
+        $xml = $this->fileLoader->load($entity);
         if ($classname) {
             $classname = '\\' . $classname;
             // Create entity with ObjectModel class
@@ -622,7 +590,7 @@ class XmlLoader
         static $position = [];
 
         $entity = 'tab';
-        $xml = $this->loadEntity($entity);
+        $xml = $this->fileLoader->load($entity);
 
         if (!isset($position[$data['id_parent']])) {
             $position[$data['id_parent']] = 0;
@@ -1045,7 +1013,7 @@ class XmlLoader
     public function generateEntitySchema($entity, array $fields, array $config)
     {
         if ($this->entityExists($entity)) {
-            $xml = $this->loadEntity($entity);
+            $xml = $this->fileLoader->load($entity);
         } else {
             $xml = new SimplexmlElement('<entity_' . $entity . ' />');
         }
@@ -1126,7 +1094,7 @@ class XmlLoader
 
     public function generateEntityContent($entity)
     {
-        $xml = $this->loadEntity($entity);
+        $xml = $this->fileLoader->load($entity);
         if (method_exists($this, 'getEntityContents' . Tools::toCamelCase($entity))) {
             $content = $this->{'getEntityContents' . Tools::toCamelCase($entity)}($entity);
         } else {
@@ -1170,7 +1138,7 @@ class XmlLoader
      */
     public function getEntityContents($entity)
     {
-        $xml = $this->loadEntity($entity);
+        $xml = $this->fileLoader->load($entity);
         $primary = (isset($xml->fields['primary']) && $xml->fields['primary']) ? (string) $xml->fields['primary'] : 'id_' . $entity;
         $is_multilang = $this->isMultilang($entity);
 
@@ -1451,7 +1419,7 @@ class XmlLoader
             $this->setError(sprintf('Cannot create directory <i>%s</i>', $backup_path));
         }
 
-        $xml = $this->loadEntity('tab');
+        $xml = $this->fileLoader->load('tab');
         foreach ($xml->entities->tab as $tab) {
             if (file_exists($from_path . $tab->class_name . '.gif')) {
                 copy($from_path . $tab->class_name . '.gif', $backup_path . $tab->class_name . '.gif');
