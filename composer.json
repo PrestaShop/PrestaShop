@@ -12,6 +12,7 @@
         "ext-json": "*",
         "ext-gd": "*",
         "ext-dom": "*",
+        "ext-simplexml": "*",
         "beberlei/doctrineextensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
