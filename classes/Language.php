@@ -294,7 +294,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             throw new PrestaShopException(sprintf("Invalid language ISO code: %s", $iso_from));
         }
 
-        $copy = ($iso_to && $theme_to) ? true : false;
+        $copy = ($iso_to && $theme_to);
 
         $lPath_from = _PS_TRANSLATIONS_DIR_ . (string) $iso_from . '/';
         $tPath_from = _PS_ROOT_DIR_ . '/themes/' . (string) $theme_from . '/';
