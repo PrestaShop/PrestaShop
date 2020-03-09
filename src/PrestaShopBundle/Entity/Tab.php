@@ -109,6 +109,20 @@ class Tab
     private $icon;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="wording", type="string", length=194)
+     */
+    private $wording;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="wording_domain", type="string", length=194)
+     */
+    private $wordingDomain;
+
+    /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="tab")
      */
     private $tabLangs;
