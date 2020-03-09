@@ -408,7 +408,7 @@ class InstallControllerHttp
     public function getForumLink()
     {
         /* Link to localized forum */
-        return $this->translator->trans('http://www.prestashop.com/forums/', array(), 'Install');
+        return $this->translator->trans('https://www.prestashop.com/forums/', array(), 'Install');
     }
 
     /**
@@ -418,7 +418,7 @@ class InstallControllerHttp
      */
     public function getBlogLink()
     {
-        return $this->translator->trans('http://www.prestashop.com/blog/', array(), 'Install');
+        return $this->translator->trans('https://www.prestashop.com/blog/', array(), 'Install');
     }
 
     /**
@@ -433,7 +433,7 @@ class InstallControllerHttp
 
     public function getDocumentationUpgradeLink()
     {
-        return $this->translator->trans('http://docs.prestashop.com/display/PS16/Updating+PrestaShop', array(), 'Install');
+        return $this->translator->trans('https://docs.prestashop.com/display/PS16/Updating+PrestaShop', array(), 'Install');
     }
 
     /**
