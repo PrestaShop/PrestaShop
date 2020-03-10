@@ -19,7 +19,7 @@
 			<taxRule iso_code_country="am" id_tax="2" />
 		</taxRulesGroup>
     
-		<taxRulesGroup name="AM Reduced Rate (0%)">
+		<taxRulesGroup name="AM Zero Rate (0%)">
 			<taxRule iso_code_country="am" id_tax="3" />
 		</taxRulesGroup>
   </taxes>
