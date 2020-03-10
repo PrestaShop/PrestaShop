@@ -51,6 +51,11 @@ class InstallFixturesFashion extends XmlLoader
     {
         // US and FL match John's address in the fixtures, if the XML is modified this should be updated as well
         $taxRulesGroupId = $this->getTaxRulesGroupId('US', 'FL');
+        // This special tax rule group is useful for tests, however for fresh install it may not be available depending
+        // on the selected country, then we fallback on the default value 1 (legacy behaviour anyway)
+        if (!$taxRulesGroupId) {
+            $taxRulesGroupId = 1;
+        }
         $this->storeId('tax_rules_group', 'default_tax_rule_group', $taxRulesGroupId);
 
         parent::populateFromXmlFiles();
