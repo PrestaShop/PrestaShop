@@ -24,29 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Core\Translation;
+
 /**
- * Translates content from the tab entity
+ * Translates multi language items in database using DataLang classes
  */
-class TabLangCore extends DataLangCore
+interface EntityTranslatorInterface
 {
-    protected $domain = 'Admin.Navigation.Menu';
-
-    protected $keys = ['id_tab'];
-
-    protected $fieldsToUpdate = ['name'];
-
     /**
-     * {@inheritdoc}
+     * Executes the translation
+     *
+     * @param int $languageId
+     * @param int $shopId
      */
-    public function getFieldValue($field, $value)
-    {
-        $domain = '';
-        if (is_array($value)) {
-            list($message, $domain) = $value;
-        } else {
-            $message = $value;
-        }
-
-        return $this->translator->trans($message, [], (!empty($domain)) ? $domain : $this->domain, $this->locale);
-    }
+    public function translate(int $languageId, int $shopId);
 }

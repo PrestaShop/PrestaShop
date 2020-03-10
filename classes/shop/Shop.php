@@ -803,7 +803,7 @@ class ShopCore extends ObjectModel
      * @param bool $active
      * @param int $id_shop_group
      *
-     * @return PrestaShopCollection Collection of Shop
+     * @return PrestaShopCollection<Shop> Collection of Shop
      */
     public static function getShopsCollection($active = true, $id_shop_group = null)
     {
