@@ -74,10 +74,10 @@ module.exports = class Login extends FOBasePage {
   }
 
   /**
-   * Is partners offer required
+   * Is partner offer required
    * @returns {Promise<boolean>}
    */
-  async isPartnersOfferRequired() {
+  async isPartnerOfferRequired() {
     return this.elementVisible(`${this.partnerOfferCheckbox}:required`, 1000);
   }
 };

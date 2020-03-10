@@ -79,7 +79,7 @@ describe('Set required fields for customers', async () => {
       await this.pageObjects.foBasePage.changeLanguage('en');
       await this.pageObjects.foBasePage.goToLoginPage();
       await this.pageObjects.loginFOPage.goToCreateAccountPage();
-      const isPartnerOfferRequired = await this.pageObjects.loginFOPage.isPartnersOfferRequired();
+      const isPartnerOfferRequired = await this.pageObjects.loginFOPage.isPartnerOfferRequired();
       await expect(isPartnerOfferRequired).to.be.equal(test.args.exist);
       page = await this.pageObjects.loginFOPage.closePage(browser, 1);
       this.pageObjects = await init();
