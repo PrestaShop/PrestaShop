@@ -318,7 +318,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $manufacturerReference
      */
-    public function manufacturerShouldHaveFollowingProperties(string $manufacturerReference)
+    public function manufacturerShouldHaveAddedAddresses(string $manufacturerReference)
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
