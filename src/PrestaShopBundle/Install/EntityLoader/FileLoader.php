@@ -28,21 +28,34 @@
 namespace PrestaShopBundle\Install\EntityLoader;
 
 use PrestashopInstallerException;
+use SimpleXMLElement;
 
+/**
+ * Loads entity data from an XML file
+ */
 class FileLoader
 {
+    const FALLBACK_LANGUAGE_CODE = 'en';
+
+    /**
+     * @var array[] Loaded data, indexed by entity name and iso code
+     */
     private $cache = [];
 
     /**
-     * @var string
+     * @var string Path for data files
      */
     private $dataPath;
 
     /**
-     * @var string
+     * @var string Path for translated data files
      */
     private $langPath;
 
+    /**
+     * @param string $dataPath Path for data files
+     * @param string $langPath Path for translated data files
+     */
     public function __construct(string $dataPath, string $langPath)
     {
         $this->dataPath = $dataPath;
@@ -55,11 +68,11 @@ class FileLoader
      * @param string $entity Name of the entity to load (eg. 'tab')
      * @param string|null $iso Language in which to load said entity. If not found, will fall back to default language.
      *
-     * @return SimplexmlElement|null
+     * @return SimpleXMLElement|null
      *
      * @throws PrestashopInstallerException
      */
-    public function load(string $entity, $iso = null): ?\SimpleXMLElement
+    public function load(string $entity, $iso = null): ?SimpleXMLElement
     {
         if (!isset($this->cache[$entity][$iso])) {
             // skip hidden files on macos (see https://github.com/PrestaShop/PrestaShop/commit/dd2d7491b483c223b3fe8c010d093b8e6e82f0e6)
@@ -86,8 +99,10 @@ class FileLoader
     }
 
     /**
-     * @param string $entity
-     * @param string|null $iso
+     * Removes an item from cache
+     *
+     * @param string $entity Entity name
+     * @param string|null $iso [default=null] 2-letter language code. If not provided, it flushes all languages for this entity
      */
     public function flushCache(string $entity, ?string $iso = null)
     {
@@ -98,17 +113,31 @@ class FileLoader
         }
     }
 
-    private function getFallBackToDefaultLanguage(string $iso)
+    /**
+     * @param string $iso
+     *
+     * @return string Returns the provided language code if a data folder for it exists, or the fallback language code instead
+     */
+    private function getFallbackToDefaultLanguage(string $iso)
     {
-        return file_exists($this->langPath . $iso . '/data/') ? $iso : 'en';
+        return file_exists($this->langPath . $iso . '/data/') ? $iso : self::FALLBACK_LANGUAGE_CODE;
     }
 
+    /**
+     * Returns the provided language code if an entity file for it exists, or the fallback language code instead
+     *
+     * @param string $iso
+     * @param string $entity
+     *
+     * @return string
+     */
     private function getFallBackToDefaultEntityLanguage($iso, $entity)
     {
-        if ($this->getFallBackToDefaultLanguage($iso) === 'en') {
-            return 'en';
+        if ($this->getFallbackToDefaultLanguage($iso) === self::FALLBACK_LANGUAGE_CODE) {
+            return self::FALLBACK_LANGUAGE_CODE;
         }
 
-        return file_exists($this->langPath . $this->getFallBackToDefaultLanguage($iso) . '/data/' . $entity . '.xml') ? $iso : 'en';
+        return file_exists($this->langPath . $this->getFallbackToDefaultLanguage($iso) . '/data/' . $entity . '.xml') ? $iso :
+            self::FALLBACK_LANGUAGE_CODE;
     }
 }
