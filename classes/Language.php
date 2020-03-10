@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\EntityTranslation\DataLangClassNameNotFoundException;
+use PrestaShop\PrestaShop\Adapter\EntityTranslation\DataLangFactory;
+use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageImageManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
@@ -1390,8 +1393,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangTables(Language $language, array $tablesToUpdate)
     {
+        $translator = SymfonyContainer::getInstance()->get('translator');
+
         foreach ($tablesToUpdate as $tableName) {
-            $className = ucfirst(Tools::toCamelCase(str_replace(_DB_PREFIX_, '', $tableName)));
+            $className = (new DataLangFactory(_DB_PREFIX_, $translator))
+                ->getClassNameFromTable($tableName);
 
             if (_DB_PREFIX_ . 'country_lang' === $tableName) {
                 self::updateMultilangFromCldr($language);
@@ -1445,12 +1451,14 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangFromClass($table, $className, $lang)
     {
-        if (!class_exists($className)) {
+        $translator = SymfonyContainer::getInstance()->get('translator');
+
+        try {
+            $classObject = (new DataLangFactory(_DB_PREFIX_, $translator))
+                ->buildFromClassName($className, $lang->locale);
+        } catch (DataLangClassNameNotFoundException $e) {
             return;
         }
-
-        /** @var DataLangCore $classObject */
-        $classObject = new $className($lang->locale);
 
         $keys = $classObject->getKeys();
         $fieldsToUpdate = $classObject->getFieldsToUpdate();
@@ -1458,7 +1466,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if (!empty($keys) && !empty($fieldsToUpdate)) {
             $shops = Shop::getShopsCollection(false);
             foreach ($shops as $shop) {
-                static::updateMultilangFromClassForShop($table, $classObject, $lang, $shop, $keys, $fieldsToUpdate);
+                static::updateMultilangFromClassForShop($classObject, $lang, $shop);
             }
         }
     }
@@ -1466,83 +1474,26 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * untranslate then re-translate duplicated rows in tables with pattern xxx_lang.
      *
-     * @param string $tableName
-     * @param DataLang $classObject
+     * @param DataLangCore $classObject
      * @param Language $lang
      * @param Shop $shop
-     * @param array $keys
-     * @param array $fieldsToUpdate
      *
      * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
-    private static function updateMultilangFromClassForShop($tableName, $classObject, $lang, $shop, $keys, $fieldsToUpdate)
+    private static function updateMultilangFromClassForShop(DataLangCore $classObject, Language $lang, Shop $shop)
     {
-        $shopFieldExists = false;
-        $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $tableName . '`');
-        foreach ($columns as $column) {
-            $fields[] = '`' . $column['Field'] . '`';
-            if ($column['Field'] == 'id_shop') {
-                $shopFieldExists = true;
-            }
+        $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+        $shopDefaultLanguage = new Language($shopDefaultLangId);
+
+        $translator = SymfonyContainer::getInstance()->get('translator');
+        if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
+            (new TranslatorLanguageLoader(true))->loadLanguage($translator, $shopDefaultLanguage->locale);
         }
 
-        // get table data
-        $tableData = Db::getInstance()->executeS(
-            'SELECT * FROM `' . bqSQL($tableName) . '`
-            WHERE `id_lang` = "' . (int) $lang->id . '"'
-            . ($shopFieldExists ? ' AND `id_shop` = ' . (int) $shop->id : ''),
-            true,
-            false
-        );
-
-        if (!empty($tableData)) {
-            $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
-            $shopDefaultLanguage = new Language($shopDefaultLangId);
-
-            $translator = SymfonyContainer::getInstance()->get('translator');
-            if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
-                (new TranslatorLanguageLoader(true))->loadLanguage($translator, $shopDefaultLanguage->locale);
-            }
-
-            foreach ($tableData as $data) {
-                $updateWhere = '';
-                $updateField = '';
-
-                // Construct update where
-                foreach ($keys as $key) {
-                    if (!empty($updateWhere)) {
-                        $updateWhere .= ' AND ';
-                    }
-                    $updateWhere .= '`' . bqSQL($key) . '` = "' . pSQL($data[$key]) . '"';
-                }
-
-                // Construct update field
-                foreach ($fieldsToUpdate as $toUpdate) {
-                    if ('url_rewrite' === $toUpdate && self::$locale_crowdin_lang === $lang->locale) {
-                        continue;
-                    }
-
-                    $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
-                    $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
-
-                    if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
-                        if (!empty($updateField)) {
-                            $updateField .= ' , ';
-                        }
-                        $updateField .= '`' . bqSQL($toUpdate) . '` = "' . pSQL($translatedField) . '"';
-                    }
-                }
-
-                // Update table
-                if (!empty($updateWhere) && !empty($updateField)) {
-                    $sql = 'UPDATE `' . bqSQL($tableName) . '` SET ' . $updateField . '
-                    WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int) $lang->id . '"
-                    ' . ($shopFieldExists ? ' AND `id_shop` = ' . (int) $shop->id : '') . '
-                    LIMIT 1;';
-                    Db::getInstance()->execute($sql);
-                }
-            }
-        }
+        (new EntityTranslatorFactory($translator))
+            ->build($classObject)
+            ->translate($lang->id, $shop->id);
     }
 
     /**
