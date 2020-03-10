@@ -26,8 +26,12 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use AdminController;
 use Behat\Gherkin\Node\TableNode;
+use Context;
+use FrontController;
 use Manufacturer;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
@@ -36,8 +40,11 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerComma
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
+use stdClass;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -60,6 +67,21 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
         $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
         $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
+    }
+
+    /**
+     * Needed for getting Viewable objects from handlers, for example ViewableManufacturer
+     *
+     * @BeforeScenario
+     */
+    public function before()
+    {
+        // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
+        /** @var AdminController|FrontController $adminControllerTestDouble */
+        $adminControllerTestDouble = new stdClass();
+        $adminControllerTestDouble->controller_type = 'admin';
+        $adminControllerTestDouble->php_self = 'dummyTestDouble';
+        Context::getContext()->controller = $adminControllerTestDouble;
     }
 
     /**
@@ -289,5 +311,25 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturerId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId->getValue()));
+    }
+
+    /**
+     * @Then manufacturer :manufacturerReference should have added addresses
+     *
+     * @param string $manufacturerReference
+     */
+    public function manufacturerShouldHaveFollowingProperties(string $manufacturerReference)
+    {
+        /** @var Manufacturer $manufacturer */
+        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
+        /** @var ViewableManufacturer $viewableMaufacturer */
+        $viewableMaufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
+            $manufacturer->id,
+            (int) $this->getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT')
+        ));
+
+        Assert::assertSame($manufacturer->name, $viewableMaufacturer->getName());
+        Assert::assertSame(2, count($viewableMaufacturer->getManufacturerAddresses()));
+        Assert::assertSame(0, count($viewableMaufacturer->getManufacturerProducts()));
     }
 }
