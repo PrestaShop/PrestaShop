@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2020 PrestaShop SA and Contributors
  *
@@ -27,25 +26,34 @@
 
 namespace PrestaShopBundle\Translation;
 
-use Symfony\Component\Translation\DataCollectorTranslator as BaseTranslator;
-
-class DataCollectorTranslator extends BaseTranslator implements TranslatorInterface
+/**
+ * Interface for PrestaShop translators
+ */
+interface TranslatorInterface extends \Symfony\Component\Translation\TranslatorInterface
 {
-    use PrestaShopTranslatorTrait;
+    /**
+     * Performs a reverse search in the catalogue and returns the translation key if found.
+     * AVOID USING THIS, IT PROVIDES APPROXIMATE RESULTS.
+     *
+     * @param string $translated Translated string
+     * @param string $domain Translation domain
+     * @param string|null $locale Unused
+     *
+     * @return string The translation
+     *
+     * @deprecated This method should not be used and will be removed
+     */
+    public function getSourceString($translated, $domain, $locale = null);
 
     /**
-     * {@inheritdoc}
+     * @param string $locale Locale code for the catalogue to check if loaded
+     *
+     * @return bool
      */
-    public function isLanguageLoaded($locale)
-    {
-        return $this->__call('isLanguageLoaded', [$locale]);
-    }
+    public function isLanguageLoaded($locale);
 
     /**
-     * {@inheritdoc}
+     * @param string $locale Locale code for the catalogue to be cleared
      */
-    public function clearLanguage($locale)
-    {
-        return  $this->__call('clearLanguage', [$locale]);
-    }
+    public function clearLanguage($locale);
 }
