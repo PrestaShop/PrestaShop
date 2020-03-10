@@ -291,7 +291,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getFilesList($iso_from, $theme_from, $iso_to = false, $theme_to = false, $select = false, $check = false, $modules = false)
     {
         if (empty($iso_from)) {
-            throw new PrestaShopException(sprintf("Invalid language ISO code: %s", $iso_from));
+            throw new PrestaShopException(sprintf('Invalid language ISO code: %s', $iso_from));
         }
 
         $copy = ($iso_to && $theme_to);
@@ -753,7 +753,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getIdByIso($iso_code, $no_cache = false)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            throw new PrestaShopException(sprintf("Invalid language ISO code: %s", $iso_code));
+            throw new PrestaShopException(sprintf('Invalid language ISO code: %s', $iso_code));
         }
 
         $key = 'Language::getIdByIso_' . $iso_code;
@@ -869,7 +869,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getLanguageCodeByIso($iso_code)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
-            throw new PrestaShopException(sprintf("Invalid language ISO code: %s", $iso_code));
+            throw new PrestaShopException(sprintf('Invalid language ISO code: %s', $iso_code));
         }
 
         return Db::getInstance()->getValue('SELECT `language_code` FROM `' . _DB_PREFIX_ . 'lang` WHERE `iso_code` = \'' . pSQL(strtolower($iso_code)) . '\'');
@@ -888,7 +888,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function getLanguageByIETFCode($code)
     {
         if (!Validate::isLanguageCode($code)) {
-            throw new PrestaShopException(sprintf("Invalid IETF language tag: %s", $code));
+            throw new PrestaShopException(sprintf('Invalid IETF language tag: %s', $code));
         }
 
         // $code is in the form of 'xx-YY' where xx is the language code
@@ -1375,7 +1375,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 $tableNames = array_map('reset', $rows);
                 static::updateMultilangTables($lang, $tableNames);
             }
-
         }
 
         return true;
