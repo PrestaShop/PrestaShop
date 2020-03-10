@@ -58,6 +58,15 @@ describe('Filter in Products Page', async () => {
     await this.pageObjects.productsPage.resetFilterCategory();
     numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
+
+    // Do not loop more than the products displayed via the pagination
+    const numberOfProductsOnPage = await this.pageObjects.productsPage.getNumberOfProductsOnPage();
+    // Check that prices have correct tax values
+    for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
+      const productPrice = await this.pageObjects.productsPage.getProductPriceFromList(i);
+      const productPriceTTC = await this.pageObjects.productsPage.getProductPriceTTCFromList(i);
+      await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceTTC / 1.2).toFixed(2)));
+    }
   });
 
   const tests = [
