@@ -37,8 +37,10 @@ module.exports = class Customers extends BOBasePage {
     this.tableHead = `${this.customersListForm} thead`;
     this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
     this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
-
-
+    // Required field section
+    this.setRequiredFieldsButton = 'button[data-target=\'#customerRequiredFieldsContainer\']';
+    this.requiredFieldCheckBox = '#required_fields_required_fields_%ID';
+    this.saveButton = '#customerRequiredFieldsContainer button';
     // Modal Dialog
     this.deleteCustomerModal = '#customer_grid_delete_customers_modal.show';
     this.deleteCustomerModalDeleteButton = `${this.deleteCustomerModal} button.js-submit-delete-customers`;
@@ -94,7 +96,7 @@ module.exports = class Customers extends BOBasePage {
         );
         break;
       default:
-        // Do nothing
+      // Do nothing
     }
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
@@ -312,5 +314,21 @@ module.exports = class Customers extends BOBasePage {
       i += 1;
     }
     await this.page.waitForSelector(sortColumnDiv, {visible: true});
+  }
+
+  /**
+   * Set required fields
+   * @param id
+   * @param valueWanted
+   * @returns {Promise<string>}
+   */
+  async setRequiredFields(id, valueWanted = true) {
+    await this.waitForSelectorAndClick(this.setRequiredFieldsButton);
+    const isCheckboxSelected = await this.isCheckboxSelected(this.requiredFieldCheckBox.replace('%ID', id));
+    if (valueWanted !== isCheckboxSelected) {
+      await this.page.click(`${this.requiredFieldCheckBox.replace('%ID', id)}+ i`);
+    }
+    await this.waitForSelectorAndClick(this.saveButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
