@@ -24,29 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Translates content from the tab entity
- */
-class TabLangCore extends DataLangCore
+namespace Tests\Unit\Adapter\Translations;
+
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\EntityTranslation\DataLangFactory;
+
+class DataLangFactoryTest extends TestCase
 {
-    protected $domain = 'Admin.Navigation.Menu';
-
-    protected $keys = ['id_tab'];
-
-    protected $fieldsToUpdate = ['name'];
-
     /**
-     * {@inheritdoc}
+     * @param string $tableName
+     * @param string $expected
+     *
+     * @dataProvider provideTableNames
      */
-    public function getFieldValue($field, $value)
+    public function testItCreatesClassNamesFromTableNames(string $tableName, string $expected)
     {
-        $domain = '';
-        if (is_array($value)) {
-            list($message, $domain) = $value;
-        } else {
-            $message = $value;
-        }
+        $factory = new DataLangFactory(_DB_PREFIX_);
+        $this->assertSame($expected, $factory->getClassNameFromTable($tableName));
+    }
 
-        return $this->translator->trans($message, [], (!empty($domain)) ? $domain : $this->domain, $this->locale);
+    public function provideTableNames()
+    {
+        return [
+            [_DB_PREFIX_ . 'tab_lang', 'TabLang'],
+            [_DB_PREFIX_ . 'cart_rule_lang', 'CartRuleLang'],
+            ['cart_rule_lang', 'CartRuleLang'],
+            [_DB_PREFIX_ . 'tab_lang', 'TabLang'],
+            ['tab', 'TabLang'],
+        ];
     }
 }

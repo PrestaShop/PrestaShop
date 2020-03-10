@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop SA and Contributors
  *
@@ -16,7 +17,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2020 PrestaShop SA and Contributors
@@ -24,29 +25,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Translates content from the tab entity
- */
-class TabLangCore extends DataLangCore
+namespace PrestaShop\PrestaShop\Adapter\EntityTranslation;
+
+class DataLangClassNameNotFoundException extends \RuntimeException
 {
-    protected $domain = 'Admin.Navigation.Menu';
-
-    protected $keys = ['id_tab'];
-
-    protected $fieldsToUpdate = ['name'];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFieldValue($field, $value)
-    {
-        $domain = '';
-        if (is_array($value)) {
-            list($message, $domain) = $value;
-        } else {
-            $message = $value;
-        }
-
-        return $this->translator->trans($message, [], (!empty($domain)) ? $domain : $this->domain, $this->locale);
-    }
 }
