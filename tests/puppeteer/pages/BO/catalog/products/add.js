@@ -75,6 +75,8 @@ module.exports = class AddProduct extends BOBasePage {
     await this.selectByVisibleText(this.productTypeSelect, productData.type);
     await this.page.click(this.productReferenceInput, {clickCount: 3});
     await this.page.type(this.productReferenceInput, productData.reference);
+    // Tax rule must be selected before setting the price, otherwise the TTC price is updated when it changes
+    await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
     await this.page.click(this.productPriceTtcInput, {clickCount: 3});
     await this.page.type(this.productPriceTtcInput, productData.price.toString());
     // Set description value
@@ -91,7 +93,6 @@ module.exports = class AddProduct extends BOBasePage {
       await this.page.click(this.productQuantityInput, {clickCount: 3});
       await this.page.type(this.productQuantityInput, productData.quantity.toString());
     }
-    await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
     if (productData.withSpecificPrice) {
       await this.reloadPage();
       // Go to pricing tab : id = 2
