@@ -113,6 +113,27 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     ]);
   });
 
+  it('should go to Products page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.catalogParentLink,
+      this.pageObjects.boBasePage.productsLink,
+    );
+    await this.pageObjects.boBasePage.closeSfToolBar();
+    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+  });
+
+  it('should filter list by reference, check prices and go to edit page', async function () {
+    await testContext.addContextItem(this, 'filterReference', 'filterBy_reference', baseContext);
+    await this.pageObjects.productsPage.filterProducts('reference', editedProductData.reference);
+    const productPrice = await this.pageObjects.productsPage.getProductPriceFromList(1);
+    const productPriceTTC = await this.pageObjects.productsPage.getProductPriceTTCFromList(1);
+    await expect(parseFloat(productPrice)).to.equal(parseFloat((editedProductData.price / 1.2).toFixed(2)));
+    await expect(parseFloat(productPriceTTC)).to.equal(parseFloat(editedProductData.price));
+    await this.pageObjects.productsPage.goToEditProductPage(1);
+  });
+
   it('should delete Product and be on product list page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
     const testResult = await this.pageObjects.addProductPage.deleteProduct();
