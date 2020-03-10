@@ -1954,7 +1954,7 @@ class AdminControllerCore extends Controller
 
         $tabs = $this->getTabs();
         $currentTabLevel = 0;
-        foreach ($tabs as &$tab) {
+        foreach ($tabs as $tab) {
             $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
         }
 
