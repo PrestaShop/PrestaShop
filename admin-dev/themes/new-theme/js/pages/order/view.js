@@ -112,9 +112,8 @@ $(() => {
   function handlePrivateNoteChange() {
     const $submitBtn = $(OrderViewPageMap.privateNoteSubmitBtn);
 
-    $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
-      const note = $(event.currentTarget).val();
-      $submitBtn.prop('disabled', !note);
+    $(OrderViewPageMap.privateNoteInput).on('input', () => {
+      $submitBtn.prop('disabled', false);
     });
   }
 
