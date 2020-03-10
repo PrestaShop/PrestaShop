@@ -246,6 +246,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 null,
                 array('newAddress' => 'invoice')
             ),
+            'id_address' => (int) Tools::getValue('id_address'),
             'id_address_delivery' => $idAddressDelivery,
             'id_address_invoice' => $idAddressInvoice,
             'show_delivery_address_form' => $this->show_delivery_address_form,
