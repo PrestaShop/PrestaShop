@@ -134,22 +134,13 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get Product Price
-   * @param row
+   * @param {int} row
+   * @param {boolean} withTaxes
    * @return Float
    */
-  async getProductPriceFromList(row) {
-    const text = await this.getTextContent(this.productsListTableColumnPrice.replace('%ROW', row));
-    const price = /\d+(\.\d+)?/g.exec(text).toString();
-    return parseFloat(price);
-  }
-
-  /**
-   * Get Product Price TTC
-   * @param row
-   * @return Float
-   */
-  async getProductPriceTTCFromList(row) {
-    const text = await this.getTextContent(this.productsListTableColumnPriceTTC.replace('%ROW', row));
+  async getProductPriceFromList(row, withTaxes) {
+    const selector = withTaxes ? this.productsListTableColumnPriceTTC : this.productsListTableColumnPrice;
+    const text = await this.getTextContent(selector.replace('%ROW', row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
     return parseFloat(price);
   }

@@ -64,7 +64,7 @@ describe('Filter in Products Page', async () => {
     // Check that prices have correct tax values
     for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
       const productPrice = await this.pageObjects.productsPage.getProductPriceFromList(i);
-      const productPriceTTC = await this.pageObjects.productsPage.getProductPriceTTCFromList(i);
+      const productPriceTTC = await this.pageObjects.productsPage.getProductPriceFromList(i, true);
       await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceTTC / 1.2).toFixed(2)));
     }
   });
