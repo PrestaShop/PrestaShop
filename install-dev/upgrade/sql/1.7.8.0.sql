@@ -9,5 +9,5 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayBanner', 'Display Banner', 'Use this hook for banners on top of every pages', '1')
 ;
 
-ALTER TABLE `PREFIX_tab` ADD `wording` VARCHAR(196) NOT NULL  DEFAULT '' AFTER `icon`;
-ALTER TABLE `PREFIX_tab` ADD `wording_domain` VARCHAR(196) NOT NULL DEFAULT '' AFTER `wording`;
+ALTER TABLE `PREFIX_tab` ADD `wording` VARCHAR(196) DEFAULT NULL AFTER `icon`;
+ALTER TABLE `PREFIX_tab` ADD `wording_domain` VARCHAR(196) DEFAULT NULL AFTER `wording`;
