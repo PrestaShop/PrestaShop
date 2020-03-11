@@ -64,7 +64,7 @@ describe('Enable/Disable multi store', async () => {
 
     it('should check the existence of \'Advanced Parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToMultiStorePage_${index}`, baseContext);
-      const result = await this.pageObjects.generalPage.IsSubmenuVisible(
+      const result = await this.pageObjects.generalPage.isSubmenuVisible(
         this.pageObjects.boBasePage.advancedParametersLink,
         this.pageObjects.boBasePage.multistoreLink,
       );
