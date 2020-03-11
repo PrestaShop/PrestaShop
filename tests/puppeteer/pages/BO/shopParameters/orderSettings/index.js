@@ -1,7 +1,7 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class orderSettings extends BOBasePage {
+module.exports = class OrderSettings extends BOBasePage {
   constructor(page) {
     super(page);
 
@@ -10,7 +10,7 @@ module.exports = class orderSettings extends BOBasePage {
 
     // Selectors
     this.generalForm = '#configuration_form';
-    this.enableFinalSummaryLabel = 'label[for=\'form_general_enable_final_summary_%TOGGLE\']';
+    this.enableFinalSummaryLabel = `${this.generalForm} label[for='form_general_enable_final_summary_%TOGGLE']`;
     this.saveGeneralFormButton = `${this.generalForm} .card-footer button`;
   }
 
