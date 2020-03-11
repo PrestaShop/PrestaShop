@@ -97,7 +97,7 @@ class OrderPreferencesGeneralFormDataProvider implements FormDataProviderInterfa
     protected function validate(array $data)
     {
         $errors = [];
-        $purchaseMinimumValue = $data['purchase_minimum_value'];
+        $purchaseMinimumValue = $data['purchase_minimum_value'] ?? null;
 
         // Check if purchase minimum value is a positive number
         if (!is_numeric($purchaseMinimumValue) || $purchaseMinimumValue < 0) {
