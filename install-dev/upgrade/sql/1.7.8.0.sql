@@ -31,5 +31,5 @@ ALTER TABLE `PREFIX_orders` ADD COLUMN `note` TEXT AFTER `date_upd`;
 
 ALTER TABLE `PREFIX_currency` CHANGE `numeric_iso_code` `numeric_iso_code` varchar(3) NULL DEFAULT NULL;
 
-ALTER TABLE `PREFIX_tab` ADD `wording` VARCHAR(196) NOT NULL  DEFAULT '' AFTER `icon`;
-ALTER TABLE `PREFIX_tab` ADD `wording_domain` VARCHAR(196) NOT NULL DEFAULT '' AFTER `wording`;
+ALTER TABLE `PREFIX_tab` ADD `wording` VARCHAR(196) DEFAULT NULL AFTER `icon`;
+ALTER TABLE `PREFIX_tab` ADD `wording_domain` VARCHAR(196) DEFAULT NULL AFTER `wording`;
