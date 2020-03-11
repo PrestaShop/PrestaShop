@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 
 /**
@@ -53,6 +52,7 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
 
     /**
      * @param CommandBusInterface $commandBus
+     * @param CustomerDataProvider $customerDataProvider
      */
     public function __construct(CommandBusInterface $commandBus, CustomerDataProvider $customerDataProvider)
     {
@@ -64,7 +64,6 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
      * {@inheritdoc]
      *
      * @throws CountryConstraintException
-     * @throws CustomerException
      * @throws StateConstraintException
      */
     public function create(array $data)

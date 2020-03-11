@@ -33,7 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCustomerAddress
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\DeleteAddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
 /**
@@ -48,7 +51,7 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
      * @throws AddressConstraintException
      * @throws CannotUpdateAddressException
      */
-    public function handle(EditCustomerAddressCommand $command): void
+    public function handle(EditCustomerAddressCommand $command): AddressId
     {
         try {
             $address = $this->getAddressFromCommand($command);
@@ -57,12 +60,29 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
                 throw new AddressConstraintException('Address contains invalid field values');
             }
 
-            if (false === $address->update()) {
+            // The address is used by an order so it is not edited directly, instead a copy is created and
+            if ($address->isUsed()) {
+                // Get a copy of current address
+                $old_address = new Address($address->id);
+
+                // Reset ID to force recreating a new address
+                $address->id = $address->id_address = null;
+
+                if (false === $address->save()) {
+                    throw new CannotAddAddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));
+                }
+                // Soft delete the former address
+                if (false === $old_address->delete()) {
+                    throw new DeleteAddressException(sprintf('Cannot delete Address object with id "%s".', $old_address->id), DeleteAddressException::FAILED_DELETE);
+                }
+            } elseif (false === $address->update()) {
                 throw new CannotUpdateAddressException(sprintf('Failed to update address "%s"', $address->id));
             }
         } catch (PrestaShopException $e) {
             throw new AddressException(sprintf('An error occurred when updating address "%s"', $command->getAddressId()->getValue()));
         }
+
+        return new AddressId((int) $address->id);
     }
 
     /**
