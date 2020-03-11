@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use CartRule;
 use Configuration;
+use Currency;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Tools;
 use Validate;
 
@@ -49,6 +51,10 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     public function handle(AddCartRuleToOrderCommand $command): void
     {
         $order = $this->getOrderObject($command->getOrderId());
+
+        $computingPrecision = new ComputingPrecision();
+        $currency = new Currency((int) $order->id_currency);
+        $precision = $computingPrecision->getPrecision($currency->precision);
 
         // If the discount is for only one invoice
         if ($order->hasInvoice() && null !== $command->getOrderInvoiceId()) {
@@ -67,11 +73,11 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                     if (isset($orderInvoice)) {
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round(
                             $orderInvoice->total_paid_tax_incl * $discountValue / 100,
-                            2
+                            $precision
                         );
                         $cartRules[$orderInvoice->id]['value_tax_excl'] = Tools::ps_round(
                             $orderInvoice->total_paid_tax_excl * $discountValue / 100,
-                            2
+                            $precision
                         );
 
                         // Update OrderInvoice
@@ -86,11 +92,11 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                             /* @var OrderInvoice $orderInvoice */
                             $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round(
                                 $orderInvoice->total_paid_tax_incl * $discountValue / 100,
-                                2
+                                $precision
                             );
                             $cartRules[$orderInvoice->id]['value_tax_excl'] = Tools::ps_round(
                                 $orderInvoice->total_paid_tax_excl * $discountValue / 100,
-                                2
+                                $precision
                             );
 
                             // Update OrderInvoice
@@ -103,11 +109,11 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                     } else {
                         $cartRules[0]['value_tax_incl'] = Tools::ps_round(
                             $order->total_paid_tax_incl * $discountValue / 100,
-                            2
+                            $precision
                         );
                         $cartRules[0]['value_tax_excl'] = Tools::ps_round(
                             $order->total_paid_tax_excl * $discountValue / 100,
-                            2
+                            $precision
                         );
                     }
                 } else {
@@ -122,10 +128,10 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                         throw new OrderException('The discount value is greater than the order invoice total.');
                     }
 
-                    $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round($discountValue, 2);
+                    $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round($discountValue, $precision);
                     $cartRules[$orderInvoice->id]['value_tax_excl'] = Tools::ps_round(
                         $discountValue / (1 + ($order->getTaxesAverageUsed() / 100)),
-                        2
+                        $precision
                     );
 
                     // Update OrderInvoice
@@ -145,7 +151,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round($discountValue, 2);
                         $cartRules[$orderInvoice->id]['value_tax_excl'] = Tools::ps_round(
                             $discountValue / (1 + ($order->getTaxesAverageUsed() / 100)),
-                            2
+                            $precision
                         );
 
                         // Update OrderInvoice
@@ -160,10 +166,10 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                         throw new OrderException('The discount value is greater than the order total.');
                     }
 
-                    $cartRules[0]['value_tax_incl'] = Tools::ps_round($discountValue, 2);
+                    $cartRules[0]['value_tax_incl'] = Tools::ps_round($discountValue, $precision);
                     $cartRules[0]['value_tax_excl'] = Tools::ps_round(
                         $discountValue / (1 + ($order->getTaxesAverageUsed() / 100)),
-                        2
+                        $precision
                     );
                 }
 
@@ -249,12 +255,30 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 $orderCartRule->value_tax_excl = $cartRule['value_tax_excl'];
                 $result &= $orderCartRule->add();
 
-                $order->total_discounts += $orderCartRule->value;
-                $order->total_discounts_tax_incl += $orderCartRule->value;
-                $order->total_discounts_tax_excl += $orderCartRule->value_tax_excl;
-                $order->total_paid -= $orderCartRule->value;
-                $order->total_paid_tax_incl -= $orderCartRule->value;
-                $order->total_paid_tax_excl -= $orderCartRule->value_tax_excl;
+                $order->total_discounts = Tools::ps_round(
+                    $order->total_discounts + $orderCartRule->value,
+                    $precision
+                );
+                $order->total_discounts_tax_incl = Tools::ps_round(
+                    $order->total_discounts_tax_incl + $orderCartRule->value,
+                    $precision
+                );
+                $order->total_discounts_tax_excl = Tools::ps_round(
+                    $order->total_discounts_tax_excl + $orderCartRule->value_tax_excl,
+                    $precision
+                );
+                $order->total_paid = Tools::ps_round(
+                    $order->total_paid - $orderCartRule->value,
+                    $precision
+                );
+                $order->total_paid_tax_incl = Tools::ps_round(
+                    $order->total_paid_tax_incl - $orderCartRule->value,
+                    $precision
+                );
+                $order->total_paid_tax_excl = Tools::ps_round(
+                    $order->total_paid_tax_excl - $orderCartRule->value_tax_excl,
+                    $precision
+                );
             }
 
             // Update Order
