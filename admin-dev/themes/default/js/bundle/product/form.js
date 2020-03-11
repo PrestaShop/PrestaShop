@@ -957,12 +957,14 @@ var form = (function() {
             }
           }
 
-          if(filter([e.attrs]).length == 0){
-            $('#form_step3_attributes-tokenfield').val(function(i, value){
-              return value.replace(orgLabel,"");
-            });
-            return false;
-          };
+          if(e.attrs.data){
+            if(filter([e.attrs]).length == 0){
+              $('#form_step3_attributes-tokenfield').val(function(i, value){
+                return value.replace(orgLabel,"");
+              });
+              return false;
+            };
+          }
         }
       });
 
