@@ -122,10 +122,8 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->connection
-            ->createQueryBuilder()
-            ->select('FOUND_ROWS()')
-        ;
+        return $this->getBaseQueryBuilder($searchCriteria->getFilters())
+            ->select('COUNT(o.id_order)');
     }
 
     /**

@@ -61,7 +61,7 @@ describe('Sort products', async () => {
     {
       args:
         {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_product', sortDirection: 'desc', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_product', sortDirection: 'asc', isFloat: true,
         },
     },
     {
@@ -127,7 +127,7 @@ describe('Sort products', async () => {
     {
       args:
         {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_product', sortDirection: 'asc', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_product', sortDirection: 'desc', isFloat: true,
         },
     },
   ];

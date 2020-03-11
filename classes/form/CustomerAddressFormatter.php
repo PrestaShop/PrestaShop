@@ -66,12 +66,6 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         $required = array_flip(AddressFormat::getFieldsRequired());
 
         $format = [
-            'id_address' => (new FormField())
-                ->setName('id_address')
-                ->setType('hidden'),
-            'id_customer' => (new FormField())
-                ->setName('id_customer')
-                ->setType('hidden'),
             'back' => (new FormField())
                 ->setName('back')
                 ->setType('hidden'),

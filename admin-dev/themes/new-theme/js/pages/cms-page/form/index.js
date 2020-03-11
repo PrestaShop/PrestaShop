@@ -48,9 +48,9 @@ $(() => {
       watchedDescription: 'input[name^="cms_page[meta_description]"]',
       watchedMetaUrl: 'input[name^="cms_page[friendly_url]"]',
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-      multiLanguageItem: translatorInput.localeItemSelector,
+      multiLanguageItem: translatorInput.localeItemSelector
     },
-    $('#serp-app').data('cms-url'),
+    $('#serp-app').data('cms-url')
   );
 
   new TranslatableField();
@@ -59,8 +59,8 @@ $(() => {
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
-      createTokensOnBlur: true,
-    },
+      createTokensOnBlur: true
+    }
   });
 
   new PreviewOpener('.js-preview-url');
