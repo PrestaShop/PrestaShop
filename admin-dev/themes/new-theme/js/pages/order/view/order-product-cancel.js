@@ -121,12 +121,13 @@ export default class OrderProductCancel {
     $(document).on('change', OrderViewPageMap.cancelProduct.inputs.selector, (event) => {
       const $productCheckbox = $(event.target);
       const $parentCell = $productCheckbox.parents(OrderViewPageMap.cancelProduct.table.cell);
-      const $productQuantity = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.quantity);
-      const refundableQuantity = parseInt($productQuantity.data('quantityRefundable'), 10);
+      const productQuantityInput = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.quantity);
+      const refundableQuantity = parseInt(productQuantityInput.data('quantityRefundable'), 10);
+      const productQuantity = parseInt(productQuantityInput.val(), 10);
       if (!$productCheckbox.is(':checked')) {
-        $productQuantity.val(0);
-      } else if (parseInt($productQuantity.val(), 10) === 0) {
-        $productQuantity.val(refundableQuantity);
+        productQuantityInput.val(0);
+      } else if (Number.isNaN(productQuantity) || productQuantity === 0) {
+        productQuantityInput.val(refundableQuantity);
       }
       this.updateVoucherRefund();
     });
