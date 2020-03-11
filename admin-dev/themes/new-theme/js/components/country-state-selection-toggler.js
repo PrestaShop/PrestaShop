@@ -54,9 +54,6 @@ export default class CountryStateSelectionToggler {
 
     this.$countryInput.on('change', () => this.change());
 
-    // toggle on page load
-    this.toggle();
-
     return {};
   }
 
@@ -94,6 +91,7 @@ export default class CountryStateSelectionToggler {
   toggle() {
     if (this.$countryStateSelector.find('option').length > 0) {
       this.$stateSelectionBlock.fadeIn();
+      this.$stateSelectionBlock.removeClass('d-none');
     } else {
       this.$stateSelectionBlock.fadeOut();
     }
