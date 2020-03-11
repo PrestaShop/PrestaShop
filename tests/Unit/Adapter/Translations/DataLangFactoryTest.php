@@ -28,6 +28,7 @@ namespace Tests\Unit\Adapter\Translations;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\DataLangFactory;
+use PrestaShopBundle\Translation\TranslatorInterface;
 
 class DataLangFactoryTest extends TestCase
 {
@@ -41,7 +42,7 @@ class DataLangFactoryTest extends TestCase
      */
     public function testItCreatesClassNamesFromTableNames(string $tableName, string $expected)
     {
-        $factory = new DataLangFactory(self::DB_PREFIX);
+        $factory = new DataLangFactory(self::DB_PREFIX, $this->getMockBuilder(TranslatorInterface::class)->getMock());
         $this->assertSame($expected, $factory->getClassNameFromTable($tableName));
     }
 
