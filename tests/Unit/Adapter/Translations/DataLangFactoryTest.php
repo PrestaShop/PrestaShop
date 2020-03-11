@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Adapter\EntityTranslation\DataLangFactory;
 
 class DataLangFactoryTest extends TestCase
 {
+    const DB_PREFIX = 'ps_';
+
     /**
      * @param string $tableName
      * @param string $expected
@@ -39,17 +41,17 @@ class DataLangFactoryTest extends TestCase
      */
     public function testItCreatesClassNamesFromTableNames(string $tableName, string $expected)
     {
-        $factory = new DataLangFactory(_DB_PREFIX_);
+        $factory = new DataLangFactory(self::DB_PREFIX);
         $this->assertSame($expected, $factory->getClassNameFromTable($tableName));
     }
 
     public function provideTableNames()
     {
         return [
-            [_DB_PREFIX_ . 'tab_lang', 'TabLang'],
-            [_DB_PREFIX_ . 'cart_rule_lang', 'CartRuleLang'],
+            [self::DB_PREFIX . 'tab_lang', 'TabLang'],
+            [self::DB_PREFIX . 'cart_rule_lang', 'CartRuleLang'],
             ['cart_rule_lang', 'CartRuleLang'],
-            [_DB_PREFIX_ . 'tab_lang', 'TabLang'],
+            [self::DB_PREFIX . 'tab_lang', 'TabLang'],
             ['tab', 'TabLang'],
         ];
     }
