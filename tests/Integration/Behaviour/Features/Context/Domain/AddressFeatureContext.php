@@ -27,6 +27,9 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Db;
+use DbQuery;
+use Order;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ManufacturerNameByIdChoiceProvider;
@@ -34,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
@@ -42,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddres
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class AddressFeatureContext extends AbstractDomainFeatureContext
@@ -135,6 +140,80 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I edit address :addressReference with following details:
+     *
+     * @param string $addressReference
+     * @param TableNode $table
+     */
+    public function editAddressToCustomerWithFollowingDetails(string $addressReference, TableNode $table)
+    {
+        $testCaseData = $table->getRowsHash();
+        $customerAddressId = SharedStorage::getStorage()->get($addressReference);
+
+        $editAddressCommand = new EditCustomerAddressCommand($customerAddressId);
+        if (!empty($testCaseData['Address alias'])) {
+            $editAddressCommand->setAddressAlias($testCaseData['Address alias']);
+        }
+        if (!empty($testCaseData['First name'])) {
+            $editAddressCommand->setFirstName($testCaseData['First name']);
+        }
+        if (!empty($testCaseData['Last name'])) {
+            $editAddressCommand->setLastName($testCaseData['Last name']);
+        }
+        if (!empty($testCaseData['Address'])) {
+            $editAddressCommand->setAddress($testCaseData['Address']);
+        }
+        if (!empty($testCaseData['City'])) {
+            $editAddressCommand->setCity($testCaseData['City']);
+        }
+        if (!empty($testCaseData['Country'])) {
+            /** @var CountryByIdChoiceProvider $countryChoiceProvider */
+            $countryChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.country_by_id');
+            $countryId = (int) $countryChoiceProvider->getChoices()[$testCaseData['Country']];
+            $editAddressCommand->setCountryId($countryId);
+
+            /* @var CountryStateByIdChoiceProvider $countryStateChoiceProvider */
+            if (isset($testCaseData['State'])) {
+                $countryStateChoiceProvider = $this->getContainer()->get('prestashop.adapter.form.choice_provider.country_state_by_id');
+                $countryStateId = $countryStateChoiceProvider->getChoices(['id_country' => $countryId])[$testCaseData['State']];
+                $editAddressCommand->setStateId($countryStateId);
+            }
+        }
+
+        /** @var AddressId $addressIdObject */
+        $addressIdObject = $this->getCommandBus()->handle($editAddressCommand);
+        SharedStorage::getStorage()->set($testCaseData['Address alias'], $addressIdObject->getValue());
+    }
+
+    /**
+     * @Then address :addressReference is assigned to an order for :customerReference
+     *
+     * @param string $addressReference
+     * @param string $customerReference
+     */
+    public function assignAddressToOrder(string $addressReference, string $customerReference)
+    {
+        $customerAddressId = (int) SharedStorage::getStorage()->get($addressReference);
+        $customerId = (int) SharedStorage::getStorage()->get($customerReference);
+
+        $order = new Order();
+        $order->id_address_invoice = $customerAddressId;
+        $order->id_address_delivery = $customerAddressId;
+        $order->id_cart = 1;
+        $order->id_currency = 1;
+        $order->id_customer = $customerId;
+        $order->id_carrier = 1;
+        $order->payment = 'Payment by check';
+        $order->module = 'ps_checkpayment';
+        $order->total_paid = $order->total_paid_real = $order->total_paid_tax_incl = $order->total_paid_tax_excl = 42;
+        $order->total_products = $order->total_products_wt = 42;
+        $order->conversion_rate = 1.0;
+        if (false === $order->save()) {
+            throw new RuntimeException('Cannot save order');
+        }
+    }
+
+    /**
      * @Then customer :customerReference should have address :addressReference with following details:
      *
      * @param string $customerReference
@@ -169,6 +248,56 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         $countryStateId = $countryStateChoiceProvider->getChoices(['id_country' => $countryId])[$testCaseData['State']];
         Assert::assertSame((int) $countryStateId, $customerAddress->getStateId()->getValue());
         Assert::assertEquals($testCaseData['Postal code'], $customerAddress->getPostCode());
+    }
+
+    /**
+     * @Then customer :customerReference should have :addressCount addresses
+     *
+     * @param string $customerReference
+     * @param int $expectedCount
+     */
+    public function checkCustomerAddressCount(string $customerReference, int $expectedCount)
+    {
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+
+        $query = new DbQuery();
+        $query->select('COUNT(a.id_address)');
+        $query->from('address', 'a');
+        $query->where('id_customer = ' . $customerId);
+        $query->where('deleted = 0');
+
+        $databaseCount = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        Assert::assertEquals(
+            (int) $expectedCount,
+            $databaseCount,
+            sprintf('Found %s addresses for customer %s, expected %s', $databaseCount, $customerReference, $expectedCount)
+        );
+    }
+
+    /**
+     * @Then customer :customerReference should have :addressCount deleted addresses
+     *
+     * @param string $customerReference
+     * @param int $expectedCount
+     */
+    public function checkCustomerDeletedAddressCount(string $customerReference, int $expectedCount)
+    {
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+
+        $query = new DbQuery();
+        $query->select('COUNT(a.id_address)');
+        $query->from('address', 'a');
+        $query->where('id_customer = ' . $customerId);
+        $query->where('deleted = 1');
+
+        $databaseCount = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        Assert::assertEquals(
+            (int) $expectedCount,
+            $databaseCount,
+            sprintf('Found %s deleted addresses for customer %s, expected %s', $databaseCount, $customerReference, $expectedCount)
+        );
     }
 
     /**

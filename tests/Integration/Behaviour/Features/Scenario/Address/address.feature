@@ -39,7 +39,7 @@ Feature: Address
       | email            | test.davidsonas@invertus.eu        |
       | password         | secret                             |
     When I add new address to customer "testFirstName" with following details:
-      | Address alias    | test-address                       |
+      | Address alias    | test-customer-address              |
       | First name       | testFirstName                      |
       | Last name        | testLastName                       |
       | Address          | Work address st. 1234567890        |
@@ -47,8 +47,8 @@ Feature: Address
       | Country          | United States                      |
       | State            | Alabama                            |
       | Postal code      | 12345                              |
-    Then customer "testFirstName" should have address "test-address" with following details:
-      | Address alias    | test-address                       |
+    Then customer "testFirstName" should have address "test-customer-address" with following details:
+      | Address alias    | test-customer-address              |
       | First name       | testFirstName                      |
       | Last name        | testLastName                       |
       | Address          | Work address st. 1234567890        |
@@ -56,6 +56,51 @@ Feature: Address
       | Country          | United States                      |
       | State            | Alabama                            |
       | Postal code      | 12345                              |
+
+  Scenario: edit customer address
+    When I edit address "test-customer-address" with following details:
+      | Address alias    | test-customer-address              |
+      | First name       | testFirstNameuh                    |
+      | Last name        | testLastNameuh                     |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birminghameuh                      |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    Then customer "testFirstName" should have address "test-customer-address" with following details:
+      | Address alias    | test-customer-address              |
+      | First name       | testFirstNameuh                    |
+      | Last name        | testLastNameuh                     |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birminghameuh                      |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    And customer "testFirstName" should have 1 addresses
+    And customer "testFirstName" should have 0 deleted addresses
+
+  Scenario: edit customer address assigned to an order
+    Given address "test-customer-address" is assigned to an order for "testFirstName"
+    When I edit address "test-customer-address" with following details:
+      | Address alias    | test-customer-address              |
+      | First name       | testFirstNameuhmeuh                |
+      | Last name        | testLastNameuhmeuh                 |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birminghameuhmeuh                  |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    Then customer "testFirstName" should have address "test-customer-address" with following details:
+      | Address alias    | test-customer-address              |
+      | First name       | testFirstNameuhmeuh                |
+      | Last name        | testLastNameuhmeuh                 |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birminghameuhmeuh                  |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    And customer "testFirstName" should have 1 addresses
+    And customer "testFirstName" should have 1 deleted addresses
 
   Scenario: delete brand address
     Given I add new brand address "testBrandAddress" with following details:
