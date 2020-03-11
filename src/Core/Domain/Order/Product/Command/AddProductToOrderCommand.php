@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
 
+use InvalidArgumentException;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -50,12 +53,12 @@ class AddProductToOrderCommand
     private $combinationId;
 
     /**
-     * @var float
+     * @var Number
      */
     private $productPriceTaxIncluded;
 
     /**
-     * @var float
+     * @var Number
      */
     private $productPriceTaxExcluded;
 
@@ -80,21 +83,21 @@ class AddProductToOrderCommand
      * @param int $orderId
      * @param int $productId
      * @param int $combinationId
-     * @param float $productPriceTaxIncluded
-     * @param float $productPriceTaxExcluded
+     * @param string $productPriceTaxIncluded
+     * @param string $productPriceTaxExcluded
      * @param int $productQuantity
      * @param bool $isFreeShipping
      *
      * @return self
      */
     public static function withNewInvoice(
-        $orderId,
-        $productId,
-        $combinationId,
-        $productPriceTaxIncluded,
-        $productPriceTaxExcluded,
-        $productQuantity,
-        $isFreeShipping
+        int $orderId,
+        int $productId,
+        int $combinationId,
+        string $productPriceTaxIncluded,
+        string $productPriceTaxExcluded,
+        int $productQuantity,
+        bool $isFreeShipping
     ) {
         $command = new self(
             $orderId,
@@ -117,20 +120,20 @@ class AddProductToOrderCommand
      * @param int $orderInvoiceId
      * @param int $productId
      * @param int $combinationId
-     * @param float $productPriceTaxIncluded
-     * @param float $productPriceTaxExcluded
+     * @param string $productPriceTaxIncluded
+     * @param string $productPriceTaxExcluded
      * @param int $productQuantity
      *
      * @return self
      */
     public static function toExistingInvoice(
-        $orderId,
-        $orderInvoiceId,
-        $productId,
-        $combinationId,
-        $productPriceTaxIncluded,
-        $productPriceTaxExcluded,
-        $productQuantity
+        int $orderId,
+        int $orderInvoiceId,
+        int $productId,
+        int $combinationId,
+        string $productPriceTaxIncluded,
+        string $productPriceTaxExcluded,
+        int $productQuantity
     ) {
         $command = new self(
             $orderId,
@@ -150,23 +153,27 @@ class AddProductToOrderCommand
      * @param int $orderId
      * @param int $productId
      * @param int $combinationId
-     * @param float $productPriceTaxIncluded
-     * @param float $productPriceTaxExcluded
+     * @param string $productPriceTaxIncluded
+     * @param string $productPriceTaxExcluded
      * @param int $productQuantity
      */
     private function __construct(
-        $orderId,
-        $productId,
-        $combinationId,
-        $productPriceTaxIncluded,
-        $productPriceTaxExcluded,
-        $productQuantity
+        int $orderId,
+        int $productId,
+        int $combinationId,
+        string $productPriceTaxIncluded,
+        string $productPriceTaxExcluded,
+        int $productQuantity
     ) {
         $this->orderId = new OrderId($orderId);
         $this->productId = new ProductId($productId);
         $this->combinationId = $combinationId;
-        $this->productPriceTaxIncluded = $productPriceTaxIncluded;
-        $this->productPriceTaxExcluded = $productPriceTaxExcluded;
+        try {
+            $this->productPriceTaxIncluded = new Number($productPriceTaxIncluded);
+            $this->productPriceTaxExcluded = new Number($productPriceTaxExcluded);
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidAmountException();
+        }
         $this->productQuantity = $productQuantity;
     }
 
@@ -195,7 +202,7 @@ class AddProductToOrderCommand
     }
 
     /**
-     * @return float
+     * @return Number
      */
     public function getProductPriceTaxIncluded()
     {
@@ -203,7 +210,7 @@ class AddProductToOrderCommand
     }
 
     /**
-     * @return float
+     * @return Number
      */
     public function getProductPriceTaxExcluded()
     {
