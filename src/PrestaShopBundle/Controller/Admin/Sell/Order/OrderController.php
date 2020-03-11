@@ -356,13 +356,21 @@ class OrderController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $orderId
+     * @param Request $request
      *
      * @return Response
      */
     public function viewAction(int $orderId, Request $request): Response
     {
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        try {
+            /** @var OrderForViewing $orderForViewing */
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        } catch (OrderException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_orders_index');
+        }
+
         $addOrderCartRuleForm = $this->createForm(AddOrderCartRuleType::class, [], [
             'order_id' => $orderId,
         ]);
@@ -418,20 +426,23 @@ class OrderController extends FrameworkBundleAdminController
             'symbol' => $orderCurrency->symbol,
         ]);
 
-        $backOfficeOrderButtons = new ActionsBarButtonsCollection();
-        $hookParameters = [
-            'controller' => $this,
-            'id_order' => $orderId,
-            'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-        ];
-
-        $this->dispatchHook(
-            'actionGetAdminOrderButtons',
-            $hookParameters
-        );
-
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
-        $cancelProductForm = $formBuilder->getFormFor($orderId);
+        $backOfficeOrderButtons = new ActionsBarButtonsCollection();
+
+        try {
+            $this->dispatchHook(
+                'actionGetAdminOrderButtons', [
+                'controller' => $this,
+                'id_order' => $orderId,
+                'actions_bar_buttons_collection' => $backOfficeOrderButtons,
+            ]);
+
+            $cancelProductForm = $formBuilder->getFormFor($orderId);
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_orders_index');
+        }
 
         $this->handleOutOfStockProduct($orderForViewing);
 
