@@ -531,15 +531,23 @@ ALTER TABLE `PREFIX_tab` ADD enabled TINYINT(1) NOT NULL;
 
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
   (NULL, 'displayAdminOrderTop', 'Admin Order Top', 'This hook displays content at the top of the order view page', '1'),
-  (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page in the side column under the customer view', '1'),
-  (NULL, 'displayAdminOrderSide', 'Admin Order Side Column', 'This hook displays content in the order view page at the end of the side column', '1'),
-  (NULL, 'displayAdminOrderMain', 'Admin Order Main Column', 'This hook displays content in the order view page at the end of the main column', '1'),
+  (NULL, 'displayAdminOrderSide', 'Admin Order Side Column', 'This hook displays content in the order view page in the side column under the customer view', '1'),
+  (NULL, 'displayAdminOrderSideBottom', 'Admin Order Side Column Bottom', 'This hook displays content in the order view page at the bottom of the side column', '1'),
+  (NULL, 'displayAdminOrderMain', 'Admin Order Main Column', 'This hook displays content in the order view page in the main column under the details view', '1'),
+  (NULL, 'displayAdminOrderMainBottom', 'Admin Order Main Column Bottom', 'This hook displays content in the order view page at the bottom of the main column', '1'),
   (NULL, 'displayAdminOrderTabLink', 'Admin Order Tab Link', 'This hook displays new tab links on the order view page', '1'),
   (NULL, 'displayAdminOrderTabContent', 'Admin Order Tab Content', 'This hook displays new tab contents on the order view page', '1'),
   (NULL, 'actionGetAdminOrderButtons', 'Admin Order Buttons', 'This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)', '1')
+  (NULL, 'displayFooterCategory', 'Category footer', 'This hook adds new blocks under the products listing in a category/search', '1'),
+  (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page after action buttons (or aliased to side column in migrated page)', '1'),
+  (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences', 'This hook is called on Admin Preferences post-process before processing the form', '1'),
+  (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields', 'This hook allows to display the extra field values added in an address from using hook ''additionalCustomerAddressFields''', '1')
 ;
 
-INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES ('displayAdminOrderTop', 'displayInvoice');
+INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
+  ('displayAdminOrderTop', 'displayInvoice'),
+  ('displayAdminOrderSide', 'displayBackOfficeOrderActions')
+;
 
 /* Add refund amount on order detail, and fill new columns via data in order_slip_detail table */
 ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `original_wholesale_price`;
@@ -560,10 +568,7 @@ SET
     ), 0)
 ;
 INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`)
-VALUES (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences',
-        'This hook is called on Admin Preferences post-process before processing the form',
-        '1'),
-       (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message identifiable object form',
+VALUES (NULL, 'actionOrderMessageFormBuilderModifier', 'Modify order message identifiable object form',
         'This hook allows to modify order message identifiable object forms content by modifying form builder data or FormBuilder itself',
         '1'),
        (NULL, 'actionCatalogPriceRuleFormBuilderModifier', 'Modify catalog price rule identifiable object form',
@@ -793,6 +798,5 @@ VALUES (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post
        (NULL, 'actionAddressGridPresenterModifier', 'Modify address grid template data',
         'This hook allows to modify data which is about to be used in template for address grid', '1'),
        (NULL, 'actionCreditSlipGridPresenterModifier', 'Modify credit slip grid template data',
-        'This hook allows to modify data which is about to be used in template for credit slip grid', '1'),
-       (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields',
-        'This hook allows to display the extra field values added in an address from using hook ''additionalCustomerAddressFields''', '1');
+        'This hook allows to modify data which is about to be used in template for credit slip grid', '1')
+;
