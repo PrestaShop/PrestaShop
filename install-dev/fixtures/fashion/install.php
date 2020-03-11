@@ -76,11 +76,10 @@ class InstallFixturesFashion extends XmlLoader
         $countryId = $this->retrieveId('country', $country);
 
         return Db::getInstance()->getValue(
-            '
-		SELECT id_tax_rules_group
-		FROM ' . _DB_PREFIX_ . 'tax_rule
-		WHERE
-			id_country=' . (int) $countryId . ' AND id_state=' . (int) $stateId
+            'SELECT id_tax_rules_group
+            FROM ' . _DB_PREFIX_ . 'tax_rule
+            WHERE
+            id_country=' . (int) $countryId . ' AND id_state=' . (int) $stateId
         );
     }
 }

@@ -105,7 +105,7 @@ class OrderRefundCalculator
             }
             if (!$isTaxIncluded) {
                 // @todo: use https://github.com/PrestaShop/decimal for price computations
-                $taxCalculator = $this->getCarrierTaxCalculator($order);
+                $taxCalculator = $this->getCarrierTaxCalculatorFromOrder($order);
                 $refundedAmount += $taxCalculator->addTaxes($shippingCostAmount);
             } else {
                 $refundedAmount += $shippingCostAmount;
@@ -247,7 +247,7 @@ class OrderRefundCalculator
      *
      * @throws PrestaShopException
      */
-    private function getCarrierTaxCalculator(Order $order): TaxCalculator
+    private function getCarrierTaxCalculatorFromOrder(Order $order): TaxCalculator
     {
         $carrier = new Carrier((int) $order->id_carrier);
         // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
