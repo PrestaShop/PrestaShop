@@ -111,14 +111,14 @@ class Tab
     /**
      * @var string
      *
-     * @ORM\Column(name="wording", type="string", length=194)
+     * @ORM\Column(name="wording", type="string", length=194, nullable=true)
      */
     private $wording;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="wording_domain", type="string", length=194)
+     * @ORM\Column(name="wording_domain", type="string", length=194, nullable=true)
      */
     private $wordingDomain;
 
@@ -170,6 +170,22 @@ class Tab
     public function getTabLangs()
     {
         return $this->tabLangs;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWording()
+    {
+        return $this->wording;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWordingDomain()
+    {
+        return $this->wordingDomain;
     }
 
     /**

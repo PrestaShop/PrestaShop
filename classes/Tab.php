@@ -59,10 +59,10 @@ class TabCore extends ObjectModel
     public $icon;
 
     /** @var string Wording to use for the display name */
-    public $wording = '';
+    public $wording;
 
     /** @var string Wording domain to use for the display name */
-    public $wording_domain = '';
+    public $wording_domain;
 
     const TAB_MODULE_LIST_URL = _PS_TAB_MODULE_LIST_URL_;
 
