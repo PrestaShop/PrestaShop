@@ -935,24 +935,34 @@ var form = (function() {
           return false;
         }
 
-        if (e.attrs.label == e.attrs.value) {
-          engine.search(e.attrs.label, function(result) {
-            if (result.length == 1) {
-              e.attrs.label = result[0].label;
-              e.attrs.value = result[0].value;
-              e.attrs.data = [];
-              e.attrs.data['id_group'] = result[0].data.id_group;
-            }
-          });
-        } else {
-          var attr = $('.js-attribute-checkbox[data-value="' + e.attrs.value + '"]');
+        if (!e.attrs.data){
+          var orgLabel = e.attrs.label;
+          if (e.attrs.label == e.attrs.value) {
+            engine.search(e.attrs.label, function(result) {
+              if (result.length == 1) {
+                e.attrs.label = result[0].label;
+                e.attrs.value = result[0].value;
+                e.attrs.data = [];
+                e.attrs.data['id_group'] = result[0].data.id_group;
+              }
+            });
+          } else {
+            var attr = $('.js-attribute-checkbox[data-value="' + e.attrs.value + '"]');
 
-          if (attr != undefined) {
-            e.attrs.label = attr.data('label');
-            e.attrs.value = attr.data('value');
-            e.attrs.data = [];
-            e.attrs.data['id_group'] = attr.data('group-id');
+            if (attr != undefined) {
+              e.attrs.label = attr.data('label');
+              e.attrs.value = attr.data('value');
+              e.attrs.data = [];
+              e.attrs.data['id_group'] = attr.data('group-id');
+            }
           }
+
+          if(filter([e.attrs]).length == 0){
+            $('#form_step3_attributes-tokenfield').val(function(i, value){
+              return value.replace(orgLabel,"");
+            });
+            return false;
+          };
         }
       });
 
