@@ -98,7 +98,7 @@ class OrderPreferencesGiftOptionsFormDataProvider implements FormDataProviderInt
     {
         $errors = [];
         $invalidFields = [];
-        $giftWrappingPrice = $data['gift_wrapping_price'];
+        $giftWrappingPrice = $data['gift_wrapping_price'] ?? null;
 
         // Check if purchase minimum value is a positive number
         if (!empty($giftWrappingPrice) && (!is_numeric($giftWrappingPrice) || $giftWrappingPrice < 0)) {
