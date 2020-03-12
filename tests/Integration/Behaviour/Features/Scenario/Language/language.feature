@@ -2,7 +2,9 @@
 @reset-database-before-feature
 Feature: Language
 
-  Scenario: Add selected languages
-    When I select language "Lietuvių kalba (Lithuanian)" and press add button
-    Then I should be able to modify "Lietuvių kalba (Lithuanian)" translations
+  Scenario: Add new language
+    When I add new language "Esperanto" with following details:
+    | name | Esperanto |
+    Then I should be able to see "Esperanto" language edit from with following details:
+    | name | Esperanto |
 
