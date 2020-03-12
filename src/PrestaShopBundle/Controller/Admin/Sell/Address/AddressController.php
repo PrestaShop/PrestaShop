@@ -178,30 +178,6 @@ class AddressController extends FrameworkBundleAdminController
     }
 
     /**
-     * Responsible for grid filtering
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_addresses_index",
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.address'),
-            $request,
-            AddressGridDefinitionFactory::GRID_ID,
-            'admin_addresses_index'
-        );
-    }
-
-    /**
      * @return array
      */
     private function getAddressToolbarButtons(): array
