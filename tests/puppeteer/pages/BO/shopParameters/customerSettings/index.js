@@ -24,7 +24,7 @@ module.exports = class customerSettings extends BOBasePage {
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async setRedisplayCartAtLogin(toEnable = true) {
+  async setRedisplayCartAtLoginStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.redisplayCartAtLoginLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
@@ -33,9 +33,9 @@ module.exports = class customerSettings extends BOBasePage {
   /**
    * Enable/Disable send email after registration
    * @param toEnable
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
-  async setEmailAfterRegistration(toEnable = true) {
+  async setEmailAfterRegistrationStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.sedEmailAfterRegistration.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
