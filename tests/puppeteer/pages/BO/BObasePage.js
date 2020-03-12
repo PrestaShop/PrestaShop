@@ -273,7 +273,7 @@ module.exports = class BOBasePage extends CommonPage {
     const growlMessageText = await this.getTextContent(this.growlMessageBlock);
     await Promise.all([
       this.page.click(this.growlCloseButton),
-      this.page.waitForSelector(this.growlCloseButton, {hidden: true}),
+      this.page.waitForSelector(this.growlMessageBlock, {hidden: true}),
     ]);
     return growlMessageText;
   }
