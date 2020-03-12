@@ -1606,7 +1606,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * @param \StdClass $modaddons Addons Module object, provided by XML stream
      *
-     * @return null|string
+     * @return string|null
      */
     public static function copyModAddonsImg($modaddons)
     {
@@ -1614,14 +1614,14 @@ abstract class ModuleCore implements ModuleInterface
             return null;
         }
 
-        $filepath = _PS_TMP_IMG_DIR_ . md5((int)$modaddons->id . '-' . $modaddons->name) . '.jpg';
+        $filepath = _PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
         $fileDoesNotExist = !file_exists($filepath);
 
         if ($fileDoesNotExist) {
             $remoteDownloadWasASuccess = false;
             try {
                 $remoteImage = Tools::file_get_contents($modaddons->img);
-                $remoteDownloadWasASuccess = true;;
+                $remoteDownloadWasASuccess = true;
             } catch (\Exception $e) {
                 copy(_PS_IMG_DIR_ . '404.gif', $filepath);
             }
