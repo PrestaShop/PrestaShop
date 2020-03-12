@@ -265,7 +265,7 @@ module.exports = class BOBasePage extends CommonPage {
     return this.elementNotVisible(this.rightSidebar, 1000);
   }
 
-  async IsSubmenuVisible(parentSelector, linkSelector) {
+  async isSubmenuVisible(parentSelector, linkSelector) {
     if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
       await this.page.click(parentSelector);
       await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
