@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+use Exception;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -1613,16 +1614,17 @@ abstract class ModuleCore implements ModuleInterface
         if (!Validate::isLoadedObject($modaddons)) {
             return null;
         }
+        
+        $filename = md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
+        $filepath = _PS_TMP_IMG_DIR_ . $filename;
+        $fileExist = file_exists($filepath);
 
-        $filepath = _PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
-        $fileDoesNotExist = !file_exists($filepath);
-
-        if ($fileDoesNotExist) {
+        if (!$fileExist) {
             $remoteDownloadWasASuccess = false;
             try {
                 $remoteImage = Tools::file_get_contents($modaddons->img);
                 $remoteDownloadWasASuccess = true;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 copy(_PS_IMG_DIR_ . '404.gif', $filepath);
             }
 
@@ -1631,8 +1633,8 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        if (file_exists($filepath)) {
-            return '../img/tmp/' . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
+        if ($fileExist) {
+            return '../img/tmp/' . $filename;
         }
     }
 
