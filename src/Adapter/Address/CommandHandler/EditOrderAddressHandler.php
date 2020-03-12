@@ -26,23 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Address\CommandHandler;
 
-use Cart;
 use Order;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditCustomerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditOrderAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotUpdateOrderAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CannotUpdateCartException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotUpdateOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShopException;
 
 /**
  * EditOrderAddressCommandHandler manages an order update, it then updates order and cart
@@ -51,50 +48,44 @@ use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
 {
     /**
-     * @var EditCustomerAddressHandlerInterface
+     * @var CommandBusInterface
      */
-    private $addressHandler;
+    private $commandBus;
 
     /**
-     * @param EditCustomerAddressHandlerInterface $addressHandler
+     * @param CommandBusInterface $commandBus
      */
-    public function __construct(EditCustomerAddressHandlerInterface $addressHandler)
+    public function __construct(CommandBusInterface $commandBus)
     {
-        $this->addressHandler = $addressHandler;
+        $this->commandBus = $commandBus;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @throws AddressException
      * @throws AddressConstraintException
-     * @throws CannotUpdateAddressException
+     * @throws CannotUpdateOrderAddressException
+     * @throws CountryConstraintException
+     * @throws StateConstraintException
      */
     public function handle(EditOrderAddressCommand $command): AddressId
     {
-        $order = new Order($command->getOrderId()->getValue());
-
-        $addressCommand = $this->createEditAddressCommand($order, $command);
-        /** @var AddressId $addressId */
-        $addressId = $this->addressHandler->handle($addressCommand);
-
         try {
-            $cart = new Cart($order->id_cart);
+            $addressCommand = $this->createEditAddressCommand($command);
+            /** @var AddressId $addressId */
+            $addressId = $this->commandBus->handle($addressCommand);
+
             switch ($command->getAddressType()) {
                 case OrderAddressType::DELIVERY_ADDRESS_TYPE:
-                    $order->id_address_delivery = $addressId->getValue();
-                    $cart->id_address_delivery = $addressId->getValue();
+                    $this->commandBus->handle(new ChangeOrderDeliveryAddressCommand(
+                        $command->getOrderId()->getValue(), $addressId->getValue()
+                    ));
                     break;
                 case OrderAddressType::INVOICE_ADDRESS_TYPE:
-                    $order->id_address_invoice = $addressId->getValue();
-                    $cart->id_address_invoice = $addressId->getValue();
+                    $this->commandBus->handle(new ChangeOrderInvoiceAddressCommand(
+                        $command->getOrderId()->getValue(), $addressId->getValue()
+                    ));
                     break;
-            }
-            if (false === $cart->update()) {
-                throw new CannotUpdateCartException(sprintf('Failed to update cart "%s"', $cart->id));
-            }
-            if (false === $order->update()) {
-                throw new CannotUpdateOrderException(sprintf('Failed to update order "%s"', $order->id));
             }
         } catch (PrestaShopException $e) {
             throw new CannotUpdateOrderAddressException(sprintf('An error occurred when updating address for order "%s"', $command->getOrderId()->getValue()));
@@ -104,7 +95,6 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
     }
 
     /**
-     * @param Order $order
      * @param EditOrderAddressCommand $orderCommand
      *
      * @return EditCustomerAddressCommand
@@ -112,9 +102,11 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
      * @throws AddressConstraintException
      * @throws CountryConstraintException
      * @throws StateConstraintException
+     * @throws PrestaShopException
      */
-    private function createEditAddressCommand(Order $order, EditOrderAddressCommand $orderCommand): EditCustomerAddressCommand
+    private function createEditAddressCommand(EditOrderAddressCommand $orderCommand): EditCustomerAddressCommand
     {
+        $order = new Order($orderCommand->getOrderId()->getValue());
         $addressId = null;
         switch ($orderCommand->getAddressType()) {
             case OrderAddressType::DELIVERY_ADDRESS_TYPE:
