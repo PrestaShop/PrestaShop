@@ -29,7 +29,6 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     {
         $testCaseData = $table->getRowsHash();
 
-
         throw new PendingException();
     }
 
