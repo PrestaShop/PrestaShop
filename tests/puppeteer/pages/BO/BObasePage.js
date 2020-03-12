@@ -113,8 +113,9 @@ module.exports = class BOBasePage extends CommonPage {
     this.onboardingStopButton = 'a.onboarding-button-stop';
 
     // Growls
-    this.growlMessageBlock = '#growls .growl-message';
-    this.growlDefaultMessageBlock = '#growls-default .growl-message';
+    this.growlDefaultDiv = '#growls-default';
+    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
+    this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
     // Alert Text
     this.alertSuccessBlock = 'div.alert.alert-success:not([style=\'display: none;\'])';
@@ -127,7 +128,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.alertBoxButtonClose = `${this.alertBoxBloc} button.close`;
 
     // Modal dialog
-    this.modalDialog = '#confirmation_modal.show .modal-dialog';
+    this.confirmationModal = '#confirmation_modal.show';
+    this.modalDialog = `${this.confirmationModal} .modal-dialog`;
     this.modalDialogYesButton = `${this.modalDialog} button.continue`;
     this.modalDialogNoButton = `${this.modalDialog} button.cancel`;
 
@@ -235,5 +237,19 @@ module.exports = class BOBasePage extends CommonPage {
   async deleteFile(file, wait = 0) {
     fs.unlinkSync(file);
     await this.page.waitFor(wait);
+  }
+
+  /**
+   * Close growl message and return its value
+   * @return {Promise<string>}
+   */
+  async closeGrowlMessage() {
+    await this.page.waitForSelector(this.growlMessageBlock, {visible: true});
+    const growlMessageText = await this.getTextContent(this.growlMessageBlock);
+    await Promise.all([
+      this.page.click(this.growlCloseButton),
+      this.page.waitForSelector(this.growlCloseButton, {hidden : true}),
+    ]);
+    return growlMessageText;
   }
 };
