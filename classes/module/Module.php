@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -31,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
-use Exception;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -1614,7 +1614,7 @@ abstract class ModuleCore implements ModuleInterface
         if (!Validate::isLoadedObject($modaddons)) {
             return null;
         }
-        
+
         $filename = md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
         $filepath = _PS_TMP_IMG_DIR_ . $filename;
         $fileExist = file_exists($filepath);
