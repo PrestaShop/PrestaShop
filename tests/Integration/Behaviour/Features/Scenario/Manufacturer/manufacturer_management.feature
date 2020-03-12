@@ -100,5 +100,5 @@ Feature: Manufacturer management
       | Address          | test street 12345                  |
       | City             | Vilnius                            |
       | Country          | Lithuania                          |
-    Then manufacturer "shoeman" should have added addresses
+    Then manufacturer "shoeman" should have 2 addresses and 0 products
 

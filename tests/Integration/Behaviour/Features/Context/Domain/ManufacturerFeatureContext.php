@@ -314,11 +314,16 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then manufacturer :manufacturerReference should have added addresses
+     * @Then manufacturer :manufacturerReference should have :countOfAddresses addresses and :countOfProducts products
      *
      * @param string $manufacturerReference
+     * @param int $countOfAddresses
+     * @param int $countOfProducts
      */
-    public function manufacturerShouldHaveAddedAddresses(string $manufacturerReference)
+    public function manufacturerShouldHaveAddedAddresses(
+        string $manufacturerReference,
+        int $countOfAddresses,
+        int $countOfProducts)
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
@@ -329,7 +334,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         ));
 
         Assert::assertSame($manufacturer->name, $viewableMaufacturer->getName());
-        Assert::assertSame(2, count($viewableMaufacturer->getManufacturerAddresses()));
-        Assert::assertSame(0, count($viewableMaufacturer->getManufacturerProducts()));
+        Assert::assertSame($countOfAddresses, count($viewableMaufacturer->getManufacturerAddresses()));
+        Assert::assertSame($countOfProducts, count($viewableMaufacturer->getManufacturerProducts()));
     }
 }
