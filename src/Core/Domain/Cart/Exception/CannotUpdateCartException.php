@@ -24,20 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+namespace PrestaShop\PrestaShop\Core\Domain\Cart\Exception;
 
 /**
- * Interface for services that handles command which edits customer address
+ * Thrown on failure to update cart
  */
-interface EditCustomerAddressHandlerInterface
+class CannotUpdateCartException extends CartException
 {
-    /**
-     * @param EditCustomerAddressCommand $command
-     *
-     * @return AddressId The (potentially) newly created address id
-     */
-    public function handle(EditCustomerAddressCommand $command): AddressId;
 }

@@ -68,6 +68,9 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
                 // Reset ID to force recreating a new address
                 $address->id = $address->id_address = null;
 
+                // We consider this address as necessarily NOT deleted, in case you were editing a deleted address
+                // from an order then the newly edited address should not be deleted, so that you can select it
+                $address->deleted = 0;
                 if (false === $address->save()) {
                     throw new CannotAddAddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));
                 }
