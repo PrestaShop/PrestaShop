@@ -78,28 +78,6 @@ class LanguageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process Grid search.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchGridAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.language'),
-            $request,
-            LanguageGridDefinitionFactory::GRID_ID,
-            'admin_languages_index'
-        );
-    }
-
-    /**
      * Show language creation form page and handle its submit.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
