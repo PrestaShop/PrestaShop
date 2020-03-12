@@ -18,7 +18,9 @@ admin_taxes_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:search'
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.tax
+    redirectRoute: admin_taxes_index
     _legacy_controller: AdminTaxes
     _legacy_link: AdminTaxes:submitFiltertax
 

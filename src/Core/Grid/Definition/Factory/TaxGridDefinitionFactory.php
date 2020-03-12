@@ -49,6 +49,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    public const GRID_ID = 'tax';
+
     use BulkDeleteActionTrait;
 
     /**
@@ -56,7 +58,7 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'tax';
+        return self::GRID_ID;
     }
 
     /**
@@ -191,10 +193,9 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'tax',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_taxes_index',
                 ])
