@@ -113,27 +113,6 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Process Grid search.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchGridAction(Request $request)
-    {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.category'),
-            $request,
-            CategoryGridDefinitionFactory::GRID_ID,
-            'admin_categories_index'
-        );
-    }
-
-    /**
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
