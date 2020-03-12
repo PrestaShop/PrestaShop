@@ -113,10 +113,11 @@ describe('Choose quantity discount based on', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
     await this.pageObjects.addProductPage.createEditBasicProduct(productWithCombinations);
-    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(productWithCombinations);
+    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
+      productWithCombinations,
+    );
     await this.pageObjects.addProductPage.addSpecificPrices(productWithCombinations.specificPrice);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
-
   });
 
   it('should preview product and check price TTC in FO', async function () {

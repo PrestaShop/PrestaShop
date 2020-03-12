@@ -391,7 +391,7 @@ module.exports = class Product extends BOBasePage {
    */
   async updateToggleColumnValue(row, valueWanted = true) {
     const actualValue = await this.getToggleColumnValue(row);
-    if(actualValue !== valueWanted) {
+    if (actualValue !== valueWanted) {
       await this.clickAndWaitForNavigation(this.productsListTableColumnStatus.replace('%ROW', row));
       return true;
     }
@@ -404,7 +404,7 @@ module.exports = class Product extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToProductPage(row = 1) {
-    await this.page.waitForSelector(this.productsListTableColumnName.replace('%ROW', row), {visible: true });
+    await this.page.waitForSelector(this.productsListTableColumnName.replace('%ROW', row), {visible: true});
     await this.clickAndWaitForNavigation(this.productsListTableColumnName.replace('%ROW', row));
   }
 

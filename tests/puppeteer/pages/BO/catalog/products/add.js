@@ -73,7 +73,7 @@ module.exports = class AddProduct extends BOBasePage {
     await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(this.productTypeSelect, productData.type);
     await this.setValue(this.productReferenceInput, productData.reference);
-    if(await this.elementVisible(this.productQuantityInput, 500)) {
+    if (await this.elementVisible(this.productQuantityInput, 500)) {
       await this.setValue(this.productQuantityInput, productData.quantity.toString());
     }
     await this.setValue(this.productPriceTtcInput, productData.price.toString());
@@ -87,7 +87,7 @@ module.exports = class AddProduct extends BOBasePage {
    */
   async setProductStatus(wantedStatus) {
     const isProductOnline = await this.getOnlineButtonStatus();
-    if(isProductOnline !== wantedStatus) {
+    if (isProductOnline !== wantedStatus) {
       await this.page.click(this.productOnlineSwitch);
       await this.closeGrowlMessage();
     }
@@ -322,7 +322,7 @@ module.exports = class AddProduct extends BOBasePage {
     await this.goToFormStep(2);
     await Promise.all([
       this.page.click(this.addSpecificPriceButton),
-      this.page.waitForSelector(`${this.specificPriceForm}.show`, {visible: true})
+      this.page.waitForSelector(`${this.specificPriceForm}.show`, {visible: true}),
     ]);
     // Choose combinations if exist
     if (specificPriceData.combinations) {

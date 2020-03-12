@@ -74,7 +74,9 @@ describe('Create, read, update and delete Standard product with combinations in 
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
     await this.pageObjects.addProductPage.createEditBasicProduct(productWithCombinations);
-    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(productWithCombinations);
+    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
+      productWithCombinations,
+    );
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
@@ -96,7 +98,9 @@ describe('Create, read, update and delete Standard product with combinations in 
   it('should edit Product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
     await this.pageObjects.addProductPage.createEditBasicProduct(editedProductWithCombinations);
-    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(editedProductWithCombinations);
+    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
+      editedProductWithCombinations,
+    );
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 

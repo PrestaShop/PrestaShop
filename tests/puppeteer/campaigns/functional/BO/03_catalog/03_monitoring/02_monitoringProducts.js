@@ -143,7 +143,7 @@ describe('Create different products and delete them from monitoring page', async
         let createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(
           test.args.productToCreate,
         );
-        if(test.args.hasCombinations) {
+        if (test.args.hasCombinations) {
           createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
             test.args.productToCreate,
           );
