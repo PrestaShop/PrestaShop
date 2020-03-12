@@ -67,11 +67,10 @@ class TaxController extends FrameworkBundleAdminController
 
         $taxGridFactory = $this->get('prestashop.core.grid.factory.tax');
         $taxGrid = $taxGridFactory->getGrid($filters);
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
         $taxOptionsForm = $this->getTaxOptionsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/International/Tax/index.html.twig', [
-            'taxGrid' => $gridPresenter->present($taxGrid),
+            'taxGrid' => $this->presentGrid($taxGrid),
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'taxOptionsForm' => $taxOptionsForm->createView(),
@@ -111,32 +110,6 @@ class TaxController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_taxes_index');
-    }
-
-    /**
-     * Provides filters functionality.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.tax');
-        $definitionFactory = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($definitionFactory);
-        $searchParametersForm->handleRequest($request);
-
-        $filters = [];
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_taxes_index', ['filters' => $filters]);
     }
 
     /**
