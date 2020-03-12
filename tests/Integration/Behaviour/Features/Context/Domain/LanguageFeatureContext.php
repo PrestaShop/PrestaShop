@@ -8,7 +8,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class LanguageFeatureContext
- * @package Tests\Integration\Behaviour\Features\Context\Domain
  */
 class LanguageFeatureContext extends AbstractDomainFeatureContext
 {
@@ -41,5 +40,4 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     {
         throw new PendingException();
     }
-
 }
