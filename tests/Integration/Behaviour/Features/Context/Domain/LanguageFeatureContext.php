@@ -4,6 +4,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -11,6 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class LanguageFeatureContext extends AbstractDomainFeatureContext
 {
+    private const SHOP_ASSOCIATION = ['TODO'];
+
     /** @var ContainerInterface */
     private $container;
 
@@ -29,7 +32,18 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     {
         $testCaseData = $table->getRowsHash();
 
-        throw new PendingException();
+        $this->getCommandBus()->handle(new AddLanguageCommand(
+            $testCaseData['Name'],
+            $testCaseData['ISO code'],
+            $testCaseData['Language code'],
+            $testCaseData['Date format'],
+            $testCaseData['Date format (full)'],
+            $testCaseData['Flag'],
+            $testCaseData['"No-picture" image'],
+            $testCaseData['Is RTL language'],
+            $testCaseData['Status'],
+            self::SHOP_ASSOCIATION
+        ));
     }
 
     /**
