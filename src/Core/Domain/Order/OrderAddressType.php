@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order;
  */
 class OrderAddressType
 {
-    const DELIVERY_ADDRESS_TYPE = 'delivery_address_type';
+    const DELIVERY_ADDRESS_TYPE = 'delivery_address';
 
-    const INVOICE_ADDRESS_TYPE = 'invoice_address_type';
+    const INVOICE_ADDRESS_TYPE = 'invoice_address';
 }

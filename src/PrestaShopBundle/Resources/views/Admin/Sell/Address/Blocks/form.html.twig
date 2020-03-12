@@ -55,7 +55,6 @@
         {% endif %}
         {% if addressForm.customer_email is defined %}
           {{ ps.form_group_row(addressForm.customer_email, {'attr': {
-            'class': 'js-manufacturer-country-select',
             'data-customer-information-url': path('admin_customer_for_address_information') }}, {
             'label': 'Customer email'|trans({}, 'Admin.Orderscustomers.Feature'),
           }) }}
@@ -108,6 +107,7 @@
       }) }}
 
       {{ ps.form_group_row(addressForm.id_country, {'attr': {
+        'class': 'js-customer-country-select',
         'data-states-url': path('admin_country_states') }}, {
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
@@ -142,7 +142,7 @@
       {% if (displayInIframe is defined and displayInIframe == true) %}
         <a href="javascript:window.parent.$.fancybox.close();" class="btn btn-outline-secondary">
       {% else %}
-        <a href="{{ path('admin_addresses_index') }}" class="btn btn-outline-secondary">
+        <a href="{{ cancelPath|default(path('admin_addresses_index')) }}" class="btn btn-outline-secondary">
       {% endif %}
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
