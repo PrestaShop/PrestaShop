@@ -107,6 +107,7 @@ describe('Create, read, update and delete Standard product with combinations in 
   it('should preview and check product in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
+
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.getProductInformation(editedProductWithCombinations);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
