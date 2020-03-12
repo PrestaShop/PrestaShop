@@ -173,3 +173,4 @@ default:
               features: Features/Scenario/Language
             contexts:
               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+              - Tests\Integration\Behaviour\Features\Context\Domain\LanguageFeatureContext
