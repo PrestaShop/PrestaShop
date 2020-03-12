@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAddressTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
