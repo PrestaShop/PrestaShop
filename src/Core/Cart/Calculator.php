@@ -206,7 +206,7 @@ class Calculator
                 $amount = $amount->sub($this->getFees()->getInitialShippingFees());
             }
             $amount = $amount->add($cartRule->getDiscountApplied());
-            $isFreeShippingAppliedToAmount = (bool)$cartRule->getRuleData()['free_shipping'];
+            $isFreeShippingAppliedToAmount = (bool) $cartRule->getRuleData()['free_shipping'];
         }
 
         $allowedMaxDiscount = $this->getRowTotalWithoutDiscount();

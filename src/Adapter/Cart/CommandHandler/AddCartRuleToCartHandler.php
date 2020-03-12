@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCartRuleToCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleValidityException;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\FreeShippingCartRuleAlreadyExistException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
