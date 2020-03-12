@@ -27,16 +27,19 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
      */
     public function addNewLanguageWithFollowingDetails($languageReference, TableNode $table)
     {
+        $testCaseData = $table->getRowsHash();
+
+
         throw new PendingException();
     }
 
     /**
-     * @Then I should be able to see :languageReference language edit from with following details:
+     * @Then I should be able to see :languageReference language edit form with following details:
      *
      * @param $languageReference
      * @param TableNode $table
      */
-    public function shouldBeAbleToSeeLanguageEditFromWithFollowingDetails($languageReference, TableNode $table)
+    public function thereIsLanguageWithFollowingDetails($languageReference, TableNode $table)
     {
         throw new PendingException();
     }
