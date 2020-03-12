@@ -1603,16 +1603,35 @@ abstract class ModuleCore implements ModuleInterface
         return $module_list;
     }
 
+    /**
+     * @param \StdClass $modaddons Addons Module object, provided by XML stream
+     *
+     * @return null|string
+     */
     public static function copyModAddonsImg($modaddons)
     {
         if (!Validate::isLoadedObject($modaddons)) {
-            return;
+            return null;
         }
-        if (!file_exists(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg') &&
-        !file_put_contents(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg', Tools::file_get_contents($modaddons->img))) {
-            copy(_PS_IMG_DIR_ . '404.gif', _PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg');
+
+        $filepath = _PS_TMP_IMG_DIR_ . md5((int)$modaddons->id . '-' . $modaddons->name) . '.jpg';
+        $fileDoesNotExist = !file_exists($filepath);
+
+        if ($fileDoesNotExist) {
+            $remoteDownloadWasASuccess = false;
+            try {
+                $remoteImage = Tools::file_get_contents($modaddons->img);
+                $remoteDownloadWasASuccess = true;;
+            } catch (\Exception $e) {
+                copy(_PS_IMG_DIR_ . '404.gif', $filepath);
+            }
+
+            if ($remoteDownloadWasASuccess && !file_put_contents($filepath, $remoteImage)) {
+                copy(_PS_IMG_DIR_ . '404.gif', $filepath);
+            }
         }
-        if (file_exists(_PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg')) {
+
+        if (file_exists($filepath)) {
             return '../img/tmp/' . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
         }
     }
