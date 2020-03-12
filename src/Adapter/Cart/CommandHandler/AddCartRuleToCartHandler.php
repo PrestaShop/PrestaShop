@@ -77,12 +77,6 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
         $cart = $this->getCart($command->getCartId());
 
         $cartRule = new CartRule($command->getCartRuleId()->getValue());
-        $freeShippingCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
-        if (count($freeShippingCartRules) && (bool) $cartRule->free_shipping) {
-            throw new FreeShippingCartRuleAlreadyExistException(
-                'Free shipping cart rule is already added to this cart!'
-            );
-        }
 
         $this->contextStateManager
             ->setCart($cart)
