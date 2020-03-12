@@ -110,14 +110,7 @@
 
             <div class="dropdown-menu dropdown-menu-right">
               <a class="dropdown-item"
-                href="{{ getAdminLink('AdminAddresses', true, {
-                  'realedit': 1,
-                  'updateaddress': 1,
-                  'address_type': 1,
-                  'id_order': orderForViewing.id,
-                  'id_address': orderForViewing.shippingAddress.addressId,
-                  'back': path('admin_orders_view', {'orderId': orderForViewing.id})
-                }) }}"
+                 href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'delivery'}) }}"
               >
                 {{ 'Edit address'|trans({}, 'Admin.Actions') }}
               </a>
@@ -166,14 +159,7 @@
 
             <div class="dropdown-menu dropdown-menu-right">
               <a class="dropdown-item"
-                href="{{ getAdminLink('AdminAddresses', true, {
-                  'realedit': 1,
-                  'updateaddress': 1,
-                  'address_type': 2,
-                  'id_order': orderForViewing.id,
-                  'id_address': orderForViewing.invoiceAddress.addressId,
-                  'back': path('admin_orders_view', {'orderId': orderForViewing.id})
-                }) }}"
+                 href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'invoice'}) }}"
               >
                 {{ 'Edit address'|trans({}, 'Admin.Actions') }}
               </a>
