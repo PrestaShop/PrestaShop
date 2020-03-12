@@ -31,14 +31,15 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
-use PrestaShop\PrestaShop\Core\Domain\Notification\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -358,6 +359,8 @@ class CommonController extends FrameworkBundleAdminController
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
     ) {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
         /** @var GridDefinitionInterface $definition */
@@ -381,6 +384,12 @@ class CommonController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute($redirectRoute, $redirectParams);
+        return $responseBuilder->buildSearchResponse(
+            $definitionFactory,
+            $request,
+            $definitionFactory::GRID_ID,
+            $redirectRoute,
+            $redirectParams
+        );
     }
 }
