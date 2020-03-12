@@ -117,27 +117,6 @@ class CustomerController extends AbstractAdminController
     }
 
     /**
-     * Process Grid search.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchGridAction(Request $request)
-    {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.customer'),
-            $request,
-            CustomerGridDefinitionFactory::GRID_ID,
-            'admin_customers_index'
-        );
-    }
-
-    /**
      * Show customer create form & handle processing of it.
      *
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
