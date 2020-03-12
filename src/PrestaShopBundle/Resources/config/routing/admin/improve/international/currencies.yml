@@ -10,7 +10,9 @@ admin_currencies_search:
     path: /
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:search'
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.currency
+        redirectRoute: admin_currencies_index
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:submitFiltercurrency
 

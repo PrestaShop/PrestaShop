@@ -98,28 +98,6 @@ class CurrencyController extends FrameworkBundleAdminController
     }
 
     /**
-     * Provides filters functionality.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.currency'),
-            $request,
-            CurrencyGridDefinitionFactory::GRID_ID,
-            'admin_currencies_index'
-        );
-    }
-
-    /**
      * Displays and handles currency form.
      *
      * @AdminSecurity(
