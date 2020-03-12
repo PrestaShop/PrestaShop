@@ -38,7 +38,7 @@ class PricesDropControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $this->doProductSearch('catalog/listing/prices-drop');
+        $this->doProductSearch('catalog/listing/prices-drop', ['entity' => 'prices-drop']);
     }
 
     protected function getProductSearchQuery()
