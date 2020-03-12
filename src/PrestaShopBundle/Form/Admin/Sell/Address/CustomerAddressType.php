@@ -89,10 +89,7 @@ class CustomerAddressType extends AbstractType
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
 
-        $hideStates = false;
-        if (empty($stateChoices)) {
-            $hideStates = true;
-        }
+        $hideStates = empty($stateChoices);
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
