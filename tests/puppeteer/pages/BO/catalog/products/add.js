@@ -76,8 +76,8 @@ module.exports = class AddProduct extends BOBasePage {
     if (await this.elementVisible(this.productQuantityInput, 500)) {
       await this.setValue(this.productQuantityInput, productData.quantity.toString());
     }
-    await this.setValue(this.productPriceTtcInput, productData.price.toString());
     await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
+    await this.setValue(this.productPriceTtcInput, productData.price.toString());
   }
 
   /**
