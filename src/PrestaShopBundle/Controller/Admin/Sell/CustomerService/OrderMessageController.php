@@ -78,31 +78,6 @@ class OrderMessageController extends FrameworkBundleAdminController
     }
 
     /**
-     * Prepares filtering response
-     *
-     * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_order_messages_index"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function filterAction(Request $request): RedirectResponse
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.order_message'),
-            $request,
-            OrderMessageGridDefinitionFactory::GRID_ID,
-            'admin_order_messages_index'
-        );
-    }
-
-    /**
      * Create new order message
      *
      * @AdminSecurity(
