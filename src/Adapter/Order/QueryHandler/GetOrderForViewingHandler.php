@@ -46,6 +46,7 @@ use OrderPayment;
 use OrderReturn;
 use OrderSlip;
 use Pack;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
@@ -474,13 +475,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                     0,
                     $pack_item['current_stock'],
                     $packItemImagePath,
-                    Tools::ps_round(0, $computingPrecision->getPrecision($currency->precision)),
-                    Tools::ps_round(0, $computingPrecision->getPrecision($currency->precision)),
-                    0,
+                    new Number('0'),
+                    new Number('0'),
+                    new Number('0'),
                     $this->locale->formatPrice(0, $currency->iso_code),
                     0,
                     $this->locale->formatPrice(0, $currency->iso_code),
-                    0,
+                    new Number('0'),
                     $pack_item['location'],
                     null,
                     '',
@@ -500,19 +501,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                Tools::ps_round(
-                    $product['unit_price_tax_excl'],
-                    $computingPrecision->getPrecision($currency->precision)
-                ),
-                Tools::ps_round(
-                    $product['unit_price_tax_incl'],
-                    $computingPrecision->getPrecision($currency->precision)
-                ),
-                $product['tax_rate'],
+                new Number((string) $product['unit_price_tax_excl']),
+                new Number((string) $product['unit_price_tax_incl']),
+                new Number((string) $product['tax_rate']),
                 $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
                 $product['product_quantity_refunded'] + $product['product_quantity_return'],
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
-                $product['displayed_max_refundable'],
+                new Number((string) $product['displayed_max_refundable']),
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
                 !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
@@ -906,13 +901,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $totalAmount = (float) $order->total_paid_tax_incl;
 
         return new OrderPricesForViewing(
-            $productsPrice,
-            $discountsAmount,
-            $wrappingPrice,
-            $shippingPrice,
-            $shippingRefundable,
-            $taxesAmount,
-            $totalAmount,
+            new Number((string) $productsPrice),
+            new Number((string) $discountsAmount),
+            new Number((string) $wrappingPrice),
+            new Number((string) $shippingPrice),
+            new Number((string) $shippingRefundable),
+            new Number((string) $taxesAmount),
+            new Number((string) $totalAmount),
             Tools::displayPrice($productsPrice, $currency),
             Tools::displayPrice($discountsAmount, $currency),
             Tools::displayPrice($wrappingPrice, $currency),
@@ -933,7 +928,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $discountsForViewing[] = new OrderDiscountForViewing(
                 (int) $discount['id_order_cart_rule'],
                 $discount['name'],
-                (float) $discount['value'],
+                new Number((string) $discount['value']),
                 Tools::displayPrice($discount['value'], $currency)
             );
         }

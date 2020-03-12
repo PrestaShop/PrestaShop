@@ -20,7 +20,6 @@ let page;
 const productToCreate = {
   name: 'product To Delete 1',
   type: 'Standard product',
-  productHasCombinations: false,
 };
 const firstProductData = new ProductFaker(productToCreate);
 productToCreate.name = 'product To Delete 2';
@@ -73,7 +72,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
     it('should create new product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `createProduct${index + 1}`, baseContext);
       await this.pageObjects.productsPage.goToAddProductPage();
-      const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+      const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
       await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
     });
 

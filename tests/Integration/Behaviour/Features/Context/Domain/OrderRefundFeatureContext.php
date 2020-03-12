@@ -386,7 +386,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
      *
      * @return IssueStandardRefundCommand
      *
@@ -398,8 +397,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         array $refunds,
         bool $generateCreditSlip,
         bool $generateVoucher,
-        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
-        ?float $voucherRefundAmount = null
+        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
     ): IssueStandardRefundCommand {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
@@ -429,8 +427,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $refundShippingCost,
             $generateCreditSlip,
             $generateVoucher,
-            $voucherRefundType,
-            $voucherRefundAmount
+            $voucherRefundType
         );
     }
 
@@ -441,7 +438,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
      *
      * @return IssueReturnProductCommand
      *
@@ -454,8 +450,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         bool $restockRefundedProducts,
         bool $generateCreditSlip,
         bool $generateVoucher,
-        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
-        ?float $voucherRefundAmount = null
+        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
     ): IssueReturnProductCommand {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
@@ -486,8 +481,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $refundShippingCost,
             $generateCreditSlip,
             $generateVoucher,
-            $voucherRefundType,
-            $voucherRefundAmount
+            $voucherRefundType
         );
     }
 

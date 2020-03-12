@@ -147,7 +147,7 @@ export default class OrderProductAdd {
   addProduct(orderId) {
     this.productAddActionBtn.prop('disabled', true);
     this.invoiceSelect.prop('disabled', true);
-    this.combinationsBlock.addClass('d-none');
+    this.combinationsSelect.prop('disabled', true);
 
     const params = {
       product_id: this.productIdInput.val(),
@@ -169,8 +169,12 @@ export default class OrderProductAdd {
         newRow: response,
       });
     }, (response) => {
-      if (response.message) {
-        $.growl.error({message: response.message});
+      this.productAddActionBtn.prop('disabled', false);
+      this.invoiceSelect.prop('disabled', false);
+      this.combinationsSelect.prop('disabled', false);
+
+      if (response.responseJSON && response.responseJSON.message) {
+        $.growl.error({message: response.responseJSON.message});
       }
     });
   }

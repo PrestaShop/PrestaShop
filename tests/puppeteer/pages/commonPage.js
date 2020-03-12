@@ -154,14 +154,12 @@ module.exports = class CommonPage {
   /**
    * Check attribute value
    * @param selector, element to check
-   * @param attribute, attribute to test
+   * @param attribute, attribute to get
    * @param textToCheckWith, text to check with
    * @return promise, throw an error if element does not exist or attribute value is not correct
    */
   async checkAttributeValue(selector, attribute, textToCheckWith) {
-    await this.page.waitForSelector(selector);
-    const value = await this.page.$eval(selector, (el, attr) => el
-      .getAttribute(attr), attribute);
+    const value = await this.getAttributeContent(selector, attribute);
     return value === textToCheckWith;
   }
 

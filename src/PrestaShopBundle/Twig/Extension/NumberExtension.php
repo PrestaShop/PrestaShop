@@ -24,7 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-define('_PS_INSTALL_VERSION_', '1.7.7.0');
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70103);
+declare(strict_types=1);
 
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '7.1.3');
+namespace PrestaShopBundle\Twig\Extension;
+
+use PrestaShop\Decimal\Number;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+
+/**
+ * Class NumberExtension provides helper function to create Prestashop/Decimal in twig
+ */
+class NumberExtension extends AbstractExtension
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions()
+    {
+        return [new TwigFunction('number', [$this, 'createNumber'])];
+    }
+
+    public function createNumber($number)
+    {
+        return new Number((string) $number);
+    }
+}

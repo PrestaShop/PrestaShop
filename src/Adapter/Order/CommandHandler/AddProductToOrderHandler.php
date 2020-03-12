@@ -41,6 +41,7 @@ use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
@@ -319,7 +320,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         );
 
-        if ($command->getProductPriceTaxIncluded() != $initialProductPriceTaxIncl) {
+        if (!$command->getProductPriceTaxIncluded()->equals(new Number((string) $initialProductPriceTaxIncl))) {
             // @todo: use private method to create specific price object
             $specificPrice = new SpecificPrice();
             $specificPrice->id_shop = 0;
