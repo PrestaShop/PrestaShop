@@ -25,7 +25,35 @@
 import CreateOrderPage from './create/create-order-page';
 
 const $ = window.$;
+let orderPageManager = null;
+
+/**
+ * proxy to allow other scripts within the page to trigger the search
+ * @param string
+ */
+function searchCustomerByString(string) {
+  if (orderPageManager !== null) {
+    orderPageManager.search(string);
+  } else {
+    console.log('Error: Could not search customer as orderPageManager is null');
+  }
+}
+
+/**
+ * proxy to allow other scripts within the page to refresh addresses list
+ */
+function refreshAddressesList(refreshCartAddresses) {
+  if (orderPageManager !== null) {
+    orderPageManager.refreshAddressesList(refreshCartAddresses);
+  } else {
+    console.log('Error: Could not refresh addresses list as orderPageManager is null');
+  }
+}
+
 
 $(document).ready(() => {
-  new CreateOrderPage();
+  orderPageManager = new CreateOrderPage();
 });
+
+export {searchCustomerByString}
+export {refreshAddressesList}
