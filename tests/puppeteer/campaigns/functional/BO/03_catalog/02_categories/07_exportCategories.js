@@ -12,7 +12,7 @@ const CategoriesPage = require('@pages/BO/catalog/categories');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_categories_helperCard';
+const baseContext = 'functional_BO_catalog_categories_exportCategories';
 
 let browser;
 let page;
@@ -59,12 +59,14 @@ describe('Export categories', async () => {
   });
 
   it('should export categories to a csv file', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'exportCategories', baseContext);
     await this.pageObjects.categoriesPage.exportDataToCsv();
     const fileExist = await files.checkFileExistence('category_', 5000, true, 'csv');
     await expect(fileExist, 'Export of data has failed').to.be.true;
   });
 
   it('should check existence of categories data in csv file', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkAllCategoriesInCsvFile', baseContext);
     const numberOfCategories = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
     const fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'category_', '.csv');
     for (let row = 1; row <= numberOfCategories; row++) {
