@@ -959,7 +959,7 @@ var form = (function() {
 
           if(e.attrs.data){
             if(filter([e.attrs]).length == 0){
-              $('#form_step3_attributes-tokenfield').val(function(i, value){
+              $('#form_step3_attributes-tokenfield').val((i, value) => {
                 return value.replace(orgLabel,"");
               });
               return false;
