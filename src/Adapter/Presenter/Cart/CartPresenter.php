@@ -550,14 +550,14 @@ class CartPresenter implements PresenterInterface
 
             if (!$this->cartVoucherHasPercentReduction($cartVoucher)
                 && !$this->cartVoucherHasAmountReduction($cartVoucher)
-                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)
-            ) {
+                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)) {
                 $freeShippingOnly = true;
                 if ($freeShippingAlreadySet) {
                     unset($vouchers[$cartVoucher['id_cart_rule']]);
                     continue;
+                } else {
+                    $freeShippingAlreadySet = true;
                 }
-                else $freeShippingAlreadySet = true;
             } else {
                 $freeShippingOnly = false;
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
