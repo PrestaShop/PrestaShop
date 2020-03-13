@@ -949,7 +949,7 @@ var form = (function() {
           } else {
             var attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
 
-            if (attr != undefined) {
+            if (attr) {
               e.attrs.label = attr.data('label');
               e.attrs.value = attr.data('value');
               e.attrs.data = [];
