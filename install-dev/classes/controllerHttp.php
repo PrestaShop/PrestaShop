@@ -388,7 +388,7 @@ class InstallControllerHttp
      */
     public function getTailoredHelp()
     {
-        return 'https://addons.prestashop.com/en/388-support';
+        return 'https://addons.prestashop.com/388-support';
     }
 
     /**
@@ -414,12 +414,7 @@ class InstallControllerHttp
      */
     public function getSupportLink()
     {
-        return 'https://www.prestashop.com/en/support';
-    }
-
-    public function getDocumentationUpgradeLink()
-    {
-        return 'https://docs.prestashop.com/display/PS16/Updating+PrestaShop';
+        return 'https://www.prestashop.com/support';
     }
 
     /**
