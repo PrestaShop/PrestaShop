@@ -118,6 +118,7 @@ export default class CartRuleManager {
       this.shippingRenderer.render(cartInfo.shipping, cartIsEmpty);
       this.cartRulesRenderer.renderCartRulesBlock(cartInfo.cartRules, cartIsEmpty);
       this.summaryRenderer.render(cartInfo);
+      this.productRenderer.renderList(cartInfo.products);
     });
   }
 

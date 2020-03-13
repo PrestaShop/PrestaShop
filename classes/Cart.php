@@ -3877,7 +3877,12 @@ class CartCore extends ObjectModel
         }
 
         foreach ($cart_rules as $key => &$cart_rule) {
-            if (((float) $cart_rule['value_real'] == 0 && (int) $cart_rule['free_shipping'] == 0)) {
+            $cartRuleIsInvalidForSummary = ((float) $cart_rule['value_real'] == 0 &&
+                (int) $cart_rule['free_shipping'] == 0 &&
+                (int) $cart_rule['gift_product'] == 0)
+            ;
+
+            if (!$cartRuleIsInvalidForSummary) {
                 unset($cart_rules[$key]);
             }
         }
