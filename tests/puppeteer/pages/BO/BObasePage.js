@@ -21,7 +21,7 @@ module.exports = class BOBasePage extends CommonPage {
     this.headerShopNameLink = '#header_shopname';
 
     // Header links
-    this.openHelpButton = '#product_form_open_help';
+    this.helpButton = '#product_form_open_help';
 
     // left navbar
     // SELL
@@ -141,9 +141,9 @@ module.exports = class BOBasePage extends CommonPage {
     this.sfCloseToolbarLink = 'a[id*=\'sfToolbarHideButton\']';
 
     // Sidebar
-    this.rightSidebar = '#right-sidebar.sidebar-open';
-    this.helpSidebar = '#ps-quicknav-sidebar';
-    this.closeHelpSidebarButton = `${this.helpSidebar} div.quicknav-header a`;
+    this.rightSidebar = '#right-sidebar';
+    this.closeHelpSidebarButton = `${this.rightSidebar} div.quicknav-header a`;
+    this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
   }
 
   /*
@@ -252,8 +252,8 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<boolean>}
    */
   async openHelpSideBar() {
-    await this.waitForSelectorAndClick(this.openHelpButton);
-    return this.elementVisible(this.helpSidebar, 1000);
+    await this.waitForSelectorAndClick(this.helpButton);
+    return this.elementVisible(`${this.rightSidebar}.sidebar-open`, 2000);
   }
 
   /**
@@ -262,7 +262,15 @@ module.exports = class BOBasePage extends CommonPage {
    */
   async closeHelpSideBar() {
     await this.waitForSelectorAndClick(this.closeHelpSidebarButton);
-    return this.elementNotVisible(this.rightSidebar, 1000);
+    return this.elementNotVisible(`${this.rightSidebar}.sidebar-open`, 2000);
+  }
+
+  /**
+   * Get help document URL
+   * @returns {Promise<string>}
+   */
+  async getHelpDocumentURL() {
+    return this.getAttributeContent(this.helpDocumentURL, 'data');
   }
 
   /**

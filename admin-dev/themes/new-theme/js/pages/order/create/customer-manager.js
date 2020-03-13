@@ -46,6 +46,7 @@ export default class CustomerManager {
     this.customerRenderer = new CustomerRenderer();
 
     this._initListeners();
+    this.initAddCustomerIframe();
 
     return {
       search: searchPhrase => this._search(searchPhrase),
@@ -65,6 +66,17 @@ export default class CustomerManager {
     this._onCustomerSearch();
     this._onCustomerSelect();
     this.onCustomersNotFound();
+  }
+
+  /**
+   * @private
+   */
+  initAddCustomerIframe() {
+    $(createOrderMap.customerAddBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
   }
 
   /**
@@ -108,6 +120,16 @@ export default class CustomerManager {
     EventEmitter.on(eventMap.customerSelected, (event) => {
       const $chooseBtn = $(event.currentTarget);
       this.customerId = $chooseBtn.data('customer-id');
+
+      const createAddressUrl = this.router.generate(
+        'admin_addresses_create',
+        {
+          'liteDisplaying': 1,
+          'submitFormAjax': 1,
+          'id_customer': this.customerId,
+        }
+      );
+      $(createOrderMap.addressAddBtn).attr('href', createAddressUrl);
 
       this.customerRenderer.displaySelectedCustomerBlock($chooseBtn);
     });

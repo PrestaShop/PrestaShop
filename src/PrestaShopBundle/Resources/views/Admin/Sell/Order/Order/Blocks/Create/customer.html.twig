@@ -42,7 +42,7 @@
       <div class="col">
         <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
 
-        <a class="btn btn-primary" href="{{ path('admin_customers_create') }}">
+        <a id="customer-add-btn" class="btn btn-primary" href="{{ path('admin_customers_create', {'liteDisplaying': 1, 'submitFormAjax': 1}) }}">
           {{ 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       </div>

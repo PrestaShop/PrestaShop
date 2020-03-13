@@ -2153,7 +2153,7 @@
     <hook id="actionGetAdminOrderButtons">
       <name>actionGetAdminOrderButtons</name>
       <title>Admin Order Buttons</title>
-      <description>This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)</description>
+      <description>This hook is used to generate the buttons collection on the order view page (see ActionsBarButtonsCollection)</description>
     </hook>
     <hook id="actionAdminAdminPreferencesControllerPostProcessBefore">
       <name>actionAdminAdminPreferencesControllerPostProcessBefore</name>
@@ -2726,7 +2726,7 @@
     <hook id="displayAdditionalCustomerAddressFields">
       <name>displayAdditionalCustomerAddressFields</name>
       <title>Display additional customer address fields</title>
-      <description>This hook allows to display the extra field values added in an address from using hook 'additionalCustomerAddressFields'</description>
+      <description>This hook allows to display extra field values added in an address form using hook 'additionalCustomerAddressFields'</description>
     </hook>
     <hook id="displayFooterCategory">
       <name>displayFooterCategory</name>

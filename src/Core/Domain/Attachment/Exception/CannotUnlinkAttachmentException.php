@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2020 PrestaShop SA and Contributors
  *
@@ -22,38 +23,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import CreateOrderPage from './create/create-order-page';
+declare(strict_types=1);
 
-const $ = window.$;
-let orderPageManager = null;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 
-/**
- * proxy to allow other scripts within the page to trigger the search
- * @param string
- */
-function searchCustomerByString(string) {
-  if (orderPageManager !== null) {
-    orderPageManager.search(string);
-  } else {
-    console.log('Error: Could not search customer as orderPageManager is null');
-  }
-}
+use Throwable;
 
 /**
- * proxy to allow other scripts within the page to refresh addresses list
+ * Thrown when file unlink fails
  */
-function refreshAddressesList(refreshCartAddresses) {
-  if (orderPageManager !== null) {
-    orderPageManager.refreshAddressesList(refreshCartAddresses);
-  } else {
-    console.log('Error: Could not refresh addresses list as orderPageManager is null');
-  }
+class CannotUnlinkAttachmentException extends AttachmentException
+{
+    /**
+     * @var string
+     */
+    private $filePath = '';
+
+    /**
+     * @param string $message
+     * @param int $code
+     */
+    public function __construct($message = '', $code = 0, Throwable $previous = null, string $filePath = '')
+    {
+        parent::__construct($message, $code, $previous);
+        $this->filePath = $filePath;
+    }
+
+    public function getFilePath(): string
+    {
+        return $this->filePath;
+    }
 }
-
-
-$(document).ready(() => {
-  orderPageManager = new CreateOrderPage();
-});
-
-export {searchCustomerByString}
-export {refreshAddressesList}

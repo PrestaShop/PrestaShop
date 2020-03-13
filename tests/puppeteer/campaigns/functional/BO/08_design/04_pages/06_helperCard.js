@@ -7,11 +7,11 @@ const loginCommon = require('@commonTests/loginBO');
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const CategoriesPage = require('@pages/BO/catalog/categories');
+const PagesPage = require('@pages/BO/design/pages/index');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_categories_helperCard';
+const baseContext = 'functional_BO_design_pages_helperCard';
 
 let browser;
 let page;
@@ -22,7 +22,7 @@ const init = async function () {
     boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
-    categoriesPage: new CategoriesPage(page),
+    pagesPage: new PagesPage(page),
   };
 };
 
@@ -37,31 +37,31 @@ describe('Helper card', async () => {
     await helper.closeBrowser(browser);
   });
 
-  // Login into BO and go to categories page
+  // Login into BO and go to Pages page
   loginCommon.loginBO();
 
-  it('should go to categories page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
+  it('should go to \'Design > Pages\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.categoriesLink,
+      this.pageObjects.boBasePage.designParentLink,
+      this.pageObjects.boBasePage.pagesLink,
     );
     await this.pageObjects.boBasePage.closeSfToolBar();
-    const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
+    const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
-    const isHelpSidebarVisible = await this.pageObjects.categoriesPage.openHelpSideBar();
+    const isHelpSidebarVisible = await this.pageObjects.pagesPage.openHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
-    const documentURL = await this.pageObjects.categoriesPage.getHelpDocumentURL();
+    const documentURL = await this.pageObjects.pagesPage.getHelpDocumentURL();
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
-    const isHelpSidebarVisible = await this.pageObjects.categoriesPage.closeHelpSideBar();
+    const isHelpSidebarVisible = await this.pageObjects.pagesPage.closeHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
   });
 });

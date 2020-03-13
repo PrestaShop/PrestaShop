@@ -307,6 +307,13 @@ class AddressController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render(
+                        '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
+                        ['refreshCartAddresses' => 'true']
+                    );
+                }
+
                 return $this->redirectToRoute('admin_addresses_index');
             }
         } catch (Exception $e) {
@@ -319,6 +326,7 @@ class AddressController extends FrameworkBundleAdminController
             'customerId' => $customerId,
             'customerInformation' => $customerInfo,
             'enableSidebar' => true,
+            'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -363,6 +371,13 @@ class AddressController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render(
+                        '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
+                        ['refreshCartAddresses' => 'false']
+                    );
+                }
+
                 return $this->redirectToRoute('admin_addresses_index');
             }
         } catch (Exception $e) {
@@ -380,6 +395,7 @@ class AddressController extends FrameworkBundleAdminController
             'customerId' => $editableAddress->getCustomerId()->getValue(),
             'customerInformation' => $customerInfo,
             'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);

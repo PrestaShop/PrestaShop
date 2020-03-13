@@ -65,6 +65,11 @@ export default class CreateOrderPage {
 
     this._initListeners();
     this._loadCartFromUrlParams();
+
+    return {
+      refreshAddressesList: (refreshCartAddresses) => this.refreshAddressesList(refreshCartAddresses),
+      search: (string) => this.customerManager.search(string),
+    };
   }
 
   /**
@@ -144,6 +149,30 @@ export default class CreateOrderPage {
     this._onCartLoaded();
     this.onCustomersNotFound();
     this._onCustomerSelected();
+    this.initAddressButtonsIframe();
+  }
+
+  /**
+   * @private
+   */
+  initAddressButtonsIframe() {
+    $(createOrderMap.addressAddBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+
+    $(createOrderMap.invoiceAddressEditBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+
+    $(createOrderMap.deliveryAddressEditBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
   }
 
   /**
@@ -471,6 +500,7 @@ export default class CreateOrderPage {
     this._preselectCartLanguage(cartInfo.langId);
 
     $(createOrderMap.cartBlock).removeClass('d-none');
+    $(createOrderMap.cartBlock).data('cartId', cartInfo.cartId);
   }
 
   /**
@@ -507,5 +537,25 @@ export default class CreateOrderPage {
     };
 
     this.cartEditor.changeCartAddresses(this.cartId, addresses);
+  }
+
+  /**
+   * Refresh addresses list
+   *
+   * @param {boolean} refreshCartAddresses optional
+   *
+   * @private
+   */
+  refreshAddressesList(refreshCartAddresses) {
+    const cartId = $(createOrderMap.cartBlock).data('cartId');
+    $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
+      this.addressesRenderer.render(cartInfo.addresses);
+
+      if (refreshCartAddresses) {
+        this._changeCartAddresses();
+      }
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
+    });
   }
 }

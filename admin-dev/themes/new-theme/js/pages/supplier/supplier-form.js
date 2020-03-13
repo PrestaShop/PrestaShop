@@ -27,6 +27,7 @@ import CountryStateSelectionToggler from '@components/country-state-selection-to
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 import SupplierMap from './supplier-map';
 import TranslatableInput from '@components/translatable-input';
+import TranslatableField from '@components/translatable-field';
 import TaggableField from '@components/taggable-field';
 import ChoiceTree from '@components/form/choice-tree';
 import TinyMCEEditor from '@components/tinymce-editor';
@@ -40,7 +41,7 @@ $(document).ready(() => {
   new CountryStateSelectionToggler(
     SupplierMap.supplierCountrySelect,
     SupplierMap.supplierStateSelect,
-    SupplierMap.supplierStateBlock,
+    SupplierMap.supplierStateBlock
   );
 
   new CountryDniRequiredToggler(
@@ -51,10 +52,11 @@ $(document).ready(() => {
 
   new TinyMCEEditor();
   new TranslatableInput();
+  new TranslatableField();
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
-      createTokensOnBlur: true,
-    },
+      createTokensOnBlur: true
+    }
   });
 });

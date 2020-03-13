@@ -43,7 +43,7 @@ module.exports = class CommonPage {
    * Get attribute from element
    * @param selector
    * @param attribute
-   * @returns {Promise<!Promise<!Object|undefined>|*>}
+   * @returns {Promise<string>}
    */
   async getAttributeContent(selector, attribute) {
     await this.page.waitForSelector(selector);
