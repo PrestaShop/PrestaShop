@@ -111,7 +111,7 @@
   </div>
 </div>
 
-{% if hookcount('displayAdminOrderTabLink') > 0 %}
+{% if hookcount('displayAdminOrderTabLink') > 0 or hookcount('displayAdminOrderTabContent') > 0 %}
   <div class="mt-2" id="order_hook_tabs">
     <ul class="nav nav nav-tabs" role="tablist">
       {# Rendering of hook displayAdminOrderTabLink, we expect tab links #}
