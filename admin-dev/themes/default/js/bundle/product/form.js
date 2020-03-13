@@ -939,7 +939,7 @@ var form = (function() {
           var orgLabel = e.attrs.label;
           if (e.attrs.label == e.attrs.value) {
             engine.search(e.attrs.label, function(result) {
-              if (result.length == 1) {
+              if (result.length >= 1) {
                 e.attrs.label = result[0].label;
                 e.attrs.value = result[0].value;
                 e.attrs.data = [];
@@ -979,7 +979,9 @@ var form = (function() {
 
       /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
       $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
-        $('#attribute-generator-' + e.attrs.value).remove();
+        if(!$(e.relatedTarget).hasClass('invalid')){
+          $('#attribute-generator-' + e.attrs.value).remove();
+        }
       });
     });
     },
