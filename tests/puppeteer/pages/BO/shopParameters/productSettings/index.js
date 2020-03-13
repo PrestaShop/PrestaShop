@@ -46,7 +46,7 @@ module.exports = class productSettings extends BOBasePage {
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async changeShowPricesStatus(toEnable = true) {
+  async setShowPricesStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchShowPricesLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
@@ -77,9 +77,9 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Enable/Disable force update of friendly URL
    * @param toEnable
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
-  async setForceUpdateFriendlyURL(toEnable = true) {
+  async setForceUpdateFriendlyURLStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchForceUpdateFriendlyURLLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
@@ -88,7 +88,7 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Change default activation status
    * @param toEnable
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async setDefaultActivationStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel.replace('%TOGGLE', toEnable ? 1 : 0));
@@ -99,7 +99,7 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Choose quantity discounts based on
    * @param basedOn
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async chooseQuantityDiscountsBasedOn(basedOn) {
     await this.selectByVisibleText(this.quantityDiscountBasedOnSelect, basedOn);
