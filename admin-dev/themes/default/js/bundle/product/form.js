@@ -931,11 +931,10 @@ var form = (function() {
 
       /** On event "tokenfield:createtoken" : check values are valid if its not a typehead result */
       $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-        if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
-          return false;
-        }
-
-        if (!e.attrs.data){
+        if (!e.attrs.data)
+          if (e.handleObj.origType !== 'tokenfield:createtoken') {
+            return false;
+          }
           var orgLabel = e.attrs.label;
           if (e.attrs.label == e.attrs.value) {
             engine.search(e.attrs.label, function(result) {
