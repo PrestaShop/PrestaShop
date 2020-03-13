@@ -125,6 +125,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         foreach ($legacySummary['discounts'] as $discount) {
             if ((bool) $discount['free_shipping']) {
                 $hasFreeShippingCartRule = true;
+                break;
             }
         }
 
