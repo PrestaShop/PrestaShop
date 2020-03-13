@@ -112,7 +112,7 @@
               <a class="dropdown-item"
                  href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'delivery'}) }}"
               >
-                {{ 'Edit address'|trans({}, 'Admin.Actions') }}
+                {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
               </a>
 
               <a href="#"
@@ -121,7 +121,7 @@
                 data-target="#updateCustomerAddressModal"
                 data-address-type="shipping"
               >
-                {{ 'Change address'|trans({}, 'Admin.Actions') }}
+                {{ 'Select another address'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
             {% endif %}
@@ -161,7 +161,7 @@
               <a class="dropdown-item"
                  href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'invoice'}) }}"
               >
-                {{ 'Edit address'|trans({}, 'Admin.Actions') }}
+                {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
               </a>
 
               <a href="#"
@@ -170,7 +170,7 @@
                 data-target="#updateCustomerAddressModal"
                 data-address-type="invoice"
               >
-                {{ 'Change address'|trans({}, 'Admin.Actions') }}
+                {{ 'Select another address'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
             {% endif %}

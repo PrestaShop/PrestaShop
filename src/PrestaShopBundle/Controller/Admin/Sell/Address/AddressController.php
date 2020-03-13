@@ -372,7 +372,7 @@ class AddressController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {
                     return $this->render(
@@ -463,7 +463,7 @@ class AddressController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($orderId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
             }

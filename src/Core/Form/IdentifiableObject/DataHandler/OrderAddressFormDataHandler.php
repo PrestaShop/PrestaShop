@@ -68,63 +68,63 @@ class OrderAddressFormDataHandler implements FormDataHandlerInterface
     {
         $editAddressCommand = new EditOrderAddressCommand($orderId, $data['address_type']);
 
-        if (null !== $data['alias']) {
+        if (isset($data['alias'])) {
             $editAddressCommand->setAddressAlias($data['alias']);
         }
 
-        if (null !== $data['first_name']) {
+        if (isset($data['first_name'])) {
             $editAddressCommand->setFirstName($data['first_name']);
         }
 
-        if (null !== $data['last_name']) {
+        if (isset($data['last_name'])) {
             $editAddressCommand->setLastName($data['last_name']);
         }
 
-        if (null !== $data['address1']) {
+        if (isset($data['address1'])) {
             $editAddressCommand->setAddress($data['address1']);
         }
 
-        if (null !== $data['city']) {
+        if (isset($data['city'])) {
             $editAddressCommand->setCity($data['city']);
         }
 
-        if (null !== $data['id_country']) {
+        if (isset($data['id_country'])) {
             $editAddressCommand->setCountryId((int) $data['id_country']);
         }
 
-        if (null !== $data['postcode']) {
+        if (isset($data['postcode'])) {
             $editAddressCommand->setPostCode($data['postcode']);
         }
 
-        if (null !== $data['dni']) {
+        if (isset($data['dni'])) {
             $editAddressCommand->setDni($data['dni']);
         }
 
-        if (null !== $data['company']) {
+        if (isset($data['company'])) {
             $editAddressCommand->setCompany($data['company']);
         }
 
-        if (null !== $data['vat_number']) {
+        if (isset($data['vat_number'])) {
             $editAddressCommand->setVatNumber($data['vat_number']);
         }
 
-        if (null !== $data['address2']) {
+        if (isset($data['address2'])) {
             $editAddressCommand->setAddress2($data['address2']);
         }
 
-        if (null !== $data['id_state']) {
+        if (isset($data['id_state'])) {
             $editAddressCommand->setStateId((int) $data['id_state']);
         }
 
-        if (null !== $data['phone']) {
+        if (isset($data['phone'])) {
             $editAddressCommand->setHomePhone($data['phone']);
         }
 
-        if (isset($data['phone_mobile']) && null !== $data['phone_mobile']) {
+        if (isset($data['phone_mobile'])) {
             $editAddressCommand->setMobilePhone($data['phone_mobile']);
         }
 
-        if (null !== $data['other']) {
+        if (isset($data['other'])) {
             $editAddressCommand->setOther($data['other']);
         }
 

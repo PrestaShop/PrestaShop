@@ -54,38 +54,38 @@ final class EditCustomerAddressHandler extends AbstractAddressHandler implements
     public function handle(EditCustomerAddressCommand $command): AddressId
     {
         try {
-            $address = $this->getAddressFromCommand($command);
+            $editedAddress = $this->getAddressFromCommand($command);
 
-            if (false === $address->validateFields(false)) {
+            if (false === $editedAddress->validateFields(false)) {
                 throw new AddressConstraintException('Address contains invalid field values');
             }
 
             // The address is used by an order so it is not edited directly, instead a copy is created and
-            if ($address->isUsed()) {
+            if ($editedAddress->isUsed()) {
                 // Get a copy of current address
-                $old_address = new Address($address->id);
+                $copyAddress = new Address($editedAddress->id);
 
                 // Reset ID to force recreating a new address
-                $address->id = $address->id_address = null;
+                $editedAddress->id = $editedAddress->id_address = null;
 
                 // We consider this address as necessarily NOT deleted, in case you were editing a deleted address
                 // from an order then the newly edited address should not be deleted, so that you can select it
-                $address->deleted = 0;
-                if (false === $address->save()) {
+                $editedAddress->deleted = 0;
+                if (false === $editedAddress->save()) {
                     throw new CannotAddAddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));
                 }
                 // Soft delete the former address
-                if (false === $old_address->delete()) {
-                    throw new DeleteAddressException(sprintf('Cannot delete Address object with id "%s".', $old_address->id), DeleteAddressException::FAILED_DELETE);
+                if (false === $copyAddress->delete()) {
+                    throw new DeleteAddressException(sprintf('Cannot delete Address object with id "%s".', $copyAddress->id), DeleteAddressException::FAILED_DELETE);
                 }
-            } elseif (false === $address->update()) {
-                throw new CannotUpdateAddressException(sprintf('Failed to update address "%s"', $address->id));
+            } elseif (false === $editedAddress->update()) {
+                throw new CannotUpdateAddressException(sprintf('Failed to update address "%s"', $editedAddress->id));
             }
         } catch (PrestaShopException $e) {
             throw new AddressException(sprintf('An error occurred when updating address "%s"', $command->getAddressId()->getValue()));
         }
 
-        return new AddressId((int) $address->id);
+        return new AddressId((int) $editedAddress->id);
     }
 
     /**
