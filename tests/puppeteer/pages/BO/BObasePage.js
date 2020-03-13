@@ -142,6 +142,7 @@ module.exports = class BOBasePage extends CommonPage {
     this.rightSidebar = '#right-sidebar.sidebar-open';
     this.helpSidebar = '#ps-quicknav-sidebar';
     this.closeHelpSidebarButton = `${this.helpSidebar} div.quicknav-header a`;
+    this.helpDocumentURL = `${this.helpSidebar} div.quicknav-scroller._fullspace object`;
   }
 
   /*
@@ -261,5 +262,13 @@ module.exports = class BOBasePage extends CommonPage {
   async closeHelpSideBar() {
     await this.waitForSelectorAndClick(this.closeHelpSidebarButton);
     return this.elementNotVisible(this.rightSidebar, 1000);
+  }
+
+  /**
+   * Get help document URL
+   * @returns {Promise<string>}
+   */
+  async getHelpDocumentURL() {
+    return this.getAttributeContent(this.helpDocumentURL, 'data');
   }
 };
