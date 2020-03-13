@@ -24,12 +24,10 @@ module.exports = {
     for (let i = 0; i <= timeDelay && !found; i += 100) {
       await (new Promise(resolve => setTimeout(resolve, 10)));
       if (isPartialName) {
-        found = (
-          await fs
-            .readdirSync(global.BO.DOWNLOAD_PATH)
-            .filter(fn => fn.startsWith(fileName) && fn.endsWith(fileExtension))
-        )
-          !== [];
+        found = (await fs
+          .readdirSync(global.BO.DOWNLOAD_PATH)
+          .filter(fn => fn.startsWith(fileName) && fn.endsWith(fileExtension))
+        ) !== [];
       } else {
         found = await fs.existsSync(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
       }
