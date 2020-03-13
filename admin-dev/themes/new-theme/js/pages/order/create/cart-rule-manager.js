@@ -49,7 +49,6 @@ export default class CartRuleManager {
     this.shippingRenderer = new ShippingRenderer();
 
     this._initListeners();
-    this.initCartRuleIframe();
 
     return {
       search: searchPhrase => this._search(searchPhrase),
@@ -69,17 +68,6 @@ export default class CartRuleManager {
     this._onAddCartRuleToCart();
     this._onAddCartRuleToCartFailure();
     this._onRemoveCartRuleFromCart();
-  }
-
-  /**
-   * @private
-   */
-  initCartRuleIframe() {
-    $(createOrderMap.cartRuleAddBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
-    });
   }
 
   /**

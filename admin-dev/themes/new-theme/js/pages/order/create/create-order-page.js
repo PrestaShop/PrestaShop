@@ -150,6 +150,8 @@ export default class CreateOrderPage {
     this.onCustomersNotFound();
     this._onCustomerSelected();
     this.initAddressButtonsIframe();
+    this.initCartRuleButtonsIframe();
+
   }
 
   /**
@@ -169,6 +171,15 @@ export default class CreateOrderPage {
     });
 
     $(createOrderMap.deliveryAddressEditBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+
+  }
+
+  initCartRuleButtonsIframe() {
+    $('#js-add-cart-rule-btn').fancybox({
       'type': 'iframe',
       'width': '90%',
       'height': '90%',
