@@ -54,9 +54,9 @@ describe('Helper card', async () => {
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
     const isHelpSidebarVisible = await this.pageObjects.pagesPage.openHelpSideBar();
+    await expect(isHelpSidebarVisible).to.be.true;
     const documentURL = await this.pageObjects.pagesPage.getHelpDocumentURL();
     await expect(documentURL).to.contains('en');
-    await expect(isHelpSidebarVisible).to.be.true;
   });
 
   it('should close the help side bar', async function () {
