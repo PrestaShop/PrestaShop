@@ -935,36 +935,37 @@ var form = (function() {
           if (e.handleObj.origType !== 'tokenfield:createtoken') {
             return false;
           }
-          var orgLabel = e.attrs.label;
-          if (e.attrs.label === e.attrs.value) {
-            engine.search(e.attrs.label, function(result) {
-              if (result.length >= 1) {
-                e.attrs.label = result[0].label;
-                e.attrs.value = result[0].value;
-                e.attrs.data = [];
-                e.attrs.data['id_group'] = result[0].data.id_group;
-              }
-            });
-          } else {
-            var attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
-
-            if (attr) {
-              e.attrs.label = attr.data('label');
-              e.attrs.value = attr.data('value');
+          
+        var orgLabel = e.attrs.label;
+        if (e.attrs.label === e.attrs.value) {
+          engine.search(e.attrs.label, function(result) {
+            if (result.length >= 1) {
+              e.attrs.label = result[0].label;
+              e.attrs.value = result[0].value;
               e.attrs.data = [];
-              e.attrs.data['id_group'] = attr.data('group-id');
+              e.attrs.data['id_group'] = result[0].data.id_group;
             }
-          }
+          });
+        } else {
+          var attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
 
-          if(e.attrs.data){
-            if(filter([e.attrs]).length === 0){
-              $('#form_step3_attributes-tokenfield').val((i, value) => {
-                return value.replace(orgLabel,"");
-              });
-              return false;
-            };
+          if (attr) {
+            e.attrs.label = attr.data('label');
+            e.attrs.value = attr.data('value');
+            e.attrs.data = [];
+            e.attrs.data['id_group'] = attr.data('group-id');
           }
         }
+
+        if(e.attrs.data){
+          if(filter([e.attrs]).length === 0){
+            $('#form_step3_attributes-tokenfield').val((i, value) => {
+              return value.replace(orgLabel,"");
+            });
+            return false;
+          };
+        }
+        
       });
 
       /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
