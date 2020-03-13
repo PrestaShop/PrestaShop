@@ -3453,7 +3453,7 @@ exit;
      * @param string $cache_id
      * @param string $compile_id
      *
-     * @return null|int number of cache files deleted
+     * @return int|null number of cache files deleted
      */
     public static function clearCache($smarty = null, $tpl = false, $cache_id = null, $compile_id = null)
     {
@@ -3481,7 +3481,7 @@ exit;
      *
      * @param Smarty $smarty
      *
-     * @return null|int number of template files deleted
+     * @return int|null number of template files deleted
      */
     public static function clearCompile($smarty = null)
     {
