@@ -89,6 +89,7 @@ export default {
   cartRuleDeleteBtn: '.js-cart-rule-delete-btn',
   cartRuleErrorBlock: '#js-cart-rule-error-block',
   cartRuleErrorText: '#js-cart-rule-error-text',
+  cartRuleAddBtn: '#cart-rule-add-btn',
 
   // selectors related to addresses block
   addressesBlock: '#addresses-block',
