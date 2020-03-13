@@ -547,6 +547,7 @@ class CartPresenter implements PresenterInterface
             }
 
             $totalCartVoucherReduction = 0;
+            $freeShippingOnly = false;
 
             if (!$this->cartVoucherHasPercentReduction($cartVoucher)
                 && !$this->cartVoucherHasAmountReduction($cartVoucher)
