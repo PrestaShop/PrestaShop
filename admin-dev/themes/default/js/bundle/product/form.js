@@ -947,7 +947,7 @@ var form = (function() {
               }
             });
           } else {
-            var attr = $('.js-attribute-checkbox[data-value="' + e.attrs.value + '"]');
+            var attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
 
             if (attr != undefined) {
               e.attrs.label = attr.data('label');
