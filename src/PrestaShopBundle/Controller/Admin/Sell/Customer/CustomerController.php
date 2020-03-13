@@ -56,6 +56,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerDiscountFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
@@ -115,6 +116,29 @@ class CustomerController extends AbstractAdminController
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
         ]);
+    }
+
+    /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
+     * Process Grid search.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(Request $request)
+    {
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.customer'),
+            $request,
+            CustomerGridDefinitionFactory::GRID_ID,
+            'admin_customers_index'
+        );
     }
 
     /**
