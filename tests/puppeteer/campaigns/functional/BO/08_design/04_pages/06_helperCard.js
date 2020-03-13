@@ -56,7 +56,7 @@ describe('Helper card', async () => {
     const isHelpSidebarVisible = await this.pageObjects.pagesPage.openHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
     const documentURL = await this.pageObjects.pagesPage.getHelpDocumentURL();
-    await expect(documentURL).to.contains('en');
+    await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
