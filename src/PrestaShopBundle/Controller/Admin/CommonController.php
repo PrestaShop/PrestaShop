@@ -361,33 +361,13 @@ class CommonController extends FrameworkBundleAdminController
         $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
-        /** @var GridDefinitionInterface $definition */
-        $definition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-
-        $filtersForm = $gridFilterFormFactory->create($definition);
-        $filtersForm->handleRequest($request);
-
-        $redirectParams = [];
-        if ($filtersForm->isSubmitted()) {
-            $redirectParams = [
-                'filters' => $filtersForm->getData(),
-            ];
-        }
-
-        foreach ($redirectQueryParamsToKeep as $paramName) {
-            if ($request->query->has($paramName)) {
-                $redirectParams[$paramName] = $request->query->get($paramName);
-            }
-        }
 
         return $responseBuilder->buildSearchResponse(
             $definitionFactory,
             $request,
             $definitionFactory::GRID_ID,
             $redirectRoute,
-            $redirectParams
+            $redirectQueryParamsToKeep
         );
     }
 }
