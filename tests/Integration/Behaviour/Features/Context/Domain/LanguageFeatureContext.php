@@ -2,13 +2,15 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Language\QueryResult\EditableLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Webmozart\Assert\Assert;
 
 /**
  * Class LanguageFeatureContext
@@ -16,12 +18,6 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class LanguageFeatureContext extends AbstractDomainFeatureContext
 {
     private const SHOP_ASSOCIATION = [];
-    private const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
-        . 'BMVEUAAAD///+l2Z/dAAAASUlEQVR4XqWQUQoAIAxC2/0vXZDr'
-        . 'EX4IJTRkb7lobNUStXsB0jIXIAMSsQnWlsV+wULF4Avk9fLq2r'
-        . '8a5HSE35Q3eO2XP1A1wQkZSgETvDtKdQAAAABJRU5ErkJggg==';
-    const JPG_IMAGE_TYPE = '.jpg';
-    const DEFAULT_LANGUAGE_ID = 'test1';
 
     /** @var ContainerInterface */
     private $container;
@@ -40,7 +36,6 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
     public function addNewLanguageWithFollowingDetails(string $languageReference, TableNode $table)
     {
         $testCaseData = $table->getRowsHash();
-        $this->pretendImagesUploaded();
 
         /** @var LanguageId $languageId */
         $languageId = $this->getCommandBus()->handle(new AddLanguageCommand(
@@ -67,21 +62,24 @@ class LanguageFeatureContext extends AbstractDomainFeatureContext
      */
     public function thereIsLanguageWithFollowingDetails($languageReference, TableNode $table)
     {
-        throw new PendingException();
-    }
+        $testCaseData = $table->getRowsHash();
 
-    private function pretendImagesUploaded()
-    {
-        $data = base64_decode(self::JPG_IMAGE_STRING);
-        $im = imagecreatefromstring($data);
-        if ($im !== false) {
-            header('Content-Type: image/jpg');
-            imagejpeg(
-                $im,
-                _PS_LANG_IMG_DIR_ . self::DEFAULT_LANGUAGE_ID . self::JPG_IMAGE_TYPE,
-                0
-            );
-            imagedestroy($im);
-        }
+        /** @var EditableLanguage $editableLanguage */
+        $editableLanguage = $this->getQueryBus()->handle(
+            new GetLanguageForEditing(SharedStorage::getStorage()->get($languageReference))
+        );
+        Assert::same($testCaseData['Name'], $editableLanguage->getName());
+        Assert::same($testCaseData['ISO code'], $editableLanguage->getIsoCode()->getValue());
+        Assert::same($testCaseData['Language code'], $editableLanguage->getTagIETF()->getValue());
+        Assert::same($testCaseData['Date format'], $editableLanguage->getShortDateFormat());
+        Assert::same($testCaseData['Date format (full)'], $editableLanguage->getFullDateFormat());
+        Assert::same(
+            PrimitiveUtils::castElementInType($testCaseData['Is RTL language'], PrimitiveUtils::TYPE_BOOLEAN),
+            $editableLanguage->isRtl()
+        );
+        Assert::same(
+            PrimitiveUtils::castElementInType($testCaseData['Status'], PrimitiveUtils::TYPE_BOOLEAN),
+            $editableLanguage->isActive()
+        );
     }
 }
