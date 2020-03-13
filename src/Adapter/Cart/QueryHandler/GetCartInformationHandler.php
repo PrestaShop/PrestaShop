@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
 use Product;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles GetCartInformation query using legacy object models
@@ -80,6 +81,11 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $contextStateManager;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
@@ -89,12 +95,14 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         LocaleInterface $locale,
         int $contextLangId,
         Link $contextLink,
-        ContextStateManager $contextStateManager
+        ContextStateManager $contextStateManager,
+        TranslatorInterface $translator
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
         $this->contextStateManager = $contextStateManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -185,7 +193,8 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                \Tools::ps_round($discount['value_real'], $currency->precision)
+                \Tools::ps_round($discount['value_real'], $currency->precision),
+                (int) $discount['gift_product'] !== 0
             );
         }
 
