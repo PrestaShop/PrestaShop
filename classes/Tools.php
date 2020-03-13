@@ -1106,6 +1106,8 @@ class ToolsCore
      *
      * @param string $file File path
      * @param array $exclude_files Excluded files
+     *
+     * @return bool
      */
     public static function deleteFile($file, $exclude_files = [])
     {
@@ -1114,8 +1116,10 @@ class ToolsCore
         }
 
         if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false) {
-            unlink($file);
+            return unlink($file);
         }
+
+        return false;
     }
 
     /**
