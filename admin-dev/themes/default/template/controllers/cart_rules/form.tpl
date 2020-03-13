@@ -78,7 +78,7 @@
 
     {if isset($refresh_cart) }
       if (typeof window.parent.order_create !== "undefined") {
-        window.parent.order_create.refreshAddressesList(true);
+        window.parent.order_create._onCartLoaded();
       }
       window.parent.$.fancybox.close();
     {/if}
