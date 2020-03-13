@@ -50,6 +50,17 @@ function refreshAddressesList(refreshCartAddresses) {
   }
 }
 
+/**
+ * proxy to allow other scripts within the page to refresh addresses list
+ */
+function refreshCart() {
+  if (orderPageManager !== null) {
+    orderPageManager.refreshCart();
+  } else {
+    console.log('Error: Could not refresh addresses list as orderPageManager is null');
+  }
+}
+
 
 $(document).ready(() => {
   orderPageManager = new CreateOrderPage();
@@ -57,3 +68,4 @@ $(document).ready(() => {
 
 export {searchCustomerByString}
 export {refreshAddressesList}
+export {refreshCart}

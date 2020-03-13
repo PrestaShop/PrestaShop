@@ -68,6 +68,7 @@ export default class CreateOrderPage {
 
     return {
       refreshAddressesList: (refreshCartAddresses) => this.refreshAddressesList(refreshCartAddresses),
+      refreshCart: (refreshCart) => this.refreshCart(refreshCart),
       search: (string) => this.customerManager.search(string),
     };
   }
@@ -568,5 +569,13 @@ export default class CreateOrderPage {
     }).catch((e) => {
       showErrorMessage(e.responseJSON.message);
     });
+  }
+
+  /**
+   * proxy to allow other scripts within the page to refresh addresses list
+   */
+  refreshCart() {
+      const cartId = $(createOrderMap.cartBlock).data('cartId');
+      this.cartProvider.getCart(cartId);
   }
 }
