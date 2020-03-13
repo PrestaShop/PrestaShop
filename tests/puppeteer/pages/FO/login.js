@@ -80,4 +80,8 @@ module.exports = class Login extends FOBasePage {
   async isPartnerOfferRequired() {
     return this.elementVisible(`${this.partnerOfferCheckbox}:required`, 1000);
   }
+
+  async isPartnerOfferVisible() {
+    return this.elementVisible(this.partnerOfferCheckbox, 1000);
+  }
 };
