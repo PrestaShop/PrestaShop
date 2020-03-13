@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerSettings_customers_sendAnEmailAfterRegistration';
+const baseContext = 'functional_BO_customerSettings_customers_askForBirthDate';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -11,18 +11,12 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CustomerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
-const EmailPage = require('@pages/BO/advancedParameters/email');
 const FOBasePage = require('@pages/FO/FObasePage');
 const LoginFOPage = require('@pages/FO/login');
-const CustomersPage = require('@pages/BO/customers');
 // Importing data
-const CustomerFaker = require('@data/faker/customer');
 
 let browser;
 let page;
-const firstCustomerToCreate = new CustomerFaker();
-const secondCustomerToCreate = new CustomerFaker();
-let numberOfCustomers = 0;
 
 // Init objects needed
 const init = async function () {
@@ -31,10 +25,8 @@ const init = async function () {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     customerSettingsPage: new CustomerSettingsPage(page),
-    emailPage: new EmailPage(page),
     foBasePage: new FOBasePage(page),
     loginFOPage: new LoginFOPage(page),
-    customersPage: new CustomersPage(page),
   };
 };
 
