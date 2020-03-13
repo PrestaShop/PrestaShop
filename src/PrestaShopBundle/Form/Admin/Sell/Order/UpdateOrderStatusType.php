@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,24 +33,25 @@ use Symfony\Component\Form\FormBuilderInterface;
 class UpdateOrderStatusType extends AbstractType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var array
      */
-    private $orderStatusChoiceProvider;
+    private $statusChoices;
 
     /**
-     * @var FormChoiceAttributeProviderInterface
+     * @var array
      */
-    private $orderStatusChoiceAttributeProvider;
+    private $statusChoiceAttributes;
 
     /**
-     * @param FormChoiceProviderInterface $orderStatusChoiceProvider
+     * @param array $statusChoices
+     * @param array $statusChoiceAttributes
      */
     public function __construct(
-        FormChoiceProviderInterface $orderStatusChoiceProvider,
-        FormChoiceAttributeProviderInterface $orderStatusChoiceAttributeProvider
+        array $statusChoices,
+        array $statusChoiceAttributes
     ) {
-        $this->orderStatusChoiceProvider = $orderStatusChoiceProvider;
-        $this->orderStatusChoiceAttributeProvider = $orderStatusChoiceAttributeProvider;
+        $this->statusChoices = $statusChoices;
+        $this->statusChoiceAttributes = $statusChoiceAttributes;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -61,8 +60,8 @@ class UpdateOrderStatusType extends AbstractType
             ->add('new_order_status_id', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => false,
-                'choices' => $this->orderStatusChoiceProvider->getChoices(),
-                'choice_attr' => $this->orderStatusChoiceAttributeProvider->getChoicesAttributes(),
+                'choices' => $this->statusChoices,
+                'choice_attr' => $this->statusChoiceAttributes,
                 'translation_domain' => false,
             ])
         ;
