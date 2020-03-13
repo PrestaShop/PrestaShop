@@ -2,6 +2,7 @@
 @reset-database-before-feature
 Feature: Language
 
+  # this scenario does not cover image uploads
   Scenario: Add new language
     When I add new language "Esperanto" with following details:
       | Name               | Esperanto          |
