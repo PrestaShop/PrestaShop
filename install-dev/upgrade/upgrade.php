@@ -39,7 +39,7 @@ $engineType = 'ENGINE_TYPE';
 define('PS_IN_UPGRADE', 1);
 
 // remove old unsupported classes
-@unlink(__DIR__.'/../../classes/db/MySQL.php');
+@Tools::deleteFile(__DIR__.'/../../classes/db/MySQL.php');
 
 if (isset($_GET['adminDir']) && $_GET['adminDir'] && !defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir']));

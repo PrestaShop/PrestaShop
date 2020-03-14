@@ -84,7 +84,7 @@ final class CategoryThumbnailImageUploader extends AbstractImageUploader
                 );
             }
 
-            unlink($tmpName);
+            \Tools::deleteFile($tmpName);
         }
     }
 }

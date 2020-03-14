@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Image\Deleter;
 
+use Tools;
+
 /**
  * Class ImageFileDeleter is responsible for deleting image files.
  */
@@ -52,9 +54,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
             $this->deleteByPattern($pattern, $path, $file);
 
             // Delete fileType file if it exists in the same directory.
-            if (file_exists($path . 'fileType')) {
-                unlink($path . 'fileType');
-            }
+            Tools::deleteFile($path . 'fileType');
         }
 
         // Can we remove the image folder?
@@ -69,9 +69,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
 
             if ($removeFolder) {
                 // we're only removing index.php if it's a folder we want to delete
-                if (file_exists($path . 'index.php')) {
-                    unlink($path . 'index.php');
-                }
+                Tools::deleteFile($path . 'index.php');
                 rmdir($path);
             }
         }
@@ -103,7 +101,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
     private function deleteByPattern($pattern, $path, $filename)
     {
         if (preg_match($pattern, $filename)) {
-            unlink($path . $filename);
+            Tools::deleteFile($path . $filename);
         }
     }
 }

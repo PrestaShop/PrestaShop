@@ -170,9 +170,7 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     public function clearModuleListCache()
     {
-        if (file_exists(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
-            @unlink(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-        }
+        @Tools::deleteFile(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
     }
 
     /**

@@ -629,7 +629,7 @@ namespace PrestaShopBundle\Install {
                     foreach (scandir($dir, SCANDIR_SORT_NONE) as $file) {
                         if ($file[0] != '.' && $file != 'index.php' && $file != '.htaccess') {
                             if (is_file($dir . $file)) {
-                                unlink($dir . $file);
+                                Tools::deleteFile($dir . $file);
                             } elseif (is_dir($dir . $file . DIRECTORY_SEPARATOR)) {
                                 //\Tools14::deleteDirectory($dir . $file . DIRECTORY_SEPARATOR, true);
                             }
@@ -642,38 +642,18 @@ namespace PrestaShopBundle\Install {
                 }
             }
 
-            if (file_exists(_PS_ROOT_DIR_ . '/var/cache/dev/class_index.php')) {
-                unlink(_PS_ROOT_DIR_ . '/var/cache/dev/class_index.php');
-            }
-            if (file_exists(_PS_ROOT_DIR_ . '/var/cache/prod/class_index.php')) {
-                unlink(_PS_ROOT_DIR_ . '/var/cache/prod/class_index.php');
-            }
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/var/cache/dev/class_index.php');
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/var/cache/prod/class_index.php');
 
             // Clear XML files
-            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/blog-fr.xml')) {
-                unlink(_PS_ROOT_DIR_ . '/config/xml/blog-fr.xml');
-            }
-            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/default_country_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_ . '/config/xml/default_country_modules_list.xml');
-            }
-            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_ . '/config/xml/modules_list.xml');
-            }
-            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/modules_native_addons.xml')) {
-                unlink(_PS_ROOT_DIR_ . '/config/xml/modules_native_addons.xml');
-            }
-            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/must_have_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_ . '/config/xml/must_have_modules_list.xml');
-            }
-            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/tab_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_ . '/config/xml/tab_modules_list.xml');
-            }
-            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/trusted_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_ . '/config/xml/trusted_modules_list.xml');
-            }
-            if (file_exists(_PS_ROOT_DIR_ . '/config/xml/untrusted_modules_list.xml')) {
-                unlink(_PS_ROOT_DIR_ . '/config/xml/untrusted_modules_list.xml');
-            }
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/config/xml/blog-fr.xml');
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/config/xml/default_country_modules_list.xml');
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/config/xml/modules_list.xml');
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/config/xml/modules_native_addons.xml');
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/config/xml/must_have_modules_list.xml');
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/config/xml/tab_modules_list.xml');
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/config/xml/trusted_modules_list.xml');
+            Tools::deleteFile(_PS_ROOT_DIR_ . '/config/xml/untrusted_modules_list.xml');
         }
 
         private function cleanDefaultThemeCache()
@@ -684,7 +664,7 @@ namespace PrestaShopBundle\Install {
                 foreach (scandir($file, SCANDIR_SORT_NONE) as $cache) {
                     if ($cache[0] != '.' && $cache != 'index.php' && $cache != '.htaccess' && file_exists($file . $cache) && !is_dir($file . $cache)) {
                         if (file_exists($file . $cache)) {
-                            unlink($file . $cache);
+                            Tools::deleteFile($file . $cache);
                         }
                     }
                 }
@@ -707,9 +687,7 @@ namespace PrestaShopBundle\Install {
                 $path = $this->adminDir . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR
                     . 'template' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR . 'modules'
                     . DIRECTORY_SEPARATOR . 'header.tpl';
-                if (file_exists($path)) {
-                    unlink($path);
-                }
+                Tools::deleteFile($path);
             }
         }
 
@@ -1165,7 +1143,7 @@ namespace PrestaShopBundle\Install {
                 $tmp_settings_file = str_replace('/settings', '/tmp_settings', $root_dir . '/' . self::SETTINGS_FILE);
                 file_put_contents($tmp_settings_file, $tmp_settings);
                 include $tmp_settings_file;
-                @unlink($tmp_settings_file);
+                @Tools::deleteFile($tmp_settings_file);
                 $factory = new RandomLib\Factory();
                 $generator = $factory->getLowStrengthGenerator();
                 $secret = $generator->generateString(64);

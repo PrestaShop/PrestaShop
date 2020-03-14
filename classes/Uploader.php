@@ -283,7 +283,7 @@ class UploaderCore
                 $file['save_path'] = $filePath;
             } else {
                 $file['size'] = $fileSize;
-                unlink($filePath);
+                Tools::deleteFile($filePath);
                 $file['error'] = Context::getContext()->getTranslator()->trans('Server file size is different from local file size', [], 'Admin.Notifications.Error');
             }
         }

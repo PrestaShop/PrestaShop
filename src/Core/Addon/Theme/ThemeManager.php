@@ -211,7 +211,7 @@ class ThemeManager implements AddonManagerInterface
         }
 
         /* if file exits, remove it and use YAML configuration file instead */
-        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name . '/shop' . $this->shop->id . '.json');
+        @Tools::deleteFile($this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name . '/shop' . $this->shop->id . '.json');
 
         $theme = $this->themeRepository->getInstanceByName($name);
         if (!$this->themeValidator->isValid($theme)) {
@@ -252,7 +252,7 @@ class ThemeManager implements AddonManagerInterface
 
         $this->doDisableModules($theme->getModulesToDisable());
 
-        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name . '/shop' . $this->shop->id . '.json');
+        @Tools::deleteFile($this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name . '/shop' . $this->shop->id . '.json');
 
         return true;
     }

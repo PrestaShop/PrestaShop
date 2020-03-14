@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use Tools;
 
 /**
  * Encapsulates common legacy behavior for adding/editing language
@@ -88,7 +89,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             }
         }
 
-        unlink($temporaryImage);
+        Tools::deleteFile($temporaryImage);
     }
 
     /**
@@ -121,12 +122,10 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
             $shopId = Context::getContext()->shop->id;
             $currentFile = _PS_TMP_IMG_DIR_ . 'lang_mini_' . $languageId . '_' . $shopId . '.jpg';
 
-            if (file_exists($currentFile)) {
-                unlink($currentFile);
-            }
+            Tools::deleteFile($currentFile);
         }
 
-        unlink($temporaryImage);
+        Tools::deleteFile($temporaryImage);
     }
 
     /**

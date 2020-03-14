@@ -67,7 +67,7 @@ function update_customer_default_group()
     if (file_exists($filename) && is_writable($filename)) {
         $result = (bool)file_put_contents($filename, $content);
         if ($result && file_exists($filename_old)) {
-            unlink($filename_old);
+            Tools::deleteFile($filename_old);
             @chmod($filename, 0664);
         }
     }

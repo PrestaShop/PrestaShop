@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use Supplier;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Tools;
 
 /**
  * Uploads supplier logo image
@@ -63,8 +64,6 @@ final class SupplierImageUploader extends AbstractImageUploader
 
         $currentLogo = _PS_TMP_IMG_DIR_ . 'supplier_mini_' . $id . '.jpg';
 
-        if (file_exists($currentLogo)) {
-            unlink($currentLogo);
-        }
+        Tools::deleteFile($currentLogo);
     }
 }

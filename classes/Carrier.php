@@ -1010,7 +1010,7 @@ class CarrierCore extends ObjectModel
             if (!isset($_FILES['logo'])) {
                 copy($old_tmp_logo, _PS_TMP_IMG_DIR_ . '/carrier_mini_' . $this->id . '.jpg');
             }
-            unlink($old_tmp_logo);
+            Tools::deleteFile($old_tmp_logo);
         }
 
         // Copy existing ranges price

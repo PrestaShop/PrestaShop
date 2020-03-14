@@ -318,9 +318,7 @@ class ImageCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        if (file_exists(_PS_TMP_IMG_DIR_ . 'product_' . $idProduct . '.jpg')) {
-            unlink(_PS_TMP_IMG_DIR_ . 'product_' . $idProduct . '.jpg');
-        }
+        Tools::deleteFile(_PS_TMP_IMG_DIR_ . 'product_' . $idProduct . '.jpg');
 
         return Db::getInstance()->execute(
             '
@@ -545,7 +543,7 @@ class ImageCore extends ObjectModel
     {
         foreach (scandir(_PS_TMP_IMG_DIR_, SCANDIR_SORT_NONE) as $d) {
             if (preg_match('/(.*)\.jpg$/', $d)) {
-                unlink(_PS_TMP_IMG_DIR_ . $d);
+                Tools::deleteFile(_PS_TMP_IMG_DIR_ . $d);
             }
         }
     }
@@ -575,7 +573,7 @@ class ImageCore extends ObjectModel
 
         // Delete base image
         if (file_exists($this->image_dir . $this->getExistingImgPath() . '.' . $this->image_format)) {
-            unlink($this->image_dir . $this->getExistingImgPath() . '.' . $this->image_format);
+            Tools::deleteFile($this->image_dir . $this->getExistingImgPath() . '.' . $this->image_format);
         } else {
             return false;
         }
@@ -602,7 +600,7 @@ class ImageCore extends ObjectModel
         $filesToDelete[] = _PS_TMP_IMG_DIR_ . 'product_mini_' . $this->id_product . '.' . $this->image_format;
 
         foreach ($filesToDelete as $file) {
-            if (file_exists($file) && !@unlink($file)) {
+            if (!@Tools::deleteFile($file)) {
                 return false;
             }
         }
@@ -640,7 +638,7 @@ class ImageCore extends ObjectModel
         }
         foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
             if (preg_match('/^[0-9]+(\-(.*))?\.' . $format . '$/', $file)) {
-                unlink($path . $file);
+                Tools::deleteFile($path . $file);
             } elseif (is_dir($path . $file) && (preg_match('/^[0-9]$/', $file))) {
                 Image::deleteAllImages($path . $file . '/', $format);
             }
@@ -659,9 +657,7 @@ class ImageCore extends ObjectModel
 
             if ($removeFolder) {
                 // we're only removing index.php if it's a folder we want to delete
-                if (file_exists($path . 'index.php')) {
-                    @unlink($path . 'index.php');
-                }
+                @Tools::deleteFile($path . 'index.php');
                 @rmdir($path);
             }
         }

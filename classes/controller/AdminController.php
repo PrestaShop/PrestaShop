@@ -4090,7 +4090,7 @@ class AdminControllerCore extends Controller
                 return false;
             }
             if ($this->afterImageUpload()) {
-                unlink($tmp_name);
+                Tools::deleteFile($tmp_name);
 
                 return true;
             }

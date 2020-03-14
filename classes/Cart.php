@@ -353,8 +353,8 @@ class CartCore extends ObjectModel
         );
 
         foreach ($uploaded_files as $must_unlink) {
-            unlink(_PS_UPLOAD_DIR_ . $must_unlink['value'] . '_small');
-            unlink(_PS_UPLOAD_DIR_ . $must_unlink['value']);
+            Tools::deleteFile(_PS_UPLOAD_DIR_ . $must_unlink['value'] . '_small');
+            Tools::deleteFile(_PS_UPLOAD_DIR_ . $must_unlink['value']);
         }
 
         Db::getInstance()->execute(
@@ -1593,8 +1593,8 @@ class CartCore extends ObjectModel
                         AND type = ' . (int) $customization['type'] . '
                         AND `index` = ' . (int) $customization['index']);
                     if ($type == Product::CUSTOMIZE_FILE) {
-                        @unlink(_PS_UPLOAD_DIR_ . $customization['value']);
-                        @unlink(_PS_UPLOAD_DIR_ . $customization['value'] . '_small');
+                        @Tools::deleteFile(_PS_UPLOAD_DIR_ . $customization['value']);
+                        @Tools::deleteFile(_PS_UPLOAD_DIR_ . $customization['value'] . '_small');
                     }
 
                     break;
@@ -1812,8 +1812,8 @@ class CartCore extends ObjectModel
 
             // Delete customization picture if necessary
             if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
-                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
-                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
+                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @Tools::deleteFile(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
+                $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @Tools::deleteFile(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
             }
 
             $result &= Db::getInstance()->execute(
@@ -4197,8 +4197,8 @@ class CartCore extends ObjectModel
 
         // Delete customization picture if necessary
         if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
-            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
-            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
+            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @Tools::deleteFile(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
+            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @Tools::deleteFile(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
         }
 
         $result &= Db::getInstance()->execute(

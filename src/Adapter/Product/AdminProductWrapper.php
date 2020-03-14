@@ -771,7 +771,7 @@ class AdminProductWrapper
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
         if ($download && !empty($download->filename)) {
-            unlink(_PS_DOWNLOAD_DIR_ . $download->filename);
+            Tools::deleteFile(_PS_DOWNLOAD_DIR_ . $download->filename);
             Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_download` SET filename = "" WHERE `id_product_download` = ' . (int) $download->id);
         }
     }

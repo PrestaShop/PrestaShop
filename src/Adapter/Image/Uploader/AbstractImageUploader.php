@@ -107,7 +107,7 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
             throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
-        unlink($temporaryImageName);
+        Tools::deleteFile($temporaryImageName);
     }
 
     /**

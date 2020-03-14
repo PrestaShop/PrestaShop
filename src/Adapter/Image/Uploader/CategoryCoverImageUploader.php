@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Tools;
 
 /**
  * Class CategoryCoverImageUploader.
@@ -105,7 +106,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader
             throw new ImageOptimizationException('Failed to optimize image after uploading');
         }
 
-        unlink($temporaryImageName);
+        Tools::deleteFile($temporaryImageName);
     }
 
     /**

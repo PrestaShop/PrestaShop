@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Tools;
 
 /**
  * Class CategoryMenuThumbnailUploader.
@@ -107,8 +108,8 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
                 throw new ImageUploadException('An error occurred while uploading the image.');
             }
 
-            if (isset($uploadedFile['save_path']) && is_file($uploadedFile['save_path'])) {
-                unlink($uploadedFile['save_path']);
+            if (isset($uploadedFile['save_path'])) {
+                Tools::deleteFile($uploadedFile['save_path']);
             }
 
             // Necessary to prevent hacking

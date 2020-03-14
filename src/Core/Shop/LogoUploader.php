@@ -124,12 +124,12 @@ class LogoUploader
                 if (Shop::isFeatureActive()) {
                     $this->updateInMultiShopContext($idShop, $idShopGroup, $fieldName);
                 } else {
-                    @unlink(_PS_IMG_DIR_ . Configuration::get($fieldName));
+                    @Tools::deleteFile(_PS_IMG_DIR_ . Configuration::get($fieldName));
                 }
             }
 
             Configuration::updateValue($fieldName, $logoName, false, $idShopGroup, $idShop);
-            unlink($tmpName);
+            Tools::deleteFile($tmpName);
 
             return true;
         }
@@ -149,7 +149,7 @@ class LogoUploader
             Shop::setContext(Shop::CONTEXT_SHOP);
             $logoShop = Configuration::get($fieldName);
             if ($logoAll != $logoShop && $logoGroup != $logoShop && $logoShop != false) {
-                @unlink(_PS_IMG_DIR_ . Configuration::get($fieldName));
+                @Tools::deleteFile(_PS_IMG_DIR_ . Configuration::get($fieldName));
             }
         } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
             $idShopGroup = Shop::getContextShopGroupID();
@@ -157,7 +157,7 @@ class LogoUploader
             $logoAll = Configuration::get($fieldName);
             Shop::setContext(Shop::CONTEXT_GROUP);
             if ($logoAll != Configuration::get($fieldName)) {
-                @unlink(_PS_IMG_DIR_ . Configuration::get($fieldName));
+                @Tools::deleteFile(_PS_IMG_DIR_ . Configuration::get($fieldName));
             }
         }
     }
