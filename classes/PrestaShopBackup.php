@@ -186,7 +186,7 @@ class PrestaShopBackupCore
      */
     public function delete()
     {
-        if (!$this->id || !unlink($this->id)) {
+        if (!$this->id || !Tools::deleteFile($this->id)) {
             $this->error = Context::getContext()->getTranslator()->trans('Error deleting', [], 'Admin.Advparameters.Notification') . ' ' . ($this->id ? '"' . $this->id . '"' :
                 Context::getContext()->getTranslator()->trans('Invalid ID', [], 'Admin.Advparameters.Notification'));
 

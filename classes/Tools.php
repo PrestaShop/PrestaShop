@@ -1082,8 +1082,8 @@ class ToolsCore
                     if ($file != '.' && $file != '..' && $file != '.svn') {
                         if (is_dir($dirname . $file)) {
                             Tools::deleteDirectory($dirname . $file);
-                        } elseif (file_exists($dirname . $file)) {
-                            unlink($dirname . $file);
+                        } else {
+                            self::deleteFile($dirname . $file);
                         }
                     }
                 }
@@ -3653,7 +3653,7 @@ exit;
                 } else {
                     copy($src . DIRECTORY_SEPARATOR . $file, $dst . DIRECTORY_SEPARATOR . $file);
                     if ($del && is_writable($src . DIRECTORY_SEPARATOR . $file)) {
-                        unlink($src . DIRECTORY_SEPARATOR . $file);
+                        self::deleteFile($src . DIRECTORY_SEPARATOR . $file);
                     }
                 }
             }

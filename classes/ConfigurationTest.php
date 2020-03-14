@@ -255,7 +255,7 @@ class ConfigurationTestCore
         closedir($dh);
         $dummy = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . uniqid();
         if (@file_put_contents($dummy, 'test')) {
-            @unlink($dummy);
+            @Tools::deleteFile($dummy);
             if (!$recursive) {
                 return true;
             }

@@ -83,7 +83,7 @@ class AttachmentCore extends ObjectModel
      */
     public function delete()
     {
-        @unlink(_PS_DOWNLOAD_DIR_ . $this->file);
+        @Tools::deleteFile(_PS_DOWNLOAD_DIR_ . $this->file);
 
         $sql = new DbQuery();
         $sql->select('pa.`id_product`');

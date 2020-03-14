@@ -130,8 +130,8 @@ final class ImportDataFormatter
         $content = fgetcsv($fd, 0, $separator);
         fclose($fd);
 
-        if ($uniqidPath !== false && file_exists($uniqidPath)) {
-            @unlink($uniqidPath);
+        if ($uniqidPath !== false) {
+            @\Tools::deleteFile($uniqidPath);
         }
 
         if (empty($content) || !is_array($content)) {

@@ -895,7 +895,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         $this->wsObject->setOutputEnabled(false);
         if (file_exists($file_path)) {
             // delete image on disk
-            @unlink($file_path);
+            @Tools::deleteFile($file_path);
             // Delete declinated image if needed
             if ($image_types) {
                 foreach ($image_types as $image_type) {
@@ -904,7 +904,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     } else {
                         $declination_path = $parent_path . $this->wsObject->urlSegment[2] . '-' . $image_type['name'] . '.jpg';
                     }
-                    if (!@unlink($declination_path)) {
+                    if (!@Tools::deleteFile($declination_path)) {
                         $this->objOutput->setStatus(204);
 
                         return false;
@@ -1105,7 +1105,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     $result = $this->writeImageOnDisk($tmp_name, $reception_path, $dest_width, $dest_height, $image_types, $parent_path);
                 }
 
-                @unlink($tmp_name);
+                @Tools::deleteFile($tmp_name);
 
                 return $result;
             } else {
@@ -1172,7 +1172,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                                 }
                             }
                         }
-                        @unlink($tmp_name);
+                        @Tools::deleteFile($tmp_name);
 
                         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
 
@@ -1193,7 +1193,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                                 $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
                             }
                         }
-                        @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
+                        @Tools::deleteFile(_PS_TMP_IMG_DIR_ . $tmp_name);
                         $this->imgToDisplay = $reception_path;
                     } elseif ($this->imageType == 'customizations') {
                         $filename = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
@@ -1208,7 +1208,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         if (!ImageManager::resize($this->imgToDisplay, $this->imgToDisplay . '_small', $product_picture_width, $product_picture_height)) {
                             throw new WebserviceException('An error occurred while resizing image', [76, 400]);
                         }
-                        @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
+                        @Tools::deleteFile(_PS_TMP_IMG_DIR_ . $tmp_name);
 
                         $query = 'INSERT INTO `' . _DB_PREFIX_ . 'customized_data` (`id_customization`, `type`, `index`, `value`)
 							VALUES (' . (int) $this->wsObject->urlSegment[3] . ', 0, ' . (int) $this->wsObject->urlSegment[4] . ', \'' . $filename . '\')';

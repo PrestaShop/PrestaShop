@@ -1024,7 +1024,7 @@ class Install extends AbstractInstall
             if (file_put_contents(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', Tools::addonsRequest('module', ['id_module' => $addons_module['id_module']]))) {
                 if (Tools::ZipExtract(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', _PS_MODULE_DIR_)) {
                     $modules[] = (string) $addons_module['name']; //if the module has been unziped we add the name in the modules list to install
-                    unlink(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip');
+                    Tools::deleteFile(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip');
                 }
             }
         }
@@ -1138,7 +1138,7 @@ class Install extends AbstractInstall
                 $xml_loader->populateFromXmlFiles();
             });
             Tools::deleteDirectory($temp_dir, true);
-            @unlink($zip_file);
+            @Tools::deleteFile($zip_file);
         }
 
         if ($errors = $xml_loader->getErrors()) {

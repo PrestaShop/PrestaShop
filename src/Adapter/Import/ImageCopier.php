@@ -143,7 +143,7 @@ final class ImageCopier
         if ($this->tools->copy($url, $tmpFile)) {
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($tmpFile)) {
-                @unlink($tmpFile);
+                @Tools::deleteFile($tmpFile);
 
                 return false;
             }
@@ -194,14 +194,10 @@ final class ImageCopier
                         }
                         if ($entity == 'products') {
                             $file = $tmpDir . 'product_mini_' . (int) $entityId . '.jpg';
-                            if (is_file($file)) {
-                                unlink($file);
-                            }
+                            \Tools::deleteFile($file);
 
                             $file = $tmpDir . 'product_mini_' . (int) $entityId . '_' . (int) $this->contextShopId . '.jpg';
-                            if (is_file($file)) {
-                                unlink($file);
-                            }
+                            \Tools::deleteFile($file);
                         }
                     }
                     if (in_array($imageType['id_image_type'], $watermarkTypes)) {
@@ -216,11 +212,11 @@ final class ImageCopier
                 }
             }
         } else {
-            @unlink($origTmpfile);
+            @\Tools::deleteFile($origTmpfile);
 
             return false;
         }
-        unlink($origTmpfile);
+        \Tools::deleteFile($origTmpfile);
 
         return true;
     }

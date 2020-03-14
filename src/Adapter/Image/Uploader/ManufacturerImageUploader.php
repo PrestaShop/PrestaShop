@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Tools;
 
 /**
  * Uploads manufacturer logo image
@@ -106,8 +107,8 @@ final class ManufacturerImageUploader extends AbstractImageUploader
 
                 $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';
 
-                if ($resized && file_exists($currentLogo)) {
-                    unlink($currentLogo);
+                if ($resized) {
+                    Tools::deleteFile($currentLogo);
                 }
             }
         } catch (PrestaShopException $e) {

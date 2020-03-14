@@ -66,7 +66,7 @@ function editorial_update()
 				"'.(isset($xml->body->{'logo_subheading_'.$language['id_lang']}) ? pSQL($xml->body->{'logo_subheading_'.$language['id_lang']}) : '').'")');
             }
 
-            unlink(dirname(__FILE__).'/../../../modules/editorial/editorial.xml');
+            Tools::deleteFile(dirname(__FILE__).'/../../../modules/editorial/editorial.xml');
         }
     }
 }

@@ -355,9 +355,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         foreach ($cacheFiles as $file) {
             $filepath = $configXMLPath.$file;
-            if (is_file($filepath) && !in_array($file, $excludes)) {
-                unlink($filepath);
-            }
+            Tools::deleteFile($filepath, $excludes);
         }
     }
 
@@ -367,9 +365,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $cacheFiles = scandir($themesPath, SCANDIR_SORT_NONE);
         foreach ($cacheFiles as $file) {
             $file = $themesPath.$file;
-            if (is_file($file)) {
-                unlink($file);
-            }
+            Tools::deleteFile($file);
         }
     }
 }

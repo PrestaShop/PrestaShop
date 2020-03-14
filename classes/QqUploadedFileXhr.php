@@ -104,7 +104,7 @@ class QqUploadedFileXhrCore
                 }
             }
         }
-        unlink($tmpName);
+        Tools::deleteFile($tmpName);
         Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_product]);
 
         if (!$image->update()) {

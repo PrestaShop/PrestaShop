@@ -2638,7 +2638,7 @@ abstract class ModuleCore implements ModuleInterface
             $file = _PS_MODULE_DIR_ . $this->name . '/' . ($iso == 'en' ? 'config.xml' : 'config_' . $iso . '.xml');
             if (!@file_put_contents($file, $xml)) {
                 if (!is_writable($file)) {
-                    @unlink($file);
+                    @Tools::deleteFile($file);
                     @file_put_contents($file, $xml);
                 }
             }
@@ -3301,7 +3301,7 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         if (!isset($to_delete) || $to_delete) {
-            unlink($override_path);
+            Tools::deleteFile($override_path);
         } else {
             file_put_contents($override_path, $code);
         }

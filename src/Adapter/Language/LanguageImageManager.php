@@ -28,6 +28,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
 use ImageType;
+use Tools;
 
 /**
  * Handles language images (flag, "no image" placeholders)
@@ -181,9 +182,7 @@ class LanguageImageManager
      */
     private function unlinkIfExists(string $file): void
     {
-        if (file_exists($file)) {
-            unlink($file);
-        }
+        Tools::deleteFile($file);
     }
 
     /**

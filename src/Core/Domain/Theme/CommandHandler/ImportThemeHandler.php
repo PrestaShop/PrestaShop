@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+use Tools;
 
 /**
  * Class ImportThemeHandler
@@ -92,7 +93,7 @@ final class ImportThemeHandler implements ImportThemeHandlerInterface
             throw new ImportedThemeAlreadyExistsException(new ThemeName($e->getThemeName()), sprintf('Imported theme "%s" already exists.', $e->getThemeName()), 0, $e);
         } finally {
             if (ThemeImportSource::FROM_ARCHIVE === $type) {
-                @unlink($themePath);
+                @Tools::deleteFile($themePath);
             }
         }
     }

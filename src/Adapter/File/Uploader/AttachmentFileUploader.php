@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Tools;
 
 /**
  * Uploads attachment file and if needed deletes old attachment file
@@ -94,12 +95,12 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
             $fileLink = _PS_DOWNLOAD_DIR_ . $attachment->file;
 
             if ($throwExceptionOnFailure) {
-                unlink($fileLink);
+                Tools::deleteFile($fileLink);
 
                 return;
             }
 
-            @unlink($fileLink);
+            @Tools::deleteFile($fileLink);
         } catch (PrestaShopException $e) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId));
         }

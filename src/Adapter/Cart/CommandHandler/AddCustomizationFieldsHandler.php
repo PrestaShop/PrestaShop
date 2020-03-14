@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\Customiz
 use PrestaShopException;
 use Product;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Tools;
 
 /**
  * Adds product customization fields data using legacy object model
@@ -152,7 +153,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
             throw new FileUploadException('An error occurred when resizing the uploaded image');
         }
 
-        unlink($tmpName);
+        Tools::deleteFile($tmpName);
 
         return $fileName;
     }

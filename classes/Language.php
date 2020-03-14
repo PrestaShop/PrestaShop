@@ -577,9 +577,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             // Files deletion
             foreach (Language::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file) {
-                if (file_exists($key)) {
-                    unlink($key);
-                }
+                Tools::deleteFile($key);
             }
 
             $modList = scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE);
@@ -591,7 +589,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 }
 
                 if (file_exists(_PS_MODULE_DIR_ . $mod . '/' . $this->iso_code . '.php')) {
-                    unlink(_PS_MODULE_DIR_ . $mod . '/' . $this->iso_code . '.php');
+                    Tools::deleteFile(_PS_MODULE_DIR_ . $mod . '/' . $this->iso_code . '.php');
                     $files = @scandir(_PS_MODULE_DIR_ . $mod, SCANDIR_SORT_NONE);
                     if (count($files) <= 2) {
                         Tools::deleteDirectory(_PS_MODULE_DIR_ . $mod);
