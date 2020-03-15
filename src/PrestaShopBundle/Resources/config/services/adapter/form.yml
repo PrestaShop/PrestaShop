@@ -1,0 +1,64 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.form.choice_provider.profile_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ProfileByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+  prestashop.adapter.form.choice_provider.shop_tree_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopTreeChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.category_tree_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.category'
+      - '@=service("prestashop.adapter.data_provider.category").getRootCategory().id'
+      - false
+
+  prestashop.adapter.form.choice_provider.gender_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GenderByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.group_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
+  prestashop.adapter.form.choice_provider.risk_by_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\RiskByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.resources_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ResourcesChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.manufacturer_name_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ManufacturerNameByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.manufacturer").getManufacturers()'
+
+  prestashop.adapter.form.choice_provider.country_state_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CountryStateByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.order_countries:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderCountriesChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.order_invoice_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderInvoiceByIdChoiceProvider'
+    arguments:
+      - '@prestashop.core.localization.locale.context_locale'
+
+  prestashop.adapter.form.choice_provider.currency_symbol_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CurrencySymbolByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.installed_payment_modules:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\InstalledPaymentModulesChoiceProvider'
+
+  prestashop.adapter.form.choice.provider.carrier_for_order_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CarrierForOrderChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.shop_name_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopNameByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.employee_name_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\EmployeeNameByIdChoiceProvider'

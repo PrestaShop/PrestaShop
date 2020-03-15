@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,22 +15,22 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Vue from 'vue';
 import VueResource from 'vue-resource';
-import * as types from './mutation-types';
-import { showGrowl } from 'app/utils/growl';
-import _ from 'lodash';
+import * as types from '@app/pages/stock/store/mutation-types';
+import {showGrowl} from '@app/utils/growl';
+import {EventBus} from '@app/utils/event-bus';
 
 Vue.use(VueResource);
 
-export const getStock = ({ commit }, payload) => {
+export const getStock = ({commit}, payload) => {
   const url = window.data.apiStockUrl;
   Vue.http.get(url, {
     params: {
@@ -40,6 +40,8 @@ export const getStock = ({ commit }, payload) => {
       keywords: payload.keywords ? payload.keywords : [],
       supplier_id: payload.suppliers ? payload.suppliers : [],
       category_id: payload.categories ? payload.categories : [],
+      active: payload.active !== 'null' ? payload.active : [],
+      low_stock: payload.low_stock,
     },
   }).then((response) => {
     commit(types.LOADING_STATE, false);
@@ -50,7 +52,7 @@ export const getStock = ({ commit }, payload) => {
   });
 };
 
-export const getSuppliers = ({ commit }) => {
+export const getSuppliers = ({commit}) => {
   const url = window.data.suppliersUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_SUPPLIERS, response.body);
@@ -59,7 +61,7 @@ export const getSuppliers = ({ commit }) => {
   });
 };
 
-export const getCategories = ({ commit }) => {
+export const getCategories = ({commit}) => {
   const url = window.data.categoriesUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_CATEGORIES, response.body);
@@ -68,7 +70,7 @@ export const getCategories = ({ commit }) => {
   });
 };
 
-export const getMovements = ({ commit }, payload) => {
+export const getMovements = ({commit}, payload) => {
   const url = window.data.apiMovementsUrl;
 
   Vue.http.get(url, {
@@ -92,7 +94,7 @@ export const getMovements = ({ commit }, payload) => {
   });
 };
 
-export const getTranslations = ({ commit }) => {
+export const getTranslations = ({commit}) => {
   const url = window.data.translationUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_TRANSLATIONS, response.body);
@@ -102,7 +104,7 @@ export const getTranslations = ({ commit }) => {
   });
 };
 
-export const getEmployees = ({ commit }) => {
+export const getEmployees = ({commit}) => {
   const url = window.data.employeesUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_EMPLOYEES_LIST, response.body);
@@ -111,7 +113,7 @@ export const getEmployees = ({ commit }) => {
   });
 };
 
-export const getMovementsTypes = ({ commit }) => {
+export const getMovementsTypes = ({commit}) => {
   const url = window.data.movementsTypesUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_MOVEMENTS_TYPES, response.body);
@@ -120,47 +122,68 @@ export const getMovementsTypes = ({ commit }) => {
   });
 };
 
-export const updateOrder = ({ commit }, order) => {
+export const updateOrder = ({commit}, order) => {
   commit(types.UPDATE_ORDER, order);
 };
 
-export const updatePageIndex = ({ commit }, pageIndex) => {
+export const updatePageIndex = ({commit}, pageIndex) => {
   commit(types.SET_PAGE_INDEX, pageIndex);
 };
 
-export const updateKeywords = ({ commit }, keywords) => {
+export const updateKeywords = ({commit}, keywords) => {
   commit(types.UPDATE_KEYWORDS, keywords);
 };
 
-export const isLoading = ({ commit }) => {
+export const isLoading = ({commit}) => {
   commit(types.LOADING_STATE, true);
 };
 
-export const updateProductQty = ({ commit }, payload) => {
+export const updateProductQty = ({commit}, payload) => {
   commit(types.UPDATE_PRODUCT_QTY, payload);
 };
 
-export const updateQtyByProductId = ({ commit, state }, payload) => {
-  const url = payload.url;
-  const delta = payload.delta;
+export const updateQtyByProductId = ({commit}, payload) => {
+  const {url} = payload;
+  const {delta} = payload;
 
   Vue.http.post(url, {
     delta,
   }).then((res) => {
     commit(types.UPDATE_PRODUCT, res.body);
-    return showGrowl('notice', state.translations.notification_stock_updated);
+    EventBus.$emit('displayBulkAlert', 'success');
   }, (error) => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const updateQtyByProductsId = ({ commit, state }, payload) => {
+export const updateQtyByProductsId = ({commit, state}) => {
   const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
+
   Vue.http.post(url, productsQty).then((res) => {
     commit(types.UPDATE_PRODUCTS_QTY, res.body);
-    return showGrowl('notice', state.translations.notification_stock_updated);
+    EventBus.$emit('displayBulkAlert', 'success');
   }, (error) => {
     showGrowl('error', error.statusText);
   });
+};
+
+export const updateBulkEditQty = ({commit}, value) => {
+  commit(types.UPDATE_BULK_EDIT_QTY, value);
+};
+
+export const addProductToUpdate = ({commit}, product) => {
+  commit(types.ADD_PRODUCT_TO_UPDATE, product);
+};
+
+export const removeProductToUpdate = ({commit}, product) => {
+  commit(types.REMOVE_PRODUCT_TO_UPDATE, product);
+};
+
+export const addSelectedProduct = ({commit}, product) => {
+  commit(types.ADD_SELECTED_PRODUCT, product);
+};
+
+export const removeSelectedProduct = ({commit}, product) => {
+  commit(types.REMOVE_SELECTED_PRODUCT, product);
 };

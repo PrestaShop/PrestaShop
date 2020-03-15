@@ -1,0 +1,18 @@
+#currency_grid_panel {
+  #currency_iso_code {
+    max-width: 120px;
+  }
+}
+
+.grid {
+  table.grid-table {
+    tr {
+      td {
+        .unofficial {
+          color: $medium-gray;
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}

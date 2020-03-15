@@ -1,0 +1,93 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.import.data_match_saver:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\DataMatchSaver'
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.adapter.import.entity_deleter:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\ImportEntityDeleter'
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.image.file_deleter'
+
+    prestashop.adapter.import.excel_to_csv_converter:
+        class: 'PrestaShop\PrestaShop\Adapter\Converter\ExcelToCsvFileConverter'
+        arguments:
+            - '@filesystem'
+            - '@=service("prestashop.core.import.dir").getDir()'
+            - '@=service("prestashop.core.import.dir").getDir() ~ "csvfromexcel/"'
+
+    prestashop.adapter.import.file_opener:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\CsvFileOpener'
+        arguments:
+            - '@prestashop.adapter.import.excel_to_csv_converter'
+            - '@prestashop.core.import.dir'
+
+    prestashop.adapter.import.handler.product:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Handler\ProductImportHandler'
+        arguments:
+            - '@prestashop.adapter.import.data_formatter'
+            - '@=service("prestashop.adapter.shop.context").getAllShopIds()'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+            - '@=service("prestashop.adapter.feature.multistore").isUsed()'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@translator'
+            - '@prestashop.adapter.legacy.logger'
+            - '@=service("prestashop.adapter.data_provider.employee").getId()'
+            - '@prestashop.adapter.database'
+            - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.getAddress()'
+            - '@prestashop.adapter.validate'
+            - '@prestashop.adapter.tools'
+            - '@prestashop.adapter.import.image_copier'
+
+    prestashop.adapter.import.handler.category:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Handler\CategoryImportHandler'
+        arguments:
+            - '@prestashop.adapter.import.data_formatter'
+            - '@=service("prestashop.adapter.shop.context").getAllShopIds()'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+            - '@=service("prestashop.adapter.feature.multistore").isUsed()'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@translator'
+            - '@prestashop.adapter.legacy.logger'
+            - '@=service("prestashop.adapter.data_provider.employee").getId()'
+            - '@prestashop.adapter.database'
+            - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.validate'
+            - '@prestashop.adapter.import.image_copier'
+            - '@prestashop.adapter.tools'
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
+    prestashop.adapter.import.handler_finder:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\Handler\ImportHandlerFinder'
+        arguments:
+            - '@prestashop.adapter.import.handler.category'
+            - '@prestashop.adapter.import.handler.product'
+
+    prestashop.adapter.import.data_formatter:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\ImportDataFormatter'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.tools'
+
+    prestashop.adapter.import.image_copier:
+        class: 'PrestaShop\PrestaShop\Adapter\Import\ImageCopier'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.tools'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+            - '@prestashop.core.hook.dispatcher'

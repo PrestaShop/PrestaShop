@@ -1,0 +1,41 @@
+# This file is an example of data configuration which can be applied to a module
+
+# Data to be updated in Configuration table
+configuration:
+    update:
+        # Option 1: having a pair key/value
+        PAYPAL_SANDBOX: 1
+        PAYPAL_API_CARD: 0
+        # Option 2: use "value" subkey. Will allow to use addtionnal keys later
+        PAYPAL_SANDBOX_2:
+            value: 1
+            multilang: false
+        # Question: how to handle multi lang values ?
+    delete:
+        - "PAYPAL_ONBOARDING"
+
+# SQL files to execute 
+sql:
+    - file: "path/to/file1.sql"
+    # But key is optionnal
+    - "path/to/file2.sql"
+    - "sql/default-config.sql"
+
+# File to copy from local disk or website
+files:
+    - source: "/path/to/source/file.txt"
+      dest: "module/path/docs/file.txt"
+      
+    - source: "https://www.prestashop.com"
+      dest: "modules/ganalytics/webpage.html"
+
+# Fox complex configuration data, allow PHP code to be executed
+php:
+    # Must have a class which implements interface PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleComplexConfigurationInterface
+    - file: "path/to/file.php"
+      params:
+        - myParam1: 1
+        - oneArrayParam:
+            - "value1"
+            - "value2"
+            - withSpecificKey: "value3"

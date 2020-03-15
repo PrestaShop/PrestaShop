@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.grid.search.factory.search_criteria_with_category_parent_id:
+        class: 'PrestaShop\PrestaShop\Adapter\Grid\Search\Factory\SearchCriteriaWithCategoryParentIdFilterFactory'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.shop.context'
+            - '@prestashop.adapter.feature.multistore'
+            - '@prestashop.adapter.shop.context'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+            - '@request_stack'
+
+    # Action accessibility checkers
+    prestashop.adapter.grid.action.row.accessibility_checker.category_for_view:
+        class: 'PrestaShop\PrestaShop\Adapter\Grid\Action\Row\AccessibilityChecker\CategoryForViewAccessibilityChecker'
+        arguments:
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

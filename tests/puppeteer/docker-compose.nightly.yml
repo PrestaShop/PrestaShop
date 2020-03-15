@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  prestashop:
+    build:
+      context: ./
+      dockerfile: ./.docker/prestashop/Dockerfile
+    env_file:
+      - .docker/prestashop/.env
+    depends_on:
+      - "db"
+    command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
+    volumes:
+      - .docker:/tmp/docker
+      - ../../:/tmp/data-ps/prestashop/
+    networks:
+      default:
+        aliases:
+          - prestashop-web
+
+  db:
+    image: mysql:5.7.22
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks:
+      - default

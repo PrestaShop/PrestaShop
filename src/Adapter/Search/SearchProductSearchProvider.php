@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,31 +16,41 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\Search;
 
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
+use Hook;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
-use Symfony\Component\Translation\TranslatorInterface;
 use Search;
-use Hook;
+use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
+/**
+ * Class responsible of retrieving products in Search page of Front Office.
+ *
+ * @see SearchController
+ */
 class SearchProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
-    private $category;
+
+    /**
+     * @var SortOrderFactory
+     */
     private $sortOrderFactory;
 
     public function __construct(
@@ -50,12 +60,15 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query
     ) {
         $products = [];
-        $count    = 0;
+        $count = 0;
 
         if (($string = $query->getSearchString())) {
             $queryString = Tools::replaceAccentedChars(urldecode($string));
@@ -72,15 +85,15 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 null
             );
             $products = $result['result'];
-            $count    = $result['total'];
+            $count = $result['total'];
 
-            Hook::exec('actionSearch', array(
+            Hook::exec('actionSearch', [
                 'searched_query' => $queryString,
                 'total' => $count,
 
                 // deprecated since 1.7.x
                 'expr' => $queryString,
-            ));
+            ]);
         } elseif (($tag = $query->getSearchTag())) {
             $queryString = urldecode($tag);
 
@@ -108,13 +121,13 @@ class SearchProductSearchProvider implements ProductSearchProviderInterface
                 null
             );
 
-            Hook::exec('actionSearch', array(
+            Hook::exec('actionSearch', [
                 'searched_query' => $queryString,
                 'total' => $count,
 
                 // deprecated since 1.7.x
                 'expr' => $queryString,
-            ));
+            ]);
         }
 
         $result = new ProductSearchResult();

@@ -1,4 +1,5 @@
 <?php
+
 define('lang_Select', 'Pilih');
 define('lang_Erase', 'Hapus');
 define('lang_Open', 'Buka');

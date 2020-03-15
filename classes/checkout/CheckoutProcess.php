@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableInterface;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 
 class CheckoutProcessCore implements RenderableInterface
 {
     private $smarty;
+
+    /**
+     * @var CheckoutSession
+     */
     private $checkoutSession;
-    private $steps = array();
+    private $steps = [];
     private $has_errors;
 
     private $template = 'checkout/checkout-process.tpl';
@@ -51,7 +53,7 @@ class CheckoutProcessCore implements RenderableInterface
         return $this->template;
     }
 
-    public function handleRequest(array $requestParameters = array())
+    public function handleRequest(array $requestParameters = [])
     {
         foreach ($this->getSteps() as $step) {
             $step->handleRequest($requestParameters);
@@ -85,20 +87,20 @@ class CheckoutProcessCore implements RenderableInterface
         return $this;
     }
 
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         $scope = $this->smarty->createData(
             $this->smarty
         );
 
-        $params = array(
+        $params = [
             'steps' => array_map(function (CheckoutStepInterface $step) {
-                return array(
+                return [
                     'identifier' => $step->getIdentifier(),
                     'ui' => new RenderableProxy($step),
-                );
+                ];
             }, $this->getSteps()),
-        );
+        ];
 
         $scope->assign(array_merge($extraParams, $params));
 
@@ -124,12 +126,12 @@ class CheckoutProcessCore implements RenderableInterface
 
     public function getDataToPersist()
     {
-        $data = array();
+        $data = [];
         foreach ($this->getSteps() as $step) {
-            $defaultStepData = array(
+            $defaultStepData = [
                 'step_is_reachable' => $step->isReachable(),
                 'step_is_complete' => $step->isComplete(),
-            );
+            ];
 
             $stepData = array_merge($defaultStepData, $step->getDataToPersist());
 
@@ -148,8 +150,7 @@ class CheckoutProcessCore implements RenderableInterface
                 $step
                     ->setReachable($stepData['step_is_reachable'])
                     ->setComplete($stepData['step_is_complete'])
-                    ->restorePersistedData($stepData)
-                ;
+                    ->restorePersistedData($stepData);
             }
         }
 
@@ -161,8 +162,10 @@ class CheckoutProcessCore implements RenderableInterface
         foreach ($this->getSteps() as $step) {
             if (!$step->isReachable()) {
                 $step->setReachable(true);
+
                 break;
             }
+
             if (!$step->isComplete()) {
                 break;
             }
@@ -211,5 +214,21 @@ class CheckoutProcessCore implements RenderableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return CheckoutStepInterface
+     *
+     * @throws \RuntimeException if no current step is found
+     */
+    public function getCurrentStep()
+    {
+        foreach ($this->getSteps() as $step) {
+            if ($step->isCurrent()) {
+                return $step;
+            }
+        }
+
+        throw new \RuntimeException('There should be at least one current step');
     }
 }

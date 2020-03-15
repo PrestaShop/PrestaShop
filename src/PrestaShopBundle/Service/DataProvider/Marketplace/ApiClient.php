@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,14 +27,14 @@
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
-use Tools;
 
 class ApiClient
 {
     private $addonsApiClient;
-    private $queryParameters = array(
+    private $queryParameters = [
         'format' => 'json',
-    );
+    ];
+    private $defaultQueryParameters;
 
     /**
      * @var \PrestaShop\PrestaShop\Adapter\Tools
@@ -44,17 +44,21 @@ class ApiClient
     public function __construct(
         Client $addonsApiClient,
         $locale,
-        $toolsAdapter
+        $isoCode,
+        $toolsAdapter,
+        $domain,
+        $shopVersion
     ) {
         $this->addonsApiClient = $addonsApiClient;
         $this->toolsAdapter = $toolsAdapter;
 
-        list($isoLang, $isoCode) = explode('-', $locale);
+        list($isoLang) = explode('-', $locale);
 
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
-            ->setVersion(_PS_VERSION_)
-        ;
+            ->setVersion($shopVersion)
+            ->setShopUrl($domain);
+        $this->defaultQueryParameters = $this->queryParameters;
     }
 
     public function setSslVerification($verifySsl)
@@ -65,6 +69,7 @@ class ApiClient
 
     /**
      * @param Client $client
+     *
      * @return $this
      */
     public function setClient(Client $client)
@@ -74,60 +79,98 @@ class ApiClient
         return $this;
     }
 
+    /**
+     * In case you reuse the Client, you may want to clean the previous parameters.
+     */
+    public function reset()
+    {
+        $this->queryParameters = $this->defaultQueryParameters;
+    }
+
+    /**
+     * Check Addons client account credentials.
+     *
+     * @return object
+     */
+    public function getCheckCustomer()
+    {
+        $response = $this->setMethod('check_customer')
+            ->getResponse();
+
+        return json_decode($response);
+    }
+
     public function getNativesModules()
     {
         $response = $this->setMethod('listing')
             ->setAction('native')
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
-        return $responseArray->modules;
+        return isset($responseArray->modules) ? $responseArray->modules : [];
     }
 
     public function getPreInstalledModules()
     {
-        return $this->setMethod('listing')
+        $response = $this->setMethod('listing')
             ->setAction('install-modules')
-            ->getResponse()
-        ;
+            ->getResponse();
+        $responseDecoded = json_decode($response);
+
+        return isset($responseDecoded->modules) ? $responseDecoded->modules : [];
     }
 
     public function getMustHaveModules()
     {
         $response = $this->setMethod('listing')
             ->setAction('must-have')
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
-        return $responseArray->modules;
+        return isset($responseArray->modules) ? $responseArray->modules : [];
+    }
+
+    /**
+     * Prepare and call API for PrestaTrust integrity and property module details.
+     *
+     * @param string $hash Hash of module files
+     * @param string $sc_address Smart contract (Module licence)
+     *
+     * @return object List of checks made and their results
+     */
+    public function getPrestaTrustCheck($hash, $sc_address)
+    {
+        $this->queryParameters['module_hash'] = $hash;
+        $this->queryParameters['sc_address'] = $sc_address;
+
+        $response = $this->setMethod('trust')
+            ->getResponse();
+
+        return json_decode($response);
     }
 
     public function getServices()
     {
         $response = $this->setMethod('listing')
             ->setAction('service')
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
-        return $responseArray->services;
+        return isset($responseArray->services) ? $responseArray->services : [];
     }
 
     public function getCategories()
     {
         $response = $this->setMethod('listing')
             ->setAction('categories')
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
-        return isset($responseArray->module) ? $responseArray->module : array();
+        return isset($responseArray->module) ? $responseArray->module : [];
     }
 
     public function getModule($moduleId)
@@ -135,8 +178,7 @@ class ApiClient
         $response = $this->setMethod('listing')
             ->setAction('module')
             ->setModuleId($moduleId)
-            ->getResponse()
-        ;
+            ->getResponse();
 
         $responseArray = json_decode($response);
 
@@ -145,41 +187,81 @@ class ApiClient
         }
     }
 
+    /**
+     * Call API for module ZIP content (= download).
+     *
+     * @param int $moduleId
+     *
+     * @return string binary content (zip format)
+     */
+    public function getModuleZip($moduleId)
+    {
+        return $this->setMethod('module')
+            ->setModuleId($moduleId)
+            ->getPostResponse();
+    }
+
     public function getCustomerModules($userMail, $password)
     {
         $response = $this->setMethod('listing')
             ->setAction('customer')
             ->setUserMail($userMail)
             ->setPassword($password)
-            ->getPostResponse()
-        ;
+            ->getPostResponse();
 
         $responseArray = json_decode($response);
 
         if (!empty($responseArray->modules)) {
             return $responseArray->modules;
         }
-        return array();
+
+        return [];
+    }
+
+    /**
+     * Get list of themes bought by customer.
+     *
+     * @return object
+     */
+    public function getCustomerThemes()
+    {
+        $response = $this->setMethod('listing')
+            ->setAction('customer-themes')
+            ->getPostResponse();
+
+        $responseDecoded = json_decode($response);
+
+        if (!empty($responseDecoded->themes)) {
+            return $responseDecoded->themes;
+        }
+
+        return [];
     }
 
     public function getResponse()
     {
         return (string) $this->addonsApiClient
-            ->get(null,
-                array('query' => $this->queryParameters,
-                )
-            )->getBody()
-        ;
+            ->get(
+                null,
+                ['query' => $this->queryParameters,
+                ]
+            )->getBody();
     }
 
     public function getPostResponse()
     {
         return (string) $this->addonsApiClient
-            ->post(null,
-                array('query' => $this->queryParameters,
-                )
+            ->post(
+                null,
+                ['query' => $this->queryParameters,
+                ]
             )->getBody();
     }
+
+    /*
+     * REQUEST PARAMETER SETTERS.
+     * All parameters will have the same label as their function name.
+     */
 
     public function setMethod($method)
     {
@@ -223,6 +305,27 @@ class ApiClient
         return $this;
     }
 
+    public function setModuleKey($moduleKey)
+    {
+        $this->queryParameters['module_key'] = $moduleKey;
+
+        return $this;
+    }
+
+    public function setModuleName($moduleName)
+    {
+        $this->queryParameters['module_name'] = $moduleName;
+
+        return $this;
+    }
+
+    public function setShopUrl($shop_url)
+    {
+        $this->queryParameters['shop_url'] = $shop_url;
+
+        return $this;
+    }
+
     public function setUserMail($userMail)
     {
         $this->queryParameters['username'] = $userMail;
@@ -236,4 +339,8 @@ class ApiClient
 
         return $this;
     }
+
+    /*
+     * END OF REQUEST PARAMETER SETTERS.
+     */
 }

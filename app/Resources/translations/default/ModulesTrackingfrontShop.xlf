@@ -190,17 +190,17 @@ File: modules/trackingfront/views/templates/front/account.tpl:81</note>
   </file>
   <file original="modules/trackingfront/views/templates/front/login.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8954e140059f7b2544469f40161ba507">
-        <source>Affiliation space</source>
-        <target>Affiliation space</target>
-        <note>Context:
-File: modules/trackingfront/views/templates/front/login.tpl:36</note>
-      </trans-unit>
       <trans-unit id="bf15e68d25d8a2b7664950ba7385ed0a">
         <source>Affiliation</source>
         <target>Affiliation</target>
         <note>Context:
 File: modules/trackingfront/views/templates/front/login.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="8954e140059f7b2544469f40161ba507">
+        <source>Affiliation space</source>
+        <target>Affiliation space</target>
+        <note>Context:
+File: modules/trackingfront/views/templates/front/login.tpl:36</note>
       </trans-unit>
       <trans-unit id="b6d4223e60986fa4c9af77ee5f7149c5">
         <source>Sign in</source>

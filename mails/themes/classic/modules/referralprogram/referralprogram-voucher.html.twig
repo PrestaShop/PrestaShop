@@ -1,0 +1,38 @@
+{% extends '@MailThemes/classic/components/layout.html.twig' %}
+
+{% block content %}
+<tr>
+  <td align="center" class="titleblock">
+    <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}</span>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="box" style="border:1px solid #D6D4D4;">
+    <table class="table">
+      <tr>
+        <td width="10">&nbsp;</td>
+        <td>
+          <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Referral Program'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
+            <span>
+              {{ 'We have created a voucher in your name for referring a friend.'|trans({}, 'Emails.Body', locale)|raw }}<br/>
+              {{ 'Here is the code of your voucher:'|trans({}, 'Emails.Body', locale)|raw }} <span><strong>{voucher_num}</strong></span>{{ ', with an amount of'|trans({}, 'Emails.Body', locale)|raw }} <span><strong>{voucher_amount}</strong></span>.<br/><br/>
+              {{ 'Simply copy/paste this code during the payment process for your next order.'|trans({}, 'Emails.Body', locale)|raw }}
+            </span>
+          </font>
+        </td>
+        <td width="10">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+{% endblock %}

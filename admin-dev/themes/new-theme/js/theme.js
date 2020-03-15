@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,35 +15,57 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+// Dependencies
+
+import 'prestakit/dist/js/prestashop-ui-kit';
+import 'jquery-ui-dist/jquery-ui';
+import 'bootstrap-tokenfield';
+import 'eonasdan-bootstrap-datetimepicker';
+import 'jwerty';
+import 'magnific-popup';
+import 'dropzone';
+import 'typeahead.js/dist/typeahead.jquery';
+import 'typeahead.js/dist/bloodhound.min';
+import 'sprintf-js';
+
 // Plugins CSS
-
 import 'dropzone/dist/min/dropzone.min.css';
-
 import 'magnific-popup/dist/magnific-popup.css';
-import 'PrestaKit/dist/css/bootstrap-prestashop-ui-kit.css';
-import 'PrestaKit/dist/css/jquery.growl.css';
-import 'PrestaKit/dist/css/bootstrap-switch.min.css';
 
 // Theme SCSS
-
-import '../scss/theme.scss';
+import '@scss/theme.scss';
 
 // Theme Javascript
+import NavBar from '@js/nav_bar';
 
-import NavBar from './nav_bar.js';
+// this needs to be ported into the UI kit
+import '@js/clickable-dropdown';
 
-import './product-page/index';
-import './translation-page/index';
+import '@js/maintenance-page';
+import '@js/translation-page/index';
 
-import Header from './header.js';
+import Header from '@js/header';
+
+import initDatePickers from '@js/app/utils/datepicker';
+import initInvalidFields from '@js/app/utils/fields';
+
+const {$} = window;
+
+// Theme Javascript
+window.Dropzone.autoDiscover = false;
 
 new NavBar();
 new Header();
+
+$(() => {
+  initDatePickers();
+  initInvalidFields();
+});

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,27 +16,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class AddressControllerCore extends FrontController
 {
-    public $auth = false;
+    public $auth = true;
     public $guestAllowed = true;
     public $php_self = 'address';
     public $authRedirection = 'addresses';
     public $ssl = true;
 
-    private $address_form;
-    private $should_redirect = false;
+    protected $address_form;
+    protected $should_redirect = false;
 
     /**
-     * Initialize address controller
+     * Initialize address controller.
+     *
      * @see FrontController::init()
      */
     public function init()
@@ -47,7 +47,8 @@ class AddressControllerCore extends FrontController
     }
 
     /**
-     * Start forms process
+     * Start forms process.
+     *
      * @see FrontController::postProcess()
      */
     public function postProcess()
@@ -56,16 +57,16 @@ class AddressControllerCore extends FrontController
         $this->address_form->fillWith(Tools::getAllValues());
         if (Tools::isSubmit('submitAddress')) {
             if (!$this->address_form->submit()) {
-                $this->errors[] = $this->trans('Please fix the error below.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('Please fix the error below.', [], 'Shop.Notifications.Error');
             } else {
                 if (Tools::getValue('id_address')) {
-                    $this->success[] = $this->trans('Address successfully updated!', array(), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('Address successfully updated!', [], 'Shop.Notifications.Success');
                 } else {
-                    $this->success[] = $this->trans('Address successfully added!', array(), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('Address successfully added!', [], 'Shop.Notifications.Success');
                 }
                 $this->should_redirect = true;
             }
-        } elseif (($id_address = (int)Tools::getValue('id_address'))) {
+        } elseif (($id_address = (int) Tools::getValue('id_address'))) {
             $this->address_form->loadAddressById($id_address);
 
             if (Tools::getValue('delete')) {
@@ -74,10 +75,10 @@ class AddressControllerCore extends FrontController
                     Tools::getValue('token')
                 );
                 if ($ok) {
-                    $this->success[] = $this->trans('Address successfully deleted!', array(), 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('Address successfully deleted!', [], 'Shop.Notifications.Success');
                     $this->should_redirect = true;
                 } else {
-                    $this->errors[] = $this->trans('Could not delete address.', array(), 'Shop.Notifications.Error');
+                    $this->errors[] = $this->trans('Could not delete address.', [], 'Shop.Notifications.Error');
                 }
             } else {
                 $this->context->smarty->assign('editing', true);
@@ -86,22 +87,23 @@ class AddressControllerCore extends FrontController
     }
 
     /**
-     * Assign template vars related to page content
+     * Assign template vars related to page content.
+     *
      * @see FrontController::initContent()
      */
     public function initContent()
     {
         if (!$this->ajax && $this->should_redirect) {
-            if (($back = Tools::getValue('back')) && Tools::secureReferrer($back)) {
+            if (($back = Tools::getValue('back')) && Tools::urlBelongsToShop($back)) {
                 $mod = Tools::getValue('mod');
-                $this->redirectWithNotifications('index.php?controller='.$back.($mod ? '&back='.$mod : ''));
+                $this->redirectWithNotifications('index.php?controller=' . $back . ($mod ? '&back=' . $mod : ''));
             } else {
                 $this->redirectWithNotifications('index.php?controller=addresses');
             }
         }
 
         parent::initContent();
-        $this->setTemplate('customer/address', array('entity' => 'address', 'id' => Tools::getValue('id_address')));
+        $this->setTemplate('customer/address', ['entity' => 'address', 'id' => Tools::getValue('id_address')]);
     }
 
     public function getBreadcrumbLinks()
@@ -111,8 +113,8 @@ class AddressControllerCore extends FrontController
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
         $breadcrumb['links'][] = [
-            'title' => $this->trans('Addresses', array(), 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('addresses')
+            'title' => $this->trans('Addresses', [], 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('addresses'),
         ];
 
         return $breadcrumb;
@@ -122,21 +124,21 @@ class AddressControllerCore extends FrontController
     {
         $addressForm = $this->makeAddressForm();
 
-        if (Tools::getIsset('id_address') && ($id_address = (int)Tools::getValue('id_address'))) {
+        if (Tools::getIsset('id_address') && ($id_address = (int) Tools::getValue('id_address'))) {
             $addressForm->loadAddressById($id_address);
         }
 
         if (Tools::getIsset('id_country')) {
-            $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
+            $addressForm->fillWith(['id_country' => Tools::getValue('id_country')]);
         }
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
+        $this->ajaxRender(Tools::jsonEncode([
             'address_form' => $this->render(
                 'customer/_partials/address-form',
                 $addressForm->getTemplateVariables()
             ),
-        )));
+        ]));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class MessageCore
+ * Class MessageCore.
  */
 class MessageCore extends ObjectModel
 {
@@ -55,39 +55,39 @@ class MessageCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'message',
         'primary' => 'id_message',
-        'fields' => array(
-            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600),
-            'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'private' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 1600],
+            'id_cart' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'private' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_cart' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_cart' => [
                 'xlink_resource' => 'carts',
-            ),
-            'id_order' => array(
+            ],
+            'id_order' => [
                 'xlink_resource' => 'orders',
-            ),
-            'id_customer' => array(
+            ],
+            'id_customer' => [
                 'xlink_resource' => 'customers',
-            ),
-            'id_employee' => array(
+            ],
+            'id_employee' => [
                 'xlink_resource' => 'employees',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     /**
-     * Return the last message from cart
+     * Return the last message from cart.
      *
      * @param int $idCart Cart ID
      *
@@ -95,17 +95,18 @@ class MessageCore extends ObjectModel
      */
     public static function getMessageByCartId($idCart)
     {
-        return Db::getInstance()->getRow('
+        return Db::getInstance()->getRow(
+            '
 			SELECT *
-			FROM `'._DB_PREFIX_.'message`
-			WHERE `id_cart` = '.(int) $idCart
+			FROM `' . _DB_PREFIX_ . 'message`
+			WHERE `id_cart` = ' . (int) $idCart
         );
     }
 
     /**
-     * Return messages from Order ID
+     * Return messages from Order ID.
      *
-     * @param int  $idOrder Order ID
+     * @param int $idOrder Order ID
      * @param bool $private return WITH private messages
      *
      * @return array Messages
@@ -123,24 +124,24 @@ class MessageCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
-			FROM `'._DB_PREFIX_.'message` m
-			LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
-			LEFT JOIN `'._DB_PREFIX_.'message_readed` mr
+			FROM `' . _DB_PREFIX_ . 'message` m
+			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON m.`id_customer` = c.`id_customer`
+			LEFT JOIN `' . _DB_PREFIX_ . 'message_readed` mr
 				ON mr.`id_message` = m.`id_message`
-				AND mr.`id_employee` = '.(isset($context->employee) ? (int)$context->employee->id : '\'\'').'
-			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = m.`id_employee`
-			WHERE id_order = '.(int) $idOrder.'
-			'.(!$private ? ' AND m.`private` = 0' : '').'
+				AND mr.`id_employee` = ' . (isset($context->employee) ? (int) $context->employee->id : '\'\'') . '
+			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = m.`id_employee`
+			WHERE id_order = ' . (int) $idOrder . '
+			' . (!$private ? ' AND m.`private` = 0' : '') . '
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
 		');
     }
 
     /**
-     * Return messages from Cart ID
+     * Return messages from Cart ID.
      *
-     * @param int  $id_order Order ID
-     * @param bool $private  return WITH private messages
+     * @param int $id_order Order ID
+     * @param bool $private return WITH private messages
      *
      * @return array Messages
      */
@@ -157,21 +158,21 @@ class MessageCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
-			FROM `'._DB_PREFIX_.'message` m
-			LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
-			LEFT JOIN `'._DB_PREFIX_.'message_readed` mr ON (mr.id_message = m.id_message AND mr.id_employee = '.(int)$context->employee->id.')
-			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = m.`id_employee`
-			WHERE id_cart = '.(int) $idCart.'
-			'.(!$private ? ' AND m.`private` = 0' : '').'
+			FROM `' . _DB_PREFIX_ . 'message` m
+			LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON m.`id_customer` = c.`id_customer`
+			LEFT JOIN `' . _DB_PREFIX_ . 'message_readed` mr ON (mr.id_message = m.id_message AND mr.id_employee = ' . (int) $context->employee->id . ')
+			LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = m.`id_employee`
+			WHERE id_cart = ' . (int) $idCart . '
+			' . (!$private ? ' AND m.`private` = 0' : '') . '
 			GROUP BY m.id_message
 			ORDER BY m.date_add DESC
 		');
     }
 
     /**
-     * Registered a message 'readed'
+     * Registered a message 'readed'.
      *
-     * @param int $idMessage  Message ID
+     * @param int $idMessage Message ID
      * @param int $id_emplyee Employee ID
      *
      * @return bool
@@ -183,8 +184,8 @@ class MessageCore extends ObjectModel
         }
 
         $result = Db::getInstance()->execute('
-			INSERT INTO '._DB_PREFIX_.'message_readed (id_message , id_employee , date_add) VALUES
-			('.(int) $idMessage.', '.(int) $idEmployee.', NOW());
+			INSERT INTO ' . _DB_PREFIX_ . 'message_readed (id_message , id_employee , date_add) VALUES
+			(' . (int) $idMessage . ', ' . (int) $idEmployee . ', NOW());
 		');
 
         return $result;

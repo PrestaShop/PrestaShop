@@ -1,7 +1,7 @@
 // Make sure the charset is set appropriately
 @charset "UTF-8"
 //Compass is required to pre-compile this stylesheets to .css
-@import "compass"
+@import "~bourbon/app/assets/stylesheets/bourbon"
 
 @import "modules/colors"
 @import "modules/variables"
@@ -19,8 +19,9 @@
 //@import "vendor/bootstrap-sass/print"
 
 //import fonts
-@import url($url-font-content)
-@import url($url-font-headings)
+@import "~open-sans-fonts/open-sans-regular"
+@import "~open-sans-fonts/open-sans-semibold"
+@import "~open-sans-fonts/open-sans-bold"
 
 //Bootstrap's rules applied only on div#content.bootstrap, nav.bootstrap, header.bootstrap, footer.bootstrap
 .bootstrap

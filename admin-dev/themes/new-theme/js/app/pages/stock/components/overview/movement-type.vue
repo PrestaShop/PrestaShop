@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -27,21 +27,22 @@
     <div class="movements">
       <PSButton
         type="button"
-        class="update-qty pull-xs-right"
+        class="update-qty float-sm-right"
         :class="classObject"
         :disabled="disabled"
         :primary="true"
         @click="sendQty"
       >
         <i class="material-icons">edit</i>
-        {{trans('button_movement_type')}}
+        {{ trans('button_movement_type') }}
       </PSButton>
     </div>
   </div>
 </template>
 
 <script>
-  import PSButton from 'app/widgets/ps-button';
+  import PSButton from '@app/widgets/ps-button';
+
   export default {
     computed: {
       disabled() {
@@ -64,8 +65,9 @@
   };
 </script>
 
-<style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+<style lang="scss" scoped>
+  @import '~@scss/config/_settings.scss';
+
   .update-qty {
     color: white;
     transition: background-color 0.2s ease;

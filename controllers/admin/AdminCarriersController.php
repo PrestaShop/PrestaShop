@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,7 @@ class AdminCarriersControllerCore extends AdminController
     public function __construct()
     {
         if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier')) {
-            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id_carrier);
+            Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard', true, [], ['id_carrier' => (int) $id_carrier]));
         }
 
         $this->bootstrap = true;
@@ -50,64 +50,64 @@ class AdminCarriersControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Notifications.Info'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Info'),
-                'icon' => 'icon-trash'
-            )
-        );
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Notifications.Info'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
+                'icon' => 'icon-trash',
+            ],
+        ];
 
-        $this->fieldImageSettings = array(
+        $this->fieldImageSettings = [
             'name' => 'logo',
-            'dir' => 's'
-        );
+            'dir' => 's',
+        ];
 
-        $this->fields_list = array(
-            'id_carrier' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_carrier' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
-                'class' => 'fixed-width-xs'
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global')
-            ),
-            'image' => array(
-                'title' => $this->trans('Logo', array(), 'Admin.Global'),
+                'class' => 'fixed-width-xs',
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
+            ],
+            'image' => [
+                'title' => $this->trans('Logo', [], 'Admin.Global'),
                 'align' => 'center',
                 'image' => 's',
                 'class' => 'fixed-width-xs',
                 'orderby' => false,
-                'search' => false
-            ),
-            'delay' => array(
-                'title' => $this->trans('Delay', array(), 'Admin.Shipping.Feature'),
-                'orderby' => false
-            ),
-            'active' => array(
-                'title' => $this->trans('Status', array(), 'Admin.Global'),
+                'search' => false,
+            ],
+            'delay' => [
+                'title' => $this->trans('Delay', [], 'Admin.Shipping.Feature'),
+                'orderby' => false,
+            ],
+            'active' => [
+                'title' => $this->trans('Status', [], 'Admin.Global'),
                 'align' => 'center',
                 'active' => 'status',
                 'type' => 'bool',
                 'class' => 'fixed-width-sm',
                 'orderby' => false,
-            ),
-            'is_free' => array(
-                'title' => $this->trans('Free Shipping', array(), 'Admin.Shipping.Feature'),
+            ],
+            'is_free' => [
+                'title' => $this->trans('Free Shipping', [], 'Admin.Shipping.Feature'),
                 'align' => 'center',
                 'active' => 'isFree',
                 'type' => 'bool',
                 'class' => 'fixed-width-sm',
                 'orderby' => false,
-            ),
-            'position' => array(
-                'title' => $this->trans('Position', array(), 'Admin.Global'),
+            ],
+            'position' => [
+                'title' => $this->trans('Position', [], 'Admin.Global'),
                 'filter_key' => 'a!position',
                 'align' => 'center',
                 'class' => 'fixed-width-sm',
-                'position' => 'position'
-            )
-        );
+                'position' => 'position',
+            ],
+        ];
     }
 
     public function initToolbar()
@@ -121,13 +121,13 @@ class AdminCarriersControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        $this->page_header_toolbar_title = $this->trans('Carriers', array(), 'Admin.Shipping.Feature');
+        $this->page_header_toolbar_title = $this->trans('Carriers', [], 'Admin.Shipping.Feature');
         if ($this->display != 'view') {
-            $this->page_header_toolbar_btn['new_carrier'] = array(
+            $this->page_header_toolbar_btn['new_carrier'] = [
                 'href' => $this->context->link->getAdminLink('AdminCarrierWizard'),
-                'desc' => $this->trans('Add new carrier', array(), 'Admin.Shipping.Feature'),
-                'icon' => 'process-icon-new'
-            );
+                'desc' => $this->trans('Add new carrier', [], 'Admin.Shipping.Feature'),
+                'icon' => 'process-icon-new',
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -136,278 +136,279 @@ class AdminCarriersControllerCore extends AdminController
     public function renderList()
     {
         $this->_select = 'b.*';
-        $this->_join = 'INNER JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.(int) $this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int) $this->context->shop->id.')';
+        $this->_join = 'INNER JOIN `' . _DB_PREFIX_ . 'carrier_lang` b ON a.id_carrier = b.id_carrier' . Shop::addSqlRestrictionOnLang('b') . ' AND b.id_lang = ' . (int) $this->context->language->id . ' LEFT JOIN `' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop=' . (int) $this->context->shop->id . ')';
         $this->_use_found_rows = false;
 
         // Removes the Recommended modules button
         unset($this->page_header_toolbar_btn['modules-list']);
 
         // test if need to show header alert.
-        $sql = 'SELECT COUNT(1) FROM `'._DB_PREFIX_.'carrier` WHERE deleted = 0 AND id_reference > 2';
-        $showHeaderAlert = (Db::getInstance()->query($sql)->fetchColumn(0) == 0);
+        $sql = 'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2';
+        $showHeaderAlert = (Db::getInstance()->executeS($sql, false)->fetchColumn(0) == 0);
 
         // Assign them in two steps! Because renderModulesList needs it before to be called.
-        $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', array(), 'Admin.Shipping.Feature'));
+        $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', [], 'Admin.Shipping.Feature'));
         $this->context->smarty->assign('panel_id', 'recommended-carriers-panel');
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'showHeaderAlert' => $showHeaderAlert,
-            'modules_list' => $this->renderModulesList('back-office,AdminCarriers,new')
-        ));
+            'modules_list' => $this->renderModulesList('back-office,AdminCarriers,new'),
+        ]);
 
         return parent::renderList();
     }
 
     public function renderForm()
     {
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Carriers', array(), 'Admin.Shipping.Feature'),
-                'icon' => 'icon-truck'
-            ),
-            'input' => array(
-                array(
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Carriers', [], 'Admin.Shipping.Feature'),
+                'icon' => 'icon-truck',
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Company', array(), 'Admin.Global'),
+                    'label' => $this->trans('Company', [], 'Admin.Global'),
                     'name' => 'name',
                     'required' => true,
-                    'hint' => array(
-                        sprintf($this->trans('Allowed characters: letters, spaces and %s', array(), 'Admin.Shipping.Help'), '().-'),
-                        $this->trans('Carrier name displayed during checkout', array(), 'Admin.Shipping.Help'),
-                        $this->trans('For in-store pickup, enter 0 to replace the carrier name with your shop name.', array(), 'Admin.Shipping.Help')
-                    )
-                ),
-                array(
+                    'hint' => [
+                        $this->trans('Allowed characters: letters, spaces and "%special_chars%".', ['%special_chars%' => '().-'], 'Admin.Shipping.Help'),
+                        $this->trans('Carrier name displayed during checkout', [], 'Admin.Shipping.Help'),
+                        $this->trans('For in-store pickup, enter 0 to replace the carrier name with your shop name.', [], 'Admin.Shipping.Help'),
+                    ],
+                ],
+                [
                     'type' => 'file',
-                    'label' => $this->trans('Logo', array(), 'Admin.Global'),
+                    'label' => $this->trans('Logo', [], 'Admin.Global'),
                     'name' => 'logo',
-                    'hint' => $this->trans('Upload a logo from your computer.', array(), 'Admin.Shipping.Help').' (.gif, .jpg, .jpeg '.$this->trans('or', array(), 'Admin.Shipping.Help').' .png)'
-                ),
-                array(
+                    'hint' => $this->trans('Upload a logo from your computer.', [], 'Admin.Shipping.Help') . ' (.gif, .jpg, .jpeg ' . $this->trans('or', [], 'Admin.Shipping.Help') . ' .png)',
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Transit time', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Transit time', [], 'Admin.Shipping.Feature'),
                     'name' => 'delay',
                     'lang' => true,
                     'required' => true,
                     'maxlength' => 512,
-                    'hint' => $this->trans('Estimated delivery time will be displayed during checkout.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                    'hint' => $this->trans('Estimated delivery time will be displayed during checkout.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Speed grade', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Speed grade', [], 'Admin.Shipping.Feature'),
                     'name' => 'grade',
                     'required' => false,
-                    'hint' => $this->trans('Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                    'hint' => $this->trans('Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('URL', array(), 'Admin.Global'),
+                    'label' => $this->trans('URL', [], 'Admin.Global'),
                     'name' => 'url',
-                    'hint' => $this->trans('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will then be automatically replaced by the tracking number.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                    'hint' => $this->trans('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will then be automatically replaced by the tracking number.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'checkbox',
-                    'label' => $this->trans('Zone', array(), 'Admin.Global'),
+                    'label' => $this->trans('Zone', [], 'Admin.Global'),
                     'name' => 'zone',
-                    'values' => array(
+                    'values' => [
                         'query' => Zone::getZones(false),
                         'id' => 'id_zone',
-                        'name' => 'name'
-                    ),
-                    'hint' => $this->trans('The zones in which this carrier will be used.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                        'name' => 'name',
+                    ],
+                    'hint' => $this->trans('The zones in which this carrier will be used.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'group',
-                    'label' => $this->trans('Group access', array(), 'Admin.Shipping.Help'),
+                    'label' => $this->trans('Group access', [], 'Admin.Shipping.Help'),
                     'name' => 'groupBox',
                     'values' => Group::getGroups(Context::getContext()->language->id),
-                    'hint' => $this->trans('Mark the groups that are allowed access to this carrier.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                    'hint' => $this->trans('Mark the groups that are allowed access to this carrier.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Status', array(), 'Admin.Global'),
+                    'label' => $this->trans('Status', [], 'Admin.Global'),
                     'name' => 'active',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                        )
-                    ),
-                    'hint' => $this->trans('Enable the carrier in the front office.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                    'hint' => $this->trans('Enable the carrier in the front office.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Apply shipping cost', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Apply shipping cost', [], 'Admin.Shipping.Feature'),
                     'name' => 'is_free',
                     'required' => false,
                     'class' => 't',
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'is_free_on',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->trans('Yes', array(), 'Admin.Global').'" title="'.$this->trans('Yes', array(), 'Admin.Global').'" />'
-                        ),
-                        array(
+                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Yes', [], 'Admin.Global') . '" title="' . $this->trans('Yes', [], 'Admin.Global') . '" />',
+                        ],
+                        [
                             'id' => 'is_free_off',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->trans('No', array(), 'Admin.Global').'" title="'.$this->trans('No', array(), 'Admin.Global').'" />'
-                        )
-                    ),
-                    'hint' => $this->trans('Apply both regular shipping cost and product-specific shipping costs.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('No', [], 'Admin.Global') . '" title="' . $this->trans('No', [], 'Admin.Global') . '" />',
+                        ],
+                    ],
+                    'hint' => $this->trans('Apply both regular shipping cost and product-specific shipping costs.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Tax', array(), 'Admin.Global'),
+                    'label' => $this->trans('Tax', [], 'Admin.Global'),
                     'name' => 'id_tax_rules_group',
-                    'options' => array(
+                    'options' => [
                         'query' => TaxRulesGroup::getTaxRulesGroups(true),
                         'id' => 'id_tax_rules_group',
                         'name' => 'name',
-                        'default' => array(
-                            'label' => $this->trans('No Tax', array(), 'Admin.Global'),
-                            'value' => 0
-                        )
-                    )
-                ),
-                array(
+                        'default' => [
+                            'label' => $this->trans('No Tax', [], 'Admin.Global'),
+                            'value' => 0,
+                        ],
+                    ],
+                ],
+                [
                     'type' => 'switch',
-                    'label' => $this->trans('Shipping and handling', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Shipping and handling', [], 'Admin.Shipping.Feature'),
                     'name' => 'shipping_handling',
                     'required' => false,
                     'class' => 't',
                     'is_bool' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'shipping_handling_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
-                        ),
-                        array(
+                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                        ],
+                        [
                             'id' => 'shipping_handling_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
-                        )
-                    ),
-                    'hint' => $this->trans('Include the shipping and handling costs in the carrier price.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                        ],
+                    ],
+                    'hint' => $this->trans('Include the shipping and handling costs in the carrier price.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'radio',
-                    'label' => $this->trans('Billing', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Billing', [], 'Admin.Shipping.Feature'),
                     'name' => 'shipping_method',
                     'required' => false,
                     'class' => 't',
                     'br' => true,
-                    'values' => array(
-                        array(
+                    'values' => [
+                        [
                             'id' => 'billing_default',
                             'value' => Carrier::SHIPPING_METHOD_DEFAULT,
-                            'label' => $this->trans('Default behavior', array(), 'Admin.Shipping.Feature')
-                        ),
-                        array(
+                            'label' => $this->trans('Default behavior', [], 'Admin.Shipping.Feature'),
+                        ],
+                        [
                             'id' => 'billing_price',
                             'value' => Carrier::SHIPPING_METHOD_PRICE,
-                            'label' => $this->trans('According to total price', array(), 'Admin.Shipping.Feature')
-                        ),
-                        array(
+                            'label' => $this->trans('According to total price', [], 'Admin.Shipping.Feature'),
+                        ],
+                        [
                             'id' => 'billing_weight',
                             'value' => Carrier::SHIPPING_METHOD_WEIGHT,
-                            'label' => $this->trans('According to total weight', array(), 'Admin.Shipping.Feature')
-                        )
-                    )
-                ),
-                array(
+                            'label' => $this->trans('According to total weight', [], 'Admin.Shipping.Feature'),
+                        ],
+                    ],
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Out-of-range behavior', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Out-of-range behavior', [], 'Admin.Shipping.Feature'),
                     'name' => 'range_behavior',
-                    'options' => array(
-                        'query' => array(
-                            array(
+                    'options' => [
+                        'query' => [
+                            [
                                 'id' => 0,
-                                'name' => $this->trans('Apply the cost of the highest defined range', array(), 'Admin.Shipping.Help')
-                            ),
-                            array(
+                                'name' => $this->trans('Apply the cost of the highest defined range', [], 'Admin.Shipping.Help'),
+                            ],
+                            [
                                 'id' => 1,
-                                'name' => $this->trans('Disable carrier', array(), 'Admin.Shipping.Feature')
-                            )
-                        ),
+                                'name' => $this->trans('Disable carrier', [], 'Admin.Shipping.Feature'),
+                            ],
+                        ],
                         'id' => 'id',
-                        'name' => 'name'
-                    ),
-                    'hint' => $this->trans('Out-of-range behavior occurs when none is defined (e.g. when a customer\'s cart weight is greater than the highest range limit).', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                        'name' => 'name',
+                    ],
+                    'hint' => $this->trans('Out-of-range behavior occurs when none is defined (e.g. when a customer\'s cart weight is greater than the highest range limit).', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Maximum package height', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Maximum package height', [], 'Admin.Shipping.Feature'),
                     'name' => 'max_height',
                     'required' => false,
-                    'hint' => $this->trans('Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                    'hint' => $this->trans('Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Maximum package width', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Maximum package width', [], 'Admin.Shipping.Feature'),
                     'name' => 'max_width',
                     'required' => false,
-                    'hint' => $this->trans('Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                    'hint' => $this->trans('Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Maximum package depth', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Maximum package depth', [], 'Admin.Shipping.Feature'),
                     'name' => 'max_depth',
                     'required' => false,
-                    'hint' => $this->trans('Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                    'hint' => $this->trans('Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Maximum package weight', array(), 'Admin.Shipping.Feature'),
+                    'label' => $this->trans('Maximum package weight', [], 'Admin.Shipping.Feature'),
                     'name' => 'max_weight',
                     'required' => false,
-                    'hint' => $this->trans('Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.', array(), 'Admin.Shipping.Help')
-                ),
-                array(
+                    'hint' => $this->trans('Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.', [], 'Admin.Shipping.Help'),
+                ],
+                [
                     'type' => 'hidden',
-                    'name' => 'is_module'
-                ),
-                array(
+                    'name' => 'is_module',
+                ],
+                [
                     'type' => 'hidden',
                     'name' => 'external_module_name',
-                ),
-                array(
+                ],
+                [
                     'type' => 'hidden',
-                    'name' => 'shipping_external'
-                ),
-                array(
+                    'name' => 'shipping_external',
+                ],
+                [
                     'type' => 'hidden',
-                    'name' => 'need_range'
-                ),
-            )
-        );
+                    'name' => 'need_range',
+                ],
+            ],
+        ];
 
         if (Shop::isFeatureActive()) {
-            $this->fields_form['input'][] = array(
+            $this->fields_form['input'][] = [
                 'type' => 'shop',
-                'label' => $this->trans('Shop association', array(), 'Admin.Global'),
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
                 'name' => 'checkBoxShopAsso',
-            );
+            ];
         }
 
-        $this->fields_form['submit'] = array(
-            'title' => $this->trans('Save', array(), 'Admin.Actions'),
-        );
+        $this->fields_form['submit'] = [
+            'title' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
 
         if (!($obj = $this->loadObject(true))) {
             return;
         }
 
         $this->getFieldsValues($obj);
+
         return parent::renderForm();
     }
 
@@ -417,11 +418,11 @@ class AdminCarriersControllerCore extends AdminController
             $this->ajaxProcessGetModuleQuickView();
         }
 
-        if (Tools::getValue('submitAdd'.$this->table)) {
+        if (Tools::getValue('submitAdd' . $this->table)) {
             /* Checking fields validity */
             $this->validateRules();
             if (!count($this->errors)) {
-                $id = (int)Tools::getValue('id_'.$this->table);
+                $id = (int) Tools::getValue('id_' . $this->table);
 
                 /* Object update */
                 if (isset($id) && !empty($id)) {
@@ -446,95 +447,70 @@ class AdminCarriersControllerCore extends AdminController
                                 $new_carrier->update();
 
                                 $this->updateAssoShop($new_carrier->id);
-                                $new_carrier->copyCarrierData((int)$current_carrier->id);
+                                $new_carrier->copyCarrierData((int) $current_carrier->id);
                                 $this->changeGroups($new_carrier->id);
                                 // Call of hooks
-                                Hook::exec('actionCarrierUpdate', array(
-                                    'id_carrier' => (int)$current_carrier->id,
-                                    'carrier' => $new_carrier
-                                ));
+                                Hook::exec('actionCarrierUpdate', [
+                                    'id_carrier' => (int) $current_carrier->id,
+                                    'carrier' => $new_carrier,
+                                ]);
                                 $this->postImage($new_carrier->id);
                                 $this->changeZones($new_carrier->id);
-                                $new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
-                                Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
+                                $new_carrier->setTaxRulesGroup((int) Tools::getValue('id_tax_rules_group'));
+                                Tools::redirectAdmin(self::$currentIndex . '&id_' . $this->table . '=' . $current_carrier->id . '&conf=4&token=' . $this->token);
                             } else {
-                                $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b>';
+                                $this->errors[] = $this->trans('An error occurred while updating an object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b>';
                             }
                         } else {
-                            $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                            $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
                         }
                     } catch (PrestaShopException $e) {
                         $this->errors[] = $e->getMessage();
                     }
-                }
-
-                /* Object creation */
-                else {
+                } else {
+                    // Object creation
                     if ($this->access('add')) {
                         // Create new Carrier
                         $carrier = new Carrier();
                         $this->copyFromPost($carrier, $this->table);
                         $carrier->position = Carrier::getHigherPosition() + 1;
                         if ($carrier->add()) {
-                            if (($_POST['id_'.$this->table] = $carrier->id /* voluntary */) && $this->postImage($carrier->id) && $this->_redirect) {
-                                $carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'), true);
+                            if (($_POST['id_' . $this->table] = $carrier->id /* voluntary */) && $this->postImage($carrier->id) && $this->_redirect) {
+                                $carrier->setTaxRulesGroup((int) Tools::getValue('id_tax_rules_group'), true);
                                 $this->changeZones($carrier->id);
                                 $this->changeGroups($carrier->id);
                                 $this->updateAssoShop($carrier->id);
-                                Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$carrier->id.'&conf=3&token='.$this->token);
+                                Tools::redirectAdmin(self::$currentIndex . '&id_' . $this->table . '=' . $carrier->id . '&conf=3&token=' . $this->token);
                             }
                         } else {
-                            $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b>';
+                            $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b>';
                         }
                     } else {
-                        $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
+                        $this->errors[] = $this->trans('You do not have permission to add this.', [], 'Admin.Notifications.Error');
                     }
                 }
             }
             parent::postProcess();
-        }
-        /*
-elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
-        {
-            if ($this->access('edit'))
-            {
-                if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
-                    $this->errors[] = $this->trans('You cannot disable the default carrier, however you can change your default carrier.', array(), 'Admin.Shipping.Notifiction');
-                else
-                    parent::postProcess();
-            }
-            else
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
-        }
-*/
-        elseif (isset($_GET['isFree'.$this->table])) {
+        } elseif (isset($_GET['isFree' . $this->table])) {
             $this->processIsFree();
         } else {
-            /*
-    if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
-                || (isset($_GET['delete'.$this->table]) && Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT')))
-                    $this->errors[] = $this->trans('Please set another carrier as default before deleting this one.', array(), 'Admin.Shipping.Notification');
-            else
-            {
-*/
-                // if deletion : removes the carrier from the warehouse/carrier association
-                if (Tools::isSubmit('delete'.$this->table)) {
-                    $id = (int)Tools::getValue('id_'.$this->table);
+            // if deletion : removes the carrier from the warehouse/carrier association
+            if (Tools::isSubmit('delete' . $this->table)) {
+                $id = (int) Tools::getValue('id_' . $this->table);
+                // Delete from the reference_id and not from the carrier id
+                $carrier = new Carrier((int) $id);
+                Warehouse::removeCarrier($carrier->id_reference);
+            } elseif (Tools::isSubmit($this->table . 'Box') && count(Tools::isSubmit($this->table . 'Box')) > 0) {
+                $ids = Tools::getValue($this->table . 'Box');
+                array_walk($ids, 'intval');
+                foreach ($ids as $id) {
                     // Delete from the reference_id and not from the carrier id
-                    $carrier = new Carrier((int)$id);
+                    $carrier = new Carrier((int) $id);
                     Warehouse::removeCarrier($carrier->id_reference);
-                } elseif (Tools::isSubmit($this->table.'Box') && count(Tools::isSubmit($this->table.'Box')) > 0) {
-                    $ids = Tools::getValue($this->table.'Box');
-                    array_walk($ids, 'intval');
-                    foreach ($ids as $id) {
-                        // Delete from the reference_id and not from the carrier id
-                        $carrier = new Carrier((int)$id);
-                        Warehouse::removeCarrier($carrier->id_reference);
-                    }
                 }
+            }
             parent::postProcess();
             Carrier::cleanPositions();
-            //}
         }
     }
 
@@ -542,17 +518,17 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
     {
         $carrier = new Carrier($this->id_object);
         if (!Validate::isLoadedObject($carrier)) {
-            $this->errors[] = $this->trans('An error occurred while updating carrier information.', array(), 'Admin.Shipping.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating carrier information.', [], 'Admin.Shipping.Notification');
         }
         $carrier->is_free = $carrier->is_free ? 0 : 1;
         if (!$carrier->update()) {
-            $this->errors[] = $this->trans('An error occurred while updating carrier information.', array(), 'Admin.Shipping.Notification');
+            $this->errors[] = $this->trans('An error occurred while updating carrier information.', [], 'Admin.Shipping.Notification');
         }
-        Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
+        Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
     }
 
     /**
-     * Overload the property $fields_value
+     * Overload the property $fields_value.
      *
      * @param object $obj
      */
@@ -571,7 +547,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
         }
         // Added values of object Zone
         $carrier_zones = $obj->getZones();
-        $carrier_zones_ids = array();
+        $carrier_zones_ids = [];
         if (is_array($carrier_zones)) {
             foreach ($carrier_zones as $carrier_zone) {
                 $carrier_zones_ids[] = $carrier_zone['id_zone'];
@@ -580,12 +556,12 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
-            $this->fields_value['zone_'.$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
+            $this->fields_value['zone_' . $zone['id_zone']] = Tools::getValue('zone_' . $zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
         }
 
         // Added values of object Group
         $carrier_groups = $obj->getGroups();
-        $carrier_groups_ids = array();
+        $carrier_groups_ids = [];
         if (is_array($carrier_groups)) {
             foreach ($carrier_groups as $carrier_group) {
                 $carrier_groups_ids[] = $carrier_group['id_group'];
@@ -595,7 +571,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
         $groups = Group::getGroups($this->context->language->id);
 
         foreach ($groups as $group) {
-            $this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
+            $this->fields_value['groupBox_' . $group['id_group']] = Tools::getValue('groupBox_' . $group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
         }
 
         $this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
@@ -603,6 +579,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
     /**
      * @param Carrier $object
+     *
      * @return int
      */
     protected function beforeDelete($object)
@@ -613,14 +590,14 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
     protected function changeGroups($id_carrier, $delete = true)
     {
         if ($delete) {
-            Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id_carrier);
+            Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'carrier_group WHERE id_carrier = ' . (int) $id_carrier);
         }
-        $groups = Db::getInstance()->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
+        $groups = Db::getInstance()->executeS('SELECT id_group FROM `' . _DB_PREFIX_ . 'group`');
         foreach ($groups as $group) {
             if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox'))) {
                 Db::getInstance()->execute('
-					INSERT INTO '._DB_PREFIX_.'carrier_group (id_group, id_carrier)
-					VALUES('.(int)$group['id_group'].','.(int)$id_carrier.')
+					INSERT INTO ' . _DB_PREFIX_ . 'carrier_group (id_group, id_carrier)
+					VALUES(' . (int) $group['id_group'] . ',' . (int) $id_carrier . ')
 				');
             }
         }
@@ -631,29 +608,29 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
         /** @var Carrier $carrier */
         $carrier = new $this->className($id);
         if (!Validate::isLoadedObject($carrier)) {
-            die($this->trans('The object cannot be loaded.', array(), 'Admin.Notifications.Error'));
+            die($this->trans('The object cannot be loaded.', [], 'Admin.Notifications.Error'));
         }
         $zones = Zone::getZones(false);
         foreach ($zones as $zone) {
             if (count($carrier->getZone($zone['id_zone']))) {
-                if (!isset($_POST['zone_'.$zone['id_zone']]) || !$_POST['zone_'.$zone['id_zone']]) {
+                if (!isset($_POST['zone_' . $zone['id_zone']]) || !$_POST['zone_' . $zone['id_zone']]) {
                     $carrier->deleteZone($zone['id_zone']);
                 }
-            } elseif (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']]) {
+            } elseif (isset($_POST['zone_' . $zone['id_zone']]) && $_POST['zone_' . $zone['id_zone']]) {
                 $carrier->addZone($zone['id_zone']);
             }
         }
     }
 
     /**
-     * Modifying initial getList method to display position feature (drag and drop)
+     * Modifying initial getList method to display position feature (drag and drop).
      *
-     * @param int         $id_lang
+     * @param int $id_lang
      * @param string|null $order_by
      * @param string|null $order_way
-     * @param int         $start
-     * @param int|null    $limit
-     * @param int|bool    $id_lang_shop
+     * @param int $start
+     * @param int|null $limit
+     * @param int|bool $id_lang_shop
      *
      * @throws PrestaShopException
      */
@@ -670,22 +647,22 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
     public function ajaxProcessUpdatePositions()
     {
-        $way = (int)(Tools::getValue('way'));
-        $id_carrier = (int)(Tools::getValue('id'));
+        $way = (int) (Tools::getValue('way'));
+        $id_carrier = (int) (Tools::getValue('id'));
         $positions = Tools::getValue($this->table);
 
         foreach ($positions as $position => $value) {
             $pos = explode('_', $value);
 
-            if (isset($pos[2]) && (int)$pos[2] === $id_carrier) {
-                if ($carrier = new Carrier((int)$pos[2])) {
+            if (isset($pos[2]) && (int) $pos[2] === $id_carrier) {
+                if ($carrier = new Carrier((int) $pos[2])) {
                     if (isset($position) && $carrier->updatePosition($way, $position)) {
-                        echo 'ok position '.(int)$position.' for carrier '.(int)$pos[1].'\r\n';
+                        echo 'ok position ' . (int) $position . ' for carrier ' . (int) $pos[1] . '\r\n';
                     } else {
-                        echo '{"hasError" : true, "errors" : "Can not update carrier '.(int)$id_carrier.' to position '.(int)$position.' "}';
+                        echo '{"hasError" : true, "errors" : "Can not update carrier ' . (int) $id_carrier . ' to position ' . (int) $position . ' "}';
                     }
                 } else {
-                    echo '{"hasError" : true, "errors" : "This carrier ('.(int)$id_carrier.') can t be loaded"}';
+                    echo '{"hasError" : true, "errors" : "This carrier (' . (int) $id_carrier . ') can t be loaded"}';
                 }
 
                 break;
@@ -693,19 +670,19 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
         }
     }
 
-    public function displayEditLink($token = null, $id, $name = null)
+    public function displayEditLink($token, $id, $name = null)
     {
         if ($this->access('edit')) {
             $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
             if (!array_key_exists('Edit', self::$cache_lang)) {
-                self::$cache_lang['Edit'] = $this->trans('Edit', array(), 'Admin.Actions');
+                self::$cache_lang['Edit'] = $this->trans('Edit', [], 'Admin.Actions');
             }
 
-            $tpl->assign(array(
-                'href' => $this->context->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id,
+            $tpl->assign([
+                'href' => $this->context->link->getAdminLink('AdminCarrierWizard', true, [], ['id_carrier' => (int) $id]),
                 'action' => self::$cache_lang['Edit'],
-                'id' => $id
-            ));
+                'id' => $id,
+            ]);
 
             return $tpl->fetch();
         } else {
@@ -713,35 +690,35 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
         }
     }
 
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         if ($this->access('delete')) {
             $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
 
             if (!array_key_exists('Delete', self::$cache_lang)) {
-                self::$cache_lang['Delete'] = $this->trans('Delete', array(), 'Admin.Actions');
+                self::$cache_lang['Delete'] = $this->trans('Delete', [], 'Admin.Actions');
             }
 
             if (!array_key_exists('DeleteItem', self::$cache_lang)) {
-                self::$cache_lang['DeleteItem'] = $this->trans('Delete selected item?', array(), 'Admin.Notifications.Info');
+                self::$cache_lang['DeleteItem'] = $this->trans('Delete selected item?', [], 'Admin.Notifications.Info');
             }
 
             if (!array_key_exists('Name', self::$cache_lang)) {
-                self::$cache_lang['Name'] = $this->trans('Name:', array(), 'Admin.Shipping.Feature');
+                self::$cache_lang['Name'] = $this->trans('Name:', [], 'Admin.Shipping.Feature');
             }
 
-            if (!is_null($name)) {
-                $name = '\n\n'.self::$cache_lang['Name'].' '.$name;
+            if (null !== $name) {
+                $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
             }
 
-            $data = array(
+            $data = [
                 $this->identifier => $id,
-                'href' => $this->context->link->getAdminLink('AdminCarriers').'&id_carrier='.(int)$id.'&deletecarrier=1',
+                'href' => $this->context->link->getAdminLink('AdminCarriers', true, [], ['id_carrier' => (int) $id, 'deletecarrier' => 1]),
                 'action' => self::$cache_lang['Delete'],
-            );
+            ];
 
             if ($this->specificConfirmDelete !== false) {
-                $data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'].$name), '\'');
+                $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'] . $name), '\'');
             }
 
             $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));

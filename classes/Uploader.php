@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class UploaderCore
+ * Class UploaderCore.
  */
 class UploaderCore
 {
@@ -47,7 +47,7 @@ class UploaderCore
     {
         $this->setName($name);
         $this->setCheckFileSize(true);
-        $this->files = array();
+        $this->files = [];
     }
 
     /**
@@ -95,10 +95,10 @@ class UploaderCore
 
         $pathInfo = pathinfo($fileName);
         if (isset($pathInfo['extension'])) {
-            $fileName = $pathInfo['filename'].'.'.Tools::strtolower($pathInfo['extension']);
+            $fileName = $pathInfo['filename'] . '.' . Tools::strtolower($pathInfo['extension']);
         }
 
-        return $this->getSavePath().$fileName;
+        return $this->getSavePath() . $fileName;
     }
 
     /**
@@ -107,7 +107,7 @@ class UploaderCore
     public function getFiles()
     {
         if (!isset($this->_files)) {
-            $this->_files = array();
+            $this->_files = [];
         }
 
         return $this->_files;
@@ -120,7 +120,8 @@ class UploaderCore
      */
     public function setMaxSize($value)
     {
-        $this->_max_size = intval($value);
+        $this->_max_size = (int) $value;
+
         return $this;
     }
 
@@ -144,6 +145,7 @@ class UploaderCore
     public function setName($value)
     {
         $this->_name = $value;
+
         return $this;
     }
 
@@ -163,6 +165,7 @@ class UploaderCore
     public function setSavePath($value)
     {
         $this->_save_path = $value;
+
         return $this;
     }
 
@@ -172,13 +175,18 @@ class UploaderCore
     public function getPostMaxSizeBytes()
     {
         $postMaxSize = ini_get('post_max_size');
-        $bytes         = (int) trim($postMaxSize);
-        $last          = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
+        $bytes = (int) trim($postMaxSize);
+        $last = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
 
         switch ($last) {
-            case 'g': $bytes *= 1024;
-            case 'm': $bytes *= 1024;
-            case 'k': $bytes *= 1024;
+            case 'g':
+                $bytes *= 1024;
+                // no break
+            case 'm':
+                $bytes *= 1024;
+                // no break
+            case 'k':
+                $bytes *= 1024;
         }
 
         if ($bytes == '') {
@@ -215,7 +223,7 @@ class UploaderCore
      */
     public function checkFileSize()
     {
-        return (isset($this->_check_file_size) && $this->_check_file_size);
+        return isset($this->_check_file_size) && $this->_check_file_size;
     }
 
     /**
@@ -228,15 +236,15 @@ class UploaderCore
         $upload = isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
 
         if ($upload && is_array($upload['tmp_name'])) {
-            $tmp = array();
+            $tmp = [];
             foreach ($upload['tmp_name'] as $index => $value) {
-                $tmp[$index] = array(
+                $tmp[$index] = [
                     'tmp_name' => $upload['tmp_name'][$index],
-                    'name'     => $upload['name'][$index],
-                    'size'     => $upload['size'][$index],
-                    'type'     => $upload['type'][$index],
-                    'error'    => $upload['error'][$index],
-                );
+                    'name' => $upload['name'][$index],
+                    'size' => $upload['size'][$index],
+                    'type' => $upload['type'][$index],
+                    'error' => $upload['error'][$index],
+                ];
 
                 $this->files[] = $this->upload($tmp[$index], $dest);
             }
@@ -248,7 +256,7 @@ class UploaderCore
     }
 
     /**
-     * @param      $file
+     * @param $file
      * @param null $dest
      *
      * @return mixed
@@ -266,7 +274,7 @@ class UploaderCore
                 move_uploaded_file($file['tmp_name'], $filePath);
             } else {
                 // Non-multipart uploads (PUT method support)
-                file_put_contents($filePath, fopen('php://input', 'r'));
+                file_put_contents($filePath, fopen('php://input', 'rb'));
             }
 
             $fileSize = $this->_getFileSize($filePath, true);
@@ -276,7 +284,7 @@ class UploaderCore
             } else {
                 $file['size'] = $fileSize;
                 unlink($filePath);
-                $file['error'] = Context::getContext()->getTranslator()->trans('Server file size is different from local file size', array(), 'Admin.Notifications.Error');
+                $file['error'] = Context::getContext()->getTranslator()->trans('Server file size is different from local file size', [], 'Admin.Notifications.Error');
             }
         }
 
@@ -293,29 +301,37 @@ class UploaderCore
         $error = 0;
         switch ($error_code) {
             case 1:
-                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('upload_max_filesize')), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', [ini_get('upload_max_filesize')], 'Admin.Notifications.Error');
+
                 break;
             case 2:
-                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', array(ini_get('post_max_size')), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file exceeds %s', [ini_get('post_max_size')], 'Admin.Notifications.Error');
+
                 break;
             case 3:
-                $error = Context::getContext()->getTranslator()->trans('The uploaded file was only partially uploaded', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('The uploaded file was only partially uploaded', [], 'Admin.Notifications.Error');
+
                 break;
             case 4:
-                $error = Context::getContext()->getTranslator()->trans('No file was uploaded', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('No file was uploaded', [], 'Admin.Notifications.Error');
+
                 break;
             case 6:
-                $error = Context::getContext()->getTranslator()->trans('Missing temporary folder', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('Missing temporary folder', [], 'Admin.Notifications.Error');
+
                 break;
             case 7:
-                $error = Context::getContext()->getTranslator()->trans('Failed to write file to disk', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('Failed to write file to disk', [], 'Admin.Notifications.Error');
+
                 break;
             case 8:
-                $error = Context::getContext()->getTranslator()->trans('A PHP extension stopped the file upload', array(), 'Admin.Notifications.Error');
+                $error = Context::getContext()->getTranslator()->trans('A PHP extension stopped the file upload', [], 'Admin.Notifications.Error');
+
                 break;
             default:
                 break;
         }
+
         return $error;
     }
 
@@ -331,12 +347,13 @@ class UploaderCore
         $postMaxSize = $this->getPostMaxSizeBytes();
 
         if ($postMaxSize && ($this->_getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', array(), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', [], 'Admin.Notifications.Error');
+
             return false;
         }
 
         if (preg_match('/\%00/', $file['name'])) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('Invalid file name', array(), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('Invalid file name', [], 'Admin.Notifications.Error');
 
             return false;
         }
@@ -345,13 +362,13 @@ class UploaderCore
 
         //TODO check mime type.
         if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', array(), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', [], 'Admin.Notifications.Error');
 
             return false;
         }
 
         if ($this->checkFileSize() && $file['size'] > $this->getMaxSize()) {
-            $file['error'] = Context::getContext()->getTranslator()->trans('File is too big. Current size is %1s, maximum size is %2s.', array($file['size'], $this->getMaxSize()), 'Admin.Notifications.Error');
+            $file['error'] = Context::getContext()->getTranslator()->trans('File is too big. Current size is %1s, maximum size is %2s.', [$file['size'], $this->getMaxSize()], 'Admin.Notifications.Error');
 
             return false;
         }
@@ -361,7 +378,7 @@ class UploaderCore
 
     /**
      * @param string $filePath
-     * @param bool   $clearStatCache
+     * @param bool $clearStatCache
      *
      * @return int
      *
@@ -374,7 +391,7 @@ class UploaderCore
 
     /**
      * @param string $filePath
-     * @param bool   $clearStatCache
+     * @param bool $clearStatCache
      *
      * @return int
      *
@@ -410,7 +427,7 @@ class UploaderCore
      */
     protected function getServerVars($var)
     {
-        return (isset($_SERVER[$var]) ? $_SERVER[$var] : '');
+        return isset($_SERVER[$var]) ? $_SERVER[$var] : '';
     }
 
     /**
@@ -436,7 +453,7 @@ class UploaderCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

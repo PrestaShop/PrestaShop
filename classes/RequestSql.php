@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class RequestSqlCore
+ * Class RequestSqlCore.
  */
 class RequestSqlCore extends ObjectModel
 {
@@ -35,59 +35,59 @@ class RequestSqlCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'request_sql',
         'primary' => 'id_request_sql',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 200),
-            'sql' => array('type' => self::TYPE_SQL, 'validate' => 'isString', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 200],
+            'sql' => ['type' => self::TYPE_SQL, 'validate' => 'isString', 'required' => true],
+        ],
+    ];
 
     /** @var array : List of params to tested */
-    public $tested = array(
-        'required' => array('SELECT', 'FROM'),
-        'option' => array('WHERE', 'ORDER', 'LIMIT', 'HAVING', 'GROUP', 'UNION'),
-        'operator' => array(
+    public $tested = [
+        'required' => ['SELECT', 'FROM'],
+        'option' => ['WHERE', 'ORDER', 'LIMIT', 'HAVING', 'GROUP', 'UNION'],
+        'operator' => [
             'AND', '&&', 'BETWEEN', 'AND', 'BINARY', '&', '~', '|', '^', 'CASE', 'WHEN', 'END', 'DIV', '/', '<=>', '=', '>=',
             '>', 'IS', 'NOT', 'NULL', '<<', '<=', '<', 'LIKE', '-', '%', '!=', '<>', 'REGEXP', '!', '||', 'OR', '+', '>>', 'RLIKE', 'SOUNDS', '*',
             '-', 'XOR', 'IN',
-        ),
-        'function' => array(
+        ],
+        'function' => [
             'AVG', 'SUM', 'COUNT', 'MIN', 'MAX', 'STDDEV', 'STDDEV_SAMP', 'STDDEV_POP', 'VARIANCE', 'VAR_SAMP', 'VAR_POP',
             'GROUP_CONCAT', 'BIT_AND', 'BIT_OR', 'BIT_XOR',
-        ),
-        'unauthorized' => array(
+        ],
+        'unauthorized' => [
             'DELETE', 'ALTER', 'INSERT', 'REPLACE', 'CREATE', 'TRUNCATE', 'OPTIMIZE', 'GRANT', 'REVOKE', 'SHOW', 'HANDLER',
             'LOAD', 'ROLLBACK', 'SAVEPOINT', 'UNLOCK', 'INSTALL', 'UNINSTALL', 'ANALZYE', 'BACKUP', 'CHECK', 'CHECKSUM', 'REPAIR', 'RESTORE', 'CACHE',
             'DESCRIBE', 'EXPLAIN', 'USE', 'HELP', 'SET', 'DUPLICATE', 'VALUES',  'INTO', 'RENAME', 'CALL', 'PROCEDURE',  'FUNCTION', 'DATABASE', 'SERVER',
             'LOGFILE', 'DEFINER', 'RETURNS', 'EVENT', 'TABLESPACE', 'VIEW', 'TRIGGER', 'DATA', 'DO', 'PASSWORD', 'USER', 'PLUGIN', 'FLUSH', 'KILL',
             'RESET', 'START', 'STOP', 'PURGE', 'EXECUTE', 'PREPARE', 'DEALLOCATE', 'LOCK', 'USING', 'DROP', 'FOR', 'UPDATE', 'BEGIN', 'BY', 'ALL', 'SHARE',
-            'MODE', 'TO','KEY', 'DISTINCTROW', 'DISTINCT',  'HIGH_PRIORITY', 'LOW_PRIORITY', 'DELAYED', 'IGNORE', 'FORCE', 'STRAIGHT_JOIN',
+            'MODE', 'TO', 'KEY', 'DISTINCTROW', 'DISTINCT',  'HIGH_PRIORITY', 'LOW_PRIORITY', 'DELAYED', 'IGNORE', 'FORCE', 'STRAIGHT_JOIN',
             'SQL_SMALL_RESULT', 'SQL_BIG_RESULT', 'QUICK', 'SQL_BUFFER_RESULT', 'SQL_CACHE', 'SQL_NO_CACHE', 'SQL_CALC_FOUND_ROWS', 'WITH',
-        ),
-    );
+        ],
+    ];
 
-    public $attributes = array(
+    public $attributes = [
         'passwd' => '*******************',
         'secure_key' => '*******************',
-    );
+    ];
 
     /** @var array : list of errors */
-    public $error_sql = array();
+    public $error_sql = [];
 
     /**
-     * Get list of request SQL
+     * Get list of request SQL.
      *
      * @return array|bool
      */
     public static function getRequestSql()
     {
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'request_sql` ORDER BY `id_request_sql`')) {
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'request_sql` ORDER BY `id_request_sql`')) {
             return false;
         }
 
-        $requestSql = array();
+        $requestSql = [];
         foreach ($result as $row) {
             $requestSql[] = $row['sql'];
         }
@@ -96,7 +96,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Get list of request SQL by id request
+     * Get list of request SQL by id request.
      *
      * @param int $id
      *
@@ -104,12 +104,12 @@ class RequestSqlCore extends ObjectModel
      */
     public static function getRequestSqlById($id)
     {
-        return Db::getInstance()->executeS('SELECT `sql` FROM `'._DB_PREFIX_.'request_sql` WHERE `id_request_sql` = '.(int) $id);
+        return Db::getInstance()->executeS('SELECT `sql` FROM `' . _DB_PREFIX_ . 'request_sql` WHERE `id_request_sql` = ' . (int) $id);
     }
 
     /**
      * Call the parserSQL() method in Tools class
-     * Cut the request in table for check it
+     * Cut the request in table for check it.
      *
      * @param string $sql
      *
@@ -121,7 +121,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check if the parsing of the SQL request is good or not
+     * Check if the parsing of the SQL request is good or not.
      *
      * @param array $tab
      * @param bool $in
@@ -129,7 +129,7 @@ class RequestSqlCore extends ObjectModel
      *
      * @return bool
      */
-    public function validateParser($tab, $in = false, $sql)
+    public function validateParser($tab, $in, $sql)
     {
         if (!$tab) {
             return false;
@@ -148,7 +148,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Cut the request for check each cutting
+     * Cut the request for check each cutting.
      *
      * @param $tab
      * @param $in
@@ -196,7 +196,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Get list of all tables
+     * Get list of all tables.
      *
      * @return array
      */
@@ -212,7 +212,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Get list of all attributes by an table
+     * Get list of all attributes by an table.
      *
      * @param $table
      *
@@ -220,11 +220,11 @@ class RequestSqlCore extends ObjectModel
      */
     public function getAttributesByTable($table)
     {
-        return Db::getInstance()->executeS('DESCRIBE '.pSQL($table));
+        return Db::getInstance()->executeS('DESCRIBE ' . pSQL($table));
     }
 
     /**
-     * Cut an join sentence
+     * Cut an join sentence.
      *
      * @param $attrs
      * @param $from
@@ -233,10 +233,10 @@ class RequestSqlCore extends ObjectModel
      */
     public function cutJoin($attrs, $from)
     {
-        $tab = array();
+        $tab = [];
 
         foreach ($attrs as $attr) {
-            if (in_array($attr['expr_type'], array('operator', 'const'))) {
+            if (in_array($attr['expr_type'], ['operator', 'const'])) {
                 continue;
             }
             if ($attribut = $this->cutAttribute($attr['base_expr'], $from)) {
@@ -248,7 +248,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Cut an attribute with or without the alias
+     * Cut an attribute with or without the alias.
      *
      * @param $attr
      * @param $from
@@ -257,49 +257,50 @@ class RequestSqlCore extends ObjectModel
      */
     public function cutAttribute($attr, $from)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('/((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))\.((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$/i', $attr, $matches, PREG_OFFSET_CAPTURE)) {
-            $tab = explode('.', str_replace(array('`', '(', ')'), '', $matches[0][0]));
+            $tab = explode('.', str_replace(['`', '(', ')'], '', $matches[0][0]));
             if ($table = $this->returnNameTable($tab[0], $from)) {
-                return array(
+                return [
                     'table' => $table,
                     'alias' => $tab[0],
                     'attribut' => $tab[1],
                     'string' => $attr,
-                );
+                ];
             }
         } elseif (preg_match('/((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$/i', $attr, $matches, PREG_OFFSET_CAPTURE)) {
-            $attribut = str_replace(array('`', '(', ')'), '', $matches[0][0]);
+            $attribut = str_replace(['`', '(', ')'], '', $matches[0][0]);
             if ($table = $this->returnNameTable(false, $from, $attr)) {
-                return array(
+                return [
                     'table' => $table,
                     'attribut' => $attribut,
                     'string' => $attr,
-                );
+                ];
             }
         }
+
         return false;
     }
 
     /**
-     * Get name of table by alias
+     * Get name of table by alias.
      *
      * @param bool $alias
      * @param $tables
      *
      * @return array|bool
      */
-    public function returnNameTable($alias = false, $tables, $attr = null)
+    public function returnNameTable($alias, $tables, $attr = null)
     {
         if ($alias) {
             foreach ($tables as $table) {
-                if (isset($table['alias']) && isset($table['table']) && $table['alias']['no_quotes'] == $alias) {
-                    return array($table['table']);
+                if (isset($table['alias'], $table['table']) && $table['alias']['no_quotes'] == $alias) {
+                    return [$table['table']];
                 }
             }
         } elseif (count($tables) > 1) {
             if ($attr !== null) {
-                $tab = array();
+                $tab = [];
                 foreach ($tables as $table) {
                     if ($this->attributExistInTable($attr, $table['table'])) {
                         $tab = $table['table'];
@@ -311,18 +312,20 @@ class RequestSqlCore extends ObjectModel
             }
 
             $this->error_sql['returnNameTable'] = false;
+
             return false;
         } else {
-            $tab = array();
+            $tab = [];
             foreach ($tables as $table) {
                 $tab[] = $table['table'];
             }
+
             return $tab;
         }
     }
 
     /**
-     * Check if an attributes exists in a table
+     * Check if an attributes exists in a table.
      *
      * @param string $attr
      * @param $table
@@ -348,7 +351,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check if all required sentence existing
+     * Check if all required sentence existing.
      *
      * @param $tab
      *
@@ -368,7 +371,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check if an unauthorized existing in an array
+     * Check if an unauthorized existing in an array.
      *
      * @param string $tab
      *
@@ -388,7 +391,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "FROM" sentence
+     * Check a "FROM" sentence.
      *
      * @param string $from
      *
@@ -397,7 +400,7 @@ class RequestSqlCore extends ObjectModel
     public function checkedFrom($from)
     {
         $nb = count($from);
-        for ($i = 0; $i < $nb; $i++) {
+        for ($i = 0; $i < $nb; ++$i) {
             $table = $from[$i];
 
             if (isset($table['table']) && !in_array(str_replace('`', '', $table['table']), $this->getTables())) {
@@ -409,7 +412,7 @@ class RequestSqlCore extends ObjectModel
                 if ($attrs = $this->cutJoin($table['ref_clause'], $from)) {
                     foreach ($attrs as $attr) {
                         if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
-                            $this->error_sql['checkedFrom']['attribut'] = array($attr['attribut'], implode(', ', $attr['table']));
+                            $this->error_sql['checkedFrom']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
 
                             return false;
                         }
@@ -432,7 +435,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "SELECT" sentence
+     * Check a "SELECT" sentence.
      *
      * @param string $select
      * @param string $from
@@ -443,13 +446,13 @@ class RequestSqlCore extends ObjectModel
     public function checkedSelect($select, $from, $in = false)
     {
         $nb = count($select);
-        for ($i = 0; $i < $nb; $i++) {
+        for ($i = 0; $i < $nb; ++$i) {
             $attribut = $select[$i];
             if ($attribut['base_expr'] != '*' && !preg_match('/\.*$/', $attribut['base_expr'])) {
                 if ($attribut['expr_type'] == 'colref') {
                     if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from)) {
                         if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
-                            $this->error_sql['checkedSelect']['attribut'] = array($attr['attribut'], implode(', ', $attr['table']));
+                            $this->error_sql['checkedSelect']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
 
                             return false;
                         }
@@ -476,7 +479,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "WHERE" sentence
+     * Check a "WHERE" sentence.
      *
      * @param string $where
      * @param string $from
@@ -487,12 +490,12 @@ class RequestSqlCore extends ObjectModel
     public function checkedWhere($where, $from, $sql)
     {
         $nb = count($where);
-        for ($i = 0; $i < $nb; $i++) {
+        for ($i = 0; $i < $nb; ++$i) {
             $attribut = $where[$i];
             if ($attribut['expr_type'] == 'colref' || $attribut['expr_type'] == 'reserved') {
                 if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from)) {
                     if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
-                        $this->error_sql['checkedWhere']['attribut'] = array($attr['attribut'], implode(', ', $attr['table']));
+                        $this->error_sql['checkedWhere']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
 
                         return false;
                     }
@@ -509,7 +512,7 @@ class RequestSqlCore extends ObjectModel
                 }
             } elseif ($attribut['expr_type'] == 'operator') {
                 if (!in_array(strtoupper($attribut['base_expr']), $this->tested['operator'])) {
-                    $this->error_sql['checkedWhere']['operator'] = array($attribut['base_expr']);
+                    $this->error_sql['checkedWhere']['operator'] = [$attribut['base_expr']];
 
                     return false;
                 }
@@ -524,7 +527,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "HAVING" sentence
+     * Check a "HAVING" sentence.
      *
      * @param string $having
      * @param string $from
@@ -534,12 +537,12 @@ class RequestSqlCore extends ObjectModel
     public function checkedHaving($having, $from)
     {
         $nb = count($having);
-        for ($i = 0; $i < $nb; $i++) {
+        for ($i = 0; $i < $nb; ++$i) {
             $attribut = $having[$i];
             if ($attribut['expr_type'] == 'colref') {
                 if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from)) {
                     if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
-                        $this->error_sql['checkedHaving']['attribut'] = array($attr['attribut'], implode(', ', $attr['table']));
+                        $this->error_sql['checkedHaving']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
 
                         return false;
                     }
@@ -558,7 +561,7 @@ class RequestSqlCore extends ObjectModel
 
             if ($attribut['expr_type'] == 'operator') {
                 if (!in_array(strtoupper($attribut['base_expr']), $this->tested['operator'])) {
-                    $this->error_sql['checkedHaving']['operator'] = array($attribut['base_expr']);
+                    $this->error_sql['checkedHaving']['operator'] = [$attribut['base_expr']];
 
                     return false;
                 }
@@ -569,7 +572,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "ORDER" sentence
+     * Check a "ORDER" sentence.
      *
      * @param string $order
      * @param string $from
@@ -579,10 +582,10 @@ class RequestSqlCore extends ObjectModel
     public function checkedOrder($order, $from)
     {
         $order = $order[0];
-        if ($order['type'] == 'expression') {
+        if (array_key_exists('expression', $order) && $order['type'] == 'expression') {
             if ($attr = $this->cutAttribute(trim($order['base_expr']), $from)) {
                 if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
-                    $this->error_sql['checkedOrder']['attribut'] = array($attr['attribut'], implode(', ', $attr['table']));
+                    $this->error_sql['checkedOrder']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
 
                     return false;
                 }
@@ -603,7 +606,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "GROUP BY" sentence
+     * Check a "GROUP BY" sentence.
      *
      * @param string $group
      * @param string $from
@@ -616,7 +619,7 @@ class RequestSqlCore extends ObjectModel
         if ($group['type'] == 'expression') {
             if ($attr = $this->cutAttribute(trim($group['base_expr']), $from)) {
                 if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
-                    $this->error_sql['checkedGroupBy']['attribut'] = array($attr['attribut'], implode(', ', $attr['table']));
+                    $this->error_sql['checkedGroupBy']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
 
                     return false;
                 }
@@ -637,7 +640,7 @@ class RequestSqlCore extends ObjectModel
     }
 
     /**
-     * Check a "LIMIT" sentence
+     * Check a "LIMIT" sentence.
      *
      * @param string $limit
      *

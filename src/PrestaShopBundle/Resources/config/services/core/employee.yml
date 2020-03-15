@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.team.employee.configuration.options_checker:
+    class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\OptionsChecker'
+    arguments:
+      - '@prestashop.adapter.multistore_feature'
+      - '@prestashop.adapter.shop.context'
+
+  prestashop.core.employee.profile_access_checker:
+    class: 'PrestaShop\PrestaShop\Core\Employee\Access\ProfileAccessChecker'
+    arguments:
+      - '@prestashop.adapter.employee.data_provider'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'

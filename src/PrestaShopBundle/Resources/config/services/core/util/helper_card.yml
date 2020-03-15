@@ -1,0 +1,73 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.util.helper_card.documentation_link_provider:
+    class: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language ? service("prestashop.adapter.legacy.context").getContext().language.iso_code : "en-US"'
+      -
+        'team':
+          'en': 'https://doc.prestashop.com/display/PS17/Team'
+          'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840334'
+          'es': 'https://doc.prestashop.com/display/PS17/Equipo'
+          'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266520'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Team'
+        'meta':
+          'fr': 'https://doc.prestashop.com/display/PS17/SEO+et+URL'
+          'es': 'https://doc.prestashop.com/display/PS17/SEO+y+URLs'
+          'it': 'https://doc.prestashop.com/display/PS17/SEO+e+URL'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/SEO+and+URLs'
+        'customer':
+          'fr': 'https://doc.prestashop.com/display/PS17/Vos+clients'
+          'es': 'https://doc.prestashop.com/display/PS17/Tus+clientes'
+          'it': 'https://doc.prestashop.com/display/PS17/I+Tuoi+Clienti'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Your+customers'
+        'supplier':
+          'en': 'https://doc.prestashop.com/display/PS17/Managing+Suppliers'
+          'fr': 'https://doc.prestashop.com/display/PS17/Gerer+les+fournisseurs'
+          'es': 'https://doc.prestashop.com/display/PS17/Gestionar+Proveedores'
+          'it': 'https://doc.prestashop.com/display/PS17/Gestire+Fornitori'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Managing+Suppliers'
+        'category':
+          'en': 'https://doc.prestashop.com/display/PS17/Managing+Categories'
+          'fr': 'https://doc.prestashop.com/display/PS17/Gerer+les+categories'
+          'es': 'https://doc.prestashop.com/display/PS17/Gestionar+las+categorias'
+          'it': 'https://doc.prestashop.com/display/PS17/Gestire+Categorie'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Managing+Categories'
+        'cms_pages':
+          'en': 'https://doc.prestashop.com/display/PS17/Pages+-+Managing+Static+Content'
+          'fr': 'https://doc.prestashop.com/display/PS17/Gerer+votre+contenu+statique+grace+aux+pages'
+          'es': 'https://doc.prestashop.com/display/PS17/Paginas+-+Gestionar+el+Contenido+Estatico'
+          'it': 'https://doc.prestashop.com/display/PS17/Pagine+-+Gestione+Contenuti+Statici'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Pages+-+Managing+Static+Content'
+        'debug_mode':
+          'en': 'https://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'
+          'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840325#Param%%C3%%A8tresdeperformances-Modedebug'
+          'it': 'http://doc.prestashop.com/pages/viewpage.action?pageId=54266514'
+          'es': 'https://doc.prestashop.com/display/PS17/Rendimiento#Rendimiento-ModoDepuraci%%C3%%B3n'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Performance#Performance-Debugmode'
+        'attribute':
+          'en': 'https://doc.prestashop.com/display/PS17/Managing+Product+Attributes'
+          'fr': 'https://doc.prestashop.com/display/PS17/Gerer+les+attributs+de+vos+produits'
+          'es': 'https://doc.prestashop.com/display/PS17/Gestionar+Atributos+del+Producto'
+          'it': 'https://doc.prestashop.com/display/PS17/Gestire+gli+Attributi+dei+Prodotti'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Managing+Product+Attributes'
+        'monitoring':
+          'en': 'https://doc.prestashop.com/display/PS17/Monitoring+your+Catalog'
+          'fr': 'https://doc.prestashop.com/display/PS17/Faire+le+suivi+de+votre+catalogue'
+          'es': 'https://doc.prestashop.com/display/PS17/Monitorear+el+catalogo'
+          'it': 'https://doc.prestashop.com/display/PS17/Monitorare+il+Catalogo'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Monitoring+your+Catalog'
+        'attachment':
+          'en': 'https://doc.prestashop.com/display/PS17/Managing+Files'
+          'fr': 'https://doc.prestashop.com/display/PS17/Gerer+les+fichiers'
+          'es': 'https://doc.prestashop.com/display/PS17/Gestionar+Archivos'
+          'it': 'https://doc.prestashop.com/display/PS17/Gestire+i+Files'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Managing+Files'
+        'credit_slip':
+          'en': 'https://doc.prestashop.com/display/PS17/Credit+Slips'
+          'fr': 'https://doc.prestashop.com/display/PS17/Avoirs'
+          'es': 'https://doc.prestashop.com/display/PS17/Facturas+por+abono'
+          'it': 'https://doc.prestashop.com/display/PS17/Note+di+credito'
+          '_fallback': 'https://doc.prestashop.com/display/PS17/Credit+Slips'

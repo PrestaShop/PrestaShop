@@ -1,16 +1,9 @@
-.lang-rtl {
-  * {
-    direction: rtl !important;
-  }
-  main {
-    text-align: right !important;
-  }
-}
 body,
 html {
   height: 100%;
 }
 body {
+  direction: ltr;
   font-family: 'Noto Sans', sans-serif;
   font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;
@@ -153,7 +146,7 @@ small.label, small.value {
       text-transform: uppercase;
       &[data-action="show-password"]{
         background: $gray;
-        height: 100%;
+        padding: .78rem 1rem;
       }
     }
   }
@@ -460,4 +453,11 @@ input, textarea {
 .separator {
   margin: 0;
   border-color: rgba(0, 0, 0, 0.25);
+}
+
+// modal-dialog-centered class added from bootstrap 4.0.0, adapted for bootstrap 4.0.0-alpha.5
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - (30px * 2)); // 30px correspond to the default margin size from bootstrap 4.0.0-alpha.5 for modal-dialog class
 }

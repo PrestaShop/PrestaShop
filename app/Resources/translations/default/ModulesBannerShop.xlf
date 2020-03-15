@@ -5,8 +5,7 @@
       <trans-unit id="92fbf0e5d97b8afd7e73126b52bdc4bb">
         <source>Choose a file</source>
         <target>Choose a file</target>
-        <note>Context:
-File: modules/ps_banner/views/templates/admin/_configure/helpers/form/form.tpl:42</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>

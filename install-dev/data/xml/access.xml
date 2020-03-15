@@ -457,5 +457,21 @@
     <access id="access_1_466" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHOPURL_READ"/>
     <access id="access_1_467" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHOPURL_UPDATE"/>
     <access id="access_1_468" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHOPURL_DELETE"/>
+    <access id="access_1_469" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_CREATE"/>
+    <access id="access_1_470" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_READ"/>
+    <access id="access_1_471" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_UPDATE"/>
+    <access id="access_1_472" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_DELETE"/>
+    <access id="access_1_473" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_CREATE"/>
+    <access id="access_1_474" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_READ"/>
+    <access id="access_1_475" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_UPDATE"/>
+    <access id="access_1_476" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_DELETE"/>
+    <access id="access_1_477" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_CREATE"/>
+    <access id="access_1_478" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_READ"/>
+    <access id="access_1_479" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_UPDATE"/>
+    <access id="access_1_480" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_DELETE"/>
+    <access id="access_1_481" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_CREATE"/>
+    <access id="access_1_482" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_READ"/>
+    <access id="access_1_483" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_UPDATE"/>
+    <access id="access_1_484" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_DELETE"/>
   </entities>
 </entity_access>

@@ -1,0 +1,258 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.product_general.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_pagination.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_page.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\PageConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_stock.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.customer.customer_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order_general.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order_gift.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.debug_mode.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration'
+        arguments:
+            - '@prestashop.adapter.debug_mode'
+            - '@prestashop.adapter.legacy.configuration'
+            - '%ps_config_dir%/defines.inc.php'
+
+    prestashop.adapter.optional_features.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.combination_feature'
+            - '@prestashop.adapter.feature.feature'
+            - '@prestashop.adapter.group.feature'
+
+    prestashop.adapter.ccc.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Cache\CombineCompressCacheConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@filesystem'
+            - '@prestashop.adapter.tools'
+            - '%themes_dir%'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme_name'
+
+    prestashop.adapter.media_servers.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.caching.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration'
+        arguments:
+          - '@prestashop.adapter.memcache_server.manager'
+          - '@prestashop.adapter.php_parameters'
+          - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+          - '%ps_cache_enable%'
+          - '%ps_caching%'
+
+    prestashop.adapter.general.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.maintenance.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.preferences.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.upload_quota.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.notifications.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.smarty_cache.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.logs.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.order.delivery.slip.options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order.delivery.slip.pdf.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.order.invoice_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.data_provider.language:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
+
+    prestashop.adapter.language.activator:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageActivator'
+
+    prestashop.adapter.language.language_pack_installer:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguagePackInstaller'
+        arguments:
+            - '@translator'
+            - '@prestashop.core.foundation.version'
+
+    prestashop.adapter.language.validator:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageValidator'
+
+    prestashop.adapter.language.copier:
+        class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageCopier'
+        arguments:
+            - '@prestashop.adapter.data_provider.language'
+            - '@translator'
+            - '@filesystem'
+            - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
+
+    prestashop.adapter.manager.currency:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager'
+
+    prestashop.adapter.localization.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.language.activator'
+            - '@prestashop.adapter.manager.currency'
+            - '@prestashop.adapter.admin.data_provider.module'
+
+    prestashop.adapter.local_units.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.localization_advanced.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Localization\AdvancedConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.geolocation_by_ip_address.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.geolocation_ip_address_whitelist.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationIpAddressWhitelistConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.geolocation_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationOptionsConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.payment_module_preferences.configuration:
+        class: 'PrestaShop\PrestaShop\Core\Payment\PaymentModulePreferencesConfiguration'
+        arguments:
+            - '@prestashop.adapter.module.payment_module_provider'
+            - '@prestashop.core.module.configuration.payment_restrictions_configurator'
+
+    prestashop.adapter.shipping_preferences.handling_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\HandlingConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.shipping_preferences.carrier_options_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.email_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.email.smtp_configurator:
+        class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.webservice.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.meta.set_up_urls.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
+            - '@translator'
+
+    prestashop.adapter.meta.shop_url.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\ShopUrlDataConfiguration'
+        arguments:
+            - '@=service("prestashop.adapter.shop.shop_url").getMainShopUrl()'
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.file.htaccess_file_generator'
+
+    prestashop.adapter.meta.url_schema.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
+
+    prestashop.adapter.meta.seo_options.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.team.employee.configuration.employee_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.core.team.employee.configuration.options_checker'
+
+    prestashop.core.tax.tax_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@prestashop.adapter.tax.ecotax.ecotax_resetter'
+
+    prestashop.core.mail_theme.configuration:
+      class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailThemeConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'
+        - '@prestashop.core.mail_template.theme_catalog'
+
+    prestashop.core.merchandise_return.configuration.merchandise_return_options_configuration:
+        class: 'PrestaShop\PrestaShop\Core\MerchandiseReturn\Configuration\MerchandiseReturnOptionsConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.core.credit_slip.credit_slip_options.configuration:
+      class: 'PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipOptionsConfiguration'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'

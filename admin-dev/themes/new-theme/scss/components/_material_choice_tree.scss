@@ -1,0 +1,100 @@
+.material-choice-tree-container {
+  padding: .625rem;
+  border: 1px solid $gray-light;
+
+  .choice-tree-actions {
+    border-bottom: .063rem solid $gray-light;
+    margin-bottom: 10px;
+  }
+
+  ul.choice-tree {
+    padding: 0;
+    margin: 0;
+
+    li {
+      list-style: none;
+      background-size: 12px 12px;
+      background: no-repeat 0 3px;
+
+      .checkbox,
+      .radio {
+        padding-left: 20px;
+        padding-top: 0;
+      }
+
+      .checkbox {
+        i.md-checkbox-control {
+          // make material checkbox smaller
+          &::before {
+            width: 16px;
+            height: 16px;
+            margin-top: 3px;
+          }
+        }
+
+        input[type="checkbox"] {
+          &:checked,
+          &:indeterminate {
+            + i.md-checkbox-control {
+              &:after {
+                // make material checkmark smaller
+                top: 5px;
+                left: 3px;
+                width: 11px;
+                height: 7px;
+              }
+            }
+          }
+        }
+      }
+
+      ul {
+        padding-left: 1rem;
+      }
+    }
+
+    .collapsed,
+    .expanded {
+      background: none;
+      position: relative;
+
+      > .checkbox,
+      > .radio {
+        cursor: pointer;
+
+        &::before {
+          position: absolute;
+          font-family: 'Material Icons';
+          cursor: pointer;
+          font-size: 1.25rem;
+          color: $gray-medium;
+          top: -0.25rem;
+          left: -0.1rem;
+        }
+      }
+    }
+
+    .expanded {
+      > .checkbox,
+      > .radio {
+        &::before {
+          content: "\E313";
+        }
+      }
+    }
+
+    .collapsed {
+      // hide inner tree when item is collapsed
+      > ul {
+        display: none;
+      }
+
+      > .checkbox,
+      > .radio {
+        &::before {
+          content: "\E5CC";
+        }
+      }
+    }
+  }
+}

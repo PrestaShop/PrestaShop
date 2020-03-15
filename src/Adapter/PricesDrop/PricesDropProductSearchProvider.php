@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,30 +16,38 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Adapter\PricesDrop;
 
-use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Product;
-use Tools;
+use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Used to query the Prices Drop, see PricesDropController in Front Office.
+ */
 class PricesDropProductSearchProvider implements ProductSearchProviderInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+
+    /**
+     * @var SortOrderFactory
+     */
     private $sortOrderFactory;
 
     public function __construct(
@@ -49,6 +57,13 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
         $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
+    /**
+     * @param ProductSearchContext $context
+     * @param ProductSearchQuery $query
+     * @param string $type
+     *
+     * @return array
+     */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
@@ -64,12 +79,15 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query
     ) {
         if (!$products = $this->getProductsOrCount($context, $query, 'products')) {
-            $products = array();
+            $products = [];
         }
         $count = $this->getProductsOrCount($context, $query, 'count');
 
@@ -83,17 +101,17 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
             $result->setAvailableSortOrders(
                 [
                     (new SortOrder('product', 'name', 'asc'))->setLabel(
-                        $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Name, A to Z', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'name', 'desc'))->setLabel(
-                        $this->translator->trans('Name, Z to A', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Name, Z to A', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'price', 'asc'))->setLabel(
-                        $this->translator->trans('Price, low to high', array(), 'Shop.Theme.Catalog')
+                        $this->translator->trans('Price, low to high', [], 'Shop.Theme.Catalog')
                     ),
                     (new SortOrder('product', 'price', 'desc'))->setLabel(
-                        $this->translator->trans('Price, high to low', array(), 'Shop.Theme.Catalog')
-                    )
+                        $this->translator->trans('Price, high to low', [], 'Shop.Theme.Catalog')
+                    ),
                 ]
             );
         }

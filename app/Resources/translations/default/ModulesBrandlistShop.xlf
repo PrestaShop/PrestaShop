@@ -18,12 +18,6 @@ File: modules/ps_brandlist/views/templates/_partials/brand_form.tpl:3</note>
         <note>Context:
 File: modules/ps_brandlist/views/templates/hook/ps_brandlist.tpl:29</note>
       </trans-unit>
-      <trans-unit id="8e41eae149ff3fa38cc9c4fde945f2c3">
-        <source>No brand</source>
-        <target>No brand</target>
-        <note>Context:
-File: modules/ps_brandlist/views/templates/hook/ps_brandlist.tpl:36</note>
-      </trans-unit>
     </body>
   </file>
 </xliff>

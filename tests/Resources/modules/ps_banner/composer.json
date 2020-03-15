@@ -1,0 +1,26 @@
+{
+  "name": "prestashop/ps_banner",
+  "description": "PrestaShop module banner",
+  "homepage": "https://github.com/PrestaShop/ps_banner",
+  "license": "AFL - Academic Free License (AFL 3.0)",
+  "authors": [
+    {
+      "name": "PrestaShop SA",
+      "email": "contact@prestashop.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "PrestaShop\\Module\\Banner\\": "src/"
+    },
+    "classmap": ["ps_banner.php"],
+    "exclude-from-classmap": []
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "type": "prestashop-module"
+}

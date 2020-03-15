@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class UpgraderCore
+ * Class UpgraderCore.
  */
 class UpgraderCore
 {
@@ -36,8 +36,8 @@ class UpgraderCore
      * @var bool contains true if last version is not installed
      */
     protected $need_upgrade = false;
-    protected $changed_files = array();
-    protected $missing_files = array();
+    protected $changed_files = [];
+    protected $missing_files = [];
 
     public $version_name;
     public $version_num;
@@ -60,8 +60,8 @@ class UpgraderCore
      */
     public function __construct($autoload = false)
     {
-        $this->rss_version_link = _PS_API_URL_.'/xml/upgrader.xml';
-        $this->rss_md5file_link_dir = _PS_API_URL_.'/xml/md5/';
+        $this->rss_version_link = _PS_API_URL_ . '/xml/upgrader.xml';
+        $this->rss_md5file_link_dir = _PS_API_URL_ . '/xml/md5/';
 
         if ($autoload) {
             $this->loadFromConfig();
@@ -69,6 +69,7 @@ class UpgraderCore
             $this->checkPSVersion();
         }
     }
+
     public function __get($var)
     {
         if ($var == 'need_upgrade') {
@@ -77,10 +78,11 @@ class UpgraderCore
     }
 
     /**
-     * downloadLast download the last version of PrestaShop and save it in $dest/$filename
+     * downloadLast download the last version of PrestaShop and save it in $dest/$filename.
      *
      * @param string $dest directory where to save the file
      * @param string $filename new filename
+     *
      * @return bool
      *
      * @TODO ftp if copy is not possible (safe_mode for example)
@@ -91,7 +93,7 @@ class UpgraderCore
             $this->checkPSVersion();
         }
 
-        $destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
+        $destPath = realpath($dest) . DIRECTORY_SEPARATOR . $filename;
         if (@copy($this->link, $destPath)) {
             return true;
         } else {
@@ -112,7 +114,7 @@ class UpgraderCore
     }
 
     /**
-     * checkPSVersion ask to prestashop.com if there is a new version. return an array if yes, false otherwise
+     * checkPSVersion ask to prestashop.com if there is a new version. return an array if yes, false otherwise.
      *
      * @return mixed
      */
@@ -126,7 +128,7 @@ class UpgraderCore
         // if we use the autoupgrade process, we will never refresh it
         // except if no check has been done before
         if ($force || ($lastCheck < time() - (3600 * Upgrader::DEFAULT_CHECK_VERSION_DELAY_HOURS))) {
-            libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
+            libxml_set_streams_context(@stream_context_create(['http' => ['timeout' => 3]]));
             if ($feed = @simplexml_load_file($this->rss_version_link)) {
                 $this->version_name = (string) $feed->version->name;
                 $this->version_num = (string) $feed->version->num;
@@ -138,7 +140,7 @@ class UpgraderCore
                 $this->autoupgrade_last_version = (string) $feed->autoupgrade_last_version;
                 $this->autoupgrade_module_link = (string) $feed->autoupgrade_module_link;
                 $this->desc = (string) $feed->desc;
-                $configLastVersion = array(
+                $configLastVersion = [
                     'name' => $this->version_name,
                     'num' => $this->version_num,
                     'link' => $this->link,
@@ -149,7 +151,7 @@ class UpgraderCore
                     'autoupgrade_module_link' => $this->autoupgrade_module_link,
                     'changelog' => $this->changelog,
                     'desc' => $this->desc,
-                );
+                ];
                 if (class_exists('Configuration')) {
                     Configuration::updateValue('PS_LAST_VERSION', serialize($configLastVersion));
                     Configuration::updateValue('PS_LAST_VERSION_CHECK', time());
@@ -164,14 +166,14 @@ class UpgraderCore
         if (version_compare(_PS_VERSION_, $this->version_num, '<')) {
             $this->need_upgrade = true;
 
-            return array('name' => $this->version_name, 'link' => $this->link);
+            return ['name' => $this->version_name, 'link' => $this->link];
         } else {
             return false;
         }
     }
 
     /**
-     * load the last version informations stocked in base
+     * load the last version informations stocked in base.
      *
      * @return Upgrader
      */
@@ -216,14 +218,15 @@ class UpgraderCore
 
     /**
      * return an array of files
-     * that the md5file does not match to the original md5file (provided by $rss_md5file_link_dir )
+     * that the md5file does not match to the original md5file (provided by $rss_md5file_link_dir ).
+     *
      * @return array
      */
     public function getChangedFilesList()
     {
         if (is_array($this->changed_files) && count($this->changed_files) == 0) {
-            libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
-            $checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
+            libxml_set_streams_context(@stream_context_create(['http' => ['timeout' => 3]]));
+            $checksum = @simplexml_load_file($this->rss_md5file_link_dir . _PS_VERSION_ . '.xml');
             if ($checksum == false) {
                 $this->changed_files = false;
             } else {
@@ -235,7 +238,8 @@ class UpgraderCore
     }
 
     /** populate $this->changed_files with $path
-     * in sub arrays  mail, translation and core items
+     * in sub arrays  mail, translation and core items.
+     *
      * @param string $path filepath to add, relative to _PS_ROOT_DIR_
      */
     protected function addChangedFile($path)
@@ -269,11 +273,11 @@ class UpgraderCore
     }
 
     /**
-     * @param       $node
+     * @param $node
      * @param array $currentPath
-     * @param int   $level
+     * @param int $level
      */
-    protected function browseXmlAndCompare($node, &$currentPath = array(), $level = 1)
+    protected function browseXmlAndCompare($node, &$currentPath = [], $level = 1)
     {
         foreach ($node as $key => $child) {
             /** @var SimpleXMLElement $child */
@@ -284,28 +288,28 @@ class UpgraderCore
                 // We will store only relative path.
                 // absolute path is only used for file_exists and compare
                 $relativePath = '';
-                for ($i = 1; $i < $level; $i++) {
-                    $relativePath .= $currentPath[$i].'/';
+                for ($i = 1; $i < $level; ++$i) {
+                    $relativePath .= $currentPath[$i] . '/';
                 }
-                $relativePath .= (string)$child['name'];
-                $fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$relativePath;
+                $relativePath .= (string) $child['name'];
+                $fullpath = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $relativePath;
 
                 $fullpath = str_replace('ps_root_dir', _PS_ROOT_DIR_, $fullpath);
 
-                    // replace default admin dir by current one
-                $fullpath = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $fullpath);
+                // replace default admin dir by current one
+                $fullpath = str_replace(_PS_ROOT_DIR_ . '/admin', _PS_ADMIN_DIR_, $fullpath);
                 if (!file_exists($fullpath)) {
                     $this->addMissingFile($relativePath);
                 } elseif (!$this->compareChecksum($fullpath, (string) $child)) {
                     $this->addChangedFile($relativePath);
                 }
-                    // else, file is original (and ok)
+                // else, file is original (and ok)
             }
         }
     }
 
     /**
-     * Compare checksum
+     * Compare checksum.
      *
      * @param string $path
      * @param string $originalSum

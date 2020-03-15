@@ -1,0 +1,28 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.legacy.configuration:
+        class: PrestaShop\PrestaShop\Adapter\Configuration
+
+    prestashop.adapter.tools:
+      class: PrestaShop\PrestaShop\Adapter\Tools
+
+    prestashop.adapter.legacy.context:
+        class: PrestaShop\PrestaShop\Adapter\LegacyContext
+        arguments:
+            - "%mail_themes_uri%"
+            - '@prestashop.adapter.tools'
+
+    prestashop.adapter.environment:
+      class: PrestaShop\PrestaShop\Adapter\Environment
+      arguments:
+        - !php/const _PS_MODE_DEV_
+
+    prestashop.adapter.validate:
+      class: PrestaShop\PrestaShop\Adapter\Validate
+
+    prestashop.adapter.context_state_manager:
+      class: PrestaShop\PrestaShop\Adapter\ContextStateManager
+      arguments:
+        - '@=service("prestashop.adapter.legacy.context").getContext()'

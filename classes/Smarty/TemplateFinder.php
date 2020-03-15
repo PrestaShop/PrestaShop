@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,10 +17,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,10 +34,10 @@ class TemplateFinderCore
 {
     private $directories;
     private $extension;
-    private $productListEntities = array('category', 'manufacturer', 'supplier');
-    private $productListSearchEntities = array('search', 'price-drop', 'best-sale');
-    private $productEntities = array('product');
-    private $brandListEntities = array('manufacturers', 'suppliers');
+    private $productListEntities = ['category', 'manufacturer', 'supplier'];
+    private $productListSearchEntities = ['search', 'price-drop', 'best-sale'];
+    private $productEntities = ['product'];
+    private $brandListEntities = ['manufacturers', 'suppliers'];
 
     public function __construct(array $directories, $extension)
     {
@@ -53,19 +53,19 @@ class TemplateFinderCore
 
         foreach ($this->directories as $dir) {
             foreach ($templates as $tpl) {
-                if (is_file($dir.$locale.DIRECTORY_SEPARATOR.$tpl.$this->extension)) {
-                    return $locale.DIRECTORY_SEPARATOR.$tpl.$this->extension;
+                if (!empty($locale) && is_file($dir . $locale . DIRECTORY_SEPARATOR . $tpl . $this->extension)) {
+                    return $locale . DIRECTORY_SEPARATOR . $tpl . $this->extension;
                 }
-                if (is_file($dir.$tpl.$this->extension)) {
-                    return $tpl.$this->extension;
+                if (is_file($dir . $tpl . $this->extension)) {
+                    return $tpl . $this->extension;
                 }
-                if (is_file($dir.$tpl) && false !== strpos($tpl, $this->extension)) {
+                if (is_file($dir . $tpl) && false !== strpos($tpl, $this->extension)) {
                     return $tpl;
                 }
             }
         }
 
-        throw new PrestaShopException('No template found for '.$template);
+        throw new PrestaShopException('No template found for ' . $template);
     }
 
     private function getTemplateHierarchy($template, $entity, $id)
@@ -74,37 +74,37 @@ class TemplateFinderCore
         $id = (int) $id;
 
         if (in_array($entity, $this->getProductListEntities())) {
-            $templates = array(
-                'catalog/listing/'.$entity.'-'.$id,
-                'catalog/listing/'.$entity,
+            $templates = [
+                'catalog/listing/' . $entity . '-' . $id,
+                'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
-            );
+            ];
         } elseif (in_array($entity, $this->getProductListSearchEntities())) {
-            $templates = array(
-                'catalog/listing/'.$entity,
+            $templates = [
+                'catalog/listing/' . $entity,
                 $template,
                 'catalog/listing/product-list',
-            );
+            ];
         } elseif (in_array($entity, $this->getProductEntities())) {
-            $templates = array(
-                'catalog/'.$entity.'-'.$id,
+            $templates = [
+                'catalog/' . $entity . '-' . $id,
                 $template,
                 'catalog/product',
-            );
+            ];
         } elseif (in_array($entity, $this->getBrandListEntities())) {
-            $templates = array(
+            $templates = [
                 $template,
                 'catalog/brands',
-            );
+            ];
         } elseif ('cms' === $entity) {
-            $templates = array(
-                'cms/page-'.$id,
+            $templates = [
+                'cms/page-' . $id,
                 $template,
                 'cms/page',
-            );
+            ];
         } else {
-            $templates = array($template);
+            $templates = [$template];
         }
 
         return array_unique($templates);

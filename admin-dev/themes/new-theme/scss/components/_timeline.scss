@@ -1,0 +1,118 @@
+.timeline {
+  border-collapse: collapse;
+  border-spacing: 0;
+  display: table;
+  position: relative;
+  table-layout: fixed;
+  width: 100%;
+
+  &:before {
+    background-color: #ddd;
+    bottom: 30px;
+    content: "";
+    left: 50%;
+    margin-left: -4px;
+    position: absolute;
+    top: 0;
+    width: 6px;
+    z-index: 0;
+  }
+
+  .timeline-item {
+    display: table-row;
+
+    &.alt {
+      text-align: right;
+
+      &:before {
+        display: none;
+      }
+
+      .timeline-panel {
+        margin-right: 42px;
+        margin-left: 0;
+      }
+
+      .timeline-icon {
+        left: auto !important;
+        right: -60px;
+      }
+
+      .timeline-date {
+        left: auto !important;
+        right: -220px;
+        text-align: left;
+      }
+    }
+
+    &:before, &.alt:after {
+      content: "";
+      display: block;
+      width: 50%;
+    }
+
+    .timeline-caption {
+      display: table-cell;
+      vertical-align: top;
+      width: 50%;
+
+      .timeline-panel {
+        border: 1px solid #ddd;
+        background-color: #fff;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 20px;
+        position: relative;
+        display: inline-block;
+        margin-left: 42px;
+        text-align: left;
+
+        .timeline-icon {
+          background-color: #666;
+          border: 2px solid #fff;
+          border-radius: 40px;
+          height: 40px;
+          left: -62px;
+          line-height: 40px;
+          position: absolute;
+          text-align: center;
+          top: -2px;
+          width: 40px;
+        }
+
+        .timeline-date {
+          left: -270px;
+          position: absolute;
+          text-align: right;
+          top: 10px;
+          width: 200px;
+        }
+      }
+    }
+  }
+
+  .arrow:after,
+  .arrow:before {
+    border-color: transparent;
+    border-style: solid;
+    content: "";
+    display: inline-block;
+    position: absolute;
+  }
+
+  .arrow-left:before {
+    border-right-color: #d1d4d7;
+    border-width: 7px 7px 7px 0;
+    left: 0;
+    margin-left: -7px;
+    top: 6px;
+  }
+
+  .arrow-right:before {
+    border-left-color: #d1d4d7;
+    border-width: 7px 0 7px 7px;
+    margin-right: -7px;
+    right: 0;
+    top: 6px;
+  }
+}

@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,79 +15,128 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <PSTable class="m-t-1">
+  <PSTable class="mt-1">
     <thead>
-      <tr>
-        <th width="40%" class="thead-title">
-          {{trans('title_product')}}
-          <PSSort order="product" @sort="toggleSort" />
+      <tr class="column-headers">
+        <th
+          scope="col"
+          width="27%"
+          class="product-title"
+        >
+          <PSSort
+            order="product"
+            @sort="sort"
+            :current-sort="currentSort"
+          >
+            {{ trans('title_product') }}
+          </PSSort>
+        </th>
+        <th scope="col">
+          <PSSort
+            order="reference"
+            @sort="sort"
+            :current-sort="currentSort"
+          >
+            {{ trans('title_reference') }}
+          </PSSort>
         </th>
         <th>
-          {{trans('title_reference')}}
-          <PSSort order="reference" @sort="toggleSort" />
+          <PSSort
+            order="supplier"
+            @sort="sort"
+            :current-sort="currentSort"
+          >
+            {{ trans('title_supplier') }}
+          </PSSort>
         </th>
-        <th>
-           {{trans('title_supplier')}}
-          <PSSort order="supplier" @sort="toggleSort" />
+        <th class="text-center">
+          {{ trans('title_status') }}
         </th>
-        <th class="text-xs-center">
-           {{trans('title_physical')}}
-          <PSSort order="physical_quantity" @sort="toggleSort" />
+        <th class="text-center">
+          <PSSort
+            order="physical_quantity"
+            @sort="sort"
+            :current-sort="currentSort"
+          >
+            {{ trans('title_physical') }}
+          </PSSort>
         </th>
-        <th class="text-xs-center">
-          {{trans('title_reserved')}}
+        <th class="text-center">
+          {{ trans('title_reserved') }}
         </th>
-        <th class="text-xs-center">
-          {{trans('title_available')}}
-          <PSSort order="available_quantity" @sort="toggleSort" />
+        <th class="text-center">
+          <PSSort
+            order="available_quantity"
+            @sort="sort"
+            :current-sort="currentSort"
+          >
+            {{ trans('title_available') }}
+          </PSSort>
         </th>
-        <th class="text-xs-right">
+        <th :title="trans('title_edit_quantity')">
           <i class="material-icons">edit</i>
-          {{trans('title_edit_quantity')}}
+          {{ trans('title_edit_quantity') }}
         </th>
       </tr>
     </thead>
     <tbody>
       <tr v-if="this.isLoading">
-        <td colspan="7">
-          <PSLoader v-for="(n, index) in 3" class="m-t-1" :key="index">
-            <div class="background-masker header-top"></div>
-            <div class="background-masker header-left"></div>
-            <div class="background-masker header-bottom"></div>
-            <div class="background-masker subheader-left"></div>
-            <div class="background-masker subheader-bottom"></div>
+        <td colspan="8">
+          <PSLoader
+            v-for="(n, index) in 3"
+            class="mt-1"
+            :key="index"
+          >
+            <div class="background-masker header-top" />
+            <div class="background-masker header-left" />
+            <div class="background-masker header-bottom" />
+            <div class="background-masker subheader-left" />
+            <div class="background-masker subheader-bottom" />
           </PSLoader>
         </td>
       </tr>
       <tr v-else-if="emptyProducts">
-        <td colspan="7">
-          <PSAlert alertType="ALERT_TYPE_WARNING" :hasClose="false" >
-            {{trans('no_product')}}
+        <td colspan="8">
+          <PSAlert
+            alert-type="ALERT_TYPE_WARNING"
+            :has-close="false"
+          >
+            {{ trans('no_product') }}
           </PSAlert>
         </td>
       </tr>
-      <ProductLine v-else v-for="(product, index) in products" key=${index} :product="product" />
+      <ProductLine
+        v-else
+        v-for="(product, index) in products"
+        :key="index"
+        :product="product"
+      />
     </tbody>
   </PSTable>
 </template>
 
 <script>
+  import PSAlert from '@app/widgets/ps-alert';
+  import PSTable from '@app/widgets/ps-table/ps-table';
+  import PSSort from '@app/widgets/ps-table/ps-sort';
+  import PSLoader from '@app/widgets/ps-loader';
   import ProductLine from './product-line';
-  import PSAlert from 'app/widgets/ps-alert';
-  import PSTable from 'app/widgets/ps-table/ps-table';
-  import PSSort from 'app/widgets/ps-table/ps-sort';
-  import PSLoader from 'app/widgets/ps-loader';
 
   export default {
-    props: ['isLoading'],
+    props: {
+      isLoading: {
+        type: Boolean,
+        required: true,
+      },
+    },
     components: {
       ProductLine,
       PSSort,
@@ -96,10 +145,9 @@
       PSLoader,
     },
     methods: {
-      toggleSort(order, isSorted) {
-        const desc = isSorted ? ' desc' : '';
+      sort(order, sortDirection) {
         this.$store.dispatch('updateOrder', order);
-        this.$emit('sort', desc);
+        this.$emit('sort', sortDirection === 'desc' ? 'desc' : 'asc');
       },
     },
     computed: {
@@ -109,44 +157,9 @@
       emptyProducts() {
         return !this.$store.state.products.length;
       },
+      currentSort() {
+        return this.$store.state.order;
+      },
     },
   };
 </script>
-
-<style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
-  .table {
-    font-size: .9em;
-    table-layout: fixed;
-    width: 100%;
-    white-space: nowrap;
-    thead {
-      border:none;
-      th {
-        border:none;
-        border-bottom: 2px solid $brand-primary;
-        color: $gray-dark;
-        padding: 10px 0;
-        .material-icons {
-          margin-left: 5px;
-          vertical-align: middle;
-        }
-        &.thead-title {
-          padding-left: 98px;
-        }
-        &:last-child {
-          .material-icons {
-            color: $gray-medium;
-            margin-right: 5px;
-          }
-        }
-      }
-    }
-    tbody {
-      border: none;
-      tr {
-        border-bottom: $gray-light 1px solid;
-      }
-    }
-  }
-</style>

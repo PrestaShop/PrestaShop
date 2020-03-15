@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class PrestaShopLoggerCore
+ * Class PrestaShopLoggerCore.
  */
 class PrestaShopLoggerCore extends ObjectModel
 {
@@ -59,25 +59,25 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'log',
         'primary' => 'id_log',
-        'fields' => array(
-            'severity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'error_code' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
-            'object_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'object_type' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'severity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'error_code' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true],
+            'object_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected static $is_present = array();
+    protected static $is_present = [];
 
     /**
-     * Send e-mail to the shop owner only if the minimal severity level has been reached
+     * Send e-mail to the shop owner only if the minimal severity level has been reached.
      *
      * @param Logger
      * @param PrestaShopLogger $log
@@ -91,25 +91,25 @@ class PrestaShopLoggerCore extends ObjectModel
                 'log_alert',
                 Context::getContext()->getTranslator()->trans(
                     'Log: You have a new alert from your shop',
-                    array(),
+                    [],
                     'Emails.Subject',
                     $language->locale
                 ),
-                array(),
+                [],
                 Configuration::get('PS_SHOP_EMAIL')
             );
         }
     }
 
     /**
-     * add a log item to the database and send a mail if configured for this $severity
+     * add a log item to the database and send a mail if configured for this $severity.
      *
-     * @param string $message        the log message
-     * @param int    $severity
-     * @param int    $errorCode
+     * @param string $message the log message
+     * @param int $severity
+     * @param int $errorCode
      * @param string $objectType
-     * @param int    $objectId
-     * @param bool   $allowDuplicate if set to true, can log several time the same information (not recommended)
+     * @param int $objectId
+     * @param bool $allowDuplicate if set to true, can log several time the same information (not recommended)
      *
      * @return bool true if succeed
      */
@@ -127,12 +127,12 @@ class PrestaShopLoggerCore extends ObjectModel
         }
 
         if ($idEmployee !== null) {
-            $log->id_employee = (int)$idEmployee;
+            $log->id_employee = (int) $idEmployee;
         }
 
         if (!empty($objectType) && !empty($objectId)) {
             $log->object_type = pSQL($objectType);
-            $log->object_id = (int)$objectId;
+            $log->object_id = (int) $objectId;
         }
 
         if ($objectType != 'Swift_Message') {
@@ -152,14 +152,14 @@ class PrestaShopLoggerCore extends ObjectModel
     }
 
     /**
-     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id)
+     * this function md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id).
      *
      * @return string hash
      */
     public function getHash()
     {
         if (empty($this->hash)) {
-            $this->hash = md5($this->message.$this->severity.$this->error_code.$this->object_type.$this->object_id);
+            $this->hash = md5($this->message . $this->severity . $this->error_code . $this->object_type . $this->object_id);
         }
 
         return $this->hash;
@@ -167,7 +167,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
     public static function eraseAllLogs()
     {
-        return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'log');
+        return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'log');
     }
 
     /**
@@ -189,13 +189,13 @@ class PrestaShopLoggerCore extends ObjectModel
     {
         if (!isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
-				FROM `'._DB_PREFIX_.'log`
+				FROM `' . _DB_PREFIX_ . 'log`
 				WHERE
-					`message` = \''.$this->message.'\'
-					AND `severity` = \''.$this->severity.'\'
-					AND `error_code` = \''.$this->error_code.'\'
-					AND `object_type` = \''.$this->object_type.'\'
-					AND `object_id` = \''.$this->object_id.'\'
+					`message` = \'' . $this->message . '\'
+					AND `severity` = \'' . $this->severity . '\'
+					AND `error_code` = \'' . $this->error_code . '\'
+					AND `object_type` = \'' . $this->object_type . '\'
+					AND `object_id` = \'' . $this->object_id . '\'
 				');
         }
 

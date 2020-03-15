@@ -1,0 +1,32 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.pdf.generator.invoice:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getSmarty()"
+      - '@prestashop.adapter.pdf.type_provider.invoice'
+
+  prestashop.adapter.pdf.order_invoice_pdf_generator:
+    class: PrestaShop\PrestaShop\Adapter\PDF\OrderInvoicePdfGenerator
+    arguments:
+      - '@translator'
+
+  prestashop.adapter.pdf.delivery_slip_pdf_generator:
+    class: PrestaShop\PrestaShop\Adapter\PDF\DeliverySlipPdfGenerator
+    arguments:
+      - '@translator'
+
+  prestashop.adapter.pdf.generator.credit_slip:
+    class: PrestaShop\PrestaShop\Adapter\PDF\PDFGenerator
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getSmarty()"
+      - '@prestashop.adapter.pdf.type_provider.credit_slip'
+
+  prestashop.adapter.pdf.credit_slip_pdf_generator:
+    class: PrestaShop\PrestaShop\Adapter\PDF\CreditSlipPdfGenerator
+    arguments:
+      - '@translator'
+      - '%database_prefix%'
+      - '@doctrine.dbal.default_connection'

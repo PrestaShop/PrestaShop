@@ -1,12 +1,13 @@
 <?php
+
 session_start();
 
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', dirname(__FILE__).'/../../');
 }
 
-require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-require_once(_PS_ADMIN_DIR_.'/init.php');
+require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
+require_once _PS_ADMIN_DIR_.'/init.php';
 
 if (function_exists('mb_internal_encoding')) {
     mb_internal_encoding('UTF-8');
@@ -35,7 +36,6 @@ if (!$products_accesses['edit'] && !$cms_accesses['edit']) {
 //    |   |   |- plugins
 //    |   |   |   |- responsivefilemanager
 //    |   |   |   |   |- plugin.min.js
-
 
 $base_url = Tools::getHttpHost(true);  // DON'T TOUCH (base url (only domain) of site (without final /)).
 $base_url = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') ? $base_url : str_replace('https', 'http', $base_url);
@@ -106,11 +106,19 @@ $duplicate_files=true;
 $ext_img = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg'); //Images
 $ext_file = array('pdf'); //array('doc', 'docx','rtf', 'pdf', 'xls', 'xlsx', 'txt', 'csv','html','xhtml','psd','sql','log','fla','xml','ade','adp','mdb','accdb','ppt','pptx','odt','ots','ott','odb','odg','otp','otg','odf','ods','odp','css','ai'); //Files
 $ext_video = array('mov', 'mpeg', 'mp4', 'avi', 'mpg', 'wma', 'flv', 'webm'); //Video
-$ext_music = array();//array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
-$ext_misc = array();// array('zip', 'rar','gz','tar','iso','dmg'); //Archives
+$ext_music = array(); //array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
+$ext_misc = array(); // array('zip', 'rar','gz','tar','iso','dmg'); //Archives
 
 $ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video, $ext_music); //allowed extensions
 
+//**********************
+//Allowed mime types
+//**********************
+$mime_img = array('image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg');
+$mime_file = array('application/pdf');
+$mime_video = array('video/mpeg', 'video/mp4', 'video/x-msvideo', 'audio/x-ms-wma', 'video/x-flv', 'video/webm');
+
+$mime = array_merge($mime_img, $mime_file, $mime_video);
 
 /******************
  * AVIARY config
@@ -120,7 +128,6 @@ $aviary_key="dvh8qudbp6yx2bnp";
 $aviary_secret="m6xaym5q42rpw433";
 $aviary_version=3;
 $aviary_language='en';
-
 
 //The filter and sorter are managed through both javascript and php scripts because if you have a lot of
 //file in a folder the javascript script can't sort all or filter all, so the filemanager switch to php script.
@@ -141,11 +148,9 @@ $hidden_files = array('config.php');
 $java_upload=false;
 $JAVAMaxSizeUpload=200; //Gb
 
-
 //************************************
 //Thumbnail for external use creation
 //************************************
-
 
 // New image resized creation with fixed path from filemanager folder after uploading (thumbnails in fixed mode)
 // If you want create images resized out of upload folder for use with external script you can choose this method,
@@ -159,7 +164,6 @@ $fixed_image_creation_name_to_prepend   = array('','test_'); //name to prepend o
 $fixed_image_creation_to_append         = array('_test',''); //name to appendon filename
 $fixed_image_creation_width             = array(300,400); //width of image (you can leave empty if you set height)
 $fixed_image_creation_height            = array(200,''); //height of image (you can leave empty if you set width)
-
 
 // New image resized creation with relative path inside to upload folder after uploading (thumbnails in relative mode)
 // With Responsive filemanager you can create automatically resized image inside the upload folder, also more than one at a time

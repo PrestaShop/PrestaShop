@@ -1,5 +1,5 @@
 {**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -28,7 +28,18 @@
       <div class="modal-body">
         {assign var=imagesCount value=$product.images|count}
         <figure>
-          <img class="js-modal-product-cover product-cover-modal" width="{$product.cover.large.width}" src="{$product.cover.large.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" itemprop="image">
+          <img
+            class="js-modal-product-cover product-cover-modal"
+            width="{$product.cover.large.width}"
+            src="{$product.cover.large.url}"
+            {if !empty($product.cover.legend)}
+              alt="{$product.cover.legend}"
+              title="{$product.cover.legend}"
+            {else}
+              alt="{$product.name}"
+            {/if}
+            itemprop="image"
+          >
           <figcaption class="image-caption">
           {block name='product_description_short'}
             <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
@@ -41,7 +52,19 @@
               <ul class="product-images js-modal-product-images">
                 {foreach from=$product.images item=image}
                   <li class="thumb-container">
-                    <img data-image-large-src="{$image.large.url}" class="thumb js-modal-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="{$image.medium.width}" itemprop="image">
+                    <img
+                      data-image-large-src="{$image.large.url}"
+                      class="thumb js-modal-thumb"
+                      src="{$image.medium.url}"
+                      {if !empty($image.legend)}
+                        alt="{$image.legend}"
+                        title="{$image.legend}"
+                      {else}
+                        alt="{$product.name}"
+                      {/if}
+                      width="{$image.medium.width}"
+                      itemprop="image"
+                    >
                   </li>
                 {/foreach}
               </ul>

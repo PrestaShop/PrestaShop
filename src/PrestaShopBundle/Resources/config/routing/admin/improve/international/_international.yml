@@ -1,0 +1,31 @@
+_translations:
+    resource: "translations.yml"
+    prefix: /translations/
+
+_localization:
+    resource: "localization.yml"
+    prefix: /localization/
+
+_geolocation:
+    resource: "geolocation.yml"
+    prefix: /geolocation/
+
+_language:
+    resource: "language.yml"
+    prefix: /languages/
+
+_currency:
+    resource: "currencies.yml"
+    prefix: /currencies/
+
+_tax:
+    resource: "tax.yml"
+    prefix: /taxes/
+
+_state:
+  resource: "state.yml"
+  prefix: /states/
+
+_tax_rules_groups:
+  resource: "tax_rules_groups.yml"
+  prefix: /tax_rules_groups/

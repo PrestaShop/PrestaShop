@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.utils.zip_manager:
+        class: PrestaShopBundle\Utils\ZipManager

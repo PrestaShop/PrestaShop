@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  ps_banner.admin_repository:
+    class: PrestaShop\Module\Banner\Repository\AdminRepository

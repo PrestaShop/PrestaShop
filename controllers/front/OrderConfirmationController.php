@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class OrderConfirmationControllerCore extends FrontController
 {
@@ -59,7 +59,7 @@ class OrderConfirmationControllerCore extends FrontController
         $order = new Order((int) ($this->id_order));
 
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
-            Tools::redirect($redirectLink.(Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
+            Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
         $this->reference = $order->reference;
         if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
@@ -92,12 +92,12 @@ class OrderConfirmationControllerCore extends FrontController
 
         parent::initContent();
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
             'order' => $presentedOrder,
             'register_form' => $register_form,
-        ));
+        ]);
 
         if ($this->context->customer->is_guest) {
             /* If guest we clear the cookie for security reason */
@@ -115,7 +115,7 @@ class OrderConfirmationControllerCore extends FrontController
             return false;
         }
 
-        return Hook::exec('displayPaymentReturn', array('order' => $order), $this->id_module);
+        return Hook::exec('displayPaymentReturn', ['order' => $order], $this->id_module);
     }
 
     /**
@@ -123,13 +123,13 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function displayOrderConfirmation($order)
     {
-        return Hook::exec('displayOrderConfirmation', array('order' => $order));
+        return Hook::exec('displayOrderConfirmation', ['order' => $order]);
     }
 
     /**
-     * Check if an order is free and create it
+     * Check if an order is free and create it.
      */
-    private function checkFreeOrder()
+    protected function checkFreeOrder()
     {
         $cart = $this->context->cart;
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0) {
@@ -141,7 +141,7 @@ class OrderConfirmationControllerCore extends FrontController
             Tools::redirect($this->context->link->getPageLink('order'));
         }
 
-        $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+        $total = (float) $cart->getOrderTotal(true, Cart::BOTH);
         if ($total > 0) {
             Tools::redirect($this->context->link->getPageLink('order'));
         }
@@ -151,10 +151,12 @@ class OrderConfirmationControllerCore extends FrontController
             $cart->id,
             Configuration::get('PS_OS_PAYMENT'),
             0,
-            $this->trans('Free order', array(), 'Admin.Orderscustomers.Feature'),
-            null, array(), null, false,
+            $this->trans('Free order', [], 'Admin.Orderscustomers.Feature'),
+            null,
+            [],
+            null,
+            false,
             $cart->secure_key
         );
-
     }
 }

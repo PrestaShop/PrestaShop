@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class OrderPaymentCore extends ObjectModel
 {
     public $order_reference;
@@ -41,51 +40,59 @@ class OrderPaymentCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_payment',
         'primary' => 'id_order_payment',
-        'fields' => array(
-            'order_reference' =>    array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 9),
-            'id_currency' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'amount' =>            array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
-            'payment_method' =>    array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'conversion_rate' =>    array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'transaction_id' =>    array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
-            'card_number' =>        array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
-            'card_brand' =>        array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
-            'card_expiration' =>    array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
-            'card_holder' =>        array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
-            'date_add' =>            array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'order_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 9],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'payment_method' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'transaction_id' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
+            'card_number' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
+            'card_brand' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
+            'card_expiration' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
+            'card_holder' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     public function add($autodate = true, $nullValues = false)
     {
         if (parent::add($autodate, $nullValues)) {
-            Hook::exec('actionPaymentCCAdd', array('paymentCC' => $this));
+            Hook::exec('actionPaymentCCAdd', ['paymentCC' => $this]);
+
             return true;
         }
+
         return false;
     }
 
     /**
-     * Get the detailed payment of an order
+     * Get the detailed payment of an order.
      *
      * @deprecated 1.5.3.0
+     *
      * @param int $id_order
+     *
      * @return array
      */
     public static function getByOrderId($id_order)
     {
         Tools::displayAsDeprecated();
         $order = new Order($id_order);
+
         return OrderPayment::getByOrderReference($order->reference);
     }
 
     /**
-     * Get the detailed payment of an order
+     * Get the detailed payment of an order.
+     *
      * @param int $order_reference
+     *
      * @return array
+     *
      * @since 1.5.0.13
      */
     public static function getByOrderReference($order_reference)
@@ -94,37 +101,39 @@ class OrderPaymentCore extends ObjectModel
             'OrderPayment',
             Db::getInstance()->executeS(
                 'SELECT *
-			    FROM `'._DB_PREFIX_.'order_payment`
-			    WHERE `order_reference` = \''.pSQL($order_reference).'\''
+			    FROM `' . _DB_PREFIX_ . 'order_payment`
+			    WHERE `order_reference` = \'' . pSQL($order_reference) . '\''
             )
         );
     }
 
     /**
-     * Get Order Payments By Invoice ID
+     * Get Order Payments By Invoice ID.
      *
      * @param int $id_invoice Invoice ID
+     *
      * @return PrestaShopCollection Collection of OrderPayment
      */
     public static function getByInvoiceId($id_invoice)
     {
-        $payments = Db::getInstance()->executeS('SELECT id_order_payment FROM `'._DB_PREFIX_.'order_invoice_payment` WHERE id_order_invoice = '.(int)$id_invoice);
+        $payments = Db::getInstance()->executeS('SELECT id_order_payment FROM `' . _DB_PREFIX_ . 'order_invoice_payment` WHERE id_order_invoice = ' . (int) $id_invoice);
         if (!$payments) {
-            return array();
+            return [];
         }
 
-        $payment_list = array();
+        $payment_list = [];
         foreach ($payments as $payment) {
             $payment_list[] = $payment['id_order_payment'];
         }
 
         $payments = new PrestaShopCollection('OrderPayment');
         $payments->where('id_order_payment', 'IN', $payment_list);
+
         return $payments;
     }
 
     /**
-     * Return order invoice object linked to the payment
+     * Return order invoice object linked to the payment.
      *
      * @param int $id_order Order Id
      *
@@ -134,14 +143,14 @@ class OrderPaymentCore extends ObjectModel
     {
         $res = Db::getInstance()->getValue('
 		SELECT id_order_invoice
-		FROM `'._DB_PREFIX_.'order_invoice_payment`
-		WHERE id_order_payment = '.(int)$this->id.'
-		AND id_order = '.(int)$id_order);
+		FROM `' . _DB_PREFIX_ . 'order_invoice_payment`
+		WHERE id_order_payment = ' . (int) $this->id . '
+		AND id_order = ' . (int) $id_order);
 
         if (!$res) {
             return false;
         }
 
-        return new OrderInvoice((int)$res);
+        return new OrderInvoice((int) $res);
     }
 }

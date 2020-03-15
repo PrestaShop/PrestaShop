@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,22 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\PrestaShop\Core\Foundation\IoC;
 
 use ReflectionClass;
 
 class Container
 {
-    private $bindings = array();
-    private $instances = array();
-    private $namespaceAliases = array();
+    private $bindings = [];
+    private $instances = [];
+    private $namespaceAliases = [];
 
     public function knows($serviceName)
     {
@@ -46,15 +47,13 @@ class Container
     public function bind($serviceName, $constructor, $shared = false)
     {
         if ($this->knows($serviceName)) {
-            throw new Exception(
-                sprintf('Cannot bind `%s` again. A service name can only be bound once.', $serviceName)
-            );
+            throw new Exception(sprintf('Cannot bind `%s` again. A service name can only be bound once.', $serviceName));
         }
 
-        $this->bindings[$serviceName] = array(
+        $this->bindings[$serviceName] = [
             'constructor' => $constructor,
-            'shared' => $shared
-        );
+            'shared' => $shared,
+        ];
 
         return $this;
     }
@@ -62,15 +61,11 @@ class Container
     public function aliasNamespace($alias, $namespacePrefix)
     {
         if ($this->knowsNamespaceAlias($alias)) {
-            throw new Exception(
-                sprintf(
-                    'Namespace alias `%1$s` already exists and points to `%2$s`',
-                    $alias, $this->namespaceAliases[$alias]
-                )
-            );
+            throw new Exception(sprintf('Namespace alias `%1$s` already exists and points to `%2$s`', $alias, $this->namespaceAliases[$alias]));
         }
 
         $this->namespaceAliases[$alias] = $namespacePrefix;
+
         return $this;
     }
 
@@ -81,6 +76,7 @@ class Container
             $alias = substr($className, 0, $colonPos);
             if ($this->knowsNamespaceAlias($alias)) {
                 $class = ltrim(substr($className, $colonPos + 1), '\\');
+
                 return $this->namespaceAliases[$alias] . '\\' . $class;
             }
         }
@@ -98,7 +94,7 @@ class Container
             throw new Exception(sprintf('This doesn\'t seem to be a class name: `%s`.', $className));
         }
 
-        $args = array();
+        $args = [];
 
         if ($refl->isAbstract()) {
             throw new Exception(sprintf('Cannot build abstract class: `%s`.', $className));
@@ -128,13 +124,10 @@ class Container
         }
     }
 
-    private function doMake($serviceName, array $alreadySeen = array())
+    private function doMake($serviceName, array $alreadySeen = [])
     {
         if (array_key_exists($serviceName, $alreadySeen)) {
-            throw new Exception(sprintf(
-                'Cyclic dependency detected while building `%s`.',
-                $serviceName
-            ));
+            throw new Exception(sprintf('Cyclic dependency detected while building `%s`.', $serviceName));
         }
 
         $alreadySeen[$serviceName] = true;
@@ -170,6 +163,6 @@ class Container
 
     public function make($serviceName)
     {
-        return $this->doMake($serviceName, array());
+        return $this->doMake($serviceName, []);
     }
 }

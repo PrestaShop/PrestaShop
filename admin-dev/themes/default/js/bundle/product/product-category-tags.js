@@ -138,6 +138,7 @@ var productCategoriesTags = (function () {
       var tree = this.getTree();
       var tags = [];
       var that = this;
+      let searchResultMsg = '';
       tree.forEach(function buildTags(tagObject){
         tags.push({
           label: tagObject.breadcrumb,
@@ -153,6 +154,12 @@ var productCategoriesTags = (function () {
         matchContains: true,
         mustMatch:false,
         scroll:false,
+        focus: function(event, ui) {
+          event.preventDefault();
+          let $this = $(this);
+          $this.val(that.getNameFromBreadcrumb(ui.item.label));
+          searchResultMsg = $this.parent().find('[role=status]').text();
+        },
         select: function(event, ui) {
           event.preventDefault();
           var label = ui.item.label;
@@ -175,10 +182,18 @@ var productCategoriesTags = (function () {
           .appendTo(ul);
       };
 
+      searchBox.parent().find('[role=status]').on('DOMSubtreeModified', function () {
+        let $this = $(this);
+        if ($.isNumeric($this.text()) && searchResultMsg !== '' && searchBox.val() !== '') {
+          $this.text(searchResultMsg);
+        }
+      });
+
       $('body').on('focusout', searchCategorySelector, function (event) {
         var $searchInput = $(event.currentTarget);
         if (0 === $searchInput.val().length ) {
           $searchInput.parent().find('[role=status]').text('');
+          searchResultMsg = '';
         }
       });
     }

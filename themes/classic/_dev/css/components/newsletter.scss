@@ -1,0 +1,38 @@
+.block_newsletter {
+  @include search-box;
+  background: white;
+  font-size: $font-size-sm;
+  margin-bottom: 0.625rem;
+  form {
+    .input-wrapper {
+      overflow: hidden;
+    }
+    input[type=email] {
+      padding: 11px;
+      width: 100%;
+      &:focus {
+        border: 3px $brand-primary solid;
+        padding: 8px 8px 9px;
+        outline: 0;
+      }
+    }
+    input {
+      height: 42px;
+      box-shadow: none;
+    }
+  }
+}
+#footer {
+  .block_newsletter {
+    p {
+      padding-top: $small-space;
+    }
+  }
+}
+#left-column {
+  .block_newsletter {
+    @include box-shadow;
+    margin-bottom: 1.563rem;
+    padding: 1.563rem 1.25rem;
+  }
+}

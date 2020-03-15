@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class OrderStateCore extends ObjectModel
 {
     /** @var string Name */
@@ -72,83 +71,88 @@ class OrderStateCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_state',
         'primary' => 'id_order_state',
         'multilang' => true,
-        'fields' => array(
-            'send_email' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'module_name' => array('type' => self::TYPE_STRING, 'validate' => 'isModuleName'),
-            'invoice' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'color' =>        array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
-            'logable' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'shipped' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'unremovable' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'delivery' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'hidden' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'paid' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'pdf_delivery' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'pdf_invoice' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'deleted' =>    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+        'fields' => [
+            'send_email' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'module_name' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName'],
+            'invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'logable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'shipped' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'unremovable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'delivery' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'hidden' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'paid' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'pdf_delivery' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'pdf_invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
-            'name' =>        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'template' =>    array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'template' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'unremovable' => array(),
-            'delivery' => array(),
-            'hidden' => array(),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'unremovable' => [],
+            'delivery' => [],
+            'hidden' => [],
+        ],
+    ];
 
-    const FLAG_NO_HIDDEN    = 1;  /* 00001 */
-    const FLAG_LOGABLE        = 2;  /* 00010 */
-    const FLAG_DELIVERY        = 4;  /* 00100 */
-    const FLAG_SHIPPED        = 8;  /* 01000 */
-    const FLAG_PAID        = 16; /* 10000 */
+    const FLAG_NO_HIDDEN = 1;  /* 00001 */
+    const FLAG_LOGABLE = 2;  /* 00010 */
+    const FLAG_DELIVERY = 4;  /* 00100 */
+    const FLAG_SHIPPED = 8;  /* 01000 */
+    const FLAG_PAID = 16; /* 10000 */
 
     /**
-    * Get all available order statuses
-    *
-    * @param int $id_lang Language id for status name
-    * @return array Order statuses
-    */
+     * Get all available order statuses.
+     *
+     * @param int $id_lang Language id for status name
+     *
+     * @return array Order statuses
+     */
     public static function getOrderStates($id_lang)
     {
-        $cache_id = 'OrderState::getOrderStates_'.(int)$id_lang;
+        $cache_id = 'OrderState::getOrderStates_' . (int) $id_lang;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
-            FROM `'._DB_PREFIX_.'order_state` os
-            LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$id_lang.')
+            FROM `' . _DB_PREFIX_ . 'order_state` os
+            LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $id_lang . ')
             WHERE deleted = 0
             ORDER BY `name` ASC');
             Cache::store($cache_id, $result);
+
             return $result;
         }
+
         return Cache::retrieve($cache_id);
     }
 
     /**
-    * Check if we can make a invoice when order is in this state
-    *
-    * @param int $id_order_state State ID
-    * @return bool availability
-    */
+     * Check if we can make a invoice when order is in this state.
+     *
+     * @param int $id_order_state State ID
+     *
+     * @return bool availability
+     */
     public static function invoiceAvailable($id_order_state)
     {
         $result = false;
         if (Configuration::get('PS_INVOICE')) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT `invoice`
-            FROM `'._DB_PREFIX_.'order_state`
-            WHERE `id_order_state` = '.(int)$id_order_state);
+            FROM `' . _DB_PREFIX_ . 'order_state`
+            WHERE `id_order_state` = ' . (int) $id_order_state);
         }
-        return (bool)$result;
+
+        return (bool) $result;
     }
 
     public function isRemovable()

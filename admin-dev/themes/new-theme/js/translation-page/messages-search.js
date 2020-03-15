@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,45 +15,45 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Jets from 'jets/jets';
-import $ from 'jquery';
 
 export default function () {
   $(() => {
     const searchSelector = '.search-translation';
-    $(searchSelector + ' form').submit(function (event) {
+    $(`${searchSelector} form`).submit((event) => {
       event.preventDefault();
 
       $('#jetsContent form').addClass('hide');
 
       const keywords = $('#jetsSearch').val().toLowerCase();
-      const jetsSelector = '#jetsContent > [data-jets*="' + keywords + '"]';
+      const jetsSelector = `#jetsContent > [data-jets*="${keywords}"]`;
 
-      if (0 === $(jetsSelector).length) {
-        var notificationElement = $(searchSelector + '> .alert')[0];
+      if ($(jetsSelector).length === 0) {
+        const notificationElement = $(`${searchSelector}> .alert`)[0];
         $(notificationElement).removeClass('hide');
-        setTimeout(function () {
+        setTimeout(() => {
           $(notificationElement).addClass('hide');
         }, 2000);
       } else {
         $(jetsSelector).removeClass('hide');
       }
 
-      if($(jetsSelector).length) {
-        $('.js-results').show().addClass('card').find('h2').removeClass('hide');
+      if ($(jetsSelector).length) {
+        $('.js-results').show().addClass('card').find('h2')
+          .removeClass('hide');
       }
 
       return false;
     });
 
-    $(searchSelector + ' input[type=reset]').click(function (event) {
+    $(`${searchSelector} input[type=reset]`).click((event) => {
       event.preventDefault();
 
       $('#jetsSearch').val('');
@@ -68,10 +68,12 @@ export default function () {
       searchTag: '#jetsSearch',
       contentTag: '#jetsContent',
       callSearchManually: true,
-      manualContentHandling: function (tag) {
+      manualContentHandling(tag) {
         // Search for translation keys and translation values
         return $(tag).find('.verbatim')[0].innerText + $(tag).find('textarea')[0].value;
-      }
+      },
     });
   }
+
+  return false;
 }

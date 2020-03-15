@@ -1,0 +1,62 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.admin.search_parameters:
+        class: PrestaShop\PrestaShop\Core\Search\SearchParameters
+        arguments: ['@prestashop.core.admin.admin_filter.repository']
+
+    # Controller Argument Resolver
+    prestashop.search_parameters.resolver:
+        class: 'PrestaShopBundle\Controller\ArgumentResolver\SearchParametersResolver'
+        arguments:
+          - '@prestashop.core.admin.search_parameters'
+          - '@security.token_storage'
+          - '@prestashop.core.admin.admin_filter.repository'
+          - '@event_dispatcher'
+          - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+#        tags:
+#          - { name: controller.argument_value_resolver, priority: 50 }
+
+    # Filters builder argument resolver
+    prestashop.filters_builder.resolver:
+        class: 'PrestaShopBundle\Controller\ArgumentResolver\FiltersBuilderResolver'
+        arguments:
+          - '@prestashop.core.search.builder'
+        tags:
+          - { name: controller.argument_value_resolver, priority: 51 }
+
+    prestashop.core.search.builder.class:
+        class: 'PrestaShop\PrestaShop\Core\Search\Builder\ClassFiltersBuilder'
+
+    prestashop.core.search.builder.request:
+        class: 'PrestaShop\PrestaShop\Core\Search\Builder\RequestFiltersBuilder'
+
+    prestashop.core.search.builder.repository:
+        class: 'PrestaShop\PrestaShop\Core\Search\Builder\RepositoryFiltersBuilder'
+        arguments:
+          - '@prestashop.core.admin.admin_filter.repository'
+          - '@prestashop.adapter.data_provider.employee'
+          - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+    prestashop.core.search.builder.event:
+      class: 'PrestaShop\PrestaShop\Core\Search\Builder\EventFiltersBuilder'
+      arguments:
+        - '@event_dispatcher'
+
+    prestashop.core.search.builder.persist:
+      class: 'PrestaShop\PrestaShop\Core\Search\Builder\PersistFiltersBuilder'
+      arguments:
+        - '@prestashop.core.admin.admin_filter.repository'
+        - '@prestashop.adapter.data_provider.employee'
+        - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+
+    prestashop.core.search.builder:
+        class: 'PrestaShop\PrestaShop\Core\Search\Builder\ChainedFiltersBuilder'
+        arguments:
+          -
+            - '@prestashop.core.search.builder.class'
+            - '@prestashop.core.search.builder.repository'
+            - '@prestashop.core.search.builder.request'
+            - '@prestashop.core.search.builder.event'
+            - '@prestashop.core.search.builder.persist'

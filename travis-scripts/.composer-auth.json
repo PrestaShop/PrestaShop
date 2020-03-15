@@ -1,0 +1,8 @@
+{
+  "github-oauth": {
+    "github.com": "PLEASE DO NOT USE THIS TOKEN IN YOUR OWN PROJECTS/FORKS",
+    "github.com": "This token is reserved for testing the PrestaShop/PrestaShop repository",
+    "github.com": "https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/",
+    "github.com": "f80842630d79e2b7d843ca0a7254d04f61493d93"
+  }
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<entity_feature_value>
+  <feature_value id="Polyester">
+    <value>Polyester</value>
+  </feature_value>
+  <feature_value id="Wool">
+    <value>Wool</value>
+  </feature_value>
+  <feature_value id="Ceramic">
+    <value>Céramique</value>
+  </feature_value>
+  <feature_value id="Cotton">
+    <value>Cotton</value>
+  </feature_value>
+  <feature_value id="Recycled_Cardboard">
+    <value>Carton recycl&#xE9;</value>
+  </feature_value>
+  <feature_value id="Matt_Paper">
+    <value>Papier mat</value>
+  </feature_value>
+  <feature_value id="Long_Sleeves">
+    <value>Manches longues</value>
+  </feature_value>
+  <feature_value id="Short_Sleeves">
+    <value>Manches courtes</value>
+  </feature_value>
+  <feature_value id="Removable_Cover">
+    <value>Housse amovible</value>
+  </feature_value>
+  <feature_value id="120_Pages">
+    <value>120 pages</value>
+  </feature_value>
+  <feature_value id="White">
+    <value>Blanc</value>
+  </feature_value>
+  <feature_value id="Black">
+    <value>Noir</value>
+  </feature_value>
+  <feature_value id="S">
+    <value>S</value>
+  </feature_value>
+  <feature_value id="M">
+    <value>M</value>
+  </feature_value>
+  <feature_value id="L">
+    <value>L</value>
+  </feature_value>
+  <feature_value id="XL">
+    <value>XL</value>
+  </feature_value>
+  <feature_value id="40x60cm">
+    <value>40x60cm</value>
+  </feature_value>
+  <feature_value id="60x90cm">
+    <value>60x90cm</value>
+  </feature_value>
+  <feature_value id="80x120cm">
+    <value>80x120cm</value>
+  </feature_value>
+</entity_feature_value>

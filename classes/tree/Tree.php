@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,21 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class TreeCore
 {
-    const DEFAULT_TEMPLATE_DIRECTORY   = 'helpers/tree';
-    const DEFAULT_TEMPLATE             = 'tree.tpl';
-    const DEFAULT_HEADER_TEMPLATE      = 'tree_header.tpl';
+    const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
+    const DEFAULT_TEMPLATE = 'tree.tpl';
+    const DEFAULT_HEADER_TEMPLATE = 'tree_header.tpl';
     const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
-    const DEFAULT_NODE_ITEM_TEMPLATE   = 'tree_node_item.tpl';
+    const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item.tpl';
 
     protected $_attributes;
     private $_context;
@@ -72,6 +71,7 @@ class TreeCore
         }
 
         $this->getToolbar()->setTemplateDirectory($this->getTemplateDirectory())->setActions($value);
+
         return $this;
     }
 
@@ -87,10 +87,11 @@ class TreeCore
     public function setAttribute($name, $value)
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         $this->_attributes[$name] = $value;
+
         return $this;
     }
 
@@ -106,12 +107,14 @@ class TreeCore
         }
 
         $this->_attributes = $value;
+
         return $this;
     }
 
     public function setIdTree($id_tree)
     {
         $this->_id_tree = $id_tree;
+
         return $this;
     }
 
@@ -123,7 +126,7 @@ class TreeCore
     public function getAttributes()
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         return $this->_attributes;
@@ -132,6 +135,7 @@ class TreeCore
     public function setContext($value)
     {
         $this->_context = $value;
+
         return $this;
     }
 
@@ -151,13 +155,14 @@ class TreeCore
         }
 
         $this->_data_search = $value;
+
         return $this;
     }
 
     public function getDataSearch()
     {
         if (!isset($this->_data_search)) {
-            $this->_data_search = array();
+            $this->_data_search = [];
         }
 
         return $this->_data_search;
@@ -170,13 +175,14 @@ class TreeCore
         }
 
         $this->_data = $value;
+
         return $this;
     }
 
     public function getData()
     {
         if (!isset($this->_data)) {
-            $this->_data = array();
+            $this->_data = [];
         }
 
         return $this->_data;
@@ -185,6 +191,7 @@ class TreeCore
     public function setHeaderTemplate($value)
     {
         $this->_headerTemplate = $value;
+
         return $this;
     }
 
@@ -200,6 +207,7 @@ class TreeCore
     public function setId($value)
     {
         $this->_id = $value;
+
         return $this;
     }
 
@@ -211,6 +219,7 @@ class TreeCore
     public function setNodeFolderTemplate($value)
     {
         $this->_node_folder_template = $value;
+
         return $this;
     }
 
@@ -226,6 +235,7 @@ class TreeCore
     public function setNodeItemTemplate($value)
     {
         $this->_node_item_template = $value;
+
         return $this;
     }
 
@@ -241,6 +251,7 @@ class TreeCore
     public function setTemplate($value)
     {
         $this->_template = $value;
+
         return $this;
     }
 
@@ -261,6 +272,7 @@ class TreeCore
     public function setTemplateDirectory($value)
     {
         $this->_template_directory = $this->_normalizeDirectory($value);
+
         return $this;
     }
 
@@ -271,7 +283,8 @@ class TreeCore
     {
         if (!isset($this->_template_directory)) {
             $this->_template_directory = $this->_normalizeDirectory(
-                self::DEFAULT_TEMPLATE_DIRECTORY);
+                self::DEFAULT_TEMPLATE_DIRECTORY
+            );
         }
 
         return $this->_template_directory;
@@ -284,40 +297,44 @@ class TreeCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
-            return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).
-                $controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+                $this->getContext()->controller->getTemplatePath()
+        ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+            return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
+                $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template)) {
+                $this->getContext()->controller->getTemplatePath()
+        ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
-                .$this->getTemplateDirectory().$template;
+                . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-                .DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+                . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
+            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+                . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                .$this->getTemplateDirectory().$template)) {
+                . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
-                    .$this->getTemplateDirectory().$template;
+                    . $this->getTemplateDirectory() . $template;
         } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template)) {
+                . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
-                .$this->getTemplateDirectory().$template;
+                . $this->getTemplateDirectory() . $template;
         } else {
-            return $this->getTemplateDirectory().$template;
+            return $this->getTemplateDirectory() . $template;
         }
     }
 
     public function setNoJS($value)
     {
         $this->_no_js = $value;
+
         return $this;
     }
 
     public function setTitle($value)
     {
         $this->_title = $value;
+
         return $this;
     }
 
@@ -339,6 +356,7 @@ class TreeCore
         }
 
         $this->_toolbar = $value;
+
         return $this;
     }
 
@@ -362,6 +380,7 @@ class TreeCore
         }
 
         $this->getToolbar()->setTemplateDirectory($this->getTemplateDirectory())->addAction($action);
+
         return $this;
     }
 
@@ -372,6 +391,7 @@ class TreeCore
         }
 
         $this->getToolbar()->setTemplateDirectory($this->getTemplateDirectory())->removeActions();
+
         return $this;
     }
 
@@ -379,18 +399,18 @@ class TreeCore
     {
         //Adding tree.js
         $admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-        $admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+        $admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $admin_webpath);
         $bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
             && $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
 
-        if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR.'template')) {
+        if (!file_exists(_PS_BO_ALL_THEMES_DIR_ . $bo_theme . DIRECTORY_SEPARATOR . 'template')) {
             $bo_theme = 'default';
         }
 
-        $js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
+        $js_path = __PS_BASE_URI__ . $admin_webpath . '/themes/' . $bo_theme . '/js/tree.js';
         if ($this->getContext()->controller->ajax) {
             if (!$this->_no_js) {
-                $html = '<script type="text/javascript" src="'.$js_path.'"></script>';
+                $html = '<script type="text/javascript" src="' . $js_path . '"></script>';
             }
         } else {
             $this->getContext()->controller->addJs($js_path);
@@ -409,21 +429,23 @@ class TreeCore
                 $this->getContext()->smarty
             );
             $headerTemplate->assign($this->getAttributes())
-                ->assign(array(
-                'title'   => $this->getTitle(),
-                'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null
-            ));
+                ->assign(
+                    [
+                        'title' => $this->getTitle(),
+                        'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
+                    ]
+            );
             $template->assign('header', $headerTemplate->fetch());
         }
 
         //Assign Tree nodes
-        $template->assign($this->getAttributes())->assign(array(
-            'id'    => $this->getId(),
+        $template->assign($this->getAttributes())->assign([
+            'id' => $this->getId(),
             'nodes' => $this->renderNodes($data),
-            'id_tree' => $this->getIdTree()
-        ));
+            'id_tree' => $this->getIdTree(),
+        ]);
 
-        return (isset($html) ? $html : '').$template->fetch();
+        return (isset($html) ? $html : '') . $template->fetch();
     }
 
     public function renderNodes($data = null)
@@ -444,17 +466,17 @@ class TreeCore
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeFolderTemplate()),
                     $this->getContext()->smarty
-                )->assign(array(
+                )->assign([
                     'children' => $this->renderNodes($item['children']),
-                    'node'     => $item
-                ))->fetch();
+                    'node' => $item,
+                ])->fetch();
             } else {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeItemTemplate()),
                     $this->getContext()->smarty
-                )->assign(array(
-                    'node' => $item
-                ))->fetch();
+                )->assign([
+                    'node' => $item,
+                ])->fetch();
             }
         }
 
@@ -480,12 +502,14 @@ class TreeCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+
             return $directory;
         }
 
         $directory .= DIRECTORY_SEPARATOR;
+
         return $directory;
     }
 }

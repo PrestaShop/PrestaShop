@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,16 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
- * Class GuestCore
+ * Class GuestCore.
  */
 class GuestCore extends ObjectModel
 {
@@ -48,36 +48,36 @@ class GuestCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'guest',
         'primary' => 'id_guest',
-        'fields' => array(
-            'id_operating_system' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_web_browser' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'javascript' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'screen_resolution_x' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'screen_resolution_y' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'screen_color' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'sun_java' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'adobe_flash' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'adobe_director' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'apple_quicktime' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'real_player' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'windows_media' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'accept_language' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 8),
-            'mobile_theme' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_operating_system' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_web_browser' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'javascript' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'screen_resolution_x' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'screen_resolution_y' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'screen_color' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'sun_java' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'adobe_flash' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'adobe_director' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'apple_quicktime' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'real_player' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'windows_media' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'accept_language' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 8],
+            'mobile_theme' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_customer' => array('xlink_resource' => 'customers'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_customer' => ['xlink_resource' => 'customers'],
+        ],
+    ];
 
     /**
-     * Set user agent
+     * Set user agent.
      */
     public function userAgent()
     {
@@ -90,7 +90,7 @@ class GuestCore extends ObjectModel
     }
 
     /**
-     * Get Guest Language
+     * Get Guest Language.
      *
      * @param $acceptLanguage
      *
@@ -99,7 +99,7 @@ class GuestCore extends ObjectModel
     protected function getLanguage($acceptLanguage)
     {
         // $langsArray is filled with all the languages accepted, ordered by priority
-        $langsArray = array();
+        $langsArray = [];
         preg_match_all('/([a-z]{2}(-[a-z]{2})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/', $acceptLanguage, $array);
         if (count($array[1])) {
             $langsArray = array_combine($array[1], $array[4]);
@@ -112,19 +112,17 @@ class GuestCore extends ObjectModel
         }
 
         // Only the first language is returned
-        return (count($langsArray) ? key($langsArray) : '');
+        return count($langsArray) ? key($langsArray) : '';
     }
 
     /**
-     * Get browser
+     * Get browser.
      *
      * @param string $userAgent
-     *
-     * @return null
      */
     protected function getBrowser($userAgent)
     {
-        $browserArray = array(
+        $browserArray = [
             'Chrome' => 'Chrome/',
             'Safari' => 'Safari',
             'Safari iPad' => 'iPad',
@@ -135,31 +133,30 @@ class GuestCore extends ObjectModel
             'IE 9' => 'MSIE 9',
             'IE 8' => 'MSIE 8',
             'IE 7' => 'MSIE 7',
-            'IE 6' => 'MSIE 6'
-        );
+            'IE 6' => 'MSIE 6',
+        ];
         foreach ($browserArray as $k => $value) {
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_web_browser`
-				FROM `'._DB_PREFIX_.'web_browser` wb
-				WHERE wb.`name` = \''.pSQL($k).'\'');
+				FROM `' . _DB_PREFIX_ . 'web_browser` wb
+				WHERE wb.`name` = \'' . pSQL($k) . '\'');
 
                 return $result['id_web_browser'];
             }
         }
+
         return null;
     }
 
     /**
-     * Get OS
+     * Get OS.
      *
      * @param string $userAgent
-     *
-     * @return null
      */
     protected function getOs($userAgent)
     {
-        $osArray = array(
+        $osArray = [
             'Windows 10' => 'Windows NT 10',
             'Windows 8.1' => 'Windows NT 6.3',
             'Windows 8' => 'Windows NT 6.2',
@@ -168,15 +165,15 @@ class GuestCore extends ObjectModel
             'Windows XP' => 'Windows NT 5',
             'MacOsX' => 'Mac OS X',
             'Android' => 'Android',
-            'Linux' => 'X11'
-        );
+            'Linux' => 'X11',
+        ];
 
         foreach ($osArray as $k => $value) {
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_operating_system`
-				FROM `'._DB_PREFIX_.'operating_system` os
-				WHERE os.`name` = \''.pSQL($k).'\'');
+				FROM `' . _DB_PREFIX_ . 'operating_system` os
+				WHERE os.`name` = \'' . pSQL($k) . '\'');
 
                 return $result['id_operating_system'];
             }
@@ -186,7 +183,7 @@ class GuestCore extends ObjectModel
     }
 
     /**
-     * Get Guest ID from Customer ID
+     * Get Guest ID from Customer ID.
      *
      * @param int $idCustomer Customer ID
      *
@@ -199,24 +196,25 @@ class GuestCore extends ObjectModel
         }
         $result = Db::getInstance()->getRow('
 		SELECT `id_guest`
-		FROM `'._DB_PREFIX_.'guest`
-		WHERE `id_customer` = '.(int) ($idCustomer));
+		FROM `' . _DB_PREFIX_ . 'guest`
+		WHERE `id_customer` = ' . (int) ($idCustomer));
+
         return $result['id_guest'];
     }
 
     /**
-     * Merge with Customer
+     * Merge with Customer.
      *
-     * @param int $idGuest    Guest ID
+     * @param int $idGuest Guest ID
      * @param int $idCustomer Customer ID
      */
     public function mergeWithCustomer($idGuest, $idCustomer)
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
         Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'connections` c
-		SET c.`id_guest` = '.(int) ($idGuest).'
-		WHERE c.`id_guest` = '.(int) ($this->id));
+		UPDATE `' . _DB_PREFIX_ . 'connections` c
+		SET c.`id_guest` = ' . (int) ($idGuest) . '
+		WHERE c.`id_guest` = ' . (int) ($this->id));
 
         // The current guest is removed from the database
         $this->delete();
@@ -230,7 +228,7 @@ class GuestCore extends ObjectModel
     }
 
     /**
-     * Set new guest
+     * Set new guest.
      *
      * @param Cookie $cookie
      */

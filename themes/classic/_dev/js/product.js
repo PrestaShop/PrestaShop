@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,14 +15,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
+import prestashop from 'prestashop';
+import ProductSelect from './components/product-select';
 
 $(document).ready(function () {
   createProductSpin();
@@ -44,6 +46,9 @@ $(document).ready(function () {
     imageScrollBox();
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
     $('.js-product-images-modal').replaceWith(event.product_images_modal);
+
+    let productSelect  = new ProductSelect();
+    productSelect.init();
   });
 
   function coverImage() {
@@ -93,24 +98,33 @@ $(document).ready(function () {
 
   function createProductSpin()
   {
-    let quantityInput = $('#quantity_wanted');
-    quantityInput.TouchSpin({
+    const $quantityInput = $('#quantity_wanted');
+
+    $quantityInput.TouchSpin({
       verticalbuttons: true,
       verticalupclass: 'material-icons touchspin-up',
       verticaldownclass: 'material-icons touchspin-down',
       buttondown_class: 'btn btn-touchspin js-touchspin',
       buttonup_class: 'btn btn-touchspin js-touchspin',
-      min: parseInt(quantityInput.attr('min'), 10),
+      min: parseInt($quantityInput.attr('min'), 10),
       max: 1000000
     });
 
-    quantityInput.on('change', function (event) {
-      let $productRefresh = $('.product-refresh');
-      $(event.currentTarget).trigger('touchspin.stopspin');
-      $productRefresh.trigger('click', {eventType: 'updatedProductQuantity'});
-      event.preventDefault();
+    $quantityInput.focusout(() => {
+      if ($quantityInput.val() === '' || $quantityInput.val() < $quantityInput.attr('min')) {
+        $quantityInput.val($quantityInput.attr('min'));
+        $quantityInput.trigger('change');
+      }
+    });
 
-      return false;
+    $('body').on('change keyup', '#quantity_wanted', (e) => {
+      if ($quantityInput.val() !== '') {
+        $(e.currentTarget).trigger('touchspin.stopspin');
+        prestashop.emit('updateProduct', {
+            eventType: 'updatedProductQuantity',
+            event: e
+        });
+      }
     });
   }
 });

@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,10 +15,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -91,13 +91,13 @@ function process_install(step)
 						process_install(process_steps[current_step]);
 				}
 			}
-			// An error occured during this step
+			// An error occurred during this step
 			else
 			{
 				install_error(step, (json) ? json.message : '');
 			}
 		},
-		// An error HTTP (page not found, json not valid, etc.) occured during this step
+		// An error HTTP (page not found, json not valid, etc.) occurred during this step
 		error: function( jqXHR, textStatus ) {
                     var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
                     install_error(step, errorMsg);
@@ -151,7 +151,7 @@ function process_install_subtask(step, current_subtask)
 			else
 				install_error(step, (json) ? json.message : '');
 		},
-		// An error HTTP (page not found, json not valid, etc.) occured during this step
+		// An error HTTP (page not found, json not valid, etc.) occurred during this step
                 error: function( jqXHR, textStatus ) {
                     var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
                     install_error(step, errorMsg);
@@ -177,7 +177,7 @@ function install_error(step, errors)
 			list_errors = [];
 			list_errors[0] = errors;
 		} else if ($.type(list_errors) == 'array') {
-			list_errors = list_errors[0];
+			list_errors = [list_errors[0]];
 		}
 
 		var display = '<ol>';

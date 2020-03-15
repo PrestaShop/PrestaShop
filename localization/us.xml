@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="United States" version="1.0">
-	
+
 	<languages>
 		<language iso_code="en" />
 	</languages>
-	
+
 	<currencies>
 		<currency name="Dollar" iso_code="USD" iso_code_num="840" sign="$" blank="0" conversion_rate="1.31153" format="1" decimals="1" />
 	</currencies>

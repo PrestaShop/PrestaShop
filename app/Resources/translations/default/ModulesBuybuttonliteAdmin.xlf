@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_buybuttonlite/ps_buybuttonlite.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fa27118f8a45d32578f88d495905f692">
+        <source>Buy button lite</source>
+        <target>Buy button lite</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:49</note>
+      </trans-unit>
+      <trans-unit id="b6fc6adf920ff6307628b7fa4a9f1132">
+        <source>Increase your conversion rate and boost your sales, generate links and add them to your content so that visitors can easily proceed to checkout</source>
+        <target>Increase your conversion rate and boost your sales, generate links and add them to your content so that visitors can easily proceed to checkout</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:50</note>
+      </trans-unit>
+      <trans-unit id="fa0e92ab3c39a4fbdf81351af8d377ef">
+        <source>Select a product</source>
+        <target>Select a product</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:150</note>
+      </trans-unit>
+      <trans-unit id="0a5938195834d4ddc74c6a6216af7f38">
+        <source>Get sharable link</source>
+        <target>Get sharable link</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:153</note>
+      </trans-unit>
+      <trans-unit id="f017b414aaf4fa4b432bbd3a6764a13b">
+        <source>Please select a product</source>
+        <target>Please select a product</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:154</note>
+      </trans-unit>
+      <trans-unit id="2e50055f487617fea2c0e3f65d52aef1">
+        <source>Please select an action</source>
+        <target>Please select an action</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:155</note>
+      </trans-unit>
+      <trans-unit id="d328b03f556f4b4a1f1d92bd694fcc5c">
+        <source>Please select a product and an action</source>
+        <target>Please select a product and an action</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:157</note>
+      </trans-unit>
+      <trans-unit id="fb9428bdb91ca93c4d24340baad94369">
+        <source>Link copied to clipboard</source>
+        <target>Link copied to clipboard</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:158</note>
+      </trans-unit>
+      <trans-unit id="31edfec531c02c0cfe522ed5ca726e2f">
+        <source>Want to go further?</source>
+        <target>Want to go further?</target>
+        <note>Context:
+File: modules/ps_buybuttonlite/ps_buybuttonlite.php:165</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

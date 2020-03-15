@@ -1,5 +1,5 @@
 <!--**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,36 +15,48 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div>
-    <div class="m-b-1 tree-header">
-      <span class="text-uppercase pointer" @click="expand">
+  <div class="ps-tree">
+    <div class="mb-3 tree-header">
+      <button
+        class="btn btn-text text-uppercase pointer"
+        @click="expand"
+      >
         <i class="material-icons">keyboard_arrow_down</i>
-        <strong v-if="translations">{{translations.expand}}</strong>
-      </span>
-      <span class="pull-right text-uppercase pointer" @click="reduce">
+        <span v-if="translations">{{ translations.expand }}</span>
+      </button>
+      <button
+        class="btn btn-text float-right text-uppercase pointer"
+        @click="reduce"
+      >
         <i class="material-icons">keyboard_arrow_up</i>
-        <strong v-if="translations">{{translations.reduce}}</strong>
-      </span>
+        <span v-if="translations">{{ translations.reduce }}</span>
+      </button>
     </div>
-    <ul class="tree" :class="className">
-      <li v-for="(element, index) in model">
+    <ul
+      class="tree"
+      :class="className"
+    >
+      <li
+        v-for="(element, index) in model"
+        :key="index"
+      >
         <PSTreeItem
           ref="item"
-          :hasCheckbox="hasCheckbox"
+          :has-checkbox="hasCheckbox"
           :model="element"
           :label="element.name"
           :translations="translations"
-          :currentItem="currentItem"
+          :current-item="currentItem"
           @checked="onCheck"
-          @setCurrentElement ="setCurrentElement"
+          @setCurrentElement="setCurrentElement"
         />
       </li>
     </ul>
@@ -52,19 +64,32 @@
 </template>
 
 <script>
+  import {EventBus} from '@app/utils/event-bus';
   import PSTreeItem from './ps-tree-item';
-  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     name: 'PSTree',
     props: {
-      model: Array,
-      className: String,
-      currentItem: String,
-      hasCheckbox: Boolean,
+      model: {
+        type: Array,
+        default: () => ([]),
+      },
+      className: {
+        type: String,
+        default: '',
+      },
+      currentItem: {
+        type: String,
+        default: '',
+      },
+      hasCheckbox: {
+        type: Boolean,
+        default: false,
+      },
       translations: {
         type: Object,
         required: false,
+        default: () => ({}),
       },
     },
     methods: {
@@ -86,26 +111,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
-  ul {
-    list-style-type: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-  }
-  strong {
-    font-weight: 600;
-  }
-  .tree-header {
-    border-bottom: $gray-light 1px solid;
-    color: $gray-medium;
-  }
-  .material-icons {
-    vertical-align: middle;
-  }
-  .pointer {
-    cursor: pointer;
-  }
-</style>

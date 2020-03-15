@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -15,19 +15,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery';
 
 export default function (search) {
   $('.reset-translation-value').each((buttonIndex, button) => {
-    let $editTranslationForm = $(button).parents('form');
-    let defaultTranslationValue = $editTranslationForm.find('*[name=default]').val();
+    const $editTranslationForm = $(button).parents('form');
+    const defaultTranslationValue = $editTranslationForm.find('*[name=default]').val();
 
     $(button).click(() => {
       $editTranslationForm.find('*[name=translation_value]').val(defaultTranslationValue);
@@ -35,22 +34,22 @@ export default function (search) {
     });
   });
 
-  let showFlashMessageOnEdit = (form) => {
+  const showFlashMessageOnEdit = (form) => {
     $(form).submit((event) => {
       event.preventDefault();
 
-      let $editTranslationForm = $(event.target);
-      let url = $editTranslationForm.attr('action');
+      const $editTranslationForm = $(event.target);
+      const url = $editTranslationForm.attr('action');
 
       $.post(url, $editTranslationForm.serialize(), (response) => {
         let flashMessage;
-        if (response['successful_update']) {
+        if (response.successful_update) {
           flashMessage = $editTranslationForm.find('.alert-info');
 
           // Propagate edition
-          let hash = $editTranslationForm.data('hash');
-          let $editTranslationForms = $('[data-hash=' + hash + ']');
-          let $translationValueFields = $($editTranslationForms.find('textarea'));
+          const hash = $editTranslationForm.data('hash');
+          const $editTranslationForms = $(`[data-hash=${hash}]`);
+          const $translationValueFields = $($editTranslationForms.find('textarea'));
           $translationValueFields.val($editTranslationForm.find('textarea').val());
 
           // Refresh search index

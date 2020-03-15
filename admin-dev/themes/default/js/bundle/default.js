@@ -2,8 +2,20 @@
  * Default layout instanciation
  */
 $(document).ready(function() {
-    $('[data-toggle="tooltip"]').tooltip();
-    rightSidebar.init();
+  var $this = $(this);
+  var $ajaxSpinner = $('.ajax-spinner');
+  $('[data-toggle="tooltip"]').tooltip();
+  rightSidebar.init();
+  /** spinner loading */
+  $this.ajaxStart(function () {
+    $ajaxSpinner.show();
+  });
+  $this.ajaxStop(function () {
+    $ajaxSpinner.hide();
+  });
+  $this.ajaxError(function () {
+    $ajaxSpinner.hide();
+  });
 });
 
 var rightSidebar = (function() {

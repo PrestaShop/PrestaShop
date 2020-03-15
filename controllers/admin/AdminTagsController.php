@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,45 +38,45 @@ class AdminTagsControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->fields_list = array(
-            'id_tag' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
-                'align' => 'center',
-                'class' => 'fixed-width-xs'
-            ),
-            'lang' => array(
-                'title' => $this->trans('Language', array(), 'Admin.Global'),
-                'filter_key' => 'l!name'
-            ),
-            'name' => array(
-                'title' => $this->trans('Name', array(), 'Admin.Global'),
-                'filter_key' => 'a!name'
-            ),
-            'products' => array(
-                'title' => $this->trans('Products', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_tag' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-                'havingFilter' => true
-            )
-        );
+            ],
+            'lang' => [
+                'title' => $this->trans('Language', [], 'Admin.Global'),
+                'filter_key' => 'l!name',
+            ],
+            'name' => [
+                'title' => $this->trans('Name', [], 'Admin.Global'),
+                'filter_key' => 'a!name',
+            ],
+            'products' => [
+                'title' => $this->trans('Products', [], 'Admin.Global'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+                'havingFilter' => true,
+            ],
+        ];
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
                 'icon' => 'icon-trash',
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning')
-            )
-        );
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ],
+        ];
     }
 
     public function initPageHeaderToolbar()
     {
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['new_tag'] = array(
-                'href' => self::$currentIndex.'&addtag&token='.$this->token,
-                'desc' => $this->trans('Add new tag', array(), 'Admin.Shopparameters.Feature'),
-                'icon' => 'process-icon-new'
-            );
+            $this->page_header_toolbar_btn['new_tag'] = [
+                'href' => self::$currentIndex . '&addtag&token=' . $this->token,
+                'desc' => $this->trans('Add new tag', [], 'Admin.Shopparameters.Feature'),
+                'icon' => 'process-icon-new',
+            ];
         }
 
         parent::initPageHeaderToolbar();
@@ -89,9 +89,9 @@ class AdminTagsControllerCore extends AdminController
 
         $this->_select = 'l.name as lang, COUNT(pt.id_product) as products';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt
+			LEFT JOIN `' . _DB_PREFIX_ . 'product_tag` pt
 				ON (a.`id_tag` = pt.`id_tag`)
-			LEFT JOIN `'._DB_PREFIX_.'lang` l
+			LEFT JOIN `' . _DB_PREFIX_ . 'lang` l
 				ON (l.`id_lang` = a.`id_lang`)';
         $this->_group = 'GROUP BY a.name, a.id_lang';
 
@@ -100,11 +100,11 @@ class AdminTagsControllerCore extends AdminController
 
     public function postProcess()
     {
-        if ($this->access('edit') && Tools::getValue('submitAdd'.$this->table)) {
-            if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
+        if ($this->access('edit') && Tools::getValue('submitAdd' . $this->table)) {
+            if (($id = (int) Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj)) {
                 /** @var Tag $obj */
                 $previous_products = $obj->getProducts();
-                $removed_products = array();
+                $removed_products = [];
 
                 foreach ($previous_products as $product) {
                     if (!in_array($product['id_product'], $_POST['products'])) {
@@ -130,38 +130,38 @@ class AdminTagsControllerCore extends AdminController
             return;
         }
 
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Tag', array(), 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-tag'
-            ),
-            'input' => array(
-                array(
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Tag', [], 'Admin.Shopparameters.Feature'),
+                'icon' => 'icon-tag',
+            ],
+            'input' => [
+                [
                     'type' => 'text',
-                    'label' => $this->trans('Name', array(), 'Admin.Global'),
+                    'label' => $this->trans('Name', [], 'Admin.Global'),
                     'name' => 'name',
-                    'required' => true
-                ),
-                array(
+                    'required' => true,
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Language', array(), 'Admin.Global'),
+                    'label' => $this->trans('Language', [], 'Admin.Global'),
                     'name' => 'id_lang',
                     'required' => true,
-                    'options' => array(
+                    'options' => [
                         'query' => Language::getLanguages(false),
                         'id' => 'id_lang',
-                        'name' => 'name'
-                    )
-                ),
-            ),
-            'selects' => array(
+                        'name' => 'name',
+                    ],
+                ],
+            ],
+            'selects' => [
                 'products' => $obj->getProducts(true),
-                'products_unselected' => $obj->getProducts(false)
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            )
-        );
+                'products_unselected' => $obj->getProducts(false),
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
         return parent::renderForm();
     }

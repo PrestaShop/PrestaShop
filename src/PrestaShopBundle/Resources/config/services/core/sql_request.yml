@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.core.sql_manager.exporter.sql_request_exporter:
+        class: 'PrestaShop\PrestaShop\Core\SqlManager\Exporter\SqlRequestExporter'
+        arguments:
+            - '@prestashop.core.export.file_writer.export_csv_file_writer'
+
+    prestashop.core.sql_manager.configuration.sql_request_configuration:
+        class: 'PrestaShop\PrestaShop\Core\SqlManager\Configuration\SqlRequestConfiguration'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@prestashop.core.query_bus'

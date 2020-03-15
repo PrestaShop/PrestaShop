@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,12 +31,12 @@
 class StockManagerFactoryCore
 {
     /**
-     * @var $stock_manager : instance of the current StockManager.
+     * @var : instance of the current StockManager
      */
     protected static $stock_manager;
 
     /**
-     * Returns a StockManager
+     * Returns a StockManager.
      *
      * @return StockManagerInterface
      */
@@ -49,6 +49,7 @@ class StockManagerFactoryCore
             }
             StockManagerFactory::$stock_manager = $stock_manager;
         }
+
         return StockManagerFactory::$stock_manager;
     }
 
@@ -65,7 +66,7 @@ class StockManagerFactoryCore
         foreach ($modules_infos as $module_infos) {
             $module_instance = Module::getInstanceByName($module_infos['name']);
 
-            if (is_callable(array($module_instance, 'hookStockManager'))) {
+            if (is_callable([$module_instance, 'hookStockManager'])) {
                 $stock_manager = $module_instance->hookStockManager();
             }
 

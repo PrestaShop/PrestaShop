@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,14 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 class OrderCarrierCore extends ObjectModel
 {
     /** @var int */
@@ -56,38 +55,39 @@ class OrderCarrierCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'order_carrier',
         'primary' => 'id_order_carrier',
-        'fields' => array(
-            'id_order' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_carrier' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order_invoice' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'weight' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'shipping_cost_tax_excl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'shipping_cost_tax_incl' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'tracking_number' =>        array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
-            'date_add' =>                array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order_invoice' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'shipping_cost_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'shipping_cost_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'tracking_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'objectMethods' => array('update' => 'updateWs'),
-        'fields' => array(
-            'id_order' => array('xlink_resource' => 'orders'),
-            'id_carrier' => array('xlink_resource' => 'carriers'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'objectMethods' => ['update' => 'updateWs'],
+        'fields' => [
+            'id_order' => ['xlink_resource' => 'orders'],
+            'id_carrier' => ['xlink_resource' => 'carriers'],
+        ],
+    ];
 
     /**
      * @param Order $order Required
+     *
      * @return bool
      */
     public function sendInTransitEmail($order)
     {
-        $customer = new Customer((int)$order->id_customer);
-        $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
-        $address = new Address((int)$order->id_address_delivery);
+        $customer = new Customer((int) $order->id_customer);
+        $carrier = new Carrier((int) $order->id_carrier, $order->id_lang);
+        $address = new Address((int) $order->id_address_delivery);
 
         if (!Validate::isLoadedObject($customer)) {
             throw new PrestaShopException('Can\'t load Customer object');
@@ -104,18 +104,18 @@ class OrderCarrierCore extends ObjectModel
 
         $metadata = '';
         foreach ($products as $product) {
-            $prod_obj = new Product((int)$product['product_id']);
+            $prod_obj = new Product((int) $product['product_id']);
 
             //try to get the first image for the purchased combination
             $img = $prod_obj->getCombinationImages($order->id_lang);
+            $link_rewrite = $prod_obj->link_rewrite[$order->id_lang];
             $combination_img = $img[$product['product_attribute_id']][0]['id_image'];
             if ($combination_img != null) {
-                $img_url = $link->getImageLink($prod_obj->link_rewrite, $combination_img, 'large_default');
-            }
-            //if there is no combination image, then get the product cover instead
-            else {
+                $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
+            } else {
+                //if there is no combination image, then get the product cover instead
                 $img = $prod_obj->getCover($prod_obj->id);
-                $img_url = $link->getImageLink($prod_obj->link_rewrite, $img['id_image']);
+                $img_url = $link->getImageLink($link_rewrite, $img['id_image']);
             }
             $prod_url = $prod_obj->getLink();
 
@@ -127,8 +127,8 @@ class OrderCarrierCore extends ObjectModel
         }
 
         $orderLanguage = new Language((int) $order->id_lang);
-        $templateVars = array(
-            '{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
+        $templateVars = [
+            '{followup}' => str_replace('@', $this->tracking_number, $carrier->url),
             '{firstname}' => $customer->firstname,
             '{lastname}' => $customer->lastname,
             '{id_order}' => $order->id,
@@ -139,15 +139,15 @@ class OrderCarrierCore extends ObjectModel
             '{country}' => $address->country,
             '{postcode}' => $address->postcode,
             '{city}' => $address->city,
-            '{meta_products}' => $metadata
-        );
+            '{meta_products}' => $metadata,
+        ];
 
         if (@Mail::Send(
-            (int)$order->id_lang,
+            (int) $order->id_lang,
             'in_transit',
             $this->trans(
                 'Package in transit',
-                array(),
+                [],
                 'Emails.Subject',
                 $orderLanguage->locale
             ),
@@ -160,7 +160,7 @@ class OrderCarrierCore extends ObjectModel
             null,
             _PS_MAIL_DIR_,
             true,
-            (int)$order->id_shop
+            (int) $order->id_shop
         )) {
             return true;
         } else {
@@ -174,21 +174,19 @@ class OrderCarrierCore extends ObjectModel
             return false;
         }
 
-        $sendemail = (bool)Tools::getValue('sendemail', false);
+        $sendemail = (bool) Tools::getValue('sendemail', false);
 
         if ($sendemail) {
-            $order = new Order((int)$this->id_order);
+            $order = new Order((int) $this->id_order);
             if (!Validate::isLoadedObject($order)) {
                 throw new PrestaShopException('Can\'t load Order object');
             }
 
-            if (!$this->sendInTransitEmail($order))
-            {
+            if (!$this->sendInTransitEmail($order)) {
                 return false;
             }
         }
 
         return true;
     }
-
 }

@@ -1,0 +1,64 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.language.pack.importer:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\Pack\LanguagePackImporter'
+    arguments:
+      - '@prestashop.adapter.language.language_pack_installer'
+      - '@prestashop.adapter.data_provider.language'
+      - '@prestashop.core.cache.clearer.cache_clearer_chain'
+      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_TRANSLATIONS_DIR_")'
+
+  prestashop.adapter.language.language_flag_thumbnail_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageFlagThumbnailProvider'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+
+  prestashop.adapter.language.rtl.installed_language_checker:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\RTL\InstalledLanguageChecker'
+    arguments:
+      - '@prestashop.adapter.data_provider.language'
+
+  prestashop.adapter.language.command_handler.add_language_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\AddLanguageHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand'
+
+  prestashop.adapter.language.command_handler.edit_language_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\EditLanguageHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand'
+
+  prestashop.adapter.language.query_handler.get_language_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\QueryHandler\GetLanguageForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Query\GetLanguageForEditing'
+
+  prestashop.adapter.language.command_handler.toggle_language_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\ToggleLanguageStatusHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommand'
+
+  prestashop.adapter.language.command_handler.bulk_toggle_languages_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkToggleLanguagesStatusHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand'
+
+  prestashop.adapter.language.command_handler.bulk_delete_languages_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkDeleteLanguagesHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand'
+
+  prestashop.adapter.language.command_handler.delete_language_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\DeleteLanguageHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand'

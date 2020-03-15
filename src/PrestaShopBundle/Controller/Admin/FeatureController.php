@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,13 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,30 +43,30 @@ class FeatureController extends FrameworkBundleAdminController
     public function getFeatureValuesAction($idFeature)
     {
         $response = new JsonResponse();
-        $locales = $this->container->get('prestashop.adapter.legacy.context')->getLanguages();
-        $data = array();
+        $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
+        $data = [];
 
         if ($idFeature == 0) {
             return $response;
         }
 
-        $featuresValues = $this->container->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $idFeature);
+        $featuresValues = $this->get('prestashop.adapter.data_provider.feature')->getFeatureValuesWithLang($locales[0]['id_lang'], $idFeature);
 
         if (count($featuresValues) !== 0) {
-            $data['0'] = array(
+            $data['0'] = [
                 'id' => 0,
-                'value' => $this->get('translator')->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
-            );
+                'value' => $this->trans('Choose a value', 'Admin.Catalog.Feature'),
+            ];
         }
 
         foreach ($featuresValues as $featureValue) {
             if (isset($featureValue['custom']) && $featureValue['custom'] == 1) {
                 continue;
             }
-            $data[] = array(
+            $data[] = [
                 'id' => $featureValue['id_feature_value'],
                 'value' => $featureValue['value'],
-            );
+            ];
         }
 
         $response->setData($data);

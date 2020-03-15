@@ -9,13 +9,13 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="IVA MX 16%" rate="16" />
-		<tax id="2" name="IVA MX 11%" rate="11" />
-		
+		<tax id="2" name="IVA MX 8%" rate="8" />
+
 		<taxRulesGroup name="MX Standard Rate (16%)">
 			<taxRule iso_code_country="mx" id_tax="1" />
 		</taxRulesGroup>
-		
-		<taxRulesGroup name="MX Reduced Rate (11%)">
+
+		<taxRulesGroup name="MX Reduced Rate (8%)">
 			<taxRule iso_code_country="mx" id_tax="2" />
 		</taxRulesGroup>
 	</taxes>
