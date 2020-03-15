@@ -22,9 +22,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
-    this.productShortDescriptionTab = '#tab_description_short a';
     this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
-    this.productDescriptionTab = '#tab_description a';
     this.productDescriptionIframe = '#form_step1_description_1_ifr';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
@@ -78,10 +76,8 @@ module.exports = class AddProduct extends BOBasePage {
     await this.page.click(this.productPriceTtcInput, {clickCount: 3});
     await this.page.type(this.productPriceTtcInput, productData.price.toString());
     // Set description value
-    await this.page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
     // Set short description value
-    await this.page.click(this.productShortDescriptionTab);
     await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
     // Add combinations if exists
     if (productData.withCombination) {
