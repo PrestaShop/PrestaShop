@@ -2147,7 +2147,7 @@ class ToolsCore
      * @param int $curl_timeout
      * @param array $opts
      *
-     * @return bool|mixed
+     * @return bool|string
      *
      * @throws Exception
      */
