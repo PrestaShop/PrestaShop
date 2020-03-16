@@ -38,9 +38,9 @@ class FloatParser
      */
     private $arabicToLatinNumberConverter;
 
-    public function __construct(ArabicToLatinDigitConverter $arabicToLatinDigitConverter)
+    public function __construct(ArabicToLatinDigitConverter $arabicToLatinDigitConverter = null)
     {
-        $this->arabicToLatinNumberConverter = $arabicToLatinDigitConverter;
+        $this->arabicToLatinNumberConverter = $arabicToLatinDigitConverter ?? new ArabicToLatinDigitConverter();
     }
 
     /**

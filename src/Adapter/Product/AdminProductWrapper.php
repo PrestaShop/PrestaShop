@@ -89,13 +89,14 @@ class AdminProductWrapper
      * @param object $translator
      * @param array $employeeAssociatedShops
      * @param Locale $locale
+     * @param FloatParser|null $floatParser
      */
-    public function __construct($translator, array $employeeAssociatedShops, Locale $locale, FloatParser $floatParser)
+    public function __construct($translator, array $employeeAssociatedShops, Locale $locale, FloatParser $floatParser = null)
     {
         $this->translator = $translator;
         $this->employeeAssociatedShops = $employeeAssociatedShops;
         $this->locale = $locale;
-        $this->floatParser = $floatParser;
+        $this->floatParser = $floatParser ?? new FloatParser();
     }
 
     /**
