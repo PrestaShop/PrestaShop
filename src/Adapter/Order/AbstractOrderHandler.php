@@ -29,8 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Order;
 use Customer;
 use Group;
 use Order;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShopException;
 
 /**
  * Reusable methods for Order subdomain command/query handlers.
@@ -44,7 +46,18 @@ abstract class AbstractOrderHandler
      */
     protected function getOrderObject(OrderId $orderId)
     {
-        $order = new Order($orderId->getValue());
+        try {
+            $order = new Order($orderId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new OrderException(
+                sprintf(
+                    'Error occured when trying to get order object #%s',
+                    $orderId->getValue()
+                ),
+                0,
+                $e
+            );
+        }
 
         if ($order->id !== $orderId->getValue()) {
             throw new OrderNotFoundException($orderId, sprintf('Order with id "%d" was not found.', $orderId->getValue()));
