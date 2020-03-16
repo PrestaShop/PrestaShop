@@ -91,6 +91,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopParametersParentLink = '#subtab-ShopParameters';
     // General
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+    // Order Settings
+    this.orderSettingsLink = '#subtab-AdminParentOrderPreferences';
     // Product Settings
     this.productSettingsLink = '#subtab-AdminPPreferences';
     // Customer Settings
@@ -110,6 +112,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.databaseLink = '#subtab-AdminParentRequestSql';
     // Webservice
     this.webserviceLink = '#subtab-AdminWebservice';
+    // Multistore
+    this.multistoreLink = '#subtab-AdminShopGroup';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
@@ -269,5 +273,13 @@ module.exports = class BOBasePage extends CommonPage {
    */
   async getHelpDocumentURL() {
     return this.getAttributeContent(this.helpDocumentURL, 'data');
+  }
+
+  async isSubmenuVisible(parentSelector, linkSelector) {
+    if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
+      await this.page.click(parentSelector);
+      await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
+    }
+    return this.elementVisible(linkSelector, 1000);
   }
 };

@@ -11,5 +11,17 @@ module.exports = class OrderConfirmation extends FOBasePage {
     // Selectors
     this.orderConfirmationCardSection = '#content-hook_order_confirmation';
     this.orderConfirmationCardTitleH3 = `${this.orderConfirmationCardSection} h3.card-title`;
+    this.orderSummaryContent = '#order-summary-content';
+  }
+
+  /*
+    Methods
+     */
+  /**
+   * Check if final summary is visible
+   * @returns {boolean}
+   */
+  isFinalSummaryVisible() {
+    return this.elementVisible(this.orderSummaryContent, 2000);
   }
 };

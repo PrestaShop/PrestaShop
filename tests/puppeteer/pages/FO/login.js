@@ -83,6 +83,14 @@ module.exports = class Login extends FOBasePage {
   }
 
   /**
+   * Is birth date input visible
+   * @returns {Promise<boolean>}
+   */
+  async isBirthDateVisible() {
+    return this.elementVisible(this.birthdateInput, 1000);
+  }
+
+  /**
    * Is company input visible
    * @returns {Promise<boolean>}
    */
