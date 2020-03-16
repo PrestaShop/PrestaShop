@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -222,6 +223,34 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $expectedCount,
                 $invoicesCollection->count()
             ));
+        }
+    }
+
+    /**
+     * @When I edit product :productName to order :orderReference with following products details:
+     *
+     * @param string $productName
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function editProductsToOrderWithFollowingDetails(string $productName, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
+        $data = $table->getRowsHash();
+
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductInOrderCommand(
+                    $orderId,
+                    $productOrderDetail['id_order_detail'],
+                    (float) $data['price'],
+                    (float) $data['price'],
+                    (int) $data['amount']
+                )
+            );
+        } catch (InvalidProductQuantityException $e) {
+            $this->lastException = $e;
         }
     }
 
@@ -526,6 +555,31 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
     {
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            Assert::assertEquals(
+                (float) $expectedDetailValue,
+                $productOrderDetail[$detailName],
+                sprintf(
+                    'Invalid product detail field %s for product %s, expected %s instead of %s',
+                    $detailName,
+                    $productName,
+                    $expectedDetailValue,
+                    $productOrderDetail[$detailName]
+                )
+            );
+        }
+    }
+
+    /**
+     * @param string $productName
+     * @param string $orderReference
+     *
+     * @return array
+     */
+    private function getOrderDetailFromOrder(string $productName, string $orderReference): array
+    {
         $productId = (int) $this->getProductIdByName($productName);
         $order = new Order(SharedStorage::getStorage()->get($orderReference));
         $orderDetails = $order->getProducts();
@@ -541,20 +595,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Cannot find product details for product %s in order %s', $productName, $orderReference));
         }
 
-        $expectedDetails = $table->getRowsHash();
-        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
-            Assert::assertEquals(
-                (float) $expectedDetailValue,
-                $productOrderDetail[$detailName],
-                sprintf(
-                    'Invalid product detail field %s for product %s, expected %s instead of %s',
-                    $detailName,
-                    $productName,
-                    $expectedDetailValue,
-                    $productOrderDetail[$detailName]
-                )
-            );
-        }
+        return $productOrderDetail;
     }
 
     /**

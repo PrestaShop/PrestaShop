@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
 use InvalidArgumentException;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -90,7 +91,7 @@ class UpdateProductInOrderCommand
         } catch (InvalidArgumentException $e) {
             throw new InvalidAmountException();
         }
-        $this->quantity = $quantity;
+        $this->setQuantity($quantity);
         $this->orderInvoiceId = $orderInvoiceId;
     }
 
@@ -140,5 +141,18 @@ class UpdateProductInOrderCommand
     public function getOrderInvoiceId()
     {
         return $this->orderInvoiceId;
+    }
+
+    /**
+     * @param int $quantity
+     *
+     * @throws InvalidProductQuantityException
+     */
+    private function setQuantity(int $quantity): void
+    {
+        if ($quantity <= 0) {
+            throw new InvalidProductQuantityException('When adding a product quantity must be strictly positive');
+        }
+        $this->quantity = $quantity;
     }
 }
