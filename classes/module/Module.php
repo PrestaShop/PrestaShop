@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -1614,15 +1615,16 @@ abstract class ModuleCore implements ModuleInterface
             return null;
         }
 
-        $filepath = _PS_TMP_IMG_DIR_ . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
-        $fileDoesNotExist = !file_exists($filepath);
+        $filename = md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
+        $filepath = _PS_TMP_IMG_DIR_ . $filename;
+        $fileExist = file_exists($filepath);
 
-        if ($fileDoesNotExist) {
+        if (!$fileExist) {
             $remoteDownloadWasASuccess = false;
             try {
                 $remoteImage = Tools::file_get_contents($modaddons->img);
                 $remoteDownloadWasASuccess = true;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 copy(_PS_IMG_DIR_ . '404.gif', $filepath);
             }
 
@@ -1631,8 +1633,8 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        if (file_exists($filepath)) {
-            return '../img/tmp/' . md5((int) $modaddons->id . '-' . $modaddons->name) . '.jpg';
+        if ($fileExist) {
+            return '../img/tmp/' . $filename;
         }
     }
 
