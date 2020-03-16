@@ -161,6 +161,50 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
   @order-from-bo
+  Scenario: Update product in order
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 12                      |
+    Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 3  |
+      | product_price               | 12 |
+      | unit_price_tax_incl         | 12 |
+      | unit_price_tax_excl         | 12 |
+      | total_price_tax_incl        | 36 |
+      | total_price_tax_excl        | 36 |
+
+  @order-from-bo
+  Scenario: Update product in order with zero quantity is forbidden
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 0                       |
+      | price         | 12                      |
+    Then I should get error that product quantity is invalid
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2    |
+      | product_price               | 11.9 |
+      | unit_price_tax_incl         | 11.9 |
+      | unit_price_tax_excl         | 11.9 |
+      | total_price_tax_incl        | 23.8 |
+      | total_price_tax_excl        | 23.8 |
+
+  @order-from-bo
+  Scenario: Update product in order with negative quantity is forbidden
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | -1                      |
+      | price         | 12                      |
+    Then I should get error that product quantity is invalid
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2    |
+      | product_price               | 11.9 |
+      | unit_price_tax_incl         | 11.9 |
+      | unit_price_tax_excl         | 11.9 |
+      | total_price_tax_incl        | 23.8 |
+      | total_price_tax_excl        | 23.8 |
+
+  @order-from-bo
   Scenario: Generating invoice for Order
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
