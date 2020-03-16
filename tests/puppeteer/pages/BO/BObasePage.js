@@ -259,8 +259,8 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<boolean>}
    */
   async closeHelpSideBar() {
-    await this.waitForSelectorAndClick(this.closeHelpSidebarButton);
-    return this.elementNotVisible(`${this.rightSidebar}.sidebar-open`, 2000);
+    await this.waitForSelectorAndClick(this.helpButton);
+    return this.elementVisible(`${this.rightSidebar}:not(.sidebar-open)`, 2000);
   }
 
   /**
