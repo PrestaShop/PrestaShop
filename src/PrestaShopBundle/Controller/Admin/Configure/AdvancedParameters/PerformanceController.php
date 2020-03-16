@@ -99,14 +99,10 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function processSmartyFormAction(Request $request)
     {
-        $this->dispatchHook(
-            'actionAdminAdvancedParametersPerformanceControllerPostProcessSmartyBefore',
-            ['controller' => $this]
-        );
-
         return $this->processForm(
             $request,
-            $this->getSmartyFormHandler()
+            $this->getSmartyFormHandler(),
+            'Smarty'
         );
     }
 
