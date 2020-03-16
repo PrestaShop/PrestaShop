@@ -91,6 +91,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopParametersParentLink = '#subtab-ShopParameters';
     // General
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+    // Order Settings
+    this.orderSettingsLink = '#subtab-AdminParentOrderPreferences';
     // Product Settings
     this.productSettingsLink = '#subtab-AdminPPreferences';
     // Customer Settings
@@ -110,6 +112,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.databaseLink = '#subtab-AdminParentRequestSql';
     // Webservice
     this.webserviceLink = '#subtab-AdminWebservice';
+    // Multistore
+    this.multistoreLink = '#subtab-AdminShopGroup';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
@@ -261,8 +265,8 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<boolean>}
    */
   async closeHelpSideBar() {
-    await this.waitForSelectorAndClick(this.closeHelpSidebarButton);
-    return this.elementNotVisible(`${this.rightSidebar}.sidebar-open`, 2000);
+    await this.waitForSelectorAndClick(this.helpButton);
+    return this.elementVisible(`${this.rightSidebar}:not(.sidebar-open)`, 2000);
   }
 
   /**
@@ -271,6 +275,20 @@ module.exports = class BOBasePage extends CommonPage {
    */
   async getHelpDocumentURL() {
     return this.getAttributeContent(this.helpDocumentURL, 'data');
+  }
+
+  /**
+   * Check if Submenu is visible
+   * @param parentSelector
+   * @param linkSelector
+   * @return {Promise<boolean|true>}
+   */
+  async isSubmenuVisible(parentSelector, linkSelector) {
+    if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
+      await this.page.click(parentSelector);
+      await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
+    }
+    return this.elementVisible(linkSelector, 1000);
   }
 
   /**
