@@ -47,6 +47,9 @@ final class ArabicToLatinDigitDataTransformer implements DataTransformerInterfac
     }
 
     /**
+     * Do not transform latin number to arabic/persian number as
+     * the javascript datepicker will handle that on its side
+     *
      * {@inheritdoc}
      */
     public function transform($value)
