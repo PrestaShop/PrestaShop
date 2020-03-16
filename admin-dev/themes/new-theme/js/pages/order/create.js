@@ -56,6 +56,7 @@ function refreshAddressesList(refreshCartAddresses) {
 function refreshCart() {
   if (orderPageManager === null) {
     console.log('Error: Could not refresh addresses list as orderPageManager is null');
+    return;
   }
   orderPageManager.refreshCart();
 }
