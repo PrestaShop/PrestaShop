@@ -12,8 +12,8 @@ module.exports = class Categories extends BOBasePage {
     // Header links
     this.addNewCategoryLink = '#page-header-desc-configuration-add[title=\'Add new category\']';
     // List of categories
-    this.categpryGridPanel = '#category_grid_panel';
-    this.categoryGridTitle = `${this.categpryGridPanel} h3.card-header-title`;
+    this.categoryGridPanel = '#category_grid_panel';
+    this.categoryGridTitle = `${this.categoryGridPanel} h3.card-header-title`;
     this.categoriesListForm = '#category_grid';
     this.categoriesListTableRow = `${this.categoriesListForm} tbody tr:nth-child(%ROW)`;
     this.categoriesListTableColumn = `${this.categoriesListTableRow} td.column-%COLUMN`;
@@ -42,6 +42,10 @@ module.exports = class Categories extends BOBasePage {
     this.deleteCategoryModal = '#category_grid_delete_categories_modal.show';
     this.deleteCategoryModalDeleteButton = `${this.deleteCategoryModal} button.js-submit-delete-categories`;
     this.deleteCategoryModalModeInput = `${this.deleteCategoryModal} #delete_categories_delete_mode_%ID`;
+    // Grid Actions
+    this.categoryGridActionsButton = '#category-grid-actions-button';
+    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'category-grid-actions-button\']';
+    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
   }
 
   /*
@@ -153,6 +157,21 @@ module.exports = class Categories extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Get all information from categories table
+   * @param row
+   * @return {Promise<{object}>}
+   */
+  async getCategoryFromTable(row) {
+    return {
+      id: await this.getTextColumnFromTableCategories(row, 'id_category'),
+      name: await this.getTextColumnFromTableCategories(row, 'name'),
+      description: await this.getTextColumnFromTableCategories(row, 'description'),
+      position: parseFloat(await this.getTextColumnFromTableCategories(row, 'position')),
+      status: await this.getToggleColumnValue(row, 'active'),
+    };
   }
 
   /**
@@ -322,5 +341,35 @@ module.exports = class Categories extends BOBasePage {
       i += 1;
     }
     await this.page.waitForSelector(sortColumnDiv, {visible: true});
+  }
+
+  // Export methods
+  /**
+   * Click on lint to export categories to a csv file
+   * @return {Promise<void>}
+   */
+  async exportDataToCsv() {
+    await Promise.all([
+      this.page.click(this.categoryGridActionsButton),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {visible: true}),
+    ]);
+    await Promise.all([
+      this.page.click(this.gridActionExportLink),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {hidden: true}),
+    ]);
+  }
+
+  /**
+   * Get category from table in csv format
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getCategoryInCsvFormat(row) {
+    const category = await this.getCategoryFromTable(row);
+    return `${category.id};`
+      + `${category.name};`
+      + `"${category.description}";`
+      + `${category.position - 1};`
+      + `${category.status ? 1 : 0}`;
   }
 };
