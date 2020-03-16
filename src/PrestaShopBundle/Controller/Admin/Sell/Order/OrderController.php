@@ -1487,8 +1487,8 @@ class OrderController extends CommonController
                 'Admin.Notifications.Error'
             ),
             InvalidOrderStateException::class => [
-                InvalidOrderStateException::UNEXPECTED_INVOICE => $this->trans(
-                    'Invalid action: this order already has an invoice.',
+                InvalidOrderStateException::ALREADY_PAID => $this->trans(
+                    'Invalid action: this order has already been paid.',
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::DELIVERY_NOT_FOUND => $this->trans(
@@ -1499,8 +1499,8 @@ class OrderController extends CommonController
                     'Invalid action: this order has already been delivered.',
                     'Admin.Notifications.Error'
                 ),
-                InvalidOrderStateException::INVOICE_NOT_FOUND => $this->trans(
-                    'Invalid action: this order has no invoice.',
+                InvalidOrderStateException::NOT_PAID => $this->trans(
+                    'Invalid action: this order has not been paid.',
                     'Admin.Notifications.Error'
                 ),
             ],
