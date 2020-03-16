@@ -233,7 +233,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then I should get error that refund quantity is too high and max is :maxRefund
-     * @then I should get error that cancel quantity is too high and max is :maxRefund
+     * @Then I should get error that cancel quantity is too high and max is :maxRefund
      */
     public function assertLastErrorIsRefundQuantityTooHigh(int $maxRefund)
     {
@@ -279,24 +279,24 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that order has unexpected invoice
+     * @Then I should get error that order is already paid
      */
-    public function assertLastErrorIsOrderHasUnexpectedInvoice()
+    public function assertLastErrorIsOrderIsAlreadyPaid()
     {
         $this->assertLastErrorIs(
             InvalidOrderStateException::class,
-            InvalidOrderStateException::UNEXPECTED_INVOICE
+            InvalidOrderStateException::ALREADY_PAID
         );
     }
 
     /**
-     * @Then I should get error that order has no invoice
+     * @Then I should get error that order is not paid
      */
-    public function assertLastErrorIsOrderHasNoInvoice()
+    public function assertLastErrorIsOrderIsNotPaid()
     {
         $this->assertLastErrorIs(
             InvalidOrderStateException::class,
-            InvalidOrderStateException::INVOICE_NOT_FOUND
+            InvalidOrderStateException::NOT_PAID
         );
     }
 

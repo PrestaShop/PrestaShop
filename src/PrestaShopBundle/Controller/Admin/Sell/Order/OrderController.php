@@ -1486,8 +1486,8 @@ class OrderController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             InvalidOrderStateException::class => [
-                InvalidOrderStateException::UNEXPECTED_INVOICE => $this->trans(
-                    'Invalid action: this order already has an invoice.',
+                InvalidOrderStateException::ALREADY_PAID => $this->trans(
+                    'Invalid action: this order is already paid.',
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::DELIVERY_NOT_FOUND => $this->trans(
@@ -1498,8 +1498,8 @@ class OrderController extends FrameworkBundleAdminController
                     'Invalid action: this order has already been delivered.',
                     'Admin.Notifications.Error'
                 ),
-                InvalidOrderStateException::INVOICE_NOT_FOUND => $this->trans(
-                    'Invalid action: this order has no invoice.',
+                InvalidOrderStateException::NOT_PAID => $this->trans(
+                    'Invalid action: this order is not paid.',
                     'Admin.Notifications.Error'
                 ),
             ],
