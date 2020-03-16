@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeComman
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
@@ -153,17 +154,83 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $productName = $data['name'];
         $productId = $this->getProductIdByName($productName);
 
-        $this->getCommandBus()->handle(
-            AddProductToOrderCommand::withNewInvoice(
-                $orderId,
-                $productId,
-                0,
-                (float) $data['price'],
-                (float) $data['price'],
-                (int) $data['amount'],
-                $data['free_shipping']
-            )
-        );
+        try {
+            $this->getCommandBus()->handle(
+                AddProductToOrderCommand::withNewInvoice(
+                    $orderId,
+                    $productId,
+                    0,
+                    (float) $data['price'],
+                    (float) $data['price'],
+                    (int) $data['amount'],
+                    $data['free_shipping']
+                )
+            );
+        } catch (InvalidProductQuantityException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I add products to order :orderReference to last invoice and the following products details:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function addProductsToOrderWithExistingInvoiceAndTheFollowingDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $invoicesCollection = $order->getInvoicesCollection();
+        $lastInvoice = $invoicesCollection->getLast();
+
+        $data = $table->getRowsHash();
+        $productName = $data['name'];
+        $productId = $this->getProductIdByName($productName);
+
+        try {
+            $this->getCommandBus()->handle(
+                AddProductToOrderCommand::toExistingInvoice(
+                    $orderId,
+                    $lastInvoice->id,
+                    $productId,
+                    0,
+                    (float) $data['price'],
+                    (float) $data['price'],
+                    (int) $data['amount'],
+                    $data['free_shipping']
+                )
+            );
+        } catch (InvalidProductQuantityException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then order :orderReference should have :expectedCount invoices
+     */
+    public function checkOrderInvoicesCount(string $orderReference, int $expectedCount)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $invoicesCollection = $order->getInvoicesCollection();
+
+        if ($expectedCount !== $invoicesCollection->count()) {
+            throw new RuntimeException(sprintf(
+                'Invalid number of invoices for order %s, expected %s but got %s instead',
+                $orderReference,
+                $expectedCount,
+                $invoicesCollection->count()
+            ));
+        }
+    }
+
+    /**
+     * @Then I should get error that product quantity is invalid
+     */
+    public function assertLastErrorIsNegativeProductQuantity()
+    {
+        $this->assertLastErrorIs(InvalidProductQuantityException::class);
     }
 
     /**

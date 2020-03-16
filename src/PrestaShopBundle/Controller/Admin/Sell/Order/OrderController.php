@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -1503,6 +1504,10 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            InvalidProductQuantityException::class => $this->trans(
+                'Please enter a positive quantity.',
+                'Admin.Orderscustomers.Notification'
+            ),
         ];
     }
 
