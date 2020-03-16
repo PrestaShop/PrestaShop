@@ -30,7 +30,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable enable partnerOffer', async () => {
+describe('Enable/Disable enable partner offer', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
