@@ -570,7 +570,7 @@ Feature: Refund Order from Back Office (BO)
       | product_name                | quantity                 | amount |
       | Mug The best is yet to come | 1                        | 10.5   |
       | Mug Today is a good day     | 1                        | 3.5    |
-    Then I should get error that order has no invoice
+    Then I should get error that order is not paid
     And "bo_order_refund" has 0 credit slips
 
   @order-refund

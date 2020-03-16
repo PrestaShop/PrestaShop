@@ -131,6 +131,11 @@ class OrderForViewing
     /**
      * @var bool
      */
+    private $hasBeenPaid;
+
+    /**
+     * @var bool
+     */
     private $hasInvoice;
 
     /**
@@ -179,6 +184,7 @@ class OrderForViewing
      * @param string $taxMethod
      * @param bool $isTaxIncluded
      * @param bool $isValid
+     * @param bool $hasBeenPaid
      * @param bool $hasInvoice
      * @param bool $isDelivered
      * @param bool $isShipped
@@ -208,6 +214,7 @@ class OrderForViewing
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
+        bool $hasBeenPaid,
         bool $hasInvoice,
         bool $isDelivered,
         bool $isShipped,
@@ -245,6 +252,7 @@ class OrderForViewing
         $this->isShipped = $isShipped;
         $this->prices = $prices;
         $this->isTaxIncluded = $isTaxIncluded;
+        $this->hasBeenPaid = $hasBeenPaid;
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
@@ -426,6 +434,14 @@ class OrderForViewing
     public function isTaxIncluded(): bool
     {
         return $this->isTaxIncluded;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBeenPaid(): bool
+    {
+        return $this->hasBeenPaid;
     }
 
     /**

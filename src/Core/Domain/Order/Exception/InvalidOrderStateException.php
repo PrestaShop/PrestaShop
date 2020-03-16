@@ -33,14 +33,14 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 class InvalidOrderStateException extends OrderException
 {
     /**
-     * Used when the order has no invoice (and it should have)
+     * Used when the order is not paid (and it should be)
      */
-    const INVOICE_NOT_FOUND = 1;
+    const NOT_PAID = 1;
 
     /**
-     * Used when the order has an invoice (and it should not)
+     * Used when the order is already paid (and it should not be)
      */
-    const UNEXPECTED_INVOICE = 2;
+    const ALREADY_PAID = 2;
 
     /**
      * Used when the order has not been delivered (and it should have)
