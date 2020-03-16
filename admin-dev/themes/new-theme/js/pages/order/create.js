@@ -51,14 +51,13 @@ function refreshAddressesList(refreshCartAddresses) {
 }
 
 /**
- * proxy to allow other scripts within the page to refresh addresses list
+ * proxy to allow other scripts within the Create Order page to refresh cart
  */
 function refreshCart() {
-  if (orderPageManager !== null) {
-    orderPageManager.refreshCart();
-  } else {
+  if (orderPageManager === null) {
     console.log('Error: Could not refresh addresses list as orderPageManager is null');
   }
+  orderPageManager.refreshCart();
 }
 
 
