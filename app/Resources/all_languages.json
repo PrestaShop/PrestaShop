@@ -685,13 +685,13 @@
     "language_code": "zh-cn",
     "locale": "zh-CN"
   },
-  "kr": {
+  "ku": {
     "name": "كوردی",
-    "iso_code": "kr",
+    "iso_code": "ku",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
     "is_rtl": "1",
-    "language_code": "kr-iq",
-    "locale": "kr-IQ"
+    "language_code": "ku-iq",
+    "locale": "ku-IQ"
   }
 }
