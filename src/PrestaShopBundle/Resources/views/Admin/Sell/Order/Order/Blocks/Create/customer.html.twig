@@ -153,7 +153,15 @@
         <p class="mb-0 js-customer-birthday"></p>
       </div>
       <div class="card-footer">
-        <a class="btn btn-outline-secondary js-details-customer-btn">
+        <a
+          class="btn btn-outline-secondary js-details-customer-btn"
+          id="js-details-customer-btn"
+          href="{{ getAdminLink(
+            'AdminCustomers',
+            true,
+            {'liteDisplaying': 1, 'submitFormAjax': 1, 'showCustomerDetails': 1}
+          ) }}"
+        >
           {{ 'Details'|trans({}, 'Admin.Global') }}
         </a>
         <button type="button" class="btn btn-outline-primary float-right js-choose-customer-btn">

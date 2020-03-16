@@ -150,6 +150,7 @@ export default class CreateOrderPage {
     this.onCustomersNotFound();
     this._onCustomerSelected();
     this.initAddressButtonsIframe();
+    this.initCustomerDetailsIframe();
   }
 
   /**
@@ -169,6 +170,17 @@ export default class CreateOrderPage {
     });
 
     $(createOrderMap.deliveryAddressEditBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+  }
+
+  /**
+   * init of iframe used when creating new Order -> Search for a customer -> Details
+   */
+  initCustomerDetailsIframe() {
+    $('#js-details-customer-btn').fancybox({
       'type': 'iframe',
       'width': '90%',
       'height': '90%',
