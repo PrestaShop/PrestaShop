@@ -37,8 +37,8 @@
     position: relative;
 
     .select-status-colored {
-      background: white;
-      color: white;
+      background: #ffffff;
+      color: #ffffff;
       border-radius: 4px;
       border: none;
       max-width: 280px;
@@ -51,7 +51,7 @@
       font-family: "Material Icons";
       cursor: pointer;
       font-size: 1.25rem;
-      color: white;
+      color: #ffffff;
       top: 50%;
       transform: translateY(-50%);
       right: 10px;
@@ -194,12 +194,12 @@
     .badge-dark,
     .badge-secondary {
       color: black;
-      background-color: white;
+      background-color: #ffffff;
     }
 
     .badge-print-light {
       color: black !important;
-      background-color: white !important;
+      background-color: #ffffff !important;
       font-weight: normal;
     }
   }
