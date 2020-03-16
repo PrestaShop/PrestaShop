@@ -76,7 +76,7 @@ final class CategoryGridFactoryDecorator implements GridFactoryInterface
         if ($this->isHomeCategory($filters) && ($this->filterFormFactory !== null)) {
             return $categoryGrid;
         }
-        
+
         $this->injectCategoryIdIntoSearchTypeOptions($categoryGrid, $filters);
 
         $filterForm = $this->rebuildFilterForm($searchCriteria, $categoryGrid);
