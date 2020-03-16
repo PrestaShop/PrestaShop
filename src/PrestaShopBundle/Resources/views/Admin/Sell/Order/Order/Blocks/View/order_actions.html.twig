@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="mb-3">
+<div class="mb-3 col-md-10">
   {{ form_start(updateOrderStatusActionBarForm, {
     'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
     'attr': {
@@ -61,6 +61,15 @@
     </form>
   {% endif %}
 
+  <form class="form-inline d-inline-block form-horizontal ml-2">
+    <div class="input-group">
+      <button type="button" class="btn btn-action js-print-order-view-page">
+        <i class="material-icons" aria-hidden="true">print</i>
+        {{ 'Print order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+  </form>
+
   {% if orderForViewing.documents.canGenerateDeliverySlip %}
     <form class="form-inline d-inline-block form-horizontal ml-2">
       <div class="input-group">
@@ -73,8 +82,43 @@
     </form>
   {% endif %}
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
+  {% if merchandiseReturnEnabled %}
+    {% if orderForViewing.isDelivered() %}
+      <div class="form-inline d-inline-block form-horizontal ml-2">
+        <div class="input-group">
+          <button class="btn btn-action return-product-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+            <i class="material-icons">swap_horiz</i>
+            {{ 'Return products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        </div>
+      </div>
+    {% elseif orderForViewing.hasInvoice() %}
+      <div class="form-inline d-inline-block form-horizontal ml-2">
+        <div class="input-group">
+          <button class="btn btn-action standard-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+            <i class="material-icons">swap_horiz</i>
+            {{ 'Standard refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        </div>
+      </div>
+    {% else %}
+      <div class="form-inline d-inline-block form-horizontal ml-2">
+        <div class="input-group">
+          <button class="btn btn-action cancel-product-display" type="button">
+            {{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
   {% if orderForViewing.hasInvoice() %}
     <div class="form-inline d-inline-block form-horizontal ml-2">
+      <div class="input-group">
+        <button class="btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+          <i class="material-icons">swap_horiz</i>
+          {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      </div>
     </div>
   {% endif %}
 </div>

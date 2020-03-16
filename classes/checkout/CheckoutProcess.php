@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,7 +34,7 @@ class CheckoutProcessCore implements RenderableInterface
      * @var CheckoutSession
      */
     private $checkoutSession;
-    private $steps = array();
+    private $steps = [];
     private $has_errors;
 
     private $template = 'checkout/checkout-process.tpl';
@@ -53,7 +53,7 @@ class CheckoutProcessCore implements RenderableInterface
         return $this->template;
     }
 
-    public function handleRequest(array $requestParameters = array())
+    public function handleRequest(array $requestParameters = [])
     {
         foreach ($this->getSteps() as $step) {
             $step->handleRequest($requestParameters);
@@ -87,20 +87,20 @@ class CheckoutProcessCore implements RenderableInterface
         return $this;
     }
 
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         $scope = $this->smarty->createData(
             $this->smarty
         );
 
-        $params = array(
+        $params = [
             'steps' => array_map(function (CheckoutStepInterface $step) {
-                return array(
+                return [
                     'identifier' => $step->getIdentifier(),
                     'ui' => new RenderableProxy($step),
-                );
+                ];
             }, $this->getSteps()),
-        );
+        ];
 
         $scope->assign(array_merge($extraParams, $params));
 
@@ -128,10 +128,10 @@ class CheckoutProcessCore implements RenderableInterface
     {
         $data = [];
         foreach ($this->getSteps() as $step) {
-            $defaultStepData = array(
+            $defaultStepData = [
                 'step_is_reachable' => $step->isReachable(),
                 'step_is_complete' => $step->isComplete(),
-            );
+            ];
 
             $stepData = array_merge($defaultStepData, $step->getDataToPersist());
 

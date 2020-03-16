@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -93,10 +93,7 @@ class SendProcessOrderEmailHandler implements SendProcessOrderEmailHandlerInterf
                 true,
                 $cart->id_shop
             )) {
-                throw new OrderEmailSendException(
-                    'Failed to send order process email to customer',
-                    OrderEmailSendException::FAILED_SEND_PROCESS_ORDER
-                );
+                throw new OrderEmailSendException('Failed to send order process email to customer', OrderEmailSendException::FAILED_SEND_PROCESS_ORDER);
             }
         } catch (PrestaShopException $e) {
             throw new OrderException('An error occurred when trying to get info for order processing');
@@ -118,9 +115,7 @@ class SendProcessOrderEmailHandler implements SendProcessOrderEmailHandlerInterf
         $cart = new Cart($cartIdValue);
 
         if ($cart->id !== $cartIdValue) {
-            throw new CartNotFoundException(
-                sprintf('Cart #%s not found', $cartIdValue)
-            );
+            throw new CartNotFoundException(sprintf('Cart #%s not found', $cartIdValue));
         }
 
         return $cart;
@@ -141,10 +136,7 @@ class SendProcessOrderEmailHandler implements SendProcessOrderEmailHandlerInterf
         $customer = new Customer($customerIdValue);
 
         if ($customer->id !== $customerIdValue) {
-            throw new CustomerNotFoundException(
-                new CustomerId($customerIdValue),
-                sprintf('Customer #%s not found', $customerIdValue)
-            );
+            throw new CustomerNotFoundException(new CustomerId($customerIdValue), sprintf('Customer #%s not found', $customerIdValue));
         }
 
         return $customer;

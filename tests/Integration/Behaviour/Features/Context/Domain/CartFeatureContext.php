@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,8 +33,8 @@ use Context;
 use Country;
 use Currency;
 use Customer;
-use DateTime;
 use DateInterval;
+use DateTime;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
@@ -43,10 +43,10 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
-use RuntimeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use Product;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext

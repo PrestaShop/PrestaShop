@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,7 +41,7 @@ class HookFinder
      *
      * @var string
      */
-    protected $expectedInstanceClasses = array();
+    protected $expectedInstanceClasses = [];
 
     /**
      * Because we cannot send the same parameters between two different finders,
@@ -49,7 +49,7 @@ class HookFinder
      *
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * The hook to call.
@@ -69,7 +69,7 @@ class HookFinder
     {
         $hookContent = (new HookManager())->exec($this->hookName, $this->params, null, true);
         if (!is_array($hookContent)) {
-            $hookContent = array();
+            $hookContent = [];
         }
 
         foreach ($hookContent as $moduleName => $moduleContents) {
@@ -100,7 +100,7 @@ class HookFinder
     public function present()
     {
         $hookContent = $this->find();
-        $presentedContents = array();
+        $presentedContents = [];
 
         foreach ($hookContent as $moduleName => $moduleContents) {
             if (!is_array($moduleContents)) {

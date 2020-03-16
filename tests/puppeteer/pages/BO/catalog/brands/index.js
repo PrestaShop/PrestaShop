@@ -13,14 +13,15 @@ module.exports = class Brands extends BOBasePage {
     this.newBrandLink = '#page-header-desc-configuration-add_manufacturer';
     this.newBrandAddressLink = '#page-header-desc-configuration-add_manufacturer_address';
 
-
     // Table Selectors
     this.gridPanel = '#%TABLE_grid_panel';
     this.gridTable = '#%TABLE_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.confirmDeleteModal = '#%TABLE_grid_confirm_modal';
+    this.confirmDeleteButton = 'button.btn-confirm-submit';
     // Filters
     this.filterColumn = `${this.gridTable} #%TABLE_%FILTERBY`;
     this.filterSearchButton = `${this.gridTable} button[name='%TABLE[actions][search]']`;
@@ -34,6 +35,10 @@ module.exports = class Brands extends BOBasePage {
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
 
     // Brands list Selectors
     this.brandsTableEnableColumn = `${this.tableColumn
@@ -53,7 +58,7 @@ module.exports = class Brands extends BOBasePage {
     // Brand Addresses Selectors
     this.editBrandAddressLink = `${this.actionsColumn} a[data-original-title='Edit']`
       .replace('%TABLE', 'manufacturer_address');
-    this.deleteAddressesButton = `${this.gridPanel} #manufacturer_address_grid_bulk_action_delete_manufacturer_address`
+    this.deleteAddressesButton = `${this.gridPanel} #manufacturer_address_grid_bulk_action_delete_selection`
       .replace('%TABLE', 'manufacturer_address');
   }
 
@@ -273,7 +278,7 @@ module.exports = class Brands extends BOBasePage {
     await Promise.all([
       this.page.click(this.selectAllRowsLabel.replace('%TABLE', 'manufacturer')),
       this.page.waitForSelector(
-        `${this.selectAllRowsLabel}:not([disabled])`.replace('%TABLE', 'manufacturer'),
+        `${this.bulkActionsToggleButton}:not([disabled])`.replace('%TABLE', 'manufacturer'),
         {visible: true},
       ),
     ]);
@@ -296,7 +301,6 @@ module.exports = class Brands extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteWithBulkActions(table) {
-    this.dialogListener(true);
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel.replace('%TABLE', table)),
@@ -315,10 +319,19 @@ module.exports = class Brands extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     if (table === 'manufacturer') {
-      await this.clickAndWaitForNavigation(this.deleteBrandsButton);
+      this.page.click(this.deleteBrandsButton);
+      await this.page.waitForSelector(
+        `${this.confirmDeleteModal.replace('%TABLE', 'manufacturer')}.show`,
+        {visible: true},
+      );
     } else if (table === 'manufacturer_address') {
-      await this.clickAndWaitForNavigation(this.deleteAddressesButton);
+      this.page.click(this.deleteAddressesButton);
+      await this.page.waitForSelector(
+        `${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`,
+        {visible: true},
+      );
     }
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -356,5 +369,100 @@ module.exports = class Brands extends BOBasePage {
    */
   async getTextColumnFromTableAddresses(row, column) {
     return this.getTextColumnFromTable('manufacturer_address', row, column);
+  }
+
+  /**
+   * Get content from all rows
+   * @param table
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(table, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(table);
+    const allRowsContentTable = [];
+    let rowContent;
+    for (let i = 1; i <= rowsNumber; i++) {
+      switch (table) {
+        case 'manufacturer':
+          rowContent = await this.getTextColumnFromTableBrands(i, column);
+          break;
+        case 'manufacturer_address':
+          rowContent = await this.getTextColumnFromTableAddresses(i, column);
+          break;
+        default:
+          // Nothing to do
+      }
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
+   * Get content from all rows table brands
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContentBrandsTable(column) {
+    return this.getAllRowsColumnContent('manufacturer', column);
+  }
+
+  /**
+   * Get content from all rows table addresses
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContentAddressesTable(column) {
+    return this.getAllRowsColumnContent('manufacturer_address', column);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param table, table to sort
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(table, sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv}[data-sort-direction='${sortDirection}']`
+      .replace('%COLUMN', sortBy)
+      .replace('%TABLE', table);
+    const sortColumnSpanButton = this.sortColumnSpanButton
+      .replace('%COLUMN', sortBy)
+      .replace('%TABLE', table);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+  }
+
+  /**
+   * Sort table brands
+   * @param sortBy
+   * @param sortDirection
+   * @return {Promise<void>}
+   */
+  async sortTableBrands(sortBy, sortDirection = 'asc') {
+    return this.sortTable('manufacturer', sortBy, sortDirection);
+  }
+
+  /**
+   * Sort table addresses
+   * @param sortBy
+   * @param sortDirection
+   * @return {Promise<void>}
+   */
+  async sortTableAddresses(sortBy, sortDirection = 'asc') {
+    return this.sortTable('manufacturer_address', sortBy, sortDirection);
+  }
+
+  /**
+   * Get alert text message
+   * @returns {Promise<string>}
+   */
+  getAlertTextMessage() {
+    return this.getTextContent(this.alertTextBlock);
   }
 };

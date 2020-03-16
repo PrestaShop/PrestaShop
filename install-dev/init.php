@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,13 +33,10 @@ require_once 'install_version.php';
 @set_time_limit(0);
 @ini_set('max_execution_time', '0');
 
-// setting the memory limit to 128M only if current is lower
-$memory_limit = ini_get('memory_limit');
-if (substr($memory_limit, -1) != 'G'
-    && ((substr($memory_limit, -1) == 'M' && substr($memory_limit, 0, -1) < 128)
-        || is_numeric($memory_limit) && ((int) $memory_limit < 131072) && $memory_limit > 0)
-) {
-    @ini_set('memory_limit', '128M');
+// setting the memory limit to 256M only if current is lower
+$current_memory_limit = psinstall_get_memory_limit();
+if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('256M')) {
+    ini_set('memory_limit', '256M');
 }
 
 // redefine REQUEST_URI if empty (on some webservers...)
@@ -137,11 +134,6 @@ if (!in_array(@ini_get('date.timezone'), timezone_identifiers_list())) {
     ini_set('date.timezone', 'UTC');
 }
 
-// Try to improve memory limit if it's under 64M
-$current_memory_limit = psinstall_get_memory_limit();
-if ($current_memory_limit > 0 && $current_memory_limit < psinstall_get_octets('128M')) {
-    ini_set('memory_limit', '128M');
-}
 
 function psinstall_get_octets($option)
 {

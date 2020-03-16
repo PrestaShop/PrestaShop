@@ -14,6 +14,10 @@ const AddProfile = require('@pages/BO/advancedParameters/team/profiles/add');
 const ProductsPage = require('@pages/BO/catalog/products/index');
 const OrdersPage = require('@pages/BO/orders/index');
 const FOBasePage = require('@pages/FO/FObasePage');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_advancedParams_team_profiles_profileBulkActions';
 
 let browser;
 let page;
@@ -36,11 +40,8 @@ const init = async function () {
   };
 };
 
-/*
-Test disabled because of issue described here https://github.com/PrestaShop/PrestaShop/issues/16899
- */
 // Create profiles, Then Delete with Bulk actions
-describe.skip('Create profiles then Delete with Bulk actions', async () => {
+describe('Create profiles then Delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -55,6 +56,7 @@ describe.skip('Create profiles then Delete with Bulk actions', async () => {
   loginCommon.loginBO();
 
   it('should go to "Advanced parameters>Team" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.teamLink,
@@ -65,12 +67,14 @@ describe.skip('Create profiles then Delete with Bulk actions', async () => {
   });
 
   it('should go to "Profiles" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
     await this.pageObjects.employeesPage.goToProfilesPage();
     const pageTitle = await this.pageObjects.profilesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.profilesPage.pageTitle);
   });
 
   it('should reset all filters and get number of profiles', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfProfiles = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
     await expect(numberOfProfiles).to.be.above(0);
   });
@@ -80,12 +84,14 @@ describe.skip('Create profiles then Delete with Bulk actions', async () => {
     const profilesToCreate = [firstProfileData, secondProfileData];
     profilesToCreate.forEach((profileToCreate, index) => {
       it('should go to add new profile page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewProfilePage${index + 1}`, baseContext);
         await this.pageObjects.profilesPage.goToAddNewProfilePage();
         const pageTitle = await this.pageObjects.addProfile.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addProfile.pageTitleCreate);
       });
 
       it('should create profile', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createProfile${index + 1}`, baseContext);
         const textResult = await this.pageObjects.addProfile.createEditProfile(profileToCreate);
         await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
         const numberOfProfilesAfterCreation = await this.pageObjects.profilesPage.getNumberOfElementInGrid();
@@ -97,6 +103,7 @@ describe.skip('Create profiles then Delete with Bulk actions', async () => {
   // 2 : Delete profile with bulk actions
   describe('Delete profiles with Bulk Actions', async () => {
     it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'FilterForDelete', baseContext);
       await this.pageObjects.profilesPage.filterProfiles(
         'input',
         'name',
@@ -107,11 +114,13 @@ describe.skip('Create profiles then Delete with Bulk actions', async () => {
     });
 
     it('should delete profiles with Bulk Actions and check Result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteProfile', baseContext);
       const deleteTextResult = await this.pageObjects.profilesPage.deleteBulkActions();
       await expect(this.pageObjects.profilesPage.successfulDeleteMessage).to.be.contains(deleteTextResult);
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
       const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
       await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
     });

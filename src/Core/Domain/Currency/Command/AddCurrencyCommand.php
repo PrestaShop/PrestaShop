@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,16 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
- * Base class for both add commands this class is abstract because it must not be used
- * as is since no handler is expecting it. Instead use AddOfficialCurrencyCommand or
- * AddUnofficialCurrencyCommand.
+ * Class AddCurrencyCommand used to add an official currency
  */
-abstract class AddCurrencyCommand
+class AddCurrencyCommand
 {
     /**
      * @var AlphaIsoCode
@@ -151,10 +149,7 @@ abstract class AddCurrencyCommand
     public function setLocalizedNames(array $localizedNames): AddCurrencyCommand
     {
         if (empty($localizedNames)) {
-            throw new CurrencyConstraintException(
-                'Currency name cannot be empty',
-                CurrencyConstraintException::EMPTY_NAME
-            );
+            throw new CurrencyConstraintException('Currency name cannot be empty', CurrencyConstraintException::EMPTY_NAME);
         }
 
         $this->localizedNames = $localizedNames;
@@ -180,10 +175,7 @@ abstract class AddCurrencyCommand
     public function setLocalizedSymbols(array $localizedSymbols): AddCurrencyCommand
     {
         if (empty($localizedSymbols)) {
-            throw new CurrencyConstraintException(
-                'Currency symbol cannot be empty',
-                CurrencyConstraintException::EMPTY_SYMBOL
-            );
+            throw new CurrencyConstraintException('Currency symbol cannot be empty', CurrencyConstraintException::EMPTY_SYMBOL);
         }
 
         $this->localizedSymbols = $localizedSymbols;

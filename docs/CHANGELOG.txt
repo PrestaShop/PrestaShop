@@ -1,4 +1,4 @@
-2007-2019 PrestaShop and Contributors
+2007-2020 PrestaShop and Contributors
 
 NOTICE OF LICENSE
 
@@ -17,12 +17,67 @@ versions in the future. If you wish to customize PrestaShop for your
 needs please refer to http://www.prestashop.com for more information.
 
 @author    PrestaShop SA <contact@prestashop.com>
-@copyright 2007-2019 PrestaShop SA and Contributors
+@copyright 2007-2020 PrestaShop SA and Contributors
 @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 International Registered Trademark & Property of PrestaShop SA
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+
+####################################
+#   v1.7.6.4 - (2020-03-02)
+####################################
+- Back Office:
+  - Bug fix:
+    - #17711: Fix a bug on safari where SEO preview on create page was not updated (by @NeOMakinG)
+    - #17613: Files translations.css and product_page.css do not exist (by @PierreRambaud)
+    - #17395: Can't explore a category when all subcats are disabled (by @PululuK)
+- Front Office:
+  - Improvement:
+    - #17638: Prevent email enumeration (by @PierreRambaud)
+  - Bug fix:
+    - #17457: Disable add-to-cart button when product/attribute combination is not available (by @sowbiba)
+    - #16616: Fix round remaining value of reduction amount (backport #16531) (by @matks)
+    - #17608: Email subject doesn't support html entities (by @Progi1984)
+- Core:
+  - Bug fix:
+    - #17846: Fix exception thrown when editing a customer with a bad email address (by @atomiix)
+    - #17433: Do not escape translations when using the legacy translator from the new one (by @Progi1984)
+    - #17306: Do not force memory_limit in index_cli.php (by @PierreRambaud)
+
+####################################
+#   v1.7.6.3 - (2020-01-20)
+####################################
+- Back Office:
+  - Improvement:
+    - #17036: Protect modules vendor folder on install/upgrade/enable (by @jolelievre)
+  - Bug fix:
+    - #16906: Handle profile name above 32 chars exception (by @atomiix)
+    - #17087: Define alert message when error are found in Category Form (by @Progi1984)
+    - #17065: Fix encoding on product name in viewed product (by @Progi1984)
+    - #17071: Fix recursive check of updated files - backport of #16765 (by @matks)
+    - #16742: Can't export data more than filters limits (by @PierreRambaud)
+    - #16696: Fix email theme permission (by @atomiix)
+    - #16746: Attributes bo_css & bo_theme can be empty (by @PierreRambaud)
+    - #16729: Cost price & unit price are erased when saving with a supplier (by @PierreRambaud)
+    - #16888: Fix customer comment template (by @jolelievre)
+    - #16294: Fix email not translated when installing a new language (by @atomiix)
+    - #16648: Fix customer statuses not being able to toggle when optin field is required (by @matthieu-rolland)
+- Front Office:
+  - Bug fix:
+    - #17248: Added RTL Style for Classic Theme (by @Progi1984)
+    - #16852: Fix a bug where changing quantity on product quickview adds products tags on ever products (by @NeOMakinG)
+    - #17030: Ignore rtl assets and remove _rtl.css files (by @NeOMakinG)
+- Core:
+  - Bug fix:
+    - #17050: Quick access error when having a wrong url (by @PierreRambaud)
+    - #16893: Fix yml config parse typo (by @mvorisek)
+    - #16522: Prevent getter from changing class state (by @eternoendless)
+  - Refactoring:
+    - #17130: Make $localizedSymbols variable to be compatible with develop (by @atomiix)
+- Web Services:
+  - Bug fix:
+    - #17069: Fix Currency i18n fields issue in webservice (by @atomiix)
 
 ####################################
 #   v1.7.6.2 - (2019-11-28)

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -76,10 +76,7 @@ final class EnableThemeHandler implements EnableThemeHandlerInterface
     public function handle(EnableThemeCommand $command)
     {
         if (!$this->isSingleShopContext) {
-            throw new ThemeConstraintException(
-                'Themes can be changed only in single shop context',
-                ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP
-            );
+            throw new ThemeConstraintException('Themes can be changed only in single shop context', ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP);
         }
 
         $plainThemeName = $command->getThemeName()->getValue();

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,10 +50,7 @@ final class EditRootCategoryHandler extends AbstractObjectModelHandler implement
         $category = new Category($command->getCategoryId()->getValue());
 
         if (!$category->id) {
-            throw new CategoryNotFoundException(
-                $command->getCategoryId(),
-                sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue())
-            );
+            throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue()));
         }
 
         $this->updateRootCategoryFromCommandData($category, $command);

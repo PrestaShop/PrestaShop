@@ -13,6 +13,10 @@ const AddEmployeePage = require('@pages/BO/advancedParameters/team/add');
 const ProductsPage = require('@pages/BO/catalog/products/index');
 const OrdersPage = require('@pages/BO/orders/index');
 const FOBasePage = require('@pages/FO/FObasePage');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_advancedParams_team_employees_employeesBulkActions';
 
 let browser;
 let page;
@@ -58,6 +62,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
   loginCommon.loginBO();
 
   it('should go to "Advanced parameters>Team" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.teamLink,
@@ -68,6 +73,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
   });
 
   it('should reset all filters and get number of employees', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfEmployees = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
     await expect(numberOfEmployees).to.be.above(0);
   });
@@ -77,12 +83,14 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     const employeesToCreate = [firstEmployeeData, secondEmployeeData];
     employeesToCreate.forEach((employeeToCreate, index) => {
       it('should go to add new employee page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);
         await this.pageObjects.employeesPage.goToAddNewEmployeePage();
         const pageTitle = await this.pageObjects.addEmployeePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addEmployeePage.pageTitleCreate);
       });
 
       it('should create employee', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createEmployee${index + 1}`, baseContext);
         const textResult = await this.pageObjects.addEmployeePage.createEditEmployee(employeeToCreate);
         await expect(textResult).to.equal(this.pageObjects.employeesPage.successfulCreationMessage);
         const numberOfEmployeesAfterCreation = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
@@ -94,6 +102,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
   // 2 : Enable/Disable employees created with bulk actions
   describe('Enable and Disable employees with Bulk Actions', async () => {
     it('should filter by First name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkEditStatus', baseContext);
       await this.pageObjects.employeesPage.filterEmployees('input', 'firstname', firstEmployeeData.firstName);
       const numberOfEmployeesAfterFilter = await this.pageObjects.employeesPage.getNumberOfElementInGrid();
       await expect(numberOfEmployeesAfterFilter).to.be.at.most(numberOfEmployees + 2);
@@ -108,6 +117,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     ];
     statuses.forEach((employeeStatus) => {
       it(`should ${employeeStatus.args.status} employees with Bulk Actions and check Result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${employeeStatus.args.status}Employee`, baseContext);
         const disableTextResult = await this.pageObjects.employeesPage.changeEnabledColumnBulkActions(
           employeeStatus.args.enable,
         );
@@ -123,11 +133,13 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     // 3 : Delete employee with bulk actions
     describe('Delete employees with Bulk Actions', async () => {
       it('should delete employees with Bulk Actions and check Result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteEmployee', baseContext);
         const deleteTextResult = await this.pageObjects.employeesPage.deleteBulkActions();
         await expect(deleteTextResult).to.be.equal(this.pageObjects.employeesPage.successfulMultiDeleteMessage);
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
         const numberOfEmployeesAfterDelete = await this.pageObjects.employeesPage.resetAndGetNumberOfLines();
         await expect(numberOfEmployeesAfterDelete).to.be.equal(numberOfEmployees);
       });

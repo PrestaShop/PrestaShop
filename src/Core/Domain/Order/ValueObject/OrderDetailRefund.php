@@ -26,8 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundAmountException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\EmptyRefundQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
@@ -57,13 +56,13 @@ class OrderDetailRefund
      *
      * @return self
      *
-     * @throws EmptyRefundAmountException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     public static function createPartialRefund(int $orderDetailId, int $productQuantity, float $refundedAmount): self
     {
         if (0 >= $refundedAmount) {
-            throw new EmptyRefundAmountException();
+            throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
         }
 
         return new self($orderDetailId, $productQuantity, $refundedAmount);
@@ -93,7 +92,7 @@ class OrderDetailRefund
     {
         $this->assertOrderDetailIdIsGreaterThanZero($orderDetailId);
         if (0 >= $productQuantity) {
-            throw new EmptyRefundQuantityException();
+            throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
         }
         $this->orderDetailId = $orderDetailId;
         $this->productQuantity = $productQuantity;
@@ -132,12 +131,7 @@ class OrderDetailRefund
     private function assertOrderDetailIdIsGreaterThanZero(int $orderDetailId)
     {
         if (0 > $orderDetailId) {
-            throw new OrderException(
-                sprintf(
-                    'Order detail id %s is invalid. Order detail id must be number that is greater than zero.',
-                    var_export($orderDetailId, true)
-                )
-            );
+            throw new OrderException(sprintf('Order detail id %s is invalid. Order detail id must be number that is greater than zero.', var_export($orderDetailId, true)));
         }
     }
 }

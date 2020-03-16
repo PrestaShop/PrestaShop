@@ -49,7 +49,7 @@ class translationtest extends Module
         $this->displayName = 'translation tests';
         $this->description = 'Test the translations accross different templating engines and controllers';
 
-        $this->ps_versions_compliancy = array('min' => '1.7.5.0', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.7.5.0', 'max' => _PS_VERSION_];
 
         $this->adminControllerName = 'AdminTranslationtestFoo';
         $this->controllers = ['bar']; // this is a front controller

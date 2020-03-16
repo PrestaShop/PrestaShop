@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -91,6 +91,7 @@ class CustomerAddressType extends AbstractType
         $data = $builder->getData();
         $requiredFields = $data['required_fields'];
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
+        $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
@@ -400,7 +401,7 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => true,
-                'choices' => $this->stateChoiceProvider->getChoices(['id_country' => $countryId]),
+                'choices' => $stateChoices,
                 'constraints' => [
                     new AddressStateRequired([
                         'id_country' => $countryId,

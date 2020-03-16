@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -137,9 +137,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         $shopAssociation = $command->getShopAssociation();
 
         if (!$employee->isSuperAdmin() && empty($shopAssociation)) {
-            throw new MissingShopAssociationException(
-                'Employee must be associated to at least one shop.'
-            );
+            throw new MissingShopAssociationException('Employee must be associated to at least one shop.');
         }
 
         if (null !== $command->getPlainPassword()) {
@@ -147,9 +145,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         }
 
         if (false === $employee->update()) {
-            throw new EmployeeException(
-                sprintf('Cannot update employee with id "%s"', $employee->id)
-            );
+            throw new EmployeeException(sprintf('Cannot update employee with id "%s"', $employee->id));
         }
 
         if ($employee->isSuperAdmin()) {
@@ -176,10 +172,7 @@ final class EditEmployeeHandler extends AbstractEmployeeHandler implements EditE
         }
 
         if (Employee::employeeExists($email)) {
-            throw new EmailAlreadyUsedException(
-                $email,
-                'An account already exists for this email address'
-            );
+            throw new EmailAlreadyUsedException($email, 'An account already exists for this email address');
         }
     }
 

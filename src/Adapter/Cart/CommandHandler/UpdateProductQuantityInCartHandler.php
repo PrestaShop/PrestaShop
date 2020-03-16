@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,10 +56,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         $qtyDiff = abs($command->getNewQuantity() - $previousQty);
 
         if ($qtyDiff === 0) {
-            throw new CartConstraintException(
-                sprintf('Cart quantity is already %d', $command->getNewQuantity()),
-                CartConstraintException::UNCHANGED_QUANTITY
-            );
+            throw new CartConstraintException(sprintf('Cart quantity is already %d', $command->getNewQuantity()), CartConstraintException::UNCHANGED_QUANTITY);
         }
 
         // $cart::updateQty needs customer context
@@ -100,9 +97,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
                 Attribute::getAttributeMinimalQty($combinationIdValue) :
                 $product->minimal_quantity;
 
-            throw new CartException(
-                sprintf('Minimum quantity of %d must be added to cart.', $minQuantity)
-            );
+            throw new CartException(sprintf('Minimum quantity of %d must be added to cart.', $minQuantity));
         }
     }
 
@@ -130,9 +125,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         $product = new Product($productId->getValue(), true);
 
         if ($product->id !== $productId->getValue()) {
-            throw new ProductNotFoundException(
-                sprintf('Product with id "%s" was not found', $productId->getValue())
-            );
+            throw new ProductNotFoundException(sprintf('Product with id "%s" was not found', $productId->getValue()));
         }
 
         return $product;
@@ -154,18 +147,14 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
             );
 
             if (!$isAvailableWhenOutOfStock && !$isEnoughQuantity) {
-                throw new ProductOutOfStockException(
-                    sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id)
-                );
+                throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
             }
 
             return;
         }
 
         if (!$product->checkQty($command->getNewQuantity())) {
-            throw new ProductOutOfStockException(
-                sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id)
-            );
+            throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
         }
     }
 

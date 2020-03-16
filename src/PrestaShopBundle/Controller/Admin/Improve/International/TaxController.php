@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand;
@@ -38,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\UpdateTaxException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\QueryResult\EditableTax;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\TaxFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;

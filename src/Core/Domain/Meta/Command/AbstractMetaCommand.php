@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,15 +45,7 @@ abstract class AbstractMetaCommand
         $regex = '/^[^<>={}]*$/u';
 
         if ($value && !preg_match($regex, $value)) {
-            throw new MetaConstraintException(
-                sprintf(
-                    'Value "%s" for language id %s did not passed the regex expression: %s',
-                    $value,
-                    $languageId,
-                    $regex
-                ),
-                $constraintErrorCode
-            );
+            throw new MetaConstraintException(sprintf('Value "%s" for language id %s did not passed the regex expression: %s', $value, $languageId, $regex), $constraintErrorCode);
         }
     }
 }

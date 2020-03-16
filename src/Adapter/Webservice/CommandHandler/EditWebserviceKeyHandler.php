@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -61,9 +61,7 @@ final class EditWebserviceKeyHandler extends AbstractWebserviceKeyHandler implem
         $webserviceKey = new WebserviceKey($webserviceKeyId->getValue());
 
         if ($webserviceKeyId->getValue() !== $webserviceKey->id) {
-            throw new WebserviceKeyNotFoundException(sprintf(
-                'Webservice key with id "%s was not found', $webserviceKeyId->getValue()
-            ));
+            throw new WebserviceKeyNotFoundException(sprintf('Webservice key with id "%s was not found', $webserviceKeyId->getValue()));
         }
 
         return $webserviceKey;
@@ -94,9 +92,7 @@ final class EditWebserviceKeyHandler extends AbstractWebserviceKeyHandler implem
         }
 
         if (false === $webserviceKey->update()) {
-            throw new WebserviceException(
-                sprintf('Failed to update WebserviceKey with id "%s"', $webserviceKey->id)
-            );
+            throw new WebserviceException(sprintf('Failed to update WebserviceKey with id "%s"', $webserviceKey->id));
         }
 
         if (null !== $command->getShopAssociation()) {

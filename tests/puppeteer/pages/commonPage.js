@@ -3,12 +3,29 @@ module.exports = class CommonPage {
     this.page = page;
   }
 
+  /**
+   * Get page title
+   * @returns {Promise<*>}
+   */
   async getPageTitle() {
     return this.page.title();
   }
 
-  async goTo(URL) {
-    await this.page.goto(URL);
+  /**
+   * Go to URL
+   * @param url
+   * @returns {Promise<void>}
+   */
+  async goTo(url) {
+    await this.page.goto(url);
+  }
+
+  /**
+   * Get current url
+   * @returns {Promise<string>}
+   */
+  async getCurrentURL() {
+    return decodeURIComponent(this.page.url());
   }
 
   /**
@@ -23,12 +40,37 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Get attribute from element
+   * @param selector
+   * @param attribute
+   * @returns {Promise<!Promise<!Object|undefined>|*>}
+   */
+  async getAttributeContent(selector, attribute) {
+    await this.page.waitForSelector(selector);
+    return this.page.$eval(selector, (el, attr) => el
+      .getAttribute(attr), attribute);
+  }
+
+  /**
    * Is checkBox have checked status
    * @param selector, checkbox to check
    * @return boolean, true if checked, false if not
    */
   async elementChecked(selector) {
     return this.page.$eval(selector, el => el.checked);
+  }
+
+  /**
+   * Update checkbox value
+   * @param selector
+   * @param expectedValue
+   * @return {Promise<void>}
+   */
+  async updateCheckboxValue(selector, expectedValue) {
+    const actualValue = await this.elementChecked(selector);
+    if (actualValue !== expectedValue) {
+      await this.page.click(selector);
+    }
   }
 
   /**
@@ -249,7 +291,7 @@ module.exports = class CommonPage {
   }
 
   /**
-   * c
+   * Check if checkbox is selected
    * @param selector
    * @return {Promise<boolean>}
    */
@@ -267,5 +309,40 @@ module.exports = class CommonPage {
     if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
       await this.page.click(checkboxSelector);
     }
+  }
+
+  /**
+   * Sort array of strings or numbers
+   * @param arrayToSort
+   * @param isFloat
+   * @return {Promise<*>}
+   */
+  async sortArray(arrayToSort, isFloat = false) {
+    if (isFloat) {
+      return arrayToSort.sort((a, b) => a - b);
+    }
+    return arrayToSort.sort((a, b) => a.localeCompare(b));
+  }
+
+  /**
+   * Drag and drop element
+   * @param selectorToDrag
+   * @param selectorWhereToDrop
+   * @return {Promise<void>}
+   */
+  async dragAndDrop(selectorToDrag, selectorWhereToDrop) {
+    await this.page.hover(selectorToDrag);
+    await this.page.mouse.down();
+    await this.page.hover(selectorWhereToDrop);
+    await this.page.mouse.up();
+  }
+
+  /**
+   * Uppercase the first character of the word
+   * @param word
+   * @returns {string}
+   */
+  uppercaseFirstCharacter(word) {
+    return `${word[0].toUpperCase()}${word.slice(1)}`;
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,8 +47,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartAddre
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartProduct;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartShipping;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CartSummary;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\Customization;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation\CustomizationFieldData;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;

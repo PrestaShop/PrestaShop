@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,10 +47,7 @@ abstract class AbstractCustomerHandler
     protected function assertCustomerWasFound(CustomerId $customerId, Customer $customer)
     {
         if ($customer->id !== $customerId->getValue()) {
-            throw new CustomerNotFoundException(
-                $customerId,
-                sprintf('Customer with id "%s" was not found.', $customerId->getValue())
-            );
+            throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found.', $customerId->getValue()));
         }
     }
 
@@ -66,13 +63,7 @@ abstract class AbstractCustomerHandler
         if (!empty($errors)) {
             $missingFields = array_keys($errors);
 
-            throw new MissingCustomerRequiredFieldsException(
-                $missingFields,
-                sprintf(
-                    'One or more required fields for customer are missing. Missing fields are: %s',
-                    implode(',', $missingFields)
-                )
-            );
+            throw new MissingCustomerRequiredFieldsException($missingFields, sprintf('One or more required fields for customer are missing. Missing fields are: %s', implode(',', $missingFields)));
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,10 +46,7 @@ class DynamicRolePass implements CompilerPassInterface
          * @see Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension:createRoleHierarchy
          */
         if ($container->hasDefinition('security.access.role_hierarchy_voter')) {
-            throw new ServiceDefinitionException(
-                'The security.access.role_hierarchy_voter service is already defined',
-                'security.access.role_hierarchy_voter'
-            );
+            throw new ServiceDefinitionException('The security.access.role_hierarchy_voter service is already defined', 'security.access.role_hierarchy_voter');
         }
 
         $roleHierarchyVoterDefinition = $container->register(
@@ -60,6 +57,6 @@ class DynamicRolePass implements CompilerPassInterface
         $roleHierarchyVoterDefinition
             ->setPublic(false)
             ->addArgument(new Reference('prestashop.security.role.dynamic_role_hierarchy'))
-            ->addTag('security.voter', array('priority' => 245));
+            ->addTag('security.voter', ['priority' => 245]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,12 +27,9 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Currency;
 use Configuration;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use RuntimeException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
+use Currency;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -41,11 +38,14 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusComma
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
@@ -73,7 +73,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 (bool) $data['is_enabled']
             );
         } else {
-            $command = new AddOfficialCurrencyCommand(
+            $command = new AddCurrencyCommand(
                 $data['iso_code'],
                 (float) $data['exchange_rate'],
                 (bool) $data['is_enabled']
@@ -238,12 +238,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             }
 
             if ($expectedValue != $apiData[$key]) {
-                throw new RuntimeException(sprintf(
-                    'Invalid currency data field %s: %s expected %s',
-                    $key,
-                    json_encode($apiData[$key]),
-                    json_encode($expectedValue)
-                ));
+                throw new RuntimeException(sprintf('Invalid currency data field %s: %s expected %s', $key, json_encode($apiData[$key]), json_encode($expectedValue)));
             }
         }
     }

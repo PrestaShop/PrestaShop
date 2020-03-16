@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -473,7 +473,7 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '[' . Tools::safeOutput($configuration['PS_SHOP_NAME']) . '] ' . $subject;
+            $subject = '[' . strip_tags($configuration['PS_SHOP_NAME']) . '] ' . $subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -561,7 +561,7 @@ class MailCore extends ObjectModel
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
-            $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin(array(self::toPunycode($toPlugin) => $templateVars)));
+            $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {
@@ -576,7 +576,7 @@ class MailCore extends ObjectModel
             if ($fileAttachment && !empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
-                    $fileAttachment = array($fileAttachment);
+                    $fileAttachment = [$fileAttachment];
                 }
 
                 foreach ($fileAttachment as $attachment) {
@@ -591,7 +591,7 @@ class MailCore extends ObjectModel
                 }
             }
             /* Send mail */
-            $message->setFrom(array($from => $fromName));
+            $message->setFrom([$from => $fromName]);
 
             // Hook to alter Swift Message before sending mail
             Hook::exec('actionMailAlterMessageBeforeSend', [

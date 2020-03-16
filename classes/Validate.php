@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,15 +67,15 @@ class ValidateCore
     public static function isModuleUrl($url, &$errors)
     {
         if (!$url || $url == 'http://') {
-            $errors[] = Context::getContext()->getTranslator()->trans('Please specify module URL', array(), 'Admin.Modules.Notification');
+            $errors[] = Context::getContext()->getTranslator()->trans('Please specify module URL', [], 'Admin.Modules.Notification');
         } elseif (substr($url, -4) != '.tar' && substr($url, -4) != '.zip' && substr($url, -4) != '.tgz' && substr($url, -7) != '.tar.gz') {
-            $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', array(), 'Admin.Modules.Notification');
+            $errors[] = Context::getContext()->getTranslator()->trans('Unknown archive type.', [], 'Admin.Modules.Notification');
         } else {
             if ((strpos($url, 'http')) === false) {
                 $url = 'http://' . $url;
             }
             if (!is_array(@get_headers($url))) {
-                $errors[] = Context::getContext()->getTranslator()->trans('Invalid URL', array(), 'Admin.Notifications.Error');
+                $errors[] = Context::getContext()->getTranslator()->trans('Invalid URL', [], 'Admin.Notifications.Error');
             }
         }
         if (!count($errors)) {
@@ -621,7 +621,7 @@ class ValidateCore
     }
 
     /**
-     * Check for birthDate validity.
+     * Check for birthDate validity. To avoid year in two digits, disallow date < 200 years ago
      *
      * @param string $date birthdate to validate
      * @param string $format optional format
@@ -638,8 +638,10 @@ class ValidateCore
         if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
             return false;
         }
+        $twoHundredYearsAgo = new Datetime();
+        $twoHundredYearsAgo->sub(new DateInterval('P200Y'));
 
-        return $d->setTime(0, 0, 0)->getTimestamp() <= time();
+        return $d->setTime(0, 0, 0) <= new Datetime() && $d->setTime(0, 0, 0) >= $twoHundredYearsAgo;
     }
 
     /**
@@ -937,7 +939,7 @@ class ValidateCore
 
     public static function isMySQLEngine($engine)
     {
-        return in_array($engine, array('InnoDB', 'MyISAM'));
+        return in_array($engine, ['InnoDB', 'MyISAM']);
     }
 
     public static function isUnixName($data)
@@ -1110,7 +1112,7 @@ class ValidateCore
      */
     public static function isLocalizationPackSelection($data)
     {
-        return in_array((string) $data, array('states', 'taxes', 'currencies', 'languages', 'units', 'groups'));
+        return in_array((string) $data, ['states', 'taxes', 'currencies', 'languages', 'units', 'groups']);
     }
 
     /**
@@ -1200,7 +1202,7 @@ class ValidateCore
      */
     public static function isStockManagement($stock_management)
     {
-        if (!in_array($stock_management, array('WA', 'FIFO', 'LIFO'))) {
+        if (!in_array($stock_management, ['WA', 'FIFO', 'LIFO'])) {
             return false;
         }
 

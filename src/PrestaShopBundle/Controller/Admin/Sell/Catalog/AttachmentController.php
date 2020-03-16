@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,21 +28,21 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use ErrorException;
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment;
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
-use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\Attachment;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\EditableAttachment;
+use PrestaShop\PrestaShop\Core\Search\Filters\AttachmentFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -364,7 +364,7 @@ class AttachmentController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_attachment_create'),
+            'href' => $this->generateUrl('admin_attachments_create'),
             'desc' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];

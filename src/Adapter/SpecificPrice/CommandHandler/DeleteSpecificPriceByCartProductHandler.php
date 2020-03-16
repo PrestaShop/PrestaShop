@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,22 +50,10 @@ final class DeleteSpecificPriceByCartProductHandler implements DeleteSpecificPri
 
         try {
             if (false === SpecificPrice::deleteByIdCart($cartIdValue, $productIdValue, $productAttributeId)) {
-                throw new SpecificPriceException(
-                    sprintf(
-                        'Failed to delete specific price for cart #%s product #%s',
-                        $cartIdValue,
-                        $productIdValue
-                    )
-                );
+                throw new SpecificPriceException(sprintf('Failed to delete specific price for cart #%s product #%s', $cartIdValue, $productIdValue));
             }
         } catch (PrestaShopException $e) {
-            throw new SpecificPriceException(
-                sprintf(
-                    'An error occurred when trying to delete specific price for cart #%s product #%s',
-                    $cartIdValue,
-                    $productIdValue
-                )
-            );
+            throw new SpecificPriceException(sprintf('An error occurred when trying to delete specific price for cart #%s product #%s', $cartIdValue, $productIdValue));
         }
     }
 }

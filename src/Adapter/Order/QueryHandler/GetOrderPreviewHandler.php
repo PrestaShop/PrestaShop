@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,8 +38,8 @@ use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderPreviewHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewInvoiceDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewInvoiceDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewProductDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -103,10 +103,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     {
         $order = new Order($orderId->getValue());
         if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException(
-                $orderId,
-                sprintf('Order with id "%s" was not found.', $orderId->getValue())
-            );
+            throw new OrderNotFoundException($orderId, sprintf('Order with id "%s" was not found.', $orderId->getValue()));
         }
 
         return $order;
@@ -136,7 +133,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->postcode,
             $stateName,
             $country->name[$order->id_lang],
-            $customer->email,
+            $customer ? $customer->email : null,
             $address->phone
         );
     }

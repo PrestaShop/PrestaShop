@@ -76,6 +76,9 @@ before_install:
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
+  # Always test with non-unity MySQL autoincrement
+  - mysql -e 'SET @@GLOBAL.auto_increment_increment = 2, @@GLOBAL.auto_increment_offset = 2;'
+
 install:
   - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
@@ -85,6 +88,9 @@ install:
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests/check_file_syntax.sh;
+    fi
+
+  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests-legacy/check_phpunit.sh;
     fi
 
@@ -93,10 +99,12 @@ script:
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
+        make assets;
         bash tests/check_integration.sh;
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+        make assets;
         bash tests/check_sanity.sh;
     fi
 

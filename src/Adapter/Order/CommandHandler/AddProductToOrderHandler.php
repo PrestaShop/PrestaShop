@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,9 +42,9 @@ use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use Shop;
@@ -188,10 +188,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         foreach ($result as $cartRule) {
             // Create OrderCartRule
             $rule = new CartRule($cartRule['id_cart_rule']);
-            $values = array(
+            $values = [
                 'tax_incl' => $rule->getContextualValue(true),
                 'tax_excl' => $rule->getContextualValue(false),
-            );
+            ];
             $orderCartRule = new OrderCartRule();
             $orderCartRule->id_order = $order->id;
             $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
@@ -256,9 +256,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $product = new Product($productId->getValue(), false, $langId);
 
         if ($product->id !== $productId->getValue()) {
-            throw new OrderException(
-                sprintf('Product with id "%d" is invalid.', $productId->getValue())
-            );
+            throw new OrderException(sprintf('Product with id "%d" is invalid.', $productId->getValue()));
         }
 
         return $product;

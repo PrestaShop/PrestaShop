@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,16 +19,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\Core\MailTemplate;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner;
@@ -41,7 +42,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\ThemeInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class FolderThemeCatalogTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -254,10 +254,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         if ($this->latestResult->getMessage() !== $message) {
-            throw new \Exception(sprintf("Expected error message '%s', got '%s'",
-                $message,
-                $this->latestResult->getMessage()
-            ));
+            throw new \Exception(sprintf("Expected error message '%s', got '%s'", $message, $this->latestResult->getMessage()));
         }
 
         $this->latestResult = null;
@@ -369,10 +366,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         if (!$isValid) {
-            throw new \Exception(sprintf('genderId %s does not exist, available genders are %s',
-                $genderName,
-                implode(', ', array_keys($availableGenders))
-            ));
+            throw new \Exception(sprintf('genderId %s does not exist, available genders are %s', $genderName, implode(', ', array_keys($availableGenders))));
         }
 
         return $genderId;

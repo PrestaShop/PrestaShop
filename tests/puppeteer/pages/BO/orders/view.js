@@ -92,7 +92,7 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async downloadInvoice() {
-    /* eslint-disable no-return-assign, no-param-reassign */
+    /* eslint-disable no-return-assign */
     // Delete the target because a new tab is opened when downloading the file
     await this.page.$eval(this.documentNumberLink.replace('%ID', 1), el => el.target = '');
     await this.page.click(this.documentNumberLink.replace('%ID', 1));
@@ -120,7 +120,7 @@ module.exports = class Order extends BOBasePage {
     await this.setValue(this.refundProductAmount.replace('%ID', productID), amount.toString());
     await this.setValue(this.refundShippingCost, shipping.toString());
     await this.page.click(this.partialRefundSubmitButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**

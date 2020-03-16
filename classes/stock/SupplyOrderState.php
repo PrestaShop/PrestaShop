@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,30 +67,30 @@ class SupplyOrderStateCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'supply_order_state',
         'primary' => 'id_supply_order_state',
         'multilang' => true,
-        'fields' => array(
-            'delivery_note' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'editable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'receipt_state' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'pending_receipt' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'enclosed' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-        ),
-    );
+        'fields' => [
+            'delivery_note' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'editable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'receipt_state' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'pending_receipt' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'enclosed' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'supply_order_states',
         'objectNodeName' => 'supply_order_state',
-        'fields' => array(
-        ),
-    );
+        'fields' => [
+        ],
+    ];
 
     /**
      * Gets the list of supply order statuses.
@@ -158,7 +158,7 @@ class SupplyOrderStateCore extends ObjectModel
         }
 
         if ($ids && !is_array($ids)) {
-            $ids = array();
+            $ids = [];
         }
 
         $query = new DbQuery();

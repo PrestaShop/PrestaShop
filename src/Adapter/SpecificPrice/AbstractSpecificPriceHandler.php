@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,9 +60,7 @@ abstract class AbstractSpecificPriceHandler
         }
 
         if ($specificPrice->id !== $specificPriceIdValue) {
-            throw new SpecificPriceNotFoundException(
-                sprintf('Specific price with id "%s" was not found.', $specificPriceIdValue)
-            );
+            throw new SpecificPriceNotFoundException(sprintf('Specific price with id "%s" was not found.', $specificPriceIdValue));
         }
 
         return $specificPrice;
@@ -79,10 +77,7 @@ abstract class AbstractSpecificPriceHandler
     protected function assertDateRangeIsNotInverse(DateTime $from, DateTime $to)
     {
         if ($from->diff($to)->invert) {
-            throw new SpecificPriceConstraintException(
-                'The date time for specific price cannot be inverse',
-                SpecificPriceConstraintException::INVALID_DATE_RANGE
-            );
+            throw new SpecificPriceConstraintException('The date time for specific price cannot be inverse', SpecificPriceConstraintException::INVALID_DATE_RANGE);
         }
     }
 }

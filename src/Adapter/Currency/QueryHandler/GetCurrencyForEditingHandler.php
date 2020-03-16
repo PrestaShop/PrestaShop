@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetCurrencyForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetCurrencyForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\EditableCurrency;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 
 /**
@@ -65,12 +65,7 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
         );
 
         if (0 >= $entity->id) {
-            throw new CurrencyNotFoundException(
-                sprintf(
-                    'Currency object with id "%s" was not found for editing',
-                    $query->getCurrencyId()->getValue()
-                )
-            );
+            throw new CurrencyNotFoundException(sprintf('Currency object with id "%s" was not found for editing', $query->getCurrencyId()->getValue()));
         }
 
         $transformer = new PatternTransformer();

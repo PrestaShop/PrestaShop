@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -513,10 +513,7 @@ class CartController extends FrameworkBundleAdminController
             $fileSizesByInputName = json_decode($fileSizeHeaders, true);
             foreach ($fileSizesByInputName as $name => $size) {
                 if (!isset($fileCustomizations[$name])) {
-                    throw new FileUploadException(
-                        'Some files were possibly not uploaded due to post_max_size limit',
-                        UPLOAD_ERR_INI_SIZE
-                    );
+                    throw new FileUploadException('Some files were possibly not uploaded due to post_max_size limit', UPLOAD_ERR_INI_SIZE);
                 }
             }
         }

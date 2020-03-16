@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,13 +48,7 @@ class BulkDeleteCmsPageCategoryCommand extends AbstractBulkCmsPageCategoryComman
     public function __construct(array $cmsPageCategoryIds)
     {
         if ($this->assertIsEmptyOrContainsNonIntegerValues($cmsPageCategoryIds)) {
-            throw new CmsPageCategoryConstraintException(
-                sprintf(
-                    'Missing cms page category data or array %s contains non integer values for bulk deleting',
-                    var_export($cmsPageCategoryIds, true)
-                ),
-                CmsPageCategoryConstraintException::INVALID_BULK_DATA
-            );
+            throw new CmsPageCategoryConstraintException(sprintf('Missing cms page category data or array %s contains non integer values for bulk deleting', var_export($cmsPageCategoryIds, true)), CmsPageCategoryConstraintException::INVALID_BULK_DATA);
         }
 
         $this->setCmsPageCategoryIds($cmsPageCategoryIds);

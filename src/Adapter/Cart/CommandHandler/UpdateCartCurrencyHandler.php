@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,10 +59,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
                 throw new CartException('Failed to update cart currency.');
             }
         } catch (PrestaShopException $e) {
-            throw new CartException(sprintf(
-                'An error occurred while trying to update currency for cart with id "%s"',
-                $cart->id
-            ));
+            throw new CartException(sprintf('An error occurred while trying to update currency for cart with id "%s"', $cart->id));
         }
     }
 
@@ -78,9 +75,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
         $currency = new Currency($currencyId->getValue());
 
         if ($currencyId->getValue() !== $currency->id) {
-            throw new CurrencyNotFoundException(
-                sprintf('Currency with id "%s" was not found', $currencyId->getValue())
-            );
+            throw new CurrencyNotFoundException(sprintf('Currency with id "%s" was not found', $currencyId->getValue()));
         }
 
         return $currency;
@@ -94,13 +89,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
     private function assertCurrencyIsActive(Currency $currency): void
     {
         if (!$currency->active) {
-            throw new CurrencyException(
-                sprintf(
-                    'Currency "%s" cannot be used in cart because it is disabled',
-                    $currency->iso_code
-                ),
-                CurrencyException::IS_DISABLED
-            );
+            throw new CurrencyException(sprintf('Currency "%s" cannot be used in cart because it is disabled', $currency->iso_code), CurrencyException::IS_DISABLED);
         }
     }
 
@@ -112,13 +101,7 @@ final class UpdateCartCurrencyHandler extends AbstractCartHandler implements Upd
     private function assertCurrencyIsNotDeleted(Currency $currency): void
     {
         if ($currency->deleted) {
-            throw new CurrencyException(
-                sprintf(
-                    'Currency "%s" cannot be used in cart because it is deleted',
-                    $currency->iso_code
-                ),
-                CurrencyException::IS_DELETED
-            );
+            throw new CurrencyException(sprintf('Currency "%s" cannot be used in cart because it is deleted', $currency->iso_code), CurrencyException::IS_DELETED);
         }
     }
 }

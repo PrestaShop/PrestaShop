@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,6 +54,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     const GRID_ID = 'cms_page_category';
 
     /**
@@ -302,12 +304,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                     'submit_route' => 'admin_cms_pages_category_bulk_status_disable',
                 ])
             )
-            ->add((new SubmitBulkAction('delete_bulk'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_cms_pages_category_delete_bulk',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+            ->add(
+                $this->buildBulkDeleteAction('admin_cms_pages_category_delete_bulk')
             )
         ;
     }

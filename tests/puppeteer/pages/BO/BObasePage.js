@@ -72,6 +72,11 @@ module.exports = class BOBasePage extends CommonPage {
     // Link widget
     this.linkWidgetLink = '#subtab-AdminLinkWidget';
 
+    // Payment
+    this.paymentParentLink = '#subtab-AdminParentPayment';
+    // Preferences
+    this.preferencesLink = '#subtab-AdminPaymentPreferences';
+
     // International
     this.internationalParentLink = '#subtab-AdminInternational';
     // Taxes
@@ -83,6 +88,10 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopParametersParentLink = '#subtab-ShopParameters';
     // General
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+    // Product Settings
+    this.productSettingsLink = '#subtab-AdminPPreferences';
+    // Customer Settings
+    this.customerSettingsLink = '#subtab-AdminParentCustomerPreferences';
     // Contact
     this.contactLink = '#subtab-AdminParentStores';
     // traffic and SEO
@@ -90,10 +99,14 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // E-mail
+    this.emailLink = '#subtab-AdminEmails';
     // Team
     this.teamLink = '#subtab-AdminParentEmployees';
     // Database
     this.databaseLink = '#subtab-AdminParentRequestSql';
+    // Webservice
+    this.webserviceLink = '#subtab-AdminWebservice';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
@@ -104,8 +117,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlDefaultMessageBlock = '#growls-default .growl-message';
 
     // Alert Text
-    this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
-    this.alertSuccessBlockParagraph = `${this.alertSuccessBloc} div.alert-text p`;
+    this.alertSuccessBlock = 'div.alert.alert-success:not([style=\'display: none;\'])';
+    this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
     this.alertTextBlock = '.alert-text';
 
     // Alert Box

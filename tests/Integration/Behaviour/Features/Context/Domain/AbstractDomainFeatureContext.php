@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,14 +27,16 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Behat\Testwork\Tester\Result\TestResult;
 use Exception;
 use Language;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Shop;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -59,6 +61,16 @@ abstract class AbstractDomainFeatureContext implements Context
     {
         // Disable legacy object model cache to prevent conflicts between scenarios.
         ObjectModel::disableCache();
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function checkLastException(AfterScenarioScope $scope)
+    {
+        if (TestResult::FAILED === $scope->getTestResult()->getResultCode() && null !== $this->lastException) {
+            throw new RuntimeException(sprintf('Might be related to the last exception: %s %s', get_class($this->lastException), $this->lastException->getTraceAsString()));
+        }
     }
 
     /**
@@ -93,11 +105,7 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function assertLastErrorIsNull()
     {
         if (null !== $this->lastException) {
-            throw new RuntimeException(sprintf(
-                'An unexpected exception was thrown %s: %s',
-                get_class($this->lastException),
-                $this->lastException->getMessage()
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('An unexpected exception was thrown %s: %s', get_class($this->lastException), $this->lastException->getMessage()), 0, $this->lastException);
         }
     }
 
@@ -108,18 +116,10 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function assertLastErrorIs($expectedError, $errorCode = null)
     {
         if (!$this->lastException instanceof $expectedError) {
-            throw new RuntimeException(sprintf(
-                'Last error should be "%s", but got "%s"',
-                $expectedError,
-                $this->lastException ? get_class($this->lastException) : 'null'
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $this->lastException ? get_class($this->lastException) : 'null'), 0, $this->lastException);
         }
         if (null !== $errorCode && $this->lastException->getCode() !== $errorCode) {
-            throw new RuntimeException(sprintf(
-                'Last error should have code "%s", but has "%s"',
-                $errorCode,
-                $this->lastException ? $this->lastException->getCode() : 'null'
-            ), 0, $this->lastException);
+            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $this->lastException ? $this->lastException->getCode() : 'null'), 0, $this->lastException);
         }
     }
 

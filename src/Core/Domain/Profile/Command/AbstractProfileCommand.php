@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -68,14 +68,7 @@ abstract class AbstractProfileCommand
     protected function assertNameIsStringAndRequiredLength($name)
     {
         if (null !== $name && !is_string($name) || strlen($name) > ProfileSettings::NAME_MAX_LENGTH) {
-            throw new ProfileConstraintException(
-                sprintf(
-                    'Profile name should not exceed %d characters length but %s given',
-                    ProfileSettings::NAME_MAX_LENGTH,
-                    var_export($name, true)
-                ),
-                ProfileConstraintException::INVALID_NAME
-            );
+            throw new ProfileConstraintException(sprintf('Profile name should not exceed %d characters length but %s given', ProfileSettings::NAME_MAX_LENGTH, var_export($name, true)), ProfileConstraintException::INVALID_NAME);
         }
     }
 }

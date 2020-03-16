@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,21 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-class OrderProductForViewing
+use JsonSerializable;
+
+class OrderProductForViewing implements JsonSerializable
 {
+    const TYPE_PACK = 'pack';
+    const TYPE_PRODUCT_WITH_COMBINATIONS = 'product_with_combinations';
+    const TYPE_PRODUCT_WITHOUT_COMBINATIONS = 'product_without_combinations';
+
     /**
      * @var int
      */
@@ -44,6 +50,11 @@ class OrderProductForViewing
     private $name;
 
     /**
+     * @var OrderProductForViewing[]
+     */
+    private $packItems;
+
+    /**
      * @var string
      */
     private $reference;
@@ -52,6 +63,11 @@ class OrderProductForViewing
      * @var string
      */
     private $supplierReference;
+
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * @var int
@@ -114,6 +130,11 @@ class OrderProductForViewing
     private $amountRefundable;
 
     /**
+     * @var float
+     */
+    private $amountRefundableRaw;
+
+    /**
      * @var int
      */
     private $orderInvoiceId;
@@ -123,8 +144,44 @@ class OrderProductForViewing
      */
     private $orderInvoiceNumber;
 
+    /**
+     * @var bool
+     */
+    private $availableOutOfStock;
+
+    /**
+     * @var OrderProductCustomizationsForViewing
+     */
+    private $customizations;
+
+    /**
+     * @param int $orderDetailId
+     * @param int $id
+     * @param string $name
+     * @param string $reference
+     * @param string $supplierReference
+     * @param int $quantity
+     * @param string $unitPrice
+     * @param string $totalPrice
+     * @param int $availableQuantity
+     * @param string|null $imagePath
+     * @param float $unitPriceTaxExclRaw
+     * @param float $unitPriceTaxInclRaw
+     * @param float $taxRate
+     * @param string $amountRefunded
+     * @param int $quantityRefunded
+     * @param string $amountRefundable
+     * @param float $amountRefundableRaw
+     * @param string $location
+     * @param int|null $orderInvoiceId
+     * @param string $orderInvoiceNumber
+     * @param string $type
+     * @param bool $availableOutOfStock
+     * @param array $packItems
+     * @param OrderProductCustomizationsForViewing|null $customizations
+     */
     public function __construct(
-        int $orderDetailId,
+        ?int $orderDetailId,
         int $id,
         string $name,
         string $reference,
@@ -140,9 +197,14 @@ class OrderProductForViewing
         string $amountRefunded,
         int $quantityRefunded,
         string $amountRefundable,
+        float $amountRefundableRaw,
         string $location,
         ?int $orderInvoiceId,
-        string $orderInvoiceNumber
+        string $orderInvoiceNumber,
+        string $type,
+        bool $availableOutOfStock,
+        array $packItems = [],
+        ?OrderProductCustomizationsForViewing $customizations = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -160,17 +222,22 @@ class OrderProductForViewing
         $this->amountRefunded = $amountRefunded;
         $this->quantityRefunded = $quantityRefunded;
         $this->amountRefundable = $amountRefundable;
+        $this->amountRefundableRaw = $amountRefundableRaw;
         $this->location = $location;
         $this->orderInvoiceId = $orderInvoiceId;
         $this->orderInvoiceNumber = $orderInvoiceNumber;
+        $this->type = $type;
+        $this->availableOutOfStock = $availableOutOfStock;
+        $this->packItems = $packItems;
+        $this->customizations = $customizations;
     }
 
     /**
      * Get product's order detail ID
      *
-     * @return int
+     * @return int|null
      */
-    public function getOrderDetailId(): int
+    public function getOrderDetailId(): ?int
     {
         return $this->orderDetailId;
     }
@@ -193,6 +260,14 @@ class OrderProductForViewing
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return OrderProductForViewing[]
+     */
+    public function getPackItems(): array
+    {
+        return $this->packItems;
     }
 
     /**
@@ -223,6 +298,14 @@ class OrderProductForViewing
     public function getTaxRate(): float
     {
         return $this->taxRate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**
@@ -326,13 +409,23 @@ class OrderProductForViewing
     }
 
     /**
-     * How much (money) can be refunded for this product
+     * How much (money) can be refunded for this product (formatted for display)
      *
      * @return string
      */
     public function getAmountRefundable(): string
     {
         return $this->amountRefundable;
+    }
+
+    /**
+     * How much (money) can be refunded for this product (raw float value)
+     *
+     * @return float
+     */
+    public function getAmountRefundableRaw(): float
+    {
+        return $this->amountRefundableRaw;
     }
 
     /**
@@ -377,5 +470,48 @@ class OrderProductForViewing
     public function getOrderInvoiceNumber(): string
     {
         return $this->orderInvoiceNumber;
+    }
+
+    /**
+     * Get customizations of this product
+     *
+     * @return OrderProductCustomizationsForViewing|null
+     */
+    public function getCustomizations(): ?OrderProductCustomizationsForViewing
+    {
+        return $this->customizations;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableOutOfStock(): bool
+    {
+        return $this->availableOutOfStock;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'orderDetailId' => $this->getOrderDetailId(),
+            'name' => $this->getName(),
+            'reference' => $this->getReference(),
+            'supplierReference' => $this->getSupplierReference(),
+            'location' => $this->getLocation(),
+            'imagePath' => $this->getImagePath(),
+            'quantity' => $this->getQuantity(),
+            'availableQuantity' => $this->getAvailableQuantity(),
+            'unitPrice' => $this->getUnitPrice(),
+            'unitPriceTaxExclRaw' => $this->getUnitPriceTaxExclRaw(),
+            'unitPriceTaxInclRaw' => $this->getUnitPriceTaxInclRaw(),
+            'totalPrice' => $this->getTotalPrice(),
+            'taxRate' => $this->getTaxRate(),
+            'type' => $this->getType(),
+            'packItems' => $this->getPackItems(),
+        ];
     }
 }

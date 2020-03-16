@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Configuration;
+use Customization;
 use Hook;
 use Order;
 use OrderCarrier;
@@ -34,9 +35,11 @@ use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use Product;
 use StockAvailable;
 use Tools;
 use Validate;
@@ -64,18 +67,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         // Check fields validity
         $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
 
-        // @todo: check if quantity can be array
-        // If multiple product_quantity, the order details concern a product customized
-//        $product_quantity = 0;
-//        if (is_array(Tools::getValue('product_quantity'))) {
-//            foreach (Tools::getValue('product_quantity') as $id_customization => $qty) {
-//                // Update quantity of each customization
-//                Db::getInstance()->update('customization', array('quantity' => (int)$qty), 'id_customization = ' . (int)$id_customization);
-//                // Calculate the real quantity of the product
-//                $product_quantity += $qty;
-//            }
-//        }
-
+        if (0 < $orderDetail->id_customization) {
+            $customization = new Customization($orderDetail->id_customization);
+            $customization->quantity = $command->getQuantity();
+            $customization->save();
+        }
         $product_quantity = $command->getQuantity();
 
         // @todo: use https://github.com/PrestaShop/decimal for price computations
@@ -174,7 +170,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $order->id_shop
         );
 
-        $order = $order->refreshShippingCost();
+        $product = new Product($orderDetail->product_id);
+
+        if (!$product->is_virtual) {
+            $order = $order->refreshShippingCost();
+        }
 
         if (!$res) {
             throw new OrderException('An error occurred while editing the product line.');
@@ -246,5 +246,14 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 //                }
 //            }
 //        }
+
+        //check if product is available in stock
+        if (!\Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+
+            if ($availableQuantity < $command->getQuantity()) {
+                throw new ProductOutOfStockException('Not enough products in stock');
+            }
+        }
     }
 }

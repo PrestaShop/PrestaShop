@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,9 +28,6 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand;
@@ -40,7 +37,10 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierExc
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotToggleSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotUpdateSupplierStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;

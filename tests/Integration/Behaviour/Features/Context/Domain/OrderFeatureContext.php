@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,15 +31,15 @@ use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Context;
 use FrontController;
+use Order;
 use OrderState;
-use Product;
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
+use Product;
 use RuntimeException;
 use stdClass;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -228,9 +229,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $expectedStatusId = (int) $availableOrderStates[$status];
 
         if ($currentOrderStateId !== $expectedStatusId) {
-            throw new RuntimeException(
-                'After changing order status id should be [' . $expectedStatusId . '] but received [' . $currentOrderStateId . ']'
-            );
+            throw new RuntimeException('After changing order status id should be [' . $expectedStatusId . '] but received [' . $currentOrderStateId . ']');
         }
     }
 
@@ -321,11 +320,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($totalQuantity !== $quantity) {
-            throw new RuntimeException(sprintf(
-                'Order should have "%d" products, but has "%d".',
-                $totalQuantity,
-                $quantity
-            ));
+            throw new RuntimeException(sprintf('Order should have "%d" products, but has "%d".', $totalQuantity, $quantity));
         }
     }
 
@@ -400,13 +395,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($orderProducts as $orderProduct) {
             if ($orderProduct->getId() == $productId) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Order with reference "%s" contains product with reference "%s".',
-                        $orderReference,
-                        $productName
-                    )
-                );
+                throw new RuntimeException(sprintf('Order with reference "%s" contains product with reference "%s".', $orderReference, $productName));
             }
         }
     }
@@ -441,14 +430,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             return;
         }
 
-        throw new RuntimeException(
-            sprintf(
-                'Order was expected to have "%d" products "%s" in it. Instead got "%s"',
-                $quantity,
-                $productName,
-                $productQuantities['quantity']
-            )
-        );
+        throw new RuntimeException(sprintf('Order was expected to have "%d" products "%s" in it. Instead got "%s"', $quantity, $productName, $productQuantities['quantity']));
     }
 
     /**
@@ -466,14 +448,46 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             return;
         }
 
-        throw new RuntimeException(
-            sprintf(
-                'Order was expected to have "%d" refunded products "%s" in it. Instead got "%s"',
-                $quantity,
-                $productName,
-                $productQuantities['refunded_quantity']
-            )
-        );
+        throw new RuntimeException(sprintf('Order was expected to have "%d" refunded products "%s" in it. Instead got "%s"', $quantity, $productName, $productQuantities['refunded_quantity']));
+    }
+
+    /**
+     * @Then product :productName in order :orderReference has following details:
+     *
+     * @param string $orderReference
+     * @param string $productName
+     */
+    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
+    {
+        $productId = (int) $this->getProductIdByName($productName);
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+        $orderDetails = $order->getProducts();
+        $productOrderDetail = null;
+        foreach ($orderDetails as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === $productId) {
+                $productOrderDetail = $orderDetail;
+                break;
+            }
+        }
+
+        if (null === $productOrderDetail) {
+            throw new RuntimeException(sprintf('Cannot find product details for product %s in order %s', $productName, $orderReference));
+        }
+
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            Assert::assertEquals(
+                (float) $expectedDetailValue,
+                $productOrderDetail[$detailName],
+                sprintf(
+                    'Invalid product detail field %s for product %s, expected %s instead of %s',
+                    $detailName,
+                    $productName,
+                    $expectedDetailValue,
+                    $productOrderDetail[$detailName]
+                )
+            );
+        }
     }
 
     /**
@@ -511,14 +525,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $productId = $this->getProductIdByName($productName);
         $nbProduct = Product::getQuantity($productId);
         if ($expectedQuantity != $nbProduct) {
-            throw new RuntimeException(
-                sprintf(
-                    'Invalid difference for product %s expected %s, got %s instead',
-                    $productName,
-                    $expectedDifference,
-                    $nbProduct - $initialQuantity
-                )
-            );
+            throw new RuntimeException(sprintf('Invalid difference for product %s expected %s, got %s instead', $productName, $expectedDifference, $nbProduct - $initialQuantity));
         }
         $this->productStock[$productName] = $expectedQuantity;
     }

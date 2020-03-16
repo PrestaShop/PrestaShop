@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,38 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <nav class="mt-1 mx-auto" v-if="displayPagination">
-    <ul class="pagination" :class="{'multi':isMultiPagination}">
-      <li v-if="isMultiPagination" class="page-item previous">
-        <a v-show="activeLeftArrow" class="float-left page-link" @click="prev($event)" href="#">
+  <nav
+    class="mt-1 mx-auto"
+    v-if="displayPagination"
+  >
+    <ul
+      class="pagination"
+      :class="{'multi':isMultiPagination}"
+    >
+      <li
+        v-if="isMultiPagination"
+        class="page-item previous"
+      >
+        <a
+          v-show="activeLeftArrow"
+          class="float-left page-link"
+          @click="prev($event)"
+          href="#"
+        >
           <span class="sr-only">Previous</span>
         </a>
       </li>
-      <li class="page-item" :class="{'active' : checkCurrentIndex(index)}" v-for="index in pagesCount">
+      <li
+        class="page-item"
+        :class="{'active' : checkCurrentIndex(index)}"
+        v-for="index in pagesCount"
+        :key="index"
+      >
         <a
           v-if="showIndex(index)"
           class="page-link"
@@ -40,14 +59,28 @@
           }"
           @click.prevent="changePage(index)"
           href="#"
-          >
-          <span v-if="isMultiPagination" v-show="showFirstDots(index)">...</span>
+        >
+          <span
+            v-if="isMultiPagination"
+            v-show="showFirstDots(index)"
+          >...</span>
           {{ index }}
-          <span v-if="isMultiPagination" v-show="showLastDots(index)">...</span>
+          <span
+            v-if="isMultiPagination"
+            v-show="showLastDots(index)"
+          >...</span>
         </a>
       </li>
-      <li v-if="isMultiPagination" class="page-item next">
-        <a v-show="activeRightArrow" class="float-left page-link" @click="next($event)" href="#">
+      <li
+        v-if="isMultiPagination"
+        class="page-item next"
+      >
+        <a
+          v-show="activeRightArrow"
+          class="float-left page-link"
+          @click="next($event)"
+          href="#"
+        >
           <span class="sr-only">Next</span>
         </a>
       </li>
@@ -57,7 +90,16 @@
 
 <script>
   export default {
-    props: ['pagesCount', 'currentIndex'],
+    props: {
+      pagesCount: {
+        type: Number,
+        required: true,
+      },
+      currentIndex: {
+        type: Number,
+        required: true,
+      },
+    },
     computed: {
       isMultiPagination() {
         return this.pagesCount > this.multiPagesActivationLimit;

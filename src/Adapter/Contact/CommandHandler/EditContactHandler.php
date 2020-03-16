@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -90,26 +90,14 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
             }
 
             if (false === $entity->update()) {
-                throw new CannotUpdateContactException(
-                    sprintf(
-                        'Unable to update contact object with id %s',
-                        $command->getContactId()->getValue()
-                    )
-                );
+                throw new CannotUpdateContactException(sprintf('Unable to update contact object with id %s', $command->getContactId()->getValue()));
             }
 
             if (null !== $command->getShopAssociation()) {
                 $this->associateWithShops($entity, $command->getShopAssociation());
             }
         } catch (PrestaShopException $e) {
-            throw new ContactException(
-                sprintf(
-                    'An unexpected error occurred when retrieving contact with id %s',
-                    var_export($command->getContactId()->getValue(), true)
-                ),
-                0,
-                $e
-            );
+            throw new ContactException(sprintf('An unexpected error occurred when retrieving contact with id %s', var_export($command->getContactId()->getValue(), true)), 0, $e);
         }
     }
 
@@ -126,10 +114,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
             $errors = $this->validator->validate($description, new CleanHtml());
 
             if (0 !== count($errors)) {
-                throw new ContactConstraintException(
-                    sprintf('Given description "%s" contains javascript events or script tags', $description),
-                    ContactConstraintException::INVALID_DESCRIPTION
-                );
+                throw new ContactConstraintException(sprintf('Given description "%s" contains javascript events or script tags', $description), ContactConstraintException::INVALID_DESCRIPTION);
             }
         }
     }
@@ -146,10 +131,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
         $errors = $this->validator->validate($localisedTitle, new DefaultLanguage());
 
         if (0 !== count($errors)) {
-            throw new ContactConstraintException(
-                'Title field is not found for default language',
-                ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE
-            );
+            throw new ContactConstraintException('Title field is not found for default language', ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE);
         }
     }
 
@@ -169,12 +151,7 @@ final class EditContactHandler extends AbstractObjectModelHandler implements Edi
         $entity = new Contact($contactId);
 
         if (0 >= $entity->id) {
-            throw new ContactNotFoundException(
-                sprintf(
-                    'Contact object with id %s was not found',
-                    var_export($contactId, true)
-                )
-            );
+            throw new ContactNotFoundException(sprintf('Contact object with id %s was not found', var_export($contactId, true)));
         }
 
         return $entity;

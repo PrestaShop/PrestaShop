@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -36,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCombination;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
-use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use Product;
 
 /**
@@ -214,7 +214,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $combination['quantity'],
                     $this->contextLocale->formatPrice($priceTaxExcluded, $currencyIsoCode),
                     $priceTaxExcluded,
-                    $priceTaxIncluded
+                    $priceTaxIncluded,
+                    $combination['location']
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;
