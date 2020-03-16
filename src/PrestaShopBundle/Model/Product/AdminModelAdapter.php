@@ -187,7 +187,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param ShopContext $shopContext
      * @param TaxRuleDataProvider $taxRuleDataProvider
      * @param Router $router
-     * @param FloatParser $floatParser
+     * @param FloatParser|null $floatParser
      */
     public function __construct(
         LegacyContext $legacyContext,
@@ -201,7 +201,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         ShopContext $shopContext,
         TaxRuleDataProvider $taxRuleDataProvider,
         Router $router,
-        FloatParser $floatParser
+        FloatParser $floatParser = null
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -218,7 +218,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
         $this->router = $router;
-        $this->floatParser = $floatParser;
+        $this->floatParser = $floatParser ?? new FloatParser();
     }
 
     /**
