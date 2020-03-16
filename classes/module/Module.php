@@ -1633,7 +1633,7 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        if ($fileExist) {
+        if (file_exists($filepath)) {
             return '../img/tmp/' . $filename;
         }
     }
