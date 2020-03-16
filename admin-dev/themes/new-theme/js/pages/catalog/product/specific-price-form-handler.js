@@ -391,11 +391,7 @@ class SpecificPriceFormHandler {
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
     const spReductionSuffix = $(`${selectorPrefix}sp_reduction_type option:selected`).text();
 
-    if ($(`${selectorPrefix}sp_reduction_type`).val() === 'percentage') {
-      $(`${selectorPrefix}sp_reduction_tax`).hide();
-    } else {
-      $(`${selectorPrefix}sp_reduction_tax`).show();
-    }
+    $(`${selectorPrefix}sp_reduction_tax`).toggle($(`${selectorPrefix}sp_reduction_type`).val() !== 'percentage');
 
     $(`${selectorPrefix}sp_reduction`).parent('.money-type').find('.input-group-text').text(spReductionSuffix);
   }
