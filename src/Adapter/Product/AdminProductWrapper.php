@@ -212,7 +212,11 @@ class AdminProductWrapper
     {
         // Hook triggered by legacy code below: actionUpdateQuantity('id_product', 'id_product_attribute', 'quantity')
         StockAvailable::setQuantity((int) $product->id, $forAttributeId, $quantity);
-        Hook::exec('actionProductUpdate', ['id_product' => (int) $product->id, 'product' => $product]);
+        static $hookExecuted = [];
+        if (!in_array($product->id, $hookExecuted)) {
+            $hookExecuted[] = $product->id;
+            Hook::exec('actionProductUpdate', array('id_product' => (int) $product->id, 'product' => $product));
+        }
     }
 
     /**
