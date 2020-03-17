@@ -25,7 +25,6 @@
 
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderShippingManager from '@pages/order/order-shipping-manager';
-import InvoiceNoteManager from '@pages/order/invoice-note-manager';
 import OrderViewPage from '@pages/order/view/order-view-page';
 import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
 import OrderProductAdd from '@pages/order/view/order-product-add';
@@ -60,7 +59,6 @@ $(() => {
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
 
-  new InvoiceNoteManager();
   const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
   orderViewPageMessageHandler.listenForPredefinedMessageSelection();
   orderViewPageMessageHandler.listenForFullMessagesOpen();
