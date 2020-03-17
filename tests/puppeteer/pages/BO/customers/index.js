@@ -373,6 +373,7 @@ module.exports = class Customers extends BOBasePage {
 
   /**
    * Get customer from table in csv format
+   * Adding an empty csv case after email is for company column which is always empty (Except when B2B mode is enabled)
    * @param row
    * @return {Promise<string>}
    */

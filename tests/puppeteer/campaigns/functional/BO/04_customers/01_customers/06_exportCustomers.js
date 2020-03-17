@@ -57,7 +57,7 @@ describe('Export customers', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
   });
 
-  it('should reset all filters and get Number of customers in BO', async function () {
+  it('should reset all filters and get number of customers in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
     numberOfCustomers = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
     await expect(numberOfCustomers).to.be.above(0);
