@@ -314,7 +314,7 @@ module.exports = class AddProduct extends BOBasePage {
   /**
    * Add specific prices
    * @param specificPriceData
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
   async addSpecificPrices(specificPriceData) {
     await this.reloadPage();

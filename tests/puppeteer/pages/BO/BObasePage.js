@@ -281,7 +281,7 @@ module.exports = class BOBasePage extends CommonPage {
    * Check if Submenu is visible
    * @param parentSelector
    * @param linkSelector
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async isSubmenuVisible(parentSelector, linkSelector) {
     if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
