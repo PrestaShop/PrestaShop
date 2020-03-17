@@ -2688,10 +2688,13 @@ class OrderCore extends ObjectModel
         $this->update();
 
         // save order_carrier prices, we'll save order right after this in update() method
-        $order_carrier = new OrderCarrier((int) $this->getIdOrderCarrier());
-        $order_carrier->shipping_cost_tax_excl = $this->total_shipping_tax_excl;
-        $order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
-        $order_carrier->update();
+        $orderCarrierId = (int) $this->getIdOrderCarrier();
+        if ($orderCarrierId > 0) {
+            $order_carrier = new OrderCarrier($orderCarrierId);
+            $order_carrier->shipping_cost_tax_excl = $this->total_shipping_tax_excl;
+            $order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
+            $order_carrier->update();
+        }
 
         // remove fake cart
         $new_cart->delete();

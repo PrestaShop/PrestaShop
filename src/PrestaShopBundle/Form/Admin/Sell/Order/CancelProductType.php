@@ -55,7 +55,7 @@ class CancelProductType extends TranslatorAwareType
                 )
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $this->trans('Quantity', 'Global', []),
+                    'label' => $this->trans('Quantity', 'Admin.Global', []),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
@@ -152,6 +152,7 @@ class CancelProductType extends TranslatorAwareType
                     'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
                     'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),
                     'data-return-product-label' => $this->trans('Return products', 'Admin.Orderscustomers.Feature'),
+                    'data-cancel-label' => $this->trans('Cancel products', 'Admin.Orderscustomers.Feature'),
                 ],
             ]);
     }

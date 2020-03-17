@@ -51,6 +51,7 @@ $(() => {
   orderViewPage.listenForProductAdd();
   orderViewPage.listenForProductPagination();
   orderViewPage.listenForRefund();
+  orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
   orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
@@ -66,6 +67,13 @@ $(() => {
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();
+  });
+
+  $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
+    const tempTitle = document.title;
+    document.title = $(OrderViewPageMap.mainDiv).data('orderTitle');
+    window.print();
+    document.title = tempTitle;
   });
 
   initAddCartRuleFormHandler();
@@ -104,9 +112,8 @@ $(() => {
   function handlePrivateNoteChange() {
     const $submitBtn = $(OrderViewPageMap.privateNoteSubmitBtn);
 
-    $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
-      const note = $(event.currentTarget).val();
-      $submitBtn.prop('disabled', !note);
+    $(OrderViewPageMap.privateNoteInput).on('input', () => {
+      $submitBtn.prop('disabled', false);
     });
   }
 
@@ -161,10 +168,9 @@ $(() => {
 
   function initChangeAddressFormHandler() {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
-    const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
 
-    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', () => {
-      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($btn.data('address-type'));
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
+      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($(event.currentTarget).data('addressType'));
     });
   }
 });

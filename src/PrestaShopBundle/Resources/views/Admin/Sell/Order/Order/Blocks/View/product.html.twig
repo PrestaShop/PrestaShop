@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% set rowIsDisplayed =  (productIndex is defined and paginationNum is defined and productIndex > paginationNum) %}
-<tr id="orderProduct_{{ product.orderDetailId }}"{% if rowIsDisplayed %} class="d-none"{% endif %}>
+<tr id="orderProduct_{{ product.orderDetailId }}" class="cellProduct{% if rowIsDisplayed %} d-none d-print-table-row{% endif %}">
   <td class="cellProductImg">
     {% if product.imagePath %}
       <img src="{{ product.imagePath }}" alt="{{ product.name }}" />
@@ -46,7 +46,7 @@
       {% endif %}
     </a>
     {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') and product.customizations is null %}
-      <span class="btn-product-pack-modal" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
+      <span class="btn-product-pack-modal d-print-none" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
         <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
       </span>
     {% endif %}
@@ -87,6 +87,7 @@
         data-tax-rate="{{ product.taxRate }}"
         data-location="{{ product.location }}"
         data-available-quantity="{{ product.availableQuantity }}"
+        data-available-out-of-stock="{{ product.availableOutOfStock }}"
         data-order-invoice-id="{{ product.orderInvoiceId }}">
         <i class="material-icons">edit</i>
       </button>
@@ -162,7 +163,7 @@
         <p><strong>{{ customization.name }}</strong> {{ customization.value }}</p>
       {% endfor %}
       {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
-        <div class="btn-product-pack-modal mb-3" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
+        <div class="btn-product-pack-modal mb-3 d-print-none" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
           <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
         </div>
       {% endif %}

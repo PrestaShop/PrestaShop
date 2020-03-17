@@ -35,7 +35,15 @@
       <article id="store-{$store.id}" class="store-item card">
         <div class="store-item-container clearfix">
           <div class="col-md-3 store-picture hidden-sm-down">
-            <img src="{$store.image.bySize.stores_default.url}" alt="{$store.image.legend}" title="{$store.image.legend}">
+            <img
+              src="{$store.image.bySize.stores_default.url}"
+              {if !empty($store.image.legend)}
+                alt="{$store.image.legend}"
+                title="{$store.image.legend}"
+              {else}
+                alt="{$store.name}"
+              {/if}
+            >
           </div>
           <div class="col-md-5 col-sm-7 col-xs-12 store-description">
             <p class="h3 card-title">{$store.name}</p>

@@ -10,6 +10,10 @@ const DashboardPage = require('@pages/BO/dashboard');
 const TaxesPage = require('@pages/BO/international/taxes');
 const AddTaxPage = require('@pages/BO/international/taxes/add');
 const TaxFaker = require('@data/faker/tax');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_international_localization_taxes_CRUDTax';
 
 let browser;
 let page;
@@ -44,6 +48,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
   loginCommon.loginBO();
 
   it('should go to Taxes page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
       this.pageObjects.boBasePage.taxesLink,
@@ -53,18 +58,21 @@ describe('Create, Update and Delete Tax in BO', async () => {
   });
 
   it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
     await expect(numberOfTaxes).to.be.above(0);
   });
   // 1 : Create tax with data generated from faker
   describe('Create tax in BO', async () => {
     it('should go to add new tax page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewTax', baseContext);
       await this.pageObjects.taxesPage.goToAddNewTaxPage();
       const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleCreate);
     });
 
     it('should create Tax and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createTax', baseContext);
       const textResult = await this.pageObjects.addTaxPage.createEditTax(createTaxData);
       await expect(textResult).to.equal(this.pageObjects.addTaxPage.successfulCreationMessage);
       const numberOfTaxesAfterCreation = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
@@ -74,6 +82,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
   // 2 : Update Tax with data generated with faker
   describe('Update Tax Created', async () => {
     it('should go to tax page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxPageToUpdate', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.internationalParentLink,
         this.pageObjects.boBasePage.taxesLink,
@@ -83,6 +92,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     });
 
     it('should filter list by tax name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToUpdate', baseContext);
       await this.pageObjects.taxesPage.filterTaxes(
         'input',
         'name',
@@ -93,6 +103,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     });
 
     it('should filter list by tax rate', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByRateToUpdate', baseContext);
       await this.pageObjects.taxesPage.filterTaxes(
         'input',
         'rate',
@@ -103,12 +114,14 @@ describe('Create, Update and Delete Tax in BO', async () => {
     });
 
     it('should go to edit tax page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
       await this.pageObjects.taxesPage.goToEditTaxPage('1');
       const pageTitle = await this.pageObjects.addTaxPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addTaxPage.pageTitleEdit);
     });
 
     it('should update tax', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateTax', baseContext);
       const textResult = await this.pageObjects.addTaxPage.createEditTax(editTaxData);
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulUpdateMessage);
       await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
@@ -117,6 +130,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterUpdate', baseContext);
       const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes + 1);
     });
@@ -124,6 +138,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
   // 3 : Delete Tax created from dropdown Menu
   describe('Delete Tax', async () => {
     it('should go to Taxes page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxPageToDelete', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.internationalParentLink,
         this.pageObjects.boBasePage.taxesLink,
@@ -133,6 +148,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     });
 
     it('should filter list by Tax name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToDelete', baseContext);
       await this.pageObjects.taxesPage.filterTaxes(
         'input',
         'name',
@@ -143,6 +159,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     });
 
     it('should filter list by tax rate', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByRateToDelete', baseContext);
       await this.pageObjects.taxesPage.filterTaxes(
         'input',
         'rate',
@@ -153,6 +170,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     });
 
     it('should delete Tax', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteTax', baseContext);
       const textResult = await this.pageObjects.taxesPage.deleteTax('1');
       await expect(textResult).to.equal(this.pageObjects.taxesPage.successfulDeleteMessage);
       const numberOfTaxesAfterDelete = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();

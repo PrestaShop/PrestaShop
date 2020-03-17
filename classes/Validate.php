@@ -621,7 +621,7 @@ class ValidateCore
     }
 
     /**
-     * Check for birthDate validity.
+     * Check for birthDate validity. To avoid year in two digits, disallow date < 200 years ago
      *
      * @param string $date birthdate to validate
      * @param string $format optional format
@@ -638,8 +638,10 @@ class ValidateCore
         if (!empty(DateTime::getLastErrors()['warning_count']) || false === $d) {
             return false;
         }
+        $twoHundredYearsAgo = new Datetime();
+        $twoHundredYearsAgo->sub(new DateInterval('P200Y'));
 
-        return $d->setTime(0, 0, 0)->getTimestamp() <= time();
+        return $d->setTime(0, 0, 0) <= new Datetime() && $d->setTime(0, 0, 0) >= $twoHundredYearsAgo;
     }
 
     /**

@@ -258,6 +258,8 @@ class ValidateCoreTest extends TestCase
             array(false, '3000-03-19'),
             array(false, '1991-03-33'),
             array(false, '1991-15-19'),
+            array(false, '1801-01-01'),
+            array(false, '0085-02-25'),
             array(true, date('Y-m-d', strtotime('now'))),
             array(true, date('Y-m-d', strtotime('-1 day'))),
             array(false, date('Y-m-d', strtotime('+1 day'))),
@@ -285,6 +287,7 @@ class ValidateCoreTest extends TestCase
             array(false, date('Y-m-d', strtotime('+1 year +1 month'))),
             array(false, date('Y-m-d', strtotime('+1 year +1 month -1 day'))),
             array(false, date('Y-m-d', strtotime('+1 year +1 month +1 day'))),
+            array(false, date('Y-m-d', strtotime('-201 year'))),
         );
     }
 

@@ -35,9 +35,11 @@
   {% endif %}
 {% endif %}
 
+{% block link %}
 <a class="{{ class }}" href="{{ path(column.options.route, { (column.options.route_param_name) : record[column.options.route_param_field]}) }}">
   {% if column.options.icon is defined %}
     <i class="material-icons">{{ column.options.icon }}</i>
   {% endif %}
   {{ record[column.options.field] }}
 </a>
+{% endblock %}
