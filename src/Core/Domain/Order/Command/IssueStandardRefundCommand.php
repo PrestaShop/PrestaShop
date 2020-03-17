@@ -56,7 +56,6 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
      *
      * @throws InvalidCancelProductException
      * @throws OrderException
@@ -67,8 +66,7 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
         bool $refundShippingCost,
         bool $generateCreditSlip,
         bool $generateVoucher,
-        int $voucherRefundType,
-        ?float $voucherRefundAmount = null
+        int $voucherRefundType
     ) {
         parent::__construct(
             $orderId,
@@ -76,8 +74,7 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
             true,
             $generateCreditSlip,
             $generateVoucher,
-            $voucherRefundType,
-            $voucherRefundAmount
+            $voucherRefundType
         );
         $this->refundShippingCost = $refundShippingCost;
     }

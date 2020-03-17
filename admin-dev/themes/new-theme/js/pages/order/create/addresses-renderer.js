@@ -76,12 +76,14 @@ export default class AddressesRenderer {
     if (address.delivery) {
       $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
       deliveryAddressOption.selected = 'selected';
+      $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+        addressId: address.addressId,
+        liteDisplaying: 1,
+        submitFormAjax: 1,
+      }));
     }
 
     $(createOrderMap.deliveryAddressSelect).append($('<option>', deliveryAddressOption));
-    $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
-      addressId: address.addressId,
-    }));
   }
 
   /**
@@ -100,12 +102,14 @@ export default class AddressesRenderer {
     if (address.invoice) {
       $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
       invoiceAddressOption.selected = 'selected';
+      $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+        addressId: address.addressId,
+        liteDisplaying: 1,
+        submitFormAjax: 1,
+      }));
     }
 
     $(createOrderMap.invoiceAddressSelect).append($('<option>', invoiceAddressOption));
-    $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
-      addressId: address.addressId,
-    }));
   }
 
   /**

@@ -35,7 +35,7 @@
 {else if $layout === 'layouts/layout-right-column.tpl'}
   {block name="right_column"}
     <div id="right-column" class="col-xs-12 col-sm-4 col-md-3">
-      {widget name="ps_contactinfo" hook='displayLeftColumn'}
+      {widget name="ps_contactinfo" hook='displayRightColumn'}
     </div>
   {/block}
 {/if}

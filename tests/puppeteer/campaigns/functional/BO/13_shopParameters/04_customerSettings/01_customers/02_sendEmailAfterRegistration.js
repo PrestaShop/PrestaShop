@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerSettings_customers_enableDisableSendAnEmailAfterRegistration';
+const baseContext = 'functional_BO_customerSettings_customers_sendAnEmailAfterRegistration';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -86,7 +86,7 @@ describe('Enable/Disable send an email after registration', async () => {
 
     it(`should ${test.args.action} send an email after registration`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}SendEmail`, baseContext);
-      const result = await this.pageObjects.customerSettingsPage.setEmailAfterRegistration(test.args.enable);
+      const result = await this.pageObjects.customerSettingsPage.setEmailAfterRegistrationStatus(test.args.enable);
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 
@@ -156,7 +156,7 @@ describe('Enable/Disable send an email after registration', async () => {
         await expect(textEmail).to.contains(test.args.customerToDelete.email);
       });
 
-      it('should delete customers', async function () {
+      it('should delete customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCustomer${index + 1}`, baseContext);
         const textResult = await this.pageObjects.customersPage.deleteCustomer(1);
         await expect(textResult).to.equal(this.pageObjects.customersPage.successfulDeleteMessage);

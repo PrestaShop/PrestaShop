@@ -1,15 +1,28 @@
 #order_grid {
+  position: relative;
+
+  #order_filter_form {
+    .dropdown {
+      position: inherit;
+    }
+  }
+
   // Do not break text for Shop column in Orders grid
   .column-shop_name {
     word-break: normal;
   }
+
   .order-preview-content {
-    .details th, .product th, .details td, .product td {
+    .details th,
+    .product th,
+    .details td,
+    .product td {
       border: none;
       padding-top: 3.2px;
       padding-bottom: 3.2px;
     }
-    .details td, .product td {
+    .details td,
+    .product td {
       padding-top: 0;
       padding-bottom: 0;
     }
@@ -78,10 +91,10 @@ $order-block-background-color: #f8f8f8;
   }
 
   #customer-tab-content-container-toggler .material-icons::before {
-    content: 'keyboard_arrow_down';
+    content: "keyboard_arrow_down";
   }
   #customer-tab-content-container-toggler[aria-expanded="false"].material-icons::before {
-    content: 'keyboard_arrow_up';
+    content: "keyboard_arrow_up";
   }
 }
 
@@ -109,14 +122,14 @@ $order-block-background-color: #f8f8f8;
   .employee-icon {
     &:before {
       font-family: "Material Icons";
-      content: 'account_circle';
+      content: "account_circle";
     }
     color: #36b9d7;
   }
   .employee-icon--private {
     &:before {
       font-family: "Material Icons";
-      content: 'visibility_off';
+      content: "visibility_off";
     }
     color: $private-message-color;
   }
@@ -298,7 +311,8 @@ input.refund-quantity {
   margin-left: 10px;
 }
 
-input.refund-amount, input#partial_refund_shipping {
+input.refund-amount,
+input#partial_refund_shipping {
   max-width: 80px;
   margin-left: 10px;
 }

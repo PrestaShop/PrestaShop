@@ -51,7 +51,6 @@ class IssueReturnProductCommand extends IssueStandardRefundCommand
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
      *
      * @throws InvalidCancelProductException
      * @throws OrderException
@@ -63,8 +62,7 @@ class IssueReturnProductCommand extends IssueStandardRefundCommand
         bool $refundShippingCost,
         bool $generateCreditSlip,
         bool $generateVoucher,
-        int $voucherRefundType,
-        ?float $voucherRefundAmount = null
+        int $voucherRefundType
     ) {
         parent::__construct(
             $orderId,
@@ -72,8 +70,7 @@ class IssueReturnProductCommand extends IssueStandardRefundCommand
             $refundShippingCost,
             $generateCreditSlip,
             $generateVoucher,
-            $voucherRefundType,
-            $voucherRefundAmount
+            $voucherRefundType
         );
         $this->restockRefundedProducts = $restockRefundedProducts;
     }
