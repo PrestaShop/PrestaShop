@@ -936,7 +936,7 @@ var form = (function() {
             return false;
           }
           
-        var orgLabel = e.attrs.label;
+        const orgLabel = e.attrs.label;
         if (e.attrs.label === e.attrs.value) {
           engine.search(e.attrs.label, function(result) {
             if (result.length >= 1) {
