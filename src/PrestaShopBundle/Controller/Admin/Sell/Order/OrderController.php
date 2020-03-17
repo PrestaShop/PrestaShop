@@ -687,6 +687,24 @@ class OrderController extends CommonController
     }
 
     /**
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     */
+    public function getDocumentsAction(int $orderId)
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        return $this->json([
+            'total' => count($orderForViewing->getDocuments()->getDocuments()),
+            'html' => $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig', [
+                'orderForViewing' => $orderForViewing,
+            ])->getContent(),
+        ]);
+    }
+
+    /**
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_view",
