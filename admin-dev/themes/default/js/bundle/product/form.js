@@ -977,7 +977,7 @@ var form = (function() {
 
       /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
       $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
-        if(!$(e.relatedTarget).hasClass('invalid')){
+        if (!$(e.relatedTarget).hasClass('invalid')) {
           $(`#attribute-generator-${e.attrs.value}`).remove();
         }
       });
