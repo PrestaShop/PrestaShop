@@ -617,7 +617,7 @@ class ProductLazyArray extends AbstractLazyArray
 
         if (count($this->product['images']) > 0) {
             foreach ($this->product['images'] as $image) {
-                if (isset($image['cover'])]) {
+                if (isset($image['cover'])) {
                     $this->product['catalogCover'] = $image;
 
                     break;
