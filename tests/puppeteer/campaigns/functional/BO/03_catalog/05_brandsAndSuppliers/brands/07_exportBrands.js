@@ -17,6 +17,7 @@ const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_exportBrand
 let browser;
 let page;
 let numberOfBrands = 0;
+let fileName;
 
 // Init objects needed
 const init = async function () {
@@ -42,6 +43,7 @@ describe('Export brands', async () => {
   });
   after(async () => {
     await helper.closeBrowser(browser);
+    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
   });
   // Login into BO
   loginCommon.loginBO();
@@ -73,12 +75,11 @@ describe('Export brands', async () => {
   it('should check existence of brands data in csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAllBrandsInCsvFile', baseContext);
     const numberOfCategories = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
-    const fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'manufacturer_', '.csv');
+    fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'manufacturer_', '.csv');
     for (let row = 1; row <= numberOfCategories; row++) {
       const brandInCsvFormat = await this.pageObjects.brandsPage.getBrandInCsvFormat(row);
       const textExist = await files.checkTextInFile(fileName, brandInCsvFormat, true, true);
       await expect(textExist, `${brandInCsvFormat} was not found in the file`).to.be.true;
     }
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
   });
 });
