@@ -20,6 +20,9 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
 
+    // Header links
+    this.helpButton = '#product_form_open_help';
+
     // left navbar
     // SELL
     // Orders
@@ -72,6 +75,11 @@ module.exports = class BOBasePage extends CommonPage {
     // Link widget
     this.linkWidgetLink = '#subtab-AdminLinkWidget';
 
+    // Payment
+    this.paymentParentLink = '#subtab-AdminParentPayment';
+    // Preferences
+    this.preferencesLink = '#subtab-AdminPaymentPreferences';
+
     // International
     this.internationalParentLink = '#subtab-AdminInternational';
     // Taxes
@@ -83,8 +91,12 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopParametersParentLink = '#subtab-ShopParameters';
     // General
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+    // Order Settings
+    this.orderSettingsLink = '#subtab-AdminParentOrderPreferences';
     // Product Settings
     this.productSettingsLink = '#subtab-AdminPPreferences';
+    // Customer Settings
+    this.customerSettingsLink = '#subtab-AdminParentCustomerPreferences';
     // Contact
     this.contactLink = '#subtab-AdminParentStores';
     // traffic and SEO
@@ -92,10 +104,16 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // E-mail
+    this.emailLink = '#subtab-AdminEmails';
     // Team
     this.teamLink = '#subtab-AdminParentEmployees';
     // Database
     this.databaseLink = '#subtab-AdminParentRequestSql';
+    // Webservice
+    this.webserviceLink = '#subtab-AdminWebservice';
+    // Multistore
+    this.multistoreLink = '#subtab-AdminShopGroup';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
@@ -106,8 +124,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.growlDefaultMessageBlock = '#growls-default .growl-message';
 
     // Alert Text
-    this.alertSuccessBloc = 'div.alert.alert-success:not([style=\'display: none;\'])';
-    this.alertSuccessBlockParagraph = `${this.alertSuccessBloc} div.alert-text p`;
+    this.alertSuccessBlock = 'div.alert.alert-success:not([style=\'display: none;\'])';
+    this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
     this.alertTextBlock = '.alert-text';
 
     // Alert Box
@@ -123,6 +141,11 @@ module.exports = class BOBasePage extends CommonPage {
     // Symfony Toolbar
     this.sfToolbarMainContentDiv = 'div[id*=\'sfToolbarMainContent\']';
     this.sfCloseToolbarLink = 'a[id*=\'sfToolbarHideButton\']';
+
+    // Sidebar
+    this.rightSidebar = '#right-sidebar';
+    this.closeHelpSidebarButton = `${this.rightSidebar} div.quicknav-header a`;
+    this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
   }
 
   /*
@@ -224,5 +247,39 @@ module.exports = class BOBasePage extends CommonPage {
   async deleteFile(file, wait = 0) {
     fs.unlinkSync(file);
     await this.page.waitFor(wait);
+  }
+
+  /**
+   * Open help side bar
+   * @returns {Promise<boolean>}
+   */
+  async openHelpSideBar() {
+    await this.waitForSelectorAndClick(this.helpButton);
+    return this.elementVisible(`${this.rightSidebar}.sidebar-open`, 2000);
+  }
+
+  /**
+   * Close help side bar
+   * @returns {Promise<boolean>}
+   */
+  async closeHelpSideBar() {
+    await this.waitForSelectorAndClick(this.helpButton);
+    return this.elementVisible(`${this.rightSidebar}:not(.sidebar-open)`, 2000);
+  }
+
+  /**
+   * Get help document URL
+   * @returns {Promise<string>}
+   */
+  async getHelpDocumentURL() {
+    return this.getAttributeContent(this.helpDocumentURL, 'data');
+  }
+
+  async isSubmenuVisible(parentSelector, linkSelector) {
+    if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
+      await this.page.click(parentSelector);
+      await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
+    }
+    return this.elementVisible(linkSelector, 1000);
   }
 };

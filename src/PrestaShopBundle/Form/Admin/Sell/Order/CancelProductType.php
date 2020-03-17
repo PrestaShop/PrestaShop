@@ -26,12 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class CancelProductType extends TranslatorAwareType
@@ -55,13 +57,13 @@ class CancelProductType extends TranslatorAwareType
                 )
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $this->trans('Quantity', 'Global', []),
+                    'label' => $this->trans('Quantity', 'Admin.Global', []),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
                     'scale' => 0,
                 ])
-                ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
+                ->add('amount_' . $product->getOrderDetailId(), TextType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
                     'label' => sprintf(
                         '%s (%s)',
@@ -70,18 +72,16 @@ class CancelProductType extends TranslatorAwareType
                     ),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
-                    'data' => 0,
-                    'scale' => $precision,
+                    'data' => (new Number('0'))->toPrecision($precision),
                 ]);
         }
         $builder
-            ->add('shipping_amount', NumberType::class,
+            ->add('shipping_amount', TextType::class,
                 [
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
                     'required' => false,
-                    'scale' => $precision,
-                    'data' => 0,
+                    'data' => (new Number('0'))->toPrecision($precision),
                 ]
             )
             ->add('shipping', CheckboxType::class,
@@ -152,6 +152,7 @@ class CancelProductType extends TranslatorAwareType
                     'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
                     'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),
                     'data-return-product-label' => $this->trans('Return products', 'Admin.Orderscustomers.Feature'),
+                    'data-cancel-label' => $this->trans('Cancel products', 'Admin.Orderscustomers.Feature'),
                 ],
             ]);
     }

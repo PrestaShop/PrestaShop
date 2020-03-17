@@ -176,24 +176,6 @@
 
   .summary-description-container {
     overflow: hidden; // fixes horizontal scrolling on the product page
-    .nav-tabs {
-      overflow: hidden; // fixes tab borders bleeding into the tab content
-
-      &.bordered {
-        .nav-link {
-          &.active {
-            border-left: 1px solid $gray-light;
-            border-right: 1px solid $gray-light;
-          }
-        }
-      }
-    }
-
-    .tab-content {
-      &.bordered {
-        border: 1px solid $gray-light;
-      }
-    }
   }
 
   .product-feature {

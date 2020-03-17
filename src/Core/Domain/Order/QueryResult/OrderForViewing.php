@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
 use DateTimeImmutable;
+use PrestaShop\Decimal\Number;
 
 /**
  * Contains data about order for viewing
@@ -183,7 +184,7 @@ class OrderForViewing
      * @param bool $isShipped
      * @param bool $invoiceManagementIsEnabled
      * @param DateTimeImmutable $createdAt
-     * @param OrderCustomerForViewing $customer
+     * @param OrderCustomerForViewing|null $customer
      * @param OrderShippingAddressForViewing $shippingAddress
      * @param OrderInvoiceAddressForViewing $invoiceAddress
      * @param OrderProductsForViewing $products
@@ -212,7 +213,7 @@ class OrderForViewing
         bool $isShipped,
         bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
-        OrderCustomerForViewing $customer,
+        ?OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
         OrderProductsForViewing $products,
@@ -308,9 +309,9 @@ class OrderForViewing
     }
 
     /**
-     * @return OrderCustomerForViewing
+     * @return OrderCustomerForViewing|null
      */
-    public function getCustomer(): OrderCustomerForViewing
+    public function getCustomer(): ?OrderCustomerForViewing
     {
         return $this->customer;
     }
@@ -473,12 +474,12 @@ class OrderForViewing
     public function isRefundable(): bool
     {
         /** @var OrderProductForViewing $product */
-        foreach ($this->products as $product) {
+        foreach ($this->products->getProducts() as $product) {
             if ($product->getQuantity() > $product->getQuantityRefunded()) {
                 return true;
             }
         }
 
-        return $this->prices->getShippingRefundableAmountRaw() > 0;
+        return $this->prices->getShippingRefundableAmountRaw()->isGreaterThan(new Number('0'));
     }
 }

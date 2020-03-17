@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use InvalidArgumentException;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
@@ -66,7 +69,7 @@ abstract class AbstractRefundCommand
     protected $voucherRefundType;
 
     /**
-     * @var float|null
+     * @var Number|null
      */
     protected $voucherRefundAmount;
 
@@ -77,9 +80,9 @@ abstract class AbstractRefundCommand
      * @param bool $generateVoucher
      * @param bool $generateCreditSlip
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
+     * @param string|null $voucherRefundAmount
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     public function __construct(
@@ -89,17 +92,23 @@ abstract class AbstractRefundCommand
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType,
-        float $voucherRefundAmount = null
+        ?string $voucherRefundAmount = null
     ) {
         $this->orderId = new OrderId($orderId);
         $this->restockRefundedProducts = $restockRefundedProducts;
         $this->generateCreditSlip = $generateCreditSlip;
         $this->generateVoucher = $generateVoucher;
         $this->voucherRefundType = $voucherRefundType;
-        $this->voucherRefundAmount = $voucherRefundAmount;
+        if (null !== $voucherRefundAmount) {
+            try {
+                $this->voucherRefundAmount = new Number($voucherRefundAmount);
+            } catch (InvalidArgumentException $e) {
+                throw new InvalidAmountException();
+            }
+        }
         $this->setOrderDetailRefunds($orderDetailRefunds);
         if (!$this->generateCreditSlip && !$this->generateVoucher) {
-            throw new InvalidRefundException(InvalidRefundException::NO_GENERATION);
+            throw new InvalidCancelProductException(InvalidCancelProductException::NO_GENERATION);
         }
     }
 
@@ -152,9 +161,9 @@ abstract class AbstractRefundCommand
     }
 
     /**
-     * @return float|null
+     * @return Number|null
      */
-    public function getVoucherRefundAmount(): ?float
+    public function getVoucherRefundAmount(): ?Number
     {
         return $this->voucherRefundAmount;
     }
@@ -162,7 +171,7 @@ abstract class AbstractRefundCommand
     /**
      * @param array $orderDetailRefunds
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     abstract protected function setOrderDetailRefunds(array $orderDetailRefunds);

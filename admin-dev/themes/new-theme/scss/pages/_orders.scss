@@ -1,15 +1,28 @@
 #order_grid {
+  position: relative;
+
+  #order_filter_form {
+    .dropdown {
+      position: inherit;
+    }
+  }
+
   // Do not break text for Shop column in Orders grid
   .column-shop_name {
     word-break: normal;
   }
+
   .order-preview-content {
-    .details th, .product th, .details td, .product td {
+    .details th,
+    .product th,
+    .details td,
+    .product td {
       border: none;
       padding-top: 3.2px;
       padding-bottom: 3.2px;
     }
-    .details td, .product td {
+    .details td,
+    .product td {
       padding-top: 0;
       padding-bottom: 0;
     }
@@ -28,13 +41,6 @@
 }
 
 #orderProductsPanel {
-  .cellProductActions .btn {
-    background-color: transparent;
-    color: $medium-gray;
-    &:hover {
-      color: $primary;
-    }
-  }
   .btn-product-pack-modal {
     color: $primary;
     cursor: pointer;
@@ -58,7 +64,7 @@
   margin-top: 8px;
 }
 
-$order-block-background-color: #F8F8F8;
+$order-block-background-color: #f8f8f8;
 
 .info-block {
   background-color: $order-block-background-color;
@@ -85,17 +91,17 @@ $order-block-background-color: #F8F8F8;
   }
 
   #customer-tab-content-container-toggler .material-icons::before {
-    content: 'keyboard_arrow_down';
+    content: "keyboard_arrow_down";
   }
-  #customer-tab-content-container-toggler[aria-expanded=false] .material-icons::before {
-    content: 'keyboard_arrow_up';
+  #customer-tab-content-container-toggler[aria-expanded="false"].material-icons::before {
+    content: "keyboard_arrow_up";
   }
 }
 
 .messages-block {
   background-color: $order-block-background-color;
 
-  $private-message-color: #7A8A8F;
+  $private-message-color: #7a8a8f;
 
   .message {
     padding: 10px;
@@ -116,14 +122,14 @@ $order-block-background-color: #F8F8F8;
   .employee-icon {
     &:before {
       font-family: "Material Icons";
-      content: 'account_circle';
+      content: "account_circle";
     }
     color: #36b9d7;
   }
   .employee-icon--private {
     &:before {
       font-family: "Material Icons";
-      content: 'visibility_off';
+      content: "visibility_off";
     }
     color: $private-message-color;
   }
@@ -138,11 +144,9 @@ $order-block-background-color: #F8F8F8;
   li {
     .row {
       .col-md-1 {
-
       }
 
       .col-md-11 {
-
       }
     }
   }
@@ -162,8 +166,7 @@ td .editProductInvoice {
   min-width: 130px;
 }
 
-
-@media only screen and (max-width: 1475px) {
+@media only screen and (max-width: map-get($grid-breakpoints, xxl)) {
   .messages-block {
     li {
       .row {
@@ -308,7 +311,19 @@ input.refund-quantity {
   margin-left: 10px;
 }
 
-input.refund-amount, input#partial_refund_shipping {
+input.refund-amount,
+input#partial_refund_shipping {
   max-width: 80px;
   margin-left: 10px;
+}
+
+.cellProductActions .btn,
+.discountList .btn {
+  background-color: transparent;
+  color: $medium-gray;
+}
+
+.cellProductActions .btn:hover,
+.discountList .btn:hover {
+  color: $primary;
 }

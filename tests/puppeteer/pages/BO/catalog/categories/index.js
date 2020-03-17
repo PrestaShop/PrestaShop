@@ -12,11 +12,12 @@ module.exports = class Categories extends BOBasePage {
     // Header links
     this.addNewCategoryLink = '#page-header-desc-configuration-add[title=\'Add new category\']';
     // List of categories
-    this.categpryGridPanel = '#category_grid_panel';
-    this.categoryGridTitle = `${this.categpryGridPanel} h3.card-header-title`;
+    this.categoryGridPanel = '#category_grid_panel';
+    this.categoryGridTitle = `${this.categoryGridPanel} h3.card-header-title`;
     this.categoriesListForm = '#category_grid';
     this.categoriesListTableRow = `${this.categoriesListForm} tbody tr:nth-child(%ROW)`;
     this.categoriesListTableColumn = `${this.categoriesListTableRow} td.column-%COLUMN`;
+    this.categoriesListTableDraggableColumn = `${this.categoriesListTableRow} td.column-position_drag span i`;
     this.categoriesListTableToggleDropDown = `${this.categoriesListTableColumn} a[data-toggle='dropdown']`;
     this.categoriesListTableDeleteLink = `${this.categoriesListTableColumn} a[data-category-delete-url]`;
     this.categoriesListTableViewLink = `${this.categoriesListTableColumn} a[data-original-title='View']`;
@@ -33,10 +34,18 @@ module.exports = class Categories extends BOBasePage {
     this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.categoriesListForm} #category_grid_bulk_action_delete_selection`;
+    // Sort Selectors
+    this.tableHead = `${this.categoriesListForm} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
     // Modal Dialog
     this.deleteCategoryModal = '#category_grid_delete_categories_modal.show';
     this.deleteCategoryModalDeleteButton = `${this.deleteCategoryModal} button.js-submit-delete-categories`;
     this.deleteCategoryModalModeInput = `${this.deleteCategoryModal} #delete_categories_delete_mode_%ID`;
+    // Grid Actions
+    this.categoryGridActionsButton = '#category-grid-actions-button';
+    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'category-grid-actions-button\']';
+    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
   }
 
   /*
@@ -148,6 +157,36 @@ module.exports = class Categories extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Get all information from categories table
+   * @param row
+   * @return {Promise<{object}>}
+   */
+  async getCategoryFromTable(row) {
+    return {
+      id: await this.getTextColumnFromTableCategories(row, 'id_category'),
+      name: await this.getTextColumnFromTableCategories(row, 'name'),
+      description: await this.getTextColumnFromTableCategories(row, 'description'),
+      position: parseFloat(await this.getTextColumnFromTableCategories(row, 'position')),
+      status: await this.getToggleColumnValue(row, 'active'),
+    };
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableCategories(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -269,5 +308,68 @@ module.exports = class Categories extends BOBasePage {
     ]);
     await this.chooseOptionAndDelete(modeID);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Change category position
+   * @param categoryRow
+   * @param position
+   * @return {Promise<string>}
+   */
+  async changeCategoryPosition(categoryRow, position) {
+    await this.dragAndDrop(
+      this.categoriesListTableDraggableColumn.replace('%ROW', categoryRow),
+      this.categoriesListTableDraggableColumn.replace('%ROW', position),
+    );
+    return this.getTextContent(this.growlDefaultMessageBlock);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
+      await this.page.hover(this.sortColumnDiv.replace('%COLUMN', sortBy));
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+  }
+
+  // Export methods
+  /**
+   * Click on lint to export categories to a csv file
+   * @return {Promise<void>}
+   */
+  async exportDataToCsv() {
+    await Promise.all([
+      this.page.click(this.categoryGridActionsButton),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {visible: true}),
+    ]);
+    await Promise.all([
+      this.page.click(this.gridActionExportLink),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {hidden: true}),
+    ]);
+  }
+
+  /**
+   * Get category from table in csv format
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getCategoryInCsvFormat(row) {
+    const category = await this.getCategoryFromTable(row);
+    return `${category.id};`
+      + `${category.name};`
+      + `"${category.description}";`
+      + `${category.position - 1};`
+      + `${category.status ? 1 : 0}`;
   }
 };

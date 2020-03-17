@@ -9,7 +9,7 @@ module.exports = class Stocks extends BOBasePage {
     this.successfulUpdateMessage = 'Stock successfully updated';
 
     // Selectors
-    this.MovementNavItemLink = '#head_tabs li:nth-child(2) > a';
+    this.movementsNavItemLink = '#head_tabs li:nth-child(2) > a';
     this.searchForm = 'form.search-form';
     this.searchInput = `${this.searchForm} input.input`;
     this.searchButton = `${this.searchForm} button.search-button`;
@@ -55,7 +55,8 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabMovements() {
-    await this.page.click(this.MovementNavItemLink, {waitUntil: 'networkidle2'});
+    await this.page.click(this.movementsNavItemLink);
+    await this.page.waitForSelector(`${this.movementsNavItemLink}.active`, {visible: true});
   }
 
   /**

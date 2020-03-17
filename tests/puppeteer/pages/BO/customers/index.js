@@ -33,8 +33,14 @@ module.exports = class Customers extends BOBasePage {
     this.bulkActionsEnableButton = `${this.customersListForm} #customer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.customersListForm} #customer_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.customersListForm} #customer_grid_bulk_action_delete_selection`;
-
-
+    // Sort Selectors
+    this.tableHead = `${this.customersListForm} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
+    // Required field section
+    this.setRequiredFieldsButton = 'button[data-target=\'#customerRequiredFieldsContainer\']';
+    this.requiredFieldCheckBox = '#required_fields_required_fields_%ID';
+    this.saveButton = '#customerRequiredFieldsContainer button';
     // Modal Dialog
     this.deleteCustomerModal = '#customer_grid_delete_customers_modal.show';
     this.deleteCustomerModalDeleteButton = `${this.deleteCustomerModal} button.js-submit-delete-customers`;
@@ -90,7 +96,7 @@ module.exports = class Customers extends BOBasePage {
         );
         break;
       default:
-        // Do nothing
+      // Do nothing
     }
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
@@ -152,6 +158,21 @@ module.exports = class Customers extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableCustomers(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -274,6 +295,40 @@ module.exports = class Customers extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+  }
+
+  /**
+   * Set required fields
+   * @param id
+   * @param valueWanted
+   * @returns {Promise<string>}
+   */
+  async setRequiredFields(id, valueWanted = true) {
+    await this.waitForSelectorAndClick(this.setRequiredFieldsButton);
+    const isCheckboxSelected = await this.isCheckboxSelected(this.requiredFieldCheckBox.replace('%ID', id));
+    if (valueWanted !== isCheckboxSelected) {
+      await this.page.click(`${this.requiredFieldCheckBox.replace('%ID', id)}+ i`);
+    }
+    await this.waitForSelectorAndClick(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

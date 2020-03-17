@@ -58,6 +58,7 @@ export default class OrderProductRenderer {
     taxRate,
     location,
     availableQuantity,
+    availableOutOfStock,
     orderInvoiceId,
   ) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
@@ -68,6 +69,7 @@ export default class OrderProductRenderer {
       quantity,
       location,
       availableQuantity,
+      availableOutOfStock,
       orderInvoiceId,
     });
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
@@ -139,7 +141,9 @@ export default class OrderProductRenderer {
   resetAddRow() {
     $(OrderViewPageMap.productAddIdInput).val('');
     $(OrderViewPageMap.productSearchInput).val('');
+    $(OrderViewPageMap.productAddCombinationsBlock).addClass('d-none');
     $(OrderViewPageMap.productAddCombinationsSelect).val('');
+    $(OrderViewPageMap.productAddCombinationsSelect).prop('disabled', false);
     $(OrderViewPageMap.productAddPriceTaxExclInput).val('');
     $(OrderViewPageMap.productAddPriceTaxInclInput).val('');
     $(OrderViewPageMap.productAddQuantityInput).val('');

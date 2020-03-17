@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 
@@ -56,9 +56,8 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     public function __construct(
@@ -67,8 +66,7 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
         bool $refundShippingCost,
         bool $generateCreditSlip,
         bool $generateVoucher,
-        int $voucherRefundType,
-        ?float $voucherRefundAmount = null
+        int $voucherRefundType
     ) {
         parent::__construct(
             $orderId,
@@ -76,8 +74,7 @@ class IssueStandardRefundCommand extends AbstractRefundCommand
             true,
             $generateCreditSlip,
             $generateVoucher,
-            $voucherRefundType,
-            $voucherRefundAmount
+            $voucherRefundType
         );
         $this->refundShippingCost = $refundShippingCost;
     }

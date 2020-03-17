@@ -106,7 +106,7 @@ export default class OrderProductCancel {
 
     this.cancelProductForm.prop('action', formAction);
     this.cancelProductForm
-      .removeClass('standard-refund partial-refund return-product')
+      .removeClass('standard-refund partial-refund return-product cancel-product')
       .addClass(formClass);
     $(OrderViewPageMap.cancelProduct.buttons.save).html(actionName);
     $(OrderViewPageMap.cancelProduct.table.header).html(actionName);
@@ -152,12 +152,13 @@ export default class OrderProductCancel {
     $(document).on('change', OrderViewPageMap.cancelProduct.inputs.selector, (event) => {
       const $productCheckbox = $(event.target);
       const $parentCell = $productCheckbox.parents(OrderViewPageMap.cancelProduct.table.cell);
-      const $productQuantity = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.quantity);
-      const refundableQuantity = parseInt($productQuantity.data('quantityRefundable'), 10);
+      const productQuantityInput = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.quantity);
+      const refundableQuantity = parseInt(productQuantityInput.data('quantityRefundable'), 10);
+      const productQuantity = parseInt(productQuantityInput.val(), 10);
       if (!$productCheckbox.is(':checked')) {
-        $productQuantity.val(0);
-      } else if (parseInt($productQuantity.val(), 10) === 0) {
-        $productQuantity.val(refundableQuantity);
+        productQuantityInput.val(0);
+      } else if (Number.isNaN(productQuantity) || productQuantity === 0) {
+        productQuantityInput.val(refundableQuantity);
       }
       this.updateVoucherRefund();
     });
@@ -246,5 +247,16 @@ export default class OrderProductCancel {
     // Change the ending text part only to avoid removing the input (the EOL is on purpose for better display)
     $label.get(0).lastChild.nodeValue = `
     ${defaultLabel} ${formattedAmount}`;
+  }
+
+  showCancelProductForm() {
+    const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: this.orderId});
+    this.initForm(
+      $(OrderViewPageMap.cancelProduct.buttons.save).data('cancelLabel'),
+      cancelProductRoute,
+      'cancel-product',
+    );
+    this.hideCancelElements();
+    $(OrderViewPageMap.cancelProduct.toggle.cancelProducts).show();
   }
 }
