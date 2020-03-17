@@ -931,39 +931,39 @@ var form = (function() {
 
       /** On event "tokenfield:createtoken" : check values are valid if its not a typehead result */
       $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-        if (!e.attrs.data)
+        if (!e.attrs.data){
           if (e.handleObj.origType !== 'tokenfield:createtoken') {
             return false;
           }
           
-        const orgLabel = e.attrs.label;
-        if (e.attrs.label === e.attrs.value) {
-          engine.search(e.attrs.label, function(result) {
-            if (result.length >= 1) {
-              e.attrs.label = result[0].label;
-              e.attrs.value = result[0].value;
-              e.attrs.data = [];
-              e.attrs.data['id_group'] = result[0].data.id_group;
-            }
-          });
-        } else {
-          const attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
+          const orgLabel = e.attrs.label;
+          if (e.attrs.label === e.attrs.value) {
+            engine.search(e.attrs.label, function(result) {
+              if (result.length >= 1) {
+                e.attrs.label = result[0].label;
+                e.attrs.value = result[0].value;
+                e.attrs.data = [];
+                e.attrs.data['id_group'] = result[0].data.id_group;
+              }
+            });
+          } else {
+            const attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
 
-          if (attr) {
-            e.attrs.label = attr.data('label');
-            e.attrs.value = attr.data('value');
-            e.attrs.data = [];
-            e.attrs.data['id_group'] = attr.data('group-id');
+            if (attr) {
+              e.attrs.label = attr.data('label');
+              e.attrs.value = attr.data('value');
+              e.attrs.data = [];
+              e.attrs.data['id_group'] = attr.data('group-id');
+            }
+          }
+
+          if(e.attrs.data && filter([e.attrs]).length === 0){
+            $('#form_step3_attributes-tokenfield').val((i, value) => {
+              return value.replace(orgLabel,"");
+            });
+            return false;
           }
         }
-
-      if(e.attrs.data && filter([e.attrs]).length === 0){
-          $('#form_step3_attributes-tokenfield').val((i, value) => {
-            return value.replace(orgLabel,"");
-          });
-          return false;
-        }
-        
       });
 
       /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
