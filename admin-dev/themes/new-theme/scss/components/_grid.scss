@@ -30,8 +30,12 @@ table.grid-ordering-column tr.position-row-while-drag {
   td {
     background-color: $medium-gray;
   }
-  td:first-child { @include border-left-radius(3px); }
-  td:last-child { @include border-right-radius(3px); }
+  td:first-child {
+    @include border-left-radius(3px);
+  }
+  td:last-child {
+    @include border-right-radius(3px);
+  }
 
   .position-drag-handle,
   .position-drag-handle:hover,
@@ -99,6 +103,7 @@ table .column-filters td:last-child .grid-reset-button {
             }
             & ~ .form-control {
               display: inline-block;
+              /* stylelint-disable-next-line */
               width: calc(100% - 29px);
             }
           }
@@ -220,9 +225,9 @@ table .column-filters td:last-child .grid-reset-button {
 
           &.order_price-type {
             .badge {
+              padding: 5px;
               font-size: 100%;
               font-weight: 600;
-              padding: 5px;
             }
           }
         }
@@ -238,4 +243,3 @@ table .column-filters td:last-child .grid-reset-button {
     }
   }
 }
-
