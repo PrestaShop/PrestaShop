@@ -11,8 +11,6 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const ProductSettingsPage = require('@pages/BO/shopParameters/productSettings');
-const ProductsPage = require('@pages/BO/catalog/products');
-const AddProductPage = require('@pages/BO/catalog/products/add');
 const ProductPage = require('@pages/FO/product');
 const HomePage = require('@pages/FO/home');
 const SearchResultsPage = require('@pages/FO/searchResults');
@@ -21,8 +19,8 @@ const {Products} = require('@data/demo/products');
 
 let browser;
 let page;
-const attributeWithSeparator2 = '1,size,s/8,color,white';
-const attributeWithSeparator1 = '1-size-s/8-color-white';
+const attributesWithSeparator2 = '1,size,s/8,color,white';
+const attributesWithSeparator1 = '1-size-s/8-color-white';
 
 // Init objects needed
 const init = async function () {
@@ -31,8 +29,6 @@ const init = async function () {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     productSettingsPage: new ProductSettingsPage(page),
-    productsPage: new ProductsPage(page),
-    addProductPage: new AddProductPage(page),
     homePage: new HomePage(page),
     productPage: new ProductPage(page),
     searchResultsPage: new SearchResultsPage(page),
@@ -64,8 +60,8 @@ describe('Test separator of attribute anchor on the product links', async () => 
   });
 
   const tests = [
-    {args: {option: ',', attributeProductLink: attributeWithSeparator2}},
-    {args: {option: '-', attributeProductLink: attributeWithSeparator1}},
+    {args: {option: ',', attributesInProductLink: attributesWithSeparator2}},
+    {args: {option: '-', attributesInProductLink: attributesWithSeparator1}},
   ];
   tests.forEach((test, index) => {
     it(`should choose the option '${test.args.option}'`, async function () {
@@ -84,7 +80,7 @@ describe('Test separator of attribute anchor on the product links', async () => 
       await this.pageObjects.homePage.searchProduct(Products.demo_1.name);
       await this.pageObjects.searchResultsPage.goToProductPage(1);
       const currentURL = await this.pageObjects.productPage.getProductPageURL();
-      await expect(currentURL).to.contains(test.args.attributeProductLink);
+      await expect(currentURL).to.contains(test.args.attributesInProductLink);
       page = await this.pageObjects.productPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
