@@ -107,26 +107,27 @@ class StockAvailableCore extends ObjectModel
         if ($this->depends_on_stock) {
             return WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot update the available stock when it depends on stock.', [], 'Admin.Catalog.Notification'), 133);
         }
-        $result =  $this->update();
-        if($this->id_product_attribute == 0){
-          $id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP && $this->id_shop ? $this->id_shop : null);
-          $quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        $result = $this->update();
+        if ($this->id_product_attribute == 0) {
+            $id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP && $this->id_shop ? $this->id_shop : null);
+            $quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
           SELECT quantity as quantity
-          FROM '._DB_PREFIX_.'stock_available
-          WHERE id_product = '.(int)$this->id_product.'
-          AND id_product_attribute = 0 '.
+          FROM ' . _DB_PREFIX_ . 'stock_available
+          WHERE id_product = ' . (int) $this->id_product . '
+          AND id_product_attribute = 0 ' .
               StockAvailable::addSqlShopRestriction(null, $id_shop)
               );
-          Hook::exec('actionUpdateQuantity',
-              array(
+            Hook::exec('actionUpdateQuantity',
+              [
                   'id_product' => $this->id_product,
                   'id_product_attribute' => 0,
-                  'quantity' => (int)$quantity
-              )
+                  'quantity' => (int) $quantity,
+              ]
               );
-          Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$this->id_product.'*');
+            Cache::clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $this->id_product . '*');
         }
-		  return $result ;
+
+        return $result;
     }
 
     public static function getStockAvailableIdByProductId($id_product, $id_product_attribute = null, $id_shop = null)
