@@ -78,8 +78,8 @@ describe('Enable B2B mode', async () => {
       await this.pageObjects.foBasePage.changeLanguage('en');
       await this.pageObjects.foBasePage.goToLoginPage();
       await this.pageObjects.loginFOPage.goToCreateAccountPage();
-      const isBirthDateInputVisible = await this.pageObjects.loginFOPage.isCompanyInputVisible();
-      await expect(isBirthDateInputVisible).to.be.equal(test.args.enable);
+      const isCompanyInputVisible = await this.pageObjects.loginFOPage.isCompanyInputVisible();
+      await expect(isCompanyInputVisible).to.be.equal(test.args.enable);
       page = await this.pageObjects.loginFOPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
