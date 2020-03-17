@@ -105,7 +105,7 @@
 					<td class="center"> &nbsp;</td>
 
 					<td>
-						{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
+						{if !empty($customization.datas[Product::CUSTOMIZE_TEXTFIELD])}
 							<table style="width: 100%;">
 								{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 									<tr>
@@ -118,7 +118,7 @@
 							</table>
 						{/if}
 
-						{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
+						{if !empty($customization.datas[Product::CUSTOMIZE_FILE])}
 							<table style="width: 100%;">
 								<tr>
 									<td style="width: 70%;">{l s='image(s):' d='Shop.Pdf' pdf='true'}</td>

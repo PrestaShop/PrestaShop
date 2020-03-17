@@ -73,14 +73,14 @@
 							<td>
 								<table style="width: 100%;"><tr><td>
 									{foreach $customization.datas as $customization_types}
-										{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
+										{if !empty($customization.datas[Product::CUSTOMIZE_TEXTFIELD])}
 											{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 												{$customization_infos.name}: {$customization_infos.value}
 												{if !$smarty.foreach.custo_foreach.last}<br />{/if}
 											{/foreach}
 										{/if}
 
-										{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
+										{if !empty($customization.datas[Product::CUSTOMIZE_FILE])}
 											{count($customization.datas[Product::CUSTOMIZE_FILE])} {l s='image(s)' d='Shop.Pdf' pdf='true'}
 										{/if}
 
