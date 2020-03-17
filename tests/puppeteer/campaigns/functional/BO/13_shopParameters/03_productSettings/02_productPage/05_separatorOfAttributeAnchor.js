@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_separatorOfAttributeAnchorOnProductLinks';
+const baseContext = 'functional_BO_productSettings_separatorOfAttributeAnchor';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -19,8 +19,7 @@ const {Products} = require('@data/demo/products');
 
 let browser;
 let page;
-const attributesWithSeparator2 = '1,size,s/8,color,white';
-const attributesWithSeparator1 = '1-size-s/8-color-white';
+const productAttributes = ['1', 'size', 's/8', 'color', 'white'];
 
 // Init objects needed
 const init = async function () {
@@ -60,11 +59,11 @@ describe('Test separator of attribute anchor on the product links', async () => 
   });
 
   const tests = [
-    {args: {option: ',', attributesInProductLink: attributesWithSeparator2}},
-    {args: {option: '-', attributesInProductLink: attributesWithSeparator1}},
+    {args: {option: ',', attributesInProductLink: productAttributes.join(',')}},
+    {args: {option: '-', attributesInProductLink: productAttributes.join('-')}},
   ];
   tests.forEach((test, index) => {
-    it(`should choose the option '${test.args.option}'`, async function () {
+    it(`should choose the separator option '${test.args.option}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `chooseOption_${index}`, baseContext);
       const result = await this.pageObjects.productSettingsPage.setSeparatorOfAttributeOnProductLink(
         test.args.option,
