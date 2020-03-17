@@ -75,7 +75,15 @@
 			};
 		{/foreach}
 		displayFlags(languages, {$id_lang_default});
-	</script>
+
+    {if isset($refresh_cart) }
+      if (typeof window.parent.order_create !== "undefined") {
+        window.parent.order_create.refreshCart();
+      }
+      window.parent.$.fancybox.close();
+    {/if}
+
+  </script>
 	<script type="text/javascript" src="themes/default/template/controllers/cart_rules/form.js"></script>
 	{include file="footer_toolbar.tpl"}
 </div>

@@ -74,5 +74,6 @@ describe('Export categories', async () => {
       const textExist = await files.checkTextInFile(fileName, categoryInCsvFormat, true);
       await expect(textExist, `${categoryInCsvFormat} was not found in the file`).to.be.true;
     }
+    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
   });
 });

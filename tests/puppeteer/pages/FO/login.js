@@ -91,6 +91,14 @@ module.exports = class Login extends FOBasePage {
   }
 
   /**
+   * Is partner offer visible
+   * @returns {Promise<boolean>}
+   */
+  async isPartnerOfferVisible() {
+    return this.elementVisible(this.partnerOfferCheckbox, 1000);
+  }
+
+  /**
    * Is company input visible
    * @returns {Promise<boolean>}
    */

@@ -20,6 +20,7 @@ module.exports = class Product extends FOBasePage {
     this.productAvailabilityIcon = '#product-availability i';
     this.productSizeOption = '#group_1 option[title=\'%SIZE\']';
     this.productColorInput = '#group_2 input[title=\'%COLOR\']';
+    this.metaLink = '#main > meta';
   }
 
   /**
@@ -115,5 +116,13 @@ module.exports = class Product extends FOBasePage {
    */
   isUnavailableProductColorDisplayed(color) {
     return this.elementVisible(this.productColorInput.replace('%COLOR', color), 1000);
+  }
+
+  /**
+   * Get product page URL
+   * @returns {Promise<string>}
+   */
+  getProductPageURL() {
+    return this.getAttributeContent(this.metaLink, 'content');
   }
 };
