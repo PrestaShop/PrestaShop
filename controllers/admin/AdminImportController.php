@@ -2310,7 +2310,7 @@ class AdminImportControllerCore extends AdminController
             if (!$validateOnly && isset($product->advanced_stock_management)) {
                 if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management has incorrect value. Not set for product %name% ',
+                        'Advanced stock management has incorrect value. Not set for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2318,7 +2318,7 @@ class AdminImportControllerCore extends AdminController
                     );
                 } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot enable on product %name% ',
+                        'Advanced stock management is not enabled, cannot enable on product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2337,7 +2337,7 @@ class AdminImportControllerCore extends AdminController
             if (isset($product->warehouse) && $product->warehouse) {
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, warehouse not set on product %name% ',
+                        'Advanced stock management is not enabled, warehouse not set on product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2377,7 +2377,7 @@ class AdminImportControllerCore extends AdminController
             if (isset($product->depends_on_stock)) {
                 if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
                     $this->warnings[] = $this->trans(
-                        'Incorrect value for "Depends on stock" for product %name% ',
+                        'Incorrect value for "Depends on stock" for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2385,7 +2385,7 @@ class AdminImportControllerCore extends AdminController
                     );
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ',
+                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2961,7 +2961,7 @@ class AdminImportControllerCore extends AdminController
             if (isset($info['depends_on_stock'])) {
                 if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1) {
                     $this->warnings[] = $this->trans(
-                        'Incorrect value for "Depends on stock" for product %name% ',
+                        'Incorrect value for "Depends on stock" for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
                         ],
@@ -2969,7 +2969,7 @@ class AdminImportControllerCore extends AdminController
                     );
                 } elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ',
+                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
                         ],
