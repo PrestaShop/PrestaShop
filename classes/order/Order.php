@@ -1121,7 +1121,7 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_customer Customer id
      *
-     * @return array Customer orders number
+     * @return int Customer orders number
      */
     public static function getCustomerNbOrders($id_customer)
     {
@@ -1131,7 +1131,7 @@ class OrderCore extends ObjectModel
                     . Shop::addSqlRestriction();
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        return isset($result['nb']) ? $result['nb'] : 0;
+        return isset($result['nb']) ? (int)$result['nb'] : 0;
     }
 
     /**
