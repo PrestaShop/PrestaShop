@@ -260,4 +260,13 @@ class PDFGeneratorCore extends TCPDF
 
         return $seed;
     }
+
+    /**
+     * @param Language $language
+     */
+    public function setLanguage(Language $language)
+    {
+        $this->setRTL($language->is_rtl);
+        $this->setFontForLang($language->iso_code);
+    }
 }
