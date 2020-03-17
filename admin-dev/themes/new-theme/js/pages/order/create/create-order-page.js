@@ -64,8 +64,51 @@ export default class CreateOrderPage {
     this.summaryRenderer = new SummaryRenderer();
     this.summaryManager = new SummaryManager();
 
+<<<<<<< HEAD
     this.initListeners();
     this.loadCartFromUrlParams();
+=======
+    this._initListeners();
+    this._loadCartFromUrlParams();
+
+    return {
+      refreshAddressesList: (refreshCartAddresses) => this.refreshAddressesList(refreshCartAddresses),
+      refreshCart: (refreshCart) => this.refreshCart(refreshCart),
+      search: (string) => this.customerManager.search(string),
+    };
+  }
+
+  /**
+   * Checks if correct addresses are selected.
+   * There is a case when options list cannot contain cart addresses 'selected' values
+   *  because those are outdated in db (e.g. deleted after cart creation or country is disabled)
+   *
+   * @param {Array} addresses
+   *
+   * @returns {boolean}
+   */
+  static validateSelectedAddresses(addresses) {
+    let deliveryValid = false;
+    let invoiceValid = false;
+
+    for (const key in addresses) {
+      const address = addresses[key];
+
+      if (address.delivery) {
+        deliveryValid = true;
+      }
+
+      if (address.invoice) {
+        invoiceValid = true;
+      }
+
+      if (deliveryValid && invoiceValid) {
+        return true;
+      }
+    }
+
+    return false;
+>>>>>>> 6de22fdf5f6b01e894b2271bfb904f9c9fbc8e86
   }
 
   /**
@@ -112,7 +155,46 @@ export default class CreateOrderPage {
     this.listenForCartEdit();
     this.onCartLoaded();
     this.onCustomersNotFound();
+<<<<<<< HEAD
     this.onCustomerSelected();
+=======
+    this._onCustomerSelected();
+    this.initAddressButtonsIframe();
+    this.initCartRuleButtonsIframe();
+
+  }
+
+  /**
+   * @private
+   */
+  initAddressButtonsIframe() {
+    $(createOrderMap.addressAddBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+
+    $(createOrderMap.invoiceAddressEditBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+
+    $(createOrderMap.deliveryAddressEditBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+
+  }
+
+  initCartRuleButtonsIframe() {
+    $('#js-add-cart-rule-btn').fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+>>>>>>> 6de22fdf5f6b01e894b2271bfb904f9c9fbc8e86
   }
 
   /**
@@ -451,6 +533,7 @@ export default class CreateOrderPage {
     this.preselectCartLanguage(cartInfo.langId);
 
     $(createOrderMap.cartBlock).removeClass('d-none');
+    $(createOrderMap.cartBlock).data('cartId', cartInfo.cartId);
   }
 
   /**
@@ -487,5 +570,33 @@ export default class CreateOrderPage {
     };
 
     this.cartEditor.changeCartAddresses(this.cartId, addresses);
+  }
+
+  /**
+   * Refresh addresses list
+   *
+   * @param {boolean} refreshCartAddresses optional
+   *
+   * @private
+   */
+  refreshAddressesList(refreshCartAddresses) {
+    const cartId = $(createOrderMap.cartBlock).data('cartId');
+    $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
+      this.addressesRenderer.render(cartInfo.addresses);
+
+      if (refreshCartAddresses) {
+        this._changeCartAddresses();
+      }
+    }).catch((e) => {
+      showErrorMessage(e.responseJSON.message);
+    });
+  }
+
+  /**
+   * proxy to allow other scripts within the page to refresh addresses list
+   */
+  refreshCart() {
+      const cartId = $(createOrderMap.cartBlock).data('cartId');
+      this.cartProvider.getCart(cartId);
   }
 }

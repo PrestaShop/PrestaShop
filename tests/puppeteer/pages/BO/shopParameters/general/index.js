@@ -12,6 +12,7 @@ module.exports = class shopParamsGeneral extends BOBasePage {
     this.configurationForm = '#configuration_form';
     this.displaySuppliersLabel = 'label[for=\'form_general_display_suppliers_%TOGGLE\']';
     this.displayBrandsLabel = 'label[for=\'form_general_display_manufacturers_%TOGGLE\']';
+    this.enableMultiStoreLabel = 'label[for=\'form_general_multishop_feature_active_%TOGGLE\']';
     this.saveFormButton = `${this.configurationForm} .card-footer button`;
   }
 
@@ -45,6 +46,17 @@ module.exports = class shopParamsGeneral extends BOBasePage {
    */
   async setDisplayBrands(toEnable = true) {
     await this.waitForSelectorAndClick(this.displayBrandsLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable/Disable multi store
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setMultiStoreStatus(toEnable = true) {
+    await this.waitForSelectorAndClick(this.enableMultiStoreLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }

@@ -406,6 +406,11 @@ Comment: subtab</note>
         <target>Module manager</target>
         <note>Line: 135</note>
       </trans-unit>
+      <trans-unit id="5f265dfcb9ab68a1258ec25393ffb886">
+        <source>Module Manager</source>
+        <target>Module Manager</target>
+        <note>Line: 135</note>
+      </trans-unit>
       <trans-unit id="9ac41b6a577daadd588f0fcde0071e8b">
         <source>Updates</source>
         <target>Updates</target>

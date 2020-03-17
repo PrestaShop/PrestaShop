@@ -112,3 +112,8 @@ services:
         - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
       tags:
         - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.number_extension:
+      class: 'PrestaShopBundle\Twig\Extension\NumberExtension'
+      tags:
+        - { name: twig.extension }
