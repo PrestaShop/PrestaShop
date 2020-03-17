@@ -54,6 +54,8 @@ export default {
   orderMessagesContainer: '.js-order-messages-container',
   orderMessage: '#order_message_message',
   orderMessageChangeWarning: '.js-message-change-warning',
+  orderDocumentsTabCount: '#orderDocumentsTab .count',
+  orderDocumentsTabBody: '#orderDocumentsTabContent .card-body',
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
