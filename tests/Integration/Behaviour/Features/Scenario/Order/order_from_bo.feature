@@ -101,7 +101,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 0 invoices
 
   @order-from-bo
-  Scenario: Add product to an existing Order WITH invoice with free shipping to NEW invoice
+  Scenario: Add product to an existing Order with invoice with free shipping to new invoice
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoices
     And order with reference "bo_order1" does not contain product "Mug Today is a good day"
@@ -114,7 +114,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 2 invoices
 
   @order-from-bo
-  Scenario: Add product to an existing Order WITH invoice with free shipping to last invoice
+  Scenario: Add product to an existing Order with invoice with free shipping to last invoice
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoices
     And order with reference "bo_order1" does not contain product "Mug Today is a good day"
