@@ -947,7 +947,7 @@ var form = (function() {
             }
           });
         } else {
-          var attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
+          const attr = $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`);
 
           if (attr) {
             e.attrs.label = attr.data('label');
