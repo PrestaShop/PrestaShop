@@ -62,6 +62,7 @@ twig:
     paths:
         '%admin_page%/Product': Product
         '%admin_page%/TwigTemplateForm': Twig
+        '%admin_page%/Common': Common
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
         '%kernel.root_dir%/../modules': Modules

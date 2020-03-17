@@ -63,12 +63,9 @@
   {% endif %}
 
   {{ label }}
-  <span
-    class="help-box"
-    data-toggle="popover"
-    data-content="{{ help }}">
-  </span>
+  {{ include('@Common/HelpBox/helpbox.html.twig', {'content': help}) }}
 </label>
+
 <p class="sr-only">{{ help }}</p>
 {% endmacro %}
 
