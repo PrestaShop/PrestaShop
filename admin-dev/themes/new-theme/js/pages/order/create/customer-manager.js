@@ -45,12 +45,8 @@ export default class CustomerManager {
     this.$customerSearchResultBlock = $(createOrderMap.customerSearchResultsBlock);
     this.customerRenderer = new CustomerRenderer();
 
-<<<<<<< HEAD
     this.initListeners();
-=======
-    this._initListeners();
     this.initAddCustomerIframe();
->>>>>>> 6de22fdf5f6b01e894b2271bfb904f9c9fbc8e86
 
     return {
       search: (searchPhrase) => this.search(searchPhrase),
@@ -77,9 +73,9 @@ export default class CustomerManager {
    */
   initAddCustomerIframe() {
     $(createOrderMap.customerAddBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -128,10 +124,10 @@ export default class CustomerManager {
       const createAddressUrl = this.router.generate(
         'admin_addresses_create',
         {
-          'liteDisplaying': 1,
-          'submitFormAjax': 1,
-          'id_customer': this.customerId,
-        }
+          liteDisplaying: 1,
+          submitFormAjax: 1,
+          id_customer: this.customerId,
+        },
       );
       $(createOrderMap.addressAddBtn).attr('href', createAddressUrl);
 

@@ -41,7 +41,7 @@ $(document).ready(() => {
   new CountryStateSelectionToggler(
     SupplierMap.supplierCountrySelect,
     SupplierMap.supplierStateSelect,
-    SupplierMap.supplierStateBlock
+    SupplierMap.supplierStateBlock,
   );
 
   new CountryDniRequiredToggler(
@@ -56,7 +56,7 @@ $(document).ready(() => {
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
-      createTokensOnBlur: true
-    }
+      createTokensOnBlur: true,
+    },
   });
 });

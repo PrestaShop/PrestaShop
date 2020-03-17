@@ -64,12 +64,8 @@ export default class CreateOrderPage {
     this.summaryRenderer = new SummaryRenderer();
     this.summaryManager = new SummaryManager();
 
-<<<<<<< HEAD
     this.initListeners();
     this.loadCartFromUrlParams();
-=======
-    this._initListeners();
-    this._loadCartFromUrlParams();
 
     return {
       refreshAddressesList: (refreshCartAddresses) => this.refreshAddressesList(refreshCartAddresses),
@@ -91,8 +87,10 @@ export default class CreateOrderPage {
     let deliveryValid = false;
     let invoiceValid = false;
 
-    for (const key in addresses) {
-      const address = addresses[key];
+    const keys = Object.keys(addresses);
+
+    for (let i = 0; i < keys.length; i += 1) {
+      const address = addresses[keys[i]];
 
       if (address.delivery) {
         deliveryValid = true;
@@ -108,7 +106,6 @@ export default class CreateOrderPage {
     }
 
     return false;
->>>>>>> 6de22fdf5f6b01e894b2271bfb904f9c9fbc8e86
   }
 
   /**
@@ -155,13 +152,9 @@ export default class CreateOrderPage {
     this.listenForCartEdit();
     this.onCartLoaded();
     this.onCustomersNotFound();
-<<<<<<< HEAD
     this.onCustomerSelected();
-=======
-    this._onCustomerSelected();
     this.initAddressButtonsIframe();
     this.initCartRuleButtonsIframe();
-
   }
 
   /**
@@ -169,32 +162,30 @@ export default class CreateOrderPage {
    */
   initAddressButtonsIframe() {
     $(createOrderMap.addressAddBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
 
     $(createOrderMap.invoiceAddressEditBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
 
     $(createOrderMap.deliveryAddressEditBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
-
   }
 
   initCartRuleButtonsIframe() {
     $('#js-add-cart-rule-btn').fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
->>>>>>> 6de22fdf5f6b01e894b2271bfb904f9c9fbc8e86
   }
 
   /**
@@ -585,10 +576,10 @@ export default class CreateOrderPage {
       this.addressesRenderer.render(cartInfo.addresses);
 
       if (refreshCartAddresses) {
-        this._changeCartAddresses();
+        this.changeCartAddresses();
       }
     }).catch((e) => {
-      showErrorMessage(e.responseJSON.message);
+      window.showErrorMessage(e.responseJSON.message);
     });
   }
 
@@ -596,7 +587,7 @@ export default class CreateOrderPage {
    * proxy to allow other scripts within the page to refresh addresses list
    */
   refreshCart() {
-      const cartId = $(createOrderMap.cartBlock).data('cartId');
-      this.cartProvider.getCart(cartId);
+    const cartId = $(createOrderMap.cartBlock).data('cartId');
+    this.cartProvider.getCart(cartId);
   }
 }

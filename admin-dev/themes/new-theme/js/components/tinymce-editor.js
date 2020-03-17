@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import {EventEmitter} from './event-emitter';
 
 const {$} = window;
 
@@ -79,7 +78,6 @@ class TinyMCEEditor {
    * @param config
    */
   initTinyMCE(config) {
-<<<<<<< HEAD
     const cfg = {
       selector: '.rte',
       plugins:
@@ -93,40 +91,6 @@ class TinyMCEEditor {
       filemanager_title: 'File manager',
       external_plugins: {
         filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
-=======
-    config = Object.assign(
-      {
-        selector: '.rte',
-        plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
-        browser_spellcheck: true,
-        toolbar1:
-          'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
-        toolbar2: '',
-        external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
-        filemanager_title: 'File manager',
-        external_plugins: {
-          filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`
-        },
-        language: iso_user,
-        content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
-        skin: 'prestashop',
-        menubar: false,
-        statusbar: false,
-        relative_urls: false,
-        convert_urls: false,
-        entity_encoding: 'raw',
-        extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
-        valid_children: '+*[*]',
-        valid_elements: '*[*]',
-        rel_list: [{title: 'nofollow', value: 'nofollow'}],
-        editor_selector: 'autoload_rte',
-        init_instance_callback: () => {
-          this.changeToMaterial();
-        },
-        setup: editor => {
-          this.setupEditor(editor);
-        }
->>>>>>> 6de22fdf5f6b01e894b2271bfb904f9c9fbc8e86
       },
       language: window.iso_user,
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
@@ -198,32 +162,14 @@ class TinyMCEEditor {
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
-          const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
           if (editor) {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
           }
-<<<<<<< HEAD
-
-          EventEmitter.emit('languageSelected', {
-            selectedLocale: textareaLocale,
-            form,
-          });
         });
       }
     });
-
-    EventEmitter.on('languageSelected', (data) => {
-      const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
-
-      $(textareaLinkSelector).click();
-    });
-=======
-        });
-      }
-    });
->>>>>>> 6de22fdf5f6b01e894b2271bfb904f9c9fbc8e86
   }
 
   /**

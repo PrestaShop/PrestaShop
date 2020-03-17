@@ -46,7 +46,8 @@ export default class OrderProductEdit {
   setupListener() {
     this.quantityInput.on('change keyup', (event) => {
       this.quantity = parseInt(event.target.value ? event.target.value : 0, 10);
-      const available = parseInt($(event.currentTarget).data('availableQuantity'), 10) - (this.quantity - this.quantityInput.data('previousQuantity'));
+      const available = parseInt($(event.currentTarget).data('availableQuantity'), 10)
+        - (this.quantity - this.quantityInput.data('previousQuantity'));
       const availableOutOfStock = this.availableText.data('availableOutOfStock');
       this.availableText.text(available);
       this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
@@ -127,7 +128,9 @@ export default class OrderProductEdit {
     this.priceTaxIncludedInput.val(
       window.ps_round(product.price_tax_incl, this.currencyPrecision),
     );
-    this.quantityInput.val(product.quantity).data('availableQuantity', product.availableQuantity).data('previousQuantity', product.quantity);
+    this.quantityInput.val(product.quantity)
+      .data('availableQuantity', product.availableQuantity)
+      .data('previousQuantity', product.quantity);
     this.availableText.data('availableOutOfStock', product.availableOutOfStock);
 
     // set this product's orderInvoiceId as selected
@@ -147,8 +150,12 @@ export default class OrderProductEdit {
     this.taxIncluded = product.price_tax_incl;
 
     // Copy product content in cells
-    this.productEditImage.html(this.productRow.find(OrderViewPageMap.productEditImage).html());
-    this.productEditName.html(this.productRow.find(OrderViewPageMap.productEditName).html());
+    this.productEditImage.html(
+      this.productRow.find(OrderViewPageMap.productEditImage).html(),
+    );
+    this.productEditName.html(
+      this.productRow.find(OrderViewPageMap.productEditName).html(),
+    );
     this.locationText.html(product.location);
     this.availableText.html(product.availableQuantity);
     this.priceTotalText.html(this.initialTotal);
