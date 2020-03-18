@@ -534,23 +534,26 @@ class OrderHistoryCore extends ObjectModel
                 // Attach invoice and / or delivery-slip if they exists and status is set to attach them
                 if (($result['pdf_invoice'] || $result['pdf_delivery'])) {
                     $invoice = $order->getInvoicesCollection();
-                    $language = new Language((int) $order->id_lang);
+                    $contextLanguage = Context::getContext()->language;
+                    $orderLanguage = new Language((int) $order->id_lang);
                     $file_attachement = [];
 
                     if ($result['pdf_invoice'] && (int) Configuration::get('PS_INVOICE') && $order->invoice_number) {
+                        Context::getContext()->language = $orderLanguage;
                         Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $invoice]);
                         $pdf = new PDF($invoice, PDF::TEMPLATE_INVOICE, $context->smarty);
-                        $pdf->setLanguage($language);
                         $file_attachement['invoice']['content'] = $pdf->render(false);
                         $file_attachement['invoice']['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
                         $file_attachement['invoice']['mime'] = 'application/pdf';
+                        Context::getContext()->language = $contextLanguage;
                     }
                     if ($result['pdf_delivery'] && $order->delivery_number) {
+                        Context::getContext()->language = $orderLanguage;
                         $pdf = new PDF($invoice, PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
-                        $pdf->setLanguage($language);
                         $file_attachement['delivery']['content'] = $pdf->render(false);
                         $file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->delivery_number) . '.pdf';
                         $file_attachement['delivery']['mime'] = 'application/pdf';
+                        Context::getContext()->language = $contextLanguage;
                     }
                 } else {
                     $file_attachement = null;

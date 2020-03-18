@@ -35,11 +35,6 @@ class PDFCore
     public $template;
     public $send_bulk_flag = false;
 
-    /**
-     * @var Language
-     */
-    private $language;
-
     const TEMPLATE_INVOICE = 'Invoice';
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
     const TEMPLATE_ORDER_SLIP = 'OrderSlip';
@@ -55,7 +50,6 @@ class PDFCore
     public function __construct($objects, $template, $smarty, $orientation = 'P')
     {
         $this->pdf_renderer = new PDFGenerator((bool) Configuration::get('PS_PDF_USE_CACHE'), $orientation);
-        $this->language = Context::getContext()->language;
         $this->template = $template;
 
         /*
@@ -111,15 +105,13 @@ class PDFCore
     public function render($display = true)
     {
         $render = false;
-        $this->pdf_renderer->setRTL($this->language->is_rtl);
-        $this->pdf_renderer->setFontForLang($this->language->iso_code);
+        $this->pdf_renderer->setFontForLang(Context::getContext()->language->iso_code);
         foreach ($this->objects as $object) {
             $this->pdf_renderer->startPageGroup();
             $template = $this->getTemplateObject($object);
             if (!$template) {
                 continue;
             }
-            $template->setLangId((int) $this->language->id);
 
             if (empty($this->filename)) {
                 $this->filename = $template->getFilename();
@@ -175,13 +167,5 @@ class PDFCore
         }
 
         return $class;
-    }
-
-    /**
-     * @param Language $language
-     */
-    public function setLanguage(Language $language)
-    {
-        $this->language = $language;
     }
 }

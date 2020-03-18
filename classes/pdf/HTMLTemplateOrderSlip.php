@@ -56,7 +56,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         // header informations
         $this->date = Tools::displayDate($this->order_slip->date_add);
-        $prefix = Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->getLangId());
+        $prefix = Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id);
         $this->title = sprintf(HTMLTemplateOrderSlip::l('%1$s%2$06d'), $prefix, (int) $this->order_slip->id);
 
         $this->shop = new Shop((int) $this->order->id_shop);
@@ -190,7 +190,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getFilename()
     {
-        return Configuration::get('PS_CREDIT_SLIP_PREFIX', $this->getLangId(), null, $this->order->id_shop) . sprintf('%06d', $this->order_slip->id) . '.pdf';
+        return Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_slip->id) . '.pdf';
     }
 
     /**

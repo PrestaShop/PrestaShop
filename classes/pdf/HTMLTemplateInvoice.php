@@ -323,7 +323,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $legal_free_text = Hook::exec('displayInvoiceLegalFreeText', ['order' => $this->order]);
         if (!$legal_free_text) {
-            $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', $this->getLangId(), null, (int) $this->order->id_shop);
+            $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int) Context::getContext()->language->id, null, (int) $this->order->id_shop);
         }
 
         $data = [
@@ -507,6 +507,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      */
     public function getFilename()
     {
+        $id_lang = Context::getContext()->language->id;
         $id_shop = (int) $this->order->id_shop;
         $format = '%1$s%2$06d';
 
@@ -516,7 +517,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         return sprintf(
             $format,
-            Configuration::get('PS_INVOICE_PREFIX', $this->getLangId(), null, $id_shop),
+            Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop),
             $this->order_invoice->number,
             date('Y', strtotime($this->order_invoice->date_add))
         ) . '.pdf';
