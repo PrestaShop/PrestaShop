@@ -66,7 +66,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
 
         $computingPrecision = new ComputingPrecision();
         $currency = new Currency((int) $order->id_currency);
-         // Override default precision with currency precision
+        // Override default precision with currency precision
         $this->precision = $computingPrecision->getPrecision($currency->precision);
 
         $discountValue = $command->getDiscountValue();

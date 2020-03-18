@@ -38,7 +38,6 @@ use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Invoice\DTO\InvoiceTotalNumbers;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\DTO\OrderTotalNumbers;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
