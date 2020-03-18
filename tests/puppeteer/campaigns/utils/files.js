@@ -105,15 +105,20 @@ module.exports = {
    * Check text in file
    * @param fileName
    * @param textToCheckWith
-   * @param ignoreSpaces
+   * @param ignoreSpaces, true to delete all spaces before the check
+   * @param ignoreTimeZone, true to delete timezone string added to some image url
    * @return {Promise<boolean>}
    */
-  async checkTextInFile(fileName, textToCheckWith, ignoreSpaces = false) {
+  async checkTextInFile(fileName, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
     let fileText = await fs.readFileSync(`${global.BO.DOWNLOAD_PATH}/${fileName}`, 'utf8');
     let text = textToCheckWith;
     if (ignoreSpaces) {
       fileText = await fileText.replace(/\s/g, '');
       text = await text.replace(/\s/g, '');
+    }
+    if (ignoreTimeZone) {
+      fileText = await fileText.replace(/\?time=\d+/g, '', '');
+      text = await text.replace(/\?time=\d+/g, '', '');
     }
     return fileText.includes(text);
   },
