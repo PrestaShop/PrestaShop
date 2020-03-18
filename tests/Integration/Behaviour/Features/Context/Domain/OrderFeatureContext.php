@@ -712,9 +712,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function setShippingRecalculationConfig(bool $status): void
     {
-        $configName = 'PS_ORDER_RECALCULATE_SHIPPING';
-
-        Configuration::set($configName, $status);
+        Configuration::set('PS_ORDER_RECALCULATE_SHIPPING', $status);
     }
 
     /**
