@@ -47,6 +47,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.brandsAndSuppliersLink = '#subtab-AdminParentManufacturers';
     // files
     this.filesLink = '#subtab-AdminAttachments';
+    // Discounts
+    this.discountsLink = '#subtab-AdminParentCartRules';
     // Stocks
     this.stocksLink = '#subtab-AdminStockManagement';
 
