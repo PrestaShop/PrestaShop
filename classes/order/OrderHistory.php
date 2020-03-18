@@ -549,7 +549,7 @@ class OrderHistoryCore extends ObjectModel
                         $pdf = new PDF($invoice, PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
                         $pdf->setLanguage($language);
                         $file_attachement['delivery']['content'] = $pdf->render(false);
-                        $file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $order->id_shop) . sprintf('%06d', $order->delivery_number) . '.pdf';
+                        $file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->delivery_number) . '.pdf';
                         $file_attachement['delivery']['mime'] = 'application/pdf';
                     }
                 } else {
