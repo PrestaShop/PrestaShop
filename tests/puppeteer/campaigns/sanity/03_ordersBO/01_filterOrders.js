@@ -32,7 +32,7 @@ const init = async function () {
   Filter the Orders table
   Logout from the BO
  */
-describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
+describe.skip('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
