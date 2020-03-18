@@ -102,7 +102,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->checkProductInStock($command->getProductId()->getValue(), $command->getCombinationId(), $command->getProductQuantity());
 
-        $cart = $this->createNewCart($order);
+        $cart = $this->createNewOrEditExistingCart($order);
 
         $specificPrice = $this->createSpecificPriceIfNeeded(
             $command,
@@ -134,12 +134,12 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         // update totals amount of order
         // @todo: use https://github.com/PrestaShop/decimal for prices computations
-        $order->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $order->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 
-        $order->total_paid += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
-        $order->total_paid_tax_excl += Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
-        $order->total_paid_tax_incl += Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
+        $order->total_paid = Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
+        $order->total_paid_tax_excl = Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
+        $order->total_paid_tax_incl = Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
 
         if (null !== $invoice && Validate::isLoadedObject($invoice)) {
             $order->total_shipping = $invoice->total_shipping_tax_incl;
@@ -148,9 +148,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         // discount
-        $order->total_discounts += (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
-        $order->total_discounts_tax_excl += (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
-        $order->total_discounts_tax_incl += (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS));
+        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
 
         // Save changes of order
         $order->update();
@@ -271,20 +271,25 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *
      * @return Cart
      */
-    private function createNewCart(Order $order)
+    private function createNewOrEditExistingCart(Order $order)
     {
-        $cart = new Cart();
-        $cart->id_shop_group = $order->id_shop_group;
-        $cart->id_shop = $order->id_shop;
-        $cart->id_customer = $order->id_customer;
-        $cart->id_carrier = $order->id_carrier;
-        $cart->id_address_delivery = $order->id_address_delivery;
-        $cart->id_address_invoice = $order->id_address_invoice;
-        $cart->id_currency = $order->id_currency;
-        $cart->id_lang = $order->id_lang;
-        $cart->secure_key = $order->secure_key;
+        $cartId = Cart::getCartIdByOrderId($order->id);
+        if ($cartId) {
+            $cart = new Cart($cartId);
+        } else {
+            $cart = new Cart();
+            $cart->id_shop_group = $order->id_shop_group;
+            $cart->id_shop = $order->id_shop;
+            $cart->id_customer = $order->id_customer;
+            $cart->id_carrier = $order->id_carrier;
+            $cart->id_address_delivery = $order->id_address_delivery;
+            $cart->id_address_invoice = $order->id_address_invoice;
+            $cart->id_currency = $order->id_currency;
+            $cart->id_lang = $order->id_lang;
+            $cart->secure_key = $order->secure_key;
 
-        $cart->add();
+            $cart->add();
+        }
 
         $this->context->cart = $cart;
         $this->context->customer = new Customer($order->id_customer);
