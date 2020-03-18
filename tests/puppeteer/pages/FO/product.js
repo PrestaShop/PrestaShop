@@ -28,9 +28,9 @@ module.exports = class Product extends FOBasePage {
    */
   async getProductInformation(productData) {
     return {
-      name: await this.getTextContent(this.productName, productData.name),
-      price: parseFloat(await this.getAttributeContent(this.productPrice, 'content', productData.price)),
-      description: await this.getTextContent(this.productDescription, productData.description),
+      name: await this.getTextContent(this.productName),
+      price: parseFloat(await this.getAttributeContent(this.productPrice, 'content')),
+      description: await this.getTextContent(this.productDescription),
     };
   }
 
