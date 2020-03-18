@@ -59,7 +59,7 @@ module.exports = class customerSettings extends BOBasePage {
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setPartnerOfferStatus(toEnable = true){
+  async setPartnerOfferStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.enablePartnerOfferLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
