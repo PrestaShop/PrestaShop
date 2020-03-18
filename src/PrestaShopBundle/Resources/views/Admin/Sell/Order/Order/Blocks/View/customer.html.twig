@@ -120,7 +120,7 @@
                   'back': path('admin_orders_view', {'orderId': orderForViewing.id})
                 }) }}"
               >
-                {{ 'Edit address'|trans({}, 'Admin.Actions') }}
+                {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
               </a>
 
               <a href="#"
@@ -129,7 +129,7 @@
                 data-target="#updateCustomerAddressModal"
                 data-address-type="shipping"
               >
-                {{ 'Change address'|trans({}, 'Admin.Actions') }}
+                {{ 'Select another address'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
             {% endif %}
@@ -177,7 +177,7 @@
                   'back': path('admin_orders_view', {'orderId': orderForViewing.id})
                 }) }}"
               >
-                {{ 'Edit address'|trans({}, 'Admin.Actions') }}
+                {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
               </a>
 
               <a href="#"
@@ -186,7 +186,7 @@
                 data-target="#updateCustomerAddressModal"
                 data-address-type="invoice"
               >
-                {{ 'Change address'|trans({}, 'Admin.Actions') }}
+                {{ 'Select another address'|trans({}, 'Admin.Actions') }}
               </a>
             </div>
             {% endif %}
