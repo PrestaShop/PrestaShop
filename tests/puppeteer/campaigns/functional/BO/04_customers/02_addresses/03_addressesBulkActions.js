@@ -14,7 +14,7 @@ const AddressFaker = require('@data/faker/address');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customers_customers_AddressesBulkActions';
+const baseContext = 'functional_BO_customers_addresses_addressesBulkActions';
 
 let browser;
 let page;

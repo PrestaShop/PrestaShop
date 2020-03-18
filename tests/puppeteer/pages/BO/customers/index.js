@@ -37,12 +37,18 @@ module.exports = class Customers extends BOBasePage {
     this.tableHead = `${this.customersListForm} thead`;
     this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
     this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
-
-
+    // Required field section
+    this.setRequiredFieldsButton = 'button[data-target=\'#customerRequiredFieldsContainer\']';
+    this.requiredFieldCheckBox = '#required_fields_required_fields_%ID';
+    this.saveButton = '#customerRequiredFieldsContainer button';
     // Modal Dialog
     this.deleteCustomerModal = '#customer_grid_delete_customers_modal.show';
     this.deleteCustomerModalDeleteButton = `${this.deleteCustomerModal} button.js-submit-delete-customers`;
     this.deleteCustomerModalMethodInput = `${this.deleteCustomerModal} #delete_customers_delete_method_%ID`;
+    // Grid Actions
+    this.customerGridActionsButton = '#customer-grid-actions-button';
+    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'customer-grid-actions-button\']';
+    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
   }
 
   /*
@@ -94,7 +100,7 @@ module.exports = class Customers extends BOBasePage {
         );
         break;
       default:
-        // Do nothing
+      // Do nothing
     }
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
@@ -156,6 +162,25 @@ module.exports = class Customers extends BOBasePage {
         .replace('%ROW', row)
         .replace('%COLUMN', column),
     );
+  }
+
+  /**
+   * Get all information for a customer in table
+   * @param row, row of customer in table
+   * @return {Promise<{object}>}
+   */
+  async getCustomerFromTable(row) {
+    return {
+      id: await this.getTextColumnFromTableCustomers(row, 'id_customer'),
+      socialTitle: await this.getTextColumnFromTableCustomers(row, 'social_title'),
+      firstName: await this.getTextColumnFromTableCustomers(row, 'firstname'),
+      lastName: await this.getTextColumnFromTableCustomers(row, 'lastname'),
+      email: await this.getTextColumnFromTableCustomers(row, 'email'),
+      sales: await this.getTextColumnFromTableCustomers(row, 'total_spent'),
+      status: await this.getToggleColumnValue(row, 'active'),
+      newsletter: await this.getToggleColumnValue(row, 'newsletter'),
+      partnerOffers: await this.getToggleColumnValue(row, 'optin'),
+    };
   }
 
   /**
@@ -312,5 +337,56 @@ module.exports = class Customers extends BOBasePage {
       i += 1;
     }
     await this.page.waitForSelector(sortColumnDiv, {visible: true});
+  }
+
+  /**
+   * Set required fields
+   * @param id
+   * @param valueWanted
+   * @returns {Promise<string>}
+   */
+  async setRequiredFields(id, valueWanted = true) {
+    await this.waitForSelectorAndClick(this.setRequiredFieldsButton);
+    const isCheckboxSelected = await this.isCheckboxSelected(this.requiredFieldCheckBox.replace('%ID', id));
+    if (valueWanted !== isCheckboxSelected) {
+      await this.page.click(`${this.requiredFieldCheckBox.replace('%ID', id)}+ i`);
+    }
+    await this.waitForSelectorAndClick(this.saveButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  // Export methods
+  /**
+   * Click on link to export customers to a csv file
+   * @return {Promise<void>}
+   */
+  async exportDataToCsv() {
+    await Promise.all([
+      this.page.click(this.customerGridActionsButton),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {visible: true}),
+    ]);
+    await Promise.all([
+      this.page.click(this.gridActionExportLink),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {hidden: true}),
+    ]);
+  }
+
+  /**
+   * Get customer from table in csv format
+   * Adding an empty csv case after email is for company column which is always empty (Except when B2B mode is enabled)
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getCustomerInCsvFormat(row) {
+    const customer = await this.getCustomerFromTable(row);
+    return `${customer.id};`
+      + `${customer.socialTitle};`
+      + `${customer.firstName};`
+      + `${customer.lastName};`
+      + `${customer.email};;`
+      + `${customer.sales !== '--' ? customer.sales : ''};`
+      + `${customer.status ? 1 : 0};`
+      + `${customer.newsletter ? 1 : 0};`
+      + `${customer.partnerOffers ? 1 : 0}`;
   }
 };

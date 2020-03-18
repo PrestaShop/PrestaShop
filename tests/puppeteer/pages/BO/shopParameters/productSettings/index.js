@@ -23,6 +23,8 @@ module.exports = class productSettings extends BOBasePage {
     this.productPageForm = '#configuration_fieldset_fo_product_page';
     this.switchDisplayAvailableQuantities = 'label[for=\'form_page_display_quantities_%TOGGLE\']';
     this.remainingQuantityInput = '#form_page_display_last_quantities';
+    this.displayUnavailableAttributesLabel = 'label[for=\'form_page_display_unavailable_attributes_%TOGGLE\']';
+    this.separatorAttributeOnProductPageSelect = '#form_page_attribute_anchor_separator';
     this.saveProductPageFormButton = `${this.productPageForm} .card-footer button`;
   }
 
@@ -46,7 +48,7 @@ module.exports = class productSettings extends BOBasePage {
    * @param toEnable, true to enable and false to disable
    * @return {Promise<string>}
    */
-  async changeShowPricesStatus(toEnable = true) {
+  async setShowPricesStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchShowPricesLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
@@ -77,9 +79,9 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Enable/Disable force update of friendly URL
    * @param toEnable
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
-  async setForceUpdateFriendlyURL(toEnable = true) {
+  async setForceUpdateFriendlyURLStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchForceUpdateFriendlyURLLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
@@ -88,7 +90,7 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Change default activation status
    * @param toEnable
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async setDefaultActivationStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchDefaultActivationStatusLabel.replace('%TOGGLE', toEnable ? 1 : 0));
@@ -99,7 +101,7 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Choose quantity discounts based on
    * @param basedOn
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async chooseQuantityDiscountsBasedOn(basedOn) {
     await this.selectByVisibleText(this.quantityDiscountBasedOnSelect, basedOn);
@@ -112,14 +114,41 @@ module.exports = class productSettings extends BOBasePage {
    * @param toEnable
    * @returns {Promise<string|*>}
    */
-  async setDisplayAvailableQuantities(toEnable = true) {
+  async setDisplayAvailableQuantitiesStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchDisplayAvailableQuantities.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 
+  /**
+   * Set display remaining quantities
+   * @param quantity
+   * @returns {Promise<string>}
+   */
   async setDisplayRemainingQuantities(quantity) {
     await this.setValue(this.remainingQuantityInput, quantity.toString());
+    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set display unavailable product attributes
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setDisplayUnavailableProductAttributesStatus(toEnable = true) {
+    await this.waitForSelectorAndClick(this.displayUnavailableAttributesLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set separator of attribute anchor on the product links
+   * @param separator
+   * @returns {Promise<string>}
+   */
+  async setSeparatorOfAttributeOnProductLink(separator) {
+    await this.selectByVisibleText(this.separatorAttributeOnProductPageSelect, separator);
     await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }

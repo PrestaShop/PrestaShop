@@ -112,15 +112,11 @@
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
-      {% if addressForm.id_state.vars.disabled is defined and addressForm.id_state.vars.disabled %}
-        {% set rowAttr = {'style': 'display:none'} %}
-      {% endif %}
-
-      {{ ps.form_group_row(addressForm.id_state, {}, {
-        'label': 'State'|trans({}, 'Admin.Global'),
-        'class': 'js-address-state-select',
-        'row_attr': rowAttr|default({})
-      }) }}
+      <div class="js-address-state-select{% if addressForm.id_state.vars.choices is empty %} d-none{% endif %}">
+        {{ ps.form_group_row(addressForm.id_state, {}, {
+          'label': 'State'|trans({}, 'Admin.Global'),
+        }) }}
+      </div>
 
       {{ ps.form_group_row(addressForm.phone, {}, {
         'label': 'Phone'|trans({}, 'Admin.Global')
@@ -143,7 +139,11 @@
 
   <div class="card-footer">
     <div class="d-inline-flex">
-      <a href="{{ path('admin_addresses_index') }}" class="btn btn-outline-secondary">
+      {% if (displayInIframe is defined and displayInIframe == true) %}
+        <a href="javascript:window.parent.$.fancybox.close();" class="btn btn-outline-secondary">
+      {% else %}
+        <a href="{{ path('admin_addresses_index') }}" class="btn btn-outline-secondary">
+      {% endif %}
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
     </div>

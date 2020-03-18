@@ -75,7 +75,7 @@ describe('Test display remaining quantities', async () => {
   it('should go to create product page and create a product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const validationMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+    const validationMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
     await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
@@ -89,40 +89,32 @@ describe('Test display remaining quantities', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
   });
 
-  it('should update Display remaining quantities to 0', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'setDisplayRemainingQuantity', baseContext);
-    const result = await this.pageObjects.productSettingsPage.setDisplayRemainingQuantities(remainingQuantity);
-    await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
-  });
+  const tests = [
+    {args: {quantity: remainingQuantity, exist: false, state: 'Displayed'}},
+    {args: {quantity: defaultRemainingQuantity, exist: true, state: 'NotDisplayed'}},
+  ];
+  tests.forEach((test, index) => {
+    it(`should update Display remaining quantities to ${test.args.quantity}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `setDisplayRemainingQuantity${index}`, baseContext);
+      const result = await this.pageObjects.productSettingsPage.setDisplayRemainingQuantities(test.args.quantity);
+      await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+    });
 
-  it('should check that the product availability is not displayed in FO product page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkThatRemainingQuantityAlertNotVisible', baseContext);
-    page = await this.pageObjects.productSettingsPage.viewMyShop();
-    this.pageObjects = await init();
-    await this.pageObjects.homePage.searchProduct(productData.name);
-    await this.pageObjects.searchResultsPage.goToProductPage(1);
-    const lastQuantityIsVisible = await this.pageObjects.productPage.isAvailabilityQuantityDisplayed();
-    await expect(lastQuantityIsVisible).to.be.false;
-    page = await this.pageObjects.productPage.closePage(browser, 1);
-    this.pageObjects = await init();
-  });
-
-  it('should update Display remaining quantities to the default value', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'setDisplayRemainingQuantityDefaultValue', baseContext);
-    const result = await this.pageObjects.productSettingsPage.setDisplayRemainingQuantities(defaultRemainingQuantity);
-    await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
-  });
-
-  it('should check that the product availability is displayed in FO product page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkThatRemainingQuantityAlertIsVisible', baseContext);
-    page = await this.pageObjects.productSettingsPage.viewMyShop();
-    this.pageObjects = await init();
-    await this.pageObjects.homePage.searchProduct(productData.name);
-    await this.pageObjects.searchResultsPage.goToProductPage(1);
-    this.pageObjects = await init();
-    const lastQuantityIsVisible = await this.pageObjects.productPage.isAvailabilityQuantityDisplayed();
-    await expect(lastQuantityIsVisible).to.be.true;
-    page = await this.pageObjects.productPage.closePage(browser, 1);
-    this.pageObjects = await init();
+    it('should check the product availability in FO product page', async function () {
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        `checkThatRemainingQuantityIs${test.args.state}`,
+        baseContext,
+      );
+      page = await this.pageObjects.productSettingsPage.viewMyShop();
+      this.pageObjects = await init();
+      await this.pageObjects.homePage.searchProduct(productData.name);
+      await this.pageObjects.searchResultsPage.goToProductPage(1);
+      const lastQuantityIsVisible = await this.pageObjects.productPage.isAvailabilityQuantityDisplayed();
+      await expect(lastQuantityIsVisible).to.be.equal(test.args.exist);
+      page = await this.pageObjects.productPage.closePage(browser, 1);
+      this.pageObjects = await init();
+    });
   });
 });

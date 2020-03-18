@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
+use InvalidArgumentException;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
  * Issues partial refund for given order.
@@ -37,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 class IssuePartialRefundCommand extends AbstractRefundCommand
 {
     /**
-     * @var float
+     * @var Number
      */
     private $shippingCostRefundAmount;
 
@@ -54,12 +56,12 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
      *
      * @param int $orderId
      * @param array $orderDetailRefunds
-     * @param float $shippingCostRefundAmount
+     * @param string $shippingCostRefundAmount
      * @param bool $restockRefundedProducts
      * @param bool $generateVoucher
      * @param bool $generateCreditSlip
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
+     * @param string|null $voucherRefundAmount
      *
      * @throws InvalidCancelProductException
      * @throws OrderException
@@ -67,12 +69,12 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
     public function __construct(
         int $orderId,
         array $orderDetailRefunds,
-        float $shippingCostRefundAmount,
+        string $shippingCostRefundAmount,
         bool $restockRefundedProducts,
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType,
-        ?float $voucherRefundAmount = null
+        ?string $voucherRefundAmount = null
     ) {
         parent::__construct(
             $orderId,
@@ -83,13 +85,17 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
             $voucherRefundType,
             $voucherRefundAmount
         );
-        $this->shippingCostRefundAmount = $shippingCostRefundAmount;
+        try {
+            $this->shippingCostRefundAmount = new Number($shippingCostRefundAmount);
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidAmountException();
+        }
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getShippingCostRefundAmount(): float
+    public function getShippingCostRefundAmount(): Number
     {
         return $this->shippingCostRefundAmount;
     }

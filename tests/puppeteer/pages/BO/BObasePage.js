@@ -20,6 +20,9 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
 
+    // Header links
+    this.helpButton = '#product_form_open_help';
+
     // left navbar
     // SELL
     // Orders
@@ -88,6 +91,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.shopParametersParentLink = '#subtab-ShopParameters';
     // General
     this.shopParametersGeneralLink = '#subtab-AdminParentPreferences';
+    // Order Settings
+    this.orderSettingsLink = '#subtab-AdminParentOrderPreferences';
     // Product Settings
     this.productSettingsLink = '#subtab-AdminPPreferences';
     // Customer Settings
@@ -107,14 +112,17 @@ module.exports = class BOBasePage extends CommonPage {
     this.databaseLink = '#subtab-AdminParentRequestSql';
     // Webservice
     this.webserviceLink = '#subtab-AdminWebservice';
+    // Multistore
+    this.multistoreLink = '#subtab-AdminShopGroup';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
     this.onboardingStopButton = 'a.onboarding-button-stop';
 
     // Growls
-    this.growlMessageBlock = '#growls .growl-message';
-    this.growlDefaultMessageBlock = '#growls-default .growl-message';
+    this.growlDefaultDiv = '#growls-default';
+    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
+    this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
     // Alert Text
     this.alertSuccessBlock = 'div.alert.alert-success:not([style=\'display: none;\'])';
@@ -127,13 +135,19 @@ module.exports = class BOBasePage extends CommonPage {
     this.alertBoxButtonClose = `${this.alertBoxBloc} button.close`;
 
     // Modal dialog
-    this.modalDialog = '#confirmation_modal.show .modal-dialog';
+    this.confirmationModal = '#confirmation_modal.show';
+    this.modalDialog = `${this.confirmationModal} .modal-dialog`;
     this.modalDialogYesButton = `${this.modalDialog} button.continue`;
     this.modalDialogNoButton = `${this.modalDialog} button.cancel`;
 
     // Symfony Toolbar
     this.sfToolbarMainContentDiv = 'div[id*=\'sfToolbarMainContent\']';
     this.sfCloseToolbarLink = 'a[id*=\'sfToolbarHideButton\']';
+
+    // Sidebar
+    this.rightSidebar = '#right-sidebar';
+    this.closeHelpSidebarButton = `${this.rightSidebar} div.quicknav-header a`;
+    this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
   }
 
   /*
@@ -235,5 +249,58 @@ module.exports = class BOBasePage extends CommonPage {
   async deleteFile(file, wait = 0) {
     fs.unlinkSync(file);
     await this.page.waitFor(wait);
+  }
+
+  /**
+   * Open help side bar
+   * @returns {Promise<boolean>}
+   */
+  async openHelpSideBar() {
+    await this.waitForSelectorAndClick(this.helpButton);
+    return this.elementVisible(`${this.rightSidebar}.sidebar-open`, 2000);
+  }
+
+  /**
+   * Close help side bar
+   * @returns {Promise<boolean>}
+   */
+  async closeHelpSideBar() {
+    await this.waitForSelectorAndClick(this.helpButton);
+    return this.elementVisible(`${this.rightSidebar}:not(.sidebar-open)`, 2000);
+  }
+
+  /**
+   * Get help document URL
+   * @returns {Promise<string>}
+   */
+  async getHelpDocumentURL() {
+    return this.getAttributeContent(this.helpDocumentURL, 'data');
+  }
+
+  /**
+   * Check if Submenu is visible
+   * @param parentSelector
+   * @param linkSelector
+   * @return {Promise<boolean>}
+   */
+  async isSubmenuVisible(parentSelector, linkSelector) {
+    if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
+      await this.page.click(parentSelector);
+      await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
+    }
+    return this.elementVisible(linkSelector, 1000);
+  }
+
+  /**
+   * Close growl message and return its value
+   * @return {Promise<string>}
+   */
+  async closeGrowlMessage() {
+    const growlMessageText = await this.getTextContent(this.growlMessageBlock);
+    await Promise.all([
+      this.page.$eval(this.growlCloseButton, e => e.click()),
+      this.page.waitForSelector(this.growlMessageBlock, {hidden: true}),
+    ]);
+    return growlMessageText;
   }
 };

@@ -93,6 +93,15 @@ table .column-filters td:last-child .grid-reset-button {
             display: inline-block;
             width: 60px;
           }
+          .md-checkbox {
+            &:not(:last-child) {
+              display: inline-block;
+            }
+            & ~ .form-control {
+              display: inline-block;
+              width: calc(100% - 29px);
+            }
+          }
         }
       }
     }

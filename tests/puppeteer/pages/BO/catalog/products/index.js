@@ -315,9 +315,8 @@ module.exports = class Product extends BOBasePage {
     await this.page.click(this.filterByCategoriesButton);
     await this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
     await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='false']`),
-      this.page.click(this.filterByCategoriesUnselectButton),
+      this.clickAndWaitForNavigation(this.filterByCategoriesUnselectButton),
     ]);
   }
 
@@ -339,18 +338,14 @@ module.exports = class Product extends BOBasePage {
     await this.filterProducts('reference', productData.reference);
     // Then delete first product and only product shown
     await Promise.all([
-      this.page.waitForSelector(`${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', '1')),
-      this.page.click(this.dropdownToggleButton.replace('%ROW', '1')),
+      this.page.waitForSelector(`${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', 1)),
+      this.page.click(this.dropdownToggleButton.replace('%ROW', 1)),
     ]);
     await Promise.all([
       this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
-      this.page.click(this.dropdownMenuDeleteLink.replace('%ROW', '1')),
+      this.page.click(this.dropdownMenuDeleteLink.replace('%ROW', 1)),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.modalDialogDeleteNowButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -362,21 +357,17 @@ module.exports = class Product extends BOBasePage {
     // Then delete first product and only product shown
     await Promise.all([
       this.page.waitForSelector(this.productBulkMenuButton, {visible: true}),
-      this.page.click(this.selectAllBulkCheckboxLabel.replace('%ROW', '1')),
+      this.page.click(this.selectAllBulkCheckboxLabel.replace('%ROW', 1)),
     ]);
     await Promise.all([
       this.page.waitForSelector(`${this.productBulkMenuButton}[aria-expanded='true']`, {visible: true}),
-      this.page.click(this.productBulkMenuButton.replace('%ROW', '1')),
+      this.page.click(this.productBulkMenuButton.replace('%ROW', 1)),
     ]);
     await Promise.all([
       this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
-      this.page.click(this.productBulkDeleteLink.replace('%ROW', '1')),
+      this.page.click(this.productBulkDeleteLink.replace('%ROW', 1)),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.modalDialogDeleteNowButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -399,15 +390,9 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
-    if (await this.getToggleColumnValue(row) !== valueWanted) {
-      this.page.click(this.productsListTableColumnStatus.replace('%ROW', row));
-      if (valueWanted) {
-        await this.page.waitForSelector(this.productsListTableColumnStatusEnabled.replace('%ROW', row));
-      } else {
-        await this.page.waitForSelector(
-          this.productsListTableColumnStatusDisabled.replace('%ROW', row),
-        );
-      }
+    const actualValue = await this.getToggleColumnValue(row);
+    if (actualValue !== valueWanted) {
+      await this.clickAndWaitForNavigation(this.productsListTableColumnStatus.replace('%ROW', row));
       return true;
     }
     return false;
@@ -419,10 +404,8 @@ module.exports = class Product extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToProductPage(row = 1) {
-    await Promise.all([
-      this.waitForSelectorAndClick(this.productsListTableColumnName.replace('%ROW', row)),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.page.waitForSelector(this.productsListTableColumnName.replace('%ROW', row), {visible: true});
+    await this.clickAndWaitForNavigation(this.productsListTableColumnName.replace('%ROW', row));
   }
 
   /* Sort methods */

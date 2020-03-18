@@ -46,7 +46,7 @@ module.exports = class CommonPage {
    * Get attribute from element
    * @param selector
    * @param attribute
-   * @returns {Promise<!Promise<!Object|undefined>|*>}
+   * @returns {Promise<string>}
    */
   async getAttributeContent(selector, attribute) {
     await this.page.waitForSelector(selector);
@@ -155,20 +155,6 @@ module.exports = class CommonPage {
       // do nothing
     }
     return false;
-  }
-
-  /**
-   * Check attribute value
-   * @param selector, element to check
-   * @param attribute, attribute to test
-   * @param textToCheckWith, text to check with
-   * @return promise, throw an error if element does not exist or attribute value is not correct
-   */
-  async checkAttributeValue(selector, attribute, textToCheckWith) {
-    await this.page.waitForSelector(selector);
-    const value = await this.page.$eval(selector, (el, attr) => el
-      .getAttribute(attr), attribute);
-    return value === textToCheckWith;
   }
 
   /**
@@ -342,5 +328,14 @@ module.exports = class CommonPage {
     await this.page.mouse.down();
     await this.page.hover(selectorWhereToDrop);
     await this.page.mouse.up();
+  }
+
+  /**
+   * Uppercase the first character of the word
+   * @param word
+   * @returns {string}
+   */
+  uppercaseFirstCharacter(word) {
+    return `${word[0].toUpperCase()}${word.slice(1)}`;
   }
 };

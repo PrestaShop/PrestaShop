@@ -18,18 +18,20 @@ module.exports = class Product extends FOBasePage {
     this.productDetail = 'div.product-information a[href=\'#product-details\']';
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailabilityIcon = '#product-availability i';
+    this.productSizeOption = '#group_1 option[title=\'%SIZE\']';
+    this.productColorInput = '#group_2 input[title=\'%COLOR\']';
+    this.metaLink = '#main > meta';
   }
 
   /**
-   * To check the product information (Product name, price, quantity, description)
-   * @param productData, product data to check
+   * Get Product information (Product name, price, description)
+   * @returns {Promise<object>}
    */
-  async checkProduct(productData) {
+  async getProductInformation() {
     return {
-      name: await this.checkTextValue(this.productName, productData.name),
-      price: await this.checkAttributeValue(this.productPrice, 'content', productData.price),
-      quantity_wanted: await this.checkAttributeValue(this.productQuantity, 'value', productData.quantity_wanted),
-      description: await this.checkTextValue(this.productDescription, productData.description, 'contain'),
+      name: await this.getTextContent(this.productName),
+      price: parseFloat(await this.getAttributeContent(this.productPrice, 'content')),
+      description: await this.getTextContent(this.productDescription),
     };
   }
 
@@ -77,5 +79,49 @@ module.exports = class Product extends FOBasePage {
    */
   isAvailabilityQuantityDisplayed() {
     return this.elementVisible(this.productAvailabilityIcon, 1000);
+  }
+
+  /**
+   * Is price displayed
+   * @returns {boolean}
+   */
+  isPriceDisplayed() {
+    return this.elementVisible(this.productPrice, 1000);
+  }
+
+  /**
+   * Is add to cart button displayed
+   * @returns {boolean}
+   */
+  isAddToCartButtonDisplayed() {
+    return this.elementVisible(this.addToCartButton, 1000);
+  }
+
+  /**
+   * Is unavailable product size displayed
+   * @param size
+   * @returns {Promise<boolean>}
+   */
+  async isUnavailableProductSizeDisplayed(size) {
+    await this.page.waitFor(2000);
+    const exist = await this.page.$(this.productSizeOption.replace('%SIZE', size)) !== null;
+    return exist;
+  }
+
+  /**
+   * Is unavailable product color displayed
+   * @param color
+   * @returns {boolean}
+   */
+  isUnavailableProductColorDisplayed(color) {
+    return this.elementVisible(this.productColorInput.replace('%COLOR', color), 1000);
+  }
+
+  /**
+   * Get product page URL
+   * @returns {Promise<string>}
+   */
+  getProductPageURL() {
+    return this.getAttributeContent(this.metaLink, 'content');
   }
 };

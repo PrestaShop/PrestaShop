@@ -23,6 +23,7 @@ module.exports = class Login extends FOBasePage {
     this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
+    this.partnerOfferCheckbox = `${this.createAccountForm} input[name='optin']`;
     this.saveButton = `${this.createAccountForm} .form-control-submit`;
   }
 
@@ -62,5 +63,37 @@ module.exports = class Login extends FOBasePage {
       await this.page.click(this.psgdprCheckbox);
     }
     await this.page.click(this.saveButton);
+  }
+
+  /**
+   * Go to create account page
+   * @returns {Promise<void>}
+   */
+  async goToCreateAccountPage() {
+    await this.waitForSelectorAndClick(this.displayRegisterFormLink);
+  }
+
+  /**
+   * Is partner offer required
+   * @returns {Promise<boolean>}
+   */
+  async isPartnerOfferRequired() {
+    return this.elementVisible(`${this.partnerOfferCheckbox}:required`, 1000);
+  }
+
+  /**
+   * Is birth date input visible
+   * @returns {Promise<boolean>}
+   */
+  async isBirthDateVisible() {
+    return this.elementVisible(this.birthdateInput, 1000);
+  }
+
+  /**
+   * Is partner offer visible
+   * @returns {Promise<boolean>}
+   */
+  async isPartnerOfferVisible() {
+    return this.elementVisible(this.partnerOfferCheckbox, 1000);
   }
 };

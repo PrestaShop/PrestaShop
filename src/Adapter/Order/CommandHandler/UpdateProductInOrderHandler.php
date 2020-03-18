@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use Product;
 use StockAvailable;
-use Tools;
 use Validate;
 
 /**
@@ -75,8 +74,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         $product_quantity = $command->getQuantity();
 
         // @todo: use https://github.com/PrestaShop/decimal for price computations
-        $product_price_tax_incl = Tools::ps_round($command->getPriceTaxIncluded(), 2);
-        $product_price_tax_excl = Tools::ps_round($command->getPriceTaxExcluded(), 2);
+        $product_price_tax_incl = (float) $command->getPriceTaxIncluded()->round(2);
+        $product_price_tax_excl = (float) $command->getPriceTaxExcluded()->round(2);
         $total_products_tax_incl = $product_price_tax_incl * $product_quantity;
         $total_products_tax_excl = $product_price_tax_excl * $product_quantity;
 
@@ -222,13 +221,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             throw new OrderException('You cannot use this invoice for the order');
         }
 
-        // Clean price
-
-        // @todo: make sure clean
-        $product_price_tax_incl = str_replace(',', '.', $command->getPriceTaxIncluded());
-        $product_price_tax_excl = str_replace(',', '.', $command->getPriceTaxExcluded());
-
-        if (!Validate::isPrice($product_price_tax_incl) || !Validate::isPrice($product_price_tax_excl)) {
+        if ($command->getPriceTaxIncluded()->isNegative() || $command->getPriceTaxExcluded()->isNegative()) {
             throw new OrderException('Invalid price');
         }
 
