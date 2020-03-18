@@ -33,7 +33,7 @@ const init = async function () {
   Edit the first order
   Logout from the BO
  */
-describe.skip('Edit Order BO', async () => {
+describe('Edit Order BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -52,6 +52,7 @@ describe.skip('Edit Order BO', async () => {
       this.pageObjects.boBasePage.ordersParentLink,
       this.pageObjects.boBasePage.ordersLink,
     );
+    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
   });
@@ -65,14 +66,14 @@ describe.skip('Edit Order BO', async () => {
 
   it('should modify the product quantity and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderQuantity', baseContext);
-    const result = await this.pageObjects.orderPage.modifyProductQuantity('1', '5');
-    await expect(result).to.be.true;
+    const newQuantity = await this.pageObjects.orderPage.modifyProductQuantity(1, 5);
+    await expect(newQuantity, 'Quantity was not updated').to.equal(5);
   });
 
   it('should modify the order status and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderStatus', baseContext);
-    const result = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
-    await expect(result).to.be.true;
+    const orderStatus = await this.pageObjects.orderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
+    await expect(orderStatus).to.equal(Statuses.paymentAccepted.status);
   });
 
   // Logout from BO

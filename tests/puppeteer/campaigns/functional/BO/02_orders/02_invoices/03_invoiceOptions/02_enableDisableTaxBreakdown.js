@@ -250,7 +250,7 @@ describe('Test enable/disable tax breakdown', async () => {
       it(`should change the order status to '${Statuses.paymentAccepted.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatusTaxBreakdown', baseContext);
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
-        await expect(result).to.be.true;
+        await expect(result).to.equal(Statuses.paymentAccepted.status);
       });
 
       it('should download the invoice', async function () {

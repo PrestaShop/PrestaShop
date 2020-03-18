@@ -182,7 +182,7 @@ describe('Test enable/disable product image in invoices', async () => {
             baseContext,
           );
           const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-          await expect(result).to.be.true;
+          await expect(result).to.equal(Statuses.shipped.status);
         });
 
         it('should download the invoice', async function () {
