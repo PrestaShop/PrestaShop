@@ -24,7 +24,7 @@ module.exports = class AddCatalogPriceRule extends BOBasePage {
   /**
    * Create/edit price rule
    * @param priceRuleData
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async createEditCatalogPriceRule(priceRuleData) {
     await this.setValue(this.nameInput, priceRuleData.name);
