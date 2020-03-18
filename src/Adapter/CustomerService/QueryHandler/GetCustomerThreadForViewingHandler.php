@@ -188,7 +188,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             if (!$message['private']) {
                 $content .= sprintf(
                     '%s <span class="badge badge-primary rounded">%s</span><br/>',
-                    $this->translator->trans('Message to: ', [], 'Admin.Catalog.Feature'),
+                    $this->translator->trans('Message to:', [], 'Admin.Catalog.Feature'),
                     !$message['id_employee'] ? $message['subject'] : $message['customer_name']
                 );
             }
@@ -196,7 +196,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             if (Validate::isLoadedObject($product)) {
                 $content .= sprintf(
                     '<br/>%s<span class="badge badge-primary-hover rounded">%s</span><br/><br/>',
-                    $this->translator->trans('Product: ', [], 'Admin.Catalog.Feature'),
+                    $this->translator->trans('Product:', [], 'Admin.Catalog.Feature'),
                     $product->name
                 );
             }
