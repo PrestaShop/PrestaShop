@@ -25,6 +25,7 @@ module.exports = class productSettings extends BOBasePage {
     this.remainingQuantityInput = '#form_page_display_last_quantities';
     this.displayUnavailableAttributesLabel = 'label[for=\'form_page_display_unavailable_attributes_%TOGGLE\']';
     this.separatorAttributeOnProductPageSelect = '#form_page_attribute_anchor_separator';
+    this.displayDiscountedPriceLabel = 'label[for=\'form_page_display_discount_price_%TOGGLE\']';
     this.saveProductPageFormButton = `${this.productPageForm} .card-footer button`;
     // Products stock form
     this.productsStockForm = '#configuration_fieldset_stock';
@@ -242,6 +243,17 @@ module.exports = class productSettings extends BOBasePage {
   async setDeliveryTimeInStock(deliveryTimeText) {
     await this.setValue(this.deliveryTimeInStockInput, deliveryTimeText);
     await this.clickAndWaitForNavigation(this.saveProductsStockForm);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set display discounted price
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setDisplayDiscountedPriceStatus(toEnable = true) {
+    await this.waitForSelectorAndClick(this.displayDiscountedPriceLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };

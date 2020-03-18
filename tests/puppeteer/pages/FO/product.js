@@ -26,6 +26,8 @@ module.exports = class Product extends FOBasePage {
     this.productPricesBlock = 'div.product-prices';
     this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
+    this.discountTable = '.table-product-discounts';
+    this.discountColumn = `${this.discountTable} th:nth-child(2)`;
   }
 
   /**
@@ -128,6 +130,24 @@ module.exports = class Product extends FOBasePage {
    */
   getProductPageURL() {
     return this.getAttributeContent(this.metaLink, 'content');
+  }
+
+  /**
+   * Is unit price visible
+   * @returns {boolean}
+   */
+  async isUnitPriceVisible() {
+    const isUnitPrice = (await this.getTextContent(this.discountColumn) === 'Unit price');
+    return isUnitPrice;
+  }
+
+  /**
+   * Is unit discount visible
+   * @returns {Promise<boolean>}
+   */
+  async isUnitDiscountVisible() {
+    const isUnitDiscount = (await this.getTextContent(this.discountColumn) === 'Unit discount');
+    return isUnitDiscount;
   }
 
   /**
