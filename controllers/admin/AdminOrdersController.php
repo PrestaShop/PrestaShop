@@ -1832,7 +1832,7 @@ class AdminOrdersControllerCore extends AdminController
 
             // if the current stock requires a warning
             if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
-                $this->displayWarning($this->trans('This product is out of stock: ', [], 'Admin.Orderscustomers.Notification') . ' ' . $product['product_name']);
+                $this->displayWarning($this->trans('This product is out of stock:', [], 'Admin.Orderscustomers.Notification') . ' ' . $product['product_name']);
             }
             if ($product['id_warehouse'] != 0) {
                 $warehouse = new Warehouse((int) $product['id_warehouse']);
