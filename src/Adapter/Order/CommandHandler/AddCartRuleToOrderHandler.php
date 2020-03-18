@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use CartRule;
 use Configuration;
+use Currency;
 use Order;
 use OrderCartRule;
 use OrderInvoice;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Validate;
 
 /**
@@ -48,11 +50,25 @@ use Validate;
 final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements AddCartRuleToOrderHandlerInterface
 {
     /**
+     * Default rounding precision value (which was hardcoded in legacy code)
+     * It is overridden by order currency precision.
+     *
+     * @var int
+     */
+    private $precision = 2;
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddCartRuleToOrderCommand $command): void
     {
         $order = $this->getOrderObject($command->getOrderId());
+
+        $computingPrecision = new ComputingPrecision();
+        $currency = new Currency((int) $order->id_currency);
+         // Override default precision with currency precision
+        $this->precision = $computingPrecision->getPrecision($currency->precision);
+
         $discountValue = $command->getDiscountValue();
         $cartRuleType = $command->getCartRuleType();
         $reductionValues = $this->getReductionValues($cartRuleType, $order, $discountValue);
@@ -266,8 +282,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         ;
 
         return $this->buildReducedValues(
-            $valueTaxIncl,
-            $valueTaxExcl
+            $this->number($valueTaxIncl->round($this->precision)),
+            $this->number($valueTaxExcl->round($this->precision))
         );
     }
 
@@ -289,8 +305,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         ;
 
         return $this->buildReducedValues(
-            $discountValue,
-            $totalTaxExcl
+            $this->number($discountValue->round($this->precision)),
+            $this->number($totalTaxExcl->round($this->precision))
         );
     }
 
@@ -330,23 +346,29 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
     {
         $orderTotals = OrderTotalNumbers::buildFromOrder($order);
 
-        $order->total_discounts = (float) (string) $orderTotals->getTotalDiscounts()
+        $order->total_discounts = (float) $orderTotals->getTotalDiscounts()
             ->plus($reductionValues['value_tax_incl'])
+            ->round($this->precision)
         ;
-        $order->total_discounts_tax_incl = (float) (string) $orderTotals->getTotalDiscountTaxIncl()
+        $order->total_discounts_tax_incl = (float) $orderTotals->getTotalDiscountTaxIncl()
             ->plus($reductionValues['value_tax_incl'])
+            ->round($this->precision)
         ;
-        $order->total_discounts_tax_excl = (float) (string) $orderTotals->getTotalDiscountTaxExcl()
+        $order->total_discounts_tax_excl = (float) $orderTotals->getTotalDiscountTaxExcl()
             ->plus($reductionValues['value_tax_excl'])
+            ->round($this->precision)
         ;
-        $order->total_paid = (float) (string) $orderTotals->getTotalPaid()
+        $order->total_paid = (float) $orderTotals->getTotalPaid()
             ->minus($reductionValues['value_tax_incl'])
+            ->round($this->precision)
         ;
-        $order->total_paid_tax_incl = (float) (string) $orderTotals->getTotalPaidTaxIncl()
+        $order->total_paid_tax_incl = (float) $orderTotals->getTotalPaidTaxIncl()
             ->minus($reductionValues['value_tax_incl'])
+            ->round($this->precision)
         ;
-        $order->total_paid_tax_excl = (float) (string) $orderTotals->getTotalPaidTaxExcl()
+        $order->total_paid_tax_excl = (float) $orderTotals->getTotalPaidTaxExcl()
             ->minus($reductionValues['value_tax_excl'])
+            ->round($this->precision)
         ;
 
         if (false === $order->update()) {
