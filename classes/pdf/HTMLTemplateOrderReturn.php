@@ -46,7 +46,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 
         // header informations
         $this->date = Tools::displayDate($this->order->invoice_date);
-        $prefix = Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id);
+        $prefix = Configuration::get('PS_RETURN_PREFIX', $this->getLangId());
         $this->title = sprintf(HTMLTemplateOrderReturn::l('%1$s%2$06d'), $prefix, $this->order_return->id);
 
         $this->shop = new Shop((int) $this->order->id_shop);
@@ -96,7 +96,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order_return->id) . '.pdf';
+        return Configuration::get('PS_RETURN_PREFIX', $this->getLangId(), null, $this->order->id_shop) . sprintf('%06d', $this->order_return->id) . '.pdf';
     }
 
     /**
