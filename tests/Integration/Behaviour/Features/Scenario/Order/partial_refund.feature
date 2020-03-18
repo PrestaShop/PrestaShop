@@ -752,3 +752,44 @@ Feature: Refund Order from Back Office (BO)
       | total_refunded_tax_incl     | 3.71 |
     And there are 1 more "Mug The best is yet to come" in stock
     And there are 1 more "Mug Today is a good day" in stock
+
+  @order-refund
+  @order-partial-refund
+  Scenario: Partial refund of products after a product has changed its tax rate
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart       |
+      | message             | test             |
+      | payment module name | dummy_payment    |
+      | status              | Payment accepted |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    And I add new tax "state-tax" with following properties:
+      | name         | State tax |
+      | rate         | 10        |
+      | is_enabled   | true      |
+    And I add tax rule group for tax "state-tax" with following conditions:
+      | name         | US-FL Rate (10%) |
+      | country      | US               |
+      | state        | FL               |
+    And I set tax rule group "US-FL Rate (10%)" to product "Mug The best is yet to come"
+    When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
+      | product_name                | quantity                 | amount |
+      | Mug The best is yet to come | 1                        | 11.9   |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 11.9   |
+      | shipping_cost_amount    | 0.0    |
+      | total_products_tax_excl | 11.9   |
+      | total_products_tax_incl | 12.614 |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2      |
+      | product_quantity_refunded   | 1      |
+      | product_quantity_return     | 0      |
+      | product_quantity_reinjected | 1      |
+      | total_refunded_tax_excl     | 11.9   |
+      | total_refunded_tax_incl     | 12.614 |
+    And there are 1 more "Mug The best is yet to come" in stock
