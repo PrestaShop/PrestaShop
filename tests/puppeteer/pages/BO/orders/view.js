@@ -83,7 +83,7 @@ module.exports = class Order extends BOBasePage {
   /**
    * Get document name
    * @param rowChild
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
   async getDocumentName(rowChild = 1) {
     await Promise.all([
