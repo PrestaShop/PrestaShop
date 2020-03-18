@@ -305,11 +305,6 @@
         <target>Search this word instead.</target>
         <note>Line: 437</note>
       </trans-unit>
-      <trans-unit id="a7c14cc18f4351bf0a0353f3c3e76e62">
-        <source>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</source>
-        <target>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</target>
-        <note>Line: 128</note>
-      </trans-unit>
       <trans-unit id="b080303b551112c7b9dcdf6a21051f42">
         <source>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</source>
         <target>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</target>
