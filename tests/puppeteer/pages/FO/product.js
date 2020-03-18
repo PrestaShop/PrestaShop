@@ -22,6 +22,8 @@ module.exports = class Product extends FOBasePage {
     this.productSizeOption = '#group_1 option[title=\'%SIZE\']';
     this.productColorInput = '#group_2 input[title=\'%COLOR\']';
     this.metaLink = '#main > meta';
+    this.discountTable = '.table-product-discounts';
+    this.discountColumn = `${this.discountTable} th:nth-child(2)`;
   }
 
   /**
@@ -124,6 +126,24 @@ module.exports = class Product extends FOBasePage {
    */
   getProductPageURL() {
     return this.getAttributeContent(this.metaLink, 'content');
+  }
+
+  /**
+   * Is unit price visible
+   * @returns {boolean}
+   */
+  async isUnitPriceVisible() {
+    const isUnitPrice = (await this.getTextContent(this.discountColumn) === 'Unit price');
+    return isUnitPrice;
+  }
+
+  /**
+   * Is unit discount visible
+   * @returns {Promise<boolean>}
+   */
+  async isUnitDiscountVisible() {
+    const isUnitDiscount = (await this.getTextContent(this.discountColumn) === 'Unit discount');
+    return isUnitDiscount;
   }
 
   /**
