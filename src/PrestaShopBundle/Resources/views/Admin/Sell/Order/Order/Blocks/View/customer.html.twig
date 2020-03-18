@@ -100,6 +100,7 @@
     {% endif %}
     <div class="mt-2 info-block">
       <div class="row">
+        {% if orderForViewing.virtual is same as(false) %}
         <div class="col-md-6">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
@@ -155,7 +156,8 @@
             {{ orderForViewing.shippingAddress.mobilePhoneNumber }}
           </p>
         </div>
-        <div class="col-md-6">
+        {% endif %}
+        <div class="{% if orderForViewing.virtual %}col-md-12{% else %}col-md-6{% endif %}">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 
