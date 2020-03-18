@@ -152,7 +152,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     public function editAddressToCustomerWithFollowingDetails(string $addressReference, TableNode $table)
     {
         $testCaseData = $table->getRowsHash();
-        $customerAddressId = SharedStorage::getStorage()->get($addressReference);
+        $customerAddressId = (int) SharedStorage::getStorage()->get($addressReference);
 
         $editAddressCommand = new EditCustomerAddressCommand($customerAddressId);
         $this->updateEditCommandFields($editAddressCommand, $testCaseData);

@@ -111,10 +111,10 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
         $addressId = null;
         switch ($orderCommand->getAddressType()) {
             case OrderAddressType::DELIVERY_ADDRESS_TYPE:
-                $addressId = $order->id_address_delivery;
+                $addressId = (int) $order->id_address_delivery;
                 break;
             case OrderAddressType::INVOICE_ADDRESS_TYPE:
-                $addressId = $order->id_address_invoice;
+                $addressId = (int) $order->id_address_invoice;
                 break;
         }
         $addressCommand = new EditCustomerAddressCommand($addressId);
