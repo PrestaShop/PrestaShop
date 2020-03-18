@@ -646,17 +646,19 @@ abstract class PaymentModuleCore extends Module
                             $data = array_merge($data, $extra_vars);
                         }
 
+                        $contextLanguage = Context::getContext()->language;
                         $orderLanguage = new Language((int) $order->id_lang);
 
                         // Join PDF invoice
                         if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
                             $order_invoice_list = $order->getInvoicesCollection();
+                            Context::getContext()->language = $orderLanguage;
                             Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                             $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
-                            $pdf->setLanguage($orderLanguage);
                             $file_attachement['content'] = $pdf->render(false);
                             $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
                             $file_attachement['mime'] = 'application/pdf';
+                            Context::getContext()->language = $contextLanguage;
                         } else {
                             $file_attachement = null;
                         }
