@@ -96,8 +96,8 @@ describe('Enable/Disable display discounted price', async () => {
   });
 
   const tests = [
-    {args: {action: 'enable', unitPrice: true, unitDiscount: false}},
     {args: {action: 'disable', unitPrice: false, unitDiscount: true}},
+    {args: {action: 'enable', unitPrice: true, unitDiscount: false}},
   ];
   tests.forEach((test) => {
     it(`should ${test.args.action} display discounted price`, async function () {
