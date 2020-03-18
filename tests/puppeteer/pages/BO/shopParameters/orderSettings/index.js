@@ -35,7 +35,7 @@ module.exports = class OrderSettings extends BOBasePage {
    * @param toEnable
    * @returns {Promise<string>}
    */
-  async setGuestCheckoutStatus(toEnable = true){
+  async setGuestCheckoutStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.enableGuestCheckoutLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
