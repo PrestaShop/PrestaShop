@@ -33,7 +33,7 @@ const init = async function () {
   Edit the first order
   Logout from the BO
  */
-describe.skip('Edit Order BO', async () => {
+describe('Edit Order BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
