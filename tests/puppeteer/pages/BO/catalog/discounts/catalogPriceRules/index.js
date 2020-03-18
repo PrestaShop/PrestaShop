@@ -41,7 +41,7 @@ module.exports = class CatalogPriceRules extends BOBasePage {
    * @param name
    * @returns {Promise<void>}
    */
-  async filterTableByRuleName(name = '') {
+  async filterTableByRuleName(name) {
     await this.setValue(this.filterNameColumn, name);
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
