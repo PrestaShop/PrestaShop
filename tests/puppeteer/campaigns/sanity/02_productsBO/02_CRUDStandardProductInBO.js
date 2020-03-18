@@ -73,7 +73,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   it('should create Product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+    const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
@@ -81,21 +81,20 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
-    const result = await this.pageObjects.foProductPage.checkProduct(productData);
+    const result = await this.pageObjects.foProductPage.getProductInformation(productData);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
     this.pageObjects = await init();
     // Check that all Product attribute are correct
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity_wanted).to.be.true,
-      expect(result.description).to.be.true,
+      expect(result.name).to.equal(productData.name),
+      expect(result.price).to.equal(productData.price),
+      expect(result.description).to.contains(productData.description),
     ]);
   });
 
   it('should edit Product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(editedProductData, false);
+    const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(editedProductData);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
@@ -103,15 +102,14 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
-    const result = await this.pageObjects.foProductPage.checkProduct(editedProductData);
+    const result = await this.pageObjects.foProductPage.getProductInformation(editedProductData);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
     this.pageObjects = await init();
     // Check that all Product attribute are correct
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity_wanted).to.be.true,
-      expect(result.description).to.be.true,
+      expect(result.name).to.equal(editedProductData.name),
+      expect(result.price).to.equal(editedProductData.price),
+      expect(result.description).to.be.equal(editedProductData.description),
     ]);
   });
 

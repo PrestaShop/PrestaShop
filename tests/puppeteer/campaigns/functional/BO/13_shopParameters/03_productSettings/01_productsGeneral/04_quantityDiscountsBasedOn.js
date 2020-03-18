@@ -22,14 +22,12 @@ let browser;
 let page;
 const productWithCombinations = new ProductFaker({
   type: 'Standard product',
-  productHasCombinations: true,
   price: 20,
   combinations: {
     Color: ['White', 'Black'],
     Size: ['S'],
   },
   quantity: 10,
-  withSpecificPrice: true,
   specificPrice: {
     combinations: 'Size - S, Color - White',
     discount: 50,
@@ -114,9 +112,12 @@ describe('Choose quantity discount based on', async () => {
   it('should create product with combinations and add a specific price', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productWithCombinations);
+    await this.pageObjects.addProductPage.createEditBasicProduct(productWithCombinations);
+    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
+      productWithCombinations,
+    );
+    await this.pageObjects.addProductPage.addSpecificPrices(productWithCombinations.specificPrice);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
-    await this.pageObjects.addProductPage.goToFormStep(1);
   });
 
   it('should preview product and check price TTC in FO', async function () {
