@@ -172,8 +172,9 @@ class AdminOutstandingControllerCore extends AdminController
             throw new PrestaShopException('object Order cannot be loaded');
         }
 
-        $link = $this->context->link->getAdminLink('AdminOrders');
-        $link .= '&vieworder&id_order=' . $order->id;
+        $parameters = ['vieworder' => 1, 'id_order' => $order->id];
+        $link = $this->context->link->getAdminLink('AdminOrders', true, [], $parameters);
+
         $this->redirect_after = $link;
         $this->redirect();
     }

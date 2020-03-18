@@ -4,6 +4,7 @@ admin_orders_index:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders
 
 admin_orders_create:
   path: /new
@@ -11,7 +12,7 @@ admin_orders_create:
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
     _legacy_controller: AdminOrders
-#    _legacy_link: AdminOrders:addorder
+    _legacy_link: AdminOrders:addorder
 
 admin_orders_place:
   path: /place
@@ -67,6 +68,9 @@ admin_orders_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:vieworder
+    _legacy_parameters:
+      id_order: orderId
   options:
     expose: true
   requirements:
