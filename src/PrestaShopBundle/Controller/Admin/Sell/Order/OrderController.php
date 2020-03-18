@@ -569,7 +569,7 @@ class OrderController extends CommonController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('A return product was successfully created.', 'Admin.Orderscustomers.Notification'));
+                    $this->addFlash('success', $this->trans('The product was successfully returned.', 'Admin.Orderscustomers.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
@@ -597,7 +597,7 @@ class OrderController extends CommonController
             if ($product->getAvailableQuantity() <= 0) {
                 $this->addFlash(
                     'warning',
-                    $this->trans('This product is out of stock: ', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
+                    $this->trans('This product is out of stock:', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
                 );
             }
         }
