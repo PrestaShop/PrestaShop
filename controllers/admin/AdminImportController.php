@@ -429,7 +429,7 @@ class AdminImportControllerCore extends AdminController
                     'supplier' => ['label' => $this->trans('Supplier', [], 'Admin.Global')],
                     'company' => ['label' => $this->trans('Company', [], 'Admin.Global')],
                     'lastname' => ['label' => $this->trans('Last name', [], 'Admin.Global') . '*'],
-                    'firstname' => ['label' => $this->trans('First name ', [], 'Admin.Global') . '*'],
+                    'firstname' => ['label' => $this->trans('First name', [], 'Admin.Global') . '*'],
                     'address1' => ['label' => $this->trans('Address', [], 'Admin.Global') . '*'],
                     'address2' => ['label' => $this->trans('Address (2)', [], 'Admin.Global')],
                     'postcode' => ['label' => $this->trans('Zip/postal code', [], 'Admin.Global') . '*'],
