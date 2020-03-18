@@ -50,12 +50,9 @@ use Validate;
 final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements AddCartRuleToOrderHandlerInterface
 {
     /**
-     * Default rounding precision value (which was hardcoded in legacy code)
-     * It is overridden by order currency precision.
-     *
      * @var int
      */
-    private $precision = 2;
+    private $precision;
 
     /**
      * {@inheritdoc}
