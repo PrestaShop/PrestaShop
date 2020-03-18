@@ -88,10 +88,10 @@ describe('Enable/Disable guest checkout', async () => {
       // Proceed to checkout the shopping cart
       await this.pageObjects.cartPage.clickOnProceedToCheckout();
       // Check guest checkout
-      let isVisible = await this.pageObjects.checkoutPage.isCreateAnAccountNoticeVisible();
-      await expect(isVisible).to.be.equal(test.args.exist);
-      isVisible = await this.pageObjects.checkoutPage.isPasswordRequired();
-      await expect(isVisible).to.be.equal(test.args.pwdRequired);
+      const isNoticeVisible = await this.pageObjects.checkoutPage.isCreateAnAccountNoticeVisible();
+      await expect(isNoticeVisible).to.be.equal(test.args.exist);
+      const isPasswordRequired = await this.pageObjects.checkoutPage.isPasswordRequired();
+      await expect(isPasswordRequired).to.be.equal(test.args.pwdRequired);
       page = await this.pageObjects.checkoutPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
