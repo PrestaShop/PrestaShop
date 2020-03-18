@@ -39,6 +39,9 @@ abstract class HTMLTemplateCore
     /** @var Shop */
     public $shop;
 
+    /** @var int */
+    private $langId;
+
     /**
      * Returns the template's HTML header.
      *
@@ -68,7 +71,7 @@ abstract class HTMLTemplateCore
             'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
             'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
             'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
-            'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
+            'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', $this->getLangId(), null, $id_shop),
         ]);
 
         return $this->smarty->fetch($this->getTemplate('footer'));
@@ -241,5 +244,25 @@ abstract class HTMLTemplateCore
     public function getPagination()
     {
         return $this->smarty->fetch($this->getTemplate('pagination'));
+    }
+
+    /**
+     * @return int
+     */
+    public function getLangId()
+    {
+        if (null === $this->langId) {
+            $this->langId = (int) Context::getContext()->language->id;
+        }
+
+        return $this->langId;
+    }
+
+    /**
+     * @param int $langId
+     */
+    public function setLangId($langId)
+    {
+        $this->langId = $langId;
     }
 }

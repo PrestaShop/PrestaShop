@@ -55,7 +55,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
         // header informations
         $this->date = Tools::displayDate($order_invoice->date_add);
-        $prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
+        $prefix = Configuration::get('PS_DELIVERY_PREFIX', $this->getLangId());
         $this->title = sprintf(HTMLTemplateDeliverySlip::l('%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
         // footer informations
@@ -156,6 +156,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
      */
     public function getFilename()
     {
-        return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop) . sprintf('%06d', $this->order->delivery_number) . '.pdf';
+        return Configuration::get('PS_DELIVERY_PREFIX', $this->getLangId(), null, $this->order->id_shop) . sprintf('%06d', $this->order->delivery_number) . '.pdf';
     }
 }

@@ -119,6 +119,7 @@ class PDFCore
             if (!$template) {
                 continue;
             }
+            $template->setLangId((int) $this->language->id);
 
             if (empty($this->filename)) {
                 $this->filename = $template->getFilename();
