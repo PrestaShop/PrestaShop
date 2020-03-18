@@ -17,13 +17,17 @@ const AddCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPric
 const ProductPage = require('@pages/FO/product');
 const HomePage = require('@pages/FO/home');
 // Importing data
-const ProductFaker = require('@data/faker/product');
 const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 
 let browser;
 let page;
-const productData = new ProductFaker({type: 'Standard product', quantity: 10});
-const priceRuleData = new PriceRuleFaker({});
+const priceRuleData = new PriceRuleFaker({
+  currency: 'All currencies',
+  country: 'All countries',
+  group: 'All groups',
+  reductionType: 'Amount',
+  reduction: 20,
+});
 
 // Init objects needed
 const init = async function () {
@@ -73,13 +77,15 @@ describe('Enable/Disable display discounted price', async () => {
   });
 
   it('should create new catalog price rule', async function () {
-    await this.pageObjects.addCatalogPriceRulePage.goToAddNewCatalogPriceRulePage();
     await testContext.addContextItem(this, 'testIdentifier', 'createCatalogPriceRule', baseContext);
+    await this.pageObjects.catalogPriceRulesPage.goToAddNewCatalogPriceRulePage();
+    const pageTitle = await this.pageObjects.addCatalogPriceRulePage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.addCatalogPriceRulePage.pageTitle);
     const validationMessage = await this.pageObjects.addCatalogPriceRulePage.createEditCatalogPriceRule(priceRuleData);
-    await expect(validationMessage).to.equal(this.pageObjects.addCatalogPriceRulePage.settingUpdatedMessage);
+    await expect(validationMessage).to.contains(this.pageObjects.catalogPriceRulesPage.successfulCreationMessage);
   });
 
-  /*it('should go to \'Shop parameters > Product Settings\' page', async function () {
+  it('should go to \'Shop parameters > Product Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
@@ -90,50 +96,45 @@ describe('Enable/Disable display discounted price', async () => {
   });
 
   const tests = [
-    {args: {action: 'disable', enable: false}},
-    {args: {action: 'enable', enable: true}},
+    {args: {action: 'enable', unitPrice: true, unitDiscount: false}},
+    {args: {action: 'disable', unitPrice: false, unitDiscount: true}},
   ];
   tests.forEach((test) => {
-    it(`should ${test.args.action} Display unavailable product attributes on the product page`, async function () {
+    it(`should ${test.args.action} display discounted price`, async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `${test.args.action}DisplayUnavailableProductAttributes`,
+        `${test.args.action}DisplayDiscountedPrice`,
         baseContext,
       );
-      const result = await this.pageObjects.productSettingsPage.setDisplayUnavailableProductAttributesStatus(
-        test.args.enable,
+      const result = await this.pageObjects.productSettingsPage.setDisplayDiscountedPriceStatus(
+        test.args.unitPrice,
       );
       await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should check the unavailable product attributes in FO product page', async function () {
+    it('should check the existence of the \'Unit discount\' or the \'Unit price\'', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `checkUnavailableAttribute${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
+        `checkUnitPrice${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
       page = await this.pageObjects.productSettingsPage.viewMyShop();
       this.pageObjects = await init();
       await this.pageObjects.homePage.changeLanguage('en');
-      await this.pageObjects.homePage.searchProduct(productData.name);
-      await this.pageObjects.searchResultsPage.goToProductPage(1);
-      const sizeIsVisible = await this.pageObjects.productPage.isUnavailableProductSizeDisplayed(
-        productData.combinations.Size[0],
-      );
-      await expect(sizeIsVisible).to.be.equal(test.args.enable);
-      const colorIsVisible = await this.pageObjects.productPage.isUnavailableProductColorDisplayed(
-        productData.combinations.Color[0],
-      );
-      await expect(colorIsVisible).to.be.equal(test.args.enable);
+      await this.pageObjects.homePage.goToProductPage(1);
+      const isUnitPriceVisible = await this.pageObjects.productPage.isUnitPriceVisible();
+      await expect(isUnitPriceVisible).to.equal(test.args.unitPrice);
+      const isUnitDiscountVisible = await this.pageObjects.productPage.isUnitDiscountVisible();
+      await expect(isUnitDiscountVisible).to.equal(test.args.unitDiscount);
       page = await this.pageObjects.productPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
   });
-*/
+
   it('should go to \'Catalog > Discounts\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPageToDeletePriceRule', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.discountsLink,
@@ -143,7 +144,7 @@ describe('Enable/Disable display discounted price', async () => {
   });
 
   it('should go to \'Catalog Price Rules\' tab', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToCatalogPriceRuleTab', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCatalogPriceRuleTabToDeletePriceRule', baseContext);
     await this.pageObjects.cartRulesPage.goToCatalogPriceRulesTab();
     const pageTitle = await this.pageObjects.catalogPriceRulesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.catalogPriceRulesPage.pageTitle);
@@ -151,8 +152,7 @@ describe('Enable/Disable display discounted price', async () => {
 
   it('should delete catalog price rule', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteCatalogPriceRule', baseContext);
-    const deleteTextResult = await this.pageObjects.catalogPriceRulesPage.deleteCataloGPriceRule(productData);
-    await expect(deleteTextResult).to.equal(this.pageObjects.catalogPriceRulesPage.productDeletedSuccessfulMessage);
+    const deleteTextResult = await this.pageObjects.catalogPriceRulesPage.deleteCatalogPriceRule(priceRuleData.name);
+    await expect(deleteTextResult).to.contains(this.pageObjects.catalogPriceRulesPage.successfulDeleteMessage);
   });
-
 });
