@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
 use InvalidArgumentException;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -1277,12 +1278,16 @@ class OrderController extends FrameworkBundleAdminController
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewingPrices = $orderForViewing->getPrices();
+        $zeroNumber = new Number('0');
 
         return $this->json([
-            'orderTotalFormatted' => $orderForViewing->getPrices()->getTotalAmountFormatted(),
-            'productsTotalFormatted' => $orderForViewing->getPrices()->getProductsPriceFormatted(),
-            'shippingTotalFormatted' => $orderForViewing->getPrices()->getShippingPriceFormatted(),
-            'taxesTotalFormatted' => $orderForViewing->getPrices()->getTaxesAmountFormatted(),
+            'orderTotalFormatted' => $orderForViewingPrices->getTotalAmountFormatted(),
+            'discountsAmountFormatted' => $orderForViewingPrices->getDiscountsAmountFormatted(),
+            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThan($zeroNumber),
+            'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
+            'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
+            'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),
         ]);
     }
 

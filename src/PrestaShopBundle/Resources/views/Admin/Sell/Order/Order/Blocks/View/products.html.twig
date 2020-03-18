@@ -179,12 +179,10 @@
               <strong id="orderProductsTotal">{{ orderForViewing.prices.productsPriceFormatted }}</strong>
             </div>
 
-            {% if orderForViewing.prices.discountsAmountRaw.greaterThan((number(0))) %}
-              <div class="col-sm text-center">
-                <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
-                <strong id="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
-              </div>
-            {% endif %}
+            <div class="col-sm text-center{% if not orderForViewing.prices.discountsAmountRaw.greaterThan((number(0))) %} d-none{% endif %}">
+              <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
+              <strong id="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+            </div>
 
             {% if orderForViewing.prices.wrappingPriceRaw.greaterThan(number(0)) %}
               <div class="col-sm text-center">
