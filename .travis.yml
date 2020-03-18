@@ -25,7 +25,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
-  - nightly
+  - 7.4
 
 env:
   global:
@@ -44,7 +44,7 @@ stages:
 
 jobs:
   allow_failures:
-    - php: nightly
+    - php: 7.4
   include:
     - stage: deploy
       php: 7.3
@@ -80,7 +80,8 @@ before_install:
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
 install:
-  - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - php --version
+  - composer install --no-suggest --ansi --prefer-dist --no-interaction || composer update --prefer-dist --no-interaction
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi
