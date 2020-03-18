@@ -24,9 +24,9 @@ module.exports = class Product extends FOBasePage {
 
   /**
    * Get Product information (Product name, price, description)
-   * @param productData, product data to check
+   * @returns {Promise<object>}
    */
-  async getProductInformation(productData) {
+  async getProductInformation() {
     return {
       name: await this.getTextContent(this.productName),
       price: parseFloat(await this.getAttributeContent(this.productPrice, 'content')),
