@@ -532,14 +532,14 @@ class SupplierController extends FrameworkBundleAdminController
 
         if ($this->configuration->get('PS_DISPLAY_SUPPLIERS')) {
             return $this->trans(
-                'The display of your suppliers is enabled on your store. Go to %sShop Parameters > General to edit settings%s.',
+                'The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
                 'Admin.Catalog.Notification',
                 [$urlOpening, $urlEnding]
             );
         }
 
         return $this->trans(
-            'The display of your suppliers is disabled on your store. Go to %sShop Parameters > General to edit settings%s.',
+            'The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',
             'Admin.Catalog.Notification',
             [$urlOpening, $urlEnding]
         );

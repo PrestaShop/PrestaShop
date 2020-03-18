@@ -1402,7 +1402,7 @@ class OrderController extends CommonController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Selected products were successfully cancelled.', 'Admin.Catalog.Notification'));
+                    $this->addFlash('success', $this->trans('Selected products were successfully canceled.', 'Admin.Catalog.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
