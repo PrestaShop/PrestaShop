@@ -260,8 +260,7 @@
 
       {% if label_attr['popover'] is defined %}
         {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
-        <span class="help-box" data-toggle="popover" data-placement="{{ placement }}"
-           data-content="{{ label_attr['popover'] }}"></span>
+        {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
       {% endif %}
     </label>
 
