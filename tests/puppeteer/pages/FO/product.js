@@ -124,4 +124,8 @@ module.exports = class Product extends FOBasePage {
   getProductPageURL() {
     return this.getAttributeContent(this.metaLink, 'content');
   }
+
+  isAddToCartButtonEnabled() {
+    return this.elementNotVisible(`${this.addToCartButton}:disabled`, 1000);
+  }
 };
