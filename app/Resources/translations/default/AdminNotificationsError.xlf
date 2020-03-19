@@ -1107,11 +1107,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <target>Cannot send test email for layout %layout%</target>
         <note>Line: 348</note>
       </trans-unit>
-      <trans-unit id="e1ad5df790ef15f9a839af9ea8562618">
-        <source>Cannot translate emails body contents</source>
-        <target>Cannot translate emails body contents</target>
-        <note>Line: 374</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/ThemeController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1348,11 +1343,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <source>Positive product quantity is required</source>
         <target>Positive product quantity is required</target>
         <note>Line: 536</note>
-      </trans-unit>
-      <trans-unit id="47e91b4ed6651aa6a51f65afa98102df">
-        <source>Selected language cannot be used because is disabled</source>
-        <target>Selected language cannot be used because is disabled</target>
-        <note>Line: 542</note>
       </trans-unit>
       <trans-unit id="86f57ed3b1fc0dc03e6cb040ec54add3">
         <source>Selected currency cannot be used because it is deleted</source>

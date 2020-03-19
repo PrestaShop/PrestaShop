@@ -899,11 +899,6 @@
         <target>An error occurred while sending the e-mail to the customer.</target>
         <note>Line: 1413</note>
       </trans-unit>
-      <trans-unit id="aeddc664f1e95691c69ea44a5c1c18f5">
-        <source>This product is out of stock: </source>
-        <target>This product is out of stock:</target>
-        <note>Line: 580</note>
-      </trans-unit>
       <trans-unit id="4174f012bc63b679f092acd1a933bf5c">
         <source>The email was sent to your customer.</source>
         <target>The email was sent to your customer.</target>
@@ -913,11 +908,6 @@
         <source>A standard refund was successfully created.</source>
         <target>A standard refund was successfully created.</target>
         <note>Line: 520</note>
-      </trans-unit>
-      <trans-unit id="676add5006e766a2f0bf5ba22e231e09">
-        <source>A return product was successfully created.</source>
-        <target>A return product was successfully created.</target>
-        <note>Line: 552</note>
       </trans-unit>
       <trans-unit id="4c8098d3dded08ff50537ed2814277ca">
         <source>You cannot edit the cart once the order delivered</source>

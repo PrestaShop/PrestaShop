@@ -310,11 +310,6 @@
         <target>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</target>
         <note>Line: 196</note>
       </trans-unit>
-      <trans-unit id="0ffb46c2ee0fa51508f5882d06dd1769">
-        <source>Disabling this option will require exact spelling for the search to match result.</source>
-        <target>Disabling this option will require exact spelling for the search to match result.</target>
-        <note>Line: 201</note>
-      </trans-unit>
       <trans-unit id="2324c421f8c5376051c024f15232cd80">
         <source>Enable approximate string matching.</source>
         <target>Enable approximate string matching.</target>
@@ -324,16 +319,6 @@
         <source>Note that this option is resource-consuming: the more you search, the longer it takes.</source>
         <target>Note that this option is resource-consuming: the more you search, the longer it takes.</target>
         <note>Line: 220</note>
-      </trans-unit>
-      <trans-unit id="971f70b93d876c6ab77fe4148b05a571">
-        <source>Only words this maximum size or smaller will be used during the search.</source>
-        <target>Only words this maximum size or smaller will be used during the search.</target>
-        <note>Line: 235</note>
-      </trans-unit>
-      <trans-unit id="43395f8b43a1575cc446a23cffcdf396">
-        <source>This parameter will only be used if fuzzy search is activated, the lower the value, the more tolerant your research will be.</source>
-        <target>This parameter will only be used if fuzzy search is activated, the lower the value, the more tolerant your research will be.</target>
-        <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="88851f53412ccb796508fd5f48e7a44f">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
@@ -470,16 +455,6 @@
         <source>Choose the page which contains your store's terms and conditions of use.</source>
         <target>Choose the page which contains your store's terms and conditions of use.</target>
         <note>Line: 126</note>
-      </trans-unit>
-      <trans-unit id="cec0fa0b700a5827d510b4968d932e0a">
-        <source>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders .</source>
-        <target>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders .</target>
-        <note>Line: 108</note>
-      </trans-unit>
-      <trans-unit id="bee59a8648e890677989ad9aa3a34b1c">
-        <source>Allows you to delay shipping at your customers' request .</source>
-        <target>Allows you to delay shipping at your customers' request .</target>
-        <note>Line: 116</note>
       </trans-unit>
     </body>
   </file>

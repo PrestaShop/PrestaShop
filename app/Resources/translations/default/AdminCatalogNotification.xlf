@@ -783,20 +783,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/ManufacturerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="24c4c5893417516670d664df2dbd3990">
-        <source><![CDATA[The display of your brands is enabled on your store. Go to %sShop Parameters > General to edit settings.%s]]></source>
-        <target><![CDATA[The display of your brands is enabled on your store. Go to %sShop Parameters > General to edit settings.%s]]></target>
-        <note>Line: 800</note>
-      </trans-unit>
-      <trans-unit id="96719674a1f518ea9adad16cb4ec5fab">
-        <source><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General to edit settings.%s]]></source>
-        <target><![CDATA[The display of your brands is disabled on your store. Go to %sShop Parameters > General to edit settings.%s]]></target>
-        <note>Line: 807</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/SupplierController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="60df675f17670057ec657783db03d35e">
@@ -809,16 +795,6 @@
         <target>It is not possible to delete a supplier if there are pending supplier orders.</target>
         <note>Line: 502</note>
       </trans-unit>
-      <trans-unit id="42eea4f94c52082dc98268689f58e24f">
-        <source><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General to edit settings%s.]]></source>
-        <target><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General to edit settings%s.]]></target>
-        <note>Line: 562</note>
-      </trans-unit>
-      <trans-unit id="fdb0d19b00e9af88de1ae2df288dfedf">
-        <source><![CDATA[The display of your suppliers is disabled on your store. Go to %sShop Parameters > General to edit settings%s.]]></source>
-        <target><![CDATA[The display of your suppliers is disabled on your store. Go to %sShop Parameters > General to edit settings%s.]]></target>
-        <note>Line: 569</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -827,11 +803,6 @@
         <source>There are not enough products in stock.</source>
         <target>There are not enough products in stock.</target>
         <note>Line: 1444</note>
-      </trans-unit>
-      <trans-unit id="ad136f5740b51cf22edd1a702d0f88c9">
-        <source>Selected products were successfully cancelled.</source>
-        <target>Selected products were successfully cancelled.</target>
-        <note>Line: 1355</note>
       </trans-unit>
     </body>
   </file>

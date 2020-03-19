@@ -588,26 +588,6 @@
         <target>Search Reference</target>
         <note>Line: 307</note>
       </trans-unit>
-      <trans-unit id="8b4a1bc5d57e6921d9cc8df069530500">
-        <source>Search Customer</source>
-        <target>Search Customer</target>
-        <note>Line: 322</note>
-      </trans-unit>
-      <trans-unit id="345c4b9b987c82907571f84f98683262">
-        <source>Search Total</source>
-        <target>Search Total</target>
-        <note>Line: 331</note>
-      </trans-unit>
-      <trans-unit id="1bd9f7be451c1efcb1226ff089a87d58">
-        <source>Search Payment</source>
-        <target>Search Payment</target>
-        <note>Line: 340</note>
-      </trans-unit>
-      <trans-unit id="e4c992f6eb00a4488881837f25b09d40">
-        <source>Search Company</source>
-        <target>Search Company</target>
-        <note>Line: 388</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Grid/Definition/Factory/OrderMessageGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1043,26 +1023,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b7cea4f6e8dd41e0cc16f0da290a71df">
-        <source>Change address</source>
-        <target>Change address</target>
-        <note>Line: 33</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/customer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a082e30c2da0ebd57cf7f4a2014daca8">
         <source>View full details</source>
         <target>View full details</target>
         <note>Line: 50</note>
-      </trans-unit>
-      <trans-unit id="cda7288d7ba9a2a79bec223efc5d15d7">
-        <source>Edit address</source>
-        <target>Edit address</target>
-        <note>Line: 171</note>
       </trans-unit>
     </body>
   </file>
