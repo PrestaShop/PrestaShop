@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
 use JsonSerializable;
-use PrestaShop\Decimal\Number;
 
 class OrderProductForViewing implements JsonSerializable
 {
@@ -96,17 +95,17 @@ class OrderProductForViewing implements JsonSerializable
     private $imagePath;
 
     /**
-     * @var Number
+     * @var string
      */
     private $unitPriceTaxExclRaw;
 
     /**
-     * @var Number
+     * @var string
      */
     private $unitPriceTaxInclRaw;
 
     /**
-     * @var Number
+     * @var string
      */
     private $taxRate;
 
@@ -131,7 +130,7 @@ class OrderProductForViewing implements JsonSerializable
     private $amountRefundable;
 
     /**
-     * @var Number
+     * @var string
      */
     private $amountRefundableRaw;
 
@@ -143,7 +142,7 @@ class OrderProductForViewing implements JsonSerializable
     /**
      * @var string
      */
-    private $orderInvoiceNumber;
+    private $orderInvoicestring;
 
     /**
      * @var bool
@@ -166,16 +165,16 @@ class OrderProductForViewing implements JsonSerializable
      * @param string $totalPrice
      * @param int $availableQuantity
      * @param string|null $imagePath
-     * @param Number $unitPriceTaxExclRaw
-     * @param Number $unitPriceTaxInclRaw
-     * @param Number $taxRate
+     * @param string $unitPriceTaxExclRaw
+     * @param string $unitPriceTaxInclRaw
+     * @param string $taxRate
      * @param string $amountRefunded
      * @param int $quantityRefunded
      * @param string $amountRefundable
-     * @param Number $amountRefundableRaw
+     * @param string $amountRefundableRaw
      * @param string $location
      * @param int|null $orderInvoiceId
-     * @param string $orderInvoiceNumber
+     * @param string $orderInvoicestring
      * @param string $type
      * @param bool $availableOutOfStock
      * @param array $packItems
@@ -192,16 +191,16 @@ class OrderProductForViewing implements JsonSerializable
         string $totalPrice,
         int $availableQuantity,
         ?string $imagePath,
-        Number $unitPriceTaxExclRaw,
-        Number $unitPriceTaxInclRaw,
-        Number $taxRate,
+        string $unitPriceTaxExclRaw,
+        string $unitPriceTaxInclRaw,
+        string $taxRate,
         string $amountRefunded,
         int $quantityRefunded,
         string $amountRefundable,
-        Number $amountRefundableRaw,
+        string $amountRefundableRaw,
         string $location,
         ?int $orderInvoiceId,
-        string $orderInvoiceNumber,
+        string $orderInvoicestring,
         string $type,
         bool $availableOutOfStock,
         array $packItems = [],
@@ -226,7 +225,7 @@ class OrderProductForViewing implements JsonSerializable
         $this->amountRefundableRaw = $amountRefundableRaw;
         $this->location = $location;
         $this->orderInvoiceId = $orderInvoiceId;
-        $this->orderInvoiceNumber = $orderInvoiceNumber;
+        $this->orderInvoicestring = $orderInvoicestring;
         $this->type = $type;
         $this->availableOutOfStock = $availableOutOfStock;
         $this->packItems = $packItems;
@@ -294,9 +293,9 @@ class OrderProductForViewing implements JsonSerializable
     /**
      * get tax rate to be applied on this product
      *
-     * @return Number
+     * @return string
      */
-    public function getTaxRate(): Number
+    public function getTaxRate(): string
     {
         return $this->taxRate;
     }
@@ -370,21 +369,21 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
-     * Get unit price without taxes, as a Number value
+     * Get unit price without taxes
      *
-     * @return Number
+     * @return string
      */
-    public function getUnitPriceTaxExclRaw(): Number
+    public function getUnitPriceTaxExclRaw(): string
     {
         return $this->unitPriceTaxExclRaw;
     }
 
     /**
-     * Get unit price including taxes, as a Number value
+     * Get unit price including taxes
      *
-     * @return Number
+     * @return string
      */
-    public function getUnitPriceTaxInclRaw(): Number
+    public function getUnitPriceTaxInclRaw(): string
     {
         return $this->unitPriceTaxInclRaw;
     }
@@ -420,11 +419,11 @@ class OrderProductForViewing implements JsonSerializable
     }
 
     /**
-     * How much (money) can be refunded for this product (raw Number value)
+     * How much (money) can be refunded for this product
      *
-     * @return Number
+     * @return string
      */
-    public function getAmountRefundableRaw(): Number
+    public function getAmountRefundableRaw(): string
     {
         return $this->amountRefundableRaw;
     }
@@ -468,9 +467,9 @@ class OrderProductForViewing implements JsonSerializable
      *
      * @return string
      */
-    public function getOrderInvoiceNumber(): string
+    public function getOrderInvoicestring(): string
     {
-        return $this->orderInvoiceNumber;
+        return $this->orderInvoicestring;
     }
 
     /**

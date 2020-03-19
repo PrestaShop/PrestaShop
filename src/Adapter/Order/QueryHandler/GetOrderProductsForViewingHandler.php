@@ -48,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
 use Shop;
 use StockAvailable;
-use Tools;
 use Warehouse;
 use WarehouseProductLocation;
 
@@ -89,6 +88,8 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
         $products = $order->getProducts();
         $currency = new Currency((int) $order->id_currency);
+        $computingPrecision = new ComputingPrecision();
+        $precision = $computingPrecision->getPrecision($currency->precision);
 
         foreach ($products as &$product) {
             if ($product['image'] instanceof Image) {
@@ -173,7 +174,6 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         $productsForViewing = [];
 
         $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
-        $computingPrecision = new ComputingPrecision();
 
         foreach ($products as $product) {
             $unitPrice = $isOrderTaxExcluded ?
@@ -215,13 +215,13 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     0,
                     $pack_item['current_stock'],
                     $packItemImagePath,
-                    new Number('0'),
-                    new Number('0'),
-                    new Number('0'),
+                    '0',
+                    '0',
+                        '0',
                     $this->locale->formatPrice(0, $currency->iso_code),
                     0,
                     $this->locale->formatPrice(0, $currency->iso_code),
-                    new Number('0'),
+                        '0',
                     $pack_item['location'],
                     null,
                     '',
@@ -241,19 +241,13 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $totalPriceFormatted,
                 $product['current_stock'],
                 $imagePath,
-                Tools::ps_round(
-                    $product['unit_price_tax_excl'],
-                    $computingPrecision->getPrecision($currency->precision)
-                ),
-                Tools::ps_round(
-                    $product['unit_price_tax_incl'],
-                    $computingPrecision->getPrecision($currency->precision)
-                ),
-                $product['tax_rate'],
+                (new Number((string) $product['unit_price_tax_excl']))->round($precision),
+                (new Number((string) $product['unit_price_tax_incl']))->round($precision),
+                (string) $product['tax_rate'],
                 $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
                 $product['product_quantity_refunded'] + $product['product_quantity_return'],
                 $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
-                $product['displayed_max_refundable'],
+                (string) $product['displayed_max_refundable'],
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
                 !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
