@@ -48,11 +48,11 @@ module.exports = class AddFile extends BOBasePage {
   async changeLanguageForSelectors(lang = 'en') {
     await Promise.all([
       this.page.click(this.nameLangButton),
-      this.page.waitForSelector(`${this.nameLangButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.nameLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
       this.page.click(this.nameLangSpan.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.nameLangButton}[aria-expanded='false']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.nameLangButton}[aria-expanded='false']`),
     ]);
   }
 };
