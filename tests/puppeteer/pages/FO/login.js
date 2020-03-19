@@ -39,10 +39,7 @@ module.exports = class Login extends FOBasePage {
   async customerLogin(customer) {
     await this.setValue(this.emailInput, customer.email);
     await this.setValue(this.passwordInput, customer.password);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.signInButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.signInButton);
   }
 
   /**

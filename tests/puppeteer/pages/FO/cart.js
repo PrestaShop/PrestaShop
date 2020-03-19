@@ -33,7 +33,7 @@ module.exports = class Cart extends FOBasePage {
    * Click on Proceed to checkout button
    */
   async clickOnProceedToCheckout() {
-    await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
+    await this.waitForVisibleSelector(this.proceedToCheckoutButton);
     await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
   }
 
