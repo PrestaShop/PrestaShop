@@ -43,7 +43,7 @@ Feature: Refund Order from Back Office (BO)
 
   @order-refund
   @order-standard-refund
-  Scenario: Standard refund can't be done if order has no invoice
+  Scenario: Standard refund can't be done if order is not paid
     Given I add order "bo_order_refund" with the following details:
       | cart                | dummy_cart             |
       | message             | test                   |
@@ -62,6 +62,54 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1        |
     Then I should get error that order is not paid
     And "bo_order_refund" has 0 credit slips
+
+  @order-refund
+  @order-standard-refund
+  Scenario: Standard refund is possible if order is not paid but has payments
+    Given I add order "bo_order_refund" with the following details:
+      | cart                | dummy_cart             |
+      | message             | test                   |
+      | payment module name | dummy_payment          |
+      | status              | Awaiting check payment |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1 |
+    And there are 2 less "Mug The best is yet to come" in stock
+    And there are 1 less "Mug Today is a good day" in stock
+    And I pay order "bo_order_refund" with the following details:
+      | date           | 2019-11-26 13:56:23 |
+      | payment_method | Payments by check   |
+      | transaction_id | test123             |
+      | id_currency    | 1                   |
+      | amount         | 6.00                |
+    And "bo_order_refund" has 0 credit slips
+    And order "bo_order_refund" has status "Awaiting check payment"
+    And return product is enabled
+    When I issue a standard refund on "bo_order_refund" with credit slip without voucher on following products:
+      | product_name                | quantity |
+      | Mug The best is yet to come | 1        |
+      | Mug Today is a good day     | 1        |
+    Then "bo_order_refund" has 1 credit slips
+    Then "bo_order_refund" last credit slip is:
+      | amount                  | 23.8   |
+      | shipping_cost_amount    | 0.0    |
+      | total_products_tax_excl | 23.8   |
+      | total_products_tax_incl | 25.228 |
+    And product "Mug The best is yet to come" in order "bo_order_refund" has following details:
+      | product_quantity            | 2      |
+      | product_quantity_refunded   | 1      |
+      | product_quantity_reinjected | 1      |
+      | total_refunded_tax_excl     | 11.9   |
+      | total_refunded_tax_incl     | 12.614 |
+    And product "Mug Today is a good day" in order "bo_order_refund" has following details:
+      | product_quantity            | 1      |
+      | product_quantity_refunded   | 1      |
+      | product_quantity_reinjected | 1      |
+      | total_refunded_tax_excl     | 11.9   |
+      | total_refunded_tax_incl     | 12.614 |
+    And there are 1 more "Mug The best is yet to come" in stock
+    And there are 1 more "Mug Today is a good day" in stock
 
   @order-refund
   @order-standard-refund

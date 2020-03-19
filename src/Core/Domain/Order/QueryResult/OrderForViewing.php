@@ -397,6 +397,14 @@ class OrderForViewing
     }
 
     /**
+     * @return bool
+     */
+    public function hasPayments(): bool
+    {
+        return count($this->payments->getPayments()) > 0;
+    }
+
+    /**
      * @return OrderMessagesForViewing
      */
     public function getMessages(): OrderMessagesForViewing

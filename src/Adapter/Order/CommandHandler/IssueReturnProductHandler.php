@@ -145,7 +145,6 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
 
         // Update refund details (by definition it returns products)
         $this->refundUpdater->updateRefundData(
-            $order,
             $orderRefundSummary,
             true,
             $command->restockRefundedProducts()
