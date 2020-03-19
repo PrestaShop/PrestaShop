@@ -215,7 +215,7 @@ class AdminProductWrapper
         static $hookExecuted = [];
         if (!in_array($product->id, $hookExecuted)) {
             $hookExecuted[] = $product->id;
-            Hook::exec('actionProductUpdate', array('id_product' => (int) $product->id, 'product' => $product));
+            Hook::exec('actionProductUpdate', ['id_product' => (int) $product->id, 'product' => $product]);
         }
     }
 
