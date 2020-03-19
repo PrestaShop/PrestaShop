@@ -321,7 +321,7 @@ module.exports = class Categories extends BOBasePage {
       this.categoriesListTableDraggableColumn.replace('%ROW', categoryRow),
       this.categoriesListTableDraggableColumn.replace('%ROW', position),
     );
-    return this.getTextContent(this.growlDefaultMessageBlock);
+    return this.getTextContent(this.growlMessageBlock);
   }
 
   /* Sort methods */
