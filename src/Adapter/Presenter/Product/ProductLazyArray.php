@@ -770,7 +770,7 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         if ($show_availability) {
-            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
+            if ($product['stock_quantity'] - $product['quantity_wanted'] >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
                 if ($product['quantity'] < $settings->lastRemainingItems) {
