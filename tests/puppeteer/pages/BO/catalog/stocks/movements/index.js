@@ -32,7 +32,7 @@ module.exports = class Movements extends BOBasePage {
    */
   async goToSubTabStocks() {
     await this.page.click(this.stocksNavItemLink);
-    await this.page.waitForSelector(`${this.stocksNavItemLink}.active`, {visible: true});
+    await this.waitForVisibleSelector(`${this.stocksNavItemLink}.active`);
   }
 
   /**
@@ -44,7 +44,7 @@ module.exports = class Movements extends BOBasePage {
     await this.page.type(this.searchInput, value);
     await Promise.all([
       this.page.click(this.searchButton),
-      this.page.waitForSelector(this.productListLoading, {visible: true}),
+      this.waitForVisibleSelector(this.productListLoading),
     ]);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
   }
