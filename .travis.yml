@@ -19,7 +19,7 @@ cache:
     - $HOME/.composer/cache
 
 os: linux
-dist: trusty
+dist: xenial
 
 php:
   - 7.1
