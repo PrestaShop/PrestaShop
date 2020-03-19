@@ -149,10 +149,9 @@ module.exports = class AddProduct extends BOBasePage {
     /* eslint-enable */
     await this.scrollTo(this.generateCombinationsButton);
     await Promise.all([
-      this.page.waitForSelector(`${this.productCombinationsBulkForm}:not(.inactive)`, {visible: true}),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(`${this.productCombinationsBulkForm}:not(.inactive)`),
+      this.waitForVisibleSelector(
         `${this.productCombinationTableRow.replace('%ID', 1)}[style='display: table-row;']`,
-        {visible: true},
       ),
       this.page.click(this.generateCombinationsButton),
     ]);
@@ -180,11 +179,11 @@ module.exports = class AddProduct extends BOBasePage {
     // Unselect all
     await this.changeCheckboxValue(this.productCombinationSelectAllCheckbox, false);
     await Promise.all([
-      this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='true']`),
       await this.changeCheckboxValue(this.productCombinationSelectAllCheckbox, true),
     ]);
     // Edit quantity
-    await this.page.waitForSelector(this.applyOnCombinationsButton, {visible: true});
+    await this.waitForVisibleSelector(this.applyOnCombinationsButton);
     await this.scrollTo(this.productCombinationBulkQuantityInput);
     await this.page.type(this.productCombinationBulkQuantityInput, quantity.toString());
     await this.scrollTo(this.applyOnCombinationsButton);
@@ -196,7 +195,7 @@ module.exports = class AddProduct extends BOBasePage {
    * @return page opened
    */
   async previewProduct() {
-    await this.page.waitForSelector(this.previewProductLink);
+    await this.waitForVisibleSelector(this.previewProductLink);
     this.page = await this.openLinkWithTargetBlank(this.page, this.previewProductLink);
     const textBody = await this.getTextContent('body');
     if (await textBody.includes('[Debug] This page has moved')) {
@@ -211,7 +210,7 @@ module.exports = class AddProduct extends BOBasePage {
    */
   async deleteProduct() {
     await Promise.all([
-      this.page.waitForSelector(this.modalDialog, {visible: true}),
+      this.waitForVisibleSelector(this.modalDialog),
       this.page.click(this.productDeleteLink),
     ]);
     await this.clickAndWaitForNavigation(this.modalDialogYesButton);
@@ -226,7 +225,7 @@ module.exports = class AddProduct extends BOBasePage {
   async goToFormStep(id = 1) {
     const selector = this.forNavlistItemLink.replace('%ID', id);
     await Promise.all([
-      this.page.waitForSelector(`${selector}[aria-selected='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${selector}[aria-selected='true']`),
       this.waitForSelectorAndClick(selector),
     ]);
   }
@@ -250,12 +249,12 @@ module.exports = class AddProduct extends BOBasePage {
       // Select all and delete combinations
       await Promise.all([
         this.changeCheckboxValue(this.productCombinationSelectAllCheckbox, true),
-        this.page.waitForSelector(`${this.bulkCombinationsContainer}.show`),
+        this.waitForVisibleSelector(`${this.bulkCombinationsContainer}.show`),
       ]);
       await this.scrollTo(this.deleteCombinationsButton);
       await Promise.all([
         this.page.click(this.deleteCombinationsButton),
-        this.page.waitForSelector(this.modalDialog, {visible: true}),
+        this.waitForVisibleSelector(this.modalDialog),
       ]);
       await this.page.waitFor(250);
       await Promise.all([
@@ -276,7 +275,7 @@ module.exports = class AddProduct extends BOBasePage {
     if (!(await this.elementVisible(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, 1000))) {
       await Promise.all([
         this.page.click(this.productCombinationsBulkFormTitle),
-        this.page.waitForSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, {visible: true}),
+        this.waitForVisibleSelector(`${this.productCombinationsBulkFormTitle}[aria-expanded='false']`),
       ]);
     }
   }
@@ -287,7 +286,7 @@ module.exports = class AddProduct extends BOBasePage {
    */
   async resetURL() {
     await this.goToFormStep(5);
-    await this.page.waitForSelector(this.resetUrlButton, {visible: true});
+    await this.waitForVisibleSelector(this.resetUrlButton);
     await this.scrollTo(this.resetUrlButton);
     await this.page.click(this.resetUrlButton);
     await this.goToFormStep(1);
@@ -322,11 +321,11 @@ module.exports = class AddProduct extends BOBasePage {
     await this.goToFormStep(2);
     await Promise.all([
       this.page.click(this.addSpecificPriceButton),
-      this.page.waitForSelector(`${this.specificPriceForm}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${this.specificPriceForm}.show`),
     ]);
     // Choose combinations if exist
     if (specificPriceData.combinations) {
-      await this.page.waitForSelector(this.combinationSelect, {visible: true});
+      await this.waitForVisibleSelector(this.combinationSelect);
       await this.scrollTo(this.combinationSelect);
       await this.selectByVisibleText(this.combinationSelect, specificPriceData.combinations);
     }
