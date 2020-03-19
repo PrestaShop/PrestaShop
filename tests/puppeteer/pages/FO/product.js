@@ -125,6 +125,10 @@ module.exports = class Product extends FOBasePage {
     return this.getAttributeContent(this.metaLink, 'content');
   }
 
+  /**
+   * Is add to cart button enabled
+   * @returns {boolean}
+   */
   isAddToCartButtonEnabled() {
     return this.elementNotVisible(`${this.addToCartButton}:disabled`, 1000);
   }
