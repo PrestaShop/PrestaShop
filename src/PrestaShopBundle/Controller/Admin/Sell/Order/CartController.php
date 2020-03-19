@@ -108,34 +108,9 @@ class CartController extends FrameworkBundleAdminController
     public function getInfoAction(int $cartId)
     {
         try {
-            /** @var CartInformation $cartInfo */
             $cartInfo = $this->getQueryBus()->handle(new GetCartInformation($cartId));
-            $decoratedCartRules = [];
 
-            foreach ($cartInfo->getCartRules() as $cartRule) {
-                if ($cartRule->isGift()) {
-                    $decoratedCartRules[] = new CartInformation\CartRule(
-                        $cartRule->getCartRuleId(),
-                        $cartRule->getName(),
-                        $cartRule->getDescription(),
-                        $this->trans('Gift', 'Admin.Orderscustomers.Feature'),
-                        $cartRule->isGift()
-                    );
-                    continue;
-                }
-
-                $decoratedCartRules[] = $cartRule;
-            }
-
-            return $this->json(new CartInformation(
-                $cartInfo->getCartId(),
-                $cartInfo->getProducts(),
-                $cartInfo->getCurrencyId(),
-                $cartInfo->getLangId(),
-                $decoratedCartRules,
-                $cartInfo->getAddresses(),
-                $cartInfo->getSummary()
-            ));
+            return $this->json($cartInfo);
         } catch (Exception $e) {
             return $this->json(
                 ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
