@@ -132,7 +132,7 @@ module.exports = class Employees extends BOBasePage {
       this.page.click(this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
       await this.waitForVisibleSelector(
         (valueWanted ? this.employeesListColumnValidIcon : this.employeesListColumnNotValidIcon)
-          .replace('%ROW', row)
+          .replace('%ROW', row),
       );
       return true;
     }
@@ -149,7 +149,9 @@ module.exports = class Employees extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.employeesListTableToggleDropDown.replace('%ROW', row)),
-      this.waitForVisibleSelector(`${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`),
+      this.waitForVisibleSelector(
+        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
+      ),
     ]);
     // Click on delete
     await this.clickAndWaitForNavigation(this.employeesListTableDeleteLink.replace('%ROW', row));
