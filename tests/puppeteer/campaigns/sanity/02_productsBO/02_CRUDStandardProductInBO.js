@@ -15,6 +15,7 @@ const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const FOProductPage = require('@pages/FO/product');
 const ProductFaker = require('@data/faker/product');
+const {DefaultFrTax} = require('@data/demo/tax');
 
 let browser;
 let page;
@@ -111,6 +112,27 @@ describe('Create, read, update and delete Standard product in BO', async () => {
       expect(result.price).to.equal(editedProductData.price),
       expect(result.description).to.be.equal(editedProductData.description),
     ]);
+  });
+
+  it('should go to Products page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToCheckPrices', baseContext);
+    await this.pageObjects.boBasePage.goToSubMenu(
+      this.pageObjects.boBasePage.catalogParentLink,
+      this.pageObjects.boBasePage.productsLink,
+    );
+    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
+    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+  });
+
+  it('should filter list by reference, check prices and go to edit page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkProductsPrices', baseContext);
+    await this.pageObjects.productsPage.filterProducts('reference', editedProductData.reference);
+    const productPrice = await this.pageObjects.productsPage.getProductPriceFromList(1);
+    const productPriceTTC = await this.pageObjects.productsPage.getProductPriceFromList(1, true);
+    const conversionRate = (100 + parseInt(DefaultFrTax.rate, 10)) / 100;
+    await expect(parseFloat(productPrice)).to.equal(parseFloat((editedProductData.price / conversionRate).toFixed(2)));
+    await expect(parseFloat(productPriceTTC)).to.equal(parseFloat(editedProductData.price));
+    await this.pageObjects.productsPage.goToEditProductPage(1);
   });
 
   it('should delete Product and be on product list page', async function () {

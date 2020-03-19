@@ -14,6 +14,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const ProductsPage = require('@pages/BO/catalog/products');
 const {Products} = require('@data/demo/products');
 const {Categories} = require('@data/demo/categories');
+const {DefaultFrTax} = require('@data/demo/tax');
 
 let browser;
 let page;
@@ -58,6 +59,16 @@ describe('Filter in Products Page', async () => {
     await this.pageObjects.productsPage.resetFilterCategory();
     numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
+
+    // Do not loop more than the products displayed via the pagination
+    const numberOfProductsOnPage = await this.pageObjects.productsPage.getNumberOfProductsOnPage();
+    // Check that prices have correct tax values
+    for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
+      const productPrice = await this.pageObjects.productsPage.getProductPriceFromList(i);
+      const productPriceTTC = await this.pageObjects.productsPage.getProductPriceFromList(i, true);
+      const conversionRate = (100 + parseInt(DefaultFrTax.rate, 10)) / 100;
+      await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceTTC / conversionRate).toFixed(2)));
+    }
   });
 
   const tests = [

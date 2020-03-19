@@ -22,6 +22,7 @@ module.exports = class Product extends BOBasePage {
     this.dropdownToggleButton = `${this.productRow}:nth-of-type(%ROW) button.dropdown-toggle`;
     this.dropdownMenu = `${this.productRow}:nth-of-type(%ROW) div.dropdown-menu`;
     this.dropdownMenuDeleteLink = `${this.dropdownMenu} a.product-edit[onclick*='delete']`;
+    this.productRowEditLink = `${this.productRow}:nth-of-type(%ROW) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
@@ -44,6 +45,7 @@ module.exports = class Product extends BOBasePage {
     this.productsListTableColumnReference = `${this.productsListTableRow} td:nth-child(5)`;
     this.productsListTableColumnCategory = `${this.productsListTableRow} td:nth-child(6)`;
     this.productsListTableColumnPrice = `${this.productsListTableRow} td:nth-child(7)`;
+    this.productsListTableColumnPriceTTC = `${this.productsListTableRow} td:nth-child(8)`;
     this.productsListTableColumnQuantity = `${this.productsListTableRow} td.product-sav-quantity`;
     this.productsListTableColumnStatus = `${this.productsListTableRow} td:nth-child(10)`;
     this.productsListTableColumnStatusEnabled = `${this.productsListTableColumnStatus} .action-enabled`;
@@ -132,11 +134,13 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get Product Price
-   * @param row
+   * @param {int} row
+   * @param {boolean} withTaxes
    * @return Float
    */
-  async getProductPriceFromList(row) {
-    const text = await this.getTextContent(this.productsListTableColumnPrice.replace('%ROW', row));
+  async getProductPriceFromList(row, withTaxes) {
+    const selector = withTaxes ? this.productsListTableColumnPriceTTC : this.productsListTableColumnPrice;
+    const text = await this.getTextContent(selector.replace('%ROW', row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
     return parseFloat(price);
   }
@@ -265,6 +269,14 @@ module.exports = class Product extends BOBasePage {
   }
 
   /**
+   * Get number of products displayed on the page
+   * @return integer
+   */
+  async getNumberOfProductsOnPage() {
+    return (await this.page.$$(this.productRow)).length;
+  }
+
+  /**
    * Reset input filters
    * @return {Promise<void>}
    */
@@ -326,6 +338,15 @@ module.exports = class Product extends BOBasePage {
    */
   async goToAddProductPage() {
     await this.clickAndWaitForNavigation(this.addProductButton);
+  }
+
+  /**
+   * GOTO edit product page from row
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToEditProductPage(row) {
+    await this.clickAndWaitForNavigation(this.productRowEditLink.replace('%ROW', row));
   }
 
   /**
