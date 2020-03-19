@@ -140,7 +140,6 @@ class GuestTrackingControllerCore extends FrontController
         $this->context->smarty->assign([
             'order' => $presented_order,
             'guest_email' => Tools::getValue('email'),
-            'is_customer' => Customer::customerExists(Tools::getValue('email'), false, true),
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order)],
         ));
 
