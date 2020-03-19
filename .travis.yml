@@ -19,7 +19,9 @@ cache:
     - $HOME/.composer/cache
 
 os: linux
+arch: arm64
 dist: xenial
+
 
 php:
   - 7.1
