@@ -68,12 +68,11 @@ class GuestTrackingControllerCore extends FrontController
             return;
         }
 
-
         $isCustomer = Customer::customerExists($email, false, true);
         if ($isCustomer) {
             $this->info[] = $this->trans(
                 'Please log in to your customer account to view the order',
-                array(),
+                [],
                 'Shop.Notifications.Info'
             );
             $this->redirectWithNotifications($this->context->link->getPageLink('history'));
@@ -82,7 +81,7 @@ class GuestTrackingControllerCore extends FrontController
             if (!Validate::isLoadedObject($this->order)) {
                 $this->errors[] = $this->getTranslator()->trans(
                     'We couldn\'t find your order with the information provided, please try again',
-                    array(),
+                    [],
                     'Shop.Notifications.Error'
                 );
             }
@@ -140,8 +139,8 @@ class GuestTrackingControllerCore extends FrontController
         $this->context->smarty->assign([
             'order' => $presented_order,
             'guest_email' => Tools::getValue('email'),
-            'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order)],
-        ));
+            'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
+        ]);
 
         return $this->setTemplate('customer/guest-tracking');
     }
@@ -156,10 +155,10 @@ class GuestTrackingControllerCore extends FrontController
         ];
 
         if (Validate::isLoadedObject($this->order)) {
-            $breadcrumbLinks['links'][] = array(
+            $breadcrumbLinks['links'][] = [
                 'title' => $this->order->reference,
                 'url' => '#',
-            );
+            ];
         }
 
         return $breadcrumbLinks;
