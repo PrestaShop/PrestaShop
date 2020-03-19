@@ -560,7 +560,7 @@ class PackCore extends Product
     }
 
     /**
-     * Returns Packs that conatins the given product in the right declinaison.
+     * Returns Packs that contains the given product in the right declinaison.
      *
      * @param int $id_item Product item id that could be contained in a|many pack(s)
      * @param int $id_attribute_item The declinaison of the product
