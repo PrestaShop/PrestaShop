@@ -26,6 +26,7 @@ const priceRuleData = new PriceRuleFaker({
   country: 'All countries',
   group: 'All groups',
   reductionType: 'Amount',
+  fromQuantity: 3,
   reduction: 20,
 });
 
@@ -96,8 +97,8 @@ describe('Enable/Disable display discounted price', async () => {
   });
 
   const tests = [
-    {args: {action: 'disable', unitPrice: false, unitDiscount: true}},
-    {args: {action: 'enable', unitPrice: true, unitDiscount: false}},
+    {args: {action: 'disable', unitPrice: false, unitDiscount: true, valueToCheck: '€24.00'}},
+    {args: {action: 'enable', unitPrice: true, unitDiscount: false, valueToCheck: '-€1.06'}},
   ];
   tests.forEach((test) => {
     it(`should ${test.args.action} display discounted price`, async function () {
@@ -124,10 +125,12 @@ describe('Enable/Disable display discounted price', async () => {
       this.pageObjects = await init();
       await this.pageObjects.homePage.changeLanguage('en');
       await this.pageObjects.homePage.goToProductPage(1);
-      const isUnitPriceVisible = await this.pageObjects.productPage.isUnitPriceVisible();
+      const isUnitPriceVisible = await this.pageObjects.productPage.isUnitPriceColumnTitle();
       await expect(isUnitPriceVisible).to.equal(test.args.unitPrice);
-      const isUnitDiscountVisible = await this.pageObjects.productPage.isUnitDiscountVisible();
+      const isUnitDiscountVisible = await this.pageObjects.productPage.isUnitDiscountColumnTitle();
       await expect(isUnitDiscountVisible).to.equal(test.args.unitDiscount);
+      const value = await this.pageObjects.productPage.getDiscountValue();
+      await expect(value).to.equal(test.args.valueToCheck);
       page = await this.pageObjects.productPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
