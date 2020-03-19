@@ -142,7 +142,7 @@ class OrderProductForViewing implements JsonSerializable
     /**
      * @var string
      */
-    private $orderInvoicestring;
+    private $orderInvoiceNumber;
 
     /**
      * @var bool
@@ -174,7 +174,7 @@ class OrderProductForViewing implements JsonSerializable
      * @param string $amountRefundableRaw
      * @param string $location
      * @param int|null $orderInvoiceId
-     * @param string $orderInvoicestring
+     * @param string $orderInvoiceNumber
      * @param string $type
      * @param bool $availableOutOfStock
      * @param array $packItems
@@ -200,7 +200,7 @@ class OrderProductForViewing implements JsonSerializable
         string $amountRefundableRaw,
         string $location,
         ?int $orderInvoiceId,
-        string $orderInvoicestring,
+        string $orderInvoiceNumber,
         string $type,
         bool $availableOutOfStock,
         array $packItems = [],
@@ -225,7 +225,7 @@ class OrderProductForViewing implements JsonSerializable
         $this->amountRefundableRaw = $amountRefundableRaw;
         $this->location = $location;
         $this->orderInvoiceId = $orderInvoiceId;
-        $this->orderInvoicestring = $orderInvoicestring;
+        $this->orderInvoiceNumber = $orderInvoiceNumber;
         $this->type = $type;
         $this->availableOutOfStock = $availableOutOfStock;
         $this->packItems = $packItems;
@@ -467,9 +467,9 @@ class OrderProductForViewing implements JsonSerializable
      *
      * @return string
      */
-    public function getOrderInvoicestring(): string
+    public function getOrderInvoiceNumber(): string
     {
-        return $this->orderInvoicestring;
+        return $this->orderInvoiceNumber;
     }
 
     /**
