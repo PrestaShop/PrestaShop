@@ -28,6 +28,7 @@ module.exports = class Product extends FOBasePage {
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
     this.discountTable = '.table-product-discounts';
     this.discountColumn = `${this.discountTable} th:nth-child(2)`;
+    this.discountValue = `${this.discountTable} td:nth-child(2)`;
   }
 
   /**
@@ -133,21 +134,29 @@ module.exports = class Product extends FOBasePage {
   }
 
   /**
-   * Is unit price visible
+   * Is unit price column title true
    * @returns {boolean}
    */
-  async isUnitPriceVisible() {
-    const isUnitPrice = (await this.getTextContent(this.discountColumn) === 'Unit price');
-    return isUnitPrice;
+  async isUnitPriceColumnTitle() {
+    const isUnitPriceColumnTitle = (await this.getTextContent(this.discountColumn) === 'Unit price');
+    return isUnitPriceColumnTitle;
   }
 
   /**
-   * Is unit discount visible
+   * Is unit discount column title true
    * @returns {Promise<boolean>}
    */
-  async isUnitDiscountVisible() {
-    const isUnitDiscount = (await this.getTextContent(this.discountColumn) === 'Unit discount');
-    return isUnitDiscount;
+  async isUnitDiscountColumnTitle() {
+    const isUnitDiscountColumnTitle = (await this.getTextContent(this.discountColumn) === 'Unit discount');
+    return isUnitDiscountColumnTitle;
+  }
+
+  /**
+   * Get discount value
+   * @returns {Promise<string>}
+   */
+  getDiscountValue() {
+    return this.getTextContent(this.discountValue);
   }
 
   /**

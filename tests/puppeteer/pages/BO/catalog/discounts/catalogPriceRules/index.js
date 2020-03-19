@@ -54,7 +54,9 @@ module.exports = class CatalogPriceRules extends BOBasePage {
    */
   async deleteCatalogPriceRule(ruleName) {
     await this.dialogListener(true);
-    if (await this.elementVisible(this.filterNameColumn)) await this.filterTableByRuleName(ruleName);
+    if (await this.elementVisible(this.filterNameColumn)) {
+      await this.filterTableByRuleName(ruleName);
+    }
     await this.waitForSelectorAndClick(this.dropdownToggleButton.replace('%ROW', 1));
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', 1));
     return this.getTextContent(this.alertSuccessBlock);
