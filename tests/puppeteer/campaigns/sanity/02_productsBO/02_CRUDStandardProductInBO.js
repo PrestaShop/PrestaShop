@@ -15,6 +15,7 @@ const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const FOProductPage = require('@pages/FO/product');
 const ProductFaker = require('@data/faker/product');
+const {DefaultFrTax} = require('@data/demo/tax');
 
 let browser;
 let page;
@@ -128,7 +129,8 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     await this.pageObjects.productsPage.filterProducts('reference', editedProductData.reference);
     const productPrice = await this.pageObjects.productsPage.getProductPriceFromList(1);
     const productPriceTTC = await this.pageObjects.productsPage.getProductPriceFromList(1, true);
-    await expect(parseFloat(productPrice)).to.equal(parseFloat((editedProductData.price / 1.2).toFixed(2)));
+    const conversionRate = (100 + parseInt(DefaultFrTax.rate, 10)) / 100;
+    await expect(parseFloat(productPrice)).to.equal(parseFloat((editedProductData.price / conversionRate).toFixed(2)));
     await expect(parseFloat(productPriceTTC)).to.equal(parseFloat(editedProductData.price));
     await this.pageObjects.productsPage.goToEditProductPage(1);
   });
