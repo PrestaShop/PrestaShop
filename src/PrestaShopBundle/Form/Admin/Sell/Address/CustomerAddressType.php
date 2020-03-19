@@ -352,9 +352,6 @@ class CustomerAddressType extends AbstractType
                     'id_country' => $countryId,
                 ]),
             ],
-            'attr' => [
-                'class' => $hideStates ? 'd-none' : '',
-            ],
         ])
         ->add('phone', TextType::class, [
             'required' => false,
