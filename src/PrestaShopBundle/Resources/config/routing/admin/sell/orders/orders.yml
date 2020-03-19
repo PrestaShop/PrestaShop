@@ -27,8 +27,10 @@ admin_orders_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:search
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
     _legacy_controller: AdminOrders
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order
+    redirectRoute: admin_orders_index
 
 admin_orders_generate_invoice_pdf:
   path: /{orderId}/generate-invoice-pdf

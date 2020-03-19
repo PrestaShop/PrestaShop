@@ -52,6 +52,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    public const GRID_ID = 'supplier';
+
     use BulkDeleteActionTrait;
 
     /**
@@ -59,7 +64,7 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'supplier';
+        return self::GRID_ID;
     }
 
     /**
@@ -202,10 +207,9 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'supplier',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_suppliers_index',
                 ])
