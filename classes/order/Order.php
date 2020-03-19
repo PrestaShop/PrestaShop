@@ -1817,6 +1817,16 @@ class OrderCore extends ObjectModel
     }
 
     /**
+     * Indicates if order has any associated payments.
+     *
+     * @return bool
+     */
+    public function hasPayments(): bool
+    {
+        return $this->getOrderPaymentCollection()->count() > 0;
+    }
+
+    /**
      * This method allows to add a payment to the current order.
      *
      * @since 1.5.0.1

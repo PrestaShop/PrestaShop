@@ -104,7 +104,7 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
 
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
-        if (!$order->hasBeenPaid()) {
+        if (!$order->hasBeenPaid() && !$order->hasPayments()) {
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::NOT_PAID,
                 'Can not perform standard refund on an order which is not paid'
@@ -150,7 +150,6 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
 
         // Update refund details (standard refund only happen for an order not delivered, so it can't return products)
         $this->refundUpdater->updateRefundData(
-            $order,
             $orderRefundSummary,
             false,
             true

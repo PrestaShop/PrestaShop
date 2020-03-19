@@ -71,7 +71,6 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 0 products "Mug Today is a good day"
     And order "bo_order_cancel_product" has status "Canceled"
 
-
   @order-cancel-product
   Scenario: Quantity is required
     Given I add order "bo_order_cancel_product" with the following details:
