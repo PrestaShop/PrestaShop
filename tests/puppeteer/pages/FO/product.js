@@ -134,21 +134,11 @@ module.exports = class Product extends FOBasePage {
   }
 
   /**
-   * Is unit price column title true
-   * @returns {boolean}
+   * Get discount column title
+   * @returns {Promise<string>}
    */
-  async isUnitPriceColumnTitle() {
-    const isUnitPriceColumnTitle = (await this.getTextContent(this.discountColumn) === 'Unit price');
-    return isUnitPriceColumnTitle;
-  }
-
-  /**
-   * Is unit discount column title true
-   * @returns {Promise<boolean>}
-   */
-  async isUnitDiscountColumnTitle() {
-    const isUnitDiscountColumnTitle = (await this.getTextContent(this.discountColumn) === 'Unit discount');
-    return isUnitDiscountColumnTitle;
+  getDiscountColumnTitle() {
+    return this.getTextContent(this.discountColumn);
   }
 
   /**

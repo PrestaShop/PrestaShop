@@ -26,9 +26,12 @@ const priceRuleData = new PriceRuleFaker({
   country: 'All countries',
   group: 'All groups',
   reductionType: 'Amount',
+  reductionTax: 'Tax included',
   fromQuantity: 3,
   reduction: 20,
 });
+const unitDiscountToCheck = '€20.00';
+const unitPriceToCheck = '€2.94';
 
 // Init objects needed
 const init = async function () {
@@ -65,7 +68,6 @@ describe('Enable/Disable display discounted price', async () => {
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.discountsLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.cartRulesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.cartRulesPage.pageTitle);
   });
@@ -92,13 +94,14 @@ describe('Enable/Disable display discounted price', async () => {
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.productSettingsLink,
     );
+    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
   });
 
   const tests = [
-    {args: {action: 'disable', unitPrice: false, unitDiscount: true, valueToCheck: '€24.00'}},
-    {args: {action: 'enable', unitPrice: true, unitDiscount: false, valueToCheck: '-€1.06'}},
+    {args: {action: 'disable', enable: false, textColumnToCheck: 'Unit discount', valueToCheck: unitDiscountToCheck}},
+    {args: {action: 'enable', enable: true, textColumnToCheck: 'Unit price', valueToCheck: unitPriceToCheck}},
   ];
   tests.forEach((test) => {
     it(`should ${test.args.action} display discounted price`, async function () {
@@ -109,28 +112,26 @@ describe('Enable/Disable display discounted price', async () => {
         baseContext,
       );
       const result = await this.pageObjects.productSettingsPage.setDisplayDiscountedPriceStatus(
-        test.args.unitPrice,
+        test.args.enable,
       );
       await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should check the existence of the \'Unit discount\' or the \'Unit price\'', async function () {
+    it('should check the existence of the unit value', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `checkUnitPrice${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
+        `checkUnitValue${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
       page = await this.pageObjects.productSettingsPage.viewMyShop();
       this.pageObjects = await init();
       await this.pageObjects.homePage.changeLanguage('en');
       await this.pageObjects.homePage.goToProductPage(1);
-      const isUnitPriceVisible = await this.pageObjects.productPage.isUnitPriceColumnTitle();
-      await expect(isUnitPriceVisible).to.equal(test.args.unitPrice);
-      const isUnitDiscountVisible = await this.pageObjects.productPage.isUnitDiscountColumnTitle();
-      await expect(isUnitDiscountVisible).to.equal(test.args.unitDiscount);
-      const value = await this.pageObjects.productPage.getDiscountValue();
-      await expect(value).to.equal(test.args.valueToCheck);
+      const columnTitle = await this.pageObjects.productPage.getDiscountColumnTitle();
+      await expect(columnTitle).to.equal(test.args.textColumnToCheck);
+      const columnValue = await this.pageObjects.productPage.getDiscountValue();
+      await expect(columnValue).to.equal(test.args.valueToCheck);
       page = await this.pageObjects.productPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
