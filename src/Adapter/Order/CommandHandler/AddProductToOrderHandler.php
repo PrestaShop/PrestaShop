@@ -137,9 +137,18 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 
-        $order->total_paid = Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
-        $order->total_paid_tax_excl = Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
-        $order->total_paid_tax_incl = Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
+        $order->total_paid = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, $totalMethod),
+            $this->context->getComputingPrecision()
+        );
+        $order->total_paid_tax_excl = Tools::ps_round(
+            (float) $cart->getOrderTotal(false, $totalMethod),
+            $this->context->getComputingPrecision()
+        );
+        $order->total_paid_tax_incl = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, $totalMethod),
+            $this->context->getComputingPrecision()
+        );
 
         if (null !== $invoice && Validate::isLoadedObject($invoice)) {
             $order->total_shipping = $invoice->total_shipping_tax_incl;
@@ -470,8 +479,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $taxCalculator = $carrier->getTaxCalculator($invoice_address);
 
         // @todo: use https://github.com/PrestaShop/decimal to compute prices and taxes
-        $invoice->total_paid_tax_excl = Tools::ps_round((float) $cart->getOrderTotal(false, $totalMethod), 2);
-        $invoice->total_paid_tax_incl = Tools::ps_round((float) $cart->getOrderTotal(true, $totalMethod), 2);
+        $invoice->total_paid_tax_excl = Tools::ps_round(
+            (float) $cart->getOrderTotal(false, $totalMethod),
+            $this->context->getComputingPrecision()
+        );
+        $invoice->total_paid_tax_incl = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, $totalMethod),
+            $this->context->getComputingPrecision()
+        );
         $invoice->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $invoice->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
         $invoice->total_shipping_tax_excl = (float) $cart->getTotalShippingCost(null, false);
@@ -517,11 +532,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $invoice->total_paid_tax_excl += Tools::ps_round(
             (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING),
-            2
+            $this->context->getComputingPrecision()
         );
         $invoice->total_paid_tax_incl += Tools::ps_round(
             (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING),
-            2
+            $this->context->getComputingPrecision()
         );
         $invoice->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $invoice->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
