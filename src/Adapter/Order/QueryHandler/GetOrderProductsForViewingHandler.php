@@ -34,6 +34,7 @@ use OrderInvoice;
 use OrderReturn;
 use OrderSlip;
 use Pack;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
@@ -214,13 +215,13 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     0,
                     $pack_item['current_stock'],
                     $packItemImagePath,
-                    Tools::ps_round(0, $computingPrecision->getPrecision($currency->precision)),
-                    Tools::ps_round(0, $computingPrecision->getPrecision($currency->precision)),
-                    0,
+                    new Number('0'),
+                    new Number('0'),
+                    new Number('0'),
                     $this->locale->formatPrice(0, $currency->iso_code),
                     0,
                     $this->locale->formatPrice(0, $currency->iso_code),
-                    0,
+                    new Number('0'),
                     $pack_item['location'],
                     null,
                     '',
