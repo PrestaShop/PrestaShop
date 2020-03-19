@@ -29,11 +29,20 @@
  */
 class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 {
+    /**
+     * @var Order
+     */
     public $order;
 
     /**
+     * @var OrderInvoice
+     */
+    public $order_invoice;
+
+    /**
      * @param OrderInvoice $order_invoice
-     * @param $smarty
+     * @param Smarty $smarty
+     * @param bool $bulk_mode
      *
      * @throws PrestaShopException
      */

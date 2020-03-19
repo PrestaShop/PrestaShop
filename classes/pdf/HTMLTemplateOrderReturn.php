@@ -29,12 +29,19 @@
  */
 class HTMLTemplateOrderReturnCore extends HTMLTemplate
 {
+    /**
+     * @var OrderReturn
+     */
     public $order_return;
+
+    /**
+     * @var Order
+     */
     public $order;
 
     /**
      * @param OrderReturn $order_return
-     * @param $smarty
+     * @param Smarty $smarty
      *
      * @throws PrestaShopException
      */
