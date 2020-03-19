@@ -71,7 +71,7 @@ module.exports = class Install extends CommonPage {
    * @return {Promise<*>}
    */
   async checkStepTitle(selector, pageTitle) {
-    await this.page.waitForSelector(selector, {visible: true});
+    await this.waitForVisibleSelector(selector, {visible: true});
     const title = await this.getTextContent(selector);
     if (Array.isArray(pageTitle)) {
       return pageTitle.some(arrVal => title.includes(arrVal));
@@ -90,7 +90,7 @@ module.exports = class Install extends CommonPage {
    * Go to next step
    */
   async nextStep() {
-    await this.page.waitForSelector(this.nextStepButton, {visible: true});
+    await this.waitForVisibleSelector(this.nextStepButton, {visible: true});
     await this.page.click(this.nextStepButton, {waitUntil: 'domcontentloaded'});
   }
 
@@ -145,17 +145,17 @@ module.exports = class Install extends CommonPage {
    */
   async isInstallationSuccessful() {
     await Promise.all([
-      this.page.waitForSelector(this.installationProgressBar, {visible: true}),
-      this.page.waitForSelector(this.generateSettingsFileStep, {visible: true}),
-      this.page.waitForSelector(this.installDatabaseStep, {visible: true, timeout: 60000}),
-      this.page.waitForSelector(this.installDefaultDataStep, {visible: true, timeout: 120000}),
-      this.page.waitForSelector(this.populateDatabaseStep, {visible: true, timeout: 180000}),
-      this.page.waitForSelector(this.configureShopStep, {visible: true, timeout: 240000}),
-      this.page.waitForSelector(this.installModulesStep, {visible: true, timeout: 360000}),
-      this.page.waitForSelector(this.installModulesAddons, {visible: true, timeout: 360000}),
-      this.page.waitForSelector(this.installThemeStep, {visible: true, timeout: 360000}),
-      this.page.waitForSelector(this.installFixturesStep, {visible: true, timeout: 360000}),
-      this.page.waitForSelector(this.finalStepPageTitle, {visible: true, timeout: 360000}),
+      this.waitForVisibleSelector(this.installationProgressBar, {visible: true}),
+      this.waitForVisibleSelector(this.generateSettingsFileStep, {visible: true}),
+      this.waitForVisibleSelector(this.installDatabaseStep, {visible: true, timeout: 60000}),
+      this.waitForVisibleSelector(this.installDefaultDataStep, {visible: true, timeout: 120000}),
+      this.waitForVisibleSelector(this.populateDatabaseStep, {visible: true, timeout: 180000}),
+      this.waitForVisibleSelector(this.configureShopStep, {visible: true, timeout: 240000}),
+      this.waitForVisibleSelector(this.installModulesStep, {visible: true, timeout: 360000}),
+      this.waitForVisibleSelector(this.installModulesAddons, {visible: true, timeout: 360000}),
+      this.waitForVisibleSelector(this.installThemeStep, {visible: true, timeout: 360000}),
+      this.waitForVisibleSelector(this.installFixturesStep, {visible: true, timeout: 360000}),
+      this.waitForVisibleSelector(this.finalStepPageTitle, {visible: true, timeout: 360000}),
     ]);
     return this.checkStepTitle(this.finalStepPageTitle, this.finalStepEnTitle);
   }
@@ -164,7 +164,7 @@ module.exports = class Install extends CommonPage {
    * Go to FO after Installation and check that Prestashop logo exist
    */
   async goToFOAfterInstall() {
-    await this.page.waitForSelector(this.discoverFoButton, {visible: true});
+    await this.waitForVisibleSelector(this.discoverFoButton, {visible: true});
     return this.openLinkWithTargetBlank(this.page, this.discoverFoButton, false);
   }
 };
