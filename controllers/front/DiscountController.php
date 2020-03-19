@@ -90,7 +90,7 @@ class DiscountControllerCore extends FrontController
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
         $breadcrumb['links'][] = [
-            'title' => $this->trans('Your vouchers', array(), 'Shop.Theme.Customeraccount'),
+            'title' => $this->trans('Your vouchers', [], 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('discount'),
         ];
 

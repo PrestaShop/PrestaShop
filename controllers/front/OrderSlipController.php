@@ -81,7 +81,7 @@ class OrderSlipControllerCore extends FrontController
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
         $breadcrumb['links'][] = [
-            'title' => $this->trans('Credit slips', array(), 'Shop.Theme.Customeraccount'),
+            'title' => $this->trans('Credit slips', [], 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('order-slip'),
         ];
 

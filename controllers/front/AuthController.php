@@ -113,14 +113,14 @@ class AuthControllerCore extends FrontController
 
         if (Tools::isSubmit('submitCreate') || Tools::isSubmit('create_account')) {
             $breadcrumb['links'][] = [
-                'title' => $this->trans('Create an account', array(), 'Shop.Theme.Customeraccount'),
+                'title' => $this->trans('Create an account', [], 'Shop.Theme.Customeraccount'),
                 'url' => $this->context->link->getPageLink('authentication'),
             ];
         } else {
             $breadcrumb['links'][] = [
-                'title' => $this->trans('Log in to your account', array(), 'Shop.Theme.Customeraccount'),
+                'title' => $this->trans('Log in to your account', [], 'Shop.Theme.Customeraccount'),
                 'url' => $this->context->link->getPageLink('authentication'),
-            ];            
+            ];
         }
 
         return $breadcrumb;
