@@ -173,7 +173,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 'visitorType' => 1,
                 'source' => 'installer',
             ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
 
