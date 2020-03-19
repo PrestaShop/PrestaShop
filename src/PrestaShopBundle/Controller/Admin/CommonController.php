@@ -37,7 +37,9 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInte
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use ReflectionClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -357,15 +359,30 @@ class CommonController extends FrameworkBundleAdminController
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
     ) {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
+        $reflectionClass = new ReflectionClass($definitionFactory);
+        $filterId = $reflectionClass->getConstant('GRID_ID');
+
+        if (false === $filterId) {
+            /** @var ControllerResponseBuilder $responseBuilder */
+            $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
+
+            return $controllerResponseBuilder->buildSearchResponse(
+                $definitionFactory,
+                $request,
+                $redirectRoute,
+                $redirectQueryParamsToKeep
+            );
+        }
+
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
         return $responseBuilder->buildSearchResponse(
             $definitionFactory,
             $request,
-            $definitionFactory::GRID_ID,
+            $filterId,
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
