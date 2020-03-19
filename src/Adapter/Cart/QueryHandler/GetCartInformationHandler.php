@@ -36,6 +36,7 @@ use Customer;
 use Language;
 use Link;
 use Message;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -134,7 +135,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency),
             (int) $currency->id,
             (int) $language->id,
-            $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
+            $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency),
             $addresses,
             $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
             $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
@@ -177,14 +178,13 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     }
 
     /**
+     * @param Cart $cart
      * @param array $legacySummary
      * @param Currency $currency
      *
      * @return CartInformation\CartRule[]
-     *
-     * @throws LocalizationException
      */
-    private function extractCartRulesFromLegacySummary(array $legacySummary, Currency $currency): array
+    private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $cartRules = [];
 
@@ -193,8 +193,18 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                \Tools::ps_round($discount['value_real'], $currency->precision),
+                (new Number((string) $discount['value_real']))->round($currency->precision),
                 (int) $discount['gift_product'] !== 0
+            );
+        }
+
+        foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
+            $cartRules[] = new CartInformation\CartRule(
+                (int) $giftRule['id_cart_rule'],
+                $giftRule['name'],
+                $giftRule['description'],
+                (new Number((string) $giftRule['value_real']))->round($currency->precision),
+                true
             );
         }
 
