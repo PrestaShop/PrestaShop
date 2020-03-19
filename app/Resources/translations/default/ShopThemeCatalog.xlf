@@ -217,11 +217,6 @@
         <target>New</target>
         <note>Line: 470</note>
       </trans-unit>
-      <trans-unit id="b0467247b81665dbd022cea14e3d553e">
-        <source>mpn</source>
-        <target>mpn</target>
-        <note>Line: 845</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Product/Search/SortOrdersCollection.php" source-language="en-US" target-language="en" datatype="plaintext">

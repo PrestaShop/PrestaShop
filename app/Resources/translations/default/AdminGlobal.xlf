@@ -2019,11 +2019,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <target>Products in pack</target>
         <note>Line: 33</note>
       </trans-unit>
-      <trans-unit id="93c2353d95de6490c3e135b3dab78137">
-        <source>Package Item</source>
-        <target>Package Item</target>
-        <note>Line: 56</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/customer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -2064,15 +2059,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Me</source>
         <target>Me</target>
         <note>Line: 50</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a44217022190f5734b2f72ba1e4f8a79">
-        <source>Card number</source>
-        <target>Card number</target>
-        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>

@@ -810,16 +810,6 @@
         <target>Mark as "pending 2" (will be answered later)</target>
         <note>Line: 312</note>
       </trans-unit>
-      <trans-unit id="119ce51409ff0ec366e67df0c852ede7">
-        <source>Message to: </source>
-        <target>Message to:</target>
-        <note>Line: 191</note>
-      </trans-unit>
-      <trans-unit id="ed96f783e467cc984e4945063760e2c4">
-        <source>Product: </source>
-        <target>Product:</target>
-        <note>Line: 199</note>
-      </trans-unit>
       <trans-unit id="24a23d787190f2c4812ff9ab11847a72">
         <source>Status:</source>
         <target>Status:</target>
