@@ -10,14 +10,12 @@ module.exports = {
    */
   async createBrowser(attempt = 1) {
     try {
-      const browser = await puppeteer.launch(global.BROWSER_CONFIG);
-      return browser;
+      return await puppeteer.launch(global.BROWSER_CONFIG);
     } catch (e) {
       if (attempt <= 3) {
         await (new Promise(resolve => setTimeout(resolve, 5000)));
         return this.createBrowser(attempt + 1);
       }
-
       throw new Error(e);
     }
   },
