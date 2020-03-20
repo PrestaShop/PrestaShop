@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Product\Command;
 use InvalidArgumentException;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -89,6 +91,10 @@ class AddProductToOrderCommand
      * @param bool $isFreeShipping
      *
      * @return self
+     *
+     * @throws InvalidProductQuantityException
+     * @throws InvalidAmountException
+     * @throws OrderException
      */
     public static function withNewInvoice(
         int $orderId,
@@ -125,6 +131,10 @@ class AddProductToOrderCommand
      * @param int $productQuantity
      *
      * @return self
+     *
+     * @throws InvalidProductQuantityException
+     * @throws InvalidAmountException
+     * @throws OrderException
      */
     public static function toExistingInvoice(
         int $orderId,
@@ -156,6 +166,10 @@ class AddProductToOrderCommand
      * @param string $productPriceTaxIncluded
      * @param string $productPriceTaxExcluded
      * @param int $productQuantity
+     *
+     * @throws InvalidProductQuantityException
+     * @throws InvalidAmountException
+     * @throws OrderException
      */
     private function __construct(
         int $orderId,
@@ -174,7 +188,7 @@ class AddProductToOrderCommand
         } catch (InvalidArgumentException $e) {
             throw new InvalidAmountException();
         }
-        $this->productQuantity = $productQuantity;
+        $this->setProductQuantity($productQuantity);
     }
 
     /**
@@ -239,5 +253,18 @@ class AddProductToOrderCommand
     public function isFreeShipping()
     {
         return $this->isFreeShipping;
+    }
+
+    /**
+     * @param int $productQuantity
+     *
+     * @throws InvalidProductQuantityException
+     */
+    private function setProductQuantity(int $productQuantity): void
+    {
+        if ($productQuantity <= 0) {
+            throw new InvalidProductQuantityException('When adding a product quantity must be strictly positive');
+        }
+        $this->productQuantity = $productQuantity;
     }
 }
