@@ -946,11 +946,6 @@ Comment: voluntary do affectation here</note>
         <target>Accessories (x,y,z...)</target>
         <note>Line: 175</note>
       </trans-unit>
-      <trans-unit id="294598238a4d88a9920c7e6fba9bb843">
-        <source>MPN</source>
-        <target>MPN</target>
-        <note>Line: 76</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Import/EntityField/Provider/StoreContactFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
