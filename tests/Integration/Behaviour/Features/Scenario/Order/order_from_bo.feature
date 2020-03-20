@@ -161,6 +161,17 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
   @order-from-bo
+  Scenario: Add product with quantity higher than stock is forbidden
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1500                    |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then I should get error that product is out of stock
+    Then order "bo_order1" should contain 0 products "Mug Today is a good day"
+
+  @order-from-bo
   Scenario: Update product in order
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 3                       |
