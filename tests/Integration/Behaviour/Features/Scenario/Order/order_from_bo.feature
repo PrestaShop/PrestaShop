@@ -182,12 +182,12 @@ Feature: Order from Back Office (BO)
     Then I should get error that product quantity is invalid
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2    |
-      | product_price               | 11.9 |
-      | unit_price_tax_incl         | 11.9 |
-      | unit_price_tax_excl         | 11.9 |
-      | total_price_tax_incl        | 23.8 |
-      | total_price_tax_excl        | 23.8 |
+      | product_quantity            | 2      |
+      | product_price               | 11.9   |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.9   |
+      | total_price_tax_incl        | 25.228 |
+      | total_price_tax_excl        | 23.8   |
 
   @order-from-bo
   Scenario: Update product in order with negative quantity is forbidden
@@ -197,12 +197,12 @@ Feature: Order from Back Office (BO)
     Then I should get error that product quantity is invalid
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
-      | product_quantity            | 2    |
-      | product_price               | 11.9 |
-      | unit_price_tax_incl         | 11.9 |
-      | unit_price_tax_excl         | 11.9 |
-      | total_price_tax_incl        | 23.8 |
-      | total_price_tax_excl        | 23.8 |
+      | product_quantity            | 2      |
+      | product_price               | 11.9   |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.9   |
+      | total_price_tax_incl        | 25.228 |
+      | total_price_tax_excl        | 23.8   |
 
   @order-from-bo
   Scenario: Generating invoice for Order
