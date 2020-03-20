@@ -310,7 +310,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      * @When I delete voucher :voucherCode from cart :cartReference
      *
      * @param string $voucherCode
-     * @param string $productName
      * @param string $cartReference
      */
     public function deleteGiftCartRule(string $voucherCode, string $cartReference)
@@ -326,17 +325,11 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartDoesNotContainProduct(string $cartReference, string $productName)
     {
-        $productId = (int) $this->getSharedStorage()->get($productName);
-        $cartInfo = $this->getCartInformationByReference($cartReference);
-
-        /** @var CartInformation\CartProduct $cartProduct */
-        foreach ($cartInfo->getProducts() as $cartProduct) {
-            if ($cartProduct->getProductId() === $productId) {
-                throw new RuntimeException(sprintf(
-                    'Expected cart not to contain product %s, but it was found in cart',
-                    $productName
-                ));
-            }
+        if ($this->productIsInCart($cartReference, $productName)) {
+            throw new RuntimeException(sprintf(
+                'Expected cart not to contain product %s, but it was found in cart',
+                $productName
+            ));
         }
     }
 
@@ -349,19 +342,37 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartContainsProduct(string $cartReference, string $productName)
     {
+        if (!$this->productIsInCart($cartReference, $productName)) {
+            throw new RuntimeException(sprintf(
+                'Expected cart to contain product %s, but it was not found',
+                $productName
+            ));
+        }
+    }
+
+    /**
+     * @Then cart :cartReference should not contain product :productName unless it is a gift
+     *
+     * @param string $cartReference
+     * @param string $productName
+     */
+    public function assertCartContainsOnlyGiftProduct(string $cartReference, string $productName)
+    {
         $productId = (int) $this->getSharedStorage()->get($productName);
         $cartInfo = $this->getCartInformationByReference($cartReference);
 
         foreach ($cartInfo->getProducts() as $cartProduct) {
-            if ($cartProduct->getProductId() === $productId) {
-                return;
+            if ($cartProduct->getProductId() !== $productId) {
+                continue;
+            }
+
+            if (!$cartProduct->isGift()) {
+                throw new RuntimeException(sprintf(
+                    'Cart contains product #%s, but it is not a gift',
+                    $productName
+                ));
             }
         }
-
-        throw new RuntimeException(sprintf(
-            'Expected cart to contain product %s, but it was not found',
-            $productName
-        ));
     }
 
     /**
@@ -380,9 +391,11 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CartInformation\CartProduct $cartProduct */
         foreach ($cartInfo->getProducts() as $cartProduct) {
-            if ($cartProduct->getProductId() === $productId) {
-                $matchingProducts[] = $cartProduct;
+            if ($cartProduct->getProductId() !== $productId) {
+                continue;
             }
+
+            $matchingProducts[] = $cartProduct;
         }
 
         if (!empty($matchingProducts)) {
@@ -432,6 +445,26 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 }
             }
         }
+    }
+
+    /**
+     * @param string $cartReference
+     * @param string $productName
+     *
+     * @return bool
+     */
+    private function productIsInCart(string $cartReference, string $productName): bool
+    {
+        $productId = (int) $this->getSharedStorage()->get($productName);
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+
+        foreach ($cartInfo->getProducts() as $cartProduct) {
+            if ($cartProduct->getProductId() === $productId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
