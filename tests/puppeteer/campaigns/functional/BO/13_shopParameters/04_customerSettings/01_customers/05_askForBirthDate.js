@@ -62,7 +62,10 @@ describe('Enable/Disable ask for birth date ', async () => {
   tests.forEach((test) => {
     it(`should ${test.args.action} ask for birth date`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AskForBirthDate`, baseContext);
-      const result = await this.pageObjects.customerSettingsPage.setAskForBirthDate(test.args.enable);
+      const result = await this.pageObjects.customerSettingsPage.setOptionStatus(
+        'Ask for birth date',
+        test.args.enable,
+      );
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 

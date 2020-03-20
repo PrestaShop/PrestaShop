@@ -62,7 +62,7 @@ describe('Enable B2B mode', async () => {
   tests.forEach((test) => {
     it(`should ${test.args.action} B2B mode`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}B2BMode`, baseContext);
-      const result = await this.pageObjects.customerSettingsPage.setB2BModeStatus(test.args.enable);
+      const result = await this.pageObjects.customerSettingsPage.setOptionStatus('B2B mode', test.args.enable);
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 

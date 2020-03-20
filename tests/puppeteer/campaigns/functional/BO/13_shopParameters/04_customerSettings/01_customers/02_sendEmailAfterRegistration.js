@@ -86,7 +86,10 @@ describe('Enable/Disable send an email after registration', async () => {
 
     it(`should ${test.args.action} send an email after registration`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}SendEmail`, baseContext);
-      const result = await this.pageObjects.customerSettingsPage.setEmailAfterRegistrationStatus(test.args.enable);
+      const result = await this.pageObjects.customerSettingsPage.setOptionStatus(
+        'Email after registration',
+        test.args.enable,
+      );
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 

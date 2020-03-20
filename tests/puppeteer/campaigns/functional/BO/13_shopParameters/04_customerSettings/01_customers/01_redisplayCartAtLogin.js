@@ -77,7 +77,10 @@ describe('Enable/Disable re-display cart at login', async () => {
         `${test.args.action}RedisplayCartAtLogin`,
         baseContext,
       );
-      const result = await this.pageObjects.customerSettingsPage.setRedisplayCartAtLoginStatus(test.args.enable);
+      const result = await this.pageObjects.customerSettingsPage.setOptionStatus(
+        'Redisplay cart at login',
+        test.args.enable,
+      );
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 
