@@ -55,37 +55,6 @@ module.exports = class AddProduct extends BOBasePage {
     this.friendlyUrlInput = '#form_step5_link_rewrite_1';
   }
 
-  /*
-  Methods
-   */
-  /**
-   * Set Name, type of product, Reference, price ttc, description and short description
-   * @param productData
-   * @return {Promise<void>}
-   */
-  async createEditProduct(productData, switchProductOnline = true) {
-    // Set Name, type of product, Reference, price ttc and quantity, and with combinations
-    await this.page.click(this.productNameInput, {clickCount: 3});
-    await this.page.type(this.productNameInput, productData.name);
-    await this.selectByVisibleText(this.productTypeSelect, productData.type);
-    await this.page.click(this.productReferenceInput, {clickCount: 3});
-    await this.page.type(this.productReferenceInput, productData.reference);
-    await this.page.click(this.productPriceTtcInput, {clickCount: 3});
-    await this.page.type(this.productPriceTtcInput, productData.price.toString());
-    // Set description value
-    await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
-    // Set short description value
-    >>>>>>> 6e1c4a49a8c9306cf837978cda09560550e5d41b
-    await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
-    await this.selectByVisibleText(this.productTypeSelect, productData.type);
-    await this.setValue(this.productReferenceInput, productData.reference);
-    if (await this.elementVisible(this.productQuantityInput, 500)) {
-      await this.setValue(this.productQuantityInput, productData.quantity.toString());
-    }
-    await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
-    await this.setValue(this.productPriceTtcInput, productData.price.toString());
-  }
-  
   async setBasicSetting(productData) {
     await this.setValue(this.productNameInput, productData.name);
     await this.page.click(this.productDescriptionTab);

@@ -111,7 +111,7 @@
         this.filters = {};
       },
       resetPagination() {
-          this.$store.dispatch('updatePageIndex', FIRST_PAGE);
+        this.$store.dispatch('updatePageIndex', FIRST_PAGE);
       },
       onLowStockChecked(isChecked) {
         this.filters = {...this.filters, low_stock: isChecked};
