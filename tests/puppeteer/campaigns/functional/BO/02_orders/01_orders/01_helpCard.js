@@ -37,7 +37,7 @@ describe('Helper card in order page', async () => {
     await helper.closeBrowser(browser);
   });
 
-  // Login into BO and go to Pages page
+  // Login into BO and go to orders page
   loginCommon.loginBO();
 
   it('should go to orders page', async function () {
