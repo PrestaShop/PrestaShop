@@ -59,9 +59,15 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $routeName
+     * @param Route $route
+     *
+     * @return AdminSecurity
+     *
+     * @throws \ReflectionException
+     * @throws LinterException
      */
-    public function lint($routeName, Route $route)
+    public function getRouteSecurityAnnotation($routeName, Route $route)
     {
         $controllerAndMethod = $this->extractControllerAndMethodNamesFromRoute($route);
 
@@ -75,6 +81,16 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
         if (null === $annotation) {
             throw new LinterException(sprintf('"%s:%s" does not have AdminSecurity annotation configured', $controllerAndMethod['controller'], $controllerAndMethod['method']));
         }
+
+        return $annotation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function lint($routeName, Route $route)
+    {
+        $this->getRouteSecurityAnnotation($routeName, $route);
     }
 
     /**
