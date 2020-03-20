@@ -157,6 +157,10 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $order->total_shipping = $invoice->total_shipping_tax_incl;
             $order->total_shipping_tax_incl = $invoice->total_shipping_tax_incl;
             $order->total_shipping_tax_excl = $invoice->total_shipping_tax_excl;
+
+            $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
+            $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
+            $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
         }
 
         // discount
@@ -499,15 +503,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $invoice->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
         $invoice->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
         $invoice->shipping_tax_computation_method = (int) $taxCalculator->computation_method;
-
-        // Update current order field, only shipping because other field is updated later
-        $order->total_shipping += $invoice->total_shipping_tax_incl;
-        $order->total_shipping_tax_excl += $invoice->total_shipping_tax_excl;
-        $order->total_shipping_tax_incl += $invoice->total_shipping_tax_incl;
-
-        $order->total_wrapping += abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
-        $order->total_wrapping_tax_excl += abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING));
-        $order->total_wrapping_tax_incl += abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING));
         $invoice->add();
 
         $invoice->saveCarrierTaxCalculator($taxCalculator->getTaxesAmount($invoice->total_shipping_tax_excl));
@@ -535,16 +530,16 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $precision = $this->getPrecisionFromCart($cart);
         $invoice = new OrderInvoice($orderInvoiceId);
 
-        $invoice->total_paid_tax_excl += Tools::ps_round(
+        $invoice->total_paid_tax_excl = Tools::ps_round(
             (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING),
             $precision
         );
-        $invoice->total_paid_tax_incl += Tools::ps_round(
+        $invoice->total_paid_tax_incl = Tools::ps_round(
             (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING),
             $precision
         );
-        $invoice->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-        $invoice->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+        $invoice->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+        $invoice->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 
         $invoice->update();
 
