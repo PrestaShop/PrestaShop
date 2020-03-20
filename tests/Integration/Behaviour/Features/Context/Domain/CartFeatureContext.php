@@ -276,15 +276,16 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartRule->gift_product = $productId;
 
         $this->addCartRule($cartRule);
+        $cartRuleId = (int) $cartRule->id;
 
         $this->getCommandBus()->handle(
             new AddCartRuleToCartCommand(
                 SharedStorage::getStorage()->get($cartReference),
-                $cartRule->id
+                $cartRuleId
             )
         );
 
-        $this->getSharedStorage()->set($voucherCode, $cartRule->id);
+        $this->getSharedStorage()->set($voucherCode, $cartRuleId);
         $this->getSharedStorage()->set($giftProductName, $productId);
     }
 
@@ -330,6 +331,24 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 'Expected cart not to contain product %s, but it was found in cart',
                 $productName
             ));
+        }
+    }
+
+    /**
+     * @Then voucher :voucherCode should not be applied to cart :cartReference
+     */
+    public function assertCartRuleIsNotAppliedToCart(string $voucherCode, string $cartReference)
+    {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
+
+        foreach ($cartInfo->getCartRules() as $cartRule) {
+            if ($cartRule->getCartRuleId() === $cartRuleId) {
+                throw new RuntimeException(sprintf(
+                    'Voucher %s is applied to cart',
+                    $voucherCode
+                ));
+            }
         }
     }
 
