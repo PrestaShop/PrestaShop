@@ -128,6 +128,7 @@ export default {
   },
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
+  orderDiscountsTotalContainer: '#order-discounts-total-container',
   orderDiscountsTotal: '#orderDiscountsTotal',
   orderWrappingTotal: '#orderWrappingTotal',
   orderShippingTotal: '#orderShippingTotal',
