@@ -25,7 +25,7 @@ const init = async function () {
     ordersPage: new OrdersPage(page),
   };
 };
-
+// Check help card language in orders page
 describe('Helper card in order page', async () => {
   // before and after functions
   before(async function () {
