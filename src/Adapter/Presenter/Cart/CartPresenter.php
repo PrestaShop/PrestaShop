@@ -563,6 +563,8 @@ class CartPresenter implements PresenterInterface
                     $selected_products = $cartVoucher['obj']->checkProductRestrictionsFromCart($cart, true);
                     if (is_array($selected_products)) {
                         foreach ($products as $key => $product) {
+                            // Check if product is in selected product for applying the voucher
+                            // Check if voucher applies on already discounted products (and if it applies)
                             if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
                                     || in_array($product['id_product'] . '-0', $selected_products))
                                 && (($cartVoucher['reduction_exclude_special'] && !$product['reduction_applies'])
