@@ -38,7 +38,7 @@ module.exports = class Order extends BOBasePage {
   async filterOrders(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value.toString());
         break;
       case 'select':
         await this.selectByVisibleText(this.filterColumn.replace('%FILTERBY', filterBy), value);
