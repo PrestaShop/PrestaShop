@@ -38,7 +38,7 @@ export default class OrderPricesRefresher {
       .then((response) => {
         $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
         $(OrderViewPageMap.orderDiscountsTotal).text(response.discountsAmountFormatted);
-        $(OrderViewPageMap.orderDiscountsTotal).parent().toggleClass('d-none', !response.discountsAmountDisplayed);
+        $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
         $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
         $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
         $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
