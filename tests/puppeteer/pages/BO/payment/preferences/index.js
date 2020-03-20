@@ -23,12 +23,14 @@ module.exports = class Preferences extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setCurrencyRestriction(paymentModule, valueWanted) {
-    await this.waitForVisibleSelector(this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule));
+    await this.waitForVisibleSelector(
+      `${this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule)} + i`,
+    );
     const isCheckboxSelected = await this.isCheckboxSelected(
       this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule),
     );
     if (valueWanted !== isCheckboxSelected) {
-      await this.page.click(`${this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule)}+ i`);
+      await this.page.click(`${this.euroCurrencyRestrictionsCheckbox.replace('%PAYMENTMODULE', paymentModule)} + i`);
     }
     await this.page.click(this.currencyRestrictionsSaveButton);
     return this.getTextContent(this.alertSuccessBlock);
