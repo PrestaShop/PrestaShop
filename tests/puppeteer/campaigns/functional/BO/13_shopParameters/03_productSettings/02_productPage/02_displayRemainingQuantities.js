@@ -75,7 +75,7 @@ describe('Test display remaining quantities', async () => {
   it('should go to create product page and create a product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const validationMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+    const validationMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
     await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 

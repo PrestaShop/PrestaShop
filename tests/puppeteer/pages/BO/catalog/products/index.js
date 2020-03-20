@@ -22,6 +22,7 @@ module.exports = class Product extends BOBasePage {
     this.dropdownToggleButton = `${this.productRow}:nth-of-type(%ROW) button.dropdown-toggle`;
     this.dropdownMenu = `${this.productRow}:nth-of-type(%ROW) div.dropdown-menu`;
     this.dropdownMenuDeleteLink = `${this.dropdownMenu} a.product-edit[onclick*='delete']`;
+    this.productRowEditLink = `${this.productRow}:nth-of-type(%ROW) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
@@ -44,6 +45,7 @@ module.exports = class Product extends BOBasePage {
     this.productsListTableColumnReference = `${this.productsListTableRow} td:nth-child(5)`;
     this.productsListTableColumnCategory = `${this.productsListTableRow} td:nth-child(6)`;
     this.productsListTableColumnPrice = `${this.productsListTableRow} td:nth-child(7)`;
+    this.productsListTableColumnPriceTTC = `${this.productsListTableRow} td:nth-child(8)`;
     this.productsListTableColumnQuantity = `${this.productsListTableRow} td.product-sav-quantity`;
     this.productsListTableColumnStatus = `${this.productsListTableRow} td:nth-child(10)`;
     this.productsListTableColumnStatusEnabled = `${this.productsListTableColumnStatus} .action-enabled`;
@@ -132,11 +134,13 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get Product Price
-   * @param row
+   * @param {int} row
+   * @param {boolean} withTaxes
    * @return Float
    */
-  async getProductPriceFromList(row) {
-    const text = await this.getTextContent(this.productsListTableColumnPrice.replace('%ROW', row));
+  async getProductPriceFromList(row, withTaxes) {
+    const selector = withTaxes ? this.productsListTableColumnPriceTTC : this.productsListTableColumnPrice;
+    const text = await this.getTextContent(selector.replace('%ROW', row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
     return parseFloat(price);
   }
@@ -265,6 +269,14 @@ module.exports = class Product extends BOBasePage {
   }
 
   /**
+   * Get number of products displayed on the page
+   * @return integer
+   */
+  async getNumberOfProductsOnPage() {
+    return (await this.page.$$(this.productRow)).length;
+  }
+
+  /**
    * Reset input filters
    * @return {Promise<void>}
    */
@@ -315,9 +327,8 @@ module.exports = class Product extends BOBasePage {
     await this.page.click(this.filterByCategoriesButton);
     await this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
     await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
       this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='false']`),
-      this.page.click(this.filterByCategoriesUnselectButton),
+      this.clickAndWaitForNavigation(this.filterByCategoriesUnselectButton),
     ]);
   }
 
@@ -330,6 +341,15 @@ module.exports = class Product extends BOBasePage {
   }
 
   /**
+   * GOTO edit product page from row
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToEditProductPage(row) {
+    await this.clickAndWaitForNavigation(this.productRowEditLink.replace('%ROW', row));
+  }
+
+  /**
    * Delete product with dropdown Menu
    * @param productData
    * @return {Promise<textContent>}
@@ -339,18 +359,14 @@ module.exports = class Product extends BOBasePage {
     await this.filterProducts('reference', productData.reference);
     // Then delete first product and only product shown
     await Promise.all([
-      this.page.waitForSelector(`${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', '1')),
-      this.page.click(this.dropdownToggleButton.replace('%ROW', '1')),
+      this.page.waitForSelector(`${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', 1)),
+      this.page.click(this.dropdownToggleButton.replace('%ROW', 1)),
     ]);
     await Promise.all([
       this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
-      this.page.click(this.dropdownMenuDeleteLink.replace('%ROW', '1')),
+      this.page.click(this.dropdownMenuDeleteLink.replace('%ROW', 1)),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.modalDialogDeleteNowButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -362,21 +378,17 @@ module.exports = class Product extends BOBasePage {
     // Then delete first product and only product shown
     await Promise.all([
       this.page.waitForSelector(this.productBulkMenuButton, {visible: true}),
-      this.page.click(this.selectAllBulkCheckboxLabel.replace('%ROW', '1')),
+      this.page.click(this.selectAllBulkCheckboxLabel.replace('%ROW', 1)),
     ]);
     await Promise.all([
       this.page.waitForSelector(`${this.productBulkMenuButton}[aria-expanded='true']`, {visible: true}),
-      this.page.click(this.productBulkMenuButton.replace('%ROW', '1')),
+      this.page.click(this.productBulkMenuButton.replace('%ROW', 1)),
     ]);
     await Promise.all([
       this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
-      this.page.click(this.productBulkDeleteLink.replace('%ROW', '1')),
+      this.page.click(this.productBulkDeleteLink.replace('%ROW', 1)),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.modalDialogDeleteNowButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -399,15 +411,9 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
-    if (await this.getToggleColumnValue(row) !== valueWanted) {
-      this.page.click(this.productsListTableColumnStatus.replace('%ROW', row));
-      if (valueWanted) {
-        await this.page.waitForSelector(this.productsListTableColumnStatusEnabled.replace('%ROW', row));
-      } else {
-        await this.page.waitForSelector(
-          this.productsListTableColumnStatusDisabled.replace('%ROW', row),
-        );
-      }
+    const actualValue = await this.getToggleColumnValue(row);
+    if (actualValue !== valueWanted) {
+      await this.clickAndWaitForNavigation(this.productsListTableColumnStatus.replace('%ROW', row));
       return true;
     }
     return false;
@@ -419,10 +425,8 @@ module.exports = class Product extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToProductPage(row = 1) {
-    await Promise.all([
-      this.waitForSelectorAndClick(this.productsListTableColumnName.replace('%ROW', row)),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.page.waitForSelector(this.productsListTableColumnName.replace('%ROW', row), {visible: true});
+    await this.clickAndWaitForNavigation(this.productsListTableColumnName.replace('%ROW', row));
   }
 
   /* Sort methods */

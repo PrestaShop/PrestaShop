@@ -18,7 +18,10 @@ module.exports = class Checkout extends FOBasePage {
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
+    this.createAccountOptionalNotice = `${this.personalInformationStepForm} #customer-form section p`;
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
+    this.checkoutGuestForm = '#checkout-guest-form';
+    this.checkoutGuestPasswordInput = `${this.checkoutGuestForm} input[name='password']`;
     // Checkout login form
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
@@ -115,5 +118,21 @@ module.exports = class Checkout extends FOBasePage {
     await this.setValue(this.emailInput, customer.email);
     await this.setValue(this.passwordInput, customer.password);
     await this.clickAndWaitForNavigation(this.personalInformationContinueButton);
+  }
+
+  /**
+   * Is create account notice visible
+   * @returns {boolean}
+   */
+  isCreateAnAccountNoticeVisible() {
+    return this.elementVisible(this.createAccountOptionalNotice, 1000);
+  }
+
+  /**
+   * Is password input required
+   * @returns {boolean}
+   */
+  isPasswordRequired() {
+    return this.elementVisible(`${this.checkoutGuestPasswordInput}:required`, 1000);
   }
 };

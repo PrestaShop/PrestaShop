@@ -59,6 +59,8 @@
   import Search from './header/search';
   import LowFilter from './header/filters/low-filter';
 
+  const FIRST_PAGE = 1;
+
   export default {
     name: 'App',
     computed: {
@@ -97,14 +99,19 @@
       },
       onSearch(keywords) {
         this.$store.dispatch('updateKeywords', keywords);
+        this.resetPagination();
         this.fetch();
       },
       applyFilter(filters) {
         this.filters = filters;
+        this.resetPagination();
         this.fetch();
       },
       resetFilters() {
         this.filters = {};
+      },
+      resetPagination() {
+          this.$store.dispatch('updatePageIndex', FIRST_PAGE);
       },
       onLowStockChecked(isChecked) {
         this.filters = {...this.filters, low_stock: isChecked};

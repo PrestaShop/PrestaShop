@@ -165,6 +165,9 @@ class AdminReturnControllerCore extends AdminController
         // Prepare customer explanation for display
         $this->object->question = '<span class="normal-text">' . nl2br($this->object->question) . '</span>';
 
+        $parameters = ['vieworder' => 1, 'id_order' => (int) $order->id];
+        $orderUrl = $this->context->link->getAdminLink('AdminOrders', true, [], $parameters);
+
         $this->tpl_form_vars = [
             'customer' => new Customer($this->object->id_customer),
             'url_customer' => $this->context->link->getAdminLink('AdminCustomers', true, [], [
@@ -179,7 +182,7 @@ class AdminReturnControllerCore extends AdminController
                 ],
                 'Admin.Orderscustomers.Feature'
             ),
-            'url_order' => 'index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder&token=' . Tools::getAdminToken('AdminOrders' . (int) Tab::getIdFromClassName('AdminOrders') . (int) $this->context->employee->id),
+            'url_order' => $orderUrl,
             'picture_folder' => _THEME_PROD_PIC_DIR_,
             'returnedCustomizations' => $returned_customizations,
             'customizedDatas' => Product::getAllCustomizedDatas((int) ($order->id_cart)),

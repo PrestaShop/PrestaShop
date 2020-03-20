@@ -33,11 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageExcepti
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderMessageGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderMessageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,31 +73,6 @@ class OrderMessageController extends FrameworkBundleAdminController
             ],
             'orderMessageGrid' => $this->presentGrid($grid),
         ]);
-    }
-
-    /**
-     * Prepares filtering response
-     *
-     * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_order_messages_index"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function filterAction(Request $request): RedirectResponse
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.order_message'),
-            $request,
-            OrderMessageGridDefinitionFactory::GRID_ID,
-            'admin_order_messages_index'
-        );
     }
 
     /**

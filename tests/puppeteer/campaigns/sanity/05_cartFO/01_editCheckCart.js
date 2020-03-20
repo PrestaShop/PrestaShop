@@ -97,21 +97,21 @@ describe('Check Cart in FO', async () => {
 
   it('should check the first product details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetail1', baseContext);
-    const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    const result = await this.pageObjects.cartPage.getProductDetail(1);
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity).to.be.true,
+      expect(result.name).to.equal(CartData.customCartData.firstProduct.name),
+      expect(result.price).to.equal(CartData.customCartData.firstProduct.price),
+      expect(result.quantity).to.equal(CartData.customCartData.firstProduct.quantity),
     ]);
   });
 
   it('should check the second product details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetail2', baseContext);
-    const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.secondProduct, '2');
+    const result = await this.pageObjects.cartPage.getProductDetail(2);
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity).to.be.true,
+      expect(result.name).to.equal(CartData.customCartData.secondProduct.name),
+      expect(result.price).to.equal(CartData.customCartData.secondProduct.price),
+      expect(result.quantity).to.equal(CartData.customCartData.secondProduct.quantity),
     ]);
   });
 

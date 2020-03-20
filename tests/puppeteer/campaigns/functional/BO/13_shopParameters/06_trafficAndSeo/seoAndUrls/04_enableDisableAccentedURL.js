@@ -20,9 +20,9 @@ const baseContext = 'functional_BO_shopParams_TrafficAndSeo_seoAndUrls_enableDis
 
 let browser;
 let page;
-const productName = 'testURLé';
-const productNameWithoutAccent = 'testURLe';
-const productData = new ProductFaker({name: productName, type: 'Standard product', productHasCombinations: false});
+const productName = 'TESTURLÉ';
+const productNameWithoutAccent = 'TESTURLE';
+const productData = new ProductFaker({name: productName, type: 'Standard product'});
 
 // Init objects needed
 const init = async function () {
@@ -65,7 +65,7 @@ describe('Enable/Disable accented URL', async () => {
   it('should create a product that the name contains accented characters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createAccentedCharsProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+    const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
@@ -120,7 +120,6 @@ describe('Enable/Disable accented URL', async () => {
       await this.pageObjects.productsPage.goToProductPage(1);
       const pageTitle = await this.pageObjects.addProductPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addProductPage.pageTitle);
-      await this.pageObjects.addProductPage.goToFormStep(5);
       await this.pageObjects.addProductPage.resetURL();
     });
 

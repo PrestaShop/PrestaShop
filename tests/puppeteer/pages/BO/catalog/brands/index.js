@@ -40,7 +40,14 @@ module.exports = class Brands extends BOBasePage {
     this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
     this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
 
+    // Grid Actions
+    this.gridActionButton = '#%TABLE-grid-actions-button';
+    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'%TABLE-grid-actions-button\']';
+    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+
     // Brands list Selectors
+    this.brandsTableColumnLogoImg = `${this.tableColumn
+      .replace('%TABLE', 'manufacturer').replace('%COLUMN', 'logo')} img`;
     this.brandsTableEnableColumn = `${this.tableColumn
       .replace('%TABLE', 'manufacturer').replace('%COLUMN', 'active')}`;
     this.brandsEnableColumnValidIcon = `${this.brandsTableEnableColumn} i.grid-toggler-icon-valid`;
@@ -362,6 +369,31 @@ module.exports = class Brands extends BOBasePage {
   }
 
   /**
+   * Get logo link from brands table row
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getLogoLinkFromBrandsTable(row) {
+    return this.getAttributeContent(this.brandsTableColumnLogoImg.replace('%ROW', row), 'src');
+  }
+
+  /**
+   * Get all information from categories table
+   * @param row
+   * @return {Promise<{object}>}
+   */
+  async getBrandFromTable(row) {
+    return {
+      id: await this.getTextColumnFromTableBrands(row, 'id_manufacturer'),
+      logo: await this.getLogoLinkFromBrandsTable(row),
+      name: await this.getTextColumnFromTableBrands(row, 'name'),
+      addresses: await this.getTextColumnFromTableBrands(row, 'addresses_count'),
+      products: await this.getTextColumnFromTableBrands(row, 'products_count'),
+      status: await this.getToggleColumnValue(row),
+    };
+  }
+
+  /**
    * get text from a column from table addresses
    * @param row
    * @param column
@@ -464,5 +496,53 @@ module.exports = class Brands extends BOBasePage {
    */
   getAlertTextMessage() {
     return this.getTextContent(this.alertTextBlock);
+  }
+
+  // Export methods
+  /**
+   * Click on lint to export categories to a csv file
+   * @param table, which table to export
+   * @return {Promise<void>}
+   */
+  async exportDataToCsv(table) {
+    await Promise.all([
+      this.page.click(this.gridActionButton.replace('%TABLE', table)),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu.replace('%TABLE', table)}.show`, {visible: true}),
+    ]);
+    await Promise.all([
+      this.page.click(this.gridActionExportLink.replace('%TABLE', table)),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu.replace('%TABLE', table)}.show`, {hidden: true}),
+    ]);
+  }
+
+  /**
+   * Export brands data to csv file
+   * @return {Promise<void>}
+   */
+  async exportBrandsDataToCsv() {
+    return this.exportDataToCsv('manufacturer');
+  }
+
+  /**
+   * Export brand addresses data to csv file
+   * @return {Promise<void>}
+   */
+  async exportAddressesDataToCsv() {
+    return this.exportDataToCsv('manufacturer_address');
+  }
+
+  /**
+   * Get category from table in csv format
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getBrandInCsvFormat(row) {
+    const brand = await this.getBrandFromTable(row);
+    return `${brand.id};`
+      + `${brand.logo};`
+      + `"${brand.name}";`
+      + `${brand.addresses};`
+      + `${brand.products};`
+      + `${brand.status ? 1 : 0}`;
   }
 };

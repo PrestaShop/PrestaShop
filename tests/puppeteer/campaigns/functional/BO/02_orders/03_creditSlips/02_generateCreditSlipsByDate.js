@@ -33,7 +33,7 @@ const today = new Date();
 today.setFullYear(today.getFullYear() + 1);
 const futureDate = today.toISOString().slice(0, 10);
 const creditSlipsFileName = 'order-slips.pdf';
-const creditSlipDocumentName = 'Credit Slip';
+const creditSlipDocumentName = 'Credit slip';
 
 // Init objects needed
 const init = async function () {
@@ -132,7 +132,7 @@ describe('Generate Credit slip file by date', async () => {
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should add a partial refund', async function () {

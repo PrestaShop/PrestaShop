@@ -64,6 +64,7 @@ describe('Generate PDF file by status', async () => {
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.ordersLink,
         );
+        await this.pageObjects.boBasePage.closeSfToolBar();
         const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
       });
@@ -78,7 +79,7 @@ describe('Generate PDF file by status', async () => {
       it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index + 1}`, baseContext);
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(orderToEdit.args.status);
-        await expect(result).to.be.true;
+        await expect(result).to.equal(orderToEdit.args.status);
       });
     });
   });

@@ -93,7 +93,6 @@ describe('Test enable/disable tax breakdown', async () => {
     }));
     const productToCreate = {
       type: 'Standard product',
-      productHasCombinations: false,
       taxRule: taxRuleGroupToCreate.name,
     };
     productData = await (new ProductFaker(productToCreate));
@@ -193,7 +192,7 @@ describe('Test enable/disable tax breakdown', async () => {
       it('should create Product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
         await this.pageObjects.productsPage.goToAddProductPage();
-        const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+        const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
         await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
       });
     });
@@ -251,7 +250,7 @@ describe('Test enable/disable tax breakdown', async () => {
       it(`should change the order status to '${Statuses.paymentAccepted.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatusTaxBreakdown', baseContext);
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.paymentAccepted.status);
-        await expect(result).to.be.true;
+        await expect(result).to.equal(Statuses.paymentAccepted.status);
       });
 
       it('should download the invoice', async function () {
