@@ -40,18 +40,22 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     public $order_invoice;
 
     /**
+     * @var bool
+     */
+    public $available_in_your_account = false;
+
+    /**
      * @param OrderInvoice $order_invoice
      * @param Smarty $smarty
      * @param bool $bulk_mode
      *
      * @throws PrestaShopException
      */
-    public function __construct(OrderInvoice $order_invoice, $smarty, $bulk_mode = false)
+    public function __construct(OrderInvoice $order_invoice, Smarty $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
         $this->order = new Order((int) $this->order_invoice->id_order);
         $this->smarty = $smarty;
-        $this->available_in_your_account = false;
 
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
@@ -92,7 +96,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      *
      * @return array Layout elements columns size
      */
-    protected function computeLayout($params)
+    protected function computeLayout(array $params)
     {
         $layout = [
             'reference' => [
@@ -379,7 +383,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Returns the tax tab content.
      *
-     * @return string|array Tax tab html content (Returns an array if debug)
+     * @return string|array Tax tab html content (Returns an array if debug params used in request)
      */
     public function getTaxTabContent()
     {

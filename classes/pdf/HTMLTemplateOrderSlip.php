@@ -50,7 +50,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      *
      * @throws PrestaShopException
      */
-    public function __construct(OrderSlip $order_slip, $smarty)
+    public function __construct(OrderSlip $order_slip, Smarty $smarty)
     {
         $this->order_slip = $order_slip;
         $this->order = new Order((int) $order_slip->id_order);
