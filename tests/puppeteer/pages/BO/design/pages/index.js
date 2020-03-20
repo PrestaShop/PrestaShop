@@ -104,9 +104,7 @@ module.exports = class Pages extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(listTableToggleDropDown.replace('%ROW', row)),
-      this.waitForVisibleSelector(`${listTableToggleDropDown
-        .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
-      ),
+      this.waitForVisibleSelector(`${listTableToggleDropDown}[aria-expanded='true']`.replace('%ROW', row)<zzz),
     ]);
     // Click on delete and wait for modal
     this.dialogListener();
