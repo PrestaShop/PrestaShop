@@ -167,7 +167,7 @@ module.exports = class Employees extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
