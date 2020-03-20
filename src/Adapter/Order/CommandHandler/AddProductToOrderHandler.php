@@ -572,12 +572,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
     /**
      * @param Cart $cart
+     *
      * @return int
      */
     private function getPrecisionFromCart(Cart $cart): int
     {
         $computingPrecision = new ComputingPrecision();
         $currency = new Currency((int) $cart->id_currency);
+
         return $computingPrecision->getPrecision($currency->precision);
     }
 }
