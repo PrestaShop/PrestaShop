@@ -10,14 +10,14 @@ Feature: Delete cart rule from cart in Back Office (BO)
     And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
 
-#  @bo-delete-cart-rule
-#  Scenario: Delete cart rule with gift product
-#    Given I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
-#    And cart "dummy_cart" contains product "Mug The best is yet to come"
-#    And I use a voucher "giftFoxNotebook" for a gift product "Mountain fox notebook" on the cart "dummy_cart"
-#    And cart "dummy_cart" contains gift product "Mountain fox notebook"
-#    When I delete voucher "giftFoxNotebook" from cart "dummy_cart"
-#    Then cart "dummy_cart" should not contain gift product "Mountain fox notebook"
+  @bo-delete-cart-rule
+  Scenario: Delete cart rule with gift product
+    Given I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
+    And cart "dummy_cart" contains product "Mug The best is yet to come"
+    And I use a voucher "giftFoxNotebook" for a gift product "Mountain fox notebook" on the cart "dummy_cart"
+    And cart "dummy_cart" contains gift product "Mountain fox notebook"
+    When I delete voucher "giftFoxNotebook" from cart "dummy_cart"
+    Then cart "dummy_cart" should not contain gift product "Mountain fox notebook"
 
   @bo-delete-cart-rule
   Scenario: Delete cart rule with gift product when same product as gift already exists in cart
