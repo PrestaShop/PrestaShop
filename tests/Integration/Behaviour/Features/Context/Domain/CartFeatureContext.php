@@ -39,13 +39,19 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveCartRuleFromCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -129,13 +135,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function addProductsToCarts(int $quantity, string $productName, string $cartReference)
     {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
-
-        if (!$productId) {
-            throw new RuntimeException(sprintf('Product with name "%s" does not exist', $productName));
-        }
+        $productId = $this->getProductIdByName($productName);
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
@@ -249,8 +249,211 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function useDiscountVoucherOnCart(string $voucherCode, float $discountAmount, string $cartReference)
     {
-        $cartRule = new CartRule();
+        $cartRule = $this->createCommonCartRule($voucherCode);
         $cartRule->reduction_amount = $discountAmount;
+
+        $this->addCartRule($cartRule);
+
+        $this->getCommandBus()->handle(
+            new AddCartRuleToCartCommand(
+                SharedStorage::getStorage()->get($cartReference),
+                $cartRule->id
+            )
+        );
+    }
+
+    /**
+     * @When I use a voucher :voucherCode for a gift product :productName on the cart :cartReference
+     *
+     * @param string $voucherCode
+     * @param string $giftProductName
+     * @param string $cartReference
+     */
+    public function useGiftProductVoucherOnCart(string $voucherCode, string $giftProductName, string $cartReference)
+    {
+        $productId = $this->getProductIdByName($giftProductName);
+        $cartRule = $this->createCommonCartRule($voucherCode);
+        $cartRule->gift_product = $productId;
+
+        $this->addCartRule($cartRule);
+
+        $this->getCommandBus()->handle(
+            new AddCartRuleToCartCommand(
+                SharedStorage::getStorage()->get($cartReference),
+                $cartRule->id
+            )
+        );
+
+        $this->getSharedStorage()->set($voucherCode, $cartRule->id);
+        $this->getSharedStorage()->set($giftProductName, $productId);
+    }
+
+    /**
+     * @When I delete product :productName from cart :cartReference
+     */
+    public function deleteProduct(string $productName, string $cartReference)
+    {
+        $productId = (int)$this->getSharedStorage()->get($productName);
+        $cartId = (int)$this->getSharedStorage()->get($cartReference);
+
+        try {
+            $this->getCommandBus()->handle(new RemoveProductFromCartCommand(
+                $cartId,
+                $productId
+            ));
+        } catch (CartException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I delete voucher :voucherCode from cart :cartReference
+     *
+     * @param string $voucherCode
+     * @param string $productName
+     * @param string $cartReference
+     */
+    public function deleteGiftCartRule(string $voucherCode, string $cartReference)
+    {
+        $cartId = (int) $this->getSharedStorage()->get($cartReference);
+        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
+
+        $this->getCommandBus()->handle(new RemoveCartRuleFromCartCommand($cartId, $cartRuleId));
+    }
+
+    /**
+     * @Then cart :cartReference should not contain product :productName
+     */
+    public function assertCartDoesNotContainProduct(string $cartReference, string $productName)
+    {
+        $productId = (int) $this->getSharedStorage()->get($productName);
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+
+        /** @var CartInformation\CartProduct $cartProduct */
+        foreach ($cartInfo->getProducts() as $cartProduct) {
+            if ($cartProduct->getProductId() === $productId) {
+                throw new RuntimeException(sprintf(
+                    'Expected cart not to contain product %s, but it was found in cart',
+                    $productName
+                ));
+            }
+        }
+    }
+
+    /**
+     * @Then cart :cartReference should contain product :productName
+     * @Then cart :cartReference contains product :productName
+     *
+     * @param string $cartReference
+     * @param string $productName
+     */
+    public function assertCartContainsProduct(string $cartReference, string $productName)
+    {
+        $productId = (int) $this->getSharedStorage()->get($productName);
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+
+        foreach ($cartInfo->getProducts() as $cartProduct) {
+            if ($cartProduct->getProductId() === $productId) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Expected cart to contain product %s, but it was not found',
+            $productName
+        ));
+    }
+
+    /**
+     * @Then cart :cartReference should contain gift product :productName
+     * @Given cart :cartReference contains gift product :productName
+     *
+     * @param string $cartReference
+     * @param string $productName
+     */
+    public function assertCartContainsGiftProduct(string $cartReference, string $productName)
+    {
+        $productId = (int) $this->getSharedStorage()->get($productName);
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+
+        $matchingProducts = [];
+
+        /** @var CartInformation\CartProduct $cartProduct */
+        foreach ($cartInfo->getProducts() as $cartProduct) {
+            if ($cartProduct->getProductId() === $productId) {
+                $matchingProducts[] = $cartProduct;
+            }
+        }
+
+        if (!empty($matchingProducts)) {
+            /** @var CartInformation\CartProduct $cartProduct */
+            foreach ($matchingProducts as $cartProduct) {
+                if ($cartProduct->isGift()) {
+                    return;
+                }
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Cart does not contain gift product "%s"',
+            $productName
+        ));
+    }
+
+    /**
+     * @Then cart :cartReference should not contain gift product :productName
+     * @Given cart :cartReference does not contain gift product :productName
+     *
+     * @param string $cartReference
+     * @param string $productName
+     */
+    public function assertCartDoesNotContainGiftProduct(string $cartReference, string $productName)
+    {
+        $productId = (int) $this->getSharedStorage()->get($productName);
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+
+        $matchingProducts = [];
+
+        /** @var CartInformation\CartProduct $cartProduct */
+        foreach ($cartInfo->getProducts() as $cartProduct) {
+            if ($cartProduct->getProductId() === $productId) {
+                $matchingProducts[] = $cartProduct;
+            }
+        }
+
+        if (!empty($matchingProducts)) {
+            /** @var CartInformation\CartProduct $cartProduct */
+            foreach ($matchingProducts as $cartProduct) {
+                if ($cartProduct->isGift()) {
+                    throw new RuntimeException(sprintf(
+                        'Cart contains gift product "%s"',
+                        $productName
+                    ));
+                }
+            }
+        }
+    }
+
+    /**
+     * @param string $cartReference
+     *
+     * @return CartInformation
+     */
+    private function getCartInformationByReference(string $cartReference): CartInformation
+    {
+        $cartId = $this->getSharedStorage()->get($cartReference);
+
+        return $this->getQueryBus()->handle(new GetCartInformation($cartId));
+    }
+
+    /**
+     * @param string $voucherCode
+     *
+     * @return CartRule
+     */
+    private function createCommonCartRule(string $voucherCode): CartRule
+    {
+        $cartRule = new CartRule();
         $cartRule->name = [Configuration::get('PS_LANG_DEFAULT') => $voucherCode];
         $cartRule->priority = 1;
         $cartRule->quantity = 1;
@@ -264,15 +467,35 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartRule->active = 1;
         $cartRule->code = $voucherCode;
 
+        return $cartRule;
+    }
+
+    /**
+     * @param string $productName
+     *
+     * @return int
+     */
+    private function getProductIdByName(string $productName)
+    {
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
+
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
+        }
+
+        /** @var FoundProduct $product */
+        $product = reset($products);
+
+        return (int) $product->getProductId();
+    }
+
+    /**
+     * @param CartRule $cartRule
+     */
+    private function addCartRule(CartRule $cartRule): void
+    {
         if (!$cartRule->add()) {
             throw new RuntimeException('Cannot add cart rule to database');
         }
-
-        $this->getCommandBus()->handle(
-            new AddCartRuleToCartCommand(
-                SharedStorage::getStorage()->get($cartReference),
-                $cartRule->id
-            )
-        );
     }
 }
