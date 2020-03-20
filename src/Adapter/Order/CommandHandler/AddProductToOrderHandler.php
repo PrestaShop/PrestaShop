@@ -34,6 +34,7 @@ use CartRule;
 use Combination;
 use Configuration;
 use Context;
+use Currency;
 use Customer;
 use Hook;
 use Order;
@@ -48,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Product;
 use Shop;
 use SpecificPrice;
@@ -137,17 +139,18 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 
+        $precision = $this->getPrecisionFromCart($cart);
         $order->total_paid = Tools::ps_round(
             (float) $cart->getOrderTotal(true, $totalMethod),
-            $this->context->getComputingPrecision()
+            $precision
         );
         $order->total_paid_tax_excl = Tools::ps_round(
             (float) $cart->getOrderTotal(false, $totalMethod),
-            $this->context->getComputingPrecision()
+            $precision
         );
         $order->total_paid_tax_incl = Tools::ps_round(
             (float) $cart->getOrderTotal(true, $totalMethod),
-            $this->context->getComputingPrecision()
+            $precision
         );
 
         if (null !== $invoice && Validate::isLoadedObject($invoice)) {
@@ -479,13 +482,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $taxCalculator = $carrier->getTaxCalculator($invoice_address);
 
         // @todo: use https://github.com/PrestaShop/decimal to compute prices and taxes
+        $precision = $this->getPrecisionFromCart($cart);
         $invoice->total_paid_tax_excl = Tools::ps_round(
             (float) $cart->getOrderTotal(false, $totalMethod),
-            $this->context->getComputingPrecision()
+            $precision
         );
         $invoice->total_paid_tax_incl = Tools::ps_round(
             (float) $cart->getOrderTotal(true, $totalMethod),
-            $this->context->getComputingPrecision()
+            $precision
         );
         $invoice->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $invoice->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
@@ -528,15 +532,16 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function updateExistingInvoice($orderInvoiceId, Cart $cart)
     {
+        $precision = $this->getPrecisionFromCart($cart);
         $invoice = new OrderInvoice($orderInvoiceId);
 
         $invoice->total_paid_tax_excl += Tools::ps_round(
             (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING),
-            $this->context->getComputingPrecision()
+            $precision
         );
         $invoice->total_paid_tax_incl += Tools::ps_round(
             (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING),
-            $this->context->getComputingPrecision()
+            $precision
         );
         $invoice->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
         $invoice->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
@@ -563,5 +568,16 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
         }
+    }
+
+    /**
+     * @param Cart $cart
+     * @return int
+     */
+    private function getPrecisionFromCart(Cart $cart): int
+    {
+        $computingPrecision = new ComputingPrecision();
+        $currency = new Currency((int) $cart->id_currency);
+        return $computingPrecision->getPrecision($currency->precision);
     }
 }
