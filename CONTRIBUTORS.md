@@ -520,7 +520,6 @@ GitHub contributors:
 - pilothuy
 - Piotr Kaczor
 - Piotr Moćko
-- PK André
 - Pliciweb - Nicolas
 - Praneeth Nidarshan
 - Presta Module
