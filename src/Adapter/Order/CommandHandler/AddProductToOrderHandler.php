@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use Shop;
@@ -98,6 +99,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
         $combination = $this->getCombination($command->getCombinationId());
+
+        $this->checkProductInStock($command->getProductId()->getValue(), $command->getCombinationId(), $command->getProductQuantity());
 
         $cart = $this->createNewCart($order);
 
@@ -521,5 +524,24 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $invoice->update();
 
         return $invoice;
+    }
+
+    /**
+     * @param int $productId
+     * @param int $combinationId
+     * @param int $expectedQuantity
+     *
+     * @throws ProductOutOfStockException
+     */
+    private function checkProductInStock(int $productId, int $combinationId, int $expectedQuantity): void
+    {
+        //check if product is available in stock
+        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($productId))) {
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($productId, $combinationId);
+
+            if ($availableQuantity < $expectedQuantity) {
+                throw new ProductOutOfStockException('Not enough products in stock');
+            }
+        }
     }
 }
