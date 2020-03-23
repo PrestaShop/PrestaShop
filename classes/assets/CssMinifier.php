@@ -32,7 +32,7 @@ class CssMinifierCore
      * @param string[] $files
      * @param string $destination
      *
-     * @return string minified data
+     * @return string Minified data
      */
     public static function minify(array $files, string $destination)
     {

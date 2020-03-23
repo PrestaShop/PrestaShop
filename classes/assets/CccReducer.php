@@ -55,9 +55,9 @@ class CccReducerCore
     /**
      * @param array $cssFileList
      *
-     * @return array same list, reduced
+     * @return array Same list, reduced
      */
-    public function reduceCss($cssFileList)
+    public function reduceCss(array $cssFileList)
     {
         $files = [];
         foreach ($cssFileList['external'] as $key => &$css) {
@@ -96,9 +96,9 @@ class CccReducerCore
     /**
      * @param array $jsFileList
      *
-     * @return array same list, reduced
+     * @return array Same list, reduced
      */
-    public function reduceJs($jsFileList)
+    public function reduceJs(array $jsFileList)
     {
         foreach ($jsFileList as $position => &$list) {
             $files = [];
