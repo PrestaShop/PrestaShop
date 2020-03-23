@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div id="customer-carts-card" class="card">
+<div class="customer-carts-card card">
   <h3 class="card-header">
     <i class="material-icons">shopping_cart</i>
     {{ 'Carts'|trans({}, 'Admin.Global') }}
@@ -45,7 +45,7 @@
         {% for cart in customerInformation.cartsInformation %}
           {% set cartViewUrl = getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) %}
 
-          <tr>
+          <tr class="customer-cart">
             <td class="customer-cart-id js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
             <td class="customer-cart-date js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
             <td class="customer-cart-carrier js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>

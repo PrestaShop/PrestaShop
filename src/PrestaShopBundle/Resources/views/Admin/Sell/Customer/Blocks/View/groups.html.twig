@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div id="customer-groups-card" class="card">
+<div class="card customer-groups-card">
   <h3 class="card-header">
     <i class="material-icons">group</i>
     {{ 'Groups'|trans({}, 'Admin.Global') }}
@@ -49,7 +49,7 @@
         </thead>
         <tbody>
         {% for group in customerInformation.groupsInformation %}
-          <tr>
+          <tr class="customer-group">
             <td class="customer-group-id">{{ group.groupId }}</td>
             <td class="customer-group-name">
               <a href="{{ getAdminLink('AdminGroups', true, {'id_group': group.groupId, 'viewgroup': 1}) }}">

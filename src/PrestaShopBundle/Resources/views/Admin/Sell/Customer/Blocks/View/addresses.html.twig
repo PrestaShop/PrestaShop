@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div id="customer-addresses-card" class="card">
+<div class="card customer-addresses-card">
   <h3 class="card-header">
     <i class="material-icons">location_on</i>
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
@@ -56,7 +56,7 @@
           {% for address in customerInformation.addressesInformation %}
             {% set addressEditUrl = getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'updateaddress': 1, 'back': app.request.uri}) %}
 
-            <tr>
+            <tr class="customer-address">
               <td class="customer-address-company js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
               <td class="customer-address-name js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
               <td class="customer-address-address js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullAddress }}</td>

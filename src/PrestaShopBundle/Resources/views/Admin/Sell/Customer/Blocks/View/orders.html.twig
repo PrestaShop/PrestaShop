@@ -27,7 +27,7 @@
 {% set invalidOrdersCount = customerInformation.ordersInformation.invalidOrders|length %}
 {% set ordersCount = validOrdersCount + invalidOrdersCount %}
 
-<div id="customer-orders-card" class="card">
+<div class="card customer-orders-card">
   <h3 class="card-header">
     <i class="material-icons">shopping_basket</i>
     {{ 'Orders'|trans({}, 'Admin.Global') }}
@@ -71,14 +71,14 @@
               {% for order in customerInformation.ordersInformation.validOrders %}
                 {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
 
-                <tr>
-                  <td class="customer-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
-                  <td class="customer-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
-                  <td class="customer-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
-                  <td class="customer-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
-                  <td class="customer-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
-                  <td class="customer-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
-                  <td class="customer-order-actions text-right">
+                <tr class="customer-valid-order">
+                  <td class="customer-valid-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
+                  <td class="customer-valid-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
+                  <td class="customer-valid-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
+                  <td class="customer-valid-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
+                  <td class="customer-valid-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
+                  <td class="customer-valid-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
+                  <td class="customer-valid-order-actions text-right">
                     <div class="btn-group-action">
                       <div class="btn-group">
                         <a href="{{ orderViewUrl }}"
@@ -119,14 +119,14 @@
               {% for order in customerInformation.ordersInformation.invalidOrders %}
                 {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
 
-                <tr>
-                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
-                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
-                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
-                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
-                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
-                  <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
-                  <td class="text-right">
+                <tr class="customer-invalid-order">
+                  <td class="customer-invalid-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
+                  <td class="customer-invalid-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
+                  <td class="customer-invalid-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
+                  <td class="customer-invalid-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
+                  <td class="customer-invalid-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
+                  <td class="customer-invalid-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
+                  <td class="text-right customer-invalid-order-actions">
                     <div class="btn-group-action">
                       <div class="btn-group">
                         <a href="{{ orderViewUrl }}"

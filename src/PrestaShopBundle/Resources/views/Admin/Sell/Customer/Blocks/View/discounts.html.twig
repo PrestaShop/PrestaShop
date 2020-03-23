@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div id="customer-discounts-card" class="card">
+<div class="card customer-discounts-card">
   <h3 class="card-header">
     <i class="material-icons">loyalty</i>
     {{ 'Vouchers'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -46,7 +46,7 @@
         {% for discount in customerInformation.discountsInformation %}
           {% set discountEditUrl = getAdminLink('AdminCartRules', true, {'id_cart_rule': discount.discountId, 'addcart_rule': 1, 'back': app.request.uri}) %}
 
-          <tr>
+          <tr class="customer-discount">
             <td class="customer-discount-id js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.discountId }}</td>
             <td class="customer-discount-code js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.code }}</td>
             <td class="customer-discount-name js-linkable-item cursor-pointer" data-linkable-href="{{ discountEditUrl }}">{{ discount.name }}</td>
