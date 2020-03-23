@@ -23,22 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAddressTypeException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 
-/**
- * Handles submitted address form data
- */
-final class AddressFormDataHandler implements FormDataHandlerInterface
+class OrderAddressFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
@@ -46,69 +42,32 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var CustomerDataProvider
-     */
-    private $customerDataProvider;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param CustomerDataProvider $customerDataProvider
      */
-    public function __construct(CommandBusInterface $commandBus, CustomerDataProvider $customerDataProvider)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
-        $this->customerDataProvider = $customerDataProvider;
     }
 
     /**
-     * {@inheritdoc]
-     *
-     * @throws CountryConstraintException
-     * @throws StateConstraintException
+     * {@inheritdoc}
      */
     public function create(array $data)
     {
-        if (!empty($data['id_customer'])) {
-            $customerId = $data['id_customer'];
-        } else {
-            $customerId = $this->customerDataProvider->getIdByEmail($data['customer_email']);
-        }
-
-        $addAddressCommand = new AddCustomerAddressCommand(
-            $customerId,
-            $data['alias'],
-            $data['first_name'],
-            $data['last_name'],
-            $data['address1'],
-            $data['city'],
-            (int) $data['id_country'],
-            $data['postcode'],
-            $data['dni'],
-            $data['company'],
-            $data['vat_number'],
-            $data['address2'],
-            (int) $data['id_state'],
-            $data['phone'],
-            $data['phone_mobile'] ?? null,
-            $data['other']
-        );
-
-        /** @var AddressId $addressId */
-        $addressId = $this->commandBus->handle($addAddressCommand);
-
-        return $addressId->getValue();
+        // Not used for creation, only edition
     }
 
     /**
      * {@inheritdoc}
      *
-     * @throws AddressConstraintException
      * @throws CountryConstraintException
      * @throws StateConstraintException
+     * @throws InvalidAddressTypeException
+     * @throws OrderException
      */
-    public function update($addressId, array $data)
+    public function update($orderId, array $data)
     {
-        $editAddressCommand = new EditCustomerAddressCommand($addressId);
+        $editAddressCommand = new EditOrderAddressCommand($orderId, $data['address_type']);
 
         if (isset($data['alias'])) {
             $editAddressCommand->setAddressAlias($data['alias']);

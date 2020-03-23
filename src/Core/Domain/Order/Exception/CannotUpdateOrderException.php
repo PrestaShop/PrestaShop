@@ -23,21 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand;
-use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
 /**
- * Interface for services that handles command which edits customer address
+ * Thrown on failure to update order
  */
-interface EditCustomerAddressHandlerInterface
+class CannotUpdateOrderException extends OrderException
 {
-    /**
-     * @param EditCustomerAddressCommand $command
-     *
-     * @return AddressId The (potentially) newly created address id
-     */
-    public function handle(EditCustomerAddressCommand $command): AddressId;
 }
