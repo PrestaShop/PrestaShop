@@ -230,7 +230,7 @@ class PrestaShopExceptionCore extends Exception
 
         return sprintf(
             $format,
-            $this->getMessage(),
+            Tools::safeOutput($this->getMessage(), true),
             $this->getLine(),
             ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
         );
