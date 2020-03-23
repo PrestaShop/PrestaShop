@@ -41,6 +41,7 @@ describe('Help card in monitoring page', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Catalog > Monitoring\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.monitoringLink,
