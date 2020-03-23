@@ -11,7 +11,7 @@ const DeliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const OrdersPage = require('@pages/BO/orders');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
 // Test context imports
 const testContext = require('@utils/testContext');
