@@ -58,6 +58,27 @@
     display: none;
   }
   /* stylelint-enable */
+
+  .addProductInvoice {
+    > .form-group {
+      margin-bottom: 0;
+      margin-top: 23px;
+    }
+  }
+
+  .editProductActions-container {
+    > .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  .cellProductTaxes,
+  .cellProductQuantity,
+  .editProductInvoice {
+    > .form-group:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 #addProductNewInvoiceInfo h4 {

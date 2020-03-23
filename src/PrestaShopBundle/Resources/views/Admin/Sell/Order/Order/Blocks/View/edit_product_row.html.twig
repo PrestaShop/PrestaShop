@@ -26,11 +26,11 @@
 <tr id="editProductTableRowTemplate" class="d-none editProductRow">
   <td class="cellProductImg"></td>
   <td class="cellProductName"></td>
-  <td class="pr-5">
+  <td class="cellProductTaxes pr-5">
     {{ form_row(editProductRowForm.price_tax_excluded) }}
     {{ form_row(editProductRowForm.price_tax_included) }}
   </td>
-  <td class="pr-5">
+  <td class="cellProductQuantity pr-5">
     {{ form_row(editProductRowForm.quantity) }}
   </td>
   <td class="editProductLocation"></td>
@@ -38,12 +38,14 @@
   <td class="editProductAvailable"></td>
   <td class="editProductTotalPrice"></td>
   {% if orderForViewing.hasInvoice() %}
-    <td>
+    <td class="editProductInvoice">
       {{ form_row(editProductRowForm.invoice) }}
     </td>
   {% endif %}
-  <td class="text-right btn-group">
-    {{ form_row(editProductRowForm.cancel) }}
-    {{ form_row(editProductRowForm.save) }}
+  <td class="editProductActions text-right">
+    <div class="editProductActions-container btn-group">
+      {{ form_row(editProductRowForm.cancel) }}
+      {{ form_row(editProductRowForm.save) }}
+    </div>
   </td>
 </tr>
