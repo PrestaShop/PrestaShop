@@ -111,7 +111,7 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
 
         switch ($actionToPerform) {
             case self::ACTION_LIST_ALL:
-                $this->listAllRoutesAndTheirPermissions($input, $output);
+                $this->listAllRoutesAndRelatedPermissions($input, $output);
                 break;
             case self::ACTION_FIND_MISSING:
                 $this->findRoutesWithMissingSecurityAnnotations($input, $output);
@@ -126,7 +126,7 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    private function listAllRoutesAndTheirPermissions(InputInterface $input, OutputInterface $output)
+    private function listAllRoutesAndRelatedPermissions(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getContainer();
 
@@ -139,7 +139,7 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
         $listing = [];
 
         foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
-            /* @var \Symfony\Component\Routing\Route $route */
+            /* @var Route $route */
             try {
                 $annotation = $securityAnnotationLinter->getRouteSecurityAnnotation($routeName, $route);
                 $listing[] = [
