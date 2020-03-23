@@ -31,10 +31,13 @@ module.exports = class CommonPage {
   /**
    * Get Text from element
    * @param selector, from where to get text
+   * @param waitForSelector
    * @return {Promise<string>}
    */
-  async getTextContent(selector) {
-    await this.page.waitForSelector(selector, {visible: true});
+  async getTextContent(selector, waitForSelector = true) {
+    if (waitForSelector) {
+      await this.page.waitForSelector(selector, {visible: true});
+    }
     const textContent = await this.page.$eval(selector, el => el.textContent);
     return textContent.replace(/\s+/g, ' ').trim();
   }
@@ -76,6 +79,7 @@ module.exports = class CommonPage {
   /**
    * Is element visible
    * @param selector, element to check
+   * @param timeout, how much should we wait
    * @return boolean, true if visible, false if not
    */
   async elementVisible(selector, timeout = 10) {
@@ -90,6 +94,7 @@ module.exports = class CommonPage {
   /**
    * Is element not visible
    * @param selector, element to check
+   * @param timeout, how much should we wait
    * @return boolean, true if visible, false if not
    */
   async elementNotVisible(selector, timeout = 10) {
@@ -105,6 +110,7 @@ module.exports = class CommonPage {
    * Open link in new Tab and get opened Page
    * @param currentPage, current page where to click on selector
    * @param selector, where to click
+   * @param waitForNavigation, if we should wait for navigation or not
    * @return newPage, what was opened by the browser
    */
   async openLinkWithTargetBlank(currentPage, selector, waitForNavigation = true) {
@@ -152,20 +158,6 @@ module.exports = class CommonPage {
   }
 
   /**
-   * Check attribute value
-   * @param selector, element to check
-   * @param attribute, attribute to test
-   * @param textToCheckWith, text to check with
-   * @return promise, throw an error if element does not exist or attribute value is not correct
-   */
-  async checkAttributeValue(selector, attribute, textToCheckWith) {
-    await this.page.waitForSelector(selector);
-    const value = await this.page.$eval(selector, (el, attr) => el
-      .getAttribute(attr), attribute);
-    return value === textToCheckWith;
-  }
-
-  /**
    * Reload actual browser page
    * @return {Promise<void>}
    */
@@ -199,6 +191,7 @@ module.exports = class CommonPage {
 
   /**
    * Close actual tab and goto another tab if wanted
+   * @param browser
    * @param tabId
    * @return {Promise<void>}
    */

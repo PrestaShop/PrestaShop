@@ -62,6 +62,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
      * @var int
      */
     private $cmsCategoryParentId;
+
     /**
      * @var MultistoreContextCheckerInterface
      */

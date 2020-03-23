@@ -139,6 +139,7 @@ class HelperListCore extends Helper
         $adminLinkBuilder = new AdminLinkBuilder(Context::getContext()->link, [
             'customer' => 'AdminCustomers',
             'product' => 'AdminProducts',
+            'order' => 'AdminOrders',
         ]);
         $this->linkBuilderFactory = new EntityLinkBuilderFactory([
             $adminLinkBuilder,

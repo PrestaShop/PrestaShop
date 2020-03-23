@@ -20,18 +20,18 @@ module.exports = class Product extends FOBasePage {
     this.productAvailabilityIcon = '#product-availability i';
     this.productSizeOption = '#group_1 option[title=\'%SIZE\']';
     this.productColorInput = '#group_2 input[title=\'%COLOR\']';
+    this.metaLink = '#main > meta';
   }
 
   /**
-   * To check the product information (Product name, price, quantity, description)
-   * @param productData, product data to check
+   * Get Product information (Product name, price, description)
+   * @returns {Promise<object>}
    */
-  async checkProduct(productData) {
+  async getProductInformation() {
     return {
-      name: await this.checkTextValue(this.productName, productData.name),
-      price: await this.checkAttributeValue(this.productPrice, 'content', productData.price),
-      quantity_wanted: await this.checkAttributeValue(this.productQuantity, 'value', productData.quantity_wanted),
-      description: await this.checkTextValue(this.productDescription, productData.description, 'contain'),
+      name: await this.getTextContent(this.productName),
+      price: parseFloat(await this.getAttributeContent(this.productPrice, 'content')),
+      description: await this.getTextContent(this.productDescription),
     };
   }
 
@@ -115,5 +115,21 @@ module.exports = class Product extends FOBasePage {
    */
   isUnavailableProductColorDisplayed(color) {
     return this.elementVisible(this.productColorInput.replace('%COLOR', color), 1000);
+  }
+
+  /**
+   * Get product page URL
+   * @returns {Promise<string>}
+   */
+  getProductPageURL() {
+    return this.getAttributeContent(this.metaLink, 'content');
+  }
+
+  /**
+   * Is add to cart button enabled
+   * @returns {boolean}
+   */
+  isAddToCartButtonEnabled() {
+    return this.elementNotVisible(`${this.addToCartButton}:disabled`, 1000);
   }
 };

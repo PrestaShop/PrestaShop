@@ -18,8 +18,8 @@ const ProductFaker = require('@data/faker/product');
 
 let browser;
 let page;
-const productData = new ProductFaker({type: 'Standard product'});
-const editProductData = new ProductFaker({name: 'testForceFriendlyURL', type: 'Standard product'});
+const productData = new ProductFaker({type: 'Standard product', status: false});
+const editProductData = new ProductFaker({name: 'testForceFriendlyURL', type: 'Standard product', status: false});
 
 // Init objects needed
 const init = async function () {
@@ -67,7 +67,7 @@ describe('Enable/Disable force update friendly URL', async () => {
   it('should go to create product page and create a product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const validationMessage = await this.pageObjects.addProductPage.createEditProduct(productData, false);
+    const validationMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
     await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
   const tests = [
@@ -140,7 +140,7 @@ describe('Enable/Disable force update friendly URL', async () => {
         `UpdateProductAndCheckFriendlyURL${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
-      const validationMessage = await this.pageObjects.addProductPage.createEditProduct(test.args.editProduct);
+      const validationMessage = await this.pageObjects.addProductPage.createEditBasicProduct(test.args.editProduct);
       await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
       const friendlyURL = await this.pageObjects.addProductPage.getFriendlyURL();
       await expect(friendlyURL).to.equal(test.args.friendlyURL.toLowerCase());

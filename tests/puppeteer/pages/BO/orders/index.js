@@ -6,20 +6,23 @@ module.exports = class Order extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Orders •';
-    this.orderPageTitle = 'Order';
 
-    // Orders page
-    this.ordersForm = '#form-order';
-    this.ordersNumberSpan = `${this.ordersForm} span.badge`;
-    this.ordersTable = '#table-order';
-    this.orderFilterColumnInput = `${this.ordersTable} input[name='orderFilter_%FILTERBY']`;
-    this.orderFilterColumnSelect = `${this.ordersTable} select[name='orderFilter_os!id_%FILTERBY']`;
-    this.searchButton = `${this.ordersTable}  #submitFilterButtonorder`;
-    this.resetButton = `${this.ordersTable} button.btn.btn-warning`;
-    this.orderRow = `${this.ordersTable} tbody tr:nth-child(%ROW)`;
-    this.orderfirstLineIdTD = `${this.orderRow} td:nth-child(2)`;
-    this.orderfirstLineReferenceTD = `${this.orderRow} td:nth-child(3)`;
-    this.orderfirstLineStatusTD = `${this.orderRow} td:nth-child(9)`;
+    // Selectors grid panel
+    this.gridPanel = '#order_grid_panel';
+    this.gridTable = '#order_grid_table';
+    this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+    // Filters
+    this.filterColumn = `${this.gridTable} #order_%FILTERBY`;
+    this.filterSearchButton = `${this.gridTable} button[name='order[actions][search]']`;
+    this.filterResetButton = `${this.gridTable} button[name='order[actions][reset]']`;
+    // Table rows and columns
+    this.tableBody = `${this.gridTable} tbody`;
+    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
+    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    // Column actions selectors
+    this.actionsColumn = `${this.tableRow} td.column-actions`;
+    this.viewRowLink = `${this.actionsColumn} a[data-original-title='View']`;
   }
 
   /*
@@ -35,22 +38,16 @@ module.exports = class Order extends BOBasePage {
   async filterOrders(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.orderFilterColumnInput.replace('%FILTERBY', filterBy), value);
-        // click on search
-        await Promise.all([
-          this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-          this.page.click(this.searchButton),
-        ]);
+        await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
         break;
       case 'select':
-        await Promise.all([
-          this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-          this.selectByVisibleText(this.orderFilterColumnSelect.replace('%FILTERBY', filterBy), value),
-        ]);
+        await this.selectByVisibleText(this.filterColumn.replace('%FILTERBY', filterBy), value);
         break;
       default:
       // Do nothing
     }
+    // click on search
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
   /**
@@ -58,10 +55,9 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter() {
-    if (await this.elementVisible(this.resetButton, 2000)) {
-      await this.clickAndWaitForNavigation(this.resetButton);
+    if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
+      await this.clickAndWaitForNavigation(this.filterResetButton);
     }
-    return this.getNumberFromText(this.ordersNumberSpan);
   }
 
   /**
@@ -70,7 +66,15 @@ module.exports = class Order extends BOBasePage {
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
-    return this.getNumberFromText(this.ordersNumberSpan);
+    return this.getNumberOfElementInGrid();
+  }
+
+  /**
+   * Get number of orders in grid
+   * @return {Promise<integer>}
+   */
+  async getNumberOfElementInGrid() {
+    return this.getNumberFromText(this.gridHeaderTitle);
   }
 
   /**
@@ -79,10 +83,7 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToOrder(orderRow) {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.orderfirstLineIdTD.replace('%ROW', orderRow)),
-    ]);
+    await this.clickAndWaitForNavigation(this.viewRowLink.replace('%ROW', orderRow));
   }
 
   /**
@@ -92,16 +93,10 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumn(columnName, row) {
-    switch (columnName) {
-      case 'id_order':
-        return this.getTextContent(this.orderfirstLineIdTD.replace('%ROW', row));
-      case 'reference':
-        return this.getTextContent(this.orderfirstLineReferenceTD.replace('%ROW', row));
-      case 'order_state':
-        return this.getTextContent(this.orderfirstLineStatusTD.replace('%ROW', row));
-      default:
-      // Do nothing
-    }
-    throw new Error(`${columnName} was not found as column`);
+    return this.getTextContent(
+      this.tableColumn
+        .replace('%ROW', row)
+        .replace('%COLUMN', columnName),
+    );
   }
 };

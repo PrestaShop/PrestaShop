@@ -23,12 +23,11 @@ let browser;
 let page;
 const productData = new ProductFaker({
   type: 'Standard product',
-  productHasCombinations: true,
   combinations: {
     Color: ['White'],
     Size: ['S'],
   },
-  quantity: '0',
+  quantity: 0,
 });
 
 // Init objects needed
@@ -74,7 +73,8 @@ describe('Enable/Disable display unavailable product attributes on the product p
   it('should go to create product page and create a product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const validationMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+    await this.pageObjects.addProductPage.createEditBasicProduct(productData);
+    const validationMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(productData);
     await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 

@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -74,7 +75,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\CommonController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
@@ -98,7 +99,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Manages "Sell > Orders" page
  */
-class OrderController extends FrameworkBundleAdminController
+class OrderController extends CommonController
 {
     /**
      * Shows list of orders
@@ -1503,6 +1504,10 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            InvalidProductQuantityException::class => $this->trans(
+                'Please enter a positive quantity.',
+                'Admin.Orderscustomers.Notification'
+            ),
         ];
     }
 

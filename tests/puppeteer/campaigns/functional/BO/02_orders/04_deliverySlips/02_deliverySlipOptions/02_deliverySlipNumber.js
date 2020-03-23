@@ -134,7 +134,6 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
       );
-
       const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
     });
@@ -149,7 +148,7 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should check that the delivery slip file name contain the \'Delivery slip number\'', async function () {

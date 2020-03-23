@@ -10,7 +10,9 @@ admin_addresses_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Sell\Address\Address:search
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.address
+    redirectRoute: admin_addresses_index
     _legacy_controller: AdminAddresses
     _legacy_link: AdminAddresses:submitFilteraddress
 

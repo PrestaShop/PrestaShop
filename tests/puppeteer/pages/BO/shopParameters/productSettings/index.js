@@ -19,12 +19,16 @@ module.exports = class productSettings extends BOBasePage {
     this.quantityDiscountBasedOnSelect = '#form_general_quantity_discount';
     this.switchDefaultActivationStatusLabel = 'label[for=\'form_general_default_status_%TOGGLE\']';
     this.saveProductGeneralFormButton = `${this.productGeneralForm} .card-footer button`;
-    // Product page selectors
+    // Product page form
     this.productPageForm = '#configuration_fieldset_fo_product_page';
     this.switchDisplayAvailableQuantities = 'label[for=\'form_page_display_quantities_%TOGGLE\']';
     this.remainingQuantityInput = '#form_page_display_last_quantities';
     this.displayUnavailableAttributesLabel = 'label[for=\'form_page_display_unavailable_attributes_%TOGGLE\']';
+    this.separatorAttributeOnProductPageSelect = '#form_page_attribute_anchor_separator';
     this.saveProductPageFormButton = `${this.productPageForm} .card-footer button`;
+    // Products stock form
+    this.productsStockForm = '#configuration_fieldset_stock';
+    this.allowOrderingOosLabel = `${this.productsStockForm} label[for='form_stock_allow_ordering_oos_%TOGGLE']`;
   }
 
   /*
@@ -137,6 +141,28 @@ module.exports = class productSettings extends BOBasePage {
    */
   async setDisplayUnavailableProductAttributesStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.displayUnavailableAttributesLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set separator of attribute anchor on the product links
+   * @param separator
+   * @returns {Promise<string>}
+   */
+  async setSeparatorOfAttributeOnProductLink(separator) {
+    await this.selectByVisibleText(this.separatorAttributeOnProductPageSelect, separator);
+    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable/Disable allow ordering out of stock
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setAllowOrderingOutOfStockStatus(toEnable = true) {
+    await this.waitForSelectorAndClick(this.allowOrderingOosLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }

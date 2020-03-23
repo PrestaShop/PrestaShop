@@ -100,7 +100,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'UpdateStatusForUpdatedPrefix', baseContext);
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-        await expect(result).to.be.true;
+        await expect(result).to.equal(Statuses.shipped.status);
       });
 
       it(`should check that the invoice file name contain the prefix '${invoiceData.prefix}'`, async function () {
