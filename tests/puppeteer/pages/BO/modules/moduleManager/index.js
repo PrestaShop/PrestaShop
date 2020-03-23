@@ -39,7 +39,7 @@ module.exports = class moduleManager extends BOBasePage {
   async searchModule(moduleTag, moduleName) {
     await this.page.type(this.searchModuleTagInput, moduleTag);
     await this.page.click(this.searchModuleButton);
-    await this.page.waitForSelector(this.moduleBlock.replace('%MODULENAME', moduleName), {visible: true});
+    await this.waitForVisibleSelector(this.moduleBlock.replace('%MODULENAME', moduleName));
   }
 
   /**
@@ -59,11 +59,11 @@ module.exports = class moduleManager extends BOBasePage {
   async filterByStatus(enabled) {
     await Promise.all([
       this.page.click(this.statusDropdownDiv),
-      this.page.waitForSelector(`${this.statusDropdownDiv}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.statusDropdownDiv}[aria-expanded='true']`),
     ]);
     await Promise.all([
       this.page.click(this.statusDropdownItemLink.replace('%REF', enabled ? 1 : 0)),
-      this.page.waitForSelector(`${this.statusDropdownDiv}[aria-expanded='false']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.statusDropdownDiv}[aria-expanded='false']`),
     ]);
   }
 
@@ -109,11 +109,11 @@ module.exports = class moduleManager extends BOBasePage {
   async filterByCategory(category) {
     await Promise.all([
       this.page.click(this.categoriesSelectDiv),
-      this.page.waitForSelector(`${this.categoriesSelectDiv}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.categoriesSelectDiv}[aria-expanded='true']`),
     ]);
     await Promise.all([
       this.page.click(this.categoryDropdownItem.replace('%CAT', category)),
-      this.page.waitForSelector(`${this.categoriesSelectDiv}[aria-expanded='false']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.categoriesSelectDiv}[aria-expanded='false']`),
     ]);
   }
 

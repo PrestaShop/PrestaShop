@@ -37,10 +37,7 @@ module.exports = class Home extends FOBasePage {
    * @param id, product id
    */
   async goToProductPage(id) {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.productImg.replace('%NUMBER', id)),
-    ]);
+    await this.clickAndWaitForNavigation(this.productImg.replace('%NUMBER', id));
   }
 
   /**
@@ -64,7 +61,7 @@ module.exports = class Home extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.page.waitForSelector(this.quickViewModalDiv, {visible: true}),
+      this.waitForVisibleSelector(this.quickViewModalDiv),
       this.page.$eval(this.productQuickViewLink.replace('%NUMBER', id), el => el.click()),
     ]);
   }
@@ -79,7 +76,7 @@ module.exports = class Home extends FOBasePage {
     await this.quickViewProduct(id);
     await this.setValue(this.quantityWantedInput, quantity_wanted.toString());
     await Promise.all([
-      this.page.waitForSelector(this.blockCartModalDiv, {visible: true}),
+      this.waitForVisibleSelector(this.blockCartModalDiv),
       this.page.click(this.addToCartButton),
     ]);
   }
@@ -89,10 +86,7 @@ module.exports = class Home extends FOBasePage {
    * @return {Promise<void>}
    */
   async proceedToCheckout() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.blockCartModalCheckoutLink),
-    ]);
+    await this.clickAndWaitForNavigation(this.blockCartModalCheckoutLink);
   }
 
   /**
