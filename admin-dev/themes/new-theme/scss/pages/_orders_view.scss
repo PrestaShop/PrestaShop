@@ -35,14 +35,23 @@
   // Todo: Looks like we don't have any custom select without JS to add in a form
   .select-status {
     position: relative;
+    background: #ffffff;
+    color: #ffffff;
+    border-radius: 4px;
+    border: none;
+    max-width: 280px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    transition: 0.2s ease-out;
 
     .select-status-colored {
-      background: #ffffff;
-      color: #ffffff;
-      border-radius: 4px;
+      background: none;
       border: none;
-      max-width: 280px;
-      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+      color: white;
+
+      option {
+        color: initial;
+        background: inherit;
+      }
     }
 
     &::after {

@@ -54,7 +54,7 @@ $(() => {
   orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
+  orderAddAutocomplete.onItemClickedCallback = product => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
@@ -64,7 +64,7 @@ $(() => {
   const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
   orderViewPageMessageHandler.listenForPredefinedMessageSelection();
   orderViewPageMessageHandler.listenForFullMessagesOpen();
-  $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
+  $(OrderViewPageMap.privateNoteToggleBtn).on('click', event => {
     event.preventDefault();
     togglePrivateNoteBlock();
   });
@@ -81,12 +81,16 @@ $(() => {
   initHookTabs();
 
   function initHookTabs() {
-    $(OrderViewPageMap.orderHookTabsContainer).find('.nav-tabs li:first-child a').tab('show');
+    $(OrderViewPageMap.orderHookTabsContainer)
+      .find('.nav-tabs li:first-child a')
+      .tab('show');
   }
 
   function handlePaymentDetailsToggle() {
-    $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
-      const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
+    $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', event => {
+      const $paymentDetailRow = $(event.currentTarget)
+        .closest('tr')
+        .next(':first');
 
       $paymentDetailRow.toggleClass('d-none');
     });
@@ -125,13 +129,13 @@ $(() => {
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 
-    $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
+    $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', event => {
       const isChecked = $(event.currentTarget).is(':checked');
 
       $invoiceSelect.attr('disabled', isChecked);
     });
 
-    $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
+    $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', event => {
       const selectedCartRuleType = $(event.currentTarget).val();
       const $valueUnit = $form.find(OrderViewPageMap.addCartRuleValueUnit);
 
@@ -160,12 +164,12 @@ $(() => {
     const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
     const $wrapper = $(OrderViewPageMap.updateOrderStatusActionInputWrapper);
 
-    $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
+    $(OrderViewPageMap.updateOrderStatusActionInput).on('change', event => {
       const $element = $(event.currentTarget);
       const $option = $('option:selected', $element);
       const selectedOrderStatusId = $element.val();
 
-      $element.css('background-color', $option.data('background-color'));
+      $wrapper.css('background-color', $option.data('background-color'));
       $wrapper.toggleClass('is-bright', $option.data('is-bright') !== undefined);
 
       $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
@@ -175,7 +179,7 @@ $(() => {
   function initChangeAddressFormHandler() {
     const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
 
-    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', event => {
       $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($(event.currentTarget).data('addressType'));
     });
   }

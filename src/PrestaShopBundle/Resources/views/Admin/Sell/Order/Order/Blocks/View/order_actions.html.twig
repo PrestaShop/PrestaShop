@@ -39,11 +39,10 @@
         {% set isBright = choice.attr['data-is-bright'] %}
       {% endif %}
     {% endfor %}
-    <div class="select-status{% if isBright %} is-bright{% endif %}" id="update_order_status_action_input_wrapper">
+    <div class="select-status{% if isBright %} is-bright{% endif %}" id="update_order_status_action_input_wrapper" style="background-color:{{ backgroundColor }};">
         {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {
           'attr': {
-            'class': 'mr-1 select-status-colored',
-            'style': 'background-color: ' ~ backgroundColor
+            'class': 'select-status-colored',
           },
           'id': 'update_order_status_action_input',
         }) }}
