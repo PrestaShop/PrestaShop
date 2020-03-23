@@ -6,6 +6,7 @@ module.exports = class Addresses extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Addresses •';
+    this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
     // Header links
