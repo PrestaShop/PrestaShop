@@ -126,12 +126,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $totalMethod = $command->getOrderInvoiceId() ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
 
         // Create Order detail information
+        $productItem = array_reduce($cart->getProducts(), function($carry, $item) use ($product) {
+            if (null !== $carry) {
+                return $carry;
+            }
+            return $item['id_product'] == $product->id ? $item : null;
+        });
+        $productItem['cart_quantity'] = $command->getProductQuantity();
         $orderDetail = new OrderDetail();
         $orderDetail->createList(
             $order,
             $cart,
             $order->getCurrentOrderState(),
-            [$product],
+            [$productItem],
             !empty($invoice->id) ? $invoice->id : 0
         );
 
