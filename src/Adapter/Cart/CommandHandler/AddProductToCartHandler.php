@@ -69,7 +69,7 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
     {
         $cartIdValue = $command->getCartId()->getValue();
         $productIdValue = $command->getProductId()->getValue();
-        $combinationId = $command->getCombinationId() ? $command->getCombinationId()->getValue() : null;
+        $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : null;
         $customizationId = null;
 
         if (!empty($command->getCustomizationsByFieldIds())) {
