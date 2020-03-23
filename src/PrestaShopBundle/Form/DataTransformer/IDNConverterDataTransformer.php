@@ -23,31 +23,46 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
+namespace PrestaShopBundle\Form\DataTransformer;
 
-use PrestaShopBundle\Form\Admin\Type\EmailType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
+use Symfony\Component\Form\DataTransformerInterface;
 
 /**
- * Class TestEmailSendingType is responsible for building form type used to send testing emails.
+ * Class DefaultLanguageToFilledArrayDataTransformer is responsible for filling empty array values with
+ * default language value if such exists.
  */
-class TestEmailSendingType extends AbstractType
+final class IDNConverterDataTransformer implements DataTransformerInterface
 {
     /**
-     * {@inheritdoc}
+     * @var InternationalizedDomainNameConverter
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    private $converter;
+
+    public function __construct(InternationalizedDomainNameConverter $converter)
     {
-        $builder
-            ->add('send_email_to', EmailType::class)
-            ->add('mail_method', HiddenType::class)
-            ->add('smtp_server', HiddenType::class)
-            ->add('smtp_username', HiddenType::class)
-            ->add('smtp_password', HiddenType::class)
-            ->add('smtp_port', HiddenType::class)
-            ->add('smtp_encryption', HiddenType::class);
+        $this->converter = $converter;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Do not convert utf8 to punycode, should be done on the client side
+     */
+    public function transform($value)
+    {
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Convert punycode to utf8 (prestashop@xn--80aswg.xn--p1ai -> prestashop@сайт.рф)
+     */
+    public function reverseTransform($value)
+    {
+        return is_string($value) ? $this->converter->emailToUtf8($value) : $value;
     }
 }

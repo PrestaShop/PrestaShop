@@ -18,3 +18,6 @@ services:
 
     prestashop.core.util.arabic_to_latin_digit_converter:
       class: PrestaShop\PrestaShop\Core\Util\ArabicToLatinDigitConverter
+
+    prestashop.core.util.internationalized_domain_name_converter:
+        class: 'PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter'
