@@ -23,31 +23,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\EmailType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use PrestaShopBundle\Form\DataTransformer\IDNConverterDataTransformer;
+use Symfony\Component\Form\Extension\Core\Type\EmailType as BaseEmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-/**
- * Class TestEmailSendingType is responsible for building form type used to send testing emails.
- */
-class TestEmailSendingType extends AbstractType
+class EmailType extends BaseEmailType
 {
     /**
-     * {@inheritdoc}
+     * @var IDNConverterDataTransformer
      */
+    private $IDNConverterDataTransformer;
+
+    public function __construct(IDNConverterDataTransformer $IDNConverterDataTransformer)
+    {
+        $this->IDNConverterDataTransformer = $IDNConverterDataTransformer;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('send_email_to', EmailType::class)
-            ->add('mail_method', HiddenType::class)
-            ->add('smtp_server', HiddenType::class)
-            ->add('smtp_username', HiddenType::class)
-            ->add('smtp_password', HiddenType::class)
-            ->add('smtp_port', HiddenType::class)
-            ->add('smtp_encryption', HiddenType::class);
+        $builder->addViewTransformer($this->IDNConverterDataTransformer);
     }
 }
