@@ -133,31 +133,30 @@ class ThemeExporter
             $themeCatalogue = new MessageCatalogue($locale, []);
         }
         $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue($themeName);
-        $databaseCatalogue = $this->addLocaleToDomain($locale, $databaseCatalogue);
 
         $mergedTranslations->addCatalogue($themeCatalogue);
         $mergedTranslations->addCatalogue($databaseCatalogue);
 
         $this->updateCatalogueMetadata($mergedTranslations);
 
-        $archiveParentDirectory = $this->makeArchiveParentDirectory($themeName, $locale);
+        $archiveDirectory = $this->getExportDir($themeName);
 
-        if ($this->ensureFileBelongsToExportDirectory($archiveParentDirectory)) {
+        if ($this->ensureFileBelongsToExportDirectory($archiveDirectory)) {
             // Clean up previously exported archives
-            $this->filesystem->remove($archiveParentDirectory);
+            $this->filesystem->remove($archiveDirectory);
         }
 
-        $this->filesystem->mkdir($archiveParentDirectory);
+        $this->filesystem->mkdir($archiveDirectory);
 
         $this->dumper->dump($mergedTranslations, [
-            'path' => $archiveParentDirectory,
+            'path' => $archiveDirectory,
             'default_locale' => $locale,
             'root_dir' => $rootDir,
         ]);
 
-        $this->renameCatalogues($locale, $archiveParentDirectory);
+        $this->renameCatalogues($locale, $archiveDirectory);
 
-        return $archiveParentDirectory;
+        return $archiveDirectory;
     }
 
     /**
@@ -227,19 +226,12 @@ class ThemeExporter
         $finder = Finder::create();
 
         foreach ($finder->in($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
-            $parentDirectoryParts = explode(DIRECTORY_SEPARATOR, dirname($file));
-            $destinationFilenameParts = [
-                $archiveParentDirectory,
-                $parentDirectoryParts[count($parentDirectoryParts) - 1] . '.' . $locale . '.xlf',
-            ];
-            $destinationFilename = implode(DIRECTORY_SEPARATOR, $destinationFilenameParts);
+            $destinationFilename = preg_replace('#(\.xlf)$#', ".$locale\$1", $file->getPathname());
             if ($this->filesystem->exists($destinationFilename)) {
                 $this->filesystem->remove($destinationFilename);
             }
             $this->filesystem->rename($file->getPathname(), $destinationFilename);
         }
-
-        $this->filesystem->remove($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale);
     }
 
     /**
