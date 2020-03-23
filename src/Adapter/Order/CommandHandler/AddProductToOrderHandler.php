@@ -44,6 +44,7 @@ use OrderDetail;
 use OrderInvoice;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\Invoice;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -116,23 +117,24 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
+        // Fetch Cart Product
+        $productCart = $this->getCartProduct($cart, $product, $command->getProductQuantity());
+
         $invoice = $this->createNewOrEditExistingInvoice(
             $command,
             $order,
             $cart,
-            $product
+            [$productCart]
         );
 
         $totalMethod = $command->getOrderInvoiceId() ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
 
         // Create Order detail information
-        $orderDetail = new OrderDetail();
-        $orderDetail->createList(
+        $orderDetail = $this->createOrderDetail(
             $order,
+            $invoice,
             $cart,
-            $order->getCurrentOrderState(),
-            [$product],
-            !empty($invoice->id) ? $invoice->id : 0
+            [$productCart]
         );
 
         // update totals amount of order
@@ -313,6 +315,31 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
+     * @param Order $order
+     * @param OrderInvoice|null $invoice
+     * @param Cart $cart
+     * @param array $productCart
+     *
+     * @return OrderDetail
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function createOrderDetail(Order $order, ?OrderInvoice $invoice, Cart $cart, array $productCart): OrderDetail
+    {
+        $orderDetail = new OrderDetail();
+        $orderDetail->createList(
+            $order,
+            $cart,
+            $order->getCurrentOrderState(),
+            $productCart,
+            !empty($invoice->id) ? $invoice->id : 0
+        );
+
+        return $orderDetail;
+    }
+
+    /**
      * @param AddProductToOrderCommand $command
      * @param Order $order
      * @param Cart $cart
@@ -372,6 +399,59 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     /**
      * @param Cart $cart
      * @param Product $product
+     * @param int $quantity
+     *
+     * @return array
+     */
+    private function getCartProduct(Cart $cart, Product $product, int $quantity): array
+    {
+        $productItem = array_reduce($cart->getProducts(), function ($carry, $item) use ($product) {
+            if (null !== $carry) {
+                return $carry;
+            }
+
+            return $item['id_product'] == $product->id ? $item : null;
+        });
+        $productItem['cart_quantity'] = $quantity;
+
+        switch (Configuration::get('PS_ROUND_TYPE')) {
+            case Order::ROUND_TOTAL:
+                $productItem['total'] = $productItem['price_with_reduction_without_tax'] * $quantity;
+                $productItem['total_wt'] = $productItem['price_with_reduction'] * $quantity;
+
+                break;
+            case Order::ROUND_LINE:
+                $productItem['total'] = Tools::ps_round(
+                    $productItem['price_with_reduction_without_tax'] * $quantity,
+                    Context::getContext()->getComputingPrecision()
+                );
+                $productItem['total_wt'] = Tools::ps_round(
+                    $productItem['price_with_reduction'] * $quantity,
+                    Context::getContext()->getComputingPrecision()
+                );
+
+                break;
+
+            case Order::ROUND_ITEM:
+            default:
+                $productItem['total'] = Tools::ps_round(
+                        $productItem['price_with_reduction_without_tax'],
+                        Context::getContext()->getComputingPrecision()
+                    ) * $quantity;
+                $productItem['total_wt'] = Tools::ps_round(
+                        $productItem['price_with_reduction'],
+                        Context::getContext()->getComputingPrecision()
+                    ) * $quantity;
+
+                break;
+        }
+
+        return $productItem;
+    }
+
+    /**
+     * @param Cart $cart
+     * @param Product $product
      * @param Combination|null $combination
      * @param int $quantity
      */
@@ -414,11 +494,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         AddProductToOrderCommand $command,
         Order $order,
         Cart $cart,
-        Product $product
+        array $products
     ) {
         if ($order->hasInvoice()) {
             return $command->getOrderInvoiceId() ?
-                $this->updateExistingInvoice($command->getOrderInvoiceId(), $cart, $product) :
+                $this->updateExistingInvoice($command->getOrderInvoiceId(), $cart, $products) :
                 $this->createNewInvoice($order, $cart, $command->isFreeShipping());
         }
 
@@ -527,21 +607,21 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *
      * @return OrderInvoice
      */
-    private function updateExistingInvoice($orderInvoiceId, Cart $cart, Product $product)
+    private function updateExistingInvoice($orderInvoiceId, Cart $cart, array $products)
     {
         $precision = $this->getPrecisionFromCart($cart);
         $invoice = new OrderInvoice($orderInvoiceId);
 
         $invoice->total_paid_tax_excl += Tools::ps_round(
-            (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING, [$product]),
+            (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING, $products),
             $precision
         );
         $invoice->total_paid_tax_incl += Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, [$product]),
+            (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $products),
             $precision
         );
-        $invoice->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, [$product]);
-        $invoice->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, [$product]);
+        $invoice->total_products += (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $products);
+        $invoice->total_products_wt += (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $products);
 
         $invoice->update();
 
