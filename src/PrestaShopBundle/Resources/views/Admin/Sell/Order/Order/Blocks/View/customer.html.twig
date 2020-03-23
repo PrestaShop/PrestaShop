@@ -49,7 +49,10 @@
           {% endif %}
         </div>
         <div class="col-md-6 text-right">
-          <a class="d-print-none" href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
+          <a class="d-print-none" 
+             href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}"
+             target="_blank"
+          >
             {{ 'View full details'|trans({}, 'Admin.Actions') }}
           </a>
         </div>
