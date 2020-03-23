@@ -64,9 +64,7 @@ module.exports = class AddProduct extends BOBasePage {
    */
   async setBasicSetting(productData) {
     await this.setValue(this.productNameInput, productData.name);
-    await this.page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
-    await this.page.click(this.productShortDescriptionTab);
     await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(this.productTypeSelect, productData.type);
     await this.setValue(this.productReferenceInput, productData.reference);
