@@ -11,6 +11,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CustomerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
+const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 const HomePage = require('@pages/FO/home');
 const FOBasePage = require('@pages/FO/FObasePage');
 const LoginFOPage = require('@pages/FO/login');
@@ -78,7 +79,7 @@ describe('Enable/Disable re-display cart at login', async () => {
         baseContext,
       );
       const result = await this.pageObjects.customerSettingsPage.setOptionStatus(
-        'Redisplay cart at login',
+        options.OPTION_CART_LOGIN,
         test.args.enable,
       );
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);

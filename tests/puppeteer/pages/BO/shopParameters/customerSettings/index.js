@@ -1,5 +1,6 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
+const {options} = require('@pages/BO/shopParameters/customerSettings/options.js');
 
 module.exports = class customerSettings extends BOBasePage {
   constructor(page) {
@@ -28,25 +29,27 @@ module.exports = class customerSettings extends BOBasePage {
    * @return {Promise<string>}
    */
   async setOptionStatus(option, toEnable = true) {
+    let selector;
     switch (option) {
-      case 'B2B mode':
-        await this.waitForSelectorAndClick(this.enableB2BModeToggle.replace('%TOGGLE', toEnable ? 1 : 0));
+      case options.OPTION_B2B:
+        selector = this.enableB2BModeToggle;
         break;
-      case 'Partner offers':
-        await this.waitForSelectorAndClick(this.enablePartnerOfferLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+      case options.OPTION_PARTNER_OFFER:
+        selector = this.enablePartnerOfferLabel;
         break;
-      case 'Ask for birth date':
-        await this.waitForSelectorAndClick(this.askForBirthDateLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+      case options.OPTION_BIRTH_DATE:
+        selector = this.askForBirthDateLabel;
         break;
-      case 'Email after registration':
-        await this.waitForSelectorAndClick(this.sendEmailAfterRegistrationLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+      case options.OPTION_EMAIL_REGISTRATION:
+        selector = this.sendEmailAfterRegistrationLabel;
         break;
-      case 'Redisplay cart at login':
-        await this.waitForSelectorAndClick(this.redisplayCartAtLoginLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+      case options.OPTION_CART_LOGIN:
+        selector = this.redisplayCartAtLoginLabel;
         break;
       default:
-        throw new Error(`${option} was not found in the page`);
+        throw new Error(`${option} was not found`);
     }
+    await this.waitForSelectorAndClick(selector.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
