@@ -6,6 +6,7 @@ module.exports = class Addresses extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Addresses •';
+    this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
     // Header links
@@ -143,8 +144,8 @@ module.exports = class Addresses extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.addressesListTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.addressesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
+      this.waitForVisibleSelector(
+        `${this.addressesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
@@ -161,12 +162,12 @@ module.exports = class Addresses extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete
     await this.page.click(this.bulkActionsDeleteButton);
@@ -188,6 +189,6 @@ module.exports = class Addresses extends BOBasePage {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
-    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

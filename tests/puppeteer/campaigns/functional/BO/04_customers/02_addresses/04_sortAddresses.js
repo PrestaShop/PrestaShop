@@ -11,7 +11,7 @@ const AddressesPage = require('@pages/BO/customers/addresses');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customers_customers_sortAddresses';
+const baseContext = 'functional_BO_customers_addresses_sortAddresses';
 
 let browser;
 let page;

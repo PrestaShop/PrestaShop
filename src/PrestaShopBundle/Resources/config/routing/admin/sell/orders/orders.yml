@@ -4,6 +4,7 @@ admin_orders_index:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders
 
 admin_orders_create:
   path: /new
@@ -11,7 +12,7 @@ admin_orders_create:
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
     _legacy_controller: AdminOrders
-#    _legacy_link: AdminOrders:addorder
+    _legacy_link: AdminOrders:addorder
 
 admin_orders_place:
   path: /place
@@ -26,8 +27,10 @@ admin_orders_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:search
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
     _legacy_controller: AdminOrders
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order
+    redirectRoute: admin_orders_index
 
 admin_orders_generate_invoice_pdf:
   path: /{orderId}/generate-invoice-pdf
@@ -67,6 +70,9 @@ admin_orders_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:vieworder
+    _legacy_parameters:
+      id_order: orderId
   options:
     expose: true
   requirements:

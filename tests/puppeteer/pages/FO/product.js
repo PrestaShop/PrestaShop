@@ -24,15 +24,14 @@ module.exports = class Product extends FOBasePage {
   }
 
   /**
-   * To check the product information (Product name, price, quantity, description)
-   * @param productData, product data to check
+   * Get Product information (Product name, price, description)
+   * @returns {Promise<object>}
    */
-  async checkProduct(productData) {
+  async getProductInformation() {
     return {
-      name: await this.checkTextValue(this.productName, productData.name),
-      price: await this.checkAttributeValue(this.productPrice, 'content', productData.price),
-      quantity_wanted: await this.checkAttributeValue(this.productQuantity, 'value', productData.quantity_wanted),
-      description: await this.checkTextValue(this.productDescription, productData.description, 'contain'),
+      name: await this.getTextContent(this.productName),
+      price: parseFloat(await this.getAttributeContent(this.productPrice, 'content')),
+      description: await this.getTextContent(this.productDescription),
     };
   }
 
@@ -47,7 +46,7 @@ module.exports = class Product extends FOBasePage {
     await this.page.waitFor(1000);
     if (attributeToChoose.color) {
       await Promise.all([
-        this.page.waitForSelector(this.colorInput.replace('%COLOR', attributeToChoose.color), {visible: true}),
+        this.waitForVisibleSelector(this.colorInput.replace('%COLOR', attributeToChoose.color)),
         this.page.click(this.colorInput.replace('%COLOR', attributeToChoose.color)),
       ]);
     }
@@ -55,9 +54,9 @@ module.exports = class Product extends FOBasePage {
       await this.setValue(this.productQuantity, attributeToChoose.quantity.toString());
     }
     await this.waitForSelectorAndClick(this.addToCartButton);
-    await this.page.waitForSelector(`${this.blockCartModal}[style*='display: block;']`);
+    await this.waitForVisibleSelector(`${this.blockCartModal}[style*='display: block;']`);
     if (proceedToCheckout) {
-      await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
+      await this.waitForVisibleSelector(this.proceedToCheckoutButton);
       await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
     } else {
       await this.waitForSelectorAndClick(this.continueShoppingButton);
@@ -124,5 +123,13 @@ module.exports = class Product extends FOBasePage {
    */
   getProductPageURL() {
     return this.getAttributeContent(this.metaLink, 'content');
+  }
+
+  /**
+   * Is add to cart button enabled
+   * @returns {boolean}
+   */
+  isAddToCartButtonEnabled() {
+    return this.elementNotVisible(`${this.addToCartButton}:disabled`, 1000);
   }
 };

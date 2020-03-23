@@ -130,13 +130,10 @@ module.exports = class Employees extends BOBasePage {
   async updateToggleColumnValue(row, valueWanted = true) {
     if (await this.getToggleColumnValue(row) !== valueWanted) {
       this.page.click(this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
-      if (valueWanted) {
-        await this.page.waitForSelector(this.employeesListColumnValidIcon.replace('%ROW', row));
-      } else {
-        await this.page.waitForSelector(
-          this.employeesListColumnNotValidIcon.replace('%ROW', row),
-        );
-      }
+      await this.waitForVisibleSelector(
+        (valueWanted ? this.employeesListColumnValidIcon : this.employeesListColumnNotValidIcon)
+          .replace('%ROW', row),
+      );
       return true;
     }
     return false;
@@ -152,15 +149,12 @@ module.exports = class Employees extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.employeesListTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
+      this.waitForVisibleSelector(
+        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
-    await Promise.all([
-      this.page.click(this.employeesListTableDeleteLink.replace('%ROW', row)),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    await this.clickAndWaitForNavigation(this.employeesListTableDeleteLink.replace('%ROW', row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -173,12 +167,12 @@ module.exports = class Employees extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
@@ -194,18 +188,15 @@ module.exports = class Employees extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

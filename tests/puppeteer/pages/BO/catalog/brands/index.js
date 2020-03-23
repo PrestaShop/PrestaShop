@@ -40,7 +40,14 @@ module.exports = class Brands extends BOBasePage {
     this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
     this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
 
+    // Grid Actions
+    this.gridActionButton = '#%TABLE-grid-actions-button';
+    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'%TABLE-grid-actions-button\']';
+    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+
     // Brands list Selectors
+    this.brandsTableColumnLogoImg = `${this.tableColumn
+      .replace('%TABLE', 'manufacturer').replace('%COLUMN', 'logo')} img`;
     this.brandsTableEnableColumn = `${this.tableColumn
       .replace('%TABLE', 'manufacturer').replace('%COLUMN', 'active')}`;
     this.brandsEnableColumnValidIcon = `${this.brandsTableEnableColumn} i.grid-toggler-icon-valid`;
@@ -213,7 +220,7 @@ module.exports = class Brands extends BOBasePage {
   async goToEditBrandPage(row = '1') {
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%TABLE', 'manufacturer').replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`
           .replace('%TABLE', 'manufacturer').replace('%ROW', row),
       ),
@@ -240,13 +247,12 @@ module.exports = class Brands extends BOBasePage {
     this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%TABLE', table).replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`
           .replace('%TABLE', table).replace('%ROW', row),
       ),
     ]);
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%TABLE', table).replace('%ROW', row));
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -285,9 +291,8 @@ module.exports = class Brands extends BOBasePage {
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton.replace('%TABLE', 'manufacturer')),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.bulkActionsToggleButton}[aria-expanded='true']`.replace('%TABLE', 'manufacturer'),
-        {visible: true},
       ),
     ]);
     // Click on delete and wait for modal
@@ -304,32 +309,20 @@ module.exports = class Brands extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel.replace('%TABLE', table)),
-      this.page.waitForSelector(
-        `${this.selectAllRowsLabel}:not([disabled])`.replace('%TABLE', table),
-        {visible: true},
-      ),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`.replace('%TABLE', table)),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton.replace('%TABLE', table)),
-      this.page.waitForSelector(
-        `${this.bulkActionsToggleButton}[aria-expanded='true']`.replace('%TABLE', table),
-        {visible: true},
-      ),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`.replace('%TABLE', table)),
     ]);
     // Click on delete and wait for modal
     if (table === 'manufacturer') {
       this.page.click(this.deleteBrandsButton);
-      await this.page.waitForSelector(
-        `${this.confirmDeleteModal.replace('%TABLE', 'manufacturer')}.show`,
-        {visible: true},
-      );
+      await this.waitForVisibleSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer')}.show`);
     } else if (table === 'manufacturer_address') {
       this.page.click(this.deleteAddressesButton);
-      await this.page.waitForSelector(
-        `${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`,
-        {visible: true},
-      );
+      await this.waitForVisibleSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`);
     }
     await this.clickAndWaitForNavigation(this.confirmDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -359,6 +352,31 @@ module.exports = class Brands extends BOBasePage {
    */
   async getTextColumnFromTableBrands(row, column) {
     return this.getTextColumnFromTable('manufacturer', row, column);
+  }
+
+  /**
+   * Get logo link from brands table row
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getLogoLinkFromBrandsTable(row) {
+    return this.getAttributeContent(this.brandsTableColumnLogoImg.replace('%ROW', row), 'src');
+  }
+
+  /**
+   * Get all information from categories table
+   * @param row
+   * @return {Promise<{object}>}
+   */
+  async getBrandFromTable(row) {
+    return {
+      id: await this.getTextColumnFromTableBrands(row, 'id_manufacturer'),
+      logo: await this.getLogoLinkFromBrandsTable(row),
+      name: await this.getTextColumnFromTableBrands(row, 'name'),
+      addresses: await this.getTextColumnFromTableBrands(row, 'addresses_count'),
+      products: await this.getTextColumnFromTableBrands(row, 'products_count'),
+      status: await this.getToggleColumnValue(row),
+    };
   }
 
   /**
@@ -435,7 +453,7 @@ module.exports = class Brands extends BOBasePage {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
-    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 
   /**
@@ -464,5 +482,53 @@ module.exports = class Brands extends BOBasePage {
    */
   getAlertTextMessage() {
     return this.getTextContent(this.alertTextBlock);
+  }
+
+  // Export methods
+  /**
+   * Click on lint to export categories to a csv file
+   * @param table, which table to export
+   * @return {Promise<void>}
+   */
+  async exportDataToCsv(table) {
+    await Promise.all([
+      this.page.click(this.gridActionButton.replace('%TABLE', table)),
+      this.waitForVisibleSelector(`${this.gridActionDropDownMenu.replace('%TABLE', table)}.show`),
+    ]);
+    await Promise.all([
+      this.page.click(this.gridActionExportLink.replace('%TABLE', table)),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu.replace('%TABLE', table)}.show`, {hidden: true}),
+    ]);
+  }
+
+  /**
+   * Export brands data to csv file
+   * @return {Promise<void>}
+   */
+  async exportBrandsDataToCsv() {
+    return this.exportDataToCsv('manufacturer');
+  }
+
+  /**
+   * Export brand addresses data to csv file
+   * @return {Promise<void>}
+   */
+  async exportAddressesDataToCsv() {
+    return this.exportDataToCsv('manufacturer_address');
+  }
+
+  /**
+   * Get category from table in csv format
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getBrandInCsvFormat(row) {
+    const brand = await this.getBrandFromTable(row);
+    return `${brand.id};`
+      + `${brand.logo};`
+      + `"${brand.name}";`
+      + `${brand.addresses};`
+      + `${brand.products};`
+      + `${brand.status ? 1 : 0}`;
   }
 };

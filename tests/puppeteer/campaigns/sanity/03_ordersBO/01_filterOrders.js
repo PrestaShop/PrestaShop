@@ -12,7 +12,7 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BOBasePage = require('@pages/BO/BObasePage');
 const OrdersPage = require('@pages/BO/orders');
-const {Orders, Statuses} = require('@data/demo/orders');
+const {Orders} = require('@data/demo/orders');
 
 let numberOfOrders;
 let browser;
@@ -83,16 +83,16 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     {
       args:
         {
-          identifier: 'filterState',
+          identifier: 'filterOsName',
           filterType: 'select',
-          filterBy: 'order_state',
-          filterValue: Statuses.paymentError.status,
+          filterBy: 'osname',
+          filterValue: Orders.thirdOrder.status,
         },
     },
   ];
 
   tests.forEach((test) => {
-    it('should filter the Orders table by ID and check the result', async function () {
+    it(`should filter the Orders table by '${test.args.filterBy}' and check the result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrders_${test.args.identifier}`, baseContext);
       await this.pageObjects.ordersPage.filterOrders(
         test.args.filterType,

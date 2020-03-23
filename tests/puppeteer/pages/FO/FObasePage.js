@@ -33,7 +33,7 @@ module.exports = class Home extends CommonPage {
    * go to the home page
    */
   async goToHomePage() {
-    await this.page.waitForSelector(this.desktopLogo, {visible: true});
+    await this.waitForVisibleSelector(this.desktopLogo);
     await this.clickAndWaitForNavigation(this.desktopLogo);
   }
 
@@ -60,10 +60,7 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<void>}
    */
   async goToLoginPage() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.userInfoLink),
-    ]);
+    await this.clickAndWaitForNavigation(this.userInfoLink);
   }
 
   /**
@@ -79,10 +76,7 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<void>}
    */
   async logout() {
-    await Promise.all([
-      this.page.click(this.logoutLink),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(this.logoutLink);
   }
 
   /**
@@ -93,12 +87,9 @@ module.exports = class Home extends CommonPage {
   async changeLanguage(lang = 'en') {
     await Promise.all([
       this.page.click(this.languageSelectorExpandIcon),
-      this.page.waitForSelector(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
+      this.waitForVisibleSelector(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
-    ]);
+    await this.clickAndWaitForNavigation(this.languageSelectorMenuItemLink.replace('%LANG', lang));
   }
 
   /**

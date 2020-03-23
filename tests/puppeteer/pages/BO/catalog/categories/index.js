@@ -131,15 +131,12 @@ module.exports = class Categories extends BOBasePage {
   async updateToggleColumnValue(row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
       this.page.click(this.categoriesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
-      if (valueWanted) {
-        await this.page.waitForSelector(
-          this.categoriesListColumnValidIcon.replace('%ROW', 1).replace('%COLUMN', column),
-        );
-      } else {
-        await this.page.waitForSelector(
-          this.categoriesListColumnNotValidIcon.replace('%ROW', 1).replace('%COLUMN', column),
-        );
-      }
+      await this.waitForVisibleSelector(
+        (valueWanted ? this.categoriesListColumnValidIcon : this.categoriesListColumnNotValidIcon)
+          .replace('%ROW', row)
+          .replace('%COLUMN', column)
+        ,
+      );
       return true;
     }
     return false;
@@ -198,7 +195,7 @@ module.exports = class Categories extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.categoriesListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
+      this.waitForVisibleSelector(this.categoriesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
     ]);
     // Click on edit
     await this.clickAndWaitForNavigation(
@@ -238,16 +235,15 @@ module.exports = class Categories extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.categoriesListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.categoriesListTableToggleDropDown
           .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
       ),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.categoriesListTableDeleteLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(this.deleteCategoryModal, {visible: true}),
+      this.waitForVisibleSelector(this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(modeID);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -261,7 +257,7 @@ module.exports = class Categories extends BOBasePage {
   async chooseOptionAndDelete(modeID) {
     await this.page.click(this.deleteCategoryModalModeInput.replace('%ID', modeID));
     await this.clickAndWaitForNavigation(this.deleteCategoryModalDeleteButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
+    await this.waitForVisibleSelector(this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -273,12 +269,12 @@ module.exports = class Categories extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
@@ -294,17 +290,17 @@ module.exports = class Categories extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.deleteCategoryModal, {visible: true}),
+      this.waitForVisibleSelector(this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(modeID);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -321,7 +317,7 @@ module.exports = class Categories extends BOBasePage {
       this.categoriesListTableDraggableColumn.replace('%ROW', categoryRow),
       this.categoriesListTableDraggableColumn.replace('%ROW', position),
     );
-    return this.getTextContent(this.growlDefaultMessageBlock);
+    return this.getTextContent(this.growlMessageBlock);
   }
 
   /* Sort methods */
@@ -340,7 +336,7 @@ module.exports = class Categories extends BOBasePage {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
-    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 
   // Export methods
@@ -351,7 +347,7 @@ module.exports = class Categories extends BOBasePage {
   async exportDataToCsv() {
     await Promise.all([
       this.page.click(this.categoryGridActionsButton),
-      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${this.gridActionDropDownMenu}.show`),
     ]);
     await Promise.all([
       this.page.click(this.gridActionExportLink),

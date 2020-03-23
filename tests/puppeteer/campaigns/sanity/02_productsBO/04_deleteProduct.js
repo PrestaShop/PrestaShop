@@ -68,7 +68,7 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
   it('should create Product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData);
+    const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 

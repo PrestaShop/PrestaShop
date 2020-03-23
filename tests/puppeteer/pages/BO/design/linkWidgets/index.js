@@ -49,12 +49,11 @@ module.exports = class LinkWidgets extends BOBasePage {
     this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%HOOKID', hookId).replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%HOOKID', hookId).replace('%ROW', row),
       ),
     ]);
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%HOOKID', hookId).replace('%ROW', row));
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

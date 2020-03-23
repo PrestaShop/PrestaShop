@@ -18,16 +18,14 @@ module.exports = class Cart extends FOBasePage {
   }
 
   /**
-   * To check the cart details (product name, price, quantity)
-   * @param cartData, cart data to check
-   * @param productID, product id to check
+   * Get Product detail from cart (product name, price, quantity)
+   * @param row, product row in cart
    */
-  async checkProductInCart(cartData, productID) {
+  async getProductDetail(row) {
     return {
-      name: await this.checkTextValue(this.productName.replace('%NUMBER', productID), cartData.name),
-      price: await this.checkTextValue(this.productPrice.replace('%NUMBER', productID), cartData.price),
-      quantity: await this.checkAttributeValue(this.productQuantity.replace('%NUMBER', productID), 'value',
-        cartData.quantity),
+      name: await this.getTextContent(this.productName.replace('%NUMBER', row)),
+      price: await this.getTextContent(this.productPrice.replace('%NUMBER', row)),
+      quantity: parseFloat(await this.getAttributeContent(this.productQuantity.replace('%NUMBER', row), 'value')),
     };
   }
 
@@ -35,7 +33,7 @@ module.exports = class Cart extends FOBasePage {
    * Click on Proceed to checkout button
    */
   async clickOnProceedToCheckout() {
-    await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
+    await this.waitForVisibleSelector(this.proceedToCheckoutButton);
     await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
   }
 

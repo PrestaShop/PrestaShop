@@ -18,7 +18,7 @@ const ProductFaker = require('@data/faker/product');
 
 let browser;
 let page;
-const productData = new ProductFaker({type: 'Standard product'});
+const productData = new ProductFaker({type: 'Standard product', status: false});
 const maxSummarySizeValue = 5;
 const defaultSummarySizeValue = 800;
 
@@ -86,11 +86,11 @@ describe('Update max size of short description', async () => {
       await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
     });
     if (test.args.descriptionSize === maxSummarySizeValue) {
-      it(`should create a product with a summary more than ${test.args.descriptionSize} characters 
+      it(`should create a product with a summary more than ${test.args.descriptionSize} characters
       and check the error message`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index + 1}`, baseContext);
         await this.pageObjects.productsPage.goToAddProductPage();
-        let errorMessage = await this.pageObjects.addProductPage.createEditProduct(productData, false);
+        let errorMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
         await expect(errorMessage).to.equal(this.pageObjects.addProductPage.errorMessage);
         errorMessage = await this.pageObjects.addProductPage.getErrorMessageWhenSummaryIsTooLong();
         await expect(errorMessage).to.equal(
@@ -101,7 +101,7 @@ describe('Update max size of short description', async () => {
       it(`should create a product with a summary less than ${test.args.descriptionSize} characters`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index + 1}`, baseContext);
         await this.pageObjects.productsPage.goToAddProductPage();
-        const validationMessage = await this.pageObjects.addProductPage.createEditProduct(productData, false);
+        const validationMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
         await expect(validationMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
       });
     }

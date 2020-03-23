@@ -134,7 +134,7 @@ module.exports = class Monitoring extends BOBasePage {
   async openDropdownMenu(grid, row) {
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row).replace('%GRID', grid)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%GRID', grid).replace('%ROW', row),
       ),
     ]);
@@ -150,7 +150,6 @@ module.exports = class Monitoring extends BOBasePage {
     this.dialogListener(true);
     await this.openDropdownMenu(grid, row);
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%GRID', grid).replace('%ROW', row));
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -172,7 +171,7 @@ module.exports = class Monitoring extends BOBasePage {
   async editCategoryInGrid(row) {
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
@@ -191,12 +190,11 @@ module.exports = class Monitoring extends BOBasePage {
     await this.openDropdownMenu(grid, row);
     await Promise.all([
       this.page.click(this.deleteCategoryRowLink.replace('%ROW', row)),
-      this.page.waitForSelector(this.deleteModeModal, {visible: true}),
+      this.waitForVisibleSelector(this.deleteModeModal),
     ]);
     // choose deletion mode
     await this.page.click(this.deleteModeInput.replace('%POSITION', deletionModePosition));
     await this.clickAndWaitForNavigation(this.submitDeleteModeButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
