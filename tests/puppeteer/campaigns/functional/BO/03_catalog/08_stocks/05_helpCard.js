@@ -11,7 +11,7 @@ const StocksPage = require('@pages/BO/catalog/stocks');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_monitoring_helpCard';
+const baseContext = 'functional_BO_catalog_stocks_helpCard';
 
 let browser;
 let page;
