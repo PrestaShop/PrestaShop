@@ -148,13 +148,13 @@ module.exports = class Order extends BOBasePage {
    */
   async getOrderInCsvFormat(row) {
     const order = await this.getOrderFromTable(row);
-    return `${`${order.id};`
+    return `${order.id};`
       + `${order.reference};`
-      + `${order.newClient === 'Yes' ? 1 : 0};`}${
-      order.delivery.split(' ').length > 1 ? `"${order.delivery}";` : `${order.delivery};`
-    }"${order.customer}";`
-      + `${order.totalPaid};${
-        order.payment.split(' ').length > 1 ? `"${order.payment}";` : `${order.payment};`
-      }${order.status.split(' ').length > 1 ? `"${order.status}";` : `${order.status};`}`;
+      + `${order.newClient === 'Yes' ? 1 : 0};`
+      + `${order.delivery.split(' ').length > 1 ? `"${order.delivery}";` : `${order.delivery};`}`
+      + `"${order.customer}";`
+      + `${order.totalPaid};`
+      + `${order.payment.split(' ').length > 1 ? `"${order.payment}";` : `${order.payment};`}`
+      + `${order.status.split(' ').length > 1 ? `"${order.status}";` : `${order.status};`}`;
   }
 };
