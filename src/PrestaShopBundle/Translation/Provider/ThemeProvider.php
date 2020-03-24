@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
@@ -224,7 +225,7 @@ class ThemeProvider extends AbstractProvider
     /**
      * @return MessageCatalogueInterface
      *
-     * @throws \Exception
+     * @throws FileNotFoundException
      */
     public function getThemeCatalogue()
     {
