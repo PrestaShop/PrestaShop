@@ -215,8 +215,8 @@ class CurrencyType extends TranslatorAwareType
                     ]),
                 ],
                 'invalid_message' => $this->trans(
-                    'This field is invalid, it must contain a positive integer',
-                    'Admin.Notifications.Error'
+                    'Please enter a positive value',
+                    'Admin.Orderscustomers.Notification'
                 ),
             ])
             ->add('active', SwitchType::class, [
