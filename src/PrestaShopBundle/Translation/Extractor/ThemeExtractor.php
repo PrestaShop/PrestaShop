@@ -48,7 +48,7 @@ class ThemeExtractor
     private $catalog;
 
     /**
-     * @var array the list of Translation dumpers
+     * @var DumperInterface[] the list of Translation dumpers
      */
     private $dumpers = array();
 
@@ -96,11 +96,13 @@ class ThemeExtractor
     }
 
     /**
+     * Extracts wordings from template files and dumps them as XLIFF files
+     *
      * @param Theme $theme
      * @param string $locale
      * @param bool $rootDir
      *
-     * @return mixed
+     * @return void
      *
      * @throws \Exception
      */
