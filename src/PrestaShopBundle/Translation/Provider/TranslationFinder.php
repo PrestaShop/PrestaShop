@@ -82,7 +82,7 @@ class TranslationFinder
     }
 
     /**
-     * @param $paths
+     * @param string|string[] $paths
      * @param $pattern
      *
      * @return Finder
