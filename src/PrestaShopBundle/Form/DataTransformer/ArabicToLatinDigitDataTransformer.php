@@ -62,8 +62,8 @@ final class ArabicToLatinDigitDataTransformer implements DataTransformerInterfac
      */
     public function reverseTransform($value)
     {
-        if (null === $value) {
-            return  $value;
+        if (null === $value || '' === $value) {
+            return null;
         }
 
         return $this->arabicToLatinDigitConverter->convert($value);
