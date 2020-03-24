@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Translation\Exporter;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
@@ -129,8 +130,9 @@ class ThemeExporter
 
         try {
             $themeCatalogue = $this->themeProvider->getThemeCatalogue();
-        } catch (\Exception $exception) {
-            $themeCatalogue = new MessageCatalogue($locale, array());
+        } catch (FileNotFoundException $exception) {
+            // if the theme doesn't have translation files (eg. the default theme)
+            $themeCatalogue = new MessageCatalogue($locale);
         }
         $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue($themeName);
 
