@@ -1,34 +1,34 @@
 {**
- * 2007-2019 PrestaShop and Contributors
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/AFL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
- *}
+  * 2007-2019 PrestaShop and Contributors
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
+  * that is bundled with this package in the file LICENSE.txt.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/AFL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+  * versions in the future. If you wish to customize PrestaShop for your
+  * needs please refer to https://www.prestashop.com for more information.
+  *
+  * @author    PrestaShop SA <contact@prestashop.com>
+  * @copyright 2007-2019 PrestaShop SA and Contributors
+  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+  * International Registered Trademark & Property of PrestaShop SA
+  *}
 {extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
   <div class="js-address-form">
     <form
       method="POST"
-      action="{$urls.pages.order}"
+      action="{url entity='order' params=['id_address' => $id_address]}"
       data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
     >
 
@@ -49,20 +49,20 @@
       {if $show_delivery_address_form}
         <div id="delivery-address">
           {render file                      = 'checkout/_partials/address-form.tpl'
-                  ui                        = $address_form
-                  use_same_address          = $use_same_address
-                  type                      = "delivery"
-                  form_has_continue_button  = $form_has_continue_button
+            ui                        = $address_form
+            use_same_address          = $use_same_address
+            type                      = "delivery"
+            form_has_continue_button  = $form_has_continue_button
           }
         </div>
       {elseif $customer.addresses|count > 0}
         <div id="delivery-addresses" class="address-selector js-address-selector">
           {include  file        = 'checkout/_partials/address-selector-block.tpl'
-                    addresses   = $customer.addresses
-                    name        = "id_address_delivery"
-                    selected    = $id_address_delivery
-                    type        = "delivery"
-                    interactive = !$show_delivery_address_form and !$show_invoice_address_form
+            addresses   = $customer.addresses
+            name        = "id_address_delivery"
+            selected    = $id_address_delivery
+            type        = "delivery"
+            interactive = !$show_delivery_address_form and !$show_invoice_address_form
           }
         </div>
 
@@ -93,20 +93,20 @@
         {if $show_invoice_address_form}
           <div id="invoice-address">
             {render file                      = 'checkout/_partials/address-form.tpl'
-                    ui                        = $address_form
-                    use_same_address          = $use_same_address
-                    type                      = "invoice"
-                    form_has_continue_button  = $form_has_continue_button
+              ui                        = $address_form
+              use_same_address          = $use_same_address
+              type                      = "invoice"
+              form_has_continue_button  = $form_has_continue_button
             }
           </div>
         {else}
           <div id="invoice-addresses" class="address-selector js-address-selector">
             {include  file        = 'checkout/_partials/address-selector-block.tpl'
-                      addresses   = $customer.addresses
-                      name        = "id_address_invoice"
-                      selected    = $id_address_invoice
-                      type        = "invoice"
-                      interactive = !$show_delivery_address_form and !$show_invoice_address_form
+              addresses   = $customer.addresses
+              name        = "id_address_invoice"
+              selected    = $id_address_invoice
+              type        = "invoice"
+              interactive = !$show_delivery_address_form and !$show_invoice_address_form
             }
           </div>
 
@@ -126,7 +126,7 @@
       {if !$form_has_continue_button}
         <div class="clearfix">
           <button type="submit" class="btn btn-primary continue float-xs-right" name="confirm-addresses" value="1">
-              {l s='Continue' d='Shop.Theme.Actions'}
+            {l s='Continue' d='Shop.Theme.Actions'}
           </button>
           <input type="hidden" id="not-valid-addresses" value="{$not_valid_addresses}">
         </div>
