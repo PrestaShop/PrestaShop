@@ -139,7 +139,10 @@ class ThemeProvider extends AbstractProvider
             $baseDir = $this->resourceDirectory;
         }
 
-        $resourceDirectory = $baseDir . '/' . $this->themeName . '/translations/' . $this->getLocale();
+        $resourceDirectory = implode(
+            DIRECTORY_SEPARATOR,
+            [$baseDir, $this->themeName, 'translations', $this->getLocale()]
+        );
         $this->filesystem->mkdir($resourceDirectory);
 
         return $resourceDirectory;
