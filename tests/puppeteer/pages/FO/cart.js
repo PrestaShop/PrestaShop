@@ -73,7 +73,7 @@ module.exports = class Cart extends FOBasePage {
 
   /**
    * Is proceed to checkout button disabled
-   * @returns {Promise<boolean>}
+   * @returns {boolean}
    */
   isProceedToCheckoutButtonDisabled() {
     return this.elementVisible(this.disabledProceedToCheckoutButton, 1000);
