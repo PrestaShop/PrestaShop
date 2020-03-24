@@ -382,7 +382,7 @@ class ShopCore extends ObjectModel
             Configuration::getMultiShopValues('PS_MEDIA_SERVER_3')
         );
 
-        if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array($http_host, $all_media)) {
+        if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || ('all' === $id_shop && defined('_PS_API_IN_USE_')) || Tools::isPHPCLI() || in_array($http_host, $all_media)) {
             // If in admin, we can access to the shop without right URL
             if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_')) {
                 $id_shop = (int) Configuration::get('PS_SHOP_DEFAULT');
