@@ -78,6 +78,16 @@ if (isset($argv) && is_array($argv)) {
         $cliEnvValue = $argv[array_search('--env', $argv) + 1];
     } elseif (in_array('-e', $argv)) {
         $cliEnvValue = $argv[array_search('-e', $argv) + 1];
+    } else {
+        // Parse arguments without spaces (e.g --env=test)
+        foreach ($argv as $arg) {
+            $args = explode('=', $arg, 2);
+            if ($args[0] !== '-e' && $args[0] !== '--env') {
+                continue;
+            }
+            $cliEnvValue = $args[1];
+            break;
+        }
     }
 }
 

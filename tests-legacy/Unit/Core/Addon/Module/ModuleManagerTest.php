@@ -59,7 +59,8 @@ class ModuleManagerTest extends TestCase
             $this->moduleZipManagerS,
             $this->translatorS,
             $this->dispatcherS,
-            $this->cacheClearerS
+            $this->cacheClearerS,
+            []
         );
     }
 

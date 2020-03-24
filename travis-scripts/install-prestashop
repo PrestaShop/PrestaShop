@@ -13,6 +13,6 @@ php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db
 if test ! $? -eq 0; then
   echo "Installed failed, displaying errors from logs:"
   echo
-  cat var/logs/* | grep -v error
+  cat var/logs/* | grep -i error
   exit 1
 fi

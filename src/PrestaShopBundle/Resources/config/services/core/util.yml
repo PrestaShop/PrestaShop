@@ -15,3 +15,6 @@ services:
 
     prestashop.core.util.color_brightness_calculator:
         class: PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator
+
+    prestashop.core.util.namespace_finder:
+        class: PrestaShop\PrestaShop\Core\Util\NamespaceFinder

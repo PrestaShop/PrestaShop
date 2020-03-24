@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
+use PrestaShop\PrestaShop\Adapter\Module\Preloader\ModuleAutoloadFilePreloader;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
@@ -77,6 +78,7 @@ class ModuleManagerBuilder
     public static $categoriesProvider = null;
     public static $instance = null;
     public static $cacheProvider = null;
+    public static $preloaders;
 
     /**
      * @return ModuleManagerBuilder|null
@@ -110,7 +112,8 @@ class ModuleManagerBuilder
                     self::$moduleZipManager,
                     self::$translator,
                     new NullDispatcher(),
-                    new Clearer\SymfonyCacheClearer()
+                    new Clearer\SymfonyCacheClearer(),
+                    self::$preloaders
                 );
             }
         }
@@ -223,6 +226,12 @@ class ModuleManagerBuilder
             self::$translator = Context::getContext()->getTranslator();
             self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
         }
+
+        // This is a minimum list of preloaders, ModuleManagerBuilder shouldn't be used in installation process
+        $autoloadPreloader = new ModuleAutoloadFilePreloader(_PS_MODULE_DIR_);
+        self::$preloaders = [
+            $autoloadPreloader,
+        ];
     }
 
     /**

@@ -101,6 +101,11 @@ class ModuleManager implements AddonManagerInterface
     private $symfonyCacheClearer;
 
     /**
+     * @var ModulePreloaderInterface[]
+     */
+    private $preloaders;
+
+    /**
      * Used to check if the cache has already been cleaned.
      *
      * @var bool
@@ -116,6 +121,7 @@ class ModuleManager implements AddonManagerInterface
      * @param TranslatorInterface $translator
      * @param EventDispatcherInterface $eventDispatcher
      * @param CacheClearerInterface $symfonyCacheClearer
+     * @param ModulePreloaderInterface[] $preloaders
      */
     public function __construct(
         AdminModuleDataProvider $adminModuleProvider,
@@ -125,7 +131,8 @@ class ModuleManager implements AddonManagerInterface
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher,
-        CacheClearerInterface $symfonyCacheClearer
+        CacheClearerInterface $symfonyCacheClearer,
+        array $preloaders
     ) {
         $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
@@ -135,6 +142,7 @@ class ModuleManager implements AddonManagerInterface
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
         $this->symfonyCacheClearer = $symfonyCacheClearer;
+        $this->preloaders = $preloaders;
         $this->actionParams = new ParameterBag();
     }
 
@@ -299,6 +307,13 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         $this->checkConfirmationGiven(__FUNCTION__, $module);
+
+        // Module preload (include autoload, doctrine mapping, load services)
+        foreach ($this->preloaders as $preloader) {
+            $preloader->preload($name);
+        }
+
+        // Module install
         $result = $module->onInstall();
 
         $this->checkAndClearCache($result);
