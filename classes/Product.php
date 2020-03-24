@@ -533,6 +533,15 @@ class ProductCore extends ObjectModel
                     'quantity' => array(),
                 ),
             ),
+            'carriers' => array(
+				'resource' => 'carrier',
+                'getter' => 'getWsCarriers',
+                'setter' => 'setWsCarriers',	
+                'fields' => array(
+                    'id' => array('required' => true),
+                    'id_shop' => array('required' => true),
+                ),
+            ),            
         ),
     );
 
@@ -6826,6 +6835,54 @@ class ProductCore extends ObjectModel
 
         return true;
     }
+    
+	/*
+	* For webservices (use id_reference not id_carrier)
+	* Get the liste of specific carriers for a product
+	* Don't know if I must limit to the default shop ?? (AND pc.id_shop = ' . (int) $this->id_shop_default)
+	*/
+    public function getWsCarriers()
+    {
+        $carriers = Db::getInstance()->executeS(
+            'SELECT pc.id_carrier_reference AS id, pc.id_shop AS id_shop
+            FROM `'      . _DB_PREFIX_ . 'product_carrier` pc
+            LEFT JOIN `' . _DB_PREFIX_ . 'carrier` c ON (pc.id_carrier_reference = c.id_reference) AND (c.deleted = 0)
+            WHERE (pc.id_product = ' . (int) $this->id . ')'
+            );
+			
+        return $carriers;
+    }
+	
+	/*
+	* For webservices (use id_reference not id_carrier)
+	* Delete old carrieres
+	* For each carrierr 
+	*	If found and not setted 'deleted' -> insert it
+	* Don't know if I must limit to the default shop ?? (pc.id_shop = ' . (int) $this->id_shop_default)
+	*/
+	public function setWsCarriers($carriers)
+	{
+		$answ = true;
+		Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'product_carrier`
+		WHERE (`id_product` = ' . (int) $this->id . ')');
+        foreach ($carriers as $carrier) {
+			$res = Db::getInstance()->executeS(
+            'SELECT id_carrier, id_reference, deleted
+            FROM `' . _DB_PREFIX_ . 'carrier`
+            WHERE (id_reference = ' . (int) $carrier['id'] . ') and (deleted=0)'
+            );
+			if (count($res) == 1) {
+				$carfnd = $res[0];
+				Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'product_carrier` (`id_product`, `id_shop`, `id_carrier_reference`)
+				VALUES (' . (int) $this->id . ', ' . (int) $carrier['id_shop'] . ', ' . (int) $carfnd['id_reference'] . ')');
+			} else {
+				$answ = false;
+			}			
+        }
+        return $answ;	
+	}
+
+    
 
     public function getWsProductBundle()
     {
