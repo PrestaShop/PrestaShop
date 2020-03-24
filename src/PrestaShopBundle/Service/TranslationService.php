@@ -35,6 +35,7 @@ use Symfony\Component\Validator\Validation;
 
 class TranslationService
 {
+    const DEFAULT_THEME = 'classic';
     /**
      * @var Container
      */
@@ -113,7 +114,7 @@ class TranslationService
         $factory = $this->container->get('ps.translations_factory');
 
         if ($this->requiresThemeTranslationsFactory($theme, $type)) {
-            if ('classic' === $theme) {
+            if ($this->isDefaultTheme($theme)) {
                 $type = 'front';
             } else {
                 $type = $theme;
@@ -153,7 +154,7 @@ class TranslationService
      */
     public function listDomainTranslation($locale, $domain, $theme = null, $search = null, $module = null)
     {
-        if (!empty($theme) && 'classic' !== $theme) {
+        if (!empty($theme) && !$this->isDefaultTheme($theme)) {
             $translationProvider = $this->container->get('prestashop.translation.theme_provider');
             $translationProvider->setThemeName($theme);
         } else {
@@ -178,7 +179,7 @@ class TranslationService
             'data' => array(),
         );
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
-        if (!empty($theme) && 'classic' !== $theme) {
+        if (!empty($theme) && !$this->isDefaultTheme($theme)) {
             $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
         } else {
             $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
@@ -350,5 +351,15 @@ class TranslationService
         }
 
         return $resetTranslationSuccessfully;
+    }
+
+    /**
+     * @param string $theme
+     *
+     * @return bool
+     */
+    private function isDefaultTheme($theme)
+    {
+        return static::DEFAULT_THEME === $theme;
     }
 }
