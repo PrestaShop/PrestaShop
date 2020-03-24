@@ -1,0 +1,2 @@
+*.min.css -text -filter
+*.min.js -text -filter
