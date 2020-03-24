@@ -151,8 +151,11 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the default (aka not translated) catalogue
      *
+     * @param bool $empty [default=true] Remove translations and return an empty catalogue
+     *
+     * @return MessageCatalogue|MessageCatalogueInterface
      * @throws FileNotFoundException
      */
     public function getDefaultCatalogue($empty = true)
@@ -253,7 +256,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * @param array $paths a list of paths when we can look for translations
+     * @param string|string[] $paths a list of paths when we can look for translations
      * @param string $locale the Symfony (not the PrestaShop one) locale
      * @param string|null $pattern a regular expression
      *
@@ -267,7 +270,9 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the path to the directory where the default (aka not translated) catalogue is
+     *
+     * @return string
      */
     abstract public function getDefaultResourceDirectory();
 }

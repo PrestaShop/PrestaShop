@@ -99,11 +99,13 @@ class ThemeExporter
     }
 
     /**
+     * Extracts the theme's translations and bundles them in a zip file
+     *
      * @param string $themeName
      * @param string $locale
      * @param bool $rootDir
      *
-     * @return string
+     * @return string Full path to the zip file
      */
     public function createZipArchive($themeName, $locale, $rootDir = false)
     {
@@ -115,11 +117,14 @@ class ThemeExporter
     }
 
     /**
+     * Extracts the theme's default catalogue by analyzing its files, applies all translations,
+     * then exports it as XLIFF files in a temporary directory
+     *
      * @param string $themeName
      * @param string $locale
      * @param bool $rootDir
      *
-     * @return string
+     * @return string The directory where the files have been exported
      */
     public function exportCatalogues($themeName, $locale, $rootDir = false)
     {
@@ -196,7 +201,7 @@ class ThemeExporter
      * @param string $locale
      * @param bool $rootDir
      *
-     * @return \Symfony\Component\Translation\MessageCatalogue
+     * @return MessageCatalogue
      */
     protected function getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir = false)
     {
@@ -227,6 +232,7 @@ class ThemeExporter
     {
         $finder = Finder::create();
 
+        /** @var \SplFileInfo $file */
         foreach ($finder->in($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
             $destinationFilename = preg_replace('#(\.xlf)$#', ".$locale\$1", $file->getPathname());
             if ($this->filesystem->exists($destinationFilename)) {
