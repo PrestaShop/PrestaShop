@@ -62,7 +62,6 @@ export default class SummaryRenderer {
       return;
     }
     const cartSummary = cartInfo.summary;
-    console.log(cartSummary);
     this.$totalProducts.text(cartSummary.totalProductsPrice);
     this.$totalDiscount.text(cartSummary.totalDiscount);
     this.$summaryTotalShipping.text(cartSummary.totalShippingWithoutTaxes);
