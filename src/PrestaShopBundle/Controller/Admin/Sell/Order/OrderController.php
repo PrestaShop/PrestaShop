@@ -1429,9 +1429,12 @@ class OrderController extends CommonController
                 'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
-            InvalidCartRuleValueException::class => $this->trans(
-                'It looks like the value is invalid: <ol><li>Percent or amount value must be greater than 0.</li><li>Percent value cannot exceed 100.</li><li>Amount value cannot exceed the total price of this order.</li></ol>',
-                'Admin.Orderscustomers.Notification'
+            InvalidCartRuleValueException::class => sprintf(
+                '%s<ol><li>%s</li><li>%s</li><li>%s</li></ol>',
+                $this->trans('It looks like the value is invalid:', 'Admin.Orderscustomers.Notification'),
+                $this->trans('Percent or amount value must be greater than 0.', 'Admin.Orderscustomers.Notification'),
+                $this->trans('Percent value cannot exceed 100.', 'Admin.Orderscustomers.Notification'),
+                $this->trans('Amount value cannot exceed the total price of this order.', 'Admin.Orderscustomers.Notification')
             ),
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
