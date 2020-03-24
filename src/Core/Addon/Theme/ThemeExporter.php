@@ -114,11 +114,7 @@ class ThemeExporter
                 $catalogueDir = $this->translationsExporter->exportCatalogues($theme->getName(), $locale);
             }
 
-            $catalogueDirParts = explode(DIRECTORY_SEPARATOR, $catalogueDir);
-            array_pop($catalogueDirParts); // Remove locale
-
-            $cataloguesDir = implode(DIRECTORY_SEPARATOR, $catalogueDirParts);
-            $this->fileSystem->mirror($cataloguesDir, $translationsDir);
+            $this->fileSystem->mirror($catalogueDir, $translationsDir);
         }
     }
 
