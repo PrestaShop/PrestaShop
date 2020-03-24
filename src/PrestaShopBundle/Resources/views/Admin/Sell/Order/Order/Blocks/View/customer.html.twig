@@ -76,7 +76,7 @@
           <p class="mb-1">
             <strong>{{ 'Account registered:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
           </p>
-          <p>{{ orderForViewing.customer.accountRegistrationDate|date("m/d/Y H:i:s") }}</p>
+          <p>{{ orderForViewing.customer.accountRegistrationDate|date_format_full }}</p>
         {% endif %}
       </div>
       <div class="col-md-6">
