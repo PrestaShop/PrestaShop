@@ -82,7 +82,7 @@ class EntityMapper
                     if ($object_datas_lang = Db::getInstance()->executeS($sql)) {
                         foreach ($object_datas_lang as $row) {
                             foreach ($row as $key => $value) {
-                                if ($key != $entity_defs['primary'] && array_key_exists($key, $entity)) {
+                                if ($key != $entity_defs['primary'] && property_exists($entity, $key)) {
                                     if (!isset($object_datas[$key]) || !is_array($object_datas[$key])) {
                                         $object_datas[$key] = [];
                                     }
@@ -95,8 +95,7 @@ class EntityMapper
                 }
                 $entity->id = (int) $id;
                 foreach ($object_datas as $key => $value) {
-                    if (array_key_exists($key, $entity_defs['fields'])
-                        || array_key_exists($key, $entity)) {
+                    if (isset($entity_defs['fields'][$key]) || property_exists($entity, $key)) {
                         $entity->{$key} = $value;
                     } else {
                         unset($object_datas[$key]);
