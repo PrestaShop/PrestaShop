@@ -45,7 +45,7 @@ const init = async function () {
 };
 
 /*
-Create order in FO win bank wire payment
+Create order in FO with bank wire payment
 Go to BO orders page and change order status to 'payment accepted'
 Check invoice creation
 Download invoice from list and check pdf text
