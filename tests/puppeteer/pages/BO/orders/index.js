@@ -20,10 +20,14 @@ module.exports = class Order extends BOBasePage {
     this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
-    this.updateStatusInTablebutton = `${this.tableRow} td.column-osname button`;
+    this.tableColumnStatus = `${this.tableRow} td.column-osname`;
+    this.updateStatusInTablebutton = `${this.tableColumnStatus} button`;
+    this.updateStatusInTabledropdown = `${this.tableColumnStatus} div.js-choice-options`;
+    this.updateStatusInTabledropdownChoice = `${this.updateStatusInTabledropdown} button[data-value='%STATUSID']`;
     // Column actions selectors
     this.actionsColumn = `${this.tableRow} td.column-actions`;
     this.viewRowLink = `${this.actionsColumn} a[data-original-title='View']`;
+    this.viewInvoiceRowLink = `${this.actionsColumn} a[data-original-title='View invoice']`;
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
     this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'order-grid-actions-button\']';
@@ -156,5 +160,33 @@ module.exports = class Order extends BOBasePage {
       + `${order.totalPaid};`
       + `${order.payment.split(' ').length > 1 ? `"${order.payment}";` : `${order.payment};`}`
       + `${order.status.split(' ').length > 1 ? `"${order.status}";` : `${order.status};`}`;
+  }
+
+  /**
+   * Set order status
+   * @param row, order row in table
+   * @param status, object{id, status} from demo orderStatuses
+   * @return {Promise<string>}
+   */
+  async setOrderStatus(row, status) {
+    await Promise.all([
+      this.page.click(this.updateStatusInTablebutton.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.updateStatusInTabledropdown.replace('%ROW', row)}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(
+      this.updateStatusInTabledropdownChoice
+        .replace('%STATUSID', status.id)
+        .replace('%ROW', row),
+    );
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Click on view invoice to download it
+   * @param row
+   * @return {Promise<void>}
+   */
+  async downloadInvoice(row) {
+    await this.page.click(this.viewInvoiceRowLink.replace('%ROW', row));
   }
 };
