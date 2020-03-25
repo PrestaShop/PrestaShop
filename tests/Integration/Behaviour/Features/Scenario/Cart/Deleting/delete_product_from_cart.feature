@@ -25,5 +25,6 @@ Feature: Delete product from cart in Back Office (BO)
     When I use a voucher "giftFoxNotebook" for a gift product "Mountain fox notebook" on the cart "dummy_cart_2"
     Then cart "dummy_cart_2" should contain gift product "Mountain fox notebook"
     When I delete product "Mountain fox notebook" from cart "dummy_cart_2"
-    Then cart "dummy_cart_2" should not contain product "Mountain fox notebook"
-    And voucher "giftFoxNotebook" should not be applied to cart "dummy_cart_2"
+    Then cart "dummy_cart_2" should not contain product "Mountain fox notebook" unless it is a gift
+    But cart "dummy_cart_2" should contain gift product "Mountain fox notebook"
+    And voucher "giftFoxNotebook" should still be applied to cart "dummy_cart_2"
