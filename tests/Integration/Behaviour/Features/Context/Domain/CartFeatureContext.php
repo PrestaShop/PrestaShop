@@ -294,8 +294,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteProduct(string $productName, string $cartReference)
     {
-        $productId = (int)$this->getSharedStorage()->get($productName);
-        $cartId = (int)$this->getSharedStorage()->get($cartReference);
+        $productId = (int) $this->getSharedStorage()->get($productName);
+        $cartId = (int) $this->getSharedStorage()->get($cartReference);
 
         try {
             $this->getCommandBus()->handle(new RemoveProductFromCartCommand(
@@ -335,41 +335,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then voucher :voucherCode should not be applied to cart :cartReference
-     */
-    public function assertCartRuleIsNotAppliedToCart(string $voucherCode, string $cartReference)
-    {
-        $cartInfo = $this->getCartInformationByReference($cartReference);
-        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
-
-        foreach ($cartInfo->getCartRules() as $cartRule) {
-            if ($cartRule->getCartRuleId() === $cartRuleId) {
-                throw new RuntimeException(sprintf(
-                    'Voucher %s is applied to cart',
-                    $voucherCode
-                ));
-            }
-        }
-    }
-
-    /**
-     * @Then cart :cartReference should contain product :productName
-     * @Then cart :cartReference contains product :productName
-     *
-     * @param string $cartReference
-     * @param string $productName
-     */
-    public function assertCartContainsProduct(string $cartReference, string $productName)
-    {
-        if (!$this->productIsInCart($cartReference, $productName)) {
-            throw new RuntimeException(sprintf(
-                'Expected cart to contain product %s, but it was not found',
-                $productName
-            ));
-        }
-    }
-
-    /**
      * @Then cart :cartReference should not contain product :productName unless it is a gift
      *
      * @param string $cartReference
@@ -391,6 +356,61 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                     $productName
                 ));
             }
+        }
+    }
+
+    /**
+     * @Then voucher :voucherCode should not be applied to cart :cartReference
+     */
+    public function assertCartRuleIsNotAppliedToCart(string $voucherCode, string $cartReference)
+    {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
+
+        foreach ($cartInfo->getCartRules() as $cartRule) {
+            if ($cartRule->getCartRuleId() === $cartRuleId) {
+                throw new RuntimeException(sprintf(
+                    'Voucher %s is applied to cart',
+                    $voucherCode
+                ));
+            }
+        }
+    }
+
+    /**
+     * @Then voucher :voucherCode should still be applied to cart :cartReference
+     */
+    public function assertCartRuleIsAppliedToCart(string $voucherCode, string $cartReference)
+    {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
+
+        foreach ($cartInfo->getCartRules() as $cartRule) {
+            if ($cartRule->getCartRuleId() === $cartRuleId) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Voucher %s is not applied to cart',
+            $voucherCode
+        ));
+    }
+
+    /**
+     * @Then cart :cartReference should contain product :productName
+     * @Then cart :cartReference contains product :productName
+     *
+     * @param string $cartReference
+     * @param string $productName
+     */
+    public function assertCartContainsProduct(string $cartReference, string $productName)
+    {
+        if (!$this->productIsInCart($cartReference, $productName)) {
+            throw new RuntimeException(sprintf(
+                'Expected cart to contain product %s, but it was not found',
+                $productName
+            ));
         }
     }
 
