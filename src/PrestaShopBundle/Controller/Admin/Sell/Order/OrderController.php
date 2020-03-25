@@ -1275,6 +1275,25 @@ class OrderController extends CommonController
      *
      * @return JsonResponse
      */
+    public function getDiscountsAction(int $orderId): Response
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        dump($orderForViewing);
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', [
+            'orderForViewing' => $orderForViewing,
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return JsonResponse
+     */
     public function getPricesAction(int $orderId): JsonResponse
     {
         /** @var OrderForViewing $orderForViewing */

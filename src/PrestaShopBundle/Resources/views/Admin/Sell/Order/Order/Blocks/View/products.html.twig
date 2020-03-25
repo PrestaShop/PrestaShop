@@ -142,33 +142,9 @@
       </div>
     </div>
 
-    {% if orderForViewing.discounts.discounts is not empty %}
-      <table class="table discountList">
-        <thead>
-        <tr>
-          <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
-          <th class="text-right d-print-none">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for discount in orderForViewing.discounts.discounts %}
-          <tr>
-            <td>{{ discount.name }}</td>
-            <td>
-              {% if discount.amountRaw.greaterThan(number(0)) %}-{% endif %}
-              {{ discount.amountFormatted }}
-            </td>
-            <td class="text-right d-print-none">
-              <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
-                  <i class="material-icons">delete</i>
-              </a>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    {% endif %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig' with {
+      'orderForViewing': orderForViewing
+    } %}
 
     <div class="row">
       <div class="col-md-12">
