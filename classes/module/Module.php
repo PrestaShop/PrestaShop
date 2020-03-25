@@ -1377,7 +1377,7 @@ abstract class ModuleCore implements ModuleInterface
                     } catch (PhpParser\Error $e) {
                         $errors[] = Context::getContext()->getTranslator()->trans('%1$s (parse error in %2$s)', [$module, substr($file_path, strlen(_PS_ROOT_DIR_))], 'Admin.Modules.Notification');
                     }
-                    
+
                     $ns = preg_replace('/\n[\s\t]*?namespace\s/', '', $file);
                     $ns = rtrim($ns, ';');
                     $module = $ns . '\\' . $module;
