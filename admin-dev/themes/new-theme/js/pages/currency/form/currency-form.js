@@ -26,8 +26,8 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueResource from 'vue-resource';
 import CurrencyFormatter from './components/CurrencyFormatter.vue';
+import ConfirmModal from '@components/modal';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import {showGrowl} from '@app/utils/growl';
 
 Vue.use(VueResource);
 Vue.use(VueI18n);
@@ -102,7 +102,7 @@ export default class CurrencyForm {
   _initListeners() {
     this.$currencySelector.change(this._onCurrencySelectorChange.bind(this));
     this.$isUnofficialCheckbox.change(this._onIsUnofficialCheckboxChange.bind(this));
-    this.$resetDefaultSettingsButton.click(this._onResetDefaultSettingsClick.bind(this));
+    this.$resetDefaultSettingsButton.click(this.showResetDefaultSettingsConfirmModal.bind(this));
   }
 
   _initFields() {
@@ -142,6 +142,23 @@ export default class CurrencyForm {
     } else {
       this.$isoCodeInput.prop('readonly', true);
     }
+  }
+
+  showResetDefaultSettingsConfirmModal() {
+    const confirmTitle = this.translations['modal.restore.title'];
+    const confirmMessage = this.translations['modal.restore.body'];
+    const confirmButtonLabel = this.translations['modal.restore.apply'];
+    const closeButtonLabel = this.translations['modal.restore.cancel'];
+
+    const modal = new ConfirmModal({
+      id: 'currency_restore_default_settings',
+      confirmTitle,
+      confirmMessage,
+      confirmButtonLabel,
+      closeButtonLabel,
+    }, () => this._onResetDefaultSettingsClick());
+
+    modal.show();
   }
 
   async _onResetDefaultSettingsClick() {
