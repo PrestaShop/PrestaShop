@@ -36,6 +36,7 @@ export default class SummaryRenderer {
     this.$totalProducts = $(createOrderMap.summaryTotalProducts);
     this.$totalDiscount = $(createOrderMap.summaryTotalDiscount);
     this.$totalShipping = $(createOrderMap.totalShippingField);
+    this.$summaryTotalShipping = $(createOrderMap.summaryTotalShipping);
     this.$totalTaxes = $(createOrderMap.summaryTotalTaxes);
     this.$totalWithoutTax = $(createOrderMap.summaryTotalWithoutTax);
     this.$totalWithTax = $(createOrderMap.summaryTotalWithTax);
@@ -61,9 +62,9 @@ export default class SummaryRenderer {
       return;
     }
     const cartSummary = cartInfo.summary;
-
     this.$totalProducts.text(cartSummary.totalProductsPrice);
     this.$totalDiscount.text(cartSummary.totalDiscount);
+    this.$summaryTotalShipping.text(cartSummary.totalShippingWithoutTaxes);
     this.$totalShipping.text(cartSummary.totalShippingPrice);
     this.$totalTaxes.text(cartSummary.totalTaxes);
     this.$totalWithoutTax.text(cartSummary.totalPriceWithoutTaxes);
