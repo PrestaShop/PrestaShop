@@ -57,14 +57,21 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function addCurrencyToContext($currencyIsoCode)
     {
-        $currency = new Currency();
-        $currency->name = $currencyIsoCode;
-        $currency->precision = 2;
-        $currency->iso_code = $currencyIsoCode;
-        $currency->active = 1;
-        $currency->conversion_rate = 1;
+        $currencyId = (int) Currency::getIdByIsoCode($currencyIsoCode);
+
+        if ($currencyId) {
+            $currency = new Currency($currencyId);
+        } else {
+            $currency = new Currency();
+            $currency->name = $currencyIsoCode;
+            $currency->precision = 2;
+            $currency->iso_code = $currencyIsoCode;
+            $currency->active = 1;
+            $currency->conversion_rate = 1;
+        }
 
         Context::getContext()->currency = $currency;
+        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
     }
 
     /**

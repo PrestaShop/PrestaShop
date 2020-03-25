@@ -52,7 +52,7 @@ Feature: Order from Back Office (BO)
       | date           | 2019-11-26 13:56:22 |
       | payment_method | Payments by check   |
       | transaction_id | test!@#$%%^^&* OR 1 |
-      | id_currency    | 1                   |
+      | currency       | USD                 |
       | amount         | -5.548              |
     Then I should get error that payment amount is negative
     And order "bo_order1" has 0 payments
@@ -63,7 +63,7 @@ Feature: Order from Back Office (BO)
       | date           | 2019-11-26 13:56:23 |
       | payment_method | Payments by check   |
       | transaction_id | test123             |
-      | id_currency    | 1                   |
+      | currency       | USD                 |
       | amount         | 6.00                |
     Then order "bo_order1" payments should have the following details:
       | date           | 2019-11-26 13:56:23 |

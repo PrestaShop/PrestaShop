@@ -65,7 +65,7 @@
 #      | date           | 2019-11-26 13:56:23 |
 #      | payment_method | Payments by check   |
 #      | transaction_id | test123             |
-#      | id_currency    | 1                   |
+#      | currency       | USD                 |
 #      | amount         | 6.00                |
 #    Then order "bo_order1" payments should have the following details:
 #      | date           | 2019-11-26 13:56:23 |
@@ -81,7 +81,7 @@
 #      | date           | 2019-11-26 13:56:23 |
 #      | payment_method | Payments by check   |
 #      | transaction_id | test123             |
-#      | id_currency    | currency2           |
+#      | currency       | currency2           |
 #      | amount         | 6.00                |
 #    Then order "bo_order1" payments should have the following details:
 #      | date           | 2019-11-26 13:56:23 |
@@ -103,7 +103,7 @@
 #      | date           | 2019-11-26 13:56:23 |
 #      | payment_method | Payments by check   |
 #      | transaction_id | test123             |
-#      | id_currency    | currency2           |
+#      | currency       | currency2           |
 #      | amount         | 6.00                |
 #    Then order "bo_order2" payments should have the following details:
 #      | date           | 2019-11-26 13:56:23 |
@@ -125,7 +125,7 @@
 #      | date           | 2019-11-26 13:56:23 |
 #      | payment_method | Payments by check   |
 #      | transaction_id | test123             |
-#      | id_currency    | currency3           |
+#      | currency       | currency3           |
 #      | amount         | 6.00                |
 #    Then order "bo_order2" payments should have the following details:
 #      | date           | 2019-11-26 13:56:23 |
