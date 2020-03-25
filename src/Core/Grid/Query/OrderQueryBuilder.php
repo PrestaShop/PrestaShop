@@ -90,12 +90,13 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->getBaseQueryBuilder($searchCriteria->getFilters())
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
             ->addSelect('o.current_state, o.id_customer')
-            ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
             ->addSelect('cu.`id_customer` IS NULL as `deleted_customer`')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')
         ;
-        $qb = $this->addNewCustomerField($qb);
+
+        $this->addCustomerField($qb);
+        $this->addNewCustomerField($qb);
 
         $this->applySorting($qb, $searchCriteria);
 
@@ -115,11 +116,13 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
     {
         $qb = $this->getBaseQueryBuilder($searchCriteria->getFilters());
         if (isset($searchCriteria->getFilters()['new'])) {
-            $qb = $this->addNewCustomerField($qb->addSelect('o.id_order as o_id_order'));
+            $this->addCustomerField($qb);
+            $this->addNewCustomerField($qb->addSelect('o.id_order as o_id_order'));
             $qb = $this->applyNewCustomerFilter($qb, $searchCriteria->getFilters());
             $qb->select('count(o_id_order)');
         } else {
             $qb->select('count(o.id_order)');
+            $this->addCustomerField($qb);
         }
 
         return $qb;
@@ -232,8 +235,6 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
 
     /**
      * @param QueryBuilder $qb
-     *
-     * @return QueryBuilder
      */
     private function addNewCustomerField(QueryBuilder $qb)
     {
@@ -246,7 +247,15 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->setMaxResults(1)
         ;
 
-        return $qb->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new');
+        $qb->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new');
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     */
+    private function addCustomerField(QueryBuilder $qb)
+    {
+        $qb->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`');
     }
 
     /**
