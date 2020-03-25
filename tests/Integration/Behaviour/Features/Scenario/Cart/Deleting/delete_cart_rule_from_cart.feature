@@ -27,5 +27,5 @@ Feature: Delete cart rule from cart in Back Office (BO)
     And I use a voucher "giftFoxNotebook" for a gift product "Mountain fox notebook" on the cart "dummy_cart_2"
     And cart "dummy_cart_2" contains gift product "Mountain fox notebook"
     When I delete voucher "giftFoxNotebook" from cart "dummy_cart_2"
-    Then cart "dummy_cart_2" should not contain gift product "Mountain fox notebook"
-    But cart "dummy_cart_2" should contain product "Mountain fox notebook"
+    Then cart "dummy_cart_2" should contain product "Mountain fox notebook"
+    But cart "dummy_cart_2" should not contain gift product "Mountain fox notebook"
