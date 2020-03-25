@@ -62,9 +62,11 @@
       {{ form_row(addProductRowForm.invoice) }}
     </td>
   {% endif %}
-  <td class="text-right btn-group add-product-buttons">
-    {{ form_row(addProductRowForm.cancel) }}
-    {{ form_row(addProductRowForm.add) }}
+  <td class="text-right add-product-buttons">
+    <div class="btn-group">
+      {{ form_row(addProductRowForm.cancel) }}
+      {{ form_row(addProductRowForm.add) }}
+    </div>
   </td>
 </tr>
 <tr id="addProductNewInvoiceInfo" class="d-none">
