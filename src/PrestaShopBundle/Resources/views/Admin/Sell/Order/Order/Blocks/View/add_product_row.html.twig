@@ -44,7 +44,7 @@
      <div class="col-sm-6">
       {{ form_widget(addProductRowForm.price_tax_excluded) }}
      </div>
-     
+
      <div class="col-sm-6">
       {{ form_widget(addProductRowForm.price_tax_included) }}
      </div>
@@ -54,7 +54,7 @@
     {{ form_row(addProductRowForm.quantity) }}
   </td>
   <td id="addProductLocation" class="cellProductLocation"></td>
-  <td id="addProductRefunded"></td>
+  <td id="addProductRefunded" class="cellProductRefunded"></td>
   <td id="addProductAvailable"></td>
   <td id="addProductTotalPrice"></td>
   {% if orderForViewing.hasInvoice() %}
