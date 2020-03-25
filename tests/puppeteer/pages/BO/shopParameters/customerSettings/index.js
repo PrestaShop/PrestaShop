@@ -1,5 +1,6 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
+const {options} = require('@pages/BO/shopParameters/customerSettings/options.js');
 
 module.exports = class customerSettings extends BOBasePage {
   constructor(page) {
@@ -14,53 +15,41 @@ module.exports = class customerSettings extends BOBasePage {
     this.enablePartnerOfferLabel = 'label[for=\'form_general_enable_offers_%TOGGLE\']';
     this.sendEmailAfterRegistrationLabel = 'label[for=\'form_general_send_email_after_registration_%TOGGLE\']';
     this.askForBirthDateLabel = 'label[for=\'form_general_ask_for_birthday_%TOGGLE\']';
+    this.enableB2BModeToggle = 'label[for=\'form_general_enable_b2b_mode_%TOGGLE\']';
     this.saveGeneralFormButton = `${this.generalForm} .card-footer button`;
   }
 
   /*
     Methods
   */
-
   /**
-   * Enable/disable redisplay cart at login
-   * @param toEnable, true to enable and false to disable
+   * Set option status
+   * @param option, option to enable or disable
+   * @param toEnable, value wanted
    * @return {Promise<string>}
    */
-  async setRedisplayCartAtLoginStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.redisplayCartAtLoginLabel.replace('%TOGGLE', toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
-  }
-
-  /**
-   * Enable/Disable send email after registration
-   * @param toEnable
-   * @returns {Promise<string>}
-   */
-  async setEmailAfterRegistrationStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.sendEmailAfterRegistrationLabel.replace('%TOGGLE', toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
-  }
-
-  /**
-   * Enable/Disable ask for birth date
-   * @param toEnable
-   * @returns {Promise<string|*>}
-   */
-  async setAskForBirthDate(toEnable = true) {
-    await this.waitForSelectorAndClick(this.askForBirthDateLabel.replace('%TOGGLE', toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
-  }
-
-  /**
-   * Enable/Disable partner offer
-   * @param toEnable
-   * @returns {Promise<string>}
-   */
-  async setPartnerOfferStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.enablePartnerOfferLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+  async setOptionStatus(option, toEnable = true) {
+    let selector;
+    switch (option) {
+      case options.OPTION_B2B:
+        selector = this.enableB2BModeToggle;
+        break;
+      case options.OPTION_PARTNER_OFFER:
+        selector = this.enablePartnerOfferLabel;
+        break;
+      case options.OPTION_BIRTH_DATE:
+        selector = this.askForBirthDateLabel;
+        break;
+      case options.OPTION_EMAIL_REGISTRATION:
+        selector = this.sendEmailAfterRegistrationLabel;
+        break;
+      case options.OPTION_CART_LOGIN:
+        selector = this.redisplayCartAtLoginLabel;
+        break;
+      default:
+        throw new Error(`${option} was not found`);
+    }
+    await this.waitForSelectorAndClick(selector.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }

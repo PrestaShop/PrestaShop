@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerSettings_customers_askForBirthDate';
+const baseContext = 'functional_BO_customerSettings_customers_enableB2BMode';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -31,7 +31,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable ask for birth date ', async () => {
+describe('Enable B2B mode', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -57,24 +57,24 @@ describe('Enable/Disable ask for birth date ', async () => {
   });
 
   const tests = [
-    {args: {action: 'disable', enable: false}},
     {args: {action: 'enable', enable: true}},
+    {args: {action: 'disable', enable: false}},
   ];
   tests.forEach((test) => {
-    it(`should ${test.args.action} ask for birth date`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AskForBirthDate`, baseContext);
+    it(`should ${test.args.action} B2B mode`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}B2BMode`, baseContext);
       const result = await this.pageObjects.customerSettingsPage.setOptionStatus(
-        options.OPTION_BIRTH_DATE,
+        options.OPTION_B2B,
         test.args.enable,
       );
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 
-    it('should go to customer account in FO and check birth day input', async function () {
+    it('should go to create customer page in FO and check company input', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `checkIsBirthDate${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
+        `checkB2BMode${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
       page = await this.pageObjects.boBasePage.viewMyShop();
@@ -82,8 +82,8 @@ describe('Enable/Disable ask for birth date ', async () => {
       await this.pageObjects.foBasePage.changeLanguage('en');
       await this.pageObjects.foBasePage.goToLoginPage();
       await this.pageObjects.loginFOPage.goToCreateAccountPage();
-      const isBirthDateInputVisible = await this.pageObjects.loginFOPage.isBirthDateVisible();
-      await expect(isBirthDateInputVisible).to.be.equal(test.args.enable);
+      const isCompanyInputVisible = await this.pageObjects.loginFOPage.isCompanyInputVisible();
+      await expect(isCompanyInputVisible).to.be.equal(test.args.enable);
       page = await this.pageObjects.loginFOPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
