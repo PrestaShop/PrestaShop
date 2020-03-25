@@ -31,6 +31,7 @@ use CartRule;
 use Configuration;
 use Context;
 use Hook;
+use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
@@ -557,7 +558,24 @@ class CartPresenter implements PresenterInterface
                 $freeShippingOnly = true;
             }
             if ($this->cartVoucherHasPercentReduction($cartVoucher)) {
-                $productsTotalExcludingTax = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
+                $products = $cart->getProducts();
+                if ($this->cartVoucherHasPercentReductionOnSelectedProducts($cartVoucher)) {
+                    $selected_products = $cartVoucher['obj']->checkProductRestrictionsFromCart($cart, true);
+                    if (is_array($selected_products)) {
+                        foreach ($products as $key => $product) {
+                            // Check if product is in selected product for applying the voucher
+                            // Check if voucher applies on already discounted products (and if it applies)
+                            if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+                                    || in_array($product['id_product'] . '-0', $selected_products))
+                                && (($cartVoucher['reduction_exclude_special'] && !$product['reduction_applies'])
+                                    || !$cartVoucher['reduction_exclude_special'])) {
+                                continue;
+                            }
+                            unset($products[$key]);
+                        }
+                    }
+                }
+                $productsTotalExcludingTax = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS, $products);
                 $percentageReduction = ($productsTotalExcludingTax / 100) * $cartVoucher['reduction_percent'];
                 $freeShippingOnly = false;
             } elseif ($this->cartVoucherHasAmountReduction($cartVoucher)) {
@@ -628,6 +646,17 @@ class CartPresenter implements PresenterInterface
         return isset($cartVoucher['reduction_percent'])
             && $cartVoucher['reduction_percent'] > 0
             && $cartVoucher['reduction_amount'] == '0.00';
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasPercentReductionOnSelectedProducts($cartVoucher)
+    {
+        return $this->cartVoucherHasPercentReduction($cartVoucher)
+            && (int) $cartVoucher['reduction_product'] == LegacyDiscountApplicationType::SELECTED_PRODUCTS;
     }
 
     /**
