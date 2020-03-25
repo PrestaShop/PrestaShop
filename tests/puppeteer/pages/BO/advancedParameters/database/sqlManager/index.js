@@ -123,6 +123,11 @@ module.exports = class SqlManager extends BOBasePage {
     await this.clickAndWaitForNavigation(this.sqlQueryListTableEditLink.replace('%ROW', row));
   }
 
+  /**
+   * Delete SQL query
+   * @param row
+   * @returns {Promise<string>}
+   */
   async deleteSQLQuery(row = 1) {
     this.dialogListener();
     // Click on dropDown

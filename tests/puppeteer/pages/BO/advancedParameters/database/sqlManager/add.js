@@ -10,7 +10,7 @@ module.exports = class AddSQLQuery extends BOBasePage {
     // Selectors
     this.sqlQueryNameInput = '#sql_request_name';
     this.sqlQueryTextArea = '#sql_request_sql';
-    this.saveButton = '#main-div  button.btn-primary';
+    this.saveButton = '#main-div button.btn-primary';
   }
 
   /*

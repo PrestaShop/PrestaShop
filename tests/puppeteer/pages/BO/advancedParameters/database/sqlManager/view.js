@@ -15,10 +15,19 @@ module.exports = class ViewSQLQuery extends BOBasePage {
   /*
   Methods
    */
+  /**
+   * Get SQL query result number
+   * @returns {integer}
+   */
   getSQLQueryResultNumber() {
     return this.getNumberFromText(this.sqlQueryResultTitle);
   }
 
+  /**
+   * Get columns name
+   * @param id
+   * @returns {Promise<string>}
+   */
   getColumnName(id = 1) {
     return this.getTextContent(this.tableColumnName.replace('%ID', id));
   }
