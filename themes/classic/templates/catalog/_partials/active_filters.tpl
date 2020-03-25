@@ -32,7 +32,7 @@
       {foreach from=$activeFilters item="filter"}
         {block name='active_filters_item'}
           <li class="filter-block">
-            {l s='%1$s: ' d='Shop.Theme.Catalog' sprintf=[$filter.facetLabel]}
+            {l s='%1$s:' d='Shop.Theme.Catalog' sprintf=[$filter.facetLabel]}
             {$filter.label}
             <a class="js-search-link" href="{$filter.nextEncodedFacetsURL}"><i class="material-icons close">&#xE5CD;</i></a>
           </li>
