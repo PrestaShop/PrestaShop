@@ -1278,7 +1278,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 } else {
                     $this->warning(
                         $this->translator->trans(
-                            'Warehouse did not exist, cannot set on product  %name%',
+                            'Warehouse did not exist, cannot set on product %name%',
                             ['%name%' => $product->name[$this->languageId]],
                             'Admin.Advparameters.Notification'
                         )
