@@ -66,6 +66,11 @@
     }
   }
 
+  #addProductAvailable,
+  #addProductTotalPrice {
+    padding-top: calc(0.4rem + 24px);
+  }
+
   .editProductActions-container {
     > .form-group {
       margin-bottom: 0;
