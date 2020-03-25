@@ -82,13 +82,15 @@ class OrderRefundCalculator
             $precision
         );
 
-        $refundedAmount = new Number('0');
+        $numberZero = new Number('0');
+
+        $refundedAmount = $numberZero;
         foreach ($productRefunds as $orderDetailId => $productRefund) {
             $refundedAmount = $refundedAmount->plus(new Number((string) $productRefund['amount']));
         }
 
         $voucherChosen = false;
-        $voucherAmount = new Number('0');
+        $voucherAmount = $numberZero;
         if ($voucherRefundType === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
             $voucherAmount = new Number((string) $order->total_discounts);
             $refundedAmount = $refundedAmount->minus($voucherAmount);
@@ -97,7 +99,7 @@ class OrderRefundCalculator
             $refundedAmount = $voucherAmount = $chosenVoucherAmount;
         }
 
-        $shippingCostAmount = new Number((string) ($shippingRefund ?? 0));
+        $shippingCostAmount = $shippingRefund ?? $numberZero;
         if ($shippingCostAmount->isPositive()) {
             $shippingMaxRefund = new Number(
                 $isTaxIncluded ?
@@ -123,7 +125,7 @@ class OrderRefundCalculator
         }
 
         // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
-        if (count($productRefunds) <= 0 && $refundedAmount->isLowerOrEqualThan(new Number('0'))) {
+        if (count($productRefunds) <= 0 && $refundedAmount->isLowerOrEqualThan($numberZero)) {
             throw new InvalidCancelProductException(InvalidCancelProductException::NO_REFUNDS);
         }
 
