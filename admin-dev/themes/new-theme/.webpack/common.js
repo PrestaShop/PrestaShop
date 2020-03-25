@@ -121,17 +121,15 @@ module.exports = {
       {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['env', {useBuiltIns: 'usage', modules: false}],
-            ],
-            plugins: [
-              'transform-object-rest-spread',
-            ],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
+              plugins: ['transform-object-rest-spread', 'transform-runtime'],
+            },
           },
-        }],
+        ],
       },
       {
         test: /jquery-ui\.js/,
@@ -236,8 +234,6 @@ module.exports = {
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
-    new CopyPlugin([
-      {from: 'static'},
-    ]),
+    new CopyPlugin([{from: 'static'}]),
   ],
 };
