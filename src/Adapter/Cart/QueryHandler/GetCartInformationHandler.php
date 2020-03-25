@@ -221,17 +221,38 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $products = [];
-        foreach ($legacySummary['products'] as $product) {
+
+        foreach ($legacySummary['products'] as &$product) {
+            // reduce product quantity for each existing gift of that product
+            $product['quantity'] -= $this->countIdenticalGiftProductsInCart($product, $legacySummary['gift_products']);
             $products[] = $this->buildCartProduct($cart, $currency, $product);
         }
 
-        if (isset($legacySummary['gift_products']) && is_array($legacySummary['gift_products'])) {
-            foreach ($legacySummary['gift_products'] as $giftProduct) {
-                $products[] = $this->buildCartProduct($cart, $currency, $giftProduct, true);
-            }
+        foreach ($legacySummary['gift_products'] as &$product) {
+            // make sure that each gift product has quantity of 1.
+            $product['quantity'] = 1;
+            $products[] = $this->buildCartProduct($cart, $currency, $product);
         }
 
         return $products;
+    }
+
+    private function countIdenticalGiftProductsInCart(array $product, array $giftProducts): int
+    {
+        $giftsCount = 0;
+
+        foreach ($giftProducts as $giftProduct) {
+            $matchesGiftProduct = $product['id_product'] === $giftProduct['id_product'] &&
+                $product['id_product_attribute'] === $giftProduct['id_product_attribute'] &&
+                $product['id_customization'] === $giftProduct['id_customization']
+            ;
+
+            if ($matchesGiftProduct) {
+                ++$giftsCount;
+            }
+        }
+
+        return $giftsCount;
     }
 
     /**
@@ -436,8 +457,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private function buildCartProduct(
         Cart $cart,
         Currency $currency,
-        array $product,
-        bool $isGift = false
+        array $product
     ): CartProduct {
         return new CartProduct(
             (int) $product['id_product'],
@@ -446,11 +466,11 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             isset($product['attributes_small']) ? $product['attributes_small'] : '',
             $product['reference'],
             \Tools::ps_round($product['price'], $currency->precision),
-            (int) $product['quantity'],
+            $product['quantity'],
             \Tools::ps_round($product['total'], $currency->precision),
             $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
             $this->getProductCustomizedData($cart, $product),
-            $isGift
+            !empty($product['is_gift'])
         );
     }
 }
