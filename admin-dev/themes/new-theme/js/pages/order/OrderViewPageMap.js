@@ -113,6 +113,10 @@ export default {
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
   productEditTotalPriceText: '.editProductTotalPrice',
+  // Product Discount List
+  productDiscountList: {
+    list: '.table.discountList',
+  },
   // Product Pack Modal
   productPackModal: {
     modal: '#product-pack-modal',
