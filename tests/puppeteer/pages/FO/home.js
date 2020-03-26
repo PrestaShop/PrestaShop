@@ -117,4 +117,12 @@ module.exports = class Home extends FOBasePage {
     await this.page.keyboard.press('Enter');
     await this.page.waitForNavigation({waitUntil: 'networkidle0'});
   }
+
+  /**
+   * Go to home category page by clicking on all products
+   * @return {Promise<void>}
+   */
+  async goToAllProductsPage() {
+    await this.clickAndWaitForNavigation(this.allProductLink);
+  }
 };
