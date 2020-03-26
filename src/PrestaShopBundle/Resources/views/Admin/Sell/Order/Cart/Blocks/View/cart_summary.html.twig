@@ -43,7 +43,8 @@
         {% for product in cartView.cartSummary.products %}
           {% if product.customization is not empty %}
             <tr>
-              <td>{{ product.image|raw }}</td>
+              <td>
+                <img src="{{ product.image_url}}" alt="" class="imgm img-thumbnail" /></td>
               <td>
                 <a href="{{ path('admin_product_form', {'id': product.id}) }}">
                   {{ product.name }}
@@ -92,7 +93,7 @@
               </td>
 
               <td></td>
-              <td>{{ product.customization.quantity }}</td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
@@ -100,7 +101,7 @@
 
           {% if product.customization is empty or product.cart_quantity > product.customization_quantity %}
             <tr>
-              <td>{{ product.image|raw }}</td>
+              <td><img src="{{ product.image_url}}" alt="" class="imgm img-thumbnail" /></td>
               <td>
                 <a href="{{ path('admin_product_form', {'id': product.id}) }}">
                   {{ product.name }}

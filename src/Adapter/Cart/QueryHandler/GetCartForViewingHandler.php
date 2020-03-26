@@ -33,6 +33,7 @@ use Customer;
 use DateTime;
 use Gender;
 use Group;
+use Link;
 use Order;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -60,13 +61,19 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
     private $locale;
 
     /**
+     * @var Link
+     */
+    private $contextLink;
+
+    /**
      * @param ImageManager $imageManager
      * @param Locale $locale
      */
-    public function __construct(ImageManager $imageManager, Locale $locale)
+    public function __construct(ImageManager $imageManager, Locale $locale, Link $contextLink)
     {
         $this->imageManager = $imageManager;
         $this->locale = $locale;
+        $this->contextLink = $contextLink;
     }
 
     /**
@@ -201,8 +208,6 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $formattedProducts = [];
 
         foreach ($products as $product) {
-            $image = Product::getCover($product['id_product']);
-
             $formattedProduct = [
                 'id' => $product['id_product'],
                 'name' => $product['name'],
@@ -216,7 +221,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'unit_price' => $product['product_price'],
                 'total_price_formatted' => $this->locale->formatPrice($product['product_total'], $currency->iso_code),
                 'unit_price_formatted' => $this->locale->formatPrice($product['product_price'], $currency->iso_code),
-                'image' => $this->imageManager->getThumbnailForListing($image['id_image']),
+                'image_url' => $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
             ];
 
             if (isset($product['customizationQuantityTotal'])) {
