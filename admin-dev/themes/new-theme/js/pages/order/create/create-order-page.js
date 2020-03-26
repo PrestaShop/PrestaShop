@@ -152,7 +152,6 @@ export default class CreateOrderPage {
     this._onCustomerSelected();
     this.initAddressButtonsIframe();
     this.initCartRuleButtonsIframe();
-
   }
 
   /**
