@@ -98,10 +98,10 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     {
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
-        if (!$order->hasInvoice()) {
+        if (!$order->hasBeenPaid() && !$order->hasPayments()) {
             throw new InvalidOrderStateException(
-                InvalidOrderStateException::INVOICE_NOT_FOUND,
-                'Can not perform partial refund on order with no invoice'
+                InvalidOrderStateException::NOT_PAID,
+                'Can not perform partial refund on an order which is not paid'
             );
         }
 
@@ -141,7 +141,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         // Update refund details
         $productsReturned = (int) $this->configuration->get('PS_ORDER_RETURN') === 1 && $order->hasBeenDelivered();
         $this->refundUpdater->updateRefundData(
-            $order,
             $orderRefundSummary,
             $productsReturned,
             $shouldReinjectProducts

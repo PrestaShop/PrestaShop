@@ -92,7 +92,7 @@
           </button>
         </div>
       </div>
-    {% elseif orderForViewing.hasInvoice() %}
+    {% elseif orderForViewing.hasBeenPaid() or orderForViewing.hasPayments() %}
       <div class="form-inline d-inline-block form-horizontal ml-2">
         <div class="input-group">
           <button class="btn btn-action standard-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
@@ -111,7 +111,7 @@
       </div>
     {% endif %}
   {% endif %}
-  {% if orderForViewing.hasInvoice() %}
+  {% if orderForViewing.hasBeenPaid() or orderForViewing.hasPayments() %}
     <div class="form-inline d-inline-block form-horizontal ml-2">
       <div class="input-group">
         <button class="btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
