@@ -58,6 +58,18 @@
       </div>
     </div>
 
+    <div id="customer-search-loading-notice" class="row d-none">
+      <div class="col">
+        <div class="col">
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">
+              {{ 'Searching for customers'|trans({}, 'Admin.Orderscustomers.Notification') }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col">
         <div class="row js-customer-search-results"></div>
@@ -218,6 +230,17 @@
       <div class="text-center grid-table-empty">
         <p class="mb-0 mt-2"><i class="material-icons">warning</i></p>
         <p class="mb-2">{{ 'No records found'|trans({}, 'Admin.Global') }}</p>
+      </div>
+    </td>
+  </tr>
+</script>
+
+<script id="js-loading-list-row" type="text/template">
+  <tr class="empty_row js-empty-row">
+    <td colspan="8" class="border-0">
+      <div class="text-center grid-table-empty">
+        <p class="mb-0 mt-2"><i class="material-icons">autorenew</i></p>
+        <p class="mb-2">{{ 'Loading'|trans({}, 'Admin.Global') }}</p>
       </div>
     </td>
   </tr>
