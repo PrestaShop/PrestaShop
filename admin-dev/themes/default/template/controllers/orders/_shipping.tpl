@@ -109,6 +109,7 @@
 								<div class="col-lg-5">{l s='Carrier' d='Admin.Shipping.Feature'}</div>
 								<div class="col-lg-7">
 									<select name="shipping_carrier" id="shipping_carrier">
+										<option value="-1">[{l s='Keep selected carrier' d='Admin.Orderscustomers.Feature'}]</option>
 										{foreach from=$carrier_list item=carrier}
 											<option value="{$carrier.id_carrier|intval}">{$carrier.name|escape:'html':'UTF-8'} {if isset($carrier.delay)}({$carrier.delay|escape:'html':'UTF-8'}){/if}</option>
 										{/foreach}
