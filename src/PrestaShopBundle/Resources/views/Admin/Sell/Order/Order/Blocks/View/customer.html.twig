@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="customer card">
   <div class="card-header">
     <h3 class="card-header-title">
       {{ 'Customer'|trans({}, 'Admin.Global') }}
@@ -98,10 +98,10 @@
       </div>
     </div>
     {% endif %}
-    <div class="mt-2 info-block">
+    <div class="info-block mt-2">
       <div class="row">
         {% if orderForViewing.virtual is same as(false) %}
-        <div class="col-md-6">
+        <div class="info-block-col col-xl-6">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
             {% if orderForViewing.customer is not null %}
@@ -150,7 +150,7 @@
           </p>
         </div>
         {% endif %}
-        <div class="{% if orderForViewing.virtual %}col-md-12{% else %}col-md-6{% endif %}">
+        <div class="info-block-col {% if orderForViewing.virtual %}col-md-12{% else %}col-md-6{% endif %}">
           <div class="row justify-content-between no-gutters">
             <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
 

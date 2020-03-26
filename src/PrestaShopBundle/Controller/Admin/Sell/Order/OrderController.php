@@ -659,7 +659,8 @@ class OrderController extends CommonController
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
             'product' => $lastProduct,
-            'isColumnLocationDisplayed' => ($lastProduct->getLocation() !== ''),
+            'isColumnLocationDisplayed' => $lastProduct->getLocation() !== '',
+            'isColumnRefundedDisplayed' => $lastProduct->getQuantityRefunded() > 0,
             'cancelProductForm' => $cancelProductForm->createView(),
             'orderCurrency' => $orderCurrency,
         ]);
@@ -836,7 +837,8 @@ class OrderController extends CommonController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'cancelProductForm' => $cancelProductForm->createView(),
-            'isColumnLocationDisplayed' => ($product->getLocation() !== ''),
+            'isColumnLocationDisplayed' => $product->getLocation() !== '',
+            'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
