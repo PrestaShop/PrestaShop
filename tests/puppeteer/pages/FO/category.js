@@ -6,16 +6,16 @@ module.exports = class Category extends FOBasePage {
     super(page);
 
     // Selectors
-    this.bodySelector = 'body#category';
-    this.mainSection = 'section#main';
-    this.productsSection = 'section#products';
-    this.productListDiv = 'div#js-product-list';
+    this.bodySelector = '#category';
+    this.mainSection = '#main';
+    this.productsSection = '#products';
+    this.productListDiv = '#js-product-list';
     this.productItemListDiv = `${this.productListDiv} .products div[itemprop='itemListElement']`;
   }
 
   /* Methods */
   /**
-   *
+   * Check if user is in category page
    * @return {Promise<boolean>}
    */
   async isCategoryPage() {
@@ -23,7 +23,7 @@ module.exports = class Category extends FOBasePage {
   }
 
   /**
-   *
+   * Get number of products displayed in category page
    * @return {Promise<int>}
    */
   async getNumberOfProductsDisplayed() {

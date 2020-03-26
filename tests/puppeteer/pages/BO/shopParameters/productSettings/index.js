@@ -32,7 +32,7 @@ module.exports = class productSettings extends BOBasePage {
     // Pagination form
     this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
     this.productsPerPageInput = '#form_pagination_products_per_page';
-    this.savePaaginationFormButton = `${this.paginationFormBlock} .card-footer button`;
+    this.savePaginationFormButton = `${this.paginationFormBlock} .card-footer button`;
   }
 
   /*
@@ -178,7 +178,7 @@ module.exports = class productSettings extends BOBasePage {
    */
   async setProductsDisplayedPerPage(numberOfProducts) {
     await this.setValue(this.productsPerPageInput, numberOfProducts.toString());
-    await this.clickAndWaitForNavigation(this.savePaaginationFormButton);
+    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };
