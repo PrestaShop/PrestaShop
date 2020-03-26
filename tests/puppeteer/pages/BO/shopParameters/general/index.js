@@ -25,7 +25,7 @@ module.exports = class shopParamsGeneral extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabMaintenance() {
-    await this.page.click(this.maintenanceNavItemLink, {waitUntil: 'networkidle2'});
+    await this.clickAndWaitForNavigation(this.maintenanceNavItemLink);
   }
 
   /**
