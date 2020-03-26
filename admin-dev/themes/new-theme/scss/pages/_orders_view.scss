@@ -298,6 +298,12 @@
       }
     }
 
+    .product-row {
+      > div:first-child {
+        order: 2;
+      }
+    }
+
     .cancel-product-element {
       margin-top: 10px;
 
@@ -314,6 +320,9 @@
       }
 
       .select-status {
+        max-width: inherit;
+        width: 100%;
+
         .select-status-colored {
           margin-right: 0 !important;
           max-width: inherit;
