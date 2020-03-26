@@ -54,7 +54,7 @@ class TranslatorLanguageLoader
     /**
      * Loads a language into a translator
      *
-     * @param TranslatorInterface $translator Translator to modifiy
+     * @param TranslatorInterface $translator Translator to modify
      * @param string $locale Locale code for the language to load
      * @param bool $withDB [default=true] Whether to load translations from the database or not
      * @param Theme|null $theme [default=false] Currently active theme (Front office only)
