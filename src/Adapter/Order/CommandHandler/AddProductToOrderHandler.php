@@ -43,8 +43,8 @@ use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Adapter\Order\Invoice;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -77,12 +77,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $context;
 
     /**
-     * @param TranslatorInterface $translator
+     * @var ContextStateManager
      */
-    public function __construct(TranslatorInterface $translator)
+    private $contextStateManager;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param ContextStateManager $contextStateManager
+     */
+    public function __construct(TranslatorInterface $translator, ContextStateManager $contextStateManager)
     {
         $this->context = Context::getContext();
         $this->translator = $translator;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -92,11 +99,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         $order = $this->getOrderObject($command->getOrderId());
 
-        if ($this->context->cart !== null) {
-            $oldCartRules = $this->context->cart->getCartRules();
-        } else {
-            $oldCartRules = [];
-        }
+        $this->contextStateManager
+            ->setCurrency(new Currency($order->id_currency))
+            ->setCustomer(new Customer($order->id_customer));
+
+        $oldCartRules = (new Cart($order->id_cart))->getCartRules();
 
         $this->assertOrderWasNotShipped($order);
 
@@ -200,11 +207,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         sort($oldCartRules);
         sort($newCartRules);
 
-        if (!empty($newCartRules) && !empty($oldCartRules)) {
-            $result = array_diff($newCartRules, $oldCartRules);
-        } else {
-            $result = [];
-        }
+        $result = array_diff($newCartRules, $oldCartRules);
 
         foreach ($result as $cartRule) {
             // Create OrderCartRule
@@ -232,6 +235,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         $order->update();
+
+        $this->contextStateManager->restoreContext();
     }
 
     /**
