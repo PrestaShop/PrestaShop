@@ -107,9 +107,9 @@ describe('CRUD SQL query', async () => {
 
     it('should check columns name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkColumnsNameForNewSQLQuery', baseContext);
-      for (let i = 1; i <= Tables.ps_alias.columns.length; i++) {
-        const columnNameText = await this.pageObjects.viewQueryManagerPage.getColumnName(i);
-        expect(columnNameText).to.be.equal(Tables.ps_alias.columns[i - 1]);
+      for (let i = 0; i <= Tables.ps_alias.columns.length - 1; i++) {
+        const columnNameText = await this.pageObjects.viewQueryManagerPage.getColumnName(i + 1);
+        expect(columnNameText).to.be.equal(Tables.ps_alias.columns[i]);
       }
     });
   });
@@ -173,9 +173,9 @@ describe('CRUD SQL query', async () => {
 
     it('should check columns name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkColumnsNameForUpdatedSQLQuery', baseContext);
-      for (let i = 1; i <= Tables.ps_access.columns.length; i++) {
-        const columnNameText = await this.pageObjects.viewQueryManagerPage.getColumnName(i);
-        expect(columnNameText).to.be.equal(Tables.ps_access.columns[i - 1]);
+      for (let i = 0; i <= Tables.ps_access.columns.length - 1; i++) {
+        const columnNameText = await this.pageObjects.viewQueryManagerPage.getColumnName(i + 1);
+        expect(columnNameText).to.be.equal(Tables.ps_access.columns[i]);
       }
     });
   });
