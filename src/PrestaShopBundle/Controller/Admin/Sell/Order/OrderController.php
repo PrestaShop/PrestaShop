@@ -1456,9 +1456,9 @@ class OrderController extends CommonController
             InvalidCartRuleValueException::class => sprintf(
                 '%s<ol><li>%s</li><li>%s</li><li>%s</li></ol>',
                 $this->trans('It looks like the value is invalid:', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Percent or amount value must be greater than 0.', 'Admin.Orderscustomers.Notification'),
+                $this->trans('Discount value must be greater than 0.', 'Admin.Orderscustomers.Notification'),
                 $this->trans('Percent value cannot exceed 100.', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Amount value cannot exceed the total price of this order.', 'Admin.Orderscustomers.Notification')
+                $this->trans('Discount value cannot exceed the total price of this order.', 'Admin.Orderscustomers.Notification')
             ),
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
