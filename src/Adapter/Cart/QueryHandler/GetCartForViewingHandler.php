@@ -149,7 +149,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
         $customerStats = $customer->getStats();
         $gender = new Gender($customer->id_gender, $context->language->id);
 
-        $products = $this->prepareProductForView($products, $currency);
+        $products = $this->prepareProductForView($products, $currency, $context->language->id);
 
         $customerInformation = [
             'id' => $customer->id,
@@ -192,15 +192,20 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
     /**
      * @param array $products
      * @param Currency $currency
+     * @param int $languageId
      *
      * @return array
      */
-    private function prepareProductForView(array $products, Currency $currency)
+    private function prepareProductForView(array $products, Currency $currency, int $languageId)
     {
         $formattedProducts = [];
 
         foreach ($products as $product) {
-            $image = Product::getCover($product['id_product']);
+            if ($product['id_product_attribute']) {
+                $image = Product::getCombinationImageById($product['id_product_attribute'], $languageId);
+            } else {
+                $image = Product::getCover($product['id_product']);
+            }
 
             $formattedProduct = [
                 'id' => $product['id_product'],
