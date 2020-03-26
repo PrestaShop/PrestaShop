@@ -71,7 +71,6 @@ Feature: Cancel Order Product from Back Office (BO)
     And order "bo_order_cancel_product" should contain 0 products "Mug Today is a good day"
     And order "bo_order_cancel_product" has status "Canceled"
 
-
   @order-cancel-product
   Scenario: Quantity is required
     Given I add order "bo_order_cancel_product" with the following details:
@@ -121,4 +120,4 @@ Feature: Cancel Order Product from Back Office (BO)
       | product_name                | quantity |
       | Mug The best is yet to come | 1       |
       | Mug Today is a good day     | 1        |
-    Then I should get error that order has unexpected invoice
+    Then I should get error that order is already paid

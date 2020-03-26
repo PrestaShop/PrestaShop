@@ -46,7 +46,7 @@ module.exports = class Product extends FOBasePage {
     await this.page.waitFor(1000);
     if (attributeToChoose.color) {
       await Promise.all([
-        this.page.waitForSelector(this.colorInput.replace('%COLOR', attributeToChoose.color), {visible: true}),
+        this.waitForVisibleSelector(this.colorInput.replace('%COLOR', attributeToChoose.color)),
         this.page.click(this.colorInput.replace('%COLOR', attributeToChoose.color)),
       ]);
     }
@@ -54,9 +54,9 @@ module.exports = class Product extends FOBasePage {
       await this.setValue(this.productQuantity, attributeToChoose.quantity.toString());
     }
     await this.waitForSelectorAndClick(this.addToCartButton);
-    await this.page.waitForSelector(`${this.blockCartModal}[style*='display: block;']`);
+    await this.waitForVisibleSelector(`${this.blockCartModal}[style*='display: block;']`);
     if (proceedToCheckout) {
-      await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
+      await this.waitForVisibleSelector(this.proceedToCheckoutButton);
       await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
     } else {
       await this.waitForSelectorAndClick(this.continueShoppingButton);

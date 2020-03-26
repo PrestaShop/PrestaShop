@@ -125,7 +125,7 @@ export default {
   shippingForm: '.js-shipping-form',
   noCarrierBlock: '.js-no-carrier-block',
   deliveryOptionSelect: '#delivery-option-select',
-  totalShippingField: '.js-total-shipping',
+  totalShippingField: '.js-total-shipping-tax-inc',
   freeShippingSwitch: '.js-free-shipping-switch',
 
   // selectors related to cart block

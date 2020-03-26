@@ -106,7 +106,8 @@ class AddOrderCartRuleType extends AbstractType
             ])
             ->add('value', NumberType::class, [
                 'attr' => [
-                    'step' => 0.01,
+                    'step' => 1,
+                    'class' => 'input-group-text',
                 ],
                 'constraints' => new Type([
                     'type' => 'numeric',

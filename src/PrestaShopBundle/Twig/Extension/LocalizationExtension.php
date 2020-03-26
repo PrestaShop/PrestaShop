@@ -39,20 +39,33 @@ class LocalizationExtension extends AbstractExtension
     private $dateFormatFull;
 
     /**
-     * @param string $contextDateFormatFull
+     * @var string
      */
-    public function __construct(string $contextDateFormatFull)
+    private $dateFormatLight;
+
+    /**
+     * @param string $contextDateFormatFull
+     * @param string $contextDateFormatLight
+     */
+    public function __construct(string $contextDateFormatFull, string $contextDateFormatLight)
     {
         $this->dateFormatFull = $contextDateFormatFull;
+        $this->dateFormatLight = $contextDateFormatLight;
     }
 
     public function getFilters(): array
     {
         return [
             new Twig_SimpleFilter('date_format_full', [$this, 'dateFormatFull']),
+            new Twig_SimpleFilter('date_format_lite', [$this, 'dateFormatLite']),
         ];
     }
 
+    /**
+     * @param DateTimeInterface|string $date
+     *
+     * @return string
+     */
     public function dateFormatFull($date): string
     {
         if (!$date instanceof DateTimeInterface) {
@@ -60,5 +73,19 @@ class LocalizationExtension extends AbstractExtension
         }
 
         return $date->format($this->dateFormatFull);
+    }
+
+    /**
+     * @param DateTimeInterface|string $date
+     *
+     * @return string
+     */
+    public function dateFormatLite($date): string
+    {
+        if (!$date instanceof DateTimeInterface) {
+            $date = new DateTime($date);
+        }
+
+        return $date->format($this->dateFormatLight);
     }
 }

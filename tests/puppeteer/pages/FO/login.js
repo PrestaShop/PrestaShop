@@ -24,6 +24,7 @@ module.exports = class Login extends FOBasePage {
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
     this.partnerOfferCheckbox = `${this.createAccountForm} input[name='optin']`;
+    this.companyInput = `${this.createAccountForm} input[name='company']`;
     this.saveButton = `${this.createAccountForm} .form-control-submit`;
   }
 
@@ -39,10 +40,7 @@ module.exports = class Login extends FOBasePage {
   async customerLogin(customer) {
     await this.setValue(this.emailInput, customer.email);
     await this.setValue(this.passwordInput, customer.password);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.signInButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.signInButton);
   }
 
   /**
@@ -95,5 +93,13 @@ module.exports = class Login extends FOBasePage {
    */
   async isPartnerOfferVisible() {
     return this.elementVisible(this.partnerOfferCheckbox, 1000);
+  }
+
+  /**
+   * Is company input visible
+   * @returns {Promise<boolean>}
+   */
+  async isCompanyInputVisible() {
+    return this.elementVisible(this.companyInput, 1000);
   }
 };

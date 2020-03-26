@@ -166,11 +166,11 @@ module.exports = class BOBasePage extends CommonPage {
       // open the block
       await Promise.all([
         this.page.click(parentSelector),
-        this.page.waitForSelector(`${parentSelector}.open`, {visible: true}),
+        this.waitForVisibleSelector(`${parentSelector}.open`),
       ]);
       await this.clickAndWaitForNavigation(linkSelector);
     }
-    await this.page.waitForSelector(`${linkSelector}.-active`, {visible: true});
+    await this.waitForVisibleSelector(`${linkSelector}.-active`);
   }
 
   /**
@@ -179,9 +179,9 @@ module.exports = class BOBasePage extends CommonPage {
    */
   async logoutBO() {
     await this.clickAndWaitForNavigation(this.headerLogoImage);
-    await this.page.waitForSelector(this.userProfileIcon, {visible: true});
+    await this.waitForVisibleSelector(this.userProfileIcon);
     await this.page.click(this.userProfileIcon);
-    await this.page.waitForSelector(this.userProfileLogoutLink, {visible: true});
+    await this.waitForVisibleSelector(this.userProfileLogoutLink);
     await this.clickAndWaitForNavigation(this.userProfileLogoutLink);
   }
 
@@ -192,7 +192,7 @@ module.exports = class BOBasePage extends CommonPage {
   async closeOnboardingModal() {
     if (await this.elementVisible(this.onboardingCloseButton, 1000)) {
       await this.page.click(this.onboardingCloseButton);
-      await this.page.waitForSelector(this.onboardingStopButton, {visible: true});
+      await this.waitForVisibleSelector(this.onboardingStopButton);
       await this.page.click(this.onboardingStopButton);
     }
   }
@@ -286,7 +286,7 @@ module.exports = class BOBasePage extends CommonPage {
   async isSubmenuVisible(parentSelector, linkSelector) {
     if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
       await this.page.click(parentSelector);
-      await this.page.waitForSelector(`${parentSelector}.open`, {visible: true});
+      await this.waitForVisibleSelector(`${parentSelector}.open`);
     }
     return this.elementVisible(linkSelector, 1000);
   }

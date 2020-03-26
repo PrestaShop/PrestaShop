@@ -25,9 +25,13 @@
 
 {% set paginationNum = 8 %}
 {% set isColumnLocationDisplayed = false %}
+{% set isColumnRefundedDisplayed = false %}
 {% for product in orderForViewing.products.products|slice(0, paginationNum) %}
   {% if product.location is not empty %}
     {% set isColumnLocationDisplayed = true %}
+  {% endif %}
+  {% if product.quantityRefunded > 0 %}
+    {% set isColumnRefundedDisplayed = true %}
   {% endif %}
 {% endfor %}
 <div class="card" id="orderProductsPanel">
@@ -65,7 +69,7 @@
         <th class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">
           <p>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
         </th>
-        <th>
+        <th class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
           <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
         </th>
         <th>
@@ -96,7 +100,8 @@
           'product': product,
           'productIndex': loop.index,
           'paginationNum': paginationNum,
-          'isColumnLocationDisplayed': isColumnLocationDisplayed
+          'isColumnLocationDisplayed': isColumnLocationDisplayed,
+          'isColumnRefundedDisplayed': isColumnRefundedDisplayed
         } %}
       {% endfor %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
@@ -128,7 +133,7 @@
           </ul>
         </nav>
       </div>
-      <div class="col-md-6 text-right">
+      <div class="col-md-6 text-right discount-action">
         {% if not orderForViewing.delivered %}
           <button type="button" class="btn btn-outline-secondary js-product-action-btn mr-3" id="addProductBtn">
             <i class="material-icons">add_circle_outline</i>

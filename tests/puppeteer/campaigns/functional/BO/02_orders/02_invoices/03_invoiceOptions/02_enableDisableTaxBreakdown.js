@@ -25,9 +25,9 @@ const files = require('@utils/files');
 const TaxRuleGroup = require('@data/faker/taxRuleGroup');
 const TaxRule = require('@data/faker/taxRule');
 const ProductFaker = require('@data/faker/product');
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 // Test context imports
 const testContext = require('@utils/testContext');
 

@@ -55,10 +55,7 @@ module.exports = class Checkout extends FOBasePage {
    * @return {Promise<boolean|true>}
    */
   async goToDeliveryStep() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.addressStepContinueButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.addressStepContinueButton);
     return this.isStepCompleted(this.addressStepSection);
   }
 
@@ -67,10 +64,7 @@ module.exports = class Checkout extends FOBasePage {
    * @return {Promise<boolean|true>}
    */
   async goToPaymentStep() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.deleveryStepContinueButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.deleveryStepContinueButton);
     return this.isStepCompleted(this.deleveryStepSection);
   }
 
@@ -82,13 +76,10 @@ module.exports = class Checkout extends FOBasePage {
   async choosePaymentAndOrder(paymentModuleName) {
     await this.page.click(this.paymentOptionInput.replace('%NAME', paymentModuleName));
     await Promise.all([
-      this.page.waitForSelector(this.paymentConfirmationButton, {visible: true}),
+      this.waitForVisibleSelector(this.paymentConfirmationButton),
       this.page.click(this.conditionToApproveLabel),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.paymentConfirmationButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.paymentConfirmationButton);
   }
 
   /**
@@ -114,7 +105,7 @@ module.exports = class Checkout extends FOBasePage {
    * @return {Promise<void>}
    */
   async customerLogin(customer) {
-    await this.page.waitForSelector(this.emailInput, {visible: true});
+    await this.waitForVisibleSelector(this.emailInput);
     await this.setValue(this.emailInput, customer.email);
     await this.setValue(this.passwordInput, customer.password);
     await this.clickAndWaitForNavigation(this.personalInformationContinueButton);

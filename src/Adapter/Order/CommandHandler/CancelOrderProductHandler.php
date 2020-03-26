@@ -184,8 +184,11 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
      */
     private function checkOrderState(Order $order)
     {
-        if ($order->hasInvoice() !== false) {
-            throw new InvalidOrderStateException(InvalidOrderStateException::UNEXPECTED_INVOICE);
+        if ($order->hasBeenPaid() || $order->hasPayments()) {
+            throw new InvalidOrderStateException(
+                InvalidOrderStateException::ALREADY_PAID,
+                'Can not cancel product on an order which is already paid'
+            );
         }
     }
 }
