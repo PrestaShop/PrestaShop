@@ -171,14 +171,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
         $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
 
-        // discount
-        $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
-        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-
-        // Save changes of order
-        $order->update();
-
         StockAvailable::synchronize($product->id);
 
         // Update weight SUM
@@ -207,7 +199,12 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         sort($oldCartRules);
         sort($newCartRules);
 
-        $result = array_diff($newCartRules, $oldCartRules);
+        // Serialize permits to diff multi dimensional array
+        $result = array_diff(
+            array_map('serialize', $newCartRules),
+            array_map('serialize', $oldCartRules)
+        );
+        $result = array_map('unserialize', $result);
 
         foreach ($result as $cartRule) {
             // Create OrderCartRule
@@ -219,20 +216,29 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $orderCartRule = new OrderCartRule();
             $orderCartRule->id_order = $order->id;
             $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
-            $orderCartRule->id_order_invoice = $invoice->id;
+            $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
             $orderCartRule->name = $cartRule['name'];
             $orderCartRule->value = $values['tax_incl'];
             $orderCartRule->value_tax_excl = $values['tax_excl'];
             $orderCartRule->add();
-
-            // @todo: use https://github.com/PrestaShop/decimal
-            $order->total_discounts += $orderCartRule->value;
-            $order->total_discounts_tax_incl += $orderCartRule->value;
-            $order->total_discounts_tax_excl += $orderCartRule->value_tax_excl;
-            $order->total_paid -= $orderCartRule->value;
-            $order->total_paid_tax_incl -= $orderCartRule->value;
-            $order->total_paid_tax_excl -= $orderCartRule->value_tax_excl;
         }
+
+        // @todo: use https://github.com/PrestaShop/decimal
+        $order->total_paid = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
+            $precision
+        );
+        $order->total_paid_tax_excl = Tools::ps_round(
+            (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
+            $precision
+        );
+        $order->total_paid_tax_incl = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
+            $precision
+        );
+        $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
+        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
+        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
 
         $order->update();
 
