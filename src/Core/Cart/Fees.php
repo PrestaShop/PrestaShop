@@ -69,7 +69,6 @@ class Fees
         $this->shippingFees = new AmountImmutable();
     }
 
-
     /**
      * @param Cart $cart
      * @param CartRowCollection $cartRowCollection
