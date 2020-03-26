@@ -105,8 +105,9 @@ export default class OrderProductRenderer {
       .appendTo($modificationPosition);
     $modificationPosition.closest('.row').removeClass('d-none');
 
-    // Show column location
-    this.toggleColumnLocation(OrderViewPageMap.productsCellLocation, true);
+    // Show column location & refunded
+    this.toggleColumn(OrderViewPageMap.productsCellLocation);
+    this.toggleColumn(OrderViewPageMap.productsCellRefunded);
 
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find(
@@ -210,8 +211,9 @@ export default class OrderProductRenderer {
       .not(OrderViewPageMap.productEditRowTemplate)
       .remove();
 
-    // Toggle Column Location
-    this.toggleColumnLocation(OrderViewPageMap.productsCellLocationDisplayed);
+    // Toggle Column Location & Refunded
+    this.toggleColumn(OrderViewPageMap.productsCellLocationDisplayed);
+    this.toggleColumn(OrderViewPageMap.productsCellRefundedDisplayed);
   }
 
   paginateUpdateControls(numPage) {
@@ -276,21 +278,21 @@ export default class OrderProductRenderer {
     );
   }
 
-  toggleColumnLocation(target, forceDisplay = null) {
-    let isColumnLocationDisplayed = false;
+  toggleColumn(target, forceDisplay = null) {
+    let isColumnDisplayed = false;
     if (forceDisplay === null) {
       $(target)
         .filter('td')
         .each(function () {
           if ($(this).html() !== '') {
-            isColumnLocationDisplayed = true;
+            isColumnDisplayed = true;
             return false;
           }
           return true;
         });
     } else {
-      isColumnLocationDisplayed = forceDisplay;
+      isColumnDisplayed = forceDisplay;
     }
-    $(target).toggleClass('d-none', !isColumnLocationDisplayed);
+    $(target).toggleClass('d-none', !isColumnDisplayed);
   }
 }

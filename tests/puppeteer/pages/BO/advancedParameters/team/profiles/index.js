@@ -113,14 +113,11 @@ module.exports = class Profiles extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.profilesListTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.profilesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(
+        `${this.profilesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`),
     ]);
     // Click on delete
-    await Promise.all([
-      this.page.click(this.profilesListTableDeleteLink.replace('%ROW', row)),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    await this.clickAndWaitForNavigation(this.profilesListTableDeleteLink.replace('%ROW', row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -133,18 +130,15 @@ module.exports = class Profiles extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

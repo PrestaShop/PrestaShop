@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
@@ -18,7 +18,7 @@ const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
 const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
 // Importing data
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
 // Test context imports
 const testContext = require('@utils/testContext');

@@ -47,12 +47,12 @@ module.exports = class Order extends BOBasePage {
     this.dialogListener();
     await Promise.all([
       this.page.click(this.editProductButton.replace('%ROW', row)),
-      this.page.waitForSelector(this.editProductQuantityInput, {visible: true}),
+      this.waitForVisibleSelector(this.editProductQuantityInput),
     ]);
     await this.setValue(this.editProductQuantityInput, quantity.toString());
     await Promise.all([
       this.page.click(this.UpdateProductButton),
-      this.page.waitForSelector(this.editProductQuantityInput, {hidden: true}),
+      this.waitForVisibleSelector(this.editProductQuantityInput),
     ]);
     return parseFloat(await this.getTextContent(this.productQuantitySpan.replace('%ROW', row)));
   }
@@ -88,7 +88,7 @@ module.exports = class Order extends BOBasePage {
   async getDocumentName(rowChild = 1) {
     await Promise.all([
       this.page.click(this.documentTab),
-      this.page.waitForSelector(`${this.documentTab}.active`),
+      this.waitForVisibleSelector(`${this.documentTab}.active`),
     ]);
     return this.getTextContent(this.documentName.replace('%ROW', rowChild));
   }
@@ -101,7 +101,7 @@ module.exports = class Order extends BOBasePage {
   async getFileName(rowChild = 1) {
     await Promise.all([
       this.page.click(this.documentTab),
-      this.page.waitForSelector(`${this.documentTab}.active`),
+      this.waitForVisibleSelector(`${this.documentTab}.active`),
     ]);
     const fileName = await this.getTextContent(this.documentNumberLink.replace('%ROW', rowChild));
     return fileName.replace('#', '').trim();
@@ -125,7 +125,7 @@ module.exports = class Order extends BOBasePage {
    */
   async clickOnPartialRefund() {
     await this.page.click(this.partialRefundButton);
-    await this.page.waitForSelector(this.refundProductQuantity.replace('%ROW', 1), {visible: true});
+    await this.waitForVisibleSelector(this.refundProductQuantity.replace('%ROW', 1));
   }
 
   /**

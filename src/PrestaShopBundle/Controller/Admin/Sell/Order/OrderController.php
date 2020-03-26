@@ -659,7 +659,8 @@ class OrderController extends CommonController
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
             'product' => $lastProduct,
-            'isColumnLocationDisplayed' => ($lastProduct->getLocation() !== ''),
+            'isColumnLocationDisplayed' => $lastProduct->getLocation() !== '',
+            'isColumnRefundedDisplayed' => $lastProduct->getQuantityRefunded() > 0,
             'cancelProductForm' => $cancelProductForm->createView(),
             'orderCurrency' => $orderCurrency,
         ]);
@@ -836,7 +837,8 @@ class OrderController extends CommonController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'cancelProductForm' => $cancelProductForm->createView(),
-            'isColumnLocationDisplayed' => ($product->getLocation() !== ''),
+            'isColumnLocationDisplayed' => $product->getLocation() !== '',
+            'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
@@ -1487,8 +1489,8 @@ class OrderController extends CommonController
                 'Admin.Notifications.Error'
             ),
             InvalidOrderStateException::class => [
-                InvalidOrderStateException::UNEXPECTED_INVOICE => $this->trans(
-                    'Invalid action: this order already has an invoice.',
+                InvalidOrderStateException::ALREADY_PAID => $this->trans(
+                    'Invalid action: this order has already been paid.',
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::DELIVERY_NOT_FOUND => $this->trans(
@@ -1499,8 +1501,8 @@ class OrderController extends CommonController
                     'Invalid action: this order has already been delivered.',
                     'Admin.Notifications.Error'
                 ),
-                InvalidOrderStateException::INVOICE_NOT_FOUND => $this->trans(
-                    'Invalid action: this order has no invoice.',
+                InvalidOrderStateException::NOT_PAID => $this->trans(
+                    'Invalid action: this order has not been paid.',
                     'Admin.Notifications.Error'
                 ),
             ],

@@ -24,6 +24,7 @@
 	overflow-y: auto
 	transition: all .5s ease-out
 
+
 	.material-icons
 		color: white
 		font-size: 1.188rem
@@ -345,9 +346,12 @@
 		padding-right: .8rem
 
 	.nav-bar
-		overflow: visible
+		overflow: visible!important;
 		width: $size-navbar-width-mini
 
+		&-overflow
+      overflow: hidden	
+      height: 100%
 		.main-menu
 			.category-title > .title,
 			.link-levelone span
@@ -361,7 +365,6 @@
 				padding-bottom: 0
 
 			.link-levelone
-				position: relative
 
 				.link
 					line-height: initial
@@ -369,7 +372,7 @@
 				&:first-of-type
 					margin-bottom: 0
 
-				&.-hover
+				&.ul-open
 					> .link
 						transition: all 0s ease 0s
 						width: 14.6875rem
@@ -381,7 +384,6 @@
 					ul.submenu
 						position: absolute !important
 						display: block !important
-						top: 34px !important
 						width: 200px !important
 						left: 50px
 						padding-left: 5px

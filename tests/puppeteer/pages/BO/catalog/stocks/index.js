@@ -56,7 +56,7 @@ module.exports = class Stocks extends BOBasePage {
    */
   async goToSubTabMovements() {
     await this.page.click(this.movementsNavItemLink);
-    await this.page.waitForSelector(`${this.movementsNavItemLink}.active`, {visible: true});
+    await this.waitForVisibleSelector(`${this.movementsNavItemLink}.active`);
   }
 
   /**
@@ -91,7 +91,7 @@ module.exports = class Stocks extends BOBasePage {
     await this.page.type(this.searchInput, value);
     await Promise.all([
       this.page.click(this.searchButton),
-      this.page.waitForSelector(this.productListLoading),
+      this.waitForVisibleSelector(this.productListLoading),
     ]);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
   }
@@ -145,7 +145,7 @@ module.exports = class Stocks extends BOBasePage {
     // Wait for check button before click
     await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton.replace('%ROW', row));
     // Wait for alert-Box after update quantity and close alert-Box
-    await this.page.waitForSelector(this.alertBoxTextSpan, {visible: true});
+    await this.waitForVisibleSelector(this.alertBoxTextSpan);
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
     await this.page.click(this.alertBoxButtonClose);
     return textContent;
@@ -164,7 +164,7 @@ module.exports = class Stocks extends BOBasePage {
     // Wait for check button before click
     await this.page.click(this.applyNewQuantityButton);
     // Wait for alert-Box after update quantity and close alert-Box
-    await this.page.waitForSelector(this.alertBoxTextSpan, {visible: true});
+    await this.waitForVisibleSelector(this.alertBoxTextSpan);
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
     await this.page.click(this.alertBoxButtonClose);
     return textContent;
@@ -178,7 +178,7 @@ module.exports = class Stocks extends BOBasePage {
   async filterByStatus(status) {
     await Promise.all([
       this.page.click(this.advancedFiltersButton),
-      this.page.waitForSelector(`${this.advancedFiltersButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.advancedFiltersButton}[aria-expanded='true']`),
     ]);
     switch (status) {
       case 'enabled':

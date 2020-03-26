@@ -12,7 +12,7 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BOBasePage = require('@pages/BO/BObasePage');
 const OrdersPage = require('@pages/BO/orders');
-const {Orders, Statuses} = require('@data/demo/orders');
+const {Orders} = require('@data/demo/orders');
 
 let numberOfOrders;
 let browser;
@@ -86,7 +86,7 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
           identifier: 'filterOsName',
           filterType: 'select',
           filterBy: 'osname',
-          filterValue: Statuses.paymentError.status,
+          filterValue: Orders.thirdOrder.status,
         },
     },
   ];

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
+use Country;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopException;
@@ -45,16 +46,23 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
         $resolvedOptions = $resolver->resolve($options);
+        $choices = [];
 
         try {
-            $states = State::getStatesByIdCountry($resolvedOptions['id_country'], $resolvedOptions['only_active']);
-            $choices = [];
+            $countryId = $resolvedOptions['id_country'];
+            $countryHasStates = (new Country($countryId))->contains_states;
+
+            if (!$countryHasStates) {
+                return [];
+            }
+
+            $states = State::getStatesByIdCountry($countryId, $resolvedOptions['only_active']);
 
             foreach ($states as $state) {
                 $choices[$state['name']] = $state['id_state'];
             }
         } catch (PrestaShopException $e) {
-            throw new CoreException(sprintf('An error occurred when getting states for country id "%s"', $resolvedOptions['id_country']));
+            throw new CoreException(sprintf('An error occurred when getting states for country id "%s"', $countryId));
         }
 
         return $choices;

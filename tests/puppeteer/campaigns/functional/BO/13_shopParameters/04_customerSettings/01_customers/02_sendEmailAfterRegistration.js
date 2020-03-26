@@ -11,6 +11,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CustomerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
+const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 const EmailPage = require('@pages/BO/advancedParameters/email');
 const FOBasePage = require('@pages/FO/FObasePage');
 const LoginFOPage = require('@pages/FO/login');
@@ -86,7 +87,10 @@ describe('Enable/Disable send an email after registration', async () => {
 
     it(`should ${test.args.action} send an email after registration`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}SendEmail`, baseContext);
-      const result = await this.pageObjects.customerSettingsPage.setEmailAfterRegistrationStatus(test.args.enable);
+      const result = await this.pageObjects.customerSettingsPage.setOptionStatus(
+        options.OPTION_EMAIL_REGISTRATION,
+        test.args.enable,
+      );
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 

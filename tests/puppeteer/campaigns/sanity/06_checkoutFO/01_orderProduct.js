@@ -14,7 +14,7 @@ const CheckoutPage = require('@pages/FO/checkout');
 const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
 const {DefaultAccount} = require('@data/demo/customer');
 const CartData = require('@data/FO/cart');
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 let browser;
 let page;

@@ -13,7 +13,7 @@ const DashboardPage = require('@pages/BO/dashboard');
 const BOBasePage = require('@pages/BO/BObasePage');
 const OrderPage = require('@pages/BO/orders/view');
 const OrdersPage = require('@pages/BO/orders');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 
 let browser;
 let page;

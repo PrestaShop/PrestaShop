@@ -249,10 +249,22 @@ export default class ProductRenderer {
     Object.values(customizationFields).forEach((customField) => {
       const $template = templateTypeMap[customField.type].clone();
 
-      $template.find(createOrderMap.productCustomInput)
+      if (customField.type === fieldTypeFile) {
+        $template.on('change', (e) => {
+          const fileName = e.target.files[0].name;
+
+          $(e.target)
+            .next('.custom-file-label')
+            .html(fileName);
+        });
+      }
+
+      $template
+        .find(createOrderMap.productCustomInput)
         .attr('name', `customizations[${customField.customizationFieldId}]`)
         .data('customization-field-id', customField.customizationFieldId);
-      $template.find(createOrderMap.productCustomInputLabel)
+      $template
+        .find(createOrderMap.productCustomInputLabel)
         .attr('for', `customizations[${customField.customizationFieldId}]`)
         .text(customField.name);
 
@@ -336,6 +348,15 @@ export default class ProductRenderer {
    */
   showResultBlock() {
     $(createOrderMap.productResultBlock).removeClass('d-none');
+  }
+
+  /**
+   * Hides result block
+   *
+   * @private
+   */
+  hideResultBlock() {
+    $(createOrderMap.productResultBlock).addClass('d-none');
   }
 
   /**

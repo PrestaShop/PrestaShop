@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use Product;
@@ -169,6 +170,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             );
         } catch (InvalidProductQuantityException $e) {
             $this->lastException = $e;
+        } catch (ProductOutOfStockException $e) {
+            $this->lastException = $e;
         }
     }
 
@@ -260,6 +263,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsNegativeProductQuantity()
     {
         $this->assertLastErrorIs(InvalidProductQuantityException::class);
+    }
+
+    /**
+     * @Then I should get error that product is out of stock
+     */
+    public function assertLastErrorIsProductOutOfStock()
+    {
+        $this->assertLastErrorIs(ProductOutOfStockException::class);
     }
 
     /**

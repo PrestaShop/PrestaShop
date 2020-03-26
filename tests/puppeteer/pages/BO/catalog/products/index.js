@@ -215,7 +215,7 @@ module.exports = class Product extends BOBasePage {
    * Get Text Column
    * @param columnName
    * @param row
-   * @return {Promise<Float|string>}
+   * @return {Promise<float|string>}
    */
   async getTextColumn(columnName, row) {
     switch (columnName) {
@@ -303,7 +303,7 @@ module.exports = class Product extends BOBasePage {
   async filterProductsByCategory(value = 'home') {
     // Click and wait to be open
     await this.page.click(this.filterByCategoriesButton);
-    await this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
+    await this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
     // Click on expand button
     await this.page.click(this.filterByCategoriesExpandButton);
     // Choose category to filter with
@@ -325,9 +325,9 @@ module.exports = class Product extends BOBasePage {
   async resetFilterCategory() {
     // Click and wait to be open
     await this.page.click(this.filterByCategoriesButton);
-    await this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
+    await this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
     await Promise.all([
-      this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='false']`),
+      this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='false']`),
       this.clickAndWaitForNavigation(this.filterByCategoriesUnselectButton),
     ]);
   }
@@ -359,11 +359,11 @@ module.exports = class Product extends BOBasePage {
     await this.filterProducts('reference', productData.reference);
     // Then delete first product and only product shown
     await Promise.all([
-      this.page.waitForSelector(`${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', 1)),
+      this.waitForVisibleSelector(`${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', 1)),
       this.page.click(this.dropdownToggleButton.replace('%ROW', 1)),
     ]);
     await Promise.all([
-      this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
+      this.waitForVisibleSelector(this.catalogDeletionModalDialog),
       this.page.click(this.dropdownMenuDeleteLink.replace('%ROW', 1)),
     ]);
     await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
@@ -377,15 +377,15 @@ module.exports = class Product extends BOBasePage {
   async deleteAllProductsWithBulkActions() {
     // Then delete first product and only product shown
     await Promise.all([
-      this.page.waitForSelector(this.productBulkMenuButton, {visible: true}),
+      this.waitForVisibleSelector(this.productBulkMenuButton),
       this.page.click(this.selectAllBulkCheckboxLabel.replace('%ROW', 1)),
     ]);
     await Promise.all([
-      this.page.waitForSelector(`${this.productBulkMenuButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.productBulkMenuButton}[aria-expanded='true']`),
       this.page.click(this.productBulkMenuButton.replace('%ROW', 1)),
     ]);
     await Promise.all([
-      this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
+      this.waitForVisibleSelector(this.catalogDeletionModalDialog),
       this.page.click(this.productBulkDeleteLink.replace('%ROW', 1)),
     ]);
     await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
@@ -425,7 +425,7 @@ module.exports = class Product extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToProductPage(row = 1) {
-    await this.page.waitForSelector(this.productsListTableColumnName.replace('%ROW', row), {visible: true});
+    await this.waitForVisibleSelector(this.productsListTableColumnName.replace('%ROW', row));
     await this.clickAndWaitForNavigation(this.productsListTableColumnName.replace('%ROW', row));
   }
 
@@ -445,6 +445,6 @@ module.exports = class Product extends BOBasePage {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
-    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

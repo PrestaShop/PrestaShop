@@ -25,7 +25,7 @@
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{% set messagesToShow = 2 %}
+{% set messagesToShow = 4 %}
 
 <div class="card mt-2 d-print-none">
   <div class="card-header">
@@ -51,7 +51,7 @@
   </div>
 
   {% if orderForViewing.messages.messages is not empty %}
-    <ul class="list-unstyled p-4 messages-block">
+    <ul class="list-unstyled messages-block">
       {% for message in orderForViewing.messages.messages|slice(0, messagesToShow)|reverse %}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/msg_list_item.html.twig' %}
       {% endfor %}
@@ -78,9 +78,9 @@
       {% endfor %}
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row configure">
       <div class="col-sm">
-        <a href="{{ path('admin_order_messages_index') }}" class="mb-1">
+        <a href="{{ path('admin_order_messages_index') }}" class="configure-link">
           {{ 'Configure predefined messages'|trans({}, 'Admin.Orderscustomers.Feature') }}
           <i class="material-icons">arrow_right_alt</i>
         </a>

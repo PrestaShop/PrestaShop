@@ -40,6 +40,18 @@ admin_addresses_edit:
   options:
     expose: true
 
+admin_order_addresses_edit:
+  path: /order/{orderId}/{addressType}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editOrder
+    _legacy_controller: AdminAddresses
+  requirements:
+    orderId: \d+
+    addressType: delivery|invoice
+  options:
+    expose: true
+
 admin_addresses_delete_bulk:
   path: /delete-bulk
   methods: [POST]

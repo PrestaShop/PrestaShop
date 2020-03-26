@@ -25,8 +25,9 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueResource from 'vue-resource';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import {showGrowl} from '@app/utils/growl';
+import ConfirmModal from '@components/modal';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import CurrencyFormatter from './components/CurrencyFormatter.vue';
 
 Vue.use(VueResource);
@@ -150,6 +151,23 @@ export default class CurrencyForm {
 
   async onResetDefaultSettingsClick() {
     await this.resetCurrencyData(this.$isoCodeInput.val());
+  }
+
+  showResetDefaultSettingsConfirmModal() {
+    const confirmTitle = this.translations['modal.restore.title'];
+    const confirmMessage = this.translations['modal.restore.body'];
+    const confirmButtonLabel = this.translations['modal.restore.apply'];
+    const closeButtonLabel = this.translations['modal.restore.cancel'];
+
+    const modal = new ConfirmModal({
+      id: 'currency_restore_default_settings',
+      confirmTitle,
+      confirmMessage,
+      confirmButtonLabel,
+      closeButtonLabel,
+    }, () => this.onResetDefaultSettingsClick());
+
+    modal.show();
   }
 
   async resetCurrencyData(selectedISOCode) {

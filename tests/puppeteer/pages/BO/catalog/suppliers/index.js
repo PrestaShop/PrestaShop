@@ -85,7 +85,7 @@ module.exports = class Suppliers extends BOBasePage {
   async goToEditSupplierPage(row = 1) {
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
@@ -101,12 +101,11 @@ module.exports = class Suppliers extends BOBasePage {
     this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -220,12 +219,12 @@ module.exports = class Suppliers extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
@@ -240,20 +239,19 @@ module.exports = class Suppliers extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(this.confirmDeleteButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
