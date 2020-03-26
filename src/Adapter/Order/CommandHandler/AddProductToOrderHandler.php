@@ -103,138 +103,149 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer));
 
-        $oldCartRules = (new Cart($order->id_cart))->getCartRules();
+        try {
+            $this->assertOrderWasNotShipped($order);
 
-        $this->assertOrderWasNotShipped($order);
+            $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
+            $combination = $this->getCombination($command->getCombinationId());
 
-        $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
-        $combination = $this->getCombination($command->getCombinationId());
+            $this->checkProductInStock($command->getProductId()->getValue(), $command->getCombinationId(), $command->getProductQuantity());
 
-        $this->checkProductInStock($command->getProductId()->getValue(), $command->getCombinationId(), $command->getProductQuantity());
+            $cart = $this->createNewOrEditExistingCart($order);
 
-        $cart = $this->createNewOrEditExistingCart($order);
+            $oldCartRules = $cart->getCartRules();
 
-        $specificPrice = $this->createSpecificPriceIfNeeded(
-            $command,
-            $order,
-            $cart,
-            $product,
-            $combination
-        );
+            $specificPrice = $this->createSpecificPriceIfNeeded(
+                $command,
+                $order,
+                $cart,
+                $product,
+                $combination
+            );
 
-        $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
+            $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
-        // Fetch Cart Product
-        $productCart = $this->getCartProductData($cart, $product, $command->getProductQuantity());
+            // Fetch Cart Product
+            $productCart = $this->getCartProductData($cart, $product, $command->getProductQuantity());
 
-        $invoice = $this->createNewOrEditExistingInvoice(
-            $command,
-            $order,
-            $cart,
-            [$productCart]
-        );
+            $invoice = $this->createNewOrEditExistingInvoice(
+                $command,
+                $order,
+                $cart,
+                [$productCart]
+            );
 
-        $totalMethod = $command->getOrderInvoiceId() ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
+            $totalMethod = $command->getOrderInvoiceId() ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
 
-        // Create Order detail information
-        $orderDetail = $this->createOrderDetail(
-            $order,
-            $invoice,
-            $cart,
-            [$productCart]
-        );
+            // Create Order detail information
+            $orderDetail = $this->createOrderDetail(
+                $order,
+                $invoice,
+                $cart,
+                [$productCart]
+            );
 
-        // update totals amount of order
-        // @todo: use https://github.com/PrestaShop/decimal for prices computations
-        $orderProducts = $order->getCartProducts();
-        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts);
-        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts);
+            // update totals amount of order
+            // @todo: use https://github.com/PrestaShop/decimal for prices computations
+            $orderProducts = $order->getCartProducts();
+            $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts);
+            $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts);
 
-        $precision = $this->getPrecisionFromCart($cart);
-        $order->total_paid = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-            $precision
-        );
-        $order->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
-            $precision
-        );
-        $order->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-            $precision
-        );
-        $order->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
-        $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts);
-        $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
+            $precision = $this->getPrecisionFromCart($cart);
+            $order->total_paid = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
+                $precision
+            );
+            $order->total_paid_tax_excl = Tools::ps_round(
+                (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
+                $precision
+            );
+            $order->total_paid_tax_incl = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
+                $precision
+            );
+            $order->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
+            $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts);
+            $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
 
-        $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
-        $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
-        $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
+            $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
+            $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
+            $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
 
-        // discount
-        $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
-        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
+            StockAvailable::synchronize($product->id);
 
-        // Save changes of order
-        $order->update();
-
-        StockAvailable::synchronize($product->id);
-
-        // Update weight SUM
-        $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-        if (Validate::isLoadedObject($orderCarrier)) {
-            $orderCarrier->weight = (float) $order->getTotalWeight();
-            if ($orderCarrier->update()) {
-                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
+            // Update weight SUM
+            $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
+            if (Validate::isLoadedObject($orderCarrier)) {
+                $orderCarrier->weight = (float) $order->getTotalWeight();
+                if ($orderCarrier->update()) {
+                    $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
+                }
             }
-        }
 
-        // Update Tax lines
-        $orderDetail->updateTaxAmount($order);
+            // Update Tax lines
+            $orderDetail->updateTaxAmount($order);
 
-        // Delete specific price if exists
-        if (null !== $specificPrice) {
-            $specificPrice->delete();
-        }
+            // Delete specific price if exists
+            if (null !== $specificPrice) {
+                $specificPrice->delete();
+            }
 
-        $order = $order->refreshShippingCost();
+            $order = $order->refreshShippingCost();
 
-        Hook::exec('actionOrderEdited', ['order' => $order]);
+            Hook::exec('actionOrderEdited', ['order' => $order]);
 
-        $newCartRules = $this->context->cart->getCartRules();
+            $newCartRules = $cart->getCartRules();
 
-        sort($oldCartRules);
-        sort($newCartRules);
+            sort($oldCartRules);
+            sort($newCartRules);
 
-        $result = array_diff($newCartRules, $oldCartRules);
+            // Serialize permits to diff multi dimensional array
+            $result = array_diff(
+                array_map('serialize', $newCartRules),
+                array_map('serialize', $oldCartRules)
+            );
+            $result = array_map('unserialize', $result);
 
-        foreach ($result as $cartRule) {
-            // Create OrderCartRule
-            $rule = new CartRule($cartRule['id_cart_rule']);
-            $values = [
-                'tax_incl' => $rule->getContextualValue(true),
-                'tax_excl' => $rule->getContextualValue(false),
-            ];
-            $orderCartRule = new OrderCartRule();
-            $orderCartRule->id_order = $order->id;
-            $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
-            $orderCartRule->id_order_invoice = $invoice->id;
-            $orderCartRule->name = $cartRule['name'];
-            $orderCartRule->value = $values['tax_incl'];
-            $orderCartRule->value_tax_excl = $values['tax_excl'];
-            $orderCartRule->add();
+            foreach ($result as $cartRule) {
+                // Create OrderCartRule
+                $rule = new CartRule($cartRule['id_cart_rule']);
+                $values = [
+                    'tax_incl' => $rule->getContextualValue(true),
+                    'tax_excl' => $rule->getContextualValue(false),
+                ];
+                $orderCartRule = new OrderCartRule();
+                $orderCartRule->id_order = $order->id;
+                $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
+                $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
+                $orderCartRule->name = $cartRule['name'];
+                $orderCartRule->value = $values['tax_incl'];
+                $orderCartRule->value_tax_excl = $values['tax_excl'];
+                $orderCartRule->add();
+            }
 
             // @todo: use https://github.com/PrestaShop/decimal
-            $order->total_discounts += $orderCartRule->value;
-            $order->total_discounts_tax_incl += $orderCartRule->value;
-            $order->total_discounts_tax_excl += $orderCartRule->value_tax_excl;
-            $order->total_paid -= $orderCartRule->value;
-            $order->total_paid_tax_incl -= $orderCartRule->value;
-            $order->total_paid_tax_excl -= $orderCartRule->value_tax_excl;
-        }
+            $order->total_paid = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
+                $precision
+            );
+            $order->total_paid_tax_excl = Tools::ps_round(
+                (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
+                $precision
+            );
+            $order->total_paid_tax_incl = Tools::ps_round(
+                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
+                $precision
+            );
+            $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
+            $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
+            $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
 
-        $order->update();
+            $order->update();
+        } catch (Exception $e) {
+            $this->contextStateManager->restoreContext();
+            throw $e;
+        }
 
         $this->contextStateManager->restoreContext();
     }
@@ -314,7 +325,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         $this->context->cart = $cart;
-        $this->context->customer = new Customer($order->id_customer);
 
         return $cart;
     }
