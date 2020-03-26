@@ -21,7 +21,8 @@ let browser;
 let page;
 const newPurchaseTotalRequired = 100;
 const defaultPurchaseTotalRequired = 0;
-const alertMessage = 'A minimum shopping cart total of €100.00 (tax excl.) is required to validate your order.';
+const alertMessage = `A minimum shopping cart total of €${newPurchaseTotalRequired}.00 (tax excl.)`
++ ' is required to validate your order.';
 
 // Init objects needed
 const init = async function () {
