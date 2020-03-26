@@ -20,6 +20,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CustomerManagerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
         category:
             paths:
                 features: Features/Scenario/Category
@@ -75,6 +76,10 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderRefundFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
         currency:
             paths:
                 features: Features/Scenario/Currency
