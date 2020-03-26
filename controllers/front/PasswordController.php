@@ -42,7 +42,6 @@ class PasswordControllerCore extends FrontController
         $this->IDNConverter = new InternationalizedDomainNameConverter();
     }
 
-
     /**
      * Start forms process.
      *
