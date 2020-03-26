@@ -180,23 +180,24 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             // Free shipping type
             case OrderDiscountType::FREE_SHIPPING:
                 if (isset($orderInvoice)) {
-                    if ($orderInvoice->total_shipping_tax_incl > 0) {
-                        $cartRules[$orderInvoice->id]['value_tax_incl'] = $orderInvoice->total_shipping_tax_incl;
-                        $cartRules[$orderInvoice->id]['value_tax_excl'] = $orderInvoice->total_shipping_tax_excl;
-
-                        // Update OrderInvoice
-                        $this->applyDiscountOnInvoice(
-                            $orderInvoice,
-                            $cartRules[$orderInvoice->id]['value_tax_incl'],
-                            $cartRules[$orderInvoice->id]['value_tax_excl']
-                        );
+                    if ($orderInvoice->total_paid_tax_incl - $orderInvoice->total_shipping_tax_incl <= 0) {
+                        throw new InvalidCartRuleValueException();
                     }
+                    $cartRules[$orderInvoice->id]['value_tax_incl'] = $orderInvoice->total_shipping_tax_incl;
+                    $cartRules[$orderInvoice->id]['value_tax_excl'] = $orderInvoice->total_shipping_tax_excl;
+
+                    // Update OrderInvoice
+                    $this->applyDiscountOnInvoice(
+                        $orderInvoice,
+                        $cartRules[$orderInvoice->id]['value_tax_incl'],
+                        $cartRules[$orderInvoice->id]['value_tax_excl']
+                    );
                 } elseif ($order->hasInvoice()) {
                     $orderInvoices = $order->getInvoicesCollection();
                     foreach ($orderInvoices as $orderInvoice) {
                         /** @var OrderInvoice $orderInvoice */
-                        if ($orderInvoice->total_shipping_tax_incl <= 0) {
-                            continue;
+                        if ($orderInvoice->total_paid_tax_incl - $orderInvoice->total_shipping_tax_incl <= 0) {
+                            throw new InvalidCartRuleValueException();
                         }
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = $orderInvoice->total_shipping_tax_incl;
                         $cartRules[$orderInvoice->id]['value_tax_excl'] = $orderInvoice->total_shipping_tax_excl;
@@ -209,6 +210,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                         );
                     }
                 } else {
+                    if ($order->total_paid_tax_incl - $order->total_shipping_tax_incl <= 0) {
+                        throw new InvalidCartRuleValueException();
+                    }
                     $cartRules[0]['value_tax_incl'] = $order->total_shipping_tax_incl;
                     $cartRules[0]['value_tax_excl'] = $order->total_shipping_tax_excl;
                 }
