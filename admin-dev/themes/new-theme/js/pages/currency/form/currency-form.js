@@ -26,9 +26,9 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueResource from 'vue-resource';
 import {showGrowl} from '@app/utils/growl';
-import CurrencyFormatter from './components/CurrencyFormatter.vue';
 import ConfirmModal from '@components/modal';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import CurrencyFormatter from './components/CurrencyFormatter.vue';
 
 Vue.use(VueResource);
 Vue.use(VueI18n);
@@ -108,7 +108,6 @@ export default class CurrencyForm {
     this.$currencySelector.change(this.onCurrencySelectorChange.bind(this));
     this.$isUnofficialCheckbox.change(this.onIsUnofficialCheckboxChange.bind(this));
     this.$resetDefaultSettingsButton.click(this.onResetDefaultSettingsClick.bind(this));
-
   }
 
   initFields() {

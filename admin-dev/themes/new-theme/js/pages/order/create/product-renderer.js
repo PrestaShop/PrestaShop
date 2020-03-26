@@ -210,7 +210,7 @@ export default class ProductRenderer {
         `<option
           value="${combination.attributeCombinationId}">
           ${combination.attribute} - ${combination.formattedPrice}
-        </option>`
+        </option>`,
       );
     });
 
@@ -243,14 +243,14 @@ export default class ProductRenderer {
 
     const templateTypeMap = {
       [fieldTypeFile]: $fileInputTemplate,
-      [fieldTypeText]: $textInputTemplate
+      [fieldTypeText]: $textInputTemplate,
     };
 
     Object.values(customizationFields).forEach((customField) => {
       const $template = templateTypeMap[customField.type].clone();
 
       if (customField.type === fieldTypeFile) {
-        $template.on('change', e => {
+        $template.on('change', (e) => {
           const fileName = e.target.files[0].name;
 
           $(e.target)

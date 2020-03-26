@@ -285,12 +285,11 @@ export default class OrderProductRenderer {
         .filter('td')
         .each(function () {
           if ($(this).html() !== '') {
-            isColumnLocationDisplayed = true;
+            isColumnDisplayed = true;
             return false;
           }
           return true;
         });
-
     } else {
       isColumnDisplayed = forceDisplay;
     }

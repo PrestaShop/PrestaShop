@@ -61,7 +61,7 @@ export default class NavBar {
         },
         function onMouseLeave() {
           $(this).removeClass('-hover');
-        }
+        },
       );
 
       $('.nav-bar li.link-levelone.has_submenu > a').on('click', function onNavBarClick(e) {
@@ -86,7 +86,7 @@ export default class NavBar {
                 .parent()
                 .removeClass('ul-open open');
               $(this).removeAttr('style');
-            }
+            },
           });
         }
 
@@ -104,7 +104,7 @@ export default class NavBar {
             complete: function slideDownIsComplete() {
               $submenu.addClass('open');
               $(this).removeAttr('style');
-            }
+            },
           });
         }
         $submenu.find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
@@ -139,8 +139,8 @@ export default class NavBar {
           url: $(this).data('toggle-url'),
           cache: false,
           data: {
-            shouldCollapse: Number($('body').hasClass('page-sidebar-closed'))
-          }
+            shouldCollapse: Number($('body').hasClass('page-sidebar-closed')),
+          },
         });
       });
 
@@ -173,7 +173,6 @@ export default class NavBar {
             }
           },
         );
-
       }
     });
   }
@@ -216,7 +215,7 @@ export default class NavBar {
     $mainMenu.find('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href='${profileLink}'></a>`);
     $('.js-mobile-menu').on('click', expand);
     $('.js-notifs_dropdown').css({
-      height: window.innerHeight
+      height: window.innerHeight,
     });
 
     function expand() {
