@@ -36,6 +36,7 @@ use Customer;
 use DateInterval;
 use DateTime;
 use Exception;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
@@ -55,9 +56,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
+    use StringToBooleanTransform;
+
     /**
      * @Given the current currency is :currencyIsoCode
      */
@@ -484,6 +488,60 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 }
             }
         }
+    }
+
+    /**
+     * @Given /^I use a voucher "(.+)" that provides gift product "(.+)" and free shipping on the cart "(.+)"$/
+     */
+    public function addGiftPlusFreeShippingCartRule(string $voucherCode, string $giftProductName, string $cartReference)
+    {
+        $productId = $this->getProductIdByName($giftProductName);
+        $cartRule = $this->createCommonCartRule($voucherCode);
+        $cartRule->free_shipping = true;
+        $cartRule->gift_product = $productId;
+
+        $this->addCartRule($cartRule);
+        $cartRuleId = (int) $cartRule->id;
+
+        $this->getCommandBus()->handle(
+            new AddCartRuleToCartCommand(
+                SharedStorage::getStorage()->get($cartReference),
+                $cartRuleId
+            )
+        );
+
+        $this->getSharedStorage()->set($voucherCode, $cartRuleId);
+        $this->getSharedStorage()->set($giftProductName, $productId);
+    }
+
+    /**
+     * @Then cart :cartReference should have free shipping
+     */
+    public function assertCartShippingIsFree(string $cartReference)
+    {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+        Assert::assertTrue($cartInfo->getShipping()->isFreeShipping());
+        Assert::assertEquals('0', $cartInfo->getShipping()->getShippingPrice());
+    }
+
+    /**
+     * @Then /^reduction value of voucher "(.+)" in cart "(.+)" should be "(.+)"$/
+     */
+    public function assertReductionValueOfCartCartRule(
+        string $voucherCode,
+        string $cartReference,
+        string $value
+    ) {
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+        $cartRuleId = $this->getSharedStorage()->get($voucherCode);
+
+        foreach ($cartInfo->getCartRules() as $cartRule) {
+            if ($cartRuleId === $cartRule->getCartRuleId()) {
+                Assert::assertEquals($value, $cartRule->getValue());
+            }
+        }
+
+        throw new RuntimeException(sprintf('Voucher was %s not found in cart', $voucherCode));
     }
 
     /**

@@ -189,22 +189,32 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         $cartRules = [];
 
         foreach ($legacySummary['discounts'] as $discount) {
-            $cartRules[] = new CartInformation\CartRule(
+            $cartRuleId = (int) $discount['id_cart_rule'];
+            $cartRules[$cartRuleId] = new CartInformation\CartRule(
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                (new Number((string) $discount['value_real']))->round($currency->precision),
-                (int) $discount['gift_product'] !== 0
+                (new Number((string) $discount['value_real']))->round($currency->precision)
             );
         }
 
         foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
-            $cartRules[] = new CartInformation\CartRule(
+            $giftRuleId = (int) $giftRule['id_cart_rule'];
+            $finalValue = new Number((string) $giftRule['value_real']);
+
+            if (isset($cartRules[$giftRuleId])) {
+                // it is possible that one cart rule can have a gift product, but also have other conditions,
+                //so we need to sum their reduction values
+                /** @var CartInformation\CartRule $cartRule */
+                $cartRule = $cartRules[$giftRuleId];
+                $finalValue = $finalValue->plus(new Number($cartRule->getValue()));
+            }
+
+            $cartRules[$giftRuleId] = new CartInformation\CartRule(
                 (int) $giftRule['id_cart_rule'],
                 $giftRule['name'],
                 $giftRule['description'],
-                (new Number((string) $giftRule['value_real']))->round($currency->precision),
-                true
+                $finalValue->round($currency->precision)
             );
         }
 
