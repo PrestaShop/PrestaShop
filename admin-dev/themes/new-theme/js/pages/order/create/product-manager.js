@@ -182,7 +182,7 @@ export default class ProductManager {
    * @private
    */
   _search(searchPhrase) {
-    if (searchPhrase.length < 3) {
+    if (searchPhrase.length < 2) {
       return;
     }
 
