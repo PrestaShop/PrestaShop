@@ -584,11 +584,19 @@ class EmployeeCore extends ObjectModel
      */
     public function getImage()
     {
+        $defaultAvatar = Tools::getAdminImageUrl('prestashop-avatar.png');
+
         if (!Validate::isLoadedObject($this)) {
-            return Tools::getAdminImageUrl('prestashop-avatar.png');
+            return $defaultAvatar;
         }
 
-        return Tools::getShopProtocol() . 'profile.prestashop.com/' . urlencode($this->email) . '.jpg';
+        $profileImageUrl = Hook::exec('actionGetProfileImageUrl');
+
+        if (is_string($profileImageUrl) && '' !== $profileImageUrl) {
+            return $profileImageUrl;
+        }
+
+        return $defaultAvatar;
     }
 
     /**
