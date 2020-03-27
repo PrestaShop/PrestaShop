@@ -24,7 +24,7 @@
  *#}
 
 {% if customerInformation.lastConnectionsInformation is not empty %}
-  <div class="card">
+  <div class="card customer-last-connections-card">
     <h3 class="card-header">
       <i class="material-icons">access_time</i>
       {{ 'Last connections'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -44,13 +44,13 @@
         </thead>
         <tbody>
         {% for connection in customerInformation.lastConnectionsInformation %}
-          <tr>
-            <td>{{ connection.connectionId }}</td>
-            <td>{{ connection.connectionDate }}</td>
-            <td>{{ connection.pagesViewed }}</td>
-            <td>{{ connection.totalTime }}</td>
-            <td>{{ connection.httpReferer }}</td>
-            <td>{{ connection.ipAddress }}</td>
+          <tr class="customer-last-connection">
+            <td class="customer-last-connection-id">{{ connection.connectionId }}</td>
+            <td class="customer-last-connection-date">{{ connection.connectionDate }}</td>
+            <td class="customer-last-connection-pages-viewed">{{ connection.pagesViewed }}</td>
+            <td class="customer-last-connection-total-time">{{ connection.totalTime }}</td>
+            <td class="customer-last-connection-origin">{{ connection.httpReferer }}</td>
+            <td class="customer-last-connection-ip-address">{{ connection.ipAddress }}</td>
           </tr>
         {% endfor %}
         </tbody>

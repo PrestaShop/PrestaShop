@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="card customer-addresses-card">
   <h3 class="card-header">
     <i class="material-icons">location_on</i>
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
@@ -56,12 +56,12 @@
           {% for address in customerInformation.addressesInformation %}
             {% set addressEditUrl = getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'updateaddress': 1, 'back': app.request.uri}) %}
 
-            <tr>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullAddress }}</td>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.countryName }}</td>
-              <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">
+            <tr class="customer-address">
+              <td class="customer-address-company js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
+              <td class="customer-address-name js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
+              <td class="customer-address-address js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullAddress }}</td>
+              <td class="customer-address-country js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.countryName }}</td>
+              <td class="customer-address-phone-number js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">
                 {% if address.phone %}
                   {{ address.phone }}
                   {% if address.phoneMobile is not empty %}
@@ -73,7 +73,7 @@
                   --
                 {% endif %}
               </td>
-              <td class="text-right">
+              <td class="customer-address-actions text-right">
                 <div class="btn-group-action">
                   <div class="btn-group">
                     <a href="{{ addressEditUrl }}"
