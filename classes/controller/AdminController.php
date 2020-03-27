@@ -4081,7 +4081,7 @@ class AdminControllerCore extends Controller
                 $result = true;
                 foreach ($this->boxes as $id) {
                     /** @var $to_delete ObjectModel */
-                    $to_delete = new $this->className($id);
+                    $to_delete = new $this->className((int) $id);
                     $delete_ok = true;
                     if ($this->deleted) {
                         $to_delete->deleted = 1;
@@ -4097,7 +4097,7 @@ class AdminControllerCore extends Controller
                     if ($delete_ok) {
                         PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int) $to_delete->id, true, (int) $this->context->employee->id);
                     } else {
-                        $this->errors[] = $this->trans('Can\'t delete #%id%', array('%id%' => $id), 'Admin.Notifications.Error');
+                        $this->errors[] = $this->trans('Can\'t delete #%id%', array('%id%' => (int) $id), 'Admin.Notifications.Error');
                     }
                 }
                 if ($result) {
