@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,40 +27,33 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\EditCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
  * Class EditCategoryHandler.
  *
  * @internal
  */
-final class EditCategoryHandler extends AbstractCategoryHandler implements EditCategoryHandlerInterface
+final class EditCategoryHandler extends AbstractObjectModelHandler implements EditCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
      * @throws CategoryNotFoundException
-     * @throws CannotEditCategoryException
      */
     public function handle(EditCategoryCommand $command)
     {
         $category = new Category($command->getCategoryId()->getValue());
 
         if (!$category->id) {
-            throw new CategoryNotFoundException(
-                $command->getCategoryId(),
-                sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue())
-            );
+            throw new CategoryNotFoundException($command->getCategoryId(), sprintf('Category with id "%s" cannot be found.', $command->getCategoryId()->getValue()));
         }
 
         $this->updateCategoryFromCommandData($category, $command);
-
-        return new CategoryId((int) $category->id);
     }
 
     /**
@@ -68,6 +61,8 @@ final class EditCategoryHandler extends AbstractCategoryHandler implements EditC
      *
      * @param Category $category
      * @param EditCategoryCommand $command
+     *
+     * @throws CannotEditCategoryException
      */
     private function updateCategoryFromCommandData(Category $category, EditCategoryCommand $command)
     {
@@ -107,18 +102,20 @@ final class EditCategoryHandler extends AbstractCategoryHandler implements EditC
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        if ($command->getAssociatedShopIds()) {
-            $this->addShopAssociation($command->getAssociatedShopIds());
+        if (false === $category->validateFields(false)) {
+            throw new CannotEditCategoryException('Invalid data when updating category');
         }
 
-        if (false === $category->validateFields(false)) {
-            throw new CategoryException('Invalid data when updating category');
+        if (false === $category->validateFieldsLang(false)) {
+            throw new CannotEditCategoryException('Invalid data when updating category');
         }
 
         if (false === $category->update()) {
-            throw new CannotEditCategoryException(
-                sprintf('Failed to edit Category with id "%s".', $category->id)
-            );
+            throw new CannotEditCategoryException(sprintf('Failed to edit Category with id "%s".', $category->id));
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
     }
 }

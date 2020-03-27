@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -67,6 +67,14 @@ class CustomerDeleteMethod
     }
 
     /**
+     * @return string[]
+     */
+    public static function getAvailableMethods()
+    {
+        return [self::ALLOW_CUSTOMER_REGISTRATION, self::DENY_CUSTOMER_REGISTRATION];
+    }
+
+    /**
      * @param string $method
      */
     private function assertMethodIsDefined($method)
@@ -74,13 +82,7 @@ class CustomerDeleteMethod
         $definedMethods = [self::ALLOW_CUSTOMER_REGISTRATION, self::DENY_CUSTOMER_REGISTRATION];
 
         if (!in_array($method, $definedMethods)) {
-            throw new CustomerException(
-                sprintf(
-                    'Supplied customer delete method "%s" does not exists. Available methods are: %s.',
-                    $method,
-                    implode(',', $definedMethods)
-                )
-            );
+            throw new CustomerException(sprintf('Supplied customer delete method "%s" does not exists. Available methods are: %s.', $method, implode(',', $definedMethods)));
         }
     }
 }

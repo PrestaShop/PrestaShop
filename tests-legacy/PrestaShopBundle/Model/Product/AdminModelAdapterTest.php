@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\PrestaShopBundle\Model\Product;
 
-use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -119,6 +118,7 @@ class AdminModelAdapterTest extends KernelTestCase
                 "tags" => [],
                 "display_options" => [],
                 "upc" => '',
+                "mpn" => '',
                 "ean13" => '',
                 "isbn" => '',
                 "reference" => '',
@@ -143,6 +143,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "ean13" => "",
             "isbn" => "",
             "upc" => "",
+            "mpn" => "",
             "wholesale_price" => "0.000000",
             "price" => "0.000000",
             "ecotax" => "0.000000",
@@ -191,7 +192,9 @@ class AdminModelAdapterTest extends KernelTestCase
             $this->container->get('prestashop.adapter.data_provider.feature'),
             $this->container->get('prestashop.adapter.data_provider.pack'),
             $this->container->get('prestashop.adapter.shop.context'),
-            $this->container->get('prestashop.adapter.data_provider.tax')
+            $this->container->get('prestashop.adapter.data_provider.tax'),
+            $this->container->get('router'),
+            $this->container->get('prestashop.utils.float_parser')
         );
     }
 
@@ -239,6 +242,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_ean13" => "",
             "attribute_isbn" => "",
             "attribute_upc" => "",
+            "attribute_mpn" => "",
             "attribute_wholesale_price" => "0.000000",
             "attribute_price_impact" => 0,
             "attribute_price" => "0.000000",
@@ -257,7 +261,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_quantity" => 300,
             "name" => "Taille - L",
         );
-        $combinationDataProvider = new combinationDataProvider();
+        $combinationDataProvider = $this->container->get('prestashop.adapter.data_provider.combination');
         $actualReturn = $combinationDataProvider->completeCombination($this->fakeCombination(), $this->product);
 
         foreach ($expectedStructureReturn as $property => $value) {

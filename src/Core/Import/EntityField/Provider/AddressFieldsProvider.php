@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,9 +56,9 @@ final class AddressFieldsProvider implements EntityFieldsProviderInterface
         $fields = [
             new EntityField('id', $this->trans('ID', 'Admin.Global')),
             new EntityField('alias', $this->trans('Alias', 'Admin.Shopparameters.Feature'), '', true),
-            new EntityField('active', $this->trans('Active  (0/1)')),
-            new EntityField('customer_email', $this->trans('Customer email'), '', true),
-            new EntityField('id_customer', $this->trans('Customer ID')),
+            new EntityField('active', $this->trans('Active  (0/1)', 'Admin.Advparameters.Feature')),
+            new EntityField('customer_email', $this->trans('Customer email', 'Admin.Advparameters.Feature'), '', true),
+            new EntityField('id_customer', $this->trans('Customer ID', 'Admin.Advparameters.Feature')),
             new EntityField('manufacturer', $this->trans('Brand', 'Admin.Global')),
             new EntityField('supplier', $this->trans('Supplier', 'Admin.Global')),
             new EntityField('company', $this->trans('Company', 'Admin.Global')),

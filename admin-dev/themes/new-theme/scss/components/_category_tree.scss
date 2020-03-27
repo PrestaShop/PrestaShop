@@ -37,6 +37,7 @@ ul.category-tree {
   .category-label {
     display: block;
     padding-left: 0;
+    padding-right: 1.563rem;
     position: relative;
     .category {
       cursor: pointer;
@@ -89,6 +90,13 @@ ul.category-tree {
       }
       color: $gray-medium;
     }
+  }
+
+  label.form-control-label {
+    color: $gray-medium;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   #choice_tree {

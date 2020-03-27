@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,7 +37,7 @@ class PDFGeneratorCore extends TCPDF
     public $content;
     public $font;
 
-    public $font_by_lang = array(
+    public $font_by_lang = [
         'ja' => 'cid0jp',
         'bg' => 'freeserif',
         'ru' => 'freeserif',
@@ -68,7 +68,7 @@ class PDFGeneratorCore extends TCPDF
         'zh' => 'cid0cs',
         'tw' => 'cid0cs',
         'th' => 'freeserif',
-    );
+    ];
 
     /**
      * @param bool $use_cache
@@ -143,8 +143,8 @@ class PDFGeneratorCore extends TCPDF
             $this->font = self::DEFAULT_FONT;
         }
 
-        $this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
-        $this->setFooterFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
+        $this->setHeaderFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
+        $this->setFooterFont([$this->font, '', PDF_FONT_SIZE_MAIN, '', false]);
 
         $this->setFont($this->font, '', PDF_FONT_SIZE_MAIN, '', false);
     }

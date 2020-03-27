@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,28 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
 
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', __DIR__);
-}
-include _PS_ADMIN_DIR_.'/../config/config.inc.php';
+$_GET['ajax'] = 1;
+$_GET['controller'] = 'AdminSearch';
+$_GET['action'] = 'searchCron';
 
-if (!Tools::getValue('id_shop')) {
-    Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
-} else {
-    Context::getContext()->shop->setContext(Shop::CONTEXT_SHOP, (int)Tools::getValue('id_shop'));
-}
-
-if (substr(_COOKIE_KEY_, 34, 8) != Tools::getValue('token')) {
-    die;
-}
-
-ini_set('max_execution_time', 7200);
-Search::indexation(Tools::getValue('full'));
-if (Tools::getValue('redirect')) {
-    Tools::redirectAdmin($_SERVER['HTTP_REFERER'].'&conf=4');
-}
+require_once dirname(__FILE__).'/index.php';

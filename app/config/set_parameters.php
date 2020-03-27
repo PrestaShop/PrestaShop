@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,11 +50,16 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     }
 }
 
-foreach ($parameters['parameters'] as $key => $value) {
-    if (defined('_PS_IN_TEST_') && $key === 'database_name') {
-        $value = 'test_'.$value;
+if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
+    foreach ($parameters['parameters'] as $key => $value) {
+        $container->setParameter($key, $value);
     }
-    $container->setParameter($key, $value);
-}
 
-$container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
+    $container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
+
+    // Parameter used only in dev and test env
+    $envParameter = getenv('DISABLE_DEBUG_TOOLBAR');
+    if (!isset($parameters['parameters']['use_debug_toolbar']) || false !== $envParameter) {
+        $container->setParameter('use_debug_toolbar', !$envParameter);
+    }
+}

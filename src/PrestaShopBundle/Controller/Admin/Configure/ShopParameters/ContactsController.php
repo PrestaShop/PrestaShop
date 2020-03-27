@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ContactFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -136,7 +136,7 @@ class ContactsController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_contacts_index');
             }
-        } catch (DomainException $exception) {
+        } catch (Exception $exception) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
@@ -173,12 +173,12 @@ class ContactsController extends FrameworkBundleAdminController
             $contactFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.contact_form_handler');
             $result = $contactFormHandler->handleFor((int) $contactId, $contactForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_contacts_index');
             }
-        } catch (DomainException $exception) {
+        } catch (Exception $exception) {
             $this->addFlash(
                 'error',
                 $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
@@ -254,11 +254,11 @@ class ContactsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param DomainException $e
+     * @param Exception $e
      *
      * @return array
      */
-    private function getErrorMessages(DomainException $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             ContactNotFoundException::class => $this->trans(

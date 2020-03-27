@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,20 +19,25 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
+use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -44,6 +49,39 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CommonController extends FrameworkBundleAdminController
 {
+    /**
+     * Get a summary of recent events on the shop.
+     * This includes:
+     * - Created orders
+     * - Registered customers
+     * - New messages.
+     *
+     * @return JsonResponse
+     */
+    public function notificationsAction()
+    {
+        $employeeId = Context::getContext()->employee->id;
+        /** @var NotificationsResults $elements */
+        $elements = $this->getQueryBus()->handle(new GetNotificationLastElements($employeeId));
+
+        return new JsonResponse($elements->getNotificationsResultsForJS());
+    }
+
+    /**
+     * Update the last time a notification type has been seen.
+     *
+     * @param Request $request
+     *
+     * @throws TypeException
+     */
+    public function notificationsAckAction(Request $request)
+    {
+        $type = $request->request->get('type');
+        $this->getCommandBus()->handle(new UpdateEmployeeNotificationLastElementCommand($type));
+
+        return new JsonResponse(true);
+    }
+
     /**
      * This will allow you to retrieve an HTML code with a ready and linked paginator.
      *
@@ -84,60 +122,61 @@ class CommonController extends FrameworkBundleAdminController
         $to = $offset + $limit - 1;
 
         // urls from route
-        $callerParameters = $request->attributes->get('caller_parameters', array());
+        $callerParameters = $request->attributes->get('caller_parameters', []);
         foreach ($callerParameters as $k => $v) {
             if (strpos($k, '_') === 0) {
                 unset($callerParameters[$k]);
             }
         }
-        $routeName = $request->attributes->get('caller_route', $request->attributes->get('caller_parameters', ['_route' => false])['_route']);
+        $callerParameters += ['_route' => false];
+        $routeName = $request->attributes->get('caller_route', $callerParameters['_route']);
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => min($total - 1, $offset + $limit),
                 $limitParam => $limit,
-            )
+            ]
         ));
 
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => max(0, $offset - $limit),
                 $limitParam => $limit,
-            )
+            ]
         ));
         $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 0,
                 $limitParam => $limit,
-            )
+            ]
         ));
         $lastPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => ($pageCount - 1) * $limit,
                 $limitParam => $limit,
-            )
+            ]
         ));
         $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 0,
                 $limitParam => '_limit',
-            )
+            ]
         ));
         $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 999999,
                 $limitParam => $limit,
-            )
+            ]
         ));
-        $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
+        $limitChoices = $request->attributes->get('limit_choices', [10, 20, 50, 100]);
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'limit' => $limit,
             'changeLimitUrl' => $changeLimitUrl,
             'first_url' => $firstPageUrl,
@@ -151,7 +190,7 @@ class CommonController extends FrameworkBundleAdminController
             'last_url' => $lastPageUrl,
             'jump_page_url' => $jumpPageUrl,
             'limit_choices' => $limitChoices,
-        );
+        ];
         if ($view != 'full') {
             return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
@@ -180,7 +219,7 @@ class CommonController extends FrameworkBundleAdminController
         /** @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
-        $modules = array();
+        $modules = [];
         foreach ($moduleIdList as $id) {
             try {
                 $module = $modulesRepository->getModule($id);
@@ -198,10 +237,10 @@ class CommonController extends FrameworkBundleAdminController
         $collection = AddonsCollection::createFrom($modules);
         $modules = $modulesProvider->generateAddonsUrls($collection);
 
-        return array(
+        return [
             'domain' => $domain,
             'modules' => array_slice($modules, 0, $limit, true),
-        );
+        ];
     }
 
     /**
@@ -252,17 +291,22 @@ class CommonController extends FrameworkBundleAdminController
     public function resetSearchAction($controller = '', $action = '', $filterId = '')
     {
         $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
+        $employeeId = $this->getUser()->getId();
+        $shopId = $this->getContext()->shop->id;
 
         // for compatibility when $controller and $action are used
         if (!empty($controller) && !empty($action)) {
-            $employeeId = $this->getUser()->getId();
-            $shopId = $this->getContext()->shop->id;
-
-            $adminFiltersRepository->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
+            $adminFilter = $adminFiltersRepository->findByEmployeeAndRouteParams(
+                $employeeId, $shopId, $controller, $action
+            );
         }
 
         if (!empty($filterId)) {
-            $adminFiltersRepository->removeByFilterId($filterId);
+            $adminFilter = $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, $filterId);
+        }
+
+        if (isset($adminFilter)) {
+            $adminFiltersRepository->unsetFilters($adminFilter);
         }
 
         return new JsonResponse();
@@ -280,11 +324,11 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function renderFieldAction($formName, $formType, $fieldName, $fieldData)
     {
-        $formData = array(
-            $formName => array(
+        $formData = [
+            $formName => [
                 $fieldName => $fieldData,
-            ),
-        );
+            ],
+        ];
 
         $form = $this->createFormBuilder($formData);
         $form->add($formName, $formType);
@@ -303,6 +347,8 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
      *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @return RedirectResponse
      */
     public function searchGridAction(
@@ -311,29 +357,17 @@ class CommonController extends FrameworkBundleAdminController
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
     ) {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
-        /** @var GridDefinitionInterface $definition */
-        $definition = $definitionFactory->getDefinition();
 
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-
-        $filtersForm = $gridFilterFormFactory->create($definition);
-        $filtersForm->handleRequest($request);
-
-        $redirectParams = [];
-        if ($filtersForm->isSubmitted()) {
-            $redirectParams = [
-                'filters' => $filtersForm->getData(),
-            ];
-        }
-
-        foreach ($redirectQueryParamsToKeep as $paramName) {
-            if ($request->query->has($paramName)) {
-                $redirectParams[$paramName] = $request->query->get($paramName);
-            }
-        }
-
-        return $this->redirectToRoute($redirectRoute, $redirectParams);
+        return $responseBuilder->buildSearchResponse(
+            $definitionFactory,
+            $request,
+            $definitionFactory::GRID_ID,
+            $redirectRoute,
+            $redirectQueryParamsToKeep
+        );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -354,9 +354,7 @@ class NumberSymbolList
         if (!isset($this->superscriptingExponent)
             || !is_string($this->superscriptingExponent)
         ) {
-            throw new LocalizationException(
-                'Invalid superscriptingExponent : ' . print_r($this->superscriptingExponent, true)
-            );
+            throw new LocalizationException('Invalid superscriptingExponent : ' . print_r($this->superscriptingExponent, true));
         }
 
         if (!isset($this->perMille)
@@ -376,5 +374,27 @@ class NumberSymbolList
         ) {
             throw new LocalizationException('Invalid nan : ' . print_r($this->nan, true));
         }
+    }
+
+    /**
+     * To array function
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            $this->getDecimal(),
+            $this->getGroup(),
+            $this->getList(),
+            $this->getPercentSign(),
+            $this->getMinusSign(),
+            $this->getPlusSign(),
+            $this->getExponential(),
+            $this->getSuperscriptingExponent(),
+            $this->getPerMille(),
+            $this->getInfinity(),
+            $this->getNaN(),
+        ];
     }
 }

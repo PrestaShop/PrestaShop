@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,25 +18,20 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
 <div class="row grid js-grid" id="{{ grid.id }}_grid" data-grid-id="{{ grid.id }}">
-  <div class="col">
+  <div class="col-sm">
     {% block grid_header_row %}
       <div class="row">
         {% block grid_bulk_actions_block %}
-          <div class="col">
+          <div class="col-sm">
             <div class="row">
-              <div class="col">
+              <div class="col-sm">
                 {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions.html.twig', {'grid': grid}) }}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {'grid': grid}) }}
               </div>
             </div>
           </div>
@@ -46,7 +41,7 @@
 
     {% block grid_table_row %}
       <div class="row">
-        <div class="col">
+        <div class="col-sm">
           {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': grid}) }}
         </div>
       </div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -112,7 +112,6 @@ class ModuleTabRegister
         }
 
         $tabs = $this->addUndeclaredTabs($module->get('name'), $module->getInstance()->getTabs());
-
         foreach ($tabs as $tab) {
             try {
                 $this->registerTab($module, new ParameterBag($tab));
@@ -120,6 +119,14 @@ class ModuleTabRegister
                 $this->logger->error($e->getMessage());
             }
         }
+    }
+
+    /**
+     * @param Module $module
+     */
+    public function enableTabs(Module $module)
+    {
+        $this->tabRepository->changeEnabledByModuleName($module->get('name'), true);
     }
 
     /**
@@ -150,10 +157,10 @@ class ModuleTabRegister
                 continue;
             }
 
-            $tabs[] = array(
+            $tabs[] = [
                 'class_name' => $adminControllerName,
                 'visible' => false,
-            );
+            ];
         }
 
         return $tabs;
@@ -176,7 +183,7 @@ class ModuleTabRegister
             throw new Exception('Missing class name of tab');
         }
         // Check controller exists
-        if (!in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
+        if (empty($data->get('route_name')) && !in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
         }
         // Deprecation check
@@ -206,7 +213,7 @@ class ModuleTabRegister
                 '/' . $moduleName . '/controllers/admin/';
 
         if (!$this->filesystem->exists($modulePath)) {
-            return array();
+            return [];
         }
 
         $moduleFolder = Finder::create()->files()
@@ -243,7 +250,7 @@ class ModuleTabRegister
      */
     protected function getTabNames($names)
     {
-        $translatedNames = array();
+        $translatedNames = [];
 
         foreach ($this->languages as $lang) {
             // In case we just receive a string, we apply it to all languages
@@ -283,20 +290,16 @@ class ModuleTabRegister
          */
         $tab = new Tab();
         $tab->active = $tabDetails->getBoolean('visible', true);
+        $tab->enabled = true;
         $tab->class_name = $tabDetails->get('class_name');
+        $tab->route_name = $tabDetails->get('route_name');
         $tab->module = $module->get('name');
         $tab->name = $this->getTabNames($tabDetails->get('name', $tab->class_name));
         $tab->icon = $tabDetails->get('icon');
         $tab->id_parent = $this->findParentId($tabDetails);
 
         if (!$tab->save()) {
-            throw new Exception(
-                $this->translator->trans(
-                    'Failed to install admin tab "%name%".',
-                    array('%name%' => $tab->name),
-                    'Admin.Modules.Notification'
-                )
-            );
+            throw new Exception($this->translator->trans('Failed to install admin tab "%name%".', ['%name%' => $tab->name], 'Admin.Modules.Notification'));
         }
     }
 

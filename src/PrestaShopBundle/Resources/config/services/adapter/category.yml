@@ -31,11 +31,11 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand
 
-  prestashop.adapter.category.command_handler.toggle_category_status_handler:
-    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\ToggleCategoryStatusHandler
+  prestashop.adapter.category.command_handler.set_category_is_enabled_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\SetCategoryIsEnabledHandler
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand
 
   prestashop.adapter.category.command_handler.delete_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryHandler
@@ -102,3 +102,15 @@ services:
     tags:
     - name: tactician.handler
       command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand
+
+  prestashop.adapter.category.command_handler.update_category_position_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\UpdateCategoryPositionHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand
+
+  prestashop.adapter.category.command_handler.get_category_status_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoryIsEnabledHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled

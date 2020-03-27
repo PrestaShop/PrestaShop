@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,6 +57,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'category';
+
     /**
      * @var string
      */
@@ -103,7 +105,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'categories';
+        return self::GRID_ID;
     }
 
     /**
@@ -127,6 +129,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'identifier_field' => 'id_category',
                     'bulk_field' => 'id_category',
                     'with_bulk_field' => true,
+                    'clickable' => false,
                 ])
             )
             ->add(
@@ -135,7 +138,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'name',
                     'route' => 'admin_categories_index',
-                    'route_param_name' => 'id_category',
+                    'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                 ])
             )
@@ -144,6 +147,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Description', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'description',
+                    'sortable' => false,
                 ])
             )
             ->add(
@@ -174,7 +178,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                             'field' => 'position',
                             'id_field' => 'id_category',
                             'id_parent_field' => 'id_parent',
-                            'update_route' => 'AdminCategories',
+                            'update_route' => 'admin_categories_update_position',
                         ])
                 )
                 ->addBefore('id_category', new DraggableColumn('position_drag'))
@@ -228,10 +232,11 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetActionUrl,
-                        'data-redirect' => $this->redirectActionUrl,
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
                     ],
+                    'redirect_route' => 'admin_categories_index',
                 ])
             );
 
@@ -334,9 +339,10 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setIcon('zoom_in')
                 ->setOptions([
                     'route' => 'admin_categories_index',
-                    'route_param_name' => 'id_category',
+                    'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
                     'accessibility_checker' => $this->categoryForViewAccessibilityChecker,
+                    'clickable_row' => true,
                 ])
             )
             ->add(
@@ -347,6 +353,7 @@ final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route' => 'admin_categories_edit',
                     'route_param_name' => 'categoryId',
                     'route_param_field' => 'id_category',
+                    'clickable_row' => true, // Will only apply if first link action is filtered
                 ])
             )
             ->add(

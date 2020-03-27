@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,9 @@
  */
 class TranslateCore
 {
+    public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
+    public static $regexClassicParams = '/%\w+%/';
+
     public static function getFrontTranslation($string, $class, $addslashes = false, $htmlentities = true, $sprintf = null)
     {
         global $_LANG;
@@ -161,17 +164,28 @@ class TranslateCore
      * @param null $sprintf
      * @param bool $js
      * @param string|null $locale
+     * @param bool $fallback [default=true] If true, this method falls back to the new translation system if no translation is found
      *
      * @return mixed|string
+     *
+     * @throws Exception
      */
-    public static function getModuleTranslation($module, $originalString, $source, $sprintf = null, $js = false, $locale = null)
-    {
+    public static function getModuleTranslation(
+        $module,
+        $originalString,
+        $source,
+        $sprintf = null,
+        $js = false,
+        $locale = null,
+        $fallback = true,
+        $escape = true
+    ) {
         global $_MODULES, $_MODULE, $_LANGADM;
 
-        static $langCache = array();
+        static $langCache = [];
         // $_MODULES is a cache of translations for all module.
         // $translations_merged is a cache of wether a specific module's translations have already been added to $_MODULES
-        static $translationsMerged = array();
+        static $translationsMerged = [];
 
         $name = $module instanceof Module ? $module->name : $module;
 
@@ -184,15 +198,15 @@ class TranslateCore
         }
 
         if (!isset($translationsMerged[$name][$iso])) {
-            $filesByPriority = array(
-                // Translations in theme
-                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
-                _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
+            $filesByPriority = [
                 // PrestaShop 1.5 translations
                 _PS_MODULE_DIR_ . $name . '/translations/' . $iso . '.php',
                 // PrestaShop 1.4 translations
                 _PS_MODULE_DIR_ . $name . '/' . $iso . '.php',
-            );
+                // Translations in theme
+                _PS_THEME_DIR_ . 'modules/' . $name . '/translations/' . $iso . '.php',
+                _PS_THEME_DIR_ . 'modules/' . $name . '/' . $iso . '.php',
+            ];
             foreach ($filesByPriority as $file) {
                 if (file_exists($file)) {
                     include_once $file;
@@ -209,18 +223,6 @@ class TranslateCore
         if (isset($langCache[$cacheKey])) {
             $ret = $langCache[$cacheKey];
         } else {
-            if ($_MODULES == null) {
-                if (
-                    $sprintf !== null &&
-                    (!is_array($sprintf) || !empty($sprintf)) &&
-                    !(count($sprintf) === 1 && isset($sprintf['legacy']))
-                ) {
-                    $string = Translate::checkAndReplaceArgs($string, $sprintf);
-                }
-
-                $ret = str_replace('"', '&quot;', $string);
-            }
-
             $currentKey = strtolower('<{' . $name . '}' . _THEME_NAME_ . '>' . $source) . '_' . $key;
             $defaultKey = strtolower('<{' . $name . '}prestashop>' . $source) . '_' . $key;
 
@@ -255,7 +257,7 @@ class TranslateCore
 
             if ($js) {
                 $ret = addslashes($ret);
-            } else {
+            } elseif ($escape) {
                 $ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
             }
 
@@ -265,9 +267,9 @@ class TranslateCore
         }
 
         if (!is_array($sprintf) && null !== $sprintf) {
-            $sprintf_for_trans = array($sprintf);
+            $sprintf_for_trans = [$sprintf];
         } elseif (null === $sprintf) {
-            $sprintf_for_trans = array();
+            $sprintf_for_trans = [];
         } else {
             $sprintf_for_trans = $sprintf;
         }
@@ -276,7 +278,7 @@ class TranslateCore
          * Native modules working on both 1.6 & 1.7 are translated in messages.xlf
          * So we need to check in the Symfony catalog for translations
          */
-        if ($ret === $originalString) {
+        if ($ret === $originalString && $fallback) {
             $ret = Context::getContext()->getTranslator()->trans($originalString, $sprintf_for_trans, null, $locale);
         }
 
@@ -299,7 +301,7 @@ class TranslateCore
         if (!Validate::isLangIsoCode($iso)) {
             Context::getContext()->getTranslator()->trans(
                 'Invalid language ISO code (%s)',
-                array(Tools::safeOutput($iso)),
+                [Tools::safeOutput($iso)],
                 'Admin.International.Notification'
             );
         }
@@ -334,12 +336,10 @@ class TranslateCore
      */
     public static function checkAndReplaceArgs($string, $args)
     {
-        if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && null !== $args) {
-            if (!is_array($args)) {
-                $args = array($args);
-            }
-
+        if (!empty($args) && self::isSprintfString($string)) {
             return vsprintf($string, $args);
+        } elseif (!empty($args)) {
+            return strtr($string, $args);
         }
 
         return $string;
@@ -356,7 +356,7 @@ class TranslateCore
                 // Make positions start at 1 so that it behaves similar to the %1$d etc. sprintf positional params
                 $position = $index + 1;
                 // extract tag name
-                $match = array();
+                $match = [];
                 if (preg_match('/^\s*<\s*(\w+)/', $tag, $match)) {
                     $opener = $tag;
                     $closer = '</' . $match[1] . '>';
@@ -390,6 +390,17 @@ class TranslateCore
     {
         Tools::displayAsDeprecated();
 
-        return Translate::postProcessTranslation($string, array('tags' => $tags));
+        return Translate::postProcessTranslation($string, ['tags' => $tags]);
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return bool
+     */
+    private static function isSprintfString($string)
+    {
+        return (bool) preg_match_all(static::$regexSprintfParams, $string)
+            && !(bool) preg_match_all(static::$regexClassicParams, $string);
     }
 }

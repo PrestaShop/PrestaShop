@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,6 +52,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     const GRID_ID = 'language';
 
     /**
@@ -157,6 +159,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_languages_edit',
                                 'route_param_name' => 'languageId',
                                 'route_param_field' => 'id_lang',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(
@@ -189,7 +192,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search ID', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search ID', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('id_lang')
@@ -199,7 +202,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search name', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search name', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('name')
@@ -209,7 +212,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search iso code', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search ISO code', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('iso_code')
@@ -219,7 +222,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search code', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search code', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('language_code')
@@ -229,7 +232,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search date format', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search date format', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('date_format_lite')
@@ -239,7 +242,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                  ->setTypeOptions([
                      'required' => false,
                      'attr' => [
-                         'placeholder' => $this->translator->trans('Search date format', [], 'Admin.International.Help'),
+                         'placeholder' => $this->translator->trans('Search date format', [], 'Admin.Actions'),
                      ],
                  ])
                  ->setAssociatedColumn('date_format_full')
@@ -320,12 +323,7 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_languages_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                $this->buildBulkDeleteAction('admin_languages_bulk_delete')
             );
     }
 }

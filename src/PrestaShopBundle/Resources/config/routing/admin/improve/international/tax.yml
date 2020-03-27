@@ -49,6 +49,8 @@ admin_taxes_delete:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Tax:delete'
     _legacy_controller: AdminTaxes
     _legacy_link: AdminTaxes:deletetax
+    _legacy_parameters:
+      id_tax: taxId
   requirements:
     taxId: \d+
 

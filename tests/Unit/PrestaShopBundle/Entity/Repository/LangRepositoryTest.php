@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,6 +28,7 @@ namespace Tests\Unit\PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
@@ -55,21 +56,21 @@ class LangRepositoryTest extends TestCase
         $this->assertInstanceOf(LangRepository::class, $partialMock);
         $this->assertInstanceOf(LanguageRepositoryInterface::class, $partialMock);
 
-        $language = $partialMock->getByLocale('en-US');
+        $language = $partialMock->getOneByLocale('en-US');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en-US', $language->getLocale());
         $this->assertEquals($languageMock, $language);
 
         //Second call does not call findOneBy (cached result)
-        $language = $partialMock->getByLocale('en-US');
+        $language = $partialMock->getOneByLocale('en-US');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en-US', $language->getLocale());
         $this->assertEquals($languageMock, $language);
 
         //Third call by iso code still does not call findOneBy (cached result)
-        $language = $partialMock->getByIsoCode('en');
+        $language = $partialMock->getOneByIsoCode('en');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en', $language->getIsoCode());
@@ -88,21 +89,21 @@ class LangRepositoryTest extends TestCase
         $this->assertInstanceOf(LangRepository::class, $partialMock);
         $this->assertInstanceOf(LanguageRepositoryInterface::class, $partialMock);
 
-        $language = $partialMock->getByIsoCode('en');
+        $language = $partialMock->getOneByIsoCode('en');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en', $language->getIsoCode());
         $this->assertEquals($languageMock, $language);
 
         //Second call does not call findOneBy (cached result)
-        $language = $partialMock->getByLocale('en-US');
+        $language = $partialMock->getOneByLocale('en-US');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en', $language->getIsoCode());
         $this->assertEquals($languageMock, $language);
 
         //Third call by iso code still does not call findOneBy (cached result)
-        $language = $partialMock->getByIsoCode('en');
+        $language = $partialMock->getOneByIsoCode('en');
         $this->assertNotNull($language);
         $this->assertInstanceOf(LanguageInterface::class, $language);
         $this->assertEquals('en', $language->getIsoCode());
@@ -137,9 +138,9 @@ class LangRepositoryTest extends TestCase
 
         for ($i = 0; $i < $consecutiveCalls; ++$i) {
             if ($i % 2 == 0) {
-                $locale = $partialMock->getByIsoCode('en');
+                $locale = $partialMock->getOneByIsoCode('en');
             } else {
-                $locale = $partialMock->getByLocale('en');
+                $locale = $partialMock->getOneByLocale('en');
             }
 
             $this->assertNull($locale);
@@ -149,14 +150,14 @@ class LangRepositoryTest extends TestCase
     /**
      * @param LanguageInterface|null $language
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|LangRepository
+     * @return MockObject|LangRepository
      */
 
     /**
      * @param array $expectedCriteria
      * @param LanguageInterface $language
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function buildPartialMock(array $expectedCriteria, LanguageInterface $language)
     {
@@ -189,7 +190,7 @@ class LangRepositoryTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|LanguageInterface
+     * @return MockObject|LanguageInterface
      */
     private function buildLanguageMock()
     {

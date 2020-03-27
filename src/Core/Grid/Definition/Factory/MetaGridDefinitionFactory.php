@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -115,6 +115,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_metas_edit',
                                 'route_param_name' => 'metaId',
                                 'route_param_field' => 'id_meta',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add(

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,11 +53,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     /**
+     * @var string
+     */
+    public const GRID_ID = 'supplier';
+
+    use BulkDeleteActionTrait;
+
+    /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'supplier';
+        return self::GRID_ID;
     }
 
     /**
@@ -126,6 +133,7 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_suppliers_view',
                                 'route_param_name' => 'supplierId',
                                 'route_param_field' => 'id_supplier',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new LinkRowAction('edit'))
@@ -199,10 +207,9 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'supplier',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_suppliers_index',
                 ])
@@ -228,12 +235,8 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'submit_route' => 'admin_suppliers_bulk_disable',
                 ])
             )
-            ->add((new SubmitBulkAction('suppliers_delete'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_suppliers_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+            ->add(
+                $this->buildBulkDeleteAction('admin_suppliers_bulk_delete')
             )
         ;
     }

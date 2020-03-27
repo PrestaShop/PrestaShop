@@ -42,7 +42,7 @@ Feature: Cart rule (percent) calculation with multiple cart rules
     When I add 3 items of product "product1" in my cart
     When I use the discount "cartrule2"
     When I use the discount "cartrule3"
-    Then my cart total should be 33.75 tax included
+    Then my cart total should be 33.7462 tax included
     #known to fail on previous
     #Then my cart total using previous calculation method should be 33.75 tax included
 

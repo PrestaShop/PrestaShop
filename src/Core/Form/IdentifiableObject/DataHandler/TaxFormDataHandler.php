@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,12 +69,7 @@ final class TaxFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * Update object with form data.
-     *
-     * @param int $id
-     * @param array $data
-     *
-     * @return int ID of identifiable object
+     * {@inheritdoc}
      *
      * @throws TaxException
      */
@@ -86,9 +81,6 @@ final class TaxFormDataHandler implements FormDataHandlerInterface
             ->setEnabled((bool) $data['is_enabled'])
         ;
 
-        /** @var TaxId $taxId */
-        $taxId = $this->commandBus->handle($command);
-
-        return $taxId->getValue();
+        $this->commandBus->handle($command);
     }
 }

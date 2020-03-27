@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,20 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\Core\MailTemplate;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog;
+use PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
@@ -84,16 +87,16 @@ class FolderThemeCatalogTest extends TestCase
             ->getMock()
         ;
 
-        $catalog = new FolderThemeCatalog($this->tempDir, $dispatcherMock);
+        $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $dispatcherMock);
         $this->assertNotNull($catalog);
     }
 
     public function testListThemes()
     {
         /** @var HookDispatcherInterface $dispatcherMock */
-        $dispatcherMock = $this->createHookDispatcherMock($this->tempDir, 8);
+        $dispatcherMock = $this->createHookDispatcherMock(8);
 
-        $catalog = new FolderThemeCatalog($this->tempDir, $dispatcherMock);
+        $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $dispatcherMock);
         $listedThemes = $catalog->listThemes();
         $this->assertEquals($this->expectedThemes->count(), $listedThemes->count());
         /** @var ThemeInterface $theme */
@@ -149,7 +152,7 @@ class FolderThemeCatalogTest extends TestCase
             ->getMock()
         ;
 
-        $catalog = new FolderThemeCatalog($this->tempDir, $dispatcherMock);
+        $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $dispatcherMock);
         $this->assertNotNull($catalog);
 
         $theme = $catalog->getByName('classic');
@@ -161,19 +164,17 @@ class FolderThemeCatalogTest extends TestCase
         $this->assertEquals('modern', $theme->getName());
     }
 
-    /**
-     * @expectedException \PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid requested theme "unknown", only available themes are: classic, modern
-     */
     public function testInvalidTheme()
     {
+        $this->expectException(InvalidArgumentException::class, 'Invalid requested theme "unknown", only available themes are: classic, modern');
+
         /** @var HookDispatcherInterface $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $catalog = new FolderThemeCatalog($this->tempDir, $dispatcherMock);
+        $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $dispatcherMock);
         $this->assertNotNull($catalog);
 
         $catalog->getByName('unknown');
@@ -191,7 +192,7 @@ class FolderThemeCatalogTest extends TestCase
             DIRECTORY_SEPARATOR,
             [$this->tempDir, 'invisible']
         );
-        $catalog = new FolderThemeCatalog($fakeFolder, $dispatcherMock);
+        $catalog = new FolderThemeCatalog($fakeFolder, new FolderThemeScanner(), $dispatcherMock);
         $this->assertNotNull($catalog);
 
         $caughtException = null;
@@ -207,7 +208,7 @@ class FolderThemeCatalogTest extends TestCase
 
     public function testListThemesWithoutCoreFolder()
     {
-        $catalog = new FolderThemeCatalog($this->tempDir, $this->createHookDispatcherMock($this->tempDir, 4));
+        $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $this->createHookDispatcherMock(4));
         //No bug occurs if the folder does not exist
         $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::CORE_CATEGORY]));
 
@@ -222,7 +223,7 @@ class FolderThemeCatalogTest extends TestCase
 
     public function testListThemesWithoutModulesFolder()
     {
-        $catalog = new FolderThemeCatalog($this->tempDir, $this->createHookDispatcherMock($this->tempDir, 4));
+        $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $this->createHookDispatcherMock(4));
         $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::MODULES_CATEGORY]));
         /** @var ThemeCollectionInterface $themeList */
         $themes = $catalog->listThemes();
@@ -270,33 +271,19 @@ class FolderThemeCatalogTest extends TestCase
     }
 
     /**
-     * @param string $tempDir
      * @param int $layoutsCount
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|HookDispatcherInterface
+     * @return MockObject|HookDispatcherInterface
      */
-    private function createHookDispatcherMock($tempDir, $layoutsCount)
+    private function createHookDispatcherMock($layoutsCount)
     {
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $mailThemeFolder = implode(DIRECTORY_SEPARATOR, [$tempDir, 'classic']);
         $dispatcherMock
             ->expects($this->at(0))
-            ->method('dispatchWithParameters')
-            ->with(
-                $this->equalTo(FolderThemeCatalog::GET_MAIL_THEME_FOLDER_HOOK),
-                $this->equalTo([
-                    'mailTheme' => 'classic',
-                    'mailThemeFolder' => $mailThemeFolder,
-                ])
-            )
-        ;
-
-        $dispatcherMock
-            ->expects($this->at(2))
             ->method('dispatchWithParameters')
             ->with(
                 $this->equalTo(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK),

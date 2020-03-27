@@ -1,38 +1,12 @@
-.block_newsletter {
-  @include search-box;
-  font-size: $font-size-sm;
-  p {
-    padding-top: $small-space;
-  }
-  form {
-    .input-wrapper {
-      overflow: hidden;
-    }
-    input[type=email] {
-      padding: 11px;
-      &:focus {
-        border: 3px $brand-primary solid;
-        padding: 8px 8px 9px;
-        outline: 0;
-      }
-      width: 100%;
-    }
-    input {
-      height: 42px;
-      box-shadow: none;
-    }
-  }
-  margin-bottom: 0.625rem;
-}
 .block-contact {
   color: $gray;
-  .block-contact-title{
-    color:$gray-darker;
+  .block-contact-title {
+    color: $gray-darker;
   }
 }
 .linklist {
   .blockcms-title a {
-    color:$gray-darker;
+    color: $gray-darker;
   }
 }
 .account-list a {
@@ -50,33 +24,48 @@
 }
 .block-social {
   text-align: right;
-}
-.block-social li {
-  height: 2.5rem;
-  width: 2.5rem;
-  background-color: $gray-light;
-  background-repeat: no-repeat;
-  display: inline-block;
-  margin: 0.125rem;
-  cursor: pointer;
-  &:hover {
-    background-color: $brand-primary;
-  }
-  a {
-    display: block;
-    height: 100%;
-    white-space: nowrap;
-    text-indent: 100%;
-    overflow: hidden;
-    &:hover {
-      color: transparent;
+  ul {
+    display: flex;
+    @include media-breakpoint-down(sm) {
+      flex-flow: wrap;
+    }
+    li {
+      height: 2.5rem;
+      width: 2.5rem;
+      background-color: $gray-light;
+      background-repeat: no-repeat;
+      display: inline-block;
+      margin: 0.125rem;
+      cursor: pointer;
+
+      @include media-breakpoint-down(sm) {
+        height: 2rem;
+        width: 2rem;
+        margin-right: 1.3rem;
+        margin-bottom: 1.3rem;
+        background-size: contain;
+      }
+
+      &:hover {
+        background-color: $brand-primary;
+      }
+      a {
+        display: block;
+        height: 100%;
+        white-space: nowrap;
+        text-indent: 100%;
+        overflow: hidden;
+        &:hover {
+          color: transparent;
+        }
+      }
     }
   }
 }
 .facebook {
   background-image: url(../img/facebook.svg);
-  &::before{
-    content:"";
+  &::before {
+    content: "";
     background-image: url(../img/facebook-blue.svg);
   }
   &.icon-gray {
@@ -88,8 +77,8 @@
 }
 .twitter {
   background-image: url(../img/twitter.svg);
-  &::before{
-    content:"";
+  &::before {
+    content: "";
     background-image: url(../img/twitter-blue.svg);
   }
   &.icon-gray {
@@ -99,6 +88,12 @@
     }
   }
 }
+
+.linkedin {
+  background-image: url(../img/linkedin.svg);
+  background-position: center center;
+}
+
 .rss {
   background-image: url(../img/rss.svg);
 }
@@ -107,8 +102,8 @@
 }
 .googleplus {
   background-image: url(../img/gplus.svg);
-  &::before{
-    content:"";
+  &::before {
+    content: "";
     background-image: url(../img/gplus-blue.svg);
   }
   &.icon-gray {
@@ -118,15 +113,15 @@
     }
   }
 }
-#block_myaccount_infos{
-  .myaccount-title a{
-    color:$gray-darker;
+#block_myaccount_infos {
+  .myaccount-title a {
+    color: $gray-darker;
   }
 }
 .pinterest {
   background-image: url(../img/pinterest.svg);
-  &::before{
-    content:"";
+  &::before {
+    content: "";
     background-image: url(../img/pinterest-blue.svg);
   }
   &.icon-gray {
@@ -164,7 +159,6 @@
     display: inherit;
   }
 }
-
 
 @include media-breakpoint-down(sm) {
   .block_newsletter {

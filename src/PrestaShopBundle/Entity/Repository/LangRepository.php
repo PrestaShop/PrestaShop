@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -61,7 +61,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function getByLocale($locale)
+    public function getOneByLocale($locale)
     {
         return $this->searchLanguage(self::LOCALE, $locale);
     }
@@ -69,9 +69,24 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function getByIsoCode($isoCode)
+    public function getOneByIsoCode($isoCode)
     {
         return $this->searchLanguage(self::ISO_CODE, $isoCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOneByLocaleOrIsoCode($locale)
+    {
+        $language = $this->getOneByLocale($locale);
+        if (!$language) {
+            $localeParts = explode('-', $locale);
+            $isoCode = strtolower($localeParts[0]);
+            $language = $this->getOneByIsoCode($isoCode);
+        }
+
+        return $language;
     }
 
     /**

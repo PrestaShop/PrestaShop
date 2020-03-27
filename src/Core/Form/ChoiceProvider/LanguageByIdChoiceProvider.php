@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
- * Class LanguageByIdChoiceProvider provides language choices with ID values.
+ * Class LanguageByIdChoiceProvider provides active language choices with ID values.
  */
 final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
 {
@@ -48,16 +48,15 @@ final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
     }
 
     /**
-     * Get language choices for form.
+     * Get active language choices for form.
      *
      * @return array
      */
     public function getChoices()
     {
-        $languages = $this->languageDataProvider->getLanguages();
         $choices = [];
 
-        foreach ($languages as $language) {
+        foreach ($this->languageDataProvider->getLanguages() as $language) {
             $choices[$language['name']] = $language['id_lang'];
         }
 

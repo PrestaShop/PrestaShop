@@ -30,67 +30,119 @@
       <trans-unit id="4f32a32dea642737580dd71cdfd8d3c0">
         <source>Quick Access</source>
         <target>Quick Access</target>
-        <note>Line: 127</note>
+        <note>Line: 128</note>
       </trans-unit>
       <trans-unit id="f5c26758149849ee0f84a2eceaf0acfd">
         <source>Remove from QuickAccess</source>
         <target>Remove from QuickAccess</target>
-        <note>Line: 142</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="383247a8cb198be4042d128986100cea">
         <source>Add current page to QuickAccess</source>
         <target>Add current page to QuickAccess</target>
-        <note>Line: 149</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="165122309e15dc09c30b78951e53cb5a">
         <source>Manage quick accesses</source>
         <target>Manage quick accesses</target>
-        <note>Line: 156</note>
+        <note>Line: 159</note>
       </trans-unit>
       <trans-unit id="6f7579a25b7aba443386a5b86a7900b4">
         <source>Please name this shortcut:</source>
         <target>Please name this shortcut:</target>
-        <note>Line: 171</note>
+        <note>Line: 174</note>
       </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
         <target>Debug mode</target>
-        <note>Line: 225</note>
+        <note>Line: 229</note>
       </trans-unit>
       <trans-unit id="38a27c0c7ef7a05e13efa2798ee21533">
         <source>Maintenance mode</source>
         <target>Maintenance mode</target>
-        <note>Line: 240</note>
+        <note>Line: 244</note>
       </trans-unit>
       <trans-unit id="d70861cbe7f8c9a1241c39b3e7ef5ef2">
         <source>View my shop</source>
         <target>View my shop</target>
-        <note>Line: 264</note>
+        <note>Line: 268</note>
       </trans-unit>
       <trans-unit id="1558db2a9e35b7898e0b2a4a777ed2f9">
         <source>Latest orders</source>
         <target>Latest orders</target>
-        <note>Line: 287</note>
+        <note>Line: 291</note>
       </trans-unit>
       <trans-unit id="3d8de6fcc09baf73f7175fe59f278ced">
         <source>Your profile</source>
         <target>Your profile</target>
-        <note>Line: 362</note>
+        <note>Line: 365</note>
       </trans-unit>
       <trans-unit id="65e81c540f5af5f5c59901a076f9b024">
         <source>My PrestaShop account</source>
         <target>My PrestaShop account</target>
-        <note>Line: 364</note>
+        <note>Line: 374</note>
       </trans-unit>
       <trans-unit id="c87aacf5673fada1108c9f809d354311">
         <source>Sign out</source>
         <target>Sign out</target>
-        <note>Line: 366</note>
+        <note>Line: 377</note>
       </trans-unit>
       <trans-unit id="5dc5aba5187b03594ed0512efb6a8d4f">
         <source>New customers</source>
         <target>New customers</target>
-        <note>Line: 293</note>
+        <note>Line: 297</note>
+      </trans-unit>
+      <trans-unit id="60434fac312a307d4f9b9eb03a6c1694">
+        <source>Welcome back %name%</source>
+        <target>Welcome back %name%</target>
+        <note>Line: 364</note>
+      </trans-unit>
+      <trans-unit id="ddcf50c29294d4414f3f7c1bbc892cb5">
+        <source>Resources</source>
+        <target>Resources</target>
+        <note>Line: 368</note>
+      </trans-unit>
+      <trans-unit id="bb19647badc9df09a2e0993fc4a7cef0">
+        <source><![CDATA[https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17]]></source>
+        <target><![CDATA[https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17]]></target>
+        <note>Line: 369</note>
+      </trans-unit>
+      <trans-unit id="cf270e40d273f9e7fd7c3061729060c3">
+        <source>Training</source>
+        <target>Training</target>
+        <note>Line: 369</note>
+      </trans-unit>
+      <trans-unit id="ec7680ca4761810a0c702c4c286f0030">
+        <source><![CDATA[https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17]]></source>
+        <target><![CDATA[https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17]]></target>
+        <note>Line: 370</note>
+      </trans-unit>
+      <trans-unit id="1611190db36358b26ea894c16023ab12">
+        <source>Find an Expert</source>
+        <target>Find an Expert</target>
+        <note>Line: 370</note>
+      </trans-unit>
+      <trans-unit id="d2230abc096f6c1383ce1b4993099e2e">
+        <source><![CDATA[https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17]]></source>
+        <target><![CDATA[https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17]]></target>
+        <note>Line: 371</note>
+      </trans-unit>
+      <trans-unit id="1862c358989cfbd20d38ca9adf69e27a">
+        <source>PrestaShop Marketplace</source>
+        <target>PrestaShop Marketplace</target>
+        <note>Line: 371</note>
+      </trans-unit>
+      <trans-unit id="1d0b7a7027c367c8aa2dcb9170fe6769">
+        <source><![CDATA[https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17]]></source>
+        <target><![CDATA[https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17]]></target>
+        <note>Line: 372</note>
+      </trans-unit>
+      <trans-unit id="012065927bff8fcbce602e741a2d663e">
+        <source><![CDATA[https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17
+]]></source>
+        <target><![CDATA[https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17
+]]></target>
+        <note>Line: 367</note>
       </trans-unit>
     </body>
   </file>
@@ -145,6 +197,87 @@
         <source>Module name</source>
         <target>Module name</target>
         <note>Line: 69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/components/layout/employee_dropdown.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="efdaf9f44ce968366fa78277263abc1d">
+        <source>Help Center</source>
+        <target>Help Center</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="5adcdddcf74f0e406c8ec667e34c9cd0">
+        <source><![CDATA[https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17]]></source>
+        <target><![CDATA[https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17]]></target>
+        <note>Line: 42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/components/layout/quick_access.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="572e3c9b387943813b5b1cb2f1a96dc3">
+        <source>Remove from Quick Access</source>
+        <target>Remove from Quick Access</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="6f08b6d95d204a4e08ad0e186c673f4f">
+        <source>Manage your quick accesses</source>
+        <target>Manage your quick accesses</target>
+        <note>Line: 49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/components/layout/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7fec0abbe0c14c6d0d0db9f71cfa108b">
+        <source>Product name, reference, etc.</source>
+        <target>Product name, reference, etc.</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="49ee3087348e8d44e1feda1917443987">
+        <source>Name</source>
+        <target>Name</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="855d2bf59043b81e76bc931e685a4f58">
+        <source>by name</source>
+        <target>by name</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="03de6422045e4ed3ac822c673ace32d1">
+        <source>123.45.67.89</source>
+        <target>123.45.67.89</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="16b2494238f8f996b09417d1dc56c795">
+        <source>by IP address</source>
+        <target>by IP address</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="8ae4286d38bb2235def98fd68d7420d2">
+        <source>Invoice number</source>
+        <target>Invoice number</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="0f544d682c3a664870f025f48c4b04b5">
+        <source>SEARCH</source>
+        <target>SEARCH</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7a2e40e90ddbc145f11afacb5eb83ae2">
+        <source>Customer name:</source>
+        <target>Customer name:</target>
+        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>

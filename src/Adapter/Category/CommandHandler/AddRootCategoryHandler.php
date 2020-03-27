@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddRootCategoryHandlerInterface;
@@ -37,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 /**
  * Class AddRootCategoryHandler.
  */
-final class AddRootCategoryHandler extends AbstractCategoryHandler implements AddRootCategoryHandlerInterface
+final class AddRootCategoryHandler extends AbstractObjectModelHandler implements AddRootCategoryHandlerInterface
 {
     /**
      * @var ConfigurationInterface
@@ -54,11 +55,10 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
 
     /**
      * {@inheritdoc}
-     *
-     * @throws CannotAddCategoryException
      */
     public function handle(AddRootCategoryCommand $command)
     {
+        /** @var Category $category */
         $category = $this->createRootCategoryFromCommand($command);
 
         return new CategoryId((int) $category->id);
@@ -70,6 +70,9 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
      * @param AddRootCategoryCommand $command
      *
      * @return Category
+     *
+     * @throws CannotAddCategoryException
+     * @throws CategoryException
      */
     private function createRootCategoryFromCommand(AddRootCategoryCommand $command)
     {
@@ -101,16 +104,20 @@ final class AddRootCategoryHandler extends AbstractCategoryHandler implements Ad
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        if ($command->getAssociatedShopIds()) {
-            $this->addShopAssociation($command->getAssociatedShopIds());
+        if (false === $category->validateFields(false)) {
+            throw new CategoryException('Invalid data for root category creation');
         }
 
-        if (false === $category->validateFields(false)) {
+        if (false === $category->validateFieldsLang(false)) {
             throw new CategoryException('Invalid data for root category creation');
         }
 
         if (false === $category->save()) {
             throw new CannotAddCategoryException('Failed to create root category');
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
 
         return $category;

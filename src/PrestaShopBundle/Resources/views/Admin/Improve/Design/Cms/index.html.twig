@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -26,15 +26,27 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% set layoutHeaderToolbarBtn = {
-  add: {
-    href: path('admin_cms_pages_create_cms_category', {'id_cms_category' : app.request.query.get('id_cms_category')}),
+  add_cms_category: {
+    href: path('admin_cms_pages_category_create', {'id_cms_category' : app.request.query.get('id_cms_category')}),
     desc: 'Add new page category'|trans({}, 'Admin.Design.Help'),
+    icon: 'add_circle_outline',
+  },
+  add_cms_page: {
+    href: path('admin_cms_pages_create', {'id_cms_category' : app.request.query.get('id_cms_category')}),
+    desc: 'Add new page'|trans({}, 'Admin.Design.Help'),
     icon: 'add_circle_outline',
   }
 }
 %}
 
 {% block content %}
+
+  <div class="row">
+    <div class="col-sm">
+      {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/showcase_card.html.twig' %}
+    </div>
+  </div>
+
   {% block cms_page_category_breadcrumb %}
     {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/breadcrumb.html.twig' %}
   {% endblock %}
@@ -50,6 +62,14 @@
               {% endif %}
             {% endblock %}
         {% endembed %}
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block cms_grid %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsGrid} %}
       </div>
     </div>
   {% endblock %}

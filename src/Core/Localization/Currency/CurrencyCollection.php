@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -128,11 +128,9 @@ class CurrencyCollection implements IteratorAggregate, Countable
      * Adds a currency collection at the end of the current set by appending all
      * currencies of the added collection.
      *
-     * @param CurrencyCollection $collection
-     *                                       The CurrencyCollection to append at the end of the current one
+     * @param CurrencyCollection $collection The CurrencyCollection to append at the end of the current one
      *
-     * @return CurrencyCollection
-     *                            Fluent interface
+     * @return CurrencyCollection Fluent interface
      */
     public function addCollection(CurrencyCollection $collection)
     {

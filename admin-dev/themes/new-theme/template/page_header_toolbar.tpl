@@ -1,6 +1,6 @@
 {* TODO: 1.7.0.0: RENAME THIS FILE AT THE NEXT RETROCOMPATIBILITY BREAK *}
 
-<div class="header-toolbar">
+<div class="header-toolbar d-print-none">
   <div class="container-fluid">
 
     {block name=pageBreadcrumb}
@@ -44,7 +44,7 @@
                   data-toggle="pstooltip"
                   data-placement="bottom"{/if}
                 >
-                  <i class="material-icons">{$btn.icon}</i>
+                  {if !empty($btn.icon)}<i class="material-icons">{$btn.icon}</i>{/if}
                   {$btn.desc|escape}
                 </a>
               {/if}
@@ -66,17 +66,17 @@
 
               {if $enableSidebar}
                 <a class="btn btn-outline-secondary btn-help btn-sidebar" href="#"
-                   title="{l s='Help'}"
+                   title="{l s='Help' d='Admin.Global'}"
                    data-toggle="sidebar"
                    data-target="#right-sidebar"
                    data-url="{$help_link|escape}"
                    id="product_form_open_help"
                 >
-                  {l s='Help'}
+                  {l s='Help' d='Admin.Global'}
                 </a>
               {else}
-                <a class="btn btn-outline-secondary" href="{$help_link|escape}" title="{l s='Help'}">
-                  {l s='Help'}
+                <a class="btn btn-outline-secondary" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
+                  {l s='Help' d='Admin.Global'}
                 </a>
               {/if}
             {/if}

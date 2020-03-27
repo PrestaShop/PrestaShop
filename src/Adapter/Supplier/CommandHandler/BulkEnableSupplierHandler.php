@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,31 +51,17 @@ final class BulkEnableSupplierHandler implements BulkEnableSupplierHandlerInterf
                 $entity = new Supplier($supplierId->getValue());
 
                 if (0 >= $entity->id) {
-                    throw new SupplierNotFoundException(
-                        sprintf(
-                            'Supplier object with id "%s" has not been found for enabling status.',
-                            $supplierId->getValue()
-                        )
-                    );
+                    throw new SupplierNotFoundException(sprintf('Supplier object with id "%s" has not been found for enabling status.', $supplierId->getValue()));
                 }
 
                 $entity->active = true;
 
                 if (false === $entity->update()) {
-                    throw new CannotUpdateSupplierStatusException(
-                        sprintf(
-                            'Unable to enable supplier object with id "%s"',
-                            $supplierId->getValue()
-                        )
-                    );
+                    throw new CannotUpdateSupplierStatusException(sprintf('Unable to enable supplier object with id "%s"', $supplierId->getValue()));
                 }
             }
         } catch (PrestaShopException $e) {
-            throw new SupplierException(
-                'Unexpected error occurred when handling bulk enable supplier',
-                0,
-                $e
-            );
+            throw new SupplierException('Unexpected error occurred when handling bulk enable supplier', 0, $e);
         }
     }
 }

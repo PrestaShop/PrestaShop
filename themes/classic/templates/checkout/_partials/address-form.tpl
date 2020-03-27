@@ -1,8 +1,8 @@
 {extends file='customer/_partials/address-form.tpl'}
 
 {block name='form_field'}
-  {if $field.name eq "alias"}
-    {* we don't ask for alias here *}
+  {if $field.name eq "alias" and $customer.is_guest}
+    {* we don't ask for alias here if customer is not registered *}
   {else}
     {$smarty.block.parent}
   {/if}

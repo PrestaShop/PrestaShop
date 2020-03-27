@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,11 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -36,11 +40,34 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class DatePickerType extends AbstractType
 {
     /**
+     * @var DataTransformerInterface
+     */
+    private $arabicToLatinDigitDataTransformer;
+
+    public function __construct(DataTransformerInterface $arabicToLatinDigitDataTransformer)
+    {
+        $this->arabicToLatinDigitDataTransformer = $arabicToLatinDigitDataTransformer;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getParent()
     {
         return TextType::class;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addViewTransformer($this->arabicToLatinDigitDataTransformer);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['date_format'] = $options['date_format'];
     }
 
     /**
@@ -50,7 +77,10 @@ class DatePickerType extends AbstractType
     {
         $resolver->setDefaults([
             'widget' => 'single_text',
+            // date_format must be provided in javascript supported type
+            'date_format' => 'YYYY-MM-DD',
         ]);
+        $resolver->setAllowedTypes('date_format', 'string');
     }
 
     /**

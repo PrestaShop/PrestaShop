@@ -39,3 +39,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater'
     arguments:
       - '@prestashop.core.grid.position.update_handler.doctrine_position_update_handler'
+
+  prestashop.core.grid.query.filter.doctrine_filter_applicator:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicator'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,6 +47,11 @@ class CategoryConstraintException extends CategoryException
     const INVALID_STATUS = 4;
 
     /**
+     * Code is used when invalid delete mode is used to delete a category.
+     */
+    const INVALID_DELETE_MODE = 5;
+
+    /**
      * Code is used when invalid parent id is supplied.
      */
     const INVALID_PARENT_ID = 6;
@@ -55,6 +60,11 @@ class CategoryConstraintException extends CategoryException
      * Code is used when too many menu thumbnails is being set for category.
      */
     const TOO_MANY_MENU_THUMBNAILS = 8;
+
+    /**
+     * Code is used when invalid id is supplied.
+     */
+    const INVALID_ID = 10;
 
     /**
      * Code is used when performing bulk delete of categories with empty data.

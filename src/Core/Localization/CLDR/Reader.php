@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,6 +50,13 @@ class Reader implements ReaderInterface
     const SUPPL_DATA_PARENT_LOCALES = 'parentLocales'; // For specific locales hierarchy
 
     const DEFAULT_CURRENCY_DIGITS = 2;
+
+    const CURRENCY_CODE_TEST = 'XTS';
+
+    /**
+     * delay after currency deactivation to prevent currency add by list
+     */
+    const CURRENCY_ACTIVE_DELAY = 365;
 
     protected $mainXml = [];
 
@@ -124,9 +131,7 @@ class Reader implements ReaderInterface
     protected function validateLocaleCodeForFilenames($localeCode)
     {
         if (!preg_match('#^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)*$#', $localeCode)) {
-            throw new LocalizationException(
-                sprintf('Invalid locale code: "%s"', $localeCode)
-            );
+            throw new LocalizationException(sprintf('Invalid locale code: "%s"', $localeCode));
         }
     }
 
@@ -214,9 +219,7 @@ class Reader implements ReaderInterface
         if (false !== $pos) {
             $parent = substr($localeCode, 0, $pos);
             if (false === $parent) {
-                throw new LocalizationException(
-                    sprintf('Invalid locale code: "%s"', $localeCode)
-                );
+                throw new LocalizationException(sprintf('Invalid locale code: "%s"', $localeCode));
             }
 
             return $parent;
@@ -508,14 +511,28 @@ class Reader implements ReaderInterface
         }
 
         // Currencies
-        $currencyData = $numbersData->currencies;
-        if (isset($currencyData->currency)) {
+        $currenciesData = $numbersData->currencies;
+        $currencyActiveDateThreshold = time() - self::CURRENCY_ACTIVE_DELAY * 86400;
+        if (isset($currenciesData->currency)) {
             $currencies = $localeData->getCurrencies();
-            foreach ($currencyData->currency as $currencyNode) {
+            foreach ($currenciesData->currency as $currencyNode) {
                 $currencyCode = (string) $currencyNode['type'];
+                if ($currencyCode == self::CURRENCY_CODE_TEST) {
+                    // dont store test currency
+                    continue;
+                }
 
                 $currencyData = new CurrencyData();
                 $currencyData->setIsoCode($currencyCode);
+
+                // check if currency is still active in one territory
+                $currencyDates = $this->supplementalXml->supplementalData->xpath('//region/currency[@iso4217="' . $currencyCode . '"]');
+                if (!empty($currencyDates) && $this->isCurrencyActiveSomewhere($currencyDates, $currencyActiveDateThreshold)) {
+                    $currencyData->setActive(true);
+                } else {
+                    // no territory with dates means currency was never used
+                    $currencyData->setActive(false);
+                }
 
                 // Symbols
                 $symbols = $currencyData->getSymbols();
@@ -547,7 +564,11 @@ class Reader implements ReaderInterface
                 if (!empty($codesMapping)) {
                     /** @var SimplexmlElement $codesMapping */
                     $codesMapping = $codesMapping[0];
-                    $currencyData->setNumericIsoCode((string) $codesMapping->attributes()->numeric);
+                    $numericIsoCode = (string) $codesMapping->attributes()->numeric;
+                    if (strlen($numericIsoCode) < 3) {
+                        $numericIsoCode = str_pad($numericIsoCode, 3, '0', STR_PAD_LEFT);
+                    }
+                    $currencyData->setNumericIsoCode($numericIsoCode);
                 }
 
                 $fractionsData = $this->supplementalXml->supplementalData->xpath(
@@ -596,5 +617,54 @@ class Reader implements ReaderInterface
         }
 
         return $digitsSets;
+    }
+
+    /**
+     * @param string $currencyCode currency iso code
+     * @param SimpleXMLElement $supplementalData xml bloc from CLDR
+     * @param int $currencyActiveDateThreshold timestamp after which currency should be used
+     *
+     * @return bool
+     */
+    protected function shouldCurrencyBeReturned($currencyCode, SimplexmlElement $supplementalData, $currencyActiveDateThreshold)
+    {
+        // dont store test currency
+        if ($currencyCode == self::CURRENCY_CODE_TEST) {
+            return false;
+        }
+        // check if currency is still active in one territory
+        $currencyDates = $supplementalData->xpath('//region/currency[@iso4217="' . $currencyCode . '"]');
+        if (empty($currencyDates)) {
+            // no territory with dates means currency was never used
+            return false;
+        }
+
+        return $this->isCurrencyActiveSomewhere($currencyDates, $currencyActiveDateThreshold);
+    }
+
+    /**
+     * check if currency is still in use in some territory
+     *
+     * @param array $currencyDates
+     * @param int $currencyActiveDateThreshold timestamp after which currency should be used
+     *
+     * @return bool
+     */
+    protected function isCurrencyActiveSomewhere(array $currencyDates, $currencyActiveDateThreshold)
+    {
+        foreach ($currencyDates as $currencyDate) {
+            if (empty($currencyDate->attributes()->to)) {
+                // no date "to": currency is active in some territory
+                return true;
+            }
+
+            // date "to" given: check if currency was active in near past to propose it
+            $dateTo = \DateTime::createFromFormat('Y-m-d', $currencyDate->attributes()->to);
+            if (false !== $dateTo && $dateTo->getTimestamp() > $currencyActiveDateThreshold) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,12 +44,6 @@ class ValidateCoreTest extends TestCase
         $this->assertTrue(Validate::isAnything());
     }
 
-    // TODO: Write test for testIsModuleUrl()
-    public function testIsModuleUrl()
-    {
-        //$this->assertSame($expected, Validate::isEmail($input));
-    }
-
     /**
      * @dataProvider isEmailDataProvider
      */
@@ -63,7 +57,14 @@ class ValidateCoreTest extends TestCase
      */
     public function testIsBirthDate($expected, $input)
     {
-        $this->assertSame($expected, Validate::isBirthDate($input));
+        // data from isBirthDateProvider provider are in UTC
+        $defaultTz = date_default_timezone_get();
+        date_default_timezone_set('UTC');
+        try {
+            $this->assertSame($expected, Validate::isBirthDate($input));
+        } finally {
+            date_default_timezone_set($defaultTz);
+        }
     }
 
     /**
@@ -88,6 +89,22 @@ class ValidateCoreTest extends TestCase
     public function testIsSha1($expected, $input)
     {
         $this->assertSame($expected, Validate::isSha1($input));
+    }
+
+    /**
+     * @dataProvider isNameDataProvider
+     */
+    public function testIsName($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isName($input));
+    }
+
+    /**
+     * @dataProvider isCustomerNameDataProvider
+     */
+    public function testIsCustomerName($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isCustomerName($input));
     }
 
     /**
@@ -149,6 +166,73 @@ class ValidateCoreTest extends TestCase
         );
     }
 
+
+    public function isNameDataProvider()
+    {
+        return array(
+            array(1, 'Mathieu'),
+            array(1, 'Dupont'),
+            array(1, 'Jaçinthé'),
+            array(1, 'Jaçinthø'),
+            array(1, 'John D.'),
+            array(1, 'John D.John'),
+            array(1, 'John D. John'),
+            array(1, 'John D. John D.'),
+            array(1, 'Mario Bros.'),
+            array(1, 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â'),
+            array(0, 'https://www.website.com'),
+            array(1, 'www.website.com'),
+            array(1, 'www\.website\.com'),
+            array(1, 'www\\.website\\.com'),
+            array(1, 'www.website.com.'),
+            array(1, 'website。com'),
+            array(1, 'John D. www.some.site'),
+            array(1, 'www.website.com is cool'),
+            array(1, 'website。com。'),
+            array(1, 'website。com'),
+            array(0, 'website%2Ecom'),
+            array(1, 'website/./com'),
+            array(1, '.rn'),
+            array(1, 'websitecom/a'),
+            array(0, 'websitecom%20a'),
+            array(1, '`hello'),
+            array(1, 'hello[my friend]'),
+        );
+    }
+
+    public function isCustomerNameDataProvider()
+    {
+        return array(
+            array(1, 'Mathieu'),
+            array(1, 'Dupont'),
+            array(1, 'Jaçinthé'),
+            array(1, 'Jaçinthø'),
+            array(1, 'John D.'),
+            array(1, 'John D. John'),
+            array(1, 'John D. John D.'),
+            array(1, 'Mario Bros.'),
+            array(1, 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â'),
+            array(0, 'https://www.website.com'),
+            array(0, 'www.website.com'),
+            array(0, 'www\.website\.com'),
+            array(0, 'www\\.website\\.com'),
+            array(0, 'www.website.com.'),
+            array(0, 'website。com'),
+            array(0, 'John D.John'),
+            array(0, 'John D. www.some.site'),
+            array(0, 'www.website.com is cool'),
+            array(0, 'website。com。'),
+            array(0, 'website。com'),
+            array(0, 'website%2Ecom'),
+            array(0, 'website/./com'),
+            array(0, '.rn'),
+            array(0, 'websitecom/a'),
+            array(0, 'websitecom%20a'),
+            array(0, '`hello'),
+            array(0, 'hello[my friend]'),
+        );
+    }
+
     public function isEmailDataProvider()
     {
         return array(
@@ -171,10 +255,12 @@ class ValidateCoreTest extends TestCase
             array(true, '1991-04-19'),
             array(true, '2015-03-22'),
             array(true, '1945-07-25'),
-            array(false, '2020-03-19'),
+            array(false, '3000-03-19'),
             array(false, '1991-03-33'),
             array(false, '1991-15-19'),
-            array(true, date('Y-m-d', strtotime('now'))), 
+            array(false, '1801-01-01'),
+            array(false, '0085-02-25'),
+            array(true, date('Y-m-d', strtotime('now'))),
             array(true, date('Y-m-d', strtotime('-1 day'))),
             array(false, date('Y-m-d', strtotime('+1 day'))),
             array(true, date('Y-m-d', strtotime('-1 month'))),
@@ -201,6 +287,7 @@ class ValidateCoreTest extends TestCase
             array(false, date('Y-m-d', strtotime('+1 year +1 month'))),
             array(false, date('Y-m-d', strtotime('+1 year +1 month -1 day'))),
             array(false, date('Y-m-d', strtotime('+1 year +1 month +1 day'))),
+            array(false, date('Y-m-d', strtotime('-201 year'))),
         );
     }
 
@@ -240,7 +327,7 @@ class ValidateCoreTest extends TestCase
             $this->trueFloatDataProvider(),
             array(
                 array(false, -12.2151),
-                array(false, -12,2151),
+                array(false, -12, 2151),
                 array(false, '-12.2151'),
                 array(false, ''),
                 array(false, 'A'),
@@ -254,7 +341,7 @@ class ValidateCoreTest extends TestCase
         return array(
             array(true, 12),
             array(true, 12.2151),
-            array(true, 12,2151),
+            array(true, 12, 2151),
             array(true, '12.2151'),
         );
     }
@@ -265,7 +352,7 @@ class ValidateCoreTest extends TestCase
             $this->trueFloatDataProvider(),
             array(
                 array(true, -12.2151),
-                array(true, -12,2151),
+                array(true, -12, 2151),
                 array(true, '-12.2151'),
                 array(false, ''),
                 array(false, 'A'),

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\Tax\AbstractTaxHandler;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\CommandHandler\EditTaxHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxException;
-use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use PrestaShopException;
 use Tax;
 
@@ -59,17 +58,15 @@ final class EditTaxHandler extends AbstractTaxHandler implements EditTaxHandlerI
         }
 
         try {
+            if (false === $tax->validateFields(false) || false === $tax->validateFieldsLang(false)) {
+                throw new TaxException('Tax contains invalid field values');
+            }
+
             if (!$tax->update()) {
-                throw new TaxException(
-                    sprintf('Cannot update tax with id "%s"', $tax->id)
-                );
+                throw new TaxException(sprintf('Cannot update tax with id "%s"', $tax->id));
             }
         } catch (PrestaShopException $e) {
-            throw new TaxException(
-                sprintf('Cannot update tax with id "%s"', $tax->id)
-            );
+            throw new TaxException(sprintf('Cannot update tax with id "%s"', $tax->id));
         }
-
-        return new TaxId((int) $tax->id);
     }
 }

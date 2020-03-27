@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,18 +17,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace LegacyTests\Integration\Core\Localization;
 
-use Cache;
 use Currency;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -50,20 +50,21 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
     protected $localeRepository;
 
     private static $isCacheClear = false;
-
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-        self::installTestedLanguagePacks();
-    }
+    private static $firstInitDone = false;
 
     protected function setUp()
     {
         parent::setUp();
-
         if (!self::$isCacheClear) {
             $this->clearCache();
             self::$isCacheClear = true;
+        }
+
+        // This code was originally present in setUpBeforeClass(), but moved here
+        // as we need the symfony kernel only instanciated in the parent setUp()
+        if (!self::$firstInitDone) {
+            self::installTestedLanguagePacks();
+            self::$firstInitDone = true;
         }
 
         $this->localeRepository = $this->container->get(self::SERVICE_LOCALE_REPOSITORY);
@@ -125,7 +126,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'France' => [
                 'localeCode' => 'fr-FR',
                 'rawNumber' => 1234568.12345,
-                'formattedNumber' => '1 234 568,123',
+                'formattedNumber' => '1 234 568,123',
             ],
             'India (Hindi)' => [
                 'localeCode' => 'hi-IN',
@@ -261,7 +262,9 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             $xmlContent = (new LocalizationWarmer(_PS_VERSION_, $country))
                 ->warmUp($cacheDir);
 
-            (new LocalizationPack())->loadLocalisationPack($xmlContent, false, true);
+            $localizationPack = new LocalizationPack();
+            $localizationPack->loadLocalisationPack($xmlContent, false, true);
+            $localizationPack->loadLocalisationPack($xmlContent, ['languages'], true);
         }
     }
 
@@ -278,8 +281,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'ja-JP',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'JPY',
-                'formattedPrice' => '¥1,234,568',
-                //'nativeFormattedPrice' => '￥1,234,568',
+                'formattedPrice' => '￥1,234,568',
             ],
             'United Kingdom' => [
                 'localeCode' => 'en-GB',
@@ -297,26 +299,19 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'fr-FR',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'EUR',
-                'formattedPrice' => '1 234 568,12 €',
+                'formattedPrice' => '1 234 568,12 €',
             ],
-            'India (Hindi)' => [
-                'localeCode' => 'hi-IN',
-                'rawNumber' => 1234568.12345,
-                'currencyCode' => 'INR',
-                'formattedPrice' => '₹12,34,568.12',
-            ],
-            'India (English)' => [
-                'localeCode' => 'en-IN',
+            'India' => [
+                'localeCode' => 'ta-IN',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'INR',
                 'formattedPrice' => '₹ 12,34,568.12',
             ],
-            'India (Bengali)' => [
-                'localeCode' => 'bn-IN',
+            'India (English)' => [
+                'localeCode' => 'en-US',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'INR',
-                'formattedPrice' => '12,34,568.12₹',
-                //'nativeFormattedPricey' => '১২,৩৪,৫৬৮.১২₹',
+                'formattedPrice' => '₹1,234,568.12',
             ],
             'Spain' => [
                 'localeCode' => 'es-ES',
@@ -330,12 +325,6 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'currencyCode' => 'CAD',
                 'formattedPrice' => '1 234 568,12 $',
             ],
-            'Canada (English)' => [
-                'localeCode' => 'en-CA',
-                'rawNumber' => 1234568.12345,
-                'currencyCode' => 'CAD',
-                'formattedPrice' => '$1,234,568.12',
-            ],
             'China' => [
                 'localeCode' => 'zh-CN',
                 'rawNumber' => 1234568.12345,
@@ -344,7 +333,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 //'nativeFormattedPrice' => '￥1,234,568.12',
             ],
             'Australia' => [
-                'localeCode' => 'en-AU',
+                'localeCode' => 'en-US',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'AUD',
                 'formattedPrice' => '$1,234,568.12',
@@ -379,21 +368,32 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'currencyCode' => 'PLN',
                 'formattedPrice' => '1 234 568,12 zł',
             ],
-            /*
-             * Following does not work even if frontoffice works well :/
             'Bulgaria' => [
                 'localeCode' => 'bg-BG',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'BGN',
                 'formattedPrice' => '1234568,12 лв.',
             ],
+            // BGN does not have a symbol in en-US
+            'United States BGN' => [
+                'localeCode' => 'en-US',
+                'rawNumber' => 1234568.12345,
+                'currencyCode' => 'BGN',
+                'formattedPrice' => 'BGN1,234,568.12',
+            ],
             'Azerbaijani' => [
                 'localeCode' => 'az-AZ',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'AZN',
-                'formattedPrice' => '₼ 1.234.568,12',
+                'formattedPrice' => '1.234.568,12 ₼',
             ],
-            */
+            // BGN does not have a symbol in en-US
+            'United States AZN' => [
+                'localeCode' => 'en-US',
+                'rawNumber' => 1234568.12345,
+                'currencyCode' => 'AZN',
+                'formattedPrice' => 'AZN1,234,568.12',
+            ],
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,7 +42,7 @@ class File
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
                 if (is_dir($src.'/'.$file)) {
-                    File::recurseCopy($src.'/'.$file, $dst.'/'.$file);
+                    static::recurseCopy($src.'/'.$file, $dst.'/'.$file);
                 } else {
                     copy($src.'/'.$file, $dst.'/'.$file);
                 }
@@ -64,7 +64,7 @@ class File
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
                 if (is_dir($dir.'/'.$file)) {
-                    File::recurseDelete($dir.'/'.$file);
+                    static::recurseDelete($dir.'/'.$file);
                 } else {
                     unlink($dir.'/'.$file);
                 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -119,7 +119,7 @@ class LegacyContext
      *
      * @return string
      */
-    public function getAdminLink($controller, $withToken = true, $extraParams = array())
+    public function getAdminLink($controller, $withToken = true, $extraParams = [])
     {
         return $this->getContext()->link->getAdminLink($controller, $withToken, $extraParams, $extraParams);
     }
@@ -133,7 +133,7 @@ class LegacyContext
      *
      * @return string
      */
-    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = array())
+    public function getLegacyAdminLink($controller, $withToken = true, $extraParams = [])
     {
         return $this->getContext()->link->getLegacyAdminLink($controller, $withToken, $extraParams);
     }
@@ -185,15 +185,19 @@ class LegacyContext
     }
 
     /**
-     * Adapter to get admin legacy layout into old controller context.
+     * Adapter to get admin legacy layout into legacy controller context.
      *
      * @param string $controllerName The legacy controller name
      * @param string $title The page title to override default one
      * @param array $headerToolbarBtn The header toolbar to override
      * @param string $displayType The legacy display type variable
      * @param bool $showContentHeader can force header toolbar (buttons and title) to be hidden with false value
+     * @param string $headerTabContent
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string[] $jsRouterMetadata array to provide base_url and security token for JS Router
+     * @param string $metaTitle
+     * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
      * @return string The html layout
      */
@@ -205,7 +209,10 @@ class LegacyContext
         $showContentHeader,
         $headerTabContent,
         $enableSidebar,
-        $helpLink = ''
+        $helpLink = '',
+        $jsRouterMetadata = [],
+        $metaTitle = '',
+        $useRegularH1Structure = true
     ) {
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
@@ -215,7 +222,10 @@ class LegacyContext
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $jsRouterMetadata,
+            $metaTitle,
+            $useRegularH1Structure
         );
         $originCtrl->run();
 
@@ -314,5 +324,13 @@ class LegacyContext
     public function getMailThemesUri()
     {
         return $this->mailThemesUri;
+    }
+
+    /**
+     * @return array Returns both enabled and disabled languages
+     */
+    public function getAvailableLanguages()
+    {
+        return $this->getLanguages(false);
     }
 }

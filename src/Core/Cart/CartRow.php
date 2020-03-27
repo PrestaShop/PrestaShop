@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -119,6 +119,11 @@ class CartRow
     /**
      * @var AmountImmutable
      */
+    protected $initialTotalPrice;
+
+    /**
+     * @var AmountImmutable
+     */
     protected $finalUnitPrice;
 
     /**
@@ -204,6 +209,22 @@ class CartRow
     }
 
     /**
+     * Returns the initial total price (ie without applying cart rules).
+     *
+     * @return AmountImmutable
+     *
+     * @throws \Exception
+     */
+    public function getInitialTotalPrice()
+    {
+        if (!$this->isProcessed) {
+            throw new \Exception('Row must be processed before getting its total');
+        }
+
+        return $this->initialTotalPrice;
+    }
+
+    /**
      * return final price: initial minus the cart rule discounts.
      *
      * @return AmountImmutable
@@ -248,10 +269,11 @@ class CartRow
         $quantity = (int) $rowData['cart_quantity'];
         $this->initialUnitPrice = $this->getProductPrice($cart, $rowData);
         // store not rounded values
-        $this->finalTotalPrice = new AmountImmutable(
+        $this->initialTotalPrice = new AmountImmutable(
             $this->initialUnitPrice->getTaxIncluded() * $quantity,
             $this->initialUnitPrice->getTaxExcluded() * $quantity
         );
+        $this->finalTotalPrice = clone $this->initialTotalPrice;
         $this->applyRound();
         // store state
         $this->isProcessed = true;

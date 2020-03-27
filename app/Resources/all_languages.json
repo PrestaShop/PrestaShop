@@ -87,7 +87,8 @@
     "date_format_full": "Y-m-d H:i:s",
     "is_rtl": "0",
     "language_code": "ca-es",
-    "locale": "ca-ES"
+    "locale": "ca-ES",
+    "flag": "catalonia"
   },
   "cb": {
     "name": "Español CO ( Spanish)",
@@ -350,6 +351,15 @@
     "language_code": "ka-ge",
     "locale": "ka-GE"
   },
+  "km": {
+    "name": "ភាសាខ្មែរ (Khmer)",
+    "iso_code": "km",
+    "date_format_lite": "Y-m-d",
+    "date_format_full": "Y-m-d H:i:s",
+    "is_rtl": "0",
+    "language_code": "km-kh",
+    "locale": "km-KH"
+  },
   "ko": {
     "name": "한국어 (Korean)",
     "iso_code": "ko",
@@ -385,6 +395,15 @@
     "is_rtl": "0",
     "language_code": "lv-lv",
     "locale": "lv-LV"
+  },
+  "mg": {
+    "name": "Malagasy",
+    "iso_code": "mg",
+    "date_format_lite": "d-m-Y",
+    "date_format_full": "d-m-Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "mg-mg",
+    "locale": "mg-MG"
   },
   "mk": {
     "name": "македонски (Macedonian)",
@@ -600,7 +619,8 @@
     "date_format_full": "m/d/Y H:i:s",
     "is_rtl": "0",
     "language_code": "en-ud",
-    "locale": "en-UD"
+    "locale": "en-UD",
+    "flag": "gb"
   },
   "ug": {
     "name": "ئۇيغۇر (Uyghur)",

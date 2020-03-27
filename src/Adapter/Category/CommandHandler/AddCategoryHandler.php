@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\CommandHandler\AddCategoryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 
 /**
@@ -38,12 +38,14 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
  *
  * @internal
  */
-final class AddCategoryHandler extends AbstractCategoryHandler implements AddCategoryHandlerInterface
+final class AddCategoryHandler extends AbstractObjectModelHandler implements AddCategoryHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @throws CannotAddCategoryException
+     * @param AddCategoryCommand $command
+     *
+     * @return CategoryId
      */
     public function handle(AddCategoryCommand $command)
     {
@@ -56,6 +58,9 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
      * @param AddCategoryCommand $command
      *
      * @return Category
+     *
+     * @throws CannotAddCategoryException
+     * @throws CategoryConstraintException
      */
     private function createCategoryFromCommand(AddCategoryCommand $command)
     {
@@ -91,16 +96,20 @@ final class AddCategoryHandler extends AbstractCategoryHandler implements AddCat
             $category->groupBox = $command->getAssociatedGroupIds();
         }
 
-        if ($command->getAssociatedShopIds()) {
-            $this->addShopAssociation($command->getAssociatedShopIds());
+        if (false === $category->validateFields(false)) {
+            throw new CannotAddCategoryException('Invalid category data');
         }
 
-        if (false === $category->validateFields(false)) {
-            throw new CategoryConstraintException('Invalid category data');
+        if (false === $category->validateFieldsLang(false)) {
+            throw new CannotAddCategoryException('Invalid category data');
         }
 
         if (false === $category->add()) {
             throw new CannotAddCategoryException('Failed to add new category.');
+        }
+
+        if ($command->getAssociatedShopIds()) {
+            $this->associateWithShops($category, $command->getAssociatedShopIds());
         }
 
         return $category;

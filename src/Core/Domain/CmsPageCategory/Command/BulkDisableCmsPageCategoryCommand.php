@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,13 +49,7 @@ class BulkDisableCmsPageCategoryCommand extends AbstractBulkCmsPageCategoryComma
     public function __construct(array $cmsPageCategoryIds)
     {
         if ($this->assertIsEmptyOrContainsNonIntegerValues($cmsPageCategoryIds)) {
-            throw new CmsPageCategoryConstraintException(
-                sprintf(
-                    'Missing cms page category data or array %s contains non integer values for bulk disabling',
-                    var_export($cmsPageCategoryIds, true)
-                ),
-                CmsPageCategoryConstraintException::INVALID_BULK_DATA
-            );
+            throw new CmsPageCategoryConstraintException(sprintf('Missing cms page category data or array %s contains non integer values for bulk disabling', var_export($cmsPageCategoryIds, true)), CmsPageCategoryConstraintException::INVALID_BULK_DATA);
         }
 
         $this->setCmsPageCategoryIds($cmsPageCategoryIds);

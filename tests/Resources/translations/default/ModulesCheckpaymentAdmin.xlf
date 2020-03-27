@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_checkpayment/ps_checkpayment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7b4cc4f79be9aae43efd53b4ae5cba4d">
+        <source>Payments by check</source>
+        <target>Payments by check</target>
+        <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="e09484ba6c16bc20236b63cc0d87ee95">
+        <source>Are you sure you want to delete these details?</source>
+        <target>Are you sure you want to delete these details?</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="eb7ee09497f2bb2a5c766c4e5ef0cc4b">
+        <source>The "Payee" and "Address" fields must be configured before using this module.</source>
+        <target>The "Payee" and "Address" fields must be configured before using this module.</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="a02758d758e8bec77a33d7f392eb3f8a">
+        <source>No currency has been set for this module.</source>
+        <target>No currency has been set for this module.</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="a6911ad28a15bf35c506e46c3a613c68">
+        <source>The "Payee" field is required.</source>
+        <target>The "Payee" field is required.</target>
+        <note>Line: 103</note>
+      </trans-unit>
+      <trans-unit id="00a369029140cfd18857425d49b472f8">
+        <source>The "Address" field is required.</source>
+        <target>The "Address" field is required.</target>
+        <note>Line: 105</note>
+      </trans-unit>
+      <trans-unit id="a60468657881aa431a0a5fccc76258e2">
+        <source>Pay by Check</source>
+        <target>Pay by Check</target>
+        <note>Line: 160</note>
+      </trans-unit>
+      <trans-unit id="5dd532f0a63d89c5af0243b74732f63c">
+        <source>Contact details</source>
+        <target>Contact details</target>
+        <note>Line: 216</note>
+      </trans-unit>
+      <trans-unit id="84649906133e37fefda33a301de8cd4f">
+        <source>Payee (name)</source>
+        <target>Payee (name)</target>
+        <note>Line: 222</note>
+      </trans-unit>
+      <trans-unit id="dd7bf230fde8d4836917806aff6a6b27">
+        <source>Address</source>
+        <target>Address</target>
+        <note>Line: 228</note>
+      </trans-unit>
+      <trans-unit id="0fe62049ad5246bc188ec1bae347269e">
+        <source>Address where the check should be sent to.</source>
+        <target>Address where the check should be sent to.</target>
+        <note>Line: 229</note>
+      </trans-unit>
+      <trans-unit id="bb56f3a51352fe2ddce129260770c440">
+        <source>%amount% (tax incl.)</source>
+        <target>%amount% (tax incl.)</target>
+        <note>Line: 268</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_checkpayment/views/templates/hook/infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="14e41f4cfd99b10766cc15676d8cda66">
+        <source>This module allows you to accept payments by check.</source>
+        <target>This module allows you to accept payments by check.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="22df5428ca8a4d0f5ec081d4815c86f6">
+        <source>If the client chooses this payment method, the order status will change to 'Waiting for payment'.</source>
+        <target>If the client chooses this payment method, the order status will change to 'Waiting for payment'.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="8c88bbf5712292b26e2a6bbeb0a7b5c4">
+        <source>You will need to manually confirm the order as soon as you receive a check.</source>
+        <target>You will need to manually confirm the order as soon as you receive a check.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

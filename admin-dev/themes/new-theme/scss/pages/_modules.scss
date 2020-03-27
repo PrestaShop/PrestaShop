@@ -518,19 +518,55 @@ form#importDropzone {
 }
 
 /**
+ * Module filters
+ */
+#position-filters {
+  input[type="checkbox"] {
+    display: none;
+
+    &:checked ~ label {
+      background-color: $primary;
+      border-color: $primary;
+
+      .done {
+        opacity: 1;
+      }
+    }
+  }
+
+  .selectbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $gray-light;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    position: relative;
+
+    .done {
+      opacity: 0;
+      color: #fff;
+      margin-top: -7px;
+      font-size: 1.6em;
+      margin-left: -4px;
+    }
+  }
+}
+
+/**
  * Module positions
  */
 
 #modules-position-selection-panel {
   position: relative;
   display: none;
+  .btn {
+    white-space: normal;
+  }
 }
 
 .hook-panel {
   margin-bottom: 10px !important;
-  border: solid #E6E6E6 1px;
-  box-shadow: rgba(black,0.10) 0 -2px 0 inset;
-  border-radius: 3px;
   padding: 10px 10px 5px 10px;
 
   .highlight {
@@ -544,7 +580,7 @@ form#importDropzone {
     .hook-name {
       font-size: 1.4em;
       color: $brand-primary;
-      background-color: white;
+      background-color: #fff;
       padding: 0 4px;
       border-radius: 3px;
     }
@@ -554,6 +590,51 @@ form#importDropzone {
     .hook_description {
       @extend .text-muted;
       padding: 3px 0 0 3px;
+    }
+
+    .badge {
+      background-color: #f4f4f4;
+      border-radius: 4px;
+      color: #363a41;
+
+      .selectbox i {
+        line-height: 1.5;
+        &.done {
+          margin-top: -5px;
+          margin-left: -2px;
+        }
+      }
+    }
+  }
+
+  input[type="checkbox"] {
+    display: none;
+
+    &:checked ~ label {
+      background-color: $primary;
+      border-color: $primary;
+
+      .done {
+        opacity: 1;
+      }
+    }
+  }
+
+  .selectbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $gray-light;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    position: relative;
+
+    .done {
+      opacity: 0;
+      color: #fff;
+      margin-top: -7px;
+      font-size: 1.6em;
+      margin-left: -4px;
     }
   }
 }
@@ -566,25 +647,71 @@ form#importDropzone {
 
 .module-list {
   .module-item {
-    display: table;
     width: 100%;
     padding: 5px 0;
-    margin-bottom: -1px;
-    border: solid 1px #9ed0ec;
+    border-bottom: solid 1px $gray-light;
     background: #fff;
 
+    &:hover {
+      background-color: $gray-soft;
+
+      .drag_indicator {
+        color: #15b7d7;
+        opacity: 1;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.ui-sortable-helper{
+      border-radius: 3px;
+      box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+      background-color: $medium-gray;
+
+      .module-name,
+      .module-description,
+      .module-column-position{
+        color: #fff;
+
+        .text-muted {
+          color: #fff !important;
+        }
+      }
+
+      .module-column-actions {
+        .dropdown-toggle.dropdown-toggle-dots::after,
+        i {
+          color: #fff;
+        }
+      }
+
+      .drag_indicator {
+        color: #fff;
+        opacity: 1;
+      }
+
+      .selectbox {
+        border-color: #fff;
+      }
+    }
+
     &.draggable {
-      cursor: pointer;
+      cursor: all-scroll;
     }
   }
 
   .module-column-select {
     display: table-cell;
-    width: 22px;
+    width: 90px;
     min-height: 35px;
     vertical-align: middle;
-    text-align: center;
-    border-right: 1px solid #ddd;
+    padding: 0 10px;
+
+    .drag_indicator {
+      opacity: 0;
+    }
   }
 
   .module-column-position {
@@ -594,14 +721,9 @@ form#importDropzone {
     text-align: right;
 
     .index-position {
-      border: solid 1px #ccc;
-      background-color: #eee;
       padding: 0 5px;
       font-size: 1em;
-      color: #aaa;
-      text-shadow: white 1px 1px;
-      border-radius: 3px;
-      box-shadow: rgba(0,0,0,0.2) 0 1px 3px inset;
+      width: 40px;
     }
   }
 
@@ -611,20 +733,34 @@ form#importDropzone {
     text-align: center;
     vertical-align: middle;
     img {
-      max-width: 57px;
+      max-width: 2.85em;
+    }
+  }
+
+  .module-column-infos,
+  .module-column-description {
+    display: table-cell;
+    height: 50px;
+    vertical-align: middle;
+    font-size:.95em;
+    .module-name {
+      color: $primary;
+    }
+
+    .module-description {
+      color: $gray-dark;
     }
   }
 
   .module-column-infos {
-    display: table-cell;
-    height: 50px;
-    vertical-align: middle;
-    .module-name {
-      font-size: 1.2em;
-    }
+    width: 200px;
+    padding: 0 4px;
+  }
 
-    .module-description {
-      @extend .text-muted;
+  .module-column-description {
+    width: 679px;
+    &.hasColumnPosition {
+      width: 600px;
     }
   }
 
@@ -633,8 +769,17 @@ form#importDropzone {
     padding: 0 10px;
     vertical-align: middle;
     text-align: right;
+
     .btn-group {
       text-align: right;
+
+      .btn-outline-primary {
+        border: none;
+        color: $medium-gray;
+      }
+    }
+    .dropdown-toggle.dropdown-toggle-dots:hover::after {
+      color: #25b9d7;
     }
   }
 

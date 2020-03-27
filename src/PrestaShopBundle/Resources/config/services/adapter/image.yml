@@ -15,3 +15,6 @@ services:
 
     prestashop.adapter.image.uploader.manufacturer_image_uploader:
       class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\ManufacturerImageUploader'
+
+    prestashop.adapter.image.uploader.supplier_image_uploader:
+      class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\SupplierImageUploader'

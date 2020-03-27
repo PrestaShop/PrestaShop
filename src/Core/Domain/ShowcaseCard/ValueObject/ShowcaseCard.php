@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,10 +17,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,10 +40,46 @@ class ShowcaseCard
     const SEO_URLS_CARD = 'seo-urls_card';
 
     /**
+     * Card shown in Categories
+     */
+    const CATEGORIES_CARD = 'categories_card';
+
+    /**
+     * Card shown in Customers
+     */
+    const CUSTOMERS_CARD = 'customers_card';
+
+    /**
+     * Card shown in Employees
+     */
+    const EMPLOYEES_CARD = 'employees_card';
+
+    /**
+     * Card shown in Improve -> Design -> Pages
+     */
+    const CMS_PAGES_CARD = 'cms-pages_card';
+
+    /**
+     * Card shown in Sell -> Catalog -> Attributes & features -> Attributes
+     */
+    const ATTRIBUTES_CARD = 'attributes_card';
+
+    /**
+     * Card shown in Sell -> Catalog -> Monitoring
+     */
+    const MONITORING_CARD = 'monitoring_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
         self::SEO_URLS_CARD => true,
+        self::CATEGORIES_CARD => true,
+        self::CUSTOMERS_CARD => true,
+        self::EMPLOYEES_CARD => true,
+        self::CMS_PAGES_CARD => true,
+        self::ATTRIBUTES_CARD => true,
+        self::MONITORING_CARD => true,
     ];
 
     /**
@@ -61,9 +97,7 @@ class ShowcaseCard
     public function __construct($name)
     {
         if (!$this->isSupported($name)) {
-            throw new InvalidShowcaseCardNameException(
-                sprintf('Unsupported showcase card name: %s', print_r($name, true))
-            );
+            throw new InvalidShowcaseCardNameException(sprintf('Unsupported showcase card name: %s', print_r($name, true)));
         }
 
         $this->name = $name;

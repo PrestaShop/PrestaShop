@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,7 +59,7 @@ class HelperCalendarCore extends Helper
     public function getActions()
     {
         if (!isset($this->_actions)) {
-            $this->_actions = array();
+            $this->_actions = [];
         }
 
         return $this->_actions;
@@ -79,7 +79,7 @@ class HelperCalendarCore extends Helper
     public function getCompareActions()
     {
         if (!isset($this->_compare_actions)) {
-            $this->_compare_actions = array();
+            $this->_compare_actions = [];
         }
 
         return $this->_compare_actions;
@@ -203,7 +203,7 @@ class HelperCalendarCore extends Helper
     public function addAction($action)
     {
         if (!isset($this->_actions)) {
-            $this->_actions = array();
+            $this->_actions = [];
         }
 
         $this->_actions[] = $action;
@@ -214,7 +214,7 @@ class HelperCalendarCore extends Helper
     public function addCompareAction($action)
     {
         if (!isset($this->_compare_actions)) {
-            $this->_compare_actions = array();
+            $this->_compare_actions = [];
         }
 
         $this->_compare_actions[] = $action;
@@ -249,7 +249,7 @@ class HelperCalendarCore extends Helper
         }
 
         $this->tpl = $this->createTemplate($this->base_tpl);
-        $this->tpl->assign(array(
+        $this->tpl->assign([
             'date_format' => $this->getDateFormat(),
             'date_from' => $this->getDateFrom(),
             'date_to' => $this->getDateTo(),
@@ -259,7 +259,7 @@ class HelperCalendarCore extends Helper
             'compare_actions' => $this->getCompareActions(),
             'compare_option' => $this->getCompareOption(),
             'is_rtl' => $this->isRTL(),
-        ));
+        ]);
 
         $html .= parent::generate();
 

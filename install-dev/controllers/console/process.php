@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -120,12 +120,17 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             if (!$this->processInstallDatabase()) {
                 $this->printErrors();
             }
+
+            // Deferred Kernel Init
+            $this->initKernel();
+
             if (!$this->processInstallDefaultData()) {
                 $this->printErrors();
             }
             if (!$this->processPopulateDatabase()) {
                 $this->printErrors();
             }
+
             if (!$this->processConfigureShop()) {
                 $this->printErrors();
             }
@@ -168,7 +173,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 'visitorType' => 1,
                 'source' => 'installer',
             ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
 
@@ -330,5 +335,17 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 unlink($file);
             }
         }
+    }
+
+    /**
+     * Deferred initialization of Symfony Kernel
+     */
+    private function initKernel()
+    {
+        require_once _PS_CORE_DIR_.'/config/bootstrap.php';
+
+        global $kernel;
+        $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+        $kernel->boot();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,26 +52,38 @@ class ValidateConstraintTranslatorCore
         if ($validator === 'isName') {
             return $this->translator->trans(
                 'Invalid name',
-                array(),
+                [],
                 'Shop.Forms.Errors'
             );
-        } elseif ($validator === 'isBirthDate') {
+        }
+
+        if ($validator === 'isCustomerName') {
+            return $this->translator->trans(
+                'Invalid format.',
+                [],
+                'Shop.Forms.Errors'
+            );
+        }
+
+        if ($validator === 'isBirthDate') {
             return $this->translator->trans(
                 'Format should be %s.',
-                array(Tools::formatDateStr('31 May 1970')),
+                [Tools::formatDateStr('31 May 1970')],
                 'Shop.Forms.Errors'
             );
-        } elseif ($validator === 'required') {
+        }
+
+        if ($validator === 'required') {
             return $this->translator->trans(
                 'Required field',
-                array(),
+                [],
                 'Shop.Forms.Errors'
             );
         }
 
         return $this->translator->trans(
             'Invalid format.',
-            array(),
+            [],
             'Shop.Forms.Errors'
         );
     }

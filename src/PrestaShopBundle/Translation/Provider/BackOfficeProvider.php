@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,16 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
+/**
+ * Main translation provider of the Back Office
+ */
 class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
     /**
@@ -35,10 +36,10 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getTranslationDomains()
     {
-        return array(
-            '^Admin*',
-            '^Modules(.*)Admin',
-        );
+        return [
+            '^Admin[A-Z]',
+            '^Modules[A-Z](.*)Admin',
+        ];
     }
 
     /**
@@ -46,10 +47,10 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getFilters()
     {
-        return array(
-            '#^Admin*#',
-            '#^Modules(.*)Admin#',
-        );
+        return [
+            '#^Admin[A-Z]#',
+            '#^Modules[A-Z](.*)Admin#',
+        ];
     }
 
     /**
@@ -58,29 +59,6 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
     public function getIdentifier()
     {
         return 'back';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultCatalogue($empty = true)
-    {
-        $defaultCatalogue = new MessageCatalogue($this->getLocale());
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                array($this->getDefaultResourceDirectory()),
-                $this->getLocale(),
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
     }
 
     /**

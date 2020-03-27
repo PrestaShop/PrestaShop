@@ -42,7 +42,7 @@
       <trans-unit id="7c8682d92dfb1522b4cc2975608e582d">
         <source>Information successfully updated.</source>
         <target>Information successfully updated.</target>
-        <note>Line: 57</note>
+        <note>Line: 56</note>
       </trans-unit>
     </body>
   </file>
@@ -65,7 +65,7 @@
       <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
         <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>
         <target>Your password has been successfully reset and a confirmation has been sent to your email address: %s</target>
-        <note>Line: 180</note>
+        <note>Line: 199</note>
       </trans-unit>
     </body>
   </file>

@@ -17,6 +17,7 @@
 @import "components/featuredproducts";
 @import "components/custom-text";
 @import "components/categories";
+@import "components/subcategories";
 @import "components/products";
 @import "components/cart";
 @import "components/block-reassurance";
@@ -27,6 +28,8 @@
 @import "components/errors";
 @import "components/customization-modal";
 @import "components/sitemap";
+@import "components/newsletter";
+@import "components/brands";
 /*** HEADER ***/
 #header {
   background: white;
@@ -167,7 +170,7 @@
 }
 /*** WRAPPER ***/
 #wrapper {
-  background: $gray-light;
+  background: $gray-lighter;
   box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11);
   padding-top: 1.563rem;
   .banner {
@@ -389,5 +392,14 @@
   #left-column, #content-wrapper {
     padding-left: 0 !important;
     padding-right: 0 !important;
+  }
+}
+
+input[type=number] {
+  -moz-appearance:textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }

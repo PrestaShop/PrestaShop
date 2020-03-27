@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -35,7 +35,15 @@
       <article id="store-{$store.id}" class="store-item card">
         <div class="store-item-container clearfix">
           <div class="col-md-3 store-picture hidden-sm-down">
-            <img src="{$store.image.bySize.stores_default.url}" alt="{$store.image.legend}" title="{$store.image.legend}">
+            <img
+              src="{$store.image.bySize.stores_default.url}"
+              {if !empty($store.image.legend)}
+                alt="{$store.image.legend}"
+                title="{$store.image.legend}"
+              {else}
+                alt="{$store.name}"
+              {/if}
+            >
           </div>
           <div class="col-md-5 col-sm-7 col-xs-12 store-description">
             <p class="h3 card-title">{$store.name}</p>
@@ -63,11 +71,11 @@
         </div>
         <footer id="about-{$store.id}" class="collapse">
           <div class="store-item-footer divide-top">
-            <div class="card-block">
-              {if $store.note}
-                <p class="text-justify">{$store.note}<p>
-              {/if}
-            </div>
+            {if $store.note}
+              <div class="card-block">
+                <p class="text-justify">{$store.note}</p>
+              </div>
+            {/if}
             <ul class="card-block">
               {if $store.phone}
                 <li><i class="material-icons">&#xE0B0;</i>{$store.phone}</li>

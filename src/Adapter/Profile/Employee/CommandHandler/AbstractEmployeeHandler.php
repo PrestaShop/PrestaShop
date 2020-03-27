@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,17 +28,18 @@ namespace PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler;
 
 use Context;
 use Employee;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\AdminEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\CannotDeleteWarehouseManagerException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeCannotChangeItselfException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\Exception\EmployeeNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteWarehouseManagerException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use Warehouse;
 
 /**
  * Class AbstractEmployeeStatusHandler.
  */
-abstract class AbstractEmployeeHandler
+abstract class AbstractEmployeeHandler extends AbstractObjectModelHandler
 {
     /**
      * @param EmployeeId $employeeId
@@ -49,13 +50,7 @@ abstract class AbstractEmployeeHandler
     protected function assertEmployeeWasFoundById(EmployeeId $employeeId, Employee $employee)
     {
         if (!$employee->id) {
-            throw new EmployeeNotFoundException(
-                $employeeId,
-                sprintf(
-                    'Employee with id "%s" cannot be found.',
-                    $employeeId->getValue()
-                )
-            );
+            throw new EmployeeNotFoundException($employeeId, sprintf('Employee with id "%s" cannot be found.', $employeeId->getValue()));
         }
     }
 
@@ -67,13 +62,7 @@ abstract class AbstractEmployeeHandler
     protected function assertEmployeeIsNotTheOnlyAdminInShop(Employee $employee)
     {
         if ($employee->isLastAdmin()) {
-            throw new AdminEmployeeException(
-                sprintf(
-                    'Employee with id %s is the only admin in shop and status cannot be changed.',
-                    $employee->id
-                ),
-                AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN
-            );
+            throw new AdminEmployeeException(sprintf('Employee with id %s is the only admin in shop and status cannot be changed.', $employee->id), AdminEmployeeException::CANNOT_CHANGE_LAST_ADMIN);
         }
     }
 
@@ -85,10 +74,7 @@ abstract class AbstractEmployeeHandler
     protected function assertLoggedInEmployeeIsNotTheSameAsBeingUpdatedEmployee(Employee $employee)
     {
         if (Context::getContext()->employee->id === $employee->id) {
-            throw new EmployeeCannotChangeItselfException(
-                'Employee cannot change status of itself.',
-                EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS
-            );
+            throw new EmployeeCannotChangeItselfException('Employee cannot change status of itself.', EmployeeCannotChangeItselfException::CANNOT_CHANGE_STATUS);
         }
     }
 
@@ -106,9 +92,7 @@ abstract class AbstractEmployeeHandler
         $warehouses = Warehouse::getWarehousesByEmployee($employee->id);
 
         if (count($warehouses) > 0) {
-            throw new CannotDeleteWarehouseManagerException(
-                sprintf('Employee with id %s is warehouse manager and cannot be deleted.', $employee->id)
-            );
+            throw new CannotDeleteWarehouseManagerException(sprintf('Employee with id %s is warehouse manager and cannot be deleted.', $employee->id));
         }
     }
 }

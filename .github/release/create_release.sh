@@ -28,10 +28,6 @@ e_arrow "Replacing version number in files"
 node replace_version.js --version $versiong
 
 
-e_arrow "Downloading CLDR"
-node download_cldr.js
-
-
 e_arrow "Installing PHP dependencies with composer"
 cd $rootPath; composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
 

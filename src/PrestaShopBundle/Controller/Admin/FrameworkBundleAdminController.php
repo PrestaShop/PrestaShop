@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,22 +19,27 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,20 +78,6 @@ class FrameworkBundleAdminController extends Controller
             'is_shop_context' => (new Context())->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
         ];
-    }
-
-    public function hashUpdateJsAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.js');
-
-        return new Response($contents);
-    }
-
-    public function hashUpdateJsonAction($hash)
-    {
-        $contents = file_get_contents('http://localhost:8080/' . $hash . '.hot-update.json');
-
-        return new Response($contents);
     }
 
     /**
@@ -198,10 +189,33 @@ class FrameworkBundleAdminController extends Controller
 
     /**
      * Get the old but still useful context.
+     *
+     * @return \Context
      */
     protected function getContext()
     {
         return $this->get('prestashop.adapter.legacy.context')->getContext();
+    }
+
+    /**
+     * Get the locale based on the context
+     *
+     * @return Locale
+     */
+    protected function getContextLocale(): Locale
+    {
+        $locale = $this->getContext()->getCurrentLocale();
+        if (null !== $locale) {
+            return $locale;
+        }
+
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $this->get('prestashop.core.localization.locale.repository');
+        $locale = $localeRepository->getLocale(
+            $this->getContext()->language->getLocale()
+        );
+
+        return $locale;
     }
 
     /**
@@ -358,11 +372,25 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param string $type
      * @param string $code
+     * @param string $message
      *
      * @return string
      */
-    protected function getFallbackErrorMessage($type, $code)
+    protected function getFallbackErrorMessage($type, $code, $message = '')
     {
+        $isDebug = $this->get('kernel')->isDebug();
+        if ($isDebug && !empty($message)) {
+            return $this->trans(
+                'An unexpected error occurred. [%type% code %code%]: %message%',
+                'Admin.Notifications.Error',
+                [
+                    '%type%' => $type,
+                    '%code%' => $code,
+                    '%message%' => $message,
+                ]
+            );
+        }
+
         return $this->trans(
             'An unexpected error occurred. [%type% code %code%]',
             'Admin.Notifications.Error',
@@ -451,6 +479,17 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
+     * @param FormInterface $form
+     */
+    protected function addFlashFormErrors(FormInterface $form)
+    {
+        /** @var FormError $formError */
+        foreach ($form->getErrors(true) as $formError) {
+            $this->addFlash('error', $formError->getMessage());
+        }
+    }
+
+    /**
      * Get error by exception from given messages
      *
      * @param Exception $e
@@ -460,6 +499,10 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getErrorMessageForException(Exception $e, array $messages)
     {
+        if ($e instanceof ModuleErrorInterface) {
+            return $e->getMessage();
+        }
+
         $exceptionType = get_class($e);
         $exceptionCode = $e->getCode();
 
@@ -477,7 +520,8 @@ class FrameworkBundleAdminController extends Controller
 
         return $this->getFallbackErrorMessage(
             $exceptionType,
-            $exceptionCode
+            $exceptionCode,
+            $e->getMessage()
         );
     }
 }

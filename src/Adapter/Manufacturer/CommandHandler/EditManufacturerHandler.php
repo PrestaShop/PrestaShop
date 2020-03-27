@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,22 +54,16 @@ final class EditManufacturerHandler extends AbstractManufacturerHandler implemen
                 throw new ManufacturerException('Manufacturer contains invalid field values');
             }
 
+            if (!$manufacturer->update()) {
+                throw new ManufacturerException(sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id));
+            }
+
             if (null !== $command->getAssociatedShops()) {
                 $this->associateWithShops($manufacturer, $command->getAssociatedShops());
             }
-
-            if (!$manufacturer->update()) {
-                throw new ManufacturerException(
-                    sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id)
-                );
-            }
         } catch (PrestaShopException $e) {
-            throw new ManufacturerException(
-                sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id)
-            );
+            throw new ManufacturerException(sprintf('Cannot update manufacturer with id "%s"', $manufacturer->id));
         }
-
-        return $manufacturerId;
     }
 
     /**

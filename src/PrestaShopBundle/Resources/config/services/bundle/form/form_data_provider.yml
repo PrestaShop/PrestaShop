@@ -171,3 +171,24 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.tax.tax_options_configuration'
+
+    prestashop.admin.improve.design.theme.shop_logos.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosFormDataProvider'
+        arguments:
+            - '@prestashop.core.command_bus'
+            - '@prestashop.adapter.theme.theme_multi_store_settings_form_data_provider'
+
+    prestashop.admin.mail_theme.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Design\MailTheme\MailThemeFormDataProvider'
+        arguments:
+            - '@prestashop.core.mail_theme.configuration'
+
+    prestashop.admin.merchandise_return_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.merchandise_return.configuration.merchandise_return_options_configuration'
+
+    prestashop.admin.sell.order.credit_slip.credit_slip_options_form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.credit_slip.credit_slip_options.configuration'

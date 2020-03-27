@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,35 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception;
 
+/**
+ * Is thrown when SqlManagement constraints are violated
+ */
 class SqlManagementConstraintException extends SqlManagementException
 {
+    /**
+     * When database table name is invalid
+     */
     const INVALID_DATABASE_TABLE_NAME = 10;
+
+    /**
+     * When database table field is invalid
+     */
     const INVALID_DATABASE_TABLE_FIELD = 20;
+
+    /**
+     * When database table field name is invalid
+     */
     const INVALID_DATABASE_TABLE_FIELD_NAME = 30;
+
+    /**
+     * When database table field type is invalid
+     */
     const INVALID_DATABASE_TABLE_FIELD_TYPE = 40;
 }

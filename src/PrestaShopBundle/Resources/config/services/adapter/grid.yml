@@ -10,6 +10,7 @@ services:
             - '@prestashop.adapter.feature.multistore'
             - '@prestashop.adapter.shop.context'
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+            - '@request_stack'
 
     # Action accessibility checkers
     prestashop.adapter.grid.action.row.accessibility_checker.category_for_view:

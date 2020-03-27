@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,9 +18,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
+ *}
+
+{**
+ * @deprecated since 1.7.6, to be removed in the next minor
  *}
 
 <div class="leadin">{block name="leadin"}{/block}</div>
@@ -51,13 +55,25 @@
 			<label class="control-label col-lg-3 required"> {l s='Transplant to' d='Admin.Design.Feature'}</label>
 			<div class="col-lg-9">
 				<select name="id_hook"{if !$hooks|@count} disabled="disabled"{/if}>
-					{if !$hooks}
+					{if !$hooks|@count}
 						<option value="0">{l s='Select a module above before choosing from available hooks' d='Admin.Design.Help'}</option>
-					{else}
-						{foreach $hooks as $hook}
-							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
-						{/foreach}
 					{/if}
+
+					<optgroup id="hooks_unregistered" label="{l s='Available hooks' d='Admin.Design.Feature'}">
+					{foreach $hooks as $hook}
+						{if !$hook['registered']}
+							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
+						{/if}
+					{/foreach}
+					</optgroup>
+
+					<optgroup id="hooks_registered" label="{l s='Already registered hooks' d='Admin.Design.Feature'}" disabled>
+					{foreach $hooks as $hook}
+						{if $hook['registered']}
+							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}{if isset($hook['description'])} ({$hook['description']|escape:'htmlall':'UTF-8'}){/if}</option>
+						{/if}
+					{/foreach}
+					</optgroup>
 				</select>
 			</div>
 		</div>

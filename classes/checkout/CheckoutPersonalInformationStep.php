@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,10 +44,10 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         $this->registerForm = $registerForm;
     }
 
-    public function handleRequest(array $requestParameters = array())
+    public function handleRequest(array $requestParameters = [])
     {
         // personal info step is always reachable
-        $this->step_is_reachable = true;
+        $this->setReachable(true);
 
         $this->registerForm
             ->fillFromCustomer(
@@ -60,23 +60,25 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
         if (isset($requestParameters['submitCreate'])) {
             $this->registerForm->fillWith($requestParameters);
             if ($this->registerForm->submit()) {
-                $this->step_is_complete = true;
+                $this->setNextStepAsCurrent();
+                $this->setComplete(true);
             } else {
-                $this->step_is_complete = false;
+                $this->setComplete(false);
                 $this->setCurrent(true);
                 $this->getCheckoutProcess()->setHasErrors(true)->setNextStepReachable();
             }
         } elseif (isset($requestParameters['submitLogin'])) {
             $this->loginForm->fillWith($requestParameters);
             if ($this->loginForm->submit()) {
-                $this->step_is_complete = true;
+                $this->setNextStepAsCurrent();
+                $this->setComplete(true);
             } else {
                 $this->getCheckoutProcess()->setHasErrors(true);
                 $this->show_login_form = true;
             }
         } elseif (array_key_exists('login', $requestParameters)) {
             $this->show_login_form = true;
-            $this->step_is_current = true;
+            $this->setCurrent(true);
         }
 
         $this->logged_in = $this
@@ -85,30 +87,30 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
             ->customerHasLoggedIn();
 
         if ($this->logged_in && !$this->getCheckoutSession()->getCustomer()->is_guest) {
-            $this->step_is_complete = true;
+            $this->setComplete(true);
         }
 
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Personal Information',
-                array(),
+                [],
                 'Shop.Theme.Checkout'
             )
         );
     }
 
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         return $this->renderTemplate(
             $this->getTemplate(),
             $extraParams,
-            array(
+            [
                 'show_login_form' => $this->show_login_form,
                 'login_form' => $this->loginForm->getProxy(),
                 'register_form' => $this->registerForm->getProxy(),
                 'guest_allowed' => $this->getCheckoutSession()->isGuestAllowed(),
                 'empty_cart_on_logout' => !Configuration::get('PS_CART_FOLLOWING'),
-            )
+            ]
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,20 +16,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use AppKernel;
+use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
+use PHPUnit\Framework\Assert as Assert;
+use RuntimeException;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -50,13 +55,13 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                 $paymentModule = new PaymentModuleFake();
                 break;
             default:
-                throw new \Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
+                throw new Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));
         }
 
         // need to boot kernel for usage in $paymentModule->validateOrder()
         global $kernel;
         $previousKernel = $kernel;
-        $kernel = new \AppKernel('test', true);
+        $kernel = new AppKernel('test', true);
         $kernel->boot();
 
         // need to update secret_key in order to get payment working
@@ -89,13 +94,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_products_wt : $order->total_products;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -108,13 +107,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_discounts_tax_incl : $order->total_discounts_tax_excl;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -127,13 +120,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $total = $withTaxes ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
         if ((float) $expectedTotal != (float) $total) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedTotal,
-                    $total
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $total));
         }
     }
 
@@ -145,13 +132,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $count = count($order->getCartRules());
         if ($expectedCount != $count) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedCount,
-                    $count
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $expectedCount, $count));
         }
     }
 
@@ -163,26 +144,35 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $order = $this->getCurrentCartOrder();
         $orderCartRulesData = $order->getCartRules();
         if (!isset($orderCartRulesData[$position - 1]['id_order_cart_rule'])) {
-            throw new \Exception(
-                sprintf('Undefined order cart rule on position #%s', $position)
-            );
+            throw new Exception(sprintf('Undefined order cart rule on position #%s', $position));
         }
         $orderCartRule = new OrderCartRule($orderCartRulesData[$position - 1]['id_order_cart_rule']);
         if ((float) $discountTaxIncluded != (float) $orderCartRule->value) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $discountTaxIncluded,
-                    $orderCartRule->value
-                )
-            );
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxIncluded, $orderCartRule->value));
         }
         if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
-            throw new \RuntimeException(
+            throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxExcluded, $orderCartRule->value_tax_excl));
+        }
+    }
+
+    /**
+     * @Then order :reference should have following details:
+     */
+    public function checkOrderDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        foreach ($orderData as $orderField => $orderValue) {
+            Assert::assertEquals(
+                (float) $orderValue,
+                $order->{$orderField},
                 sprintf(
-                    'Expects %s, got %s instead',
-                    $discountTaxIncluded,
-                    $orderCartRule->value_tax_excl
+                    'Invalid order field %s, expected %s instead of %s',
+                    $orderField,
+                    $orderValue,
+                    $order->{$orderField}
                 )
             );
         }
@@ -192,7 +182,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $cart = $this->getCurrentCart();
         if (null === $cart) {
-            throw new \Exception('Current cart was not initialized');
+            throw new Exception('Current cart was not initialized');
         }
         $order = Order::getByCartId($cart->id);
 
@@ -208,5 +198,23 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             $order->delete();
         }
         $this->orders = [];
+    }
+
+    /**
+     * @Then order :reference should have :paymentModuleName payment method
+     *
+     * @param string $reference
+     * @param string $paymentModuleName
+     */
+    public function createdOrderShouldHavePaymentMethod(string $reference, string $paymentModuleName)
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        $order = new Order($orderId);
+
+        // todo: think about a way to get paymentModuleName from domain classes
+        if ($order->module !== $paymentModuleName) {
+            throw new RuntimeException(sprintf('Order should have "%s" payment method, but has "%s" instead.', $paymentModuleName, $order->payment));
+        }
     }
 }

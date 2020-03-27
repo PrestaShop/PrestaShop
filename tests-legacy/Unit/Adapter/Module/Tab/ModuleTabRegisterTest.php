@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -52,6 +52,13 @@ class ModuleTabRegisterTest extends UnitTestCase
                 'exception' => 'Class "AdminMissingController" not found in controllers/admin',
             ),
         ),
+        'symfony' => array(
+            // modules with routes are added regardless of the controller existing or not
+            array(
+                'class_name' => 'UnknownLegacyController',
+                'route_name' => 'some_fancy_symfony_route',
+            ),
+        ),
     );
 
     protected $moduleAdminControllers = array(
@@ -62,6 +69,7 @@ class ModuleTabRegisterTest extends UnitTestCase
     protected $expectedTabsToAdd = array(
         'gamification' => array('AdminGamification'),
         'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
+        'symfony' => array('UnknownLegacyController'),
     );
 
     protected $languages = array(

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,7 +45,7 @@ class SupplierId
      */
     public function __construct($supplierId)
     {
-        $this->assertIsNotIntegerOrLessThanZero($supplierId);
+        $this->assertIsIntegerGreaterThanZero($supplierId);
         $this->value = $supplierId;
     }
 
@@ -62,12 +62,10 @@ class SupplierId
      *
      * @throws SupplierException
      */
-    private function assertIsNotIntegerOrLessThanZero($supplierId)
+    private function assertIsIntegerGreaterThanZero($supplierId)
     {
         if (!is_int($supplierId) || 0 >= $supplierId) {
-            throw new SupplierException(
-                sprintf('Invalid Supplier id: %s', var_export($supplierId, true))
-            );
+            throw new SupplierException(sprintf('Invalid Supplier id: %s', var_export($supplierId, true)));
         }
     }
 }

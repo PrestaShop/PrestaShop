@@ -4,8 +4,9 @@ Tests
 This is PrestaShop automated tests folder.
 
 Multiple type of tests are available:
-- `E2E` and `Selenium` folders contains end-to-end tests
+- `E2E`  folder contains end-to-end tests
 - `Unit` folder contains unit tests, see below
+- `Integration` folder contains integration tests, see below
 
 # Unit tests
 

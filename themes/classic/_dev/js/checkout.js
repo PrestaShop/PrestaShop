@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -26,10 +26,6 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 
 function setUpCheckout() {
-  if ($('.js-cancel-address').length !== 0) {
-    $('.checkout-step:not(.js-current-step) .step-title').addClass('not-allowed');
-  }
-
   $('.js-terms a').on('click', (event) => {
     event.preventDefault();
     var url = $(event.target).attr('href');
@@ -51,9 +47,22 @@ function setUpCheckout() {
   });
 }
 
+function toggleImage() {
+  // Arrow show/hide details Checkout page
+  $('.card-block .cart-summary-products p a').on('click', function (icon) {
+    icon = $(this).find('i.material-icons');
+    if (icon.text() == 'expand_more') { 
+      icon.text('expand_less'); 
+    } else { 
+      icon.text('expand_more'); 
+    }
+  });
+}
+
 $(document).ready(() => {
   if ($('body#checkout').length === 1) {
     setUpCheckout();
+    toggleImage();
   }
 
   prestashop.on('updatedDeliveryForm', (params) => {

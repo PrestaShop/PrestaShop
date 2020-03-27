@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,23 +17,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
-use Exception;
+use Language;
 use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
@@ -43,10 +43,24 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  */
 class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
+    /**
+     * @var CurrencyDataProviderInterface
+     */
     protected $dataProvider;
 
-    public function __construct(CurrencyDataProviderInterface $dataProvider)
-    {
+    /**
+     * This layer must be ready only, displaying a price should not change the database data
+     *
+     * @var bool
+     */
+    protected $isWritable = false;
+
+    /**
+     * @param CurrencyDataProviderInterface $dataProvider
+     */
+    public function __construct(
+        CurrencyDataProviderInterface $dataProvider
+    ) {
         $this->dataProvider = $dataProvider;
     }
 
@@ -89,19 +103,24 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
 
         $localeCode = $currencyDataId->getLocaleCode();
         $currencyCode = $currencyDataId->getCurrencyCode();
-        $currencyEntity = $this->dataProvider->getCurrencyByIsoCode($currencyCode, $localeCode);
+        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeAndLocale($currencyCode, $localeCode);
 
         if (null === $currencyEntity) {
             return null;
         }
 
         $currencyData = new CurrencyData();
-
         $currencyData->setIsoCode($currencyEntity->iso_code);
-        $currencyData->setNames([$localeCode => $currencyEntity->name]);
         $currencyData->setNumericIsoCode($currencyEntity->numeric_iso_code);
-        $currencyData->setSymbols([$localeCode => $currencyEntity->symbol]);
         $currencyData->setPrecision($currencyEntity->precision);
+        $currencyData->setNames([$localeCode => $currencyEntity->name]);
+        $currencyData->setSymbols([$localeCode => $currencyEntity->symbol]);
+
+        $idLang = Language::getIdByLocale($localeCode, true);
+        $currencyPattern = $currencyEntity->getPattern($idLang);
+        if (!empty($currencyPattern)) {
+            $currencyData->setPatterns([$localeCode => $currencyEntity->getPattern($idLang)]);
+        }
 
         return $currencyData;
     }
@@ -122,23 +141,9 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      */
     protected function doWrite($currencyDataId, $currencyData)
     {
-        if (!$currencyDataId instanceof LocalizedCurrencyId) {
-            throw new LocalizationException('First parameter must be an instance of ' . LocalizedCurrencyId::class);
-        }
-
-        $currencyCode = $currencyDataId->getCurrencyCode();
-        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode, $currencyDataId->getLocaleCode());
-
-        $currencyEntity->iso_code = $currencyData->getIsoCode();
-        $currencyEntity->name = $currencyData->getNames()[$currencyDataId->getLocaleCode()];
-        $currencyEntity->numeric_iso_code = $currencyData->getNumericIsoCode();
-        $currencyEntity->symbol = $currencyData->getSymbols()[$currencyDataId->getLocaleCode()];
-        $currencyEntity->precision = $currencyData->getPrecision();
-
-        try {
-            $this->dataProvider->saveCurrency($currencyEntity);
-        } catch (Exception $e) {
-            throw new DataLayerException('Unable to persist data in DB data layer', 0, $e);
-        }
+        // We should not save anything in this layer. The CLDR or its Repository nor any of its layers
+        // should modify the database. This could override customization added by the user with default
+        // CLDR values. Any changes on the database must be managed through the backoffice and the appropriate
+        // commands/handlers
     }
 }

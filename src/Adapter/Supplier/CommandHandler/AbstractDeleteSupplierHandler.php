@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -89,61 +89,26 @@ abstract class AbstractDeleteSupplierHandler
             $entity = new Supplier($supplierId->getValue());
 
             if (0 >= $entity->id) {
-                throw new SupplierNotFoundException(
-                    sprintf(
-                        'Supplier object with id "%s" has not been found for deletion.',
-                        $supplierId->getValue()
-                    )
-                );
+                throw new SupplierNotFoundException(sprintf('Supplier object with id "%s" was not found for deletion.', $supplierId->getValue()));
             }
 
             if ($this->hasPendingOrders($supplierId)) {
-                throw new CannotDeleteSupplierException(
-                    $supplierId->getValue(),
-                    sprintf(
-                        'Supplier with id %s cannot be deleted due to it has pending orders',
-                        $supplierId->getValue()
-                    ),
-                    CannotDeleteSupplierException::HAS_PENDING_ORDERS
-                );
+                throw new CannotDeleteSupplierException($supplierId->getValue(), sprintf('Supplier with id %s cannot be deleted due to it has pending orders', $supplierId->getValue()), CannotDeleteSupplierException::HAS_PENDING_ORDERS);
             }
 
             if (false === $this->deleteProductSupplierRelation($supplierId)) {
-                throw new CannotDeleteSupplierProductRelationException(
-                    sprintf(
-                        'Unable to delete suppliers with id "%s" product relation from product_supplier table',
-                        $supplierId->getValue()
-                    )
-                );
+                throw new CannotDeleteSupplierProductRelationException(sprintf('Unable to delete suppliers with id "%s" product relation from product_supplier table', $supplierId->getValue()));
             }
 
-            if (false === $this->deleteSupplierAddress($supplierId)) {
-                throw new CannotDeleteSupplierAddressException(
-                    sprintf(
-                        'Unable to set deleted flag for supplier with id "%s" address',
-                        $supplierId->getValue()
-                    )
-                );
+            if (1 >= count($entity->getAssociatedShops()) && false === $this->deleteSupplierAddress($supplierId)) {
+                throw new CannotDeleteSupplierAddressException(sprintf('Unable to set deleted flag for supplier with id "%s" address', $supplierId->getValue()));
             }
 
             if (false === $entity->delete()) {
-                throw new CannotDeleteSupplierException(
-                    $supplierId->getValue(),
-                    sprintf(
-                        'Unable to delete supplier object with id "%s"',
-                        $supplierId->getValue()
-                    )
-                );
+                throw new SupplierException(sprintf('Unable to delete supplier object with id "%s"', $supplierId->getValue()));
             }
         } catch (PrestaShopException $exception) {
-            throw new SupplierException(
-                sprintf(
-                    'An error occurred when deleting the supplier object with id "%s"',
-                    $supplierId->getValue()
-                ),
-                0,
-                $exception
-            );
+            throw new SupplierException(sprintf('An error occurred when deleting the supplier object with id "%s"', $supplierId->getValue()), 0, $exception);
         }
     }
 

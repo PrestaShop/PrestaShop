@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Class GridPresenter is responsible for presenting grid.
@@ -93,7 +94,7 @@ final class GridPresenter implements GridPresenterInterface
             $presentedGrid['form_prefix'] = $searchCriteria->getFilterId();
         }
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridPresenterModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridPresenterModifier', [
             'presented_grid' => &$presentedGrid,
         ]);
 
@@ -115,7 +116,7 @@ final class GridPresenter implements GridPresenterInterface
         $positionColumn = $this->getOrderingPosition($grid);
         if (null !== $positionColumn) {
             array_unshift($columns, [
-                'id' => $positionColumn->getId(),
+                'id' => $positionColumn->getId() . '_handle',
                 'name' => $positionColumn->getName(),
                 'type' => 'position_handle',
                 'options' => $positionColumn->getOptions(),

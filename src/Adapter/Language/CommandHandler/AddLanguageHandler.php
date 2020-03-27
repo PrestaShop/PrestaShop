@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,10 +16,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,10 +69,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
     private function assertLanguageWithIsoCodeDoesNotExist(IsoCode $isoCode)
     {
         if (Language::getIdByIso($isoCode->getValue())) {
-            throw new LanguageConstraintException(
-                sprintf('Language with ISO code "%s" already exists', $isoCode->getValue()),
-                LanguageConstraintException::DUPLICATE_ISO_CODE
-            );
+            throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $isoCode->getValue()), LanguageConstraintException::DUPLICATE_ISO_CODE);
         }
     }
 
@@ -100,16 +97,21 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         $language = new Language();
         $language->name = $command->getName();
         $language->iso_code = $command->getIsoCode()->getValue();
+        if (false !== ($languageDetails = Language::getLangDetails($command->getIsoCode()->getValue()))) {
+            $language->locale = $languageDetails['locale'];
+        }
         $language->language_code = $command->getTagIETF()->getValue();
         $language->date_format_lite = $command->getShortDateFormat();
         $language->date_format_full = $command->getFullDateFormat();
         $language->is_rtl = $command->isRtl();
         $language->active = $command->isActive();
 
+        if (false === $language->validateFields(false)) {
+            throw new LanguageException('Cannot add language with invalid data');
+        }
+
         if (false === $language->add()) {
-            throw new LanguageException(
-                sprintf('Failed to add new language "%s"', $command->getName())
-            );
+            throw new LanguageException(sprintf('Failed to add new language "%s"', $command->getName()));
         }
 
         return $language;

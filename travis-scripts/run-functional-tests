@@ -2,16 +2,21 @@
 
 PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
 
-if [[ $EXTRA_TESTS != *"functional"* ]]; then
-  exit 0
-fi
-
 bash $PROJECT_PATH/travis-scripts/install-prestashop
 
-echo "* Installing functional tests ...";
+echo "* Installing functional tests...";
 
-cd $PROJECT_PATH/tests/E2E && npm install
+cd $PROJECT_PATH/tests/E2E
+npm install --silent
+
+echo "* Preparing environment...";
+
+DISPLAY=:10 npm run start-selenium &> /dev/null &
+sleep 5
+npm run sanity-check
 
 echo "* Running functional tests ...";
-npm test -- --MODULE=ps_legalcompliance
-exit $?
+npm run test --verbose -- --MODULE=ps_legalcompliance
+status=$?
+
+exit $status

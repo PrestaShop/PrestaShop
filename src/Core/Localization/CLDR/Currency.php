@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -17,10 +17,10 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -141,12 +141,7 @@ final class Currency implements CurrencyInterface
     public function getDisplayName($countContext = CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT)
     {
         if (!in_array($countContext, [CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT, CurrencyInterface::DISPLAY_NAME_COUNT_ONE, CurrencyInterface::DISPLAY_NAME_COUNT_OTHER])) {
-            throw new LocalizationException(
-                sprintf(
-                    'Unknown display name: "%s"',
-                    print_r($countContext, true)
-                )
-            );
+            throw new LocalizationException(sprintf('Unknown display name: "%s"', print_r($countContext, true)));
         }
 
         return $this->displayNames[$countContext];
@@ -164,14 +159,13 @@ final class Currency implements CurrencyInterface
     public function getSymbol($type = CurrencyInterface::SYMBOL_TYPE_NARROW)
     {
         if (!in_array($type, [CurrencyInterface::SYMBOL_TYPE_NARROW, CurrencyInterface::SYMBOL_TYPE_DEFAULT])) {
-            throw new LocalizationException(
-                sprintf(
-                    'Unknown symbol type: "%s"',
-                    print_r($type, true)
-                )
-            );
+            throw new LocalizationException(sprintf('Unknown symbol type: "%s"', print_r($type, true)));
         }
 
-        return $this->symbols[$type];
+        if (isset($this->symbols[$type])) {
+            return $this->symbols[$type];
+        }
+
+        return $this->symbols[CurrencyInterface::SYMBOL_TYPE_DEFAULT];
     }
 }

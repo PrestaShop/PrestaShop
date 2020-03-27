@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,16 +32,19 @@ import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-ac
 import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
-import LinkableItem from "../../components/linkable-item";
-import ChoiceTable from "../../components/choice-table";
-import ColumnTogglingExtension from "../../components/grid/extension/column-toggling-extension";
+import LinkableItem from '../../components/linkable-item';
+import ChoiceTable from '../../components/choice-table';
+import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
 import DeleteCustomersBulkActionExtension
-  from "../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension";
+  from '../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
 import DeleteCustomerRowActionExtension
-  from "../../components/grid/extension/action/row/customer/delete-customer-row-action-extension";
-import HelperCard from "../../components/helper-card";
+  from '../../components/grid/extension/action/row/customer/delete-customer-row-action-extension';
+import FiltersSubmitButtonEnablerExtension
+  from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import ShowcaseCard from '../../components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const customerGrid = new Grid('customer');
@@ -57,6 +60,10 @@ $(() => {
   customerGrid.addExtension(new ColumnTogglingExtension());
   customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
   customerGrid.addExtension(new DeleteCustomerRowActionExtension());
+  customerGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+
+  const showcaseCard = new ShowcaseCard('customersShowcaseCard');
+  showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
   // needed for "Group access" input in Add/Edit customer forms
   new ChoiceTable();
@@ -66,5 +73,4 @@ $(() => {
   // where you click any row
   // and it redirects user to related page
   new LinkableItem();
-  new HelperCard();
 });

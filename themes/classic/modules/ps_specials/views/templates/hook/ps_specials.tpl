@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -27,11 +27,7 @@
   <h2 class="h2 products-section-title text-uppercase">
     {l s='On sale' d='Shop.Theme.Catalog'}
   </h2>
-  <div class="products">
-    {foreach from=$products item="product"}
-      {include file="catalog/_partials/miniatures/product.tpl" product=$product}
-    {/foreach}
-  </div>
+  {include file="catalog/_partials/productlist.tpl" products=$products}
   <a class="all-product-link float-xs-left float-md-right h4" href="{$allSpecialProductsLink}">
     {l s='All sale products' d='Shop.Theme.Catalog'}<i class="material-icons">&#xE315;</i>
   </a>

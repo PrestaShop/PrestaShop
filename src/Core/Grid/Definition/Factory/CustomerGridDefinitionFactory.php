@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,6 +56,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    const GRID_ID = 'customer';
+
     /**
      * @var bool
      */
@@ -94,7 +96,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'customer';
+        return self::GRID_ID;
     }
 
     /**
@@ -226,6 +228,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route' => 'admin_customers_view',
                                 'route_param_name' => 'customerId',
                                 'route_param_field' => 'id_customer',
+                                'clickable_row' => true,
                             ])
                         )
                         ->add((new DeleteCustomerRowAction('delete'))
@@ -296,7 +299,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('firstname', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search first name', [], 'Admin.Orderscustomers.Help'),
+                        'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
@@ -306,7 +309,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('lastname', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search last name', [], 'Admin.Orderscustomers.Help'),
+                        'placeholder' => $this->trans('Search last name', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])
@@ -344,10 +347,9 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'customer',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_customers_index',
                 ])
@@ -359,7 +361,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new Filter('company', TextType::class))
                 ->setTypeOptions([
                     'attr' => [
-                        'placeholder' => $this->trans('Search company', [], 'Admin.Orderscustomers.Help'),
+                        'placeholder' => $this->trans('Search company', [], 'Admin.Actions'),
                     ],
                     'required' => false,
                 ])

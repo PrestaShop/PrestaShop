@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="ln"/>
 	</identity>
 	<localeDisplayNames>
@@ -252,8 +252,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MF" draft="unconfirmed">Sántu Martin</territory>
 			<territory type="MG">Madagasikari</territory>
 			<territory type="MH">Bisanga bya Marishalɛ</territory>
-			<territory type="MK">Masedwanɛ</territory>
-			<territory type="MK" alt="variant" draft="unconfirmed">Masedoni (RYYYK)</territory>
 			<territory type="ML">Malí</territory>
 			<territory type="MM">Birmanie</territory>
 			<territory type="MN">Mongolí</territory>
@@ -378,7 +376,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 		<exemplarCharacters>[a á â ǎ b c d e é ê ě ɛ {ɛ\u0301} {ɛ\u0302} {ɛ\u030C} f g {gb} h i í î ǐ k l m {mb} {mp} n {nd} {ng} {nk} {ns} {nt} {ny} {nz} o ó ô ǒ ɔ {ɔ\u0301} {ɔ\u0302} {ɔ\u030C} p r s t u ú v w y z]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[j q x]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E Ɛ F G {Gb} H I K L M {Mb} {Mp} N {Nd} {Ng} {Nk} {Ns} {Nt} {Ny} {Nz} O Ɔ P R S T U V W Y Z]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
 		<moreInformation draft="unconfirmed">?</moreInformation>
 	</characters>
 	<delimiters>
@@ -556,7 +554,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 					</eraNames>
 					<eraAbbr>
 						<era type="0">libóso ya</era>
+						<era type="0" alt="variant" draft="unconfirmed">LYK</era>
 						<era type="1">nsima ya Y</era>
+						<era type="1" alt="variant" draft="unconfirmed">NSYK</era>
 					</eraAbbr>
 				</eras>
 				<dateFormats>
@@ -1038,6 +1038,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<symbol draft="unconfirmed">MKD</symbol>
 			</currency>
 			<currency type="MRO">
+				<displayName>Ugwiya ya Moritani (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Ugwiya ya Moritani</displayName>
 			</currency>
 			<currency type="MUR">
@@ -1164,6 +1167,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName draft="unconfirmed">Bojito ya Sudaní ya Súdi</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Dobra ya Sao Tomé mpé Presipe (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Dobra ya Sao Tomé mpé Presipe</displayName>
 			</currency>
 			<currency type="SZL">

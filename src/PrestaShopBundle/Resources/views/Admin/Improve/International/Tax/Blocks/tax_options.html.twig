@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,10 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {{ form_start(taxOptionsForm, {'action': path('admin_taxes_save_options')}) }}
 <div class="card">
@@ -74,14 +76,10 @@
         </div>
       </div>
       {% if taxOptionsForm.options.eco_tax_rule_group is defined %}
-        <div class="form-group row">
-          <label class="form-control-label" for="{{ taxOptionsForm.options.eco_tax_rule_group.vars.id }}">
-            {{ 'Ecotax'|trans({}, 'Admin.International.Feature') }}
-          </label>
-          <div class="col-sm">
-            {{ form_widget(taxOptionsForm.options.eco_tax_rule_group) }}
-          </div>
-        </div>
+        {{ ps.form_group_row(taxOptionsForm.options.eco_tax_rule_group, {}, {
+          label: 'Ecotax'|trans({}, 'Admin.International.Feature'),
+          help: 'Define the ecotax (e.g. French ecotax: 19.6%).'|trans({}, 'Admin.International.Help')
+        }) }}
       {% endif %}
 
       {% block tax_options_rest %}

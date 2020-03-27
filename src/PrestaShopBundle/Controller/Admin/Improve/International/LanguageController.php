@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\DeleteLanguageCommand;
@@ -79,6 +80,8 @@ class LanguageController extends FrameworkBundleAdminController
     /**
      * Process Grid search.
      *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -121,7 +124,7 @@ class LanguageController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_languages_index');
             }
-        } catch (LanguageException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -155,12 +158,12 @@ class LanguageController extends FrameworkBundleAdminController
 
             $result = $languageFormHandler->handleFor((int) $languageId, $languageForm);
 
-            if (null !== $result->getIdentifiableObjectId()) {
+            if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_languages_index');
             }
-        } catch (LanguageException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             if ($e instanceof LanguageNotFoundException) {
@@ -296,11 +299,11 @@ class LanguageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param LanguageException $e
+     * @param Exception $e
      *
      * @return array
      */
-    private function getErrorMessages(LanguageException $e)
+    private function getErrorMessages(Exception $e)
     {
         return [
             LanguageNotFoundException::class => $this->trans(
@@ -327,7 +330,7 @@ class LanguageController extends FrameworkBundleAdminController
             ],
             LanguageImageUploadingException::class => [
                 LanguageImageUploadingException::MEMORY_LIMIT_RESTRICTION => $this->trans(
-                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings. ',
+                    'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.',
                     'Admin.Notifications.Error'
                 ),
                 LanguageImageUploadingException::UNEXPECTED_ERROR => $this->trans(

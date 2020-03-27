@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -37,18 +37,20 @@
       </h3>
       <div class="card-block row">
         <div class="card-text">
+          {{ form_errors(customerForm) }}
+
           {{ ps.form_group_row(customerForm.gender_id, {}, {
             'label': 'Social title'|trans({}, 'Admin.Global')
           }) }}
 
           {{ ps.form_group_row(customerForm.first_name, {}, {
             'label': 'First name'|trans({}, 'Admin.Global'),
-            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars)
+            'help': 'Only letters and the dot (.) character, followed by a space, are allowed.'|trans({}, 'Admin.Orderscustomers.Help')
           }) }}
 
           {{ ps.form_group_row(customerForm.last_name, {}, {
             'label': 'Last name'|trans({}, 'Admin.Global'),
-            'help': '%s %s'|format('Invalid characters:'|trans({}, 'Admin.Notifications.Info'), allowedNameChars)
+            'help': 'Only letters and the dot (.) character, followed by a space, are allowed.'|trans({}, 'Admin.Orderscustomers.Help')
           }) }}
 
           {{ ps.form_group_row(customerForm.email, {}, {
@@ -123,12 +125,14 @@
         </div>
       </div>
       <div class="card-footer">
-        <a href="{{ path('admin_customers_index') }}" class="btn btn-outline-secondary">
-          <i class="material-icons">cancel</i>
+        {% if (displayInIframe is defined and displayInIframe == true) %}
+          <a href="javascript:window.parent.$.fancybox.close();" class="btn btn-outline-secondary">
+        {% else %}
+          <a href="{{ pathWithBackUrl('admin_customers_index') }}" class="btn btn-outline-secondary">
+        {% endif %}
           {{ 'Cancel'|trans({}, 'Admin.Actions') }}
         </a>
         <button class="btn btn-primary float-right">
-          <i class="material-icons">save</i>
           {{ 'Save'|trans({}, 'Admin.Actions') }}
         </button>
       </div>

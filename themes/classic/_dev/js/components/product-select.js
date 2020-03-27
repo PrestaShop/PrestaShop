@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,10 +28,8 @@ import 'velocity-animate';
 export default class ProductSelect {
   init() {
     const MAX_THUMBS = 5;
-    const FLAG_MARGIN = 10;
     let $arrows =   $('.js-modal-arrows');
     let $thumbnails = $('.js-modal-product-images');
-    let $onsale =  $('.on-sale');
 
     $('body').on('click','.js-modal-thumb', (event) => {
       if($('.js-modal-thumb').hasClass('selected')){
@@ -48,9 +46,6 @@ export default class ProductSelect {
       }
     });
 
-    if($onsale.length && $('#product').length){
-      $('.new').css('top',$onsale.height() + FLAG_MARGIN);
-    }
     if ($('.js-modal-product-images li').length <= MAX_THUMBS) {
       $arrows.css('opacity', '.2');
     } else {

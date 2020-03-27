@@ -4,7 +4,7 @@
 <tr>
   <td align="center" class="titleblock">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-      <span class="title">{{ 'Hi,'|trans({}, 'EmailsBody', locale)|raw }}</span>
+      <span class="title">{{ 'Hi,'|trans({}, 'Emails.Body', locale)|raw }}</span>
     </font>
   </td>
 </tr>
@@ -18,11 +18,15 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ 'Newsletter subscription'|trans({}, 'EmailsBody', locale)|raw }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Newsletter subscription'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+            
+{% endif %}
             <span>
-              {{ 'Regarding your newsletter subscription, we are pleased to offer you the following voucher:'|trans({}, 'EmailsBody', locale)|raw }} <span><strong>{discount}</strong></span>
+              {{ 'Regarding your newsletter subscription, we are pleased to offer you the following voucher:'|trans({}, 'Emails.Body', locale)|raw }} <span><strong>{discount}</strong></span>
             </span>
           </font>
         </td>

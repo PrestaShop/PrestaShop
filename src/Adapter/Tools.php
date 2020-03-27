@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -230,5 +230,52 @@ class Tools
     public function sanitize($value, $allowHtml = false)
     {
         return LegacyTools::safeOutput($value, $allowHtml);
+    }
+
+    /**
+     * Get a valid image URL to use from BackOffice.
+     *
+     * @param string $fileName image file name
+     * @param bool $escapeHtmlEntities if true - escape html entities on file name argument
+     *
+     * @return string image URL
+     */
+    public function getAdminImageUrl($fileName, $escapeHtmlEntities = false)
+    {
+        return LegacyTools::getAdminImageUrl($fileName, $escapeHtmlEntities);
+    }
+
+    /**
+     * Delete unicode class from regular expression patterns.
+     *
+     * @param string $pattern
+     *
+     * @return string pattern
+     */
+    public function cleanNonUnicodeSupport($pattern)
+    {
+        return LegacyTools::cleanNonUnicodeSupport($pattern);
+    }
+
+    /**
+     * @see LegacyTools::displayDate()
+     *
+     * @return string
+     *
+     * @throws \PrestaShopException
+     */
+    public function displayDate($date, $id_lang = null, $full = false, $separator = null)
+    {
+        return LegacyTools::displayDate($date, $id_lang, $full, $separator);
+    }
+
+    /**
+     * @see LegacyTools::truncateString()
+     *
+     * @return bool|string
+     */
+    public function truncateString($text, $length = 120, $options = [])
+    {
+        return LegacyTools::truncateString($text, $length, $options);
     }
 }
