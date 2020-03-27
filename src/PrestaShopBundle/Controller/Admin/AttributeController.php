@@ -39,7 +39,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get All Attributes as json.
      *
-     * @AdminSecurity("is_granted(['read'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @return JsonResponse
      */
@@ -82,7 +82,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Attributes generator.
      *
-     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param Request $request The request
      *
@@ -200,7 +200,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete a product attribute.
      *
-     * @AdminSecurity("is_granted(['delete'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
      *
      * @param int $idProduct The product ID
      * @param Request $request The request
@@ -237,7 +237,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete all product attributes.
      *
-     * @AdminSecurity("is_granted(['delete'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
      *
      * @param int $idProduct The product ID
      * @param Request $request The request
@@ -277,7 +277,7 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get the images form for a product combinations.
      *
-     * @AdminSecurity("is_granted(['read'], 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param int $idProduct The product id
      * @param Request $request The request

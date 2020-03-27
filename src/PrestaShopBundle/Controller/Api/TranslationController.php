@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Api;
 use Exception;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Exception\InvalidLanguageException;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,6 +51,8 @@ class TranslationController extends ApiController
 
     /**
      * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -115,6 +118,8 @@ class TranslationController extends ApiController
     /**
      * Show tree for translation page with some params.
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -166,6 +171,8 @@ class TranslationController extends ApiController
     /**
      * Route to edit translation.
      *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -210,6 +217,8 @@ class TranslationController extends ApiController
 
     /**
      * Route to reset translation.
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
