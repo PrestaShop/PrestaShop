@@ -437,6 +437,7 @@ export default class CreateOrderPage {
     const $productSearchInput = $(event.currentTarget);
     const searchPhrase = $productSearchInput.val();
     clearTimeout(this.timeoutId);
+    this.productRenderer.renderSearching();
 
     this.timeoutId = setTimeout(() => this.productManager.search(searchPhrase), 300);
   }
