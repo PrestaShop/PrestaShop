@@ -97,3 +97,12 @@ Feature: Add cart rule in cart
     When I use the discount "cartrule1"
     When at least one cart rule applies today for customer with id 0
     Then I should have 1 products in my cart
+
+  Scenario: Add cart rule which provides gift product and free shipping
+    Given I create an empty cart "dummy_cart_1" for customer "testCustomer"
+    Given I add 2 products "Mug The best is yet to come" to the cart "dummy_cart_1"
+    And cart "dummy_cart" contains product "Mug The best is yet to come"
+    When I use a voucher "gift+freeShip" that provides gift product "Mountain fox notebook" and free shipping on the cart "dummy_cart_1"
+    Then cart "dummy_cart" contains gift product "Mountain fox notebook"
+    And cart "dummy_cart_1" should have free shipping
+    And reduction value of voucher "gift+freeShip" in cart "dummy_cart_1" should be "25.60"

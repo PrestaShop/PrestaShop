@@ -52,29 +52,21 @@ class CartRule
     private $value;
 
     /**
-     * @var bool
-     */
-    private $gift;
-
-    /**
      * @param int $cartRuleId
      * @param string $name
      * @param string $description
      * @param string $value
-     * @param bool $gift
      */
     public function __construct(
         int $cartRuleId,
         string $name,
         string $description,
-        string $value,
-        bool $gift
+        string $value
     ) {
         $this->cartRuleId = $cartRuleId;
         $this->name = $name;
         $this->description = $description;
         $this->value = $value;
-        $this->gift = $gift;
     }
 
     /**
@@ -107,13 +99,5 @@ class CartRule
     public function getValue(): string
     {
         return $this->value;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isGift(): bool
-    {
-        return $this->gift;
     }
 }
