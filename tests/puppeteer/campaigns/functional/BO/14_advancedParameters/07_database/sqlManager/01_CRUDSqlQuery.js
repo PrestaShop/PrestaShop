@@ -65,7 +65,9 @@ describe('CRUD SQL query', async () => {
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstResetFilter', baseContext);
     numberOfSQLQuery = await this.pageObjects.sqlManagerPage.resetAndGetNumberOfLines();
-    if (numberOfSQLQuery !== 0) await expect(numberOfSQLQuery).to.be.above(0);
+    if (numberOfSQLQuery !== 0) {
+      await expect(numberOfSQLQuery).to.be.above(0);
+    }
   });
 
   describe('Create new SQL query', async () => {
