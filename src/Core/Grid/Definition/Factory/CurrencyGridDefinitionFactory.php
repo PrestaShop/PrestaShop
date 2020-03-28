@@ -47,6 +47,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     const GRID_ID = 'currency';
 
     /**
@@ -133,6 +135,13 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     'Admin.Notifications.Warning'
                                 ),
                             ])
+                        )
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_currencies_delete',
+                                'currencyId',
+                                'id_currency'
+                            )
                         ),
                 ])
             )
