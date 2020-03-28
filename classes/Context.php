@@ -467,4 +467,17 @@ class ContextCore
 
         return $this->priceComputingPrecision;
     }
+
+    /**
+     * Change context language and locale used in translator
+     *
+     * @since 1.7.8
+     *
+     * @param Language $language
+     */
+    public function setLanguageAndTranslatorLocale(Language $language)
+    {
+        $this->language = $language;
+        $this->translator->setLocale($language->locale);
+    }
 }
