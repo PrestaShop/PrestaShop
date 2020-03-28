@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -53,6 +52,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
+    use DeleteActionTrait;
 
     const GRID_ID = 'language';
 
@@ -163,19 +163,11 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         )
                         ->add(
-                            (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                                'route' => 'admin_languages_delete',
-                                'route_param_name' => 'languageId',
-                                'route_param_field' => 'id_lang',
-                            ])
+                            $this->buildDeleteAction(
+                                'admin_languages_delete',
+                                'languageId',
+                                'id_lang'
+                            )
                         ),
                 ])
             );
