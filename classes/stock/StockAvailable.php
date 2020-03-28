@@ -110,20 +110,22 @@ class StockAvailableCore extends ObjectModel
         $result = $this->update();
         if ($this->id_product_attribute == 0) {
             $id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP && $this->id_shop ? $this->id_shop : null);
-            $quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-          SELECT quantity as quantity
-          FROM ' . _DB_PREFIX_ . 'stock_available
-          WHERE id_product = ' . (int) $this->id_product . '
-          AND id_product_attribute = 0 ' .
-              StockAvailable::addSqlShopRestriction(null, $id_shop)
-              );
-            Hook::exec('actionUpdateQuantity',
-              [
-                  'id_product' => $this->id_product,
-                  'id_product_attribute' => 0,
-                  'quantity' => (int) $quantity,
-              ]
-              );
+            $quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT quantity as quantity ' .
+                'FROM ' . _DB_PREFIX_ . 'stock_available ' .
+                'WHERE id_product = ' . (int) $this->id_product . ' ' .
+                'AND id_product_attribute = 0 ' .
+                StockAvailable::addSqlShopRestriction(null, $id_shop)
+            );
+        
+            Hook::exec(
+                'actionUpdateQuantity',
+                [
+                    'id_product' => $this->id_product,
+                    'id_product_attribute' => 0,
+                    'quantity' => (int) $quantity,
+                ]
+            );
             Cache::clean('StockAvailable::getQuantityAvailableByProduct_' . (int) $this->id_product . '*');
         }
 
