@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -55,6 +54,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
+    use DeleteActionTrait;
 
     const GRID_ID = 'cms_page_category';
 
@@ -172,20 +172,12 @@ final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFacto
                                 'route_param_field' => 'id_cms_category',
                             ])
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'method' => 'DELETE',
-                                'route' => 'admin_cms_pages_category_delete',
-                                'route_param_name' => 'cmsCategoryId',
-                                'route_param_field' => 'id_cms_category',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_cms_pages_category_delete',
+                                'cmsCategoryId',
+                                'id_cms_category'
+                            )
                         ),
                 ])
             )
