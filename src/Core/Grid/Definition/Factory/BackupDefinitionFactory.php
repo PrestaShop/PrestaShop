@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -41,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
  */
 final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -116,20 +117,11 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                             ])
                         )
                         ->add(
-                            (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'method' => 'DELETE',
-                                'route' => 'admin_backups_delete',
-                                'route_param_name' => 'deleteFileName',
-                                'route_param_field' => 'file_name',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
+                            $this->buildDeleteAction(
+                                'admin_backups_delete',
+                                'deleteFileName',
+                                'file_name'
+                            )
                         ),
                 ])
             );
