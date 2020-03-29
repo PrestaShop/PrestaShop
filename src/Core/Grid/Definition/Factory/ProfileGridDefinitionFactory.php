@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -49,6 +48,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     /**
      * @var string
      */
@@ -134,20 +135,12 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'clickable_row' => true,
                             ])
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'route' => 'admin_profiles_delete',
-                                'route_param_name' => 'profileId',
-                                'route_param_field' => 'id_profile',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                                'accessibility_checker' => $this->deleteProfileAccessibilityChecker,
-                            ])
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_profiles_delete',
+                                'profileId',
+                                'id_profile'
+                            )
                         ),
                 ])
             )
