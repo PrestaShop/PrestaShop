@@ -31,6 +31,7 @@ import SortingExtension from '@components/grid/extension/sorting-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
@@ -47,6 +48,7 @@ class SqlManagerPage {
     requestSqlGrid.addExtension(new LinkRowActionExtension());
     requestSqlGrid.addExtension(new SubmitGridExtension());
     requestSqlGrid.addExtension(new SubmitBulkExtension());
+    requestSqlGrid.addExtension(new SubmitRowActionExtension());
     requestSqlGrid.addExtension(new BulkActionCheckboxExtension());
     requestSqlGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
