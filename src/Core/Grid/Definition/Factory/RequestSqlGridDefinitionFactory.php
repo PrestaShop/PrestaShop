@@ -47,6 +47,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     /**
      * @var string
      */
@@ -157,15 +159,11 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ])
                         )
                         ->add(
-                            (new LinkRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
-                                'route' => 'admin_sql_requests_delete',
-                                'route_param_name' => 'sqlRequestId',
-                                'route_param_field' => 'id_request_sql',
-                            ])
+                            $this->buildDeleteAction(
+                                'admin_sql_requests_delete',
+                                'sqlRequestId',
+                                'id_request_sql'
+                            )
                         ),
                 ])
             );
