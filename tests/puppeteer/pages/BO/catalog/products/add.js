@@ -355,6 +355,6 @@ module.exports = class AddProduct extends BOBasePage {
    * @returns {boolean}
    */
   isQuantityInputVisible() {
-    return this.elementVisible(this.productQuantityInput, 1000)
+    return this.elementVisible(this.productQuantityInput, 1000);
   }
 };
