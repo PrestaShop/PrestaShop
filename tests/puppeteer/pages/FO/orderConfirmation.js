@@ -12,6 +12,7 @@ module.exports = class OrderConfirmation extends FOBasePage {
     this.orderConfirmationCardSection = '#content-hook_order_confirmation';
     this.orderConfirmationCardTitleH3 = `${this.orderConfirmationCardSection} h3.card-title`;
     this.orderSummaryContent = '#order-summary-content';
+    this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
   }
 
   /*
@@ -23,5 +24,13 @@ module.exports = class OrderConfirmation extends FOBasePage {
    */
   isFinalSummaryVisible() {
     return this.elementVisible(this.orderSummaryContent, 2000);
+  }
+
+  /**
+   * Check if checkbox of condition to approve is visible
+   * @returns {boolean}
+   */
+  isConditionToApproveCheckboxVisible() {
+    return this.elementVisible(this.conditionToApproveCheckbox, 1000);
   }
 };

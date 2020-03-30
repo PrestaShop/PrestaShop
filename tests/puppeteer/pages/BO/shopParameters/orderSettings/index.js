@@ -14,6 +14,8 @@ module.exports = class OrderSettings extends BOBasePage {
     this.enableGuestCheckoutLabel = `${this.generalForm} label[for='form_general_enable_guest_checkout_%TOGGLE']`;
     this.disableReorderingLabel = `${this.generalForm} label[for='form_general_disable_reordering_option_%TOGGLE']`;
     this.minimumPurchaseRequiredValue = '#form_general_purchase_minimum_value';
+    this.enableTermsOfServiceLabel = `${this.generalForm} label[for='form_general_enable_tos_%TOGGLE']`;
+    this.pageForTermsAndConditionsSelect = '#form_general_tos_cms_id';
     this.saveGeneralFormButton = `${this.generalForm} .card-footer button`;
   }
 
@@ -61,6 +63,21 @@ module.exports = class OrderSettings extends BOBasePage {
    */
   async setMinimumPurchaseRequiredTotal(value) {
     await this.setValue(this.minimumPurchaseRequiredValue, value.toString());
+    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set terms of service
+   * @param toEnable
+   * @param pageName
+   * @returns {Promise<string>}
+   */
+  async setTermsOfService(toEnable = true, pageName = '') {
+    await this.waitForSelectorAndClick(this.enableTermsOfServiceLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    if (toEnable) {
+      await this.selectByVisibleText(this.pageForTermsAndConditionsSelect, pageName);
+    }
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
