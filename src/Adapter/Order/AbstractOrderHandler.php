@@ -79,4 +79,16 @@ abstract class AbstractOrderHandler
 
         return $taxCalculationMethod === PS_TAX_INC;
     }
+
+    /**
+     * @param Order $order
+     *
+     * @return int
+     */
+    protected function getOrderTaxCalculationMethod(Order $order): int
+    {
+        $customer = new Customer($order->id_customer);
+
+        return Group::getPriceDisplayMethod((int) $customer->id_default_group);
+    }
 }
