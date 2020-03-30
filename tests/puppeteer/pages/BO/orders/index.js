@@ -33,6 +33,16 @@ module.exports = class Order extends BOBasePage {
     this.gridActionButton = '#order-grid-actions-button';
     this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'order-grid-actions-button\']';
     this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    // Bulk actions
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
+    this.tableColumnOrderBulk = `${this.tableRow} td.column-orders_bulk`;
+    this.tableColumnOrderBulkCheckboxLabel = `${this.tableColumnOrderBulk} .md-checkbox i`;
+    // Order status modal
+    this.updateOrdersStatusModal = '#changeOrdersStatusModal';
+    this.updateOrdersStatusModalSelect = '#change_orders_status_new_order_status_id';
+    this.updateOrdersStatusModalButton = `${this.updateOrdersStatusModal} .modal-footer .js-submit-modal-form-btn`;
   }
 
   /*
@@ -198,5 +208,41 @@ module.exports = class Order extends BOBasePage {
    */
   async downloadDeliverySlip(row) {
     await this.page.click(this.viewDeliverySlipsRowLink.replace('%ROW', row));
+  }
+
+  /**
+   * Bulk change orders status
+   * @param status, new status to give to orders
+   * @param allOrders, true if want to change all selectors
+   * @param rows, array of which orders rows to change (if allOrders = false)
+   * @return {Promise<string>}
+   */
+  async bulkUpdateOrdersStatus(status, allOrders = true, rows = []) {
+    // Select all orders or some
+    if (allOrders) {
+      await Promise.all([
+        this.page.click(this.selectAllRowsLabel),
+        this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      ]);
+    } else {
+      for (let i = 0; i < rows.length; i++) {
+        await this.page.click(this.tableColumnOrderBulkCheckboxLabel.replace('%ROW', rows[i]));
+      }
+      await this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`);
+    }
+    // Open bulk actions button
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+    // Click on change order status button
+    await Promise.all([
+      this.page.click(this.bulkUpdateOrdersStatusButton),
+      this.waitForVisibleSelector(`${this.updateOrdersStatusModal}:not([aria-hidden='true']`),
+    ]);
+    // Select new orders status in modal and confirm update
+    await this.selectByVisibleText(this.updateOrdersStatusModalSelect, status);
+    await this.clickAndWaitForNavigation(this.updateOrdersStatusModalButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
