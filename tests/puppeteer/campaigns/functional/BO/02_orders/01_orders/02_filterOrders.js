@@ -82,6 +82,15 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     {
       args:
         {
+          identifier: 'filterByNewClient',
+          filterType: 'select',
+          filterBy: 'new',
+          filterValue: Orders.firstOrder.newClient,
+        },
+    },
+    {
+      args:
+        {
           identifier: 'filterByDelivery',
           filterType: 'select',
           filterBy: 'country_name',
