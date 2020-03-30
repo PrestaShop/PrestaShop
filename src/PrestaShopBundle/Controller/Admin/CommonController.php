@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotific
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\IdentifiableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
-use ReflectionClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -361,10 +361,9 @@ class CommonController extends FrameworkBundleAdminController
     ) {
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
-        $reflectionClass = new ReflectionClass($definitionFactory);
-        $filterId = $reflectionClass->getConstant('GRID_ID');
 
-        if (false === $filterId) {
+        // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
+        if (!($definitionFactory instanceof IdentifiableGridDefinitionFactoryInterface)) {
             /** @var ControllerResponseBuilder $responseBuilder */
             $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
 
@@ -382,7 +381,7 @@ class CommonController extends FrameworkBundleAdminController
         return $responseBuilder->buildSearchResponse(
             $definitionFactory,
             $request,
-            $filterId,
+            $definitionFactory->getGridId(),
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
