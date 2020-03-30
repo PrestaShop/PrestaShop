@@ -47,7 +47,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Defines tax rules groups grid
  */
-final class TaxRulesGroupGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class TaxRulesGroupGridDefinitionFactory extends AbstractIdentifiableGridDefinitionFactory
 {
     public const GRID_ID = 'tax_rules_group';
 

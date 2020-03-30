@@ -50,7 +50,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class SupplierGridDefinitionFactory creates definition for supplier grid.
  */
-final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class SupplierGridDefinitionFactory extends AbstractIdentifiableGridDefinitionFactory
 {
     /**
      * @var string

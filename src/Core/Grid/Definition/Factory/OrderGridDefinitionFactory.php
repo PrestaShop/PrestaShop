@@ -61,7 +61,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Creates definition for Orders grid
  */
-final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class OrderGridDefinitionFactory extends AbstractIdentifiableGridDefinitionFactory
 {
     const GRID_ID = 'order';
 

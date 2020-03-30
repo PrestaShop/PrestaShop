@@ -50,7 +50,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Defines grid for attributes group > attributes list
  */
-final class AttributeGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class AttributeGridDefinitionFactory extends AbstractIdentifiableGridDefinitionFactory
 {
     const GRID_ID = 'attribute';
 

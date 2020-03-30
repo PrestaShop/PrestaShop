@@ -40,7 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class MerchandiseReturnGridDefinitionFactory builds grid definition for merchandise returns grid.
  */
-final class MerchandiseReturnGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class MerchandiseReturnGridDefinitionFactory extends AbstractIdentifiableGridDefinitionFactory
 {
     const GRID_ID = 'merchandise_return';
 
