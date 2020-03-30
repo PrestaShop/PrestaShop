@@ -223,7 +223,7 @@ class ProductLazyArray extends AbstractLazyArray
             case 'new':
                 return [
                     'type' => 'new',
-                    'label' => $this->translator->trans('New product', [], 'Shop.Theme.Catalog'),
+                    'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/NewCondition',
                 ];
             case 'used':
@@ -467,7 +467,7 @@ class ProductLazyArray extends AbstractLazyArray
         if ($this->product['new']) {
             $flags['new'] = [
                 'type' => 'new',
-                'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
+                'label' => $this->translator->trans('New product', [], 'Shop.Theme.Catalog'),
             ];
         }
 
