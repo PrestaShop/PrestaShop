@@ -86,7 +86,7 @@ describe('Enable/Disable Allow ordering of out-of-stock products ', async () => 
   ];
   tests.forEach((test) => {
     it(`should ${test.args.action} allow ordering of out-of-stock products`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AllowOrderingOfStock`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AllowOrderingOutOfStock`, baseContext);
       const result = await this.pageObjects.productSettingsPage.setAllowOrderingOutOfStockStatus(test.args.enable);
       await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
     });
