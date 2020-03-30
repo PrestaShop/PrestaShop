@@ -21,7 +21,11 @@
   z-index: 502;
   width: $size-navbar-width;
   height: 100%;
-  @include transition(all 0.5s ease-out) &-overflow {
+  margin-top: $size-header-height;
+  background: $gray-dark;
+  @include transition(all 0.5s ease-out);
+
+  &-overflow {
     height: 100%;
     overflow: hidden;
   }

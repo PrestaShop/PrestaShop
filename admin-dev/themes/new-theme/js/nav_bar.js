@@ -41,11 +41,13 @@ export default class NavBar {
         $navBar,
         $mainMenu,
         getAnimationEvent('transition', 'end'),
-        $body,
+        $body
       );
 
       $('.nav-bar-overflow').on('scroll', () => {
-        const $menuItems = $('.main-menu .link-levelone.has_submenu.ul-open');
+        const $menuItems = $(
+          '.main-menu .link-levelone.has_submenu.ul-open, .main-menu .link-levelone.has_submenu.link-hover'
+        );
 
         $($menuItems).each((i, e) => {
           const itemOffsetTop = $(e).position().top;
@@ -57,11 +59,15 @@ export default class NavBar {
 
       $navBar.find('.link-levelone').hover(
         function onMouseEnter() {
+          const itemOffsetTop = $(this).position().top;
           $(this).addClass('link-hover');
+          $(this)
+            .find('ul.submenu')
+            .css('top', itemOffsetTop);
         },
         function onMouseLeave() {
-          $(this).removeClass('.link-hover');
-        },
+          $(this).removeClass('link-hover');
+        }
       );
 
       $('.nav-bar li.link-levelone.has_submenu > a').on('click', function onNavBarClick(e) {
@@ -77,8 +83,8 @@ export default class NavBar {
           .hasClass('ul-open');
 
         if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-          $('.nav-bar li.link-levelone.has-submenu.ul-open').removeClass('ul-open open submenu-hover');
-          $('.nav-bar li.link-levelone.has-submenu.ul-open ul.submenu').removeAttr('style');
+          $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open submenu-hover');
+          $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
         } else {
           $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').slideUp({
             complete: function slideUpIsComplete() {
@@ -86,7 +92,7 @@ export default class NavBar {
                 .parent()
                 .removeClass('ul-open open');
               $(this).removeAttr('style');
-            },
+            }
           });
         }
 
@@ -104,7 +110,7 @@ export default class NavBar {
             complete: function slideDownIsComplete() {
               $submenu.addClass('open');
               $(this).removeAttr('style');
-            },
+            }
           });
         }
         $submenu.find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
@@ -139,8 +145,8 @@ export default class NavBar {
           url: $(this).data('toggle-url'),
           cache: false,
           data: {
-            shouldCollapse: Number($('body').hasClass('page-sidebar-closed')),
-          },
+            shouldCollapse: Number($('body').hasClass('page-sidebar-closed'))
+          }
         });
       });
 
@@ -166,8 +172,8 @@ export default class NavBar {
         // To close submenu on mobile devices
         $('body').on('click.mobile', () => {
           if ($('ul.main-menu li.ul-open').length > 0) {
-            $('.nav-bar li.link-levelone.has-submenu.ul-open').removeClass('ul-open open submenu-hover');
-            $('.nav-bar li.link-levelone.has-submenu.ul-open ul.submenu').removeAttr('style');
+            $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open submenu-hover');
+            $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
           }
         });
       }
@@ -184,7 +190,7 @@ export default class NavBar {
     const $mainMenu = $('.main-menu');
 
     $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text(
-      'keyboard_arrow_down',
+      'keyboard_arrow_down'
     );
     $('body').addClass('mobile');
     $('.nav-bar')
@@ -207,13 +213,13 @@ export default class NavBar {
     $mainMenu.prepend(`<li class='link-levelone'>${$employee}</li>`);
 
     $('.collapse').collapse({
-      toggle: false,
+      toggle: false
     });
 
     $mainMenu.find('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href='${profileLink}'></a>`);
     $('.js-mobile-menu').on('click', expand);
     $('.js-notifs_dropdown').css({
-      height: window.innerHeight,
+      height: window.innerHeight
     });
 
     function expand() {
@@ -228,8 +234,8 @@ export default class NavBar {
             complete: () => {
               $('.nav-bar, .mobile-layer').removeClass('expanded');
               $('.nav-bar, .mobile-layer').addClass('d-none');
-            },
-          },
+            }
+          }
         );
         $('.mobile-layer').off();
         return;
