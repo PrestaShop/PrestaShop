@@ -28,6 +28,7 @@ module.exports = class Order extends BOBasePage {
     this.actionsColumn = `${this.tableRow} td.column-actions`;
     this.viewRowLink = `${this.actionsColumn} a[data-original-title='View']`;
     this.viewInvoiceRowLink = `${this.actionsColumn} a[data-original-title='View invoice']`;
+    this.viewDeliverySlipsRowLink = `${this.actionsColumn} a[data-original-title='View delivery slip']`;
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
     this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'order-grid-actions-button\']';
@@ -188,5 +189,14 @@ module.exports = class Order extends BOBasePage {
    */
   async downloadInvoice(row) {
     await this.page.click(this.viewInvoiceRowLink.replace('%ROW', row));
+  }
+
+  /**
+   * Click on view delivery slip to download it
+   * @param row
+   * @return {Promise<void>}
+   */
+  async downloadDeliverySlip(row) {
+    await this.page.click(this.viewDeliverySlipsRowLink.replace('%ROW', row));
   }
 };
