@@ -94,8 +94,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         'meta_title',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page',
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPage(
         1,
         'meta_title',
       );
@@ -116,7 +115,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         const numberOfPagesInGrid = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
         await expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
         for (let i = 1; i <= numberOfPagesInGrid; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable('cms_page', i, 'active');
+          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPage(i, 'active');
           await expect(textColumn).to.contains(pageStatus.expected);
         }
       });
@@ -132,8 +131,7 @@ describe('Create Pages, Then disable / Enable and Delete with Bulk actions', asy
         'meta_title',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page',
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPage(
         1,
         'meta_title',
       );
