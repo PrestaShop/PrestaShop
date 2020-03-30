@@ -25,5 +25,5 @@ for (var i in EventEmitter.prototype) {
 
 $(document).ready(() => {
   psShowHide();
-  initEmailFields();
+  initEmailFields('input[type="email"]');
 });

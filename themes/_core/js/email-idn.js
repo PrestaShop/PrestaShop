@@ -25,8 +25,8 @@
 import $ from 'jquery';
 import punycode from 'punycode';
 
-const init = function initEmailFields() {
-  const $emailFields = $('input[type="email"]');
+const init = function initEmailFields(selector) {
+  const $emailFields = $(selector);
   $.each($emailFields, (i, field) => {
     if (!field.checkValidity()) {
       const parts = field.value.split('@');

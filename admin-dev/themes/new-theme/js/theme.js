@@ -66,5 +66,5 @@ import initEmailFields from '@js/app/utils/email-idn';
 $(() => {
   initDatePickers();
   initInvalidFields();
-  initEmailFields();
+  initEmailFields('input[type="email"]');
 });
