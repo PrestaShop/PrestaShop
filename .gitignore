@@ -4,11 +4,8 @@
 *.log
 npm-debug.log.*
 .sass-cache/
-<<<<<<< HEAD
 *.swp
-=======
 .cache/
->>>>>>> Adding stylelint
 
 # Cache
 /cache/*
