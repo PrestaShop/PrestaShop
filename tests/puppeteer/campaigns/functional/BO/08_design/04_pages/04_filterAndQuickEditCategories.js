@@ -153,8 +153,7 @@ describe('Filter And Quick Edit Categories', async () => {
           );
           await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
           for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
-            const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-              'cms_page_category',
+            const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
               i,
               test.args.filterBy,
             );
@@ -190,8 +189,7 @@ describe('Filter And Quick Edit Categories', async () => {
           'cms_page_category',
         );
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
-        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-          'cms_page_category',
+        const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
           1,
           'name',
         );
