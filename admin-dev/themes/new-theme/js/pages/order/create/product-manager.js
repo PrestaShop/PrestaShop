@@ -143,9 +143,10 @@ export default class ProductManager {
    */
   _onProductQtyChange() {
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+    EventEmitter.on(eventMap.productQtyChanged, (response) => {
       this.productRenderer.cleanCartBlockAlerts();
-      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+      this._updateStockOnQtyChange(response.product);
+      EventEmitter.emit(eventMap.cartLoaded, response.cartInfo);
     });
 
     // on failure
@@ -368,6 +369,41 @@ export default class ProductManager {
         {
           // Update the stock counter if the removed combination is the selected combination
           if (combinationId && Number(this.selectedCombinationId) == combinationId)
+          {
+            this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
+          } else {
+            this.productRenderer.renderStock(this.products[key].stock);
+          }
+        }
+        break;
+      }
+    }
+  }
+
+  /**
+   * Updates the stock when the quantity of product is changed from cart in Orders/"create new order page"
+   *
+   * @private
+   */
+  _updateStockOnQtyChange(product){
+    const previousQty = Number(product.prevQty);
+    const newQty = Number(product.newQty);
+    const productId = product.productId;
+    const combinationId = Number(product.attributeId);
+
+    for (const key in this.products) {
+      if (this.products[key].productId === productId) {
+        // Update the stock value of "the updated product" in products object
+        this.products[key].stock = Number(this.products[key].stock) - newQty + previousQty;
+        if (combinationId && combinationId > 0) {
+          // Update the stock also for combination */
+          this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) - newQty + previousQty;
+        }
+        // Update the stock counter if "the updated product" is the selected product
+        if (Number(this.selectedProduct.productId) === productId)
+        {
+          // Update the stock counter if "the updated product combination" is the selected combination
+          if (combinationId && Number(this.selectedCombinationId) === combinationId)
           {
             this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
           } else {
