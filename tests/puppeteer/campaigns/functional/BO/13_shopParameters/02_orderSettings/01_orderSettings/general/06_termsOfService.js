@@ -16,7 +16,6 @@ const FOBasePage = require('@pages/FO/FObasePage');
 const HomePage = require('@pages/FO/home');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
 // Importing data
 const {DefaultAccount} = require('@data/demo/customer');
 
@@ -35,7 +34,6 @@ const init = async function () {
     homePage: new HomePage(page),
     cartPage: new CartPage(page),
     checkoutPage: new CheckoutPage(page),
-    orderConfirmationPage: new OrderConfirmationPage(page),
   };
 };
 
@@ -104,9 +102,9 @@ describe('Enable/Disable terms of service', async () => {
       const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
       // Check terms of service checkbox existence
-      const isVisible = await this.pageObjects.orderConfirmationPage.isConditionToApproveCheckboxVisible();
+      const isVisible = await this.pageObjects.checkoutPage.isConditionToApproveCheckboxVisible();
       await expect(isVisible).to.be.equal(test.args.enable);
-      page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
+      page = await this.pageObjects.checkoutPage.closePage(browser, 1);
       this.pageObjects = await init();
     });
   });
