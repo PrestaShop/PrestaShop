@@ -30,6 +30,7 @@ use Exception;
 use InvalidArgumentException;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
@@ -49,7 +50,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderPr
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCartRuleValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
@@ -1453,7 +1453,7 @@ class OrderController extends CommonController
                 'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
-            InvalidCartRuleValueException::class => sprintf(
+            InvalidCartRuleDiscountValueException::class => sprintf(
                 '%s<ol><li>%s</li><li>%s</li><li>%s</li></ol>',
                 $this->trans('It looks like the value is invalid:', 'Admin.Orderscustomers.Notification'),
                 $this->trans('Discount value must be greater than 0.', 'Admin.Orderscustomers.Notification'),

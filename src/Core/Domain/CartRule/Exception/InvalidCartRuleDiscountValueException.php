@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
 
 /**
  * Thrown when a discount is added with an invalid amount/percentage
  */
-class InvalidCartRuleValueException extends OrderException
+class InvalidCartRuleDiscountValueException extends InvalidCartRuleValueException
 {
 }
