@@ -21,11 +21,9 @@
   z-index: 502;
   width: $size-navbar-width;
   height: 100%;
-  transition: all 0.5s ease-out;
-
-  &-overflow {
-    overflow: hidden;
+  @include transition(all 0.5s ease-out) &-overflow {
     height: 100%;
+    overflow: hidden;
   }
 
   .material-icons {
@@ -122,12 +120,12 @@
       text-transform: uppercase;
 
       &::after {
-        font-family: "Material Icons", Arial, Helvetica, sans-serif;
-        content: "\E313";
         margin-left: 0.625rem;
+        font-family: "Material Icons", Arial, Helvetica, sans-serif;
         font-size: 1.25rem;
         line-height: 1.375rem;
         vertical-align: bottom;
+        content: "\E313";
       }
     }
     .items-list {
@@ -143,7 +141,7 @@
 
         &.group a {
           padding: 0.9375rem 2.5rem;
-          font-weight: bold;
+          font-weight: 700;
         }
 
         &.shop {

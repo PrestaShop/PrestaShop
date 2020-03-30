@@ -17,7 +17,6 @@
     .product th,
     .details td,
     .product td {
-      border: none;
       padding-top: 3.2px;
       padding-bottom: 3.2px;
       border: none;
@@ -63,8 +62,8 @@
 
   .addProductInvoice {
     > .form-group {
-      margin-bottom: 0;
       margin-top: 23px;
+      margin-bottom: 0;
     }
   }
 
@@ -97,8 +96,8 @@ $order-block-background-color: #f8f8f8 !default;
 .info-block {
   padding-top: 18px;
   padding-right: 18px;
-  padding-left: 18px;
   padding-bottom: 16px;
+  padding-left: 18px;
 
   & &-col {
     > .row {
@@ -133,9 +132,24 @@ $order-block-background-color: #f8f8f8 !default;
 }
 
 .messages-block {
+  padding: 3rem 0;
   background-color: $order-block-background-color;
-
   $private-message-color: #7a8a8f;
+
+  .employee-icon {
+    &::before {
+      font-family: "Material Icons", sans-serif;
+      content: "account_circle";
+    }
+    color: #36b9d7;
+  }
+  .employee-icon--private {
+    &::before {
+      font-family: "Material Icons", sans-serif;
+      content: "visibility_off";
+    }
+    color: $private-message-color;
+  }
 
   &#all-messages-list {
     height: 80vh;
@@ -158,30 +172,6 @@ $order-block-background-color: #f8f8f8 !default;
     }
   }
 
-  .employee-icon {
-    &::before {
-      font-family: "Material Icons", sans-serif;
-      content: "account_circle";
-    }
-    color: #36b9d7;
-  }
-  .employee-icon--private {
-    &::before {
-      font-family: "Material Icons", sans-serif;
-      content: "visibility_off";
-    }
-    color: $private-message-color;
-  }
-}
-
-.messages-block {
-  padding: 3rem 0;
-
-  &#all-messages-list {
-    height: 80vh;
-    overflow-y: scroll;
-  }
-
   li {
     &.messages-block-employee {
       padding-left: 3.7rem;
@@ -199,17 +189,17 @@ $order-block-background-color: #f8f8f8 !default;
       flex-wrap: nowrap;
 
       .messages-block-icon {
-        text-align: center;
         width: 100%;
         max-width: 3.7rem;
+        text-align: center;
       }
 
       .messages-block-content {
         width: 100%;
 
         .message {
-          box-shadow: 0 6px 12px 0 $background-grey;
           padding: 0.7rem;
+          box-shadow: 0 6px 12px 0 $background-grey;
         }
       }
 

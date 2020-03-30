@@ -9,8 +9,8 @@ ul.category-tree {
       cursor: pointer;
       &::before {
         position: absolute;
-        top: -0.25rem;
-        left: -0.1rem;
+        top: -.25rem;
+        left: -.1rem;
         font-family: "Material Icons", Arial, Helvetica, sans-serif;
         font-size: 1.25rem;
         color: $gray-medium;
@@ -41,8 +41,8 @@ ul.category-tree {
 
     .category {
       position: absolute;
-      top: 0.4em; // relative to the current font size, so "em" and not "rem"
-      right: 0.4em;
+      top: .4em; // relative to the current font size, so "em" and not "rem"
+      right: .4em;
       cursor: pointer;
     }
   }
@@ -64,21 +64,21 @@ ul.category-tree {
 
 // category tree on the catalog page
 #tree-categories {
-  padding: 0.625rem;
+  padding: .625rem;
 
   .categories-tree-actions {
-    margin-bottom: 0.625rem;
+    margin-bottom: .625rem;
     white-space: nowrap; // prevent buttons from collapsing
-    border-bottom: 0.063rem solid $gray-light;
+    border-bottom: .063rem solid $gray-light;
 
     > a {
       display: inline-block;
 
-      margin-bottom: 0.625rem;
+      margin-bottom: .625rem;
       color: $gray-medium;
 
       + a {
-        margin-left: 0.9375rem;
+        margin-left: .9375rem;
       }
 
       &:hover {

@@ -10,6 +10,8 @@
     "selector-no-qualifying-type": null,
     "selector-max-combinators": null,
     "selector-class-pattern": null,
-    "selector-descendant-combinator-no-non-space": null
+    "selector-descendant-combinator-no-non-space": null,
+    "number-leading-zero": null,
+    "function-blacklist": null
   }
 }
