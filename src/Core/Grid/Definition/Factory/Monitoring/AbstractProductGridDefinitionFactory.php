@@ -199,7 +199,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                         'confirm_message' => $this->trans(
                             'Delete selected item?',
                             [],
-                            'Admin.Advparameters.Feature'
+                            'Admin.Notifications.Warning'
                         ),
                     ]
                 )
