@@ -71,7 +71,7 @@ describe('Bulk update orders status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
       await this.pageObjects.homePage.goToLoginPage();
       const pageTitle = await this.pageObjects.foLoginPage.getPageTitle();
-      await expect(pageTitle, 'Fail to open FO home page').to.contains(this.pageObjects.foLoginPage.pageTitle);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(this.pageObjects.foLoginPage.pageTitle);
     });
 
     it('should sign in with default customer', async function () {
@@ -109,7 +109,7 @@ describe('Bulk update orders status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
       await this.pageObjects.orderConfirmationPage.logout();
       const isCustomerConnected = await this.pageObjects.orderConfirmationPage.isCustomerConnected();
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.false;
+      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
   });
 
