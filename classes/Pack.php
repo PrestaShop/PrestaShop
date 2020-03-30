@@ -367,13 +367,13 @@ class PackCore extends Product
                 if (isset($attr_name[0]['id_product_attribute_image']) && $attr_name[0]['id_product_attribute_image']) {
                     $line['id_image'] = $attr_name[0]['id_product_attribute_image'];
                 }
-                
-                if(isset($attr_name[0]['attribute_reference'])){
-					$line['reference'] = $attr_name[0]['attribute_reference'];
-				}else{
-					$line['reference'] = '';
-				}
-                
+
+                if (isset($attr_name[0]['attribute_reference'])) {
+                    $line['reference'] = $attr_name[0]['attribute_reference'];
+                } else {
+                    $line['reference'] = '';
+                }
+
                 $line['name'] .= "\n";
                 foreach ($attr_name as $value) {
                     $line['name'] .= ' ' . $value['group_name'] . '-' . $value['attribute_name'];
