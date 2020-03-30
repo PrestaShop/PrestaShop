@@ -118,8 +118,9 @@ export default class ProductManager {
    * @private
    */
   _onRemoveProductFromCart() {
-    EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
-      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    EventEmitter.on(eventMap.productRemovedFromCart, (response) => {
+      this._updateStockOnProductRemove(response.product);
+      EventEmitter.emit(eventMap.cartLoaded, response.cartInfo);
     });
   }
 
@@ -337,6 +338,41 @@ export default class ProductManager {
         } else {
           // Update the stock counter
           this.productRenderer.renderStock(this.products[key].stock);
+        }
+        break;
+      }
+    }
+  }
+
+  /**
+   * Updates the stock when the product is removed from cart in Orders/"create new order page"
+   *
+   * @private
+   */
+  _updateStockOnProductRemove(product){
+    const removedQty = Number(product.qtyToRemove);
+    const productId = product.productId;
+    const combinationId = Number(product.attributeId);
+
+    for (const key in this.products) {
+      if (this.products[key].productId === productId) {
+        // Update the stock value of "the removed product" in products object
+        this.products[key].stock = Number(this.products[key].stock) + removedQty;
+        if (combinationId && combinationId > 0) {
+          // Update the stock also for combination */
+          this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) + removedQty;
+        }
+        
+        // Update the stock counter if the removed product is the selected product
+        if (Number(this.selectedProduct.productId) === productId)
+        {
+          // Update the stock counter if the removed combination is the selected combination
+          if (combinationId && Number(this.selectedCombinationId) == combinationId)
+          {
+            this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
+          } else {
+            this.productRenderer.renderStock(this.products[key].stock);
+          }
         }
         break;
       }
