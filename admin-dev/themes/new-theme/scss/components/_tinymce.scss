@@ -637,7 +637,8 @@ body .mce-abs-layout-item {
   color: #fff;
   background-color: #006dcc;
   border: 1px solid #b1b1b1;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25)
+  border-color:
+    rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25)
     rgba(0, 0, 0, 0.25);
   &:hover,
   &:focus {
@@ -1080,13 +1081,13 @@ i.mce-i-checkbox {
   }
   &:hover .mce-text,
   &.mce-selected
-    .mce-text
-    &:hover
-    .mce-ico
-    &.mce-selected
-    .mce-ico
-    &:focus
-    .mce-ico {
+  .mce-text
+  &:hover
+  .mce-ico
+  &.mce-selected
+  .mce-ico
+  &:focus
+  .mce-ico {
     color: #fff;
   }
   &.mce-disabled:hover {
@@ -1221,8 +1222,8 @@ i.mce-i-resize {
 
     &.mce-active {
       /* stylelint-disable */
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15),
-        0 1px 2px rgba(0, 0, 0, 0.05);
+      box-shadow:
+ inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
       /* stylelint-enable */
     }
   }
