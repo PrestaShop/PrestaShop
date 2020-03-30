@@ -101,7 +101,7 @@
 
 .mce-fade {
   opacity: 0;
-  @include transition(opacity .15s linear);
+  @include transition(opacity 0.15s linear);
 
   &.mce-in {
     opacity: 1;
@@ -246,7 +246,7 @@ div.mce-tinymce-inline {
   height: 100%;
   zoom: 1;
   filter: alpha(opacity = 40);
-  opacity: .4;
+  opacity: 0.4;
 
   &:hover,
   &.mce-active {
@@ -254,7 +254,7 @@ div.mce-tinymce-inline {
     background-color: #aaa;
     filter: alpha(opacity = 60);
     @include border-radius(7px);
-    opacity: .6;
+    opacity: 0.6;
   }
 }
 
@@ -272,7 +272,7 @@ div.mce-tinymce-inline {
   width: 5px;
   height: 100%;
   background-color: #000;
-  border: 1px solid rgba(85, 85, 85, .6);
+  border: 1px solid rgba(85, 85, 85, 0.6);
   @include border-radius(7px);
 }
 
@@ -291,7 +291,7 @@ div.mce-tinymce-inline {
 
 .mce-floatpanel {
   position: absolute;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   &.mce-fixed {
     position: fixed;
   }
@@ -315,7 +315,7 @@ div.mce-tinymce-inline {
 
     left: 0;
     background: #fff;
-    border: 1px solid rgba(0, 0, 0, .25);
+    border: 1px solid rgba(0, 0, 0, 0.25);
     @include border-radius(6px);
 
     &.mce-bottom {
@@ -327,7 +327,7 @@ div.mce-tinymce-inline {
         margin-left: -11px;
         border-top-width: 0;
         border-bottom-color: #9e9e9e;
-        border-bottom-color: rgba(0, 0, 0, .25);
+        border-bottom-color: rgba(0, 0, 0, 0.25);
         &::after {
           top: 1px;
           margin-left: -10px;
@@ -365,7 +365,7 @@ div.mce-tinymce-inline {
   &.mce-in {
     zoom: 1;
     filter: alpha(opacity = 30);
-    opacity: .3;
+    opacity: 0.3;
   }
 }
 
@@ -605,7 +605,7 @@ body .mce-abs-layout-item {
       zoom: 1;
       filter: alpha(opacity = 40);
       box-shadow: none;
-      opacity: .4;
+      opacity: 0.4;
     }
   }
   &.mce-active {
@@ -637,9 +637,8 @@ body .mce-abs-layout-item {
   color: #fff;
   background-color: #006dcc;
   border: 1px solid #b1b1b1;
-  border-color:
-    rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25)
-    rgba(0, 0, 0, .25);
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25)
+    rgba(0, 0, 0, 0.25);
   &:hover,
   &:focus {
     background-color: #005fb3;
@@ -650,7 +649,7 @@ body .mce-abs-layout-item {
       cursor: default;
       zoom: 1;
       filter: alpha(opacity = 40);
-      opacity: .4;
+      opacity: 0.4;
     }
   }
   &.mce-active {
@@ -772,7 +771,7 @@ i.mce-i-checkbox {
 
   &:focus i.mce-i-checkbox,
   &.mce-focus i.mce-i-checkbox {
-    border: 1px solid rgba(82, 168, 236, .8);
+    border: 1px solid rgba(82, 168, 236, 0.8);
   }
   &.mce-disabled {
     .mce-label,
@@ -855,7 +854,7 @@ i.mce-i-checkbox {
     zoom: 1;
     filter: alpha(opacity = 40);
     box-shadow: none;
-    opacity: .4;
+    opacity: 0.4;
   }
 }
 
@@ -1081,13 +1080,13 @@ i.mce-i-checkbox {
   }
   &:hover .mce-text,
   &.mce-selected
-  .mce-text
-  &:hover
-  .mce-ico
-  &.mce-selected
-  .mce-ico
-  &:focus
-  .mce-ico {
+    .mce-text
+    &:hover
+    .mce-ico
+    &.mce-selected
+    .mce-ico
+    &:focus
+    .mce-ico {
     color: #fff;
   }
   &.mce-disabled:hover {
@@ -1162,7 +1161,7 @@ div.mce-menu .mce-menu-item-sep,
   background: #fff;
   border: 1px solid #989898;
   @include border-radius(6px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
   i {
     display: none;
@@ -1221,8 +1220,8 @@ i.mce-i-resize {
     border-left: 1px solid transparent;
 
     &.mce-active {
-      box-shadow:
- inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15),
+        0 1px 2px rgba(0, 0, 0, 0.05);
     }
   }
 
@@ -1275,11 +1274,11 @@ i.mce-i-resize {
   background: #fff;
   border: 1px solid #c5c5c5;
   @include border-radius(3px);
-  @include transition(border linear .2s, box-shadow linear .2s);
+  @include transition(border linear 0.2s, box-shadow linear 0.2s);
 
   &:focus,
   &.mce-focus {
-    border-color: rgba(82, 168, 236, .8);
+    border-color: rgba(82, 168, 236, 0.8);
   }
 
   &.mce-multiline {
@@ -1304,7 +1303,7 @@ i.mce-i-resize {
   zoom: 1;
   background: #fff no-repeat center center;
   filter: alpha(opacity = 60);
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .mce-i-none {
