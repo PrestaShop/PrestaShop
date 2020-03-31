@@ -29,11 +29,13 @@ module.exports = class DbBackup extends BOBasePage {
     this.viewRowLink = `${this.actionsColumn} a[[href*='backups/view']`;
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-method='DELETE']`;
+    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-confirm-button-label='Delete']`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = `${this.gridPanel} #backup_grid_bulk_action_delete_backups`;
+    this.confirmDeleteModal = '#backup-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* Header methods */
@@ -103,13 +105,25 @@ module.exports = class DbBackup extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteBackup(row) {
-    this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
       this.page.waitForSelector(`${this.dropdownToggleButton.replace('%ROW', row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteDbBackups();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteDbBackups() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**
