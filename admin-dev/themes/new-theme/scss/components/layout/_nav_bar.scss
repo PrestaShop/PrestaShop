@@ -221,7 +221,7 @@
         }
       }
 
-      &.has-submenu {
+      &.has_submenu {
         @include media-breakpoint-down(md) {
           .sub-tabs-arrow {
             visibility: visible;
@@ -296,7 +296,7 @@
         }
       }
 
-      &.has-submenu {
+      &.has_submenu {
         .link {
           .sub-tabs-arrow {
             visibility: visible;
