@@ -35,7 +35,6 @@ use PrestaShopException;
 class OrderRefundUpdater
 {
     /**
-     * @param Order $order
      * @param OrderRefundSummary $orderRefundSummary
      * @param bool $returnedProducts
      * @param bool $restock
@@ -45,17 +44,10 @@ class OrderRefundUpdater
      * @throws PrestaShopException
      */
     public function updateRefundData(
-        Order $order,
         OrderRefundSummary $orderRefundSummary,
         bool $returnedProducts,
         bool $restock
     ) {
-        // I wonder it this is really useful since partial refund is supposed to be enabled only once order
-        // is paid Maybe this should be a more general check at the beginning of the handler and throw an error
-        if (!$order->hasBeenPaid()) {
-            return;
-        }
-
         // Update order details (after credit slip to avoid updating refunded quantities while the credit slip fails)
         foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);

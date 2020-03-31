@@ -29,12 +29,25 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Wait for selector to be visible
+   * @param selector
+   * @param timeout
+   * @return {Promise<void>}
+   */
+  async waitForVisibleSelector(selector, timeout = 10000) {
+    await this.page.waitForSelector(selector, {visible: true, timeout});
+  }
+
+  /**
    * Get Text from element
    * @param selector, from where to get text
+   * @param waitForSelector
    * @return {Promise<string>}
    */
-  async getTextContent(selector) {
-    await this.page.waitForSelector(selector, {visible: true});
+  async getTextContent(selector, waitForSelector = true) {
+    if (waitForSelector) {
+      await this.waitForVisibleSelector(selector);
+    }
     const textContent = await this.page.$eval(selector, el => el.textContent);
     return textContent.replace(/\s+/g, ' ').trim();
   }
@@ -76,11 +89,12 @@ module.exports = class CommonPage {
   /**
    * Is element visible
    * @param selector, element to check
+   * @param timeout, how much should we wait
    * @return boolean, true if visible, false if not
    */
   async elementVisible(selector, timeout = 10) {
     try {
-      await this.page.waitForSelector(selector, {visible: true, timeout});
+      await this.waitForVisibleSelector(selector, timeout);
       return true;
     } catch (error) {
       return false;
@@ -90,6 +104,7 @@ module.exports = class CommonPage {
   /**
    * Is element not visible
    * @param selector, element to check
+   * @param timeout, how much should we wait
    * @return boolean, true if visible, false if not
    */
   async elementNotVisible(selector, timeout = 10) {
@@ -105,6 +120,7 @@ module.exports = class CommonPage {
    * Open link in new Tab and get opened Page
    * @param currentPage, current page where to click on selector
    * @param selector, where to click
+   * @param waitForNavigation, if we should wait for navigation or not
    * @return newPage, what was opened by the browser
    */
   async openLinkWithTargetBlank(currentPage, selector, waitForNavigation = true) {
@@ -124,31 +140,8 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async waitForSelectorAndClick(selector, timeout = 5000) {
-    await this.page.waitForSelector(selector, {visible: true, timeout});
+    await this.waitForVisibleSelector(selector, timeout);
     await this.page.click(selector);
-  }
-
-  /**
-   * Check text value
-   * @param selector, element to check
-   * @param textToCheckWith, text to check with
-   * @param parameter, parameter to use
-   * @return promise<*>, boolean if check has passed or failed
-   */
-  async checkTextValue(selector, textToCheckWith, parameter = 'equal') {
-    await this.page.waitForSelector(selector);
-    let text;
-    switch (parameter) {
-      case 'equal':
-        text = await this.page.$eval(selector, el => el.innerText);
-        return text.replace(/\s+/g, ' ').trim() === textToCheckWith;
-      case 'contain':
-        text = await this.page.$eval(selector, el => el.innerText);
-        return text.includes(textToCheckWith);
-      default:
-      // do nothing
-    }
-    return false;
   }
 
   /**
@@ -185,6 +178,7 @@ module.exports = class CommonPage {
 
   /**
    * Close actual tab and goto another tab if wanted
+   * @param browser
    * @param tabId
    * @return {Promise<void>}
    */

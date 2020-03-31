@@ -86,25 +86,17 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $newCustomerSubSelect = $this->connection
-            ->createQueryBuilder()
-            ->select('so.id_order')
-            ->from($this->dbPrefix . 'orders', 'so')
-            ->where('so.id_customer = o.id_customer')
-            ->andWhere('so.id_order < o.id_order')
-            ->setMaxResults(1)
-        ;
-
         $qb = $this
             ->getBaseQueryBuilder($searchCriteria->getFilters())
+            ->addSelect($this->getCustomerField() . ' AS `customer`')
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
             ->addSelect('o.current_state, o.id_customer')
-            ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
             ->addSelect('cu.`id_customer` IS NULL as `deleted_customer`')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')
-            ->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new')
         ;
+
+        $this->addNewCustomerField($qb);
 
         $this->applySorting($qb, $searchCriteria);
 
@@ -122,8 +114,16 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->getBaseQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(o.id_order)');
+        $qb = $this->getBaseQueryBuilder($searchCriteria->getFilters());
+        if (isset($searchCriteria->getFilters()['new'])) {
+            $this->addNewCustomerField($qb->addSelect('o.id_order as o_id_order'));
+            $qb = $this->applyNewCustomerFilter($qb, $searchCriteria->getFilters());
+            $qb->select('count(o_id_order)');
+        } else {
+            $qb->select('count(o.id_order)');
+        }
+
+        return $qb;
     }
 
     /**
@@ -169,11 +169,10 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             'reference' => 'o.`reference`',
             'company' => 'cu.`company`',
             'payment' => 'o.`payment`',
+            'customer' => $this->getCustomerField(),
         ];
 
-        $havingLikeComparisonFilters = [
-            'customer' => 'customer',
-        ];
+        $havingLikeComparisonFilters = [];
 
         $dateComparisonFilters = [
             'date_add' => 'o.`date_add`',
@@ -229,6 +228,31 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
         }
 
         return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     */
+    private function addNewCustomerField(QueryBuilder $qb)
+    {
+        $newCustomerSubSelect = $this->connection
+            ->createQueryBuilder()
+            ->select('so.id_order')
+            ->from($this->dbPrefix . 'orders', 'so')
+            ->where('so.id_customer = o.id_customer')
+            ->andWhere('so.id_order < o.id_order')
+            ->setMaxResults(1)
+        ;
+
+        $qb->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new');
+    }
+
+    /**
+     * @return string
+     */
+    private function getCustomerField()
+    {
+        return 'CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`)';
     }
 
     /**

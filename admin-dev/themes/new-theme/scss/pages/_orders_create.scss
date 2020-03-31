@@ -1,0 +1,13 @@
+#order-creation-container {
+  .custom-fields-container {
+    max-height: 300px;
+    overflow-y: scroll;
+    padding-bottom: 0.9375rem;
+
+    .custom-file {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+}

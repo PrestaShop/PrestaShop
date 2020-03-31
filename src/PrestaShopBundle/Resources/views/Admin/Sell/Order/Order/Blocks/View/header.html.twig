@@ -44,7 +44,7 @@
   </span>
 
 <p class="lead d-inline">
-  {{ orderForViewing.createdAt|date('Y-m-d') }}
+  {{ orderForViewing.createdAt|date_format_lite }}
   <span class="text-muted">
       {{ 'at'|trans({}, 'Admin.Global') }}
 

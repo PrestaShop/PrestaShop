@@ -208,6 +208,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route' => 'admin_customers_view',
                     'route_param_name' => 'customerId',
                     'route_param_field' => 'id_customer',
+                    'target' => '_blank',
                 ])
             )
             ->add((new OrderPriceColumn('total_paid_tax_incl'))

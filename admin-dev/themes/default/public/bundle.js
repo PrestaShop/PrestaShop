@@ -29,4 +29,4 @@ function i(t){return getComputedStyle(t)}function n(t,e){for(var r in e){var i=e
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */$(document).ready(function(){new T(".nav-bar")})}]);
+ */$(document).ready(function(){new T(".nav-bar-overflow")})}]);

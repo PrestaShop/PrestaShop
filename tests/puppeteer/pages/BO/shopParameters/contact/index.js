@@ -134,9 +134,8 @@ module.exports = class Contacts extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.listTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
-        {visible: true},
       ),
     ]);
     // Click on delete
@@ -154,12 +153,12 @@ module.exports = class Contacts extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(this.bulkActionsToggleButton, {visible: true}),
+      this.waitForVisibleSelector(this.bulkActionsToggleButton),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
@@ -181,6 +180,6 @@ module.exports = class Contacts extends BOBasePage {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
-    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

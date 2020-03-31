@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -74,7 +75,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\CommonController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
@@ -98,7 +99,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Manages "Sell > Orders" page
  */
-class OrderController extends FrameworkBundleAdminController
+class OrderController extends CommonController
 {
     /**
      * Shows list of orders
@@ -658,7 +659,8 @@ class OrderController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'orderForViewing' => $orderForViewing,
             'product' => $lastProduct,
-            'isColumnLocationDisplayed' => ($lastProduct->getLocation() !== ''),
+            'isColumnLocationDisplayed' => $lastProduct->getLocation() !== '',
+            'isColumnRefundedDisplayed' => $lastProduct->getQuantityRefunded() > 0,
             'cancelProductForm' => $cancelProductForm->createView(),
             'orderCurrency' => $orderCurrency,
         ]);
@@ -835,7 +837,8 @@ class OrderController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig', [
             'cancelProductForm' => $cancelProductForm->createView(),
-            'isColumnLocationDisplayed' => ($product->getLocation() !== ''),
+            'isColumnLocationDisplayed' => $product->getLocation() !== '',
+            'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
@@ -1287,35 +1290,6 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * Returns products for given order
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getPaginatedProductsAction(int $orderId, Request $request): JsonResponse
-    {
-        $offset = $request->get('offset');
-        $limit = $request->get('limit');
-
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
-        $products = $orderForViewing->getProducts()->getProducts();
-        if (null !== $limit && null !== $offset) {
-            // @todo: Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
-            $products = array_slice($products, (int) $offset, (int) $limit);
-        }
-
-        return $this->json([
-            'products' => $products,
-        ]);
-    }
-
-    /**
      * Generates invoice for given order
      *
      * @param int $orderId
@@ -1486,8 +1460,8 @@ class OrderController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             InvalidOrderStateException::class => [
-                InvalidOrderStateException::UNEXPECTED_INVOICE => $this->trans(
-                    'Invalid action: this order already has an invoice.',
+                InvalidOrderStateException::ALREADY_PAID => $this->trans(
+                    'Invalid action: this order has already been paid.',
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::DELIVERY_NOT_FOUND => $this->trans(
@@ -1498,11 +1472,15 @@ class OrderController extends FrameworkBundleAdminController
                     'Invalid action: this order has already been delivered.',
                     'Admin.Notifications.Error'
                 ),
-                InvalidOrderStateException::INVOICE_NOT_FOUND => $this->trans(
-                    'Invalid action: this order has no invoice.',
+                InvalidOrderStateException::NOT_PAID => $this->trans(
+                    'Invalid action: this order has not been paid.',
                     'Admin.Notifications.Error'
                 ),
             ],
+            InvalidProductQuantityException::class => $this->trans(
+                'Please enter a positive quantity.',
+                'Admin.Orderscustomers.Notification'
+            ),
         ];
     }
 

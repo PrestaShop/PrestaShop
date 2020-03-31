@@ -84,7 +84,6 @@ module.exports = class AddSupplier extends BOBasePage {
 
     // Save Supplier
     await this.clickAndWaitForNavigation(this.saveButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -126,16 +125,16 @@ module.exports = class AddSupplier extends BOBasePage {
     // Change language for Description input
     await Promise.all([
       this.page.click(this.descriptionLangNavItemLink.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.descriptionLangNavItemLink.replace('%LANG', lang)}.active`, {visible: true}),
+      this.waitForVisibleSelector(`${this.descriptionLangNavItemLink.replace('%LANG', lang)}.active`),
     ]);
     // Change language for meta selectors
     await Promise.all([
       this.page.click(this.metaTitleLangButton),
-      this.page.waitForSelector(`${this.metaTitleLangButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.metaTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
       this.page.click(this.metaTitleLangSpan.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.metaTitleLangButton}[aria-expanded='false']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.metaTitleLangButton}[aria-expanded='false']`),
     ]);
   }
 };

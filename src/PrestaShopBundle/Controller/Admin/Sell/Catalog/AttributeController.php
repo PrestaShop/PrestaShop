@@ -32,11 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\D
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\DeleteAttributeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupNotFoundException;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttributeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -130,32 +128,6 @@ class AttributeController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_attributes_index', [
             'attributeGroupId' => $attributeGroupId,
         ]);
-    }
-
-    /**
-     * Responsible for grid filtering
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_attributes_index",
-     *     redirectQueryParamsToKeep={"attributeGroupId"}
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.attribute'),
-            $request,
-            AttributeGridDefinitionFactory::GRID_ID,
-            'admin_attributes_index',
-            ['attributeGroupId']
-        );
     }
 
     /**

@@ -38,10 +38,9 @@ module.exports = class autoUpgrade extends BOBasePage {
     if (await this.elementVisible(this.showExpertModeButton)) {
       await this.page.click(this.showExpertModeButton);
     }
-    await this.page.waitForSelector(this.channelSelect, {visible: true});
+    await this.waitForVisibleSelector(this.channelSelect);
     await this.page.select(this.channelSelect, upgradeChannelValue);
-    await this.page.click(this.updateChannelSaveButton);
-    await this.page.waitForNavigation({waitUntil: 'networkidle0'});
+    await this.clickAndWaitForNavigation(this.updateChannelSaveButton);
   }
 
   /**
@@ -53,7 +52,7 @@ module.exports = class autoUpgrade extends BOBasePage {
    */
   async upgradePrestashop(upgradeChannelValue) {
     await this.chooseUpgradeChannel(upgradeChannelValue);
-    await this.page.waitForSelector(this.upgradePrestashopNowButton, {visible: true});
+    await this.waitForVisibleSelector(this.upgradePrestashopNowButton);
     this.page.on('response', async (response) => {
       if (await response.url().endsWith('ajax-upgradetab.php') && await response.status() === 200) {
         const jsonResponse = await response.json();
@@ -61,7 +60,7 @@ module.exports = class autoUpgrade extends BOBasePage {
       }
     });
     await this.page.click(this.upgradePrestashopNowButton);
-    await this.page.waitForSelector(this.upgradeResultMessageBloc, {visible: true, timeout: 300000});
+    await this.waitForVisibleSelector(this.upgradeResultMessageBloc, 300000);
     return this.actualStepsDoneForUpgradeTable;
   }
 };

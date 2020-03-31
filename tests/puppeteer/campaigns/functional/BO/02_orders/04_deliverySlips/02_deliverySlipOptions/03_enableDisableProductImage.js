@@ -18,9 +18,9 @@ const CheckoutPage = require('@pages/FO/checkout');
 const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
 const files = require('@utils/files');
 // Importing data
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 // Test context imports
 const testContext = require('@utils/testContext');
 
@@ -173,7 +173,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
             baseContext,
           );
           const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-          await expect(result).to.be.true;
+          await expect(result).to.equal(Statuses.shipped.status);
         });
 
         it('should download the delivery slip', async function () {

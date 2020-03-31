@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Country;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand;
@@ -37,7 +38,10 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\Exception\TaxNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use RuntimeException;
+use State;
 use Tax;
+use TaxRule;
+use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -252,5 +256,29 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($taxReference, new Tax($taxId->getValue()));
+    }
+
+    /**
+     * @Then I add tax rule group for tax :taxReference with following conditions:
+     */
+    public function addTaxRuleGroupToTax(string $taxReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+
+        $taxRulesGroup = new TaxRulesGroup();
+        $taxRulesGroup->name = $data['name'];
+        $taxRulesGroup->active = 1;
+        $taxRulesGroup->deleted = 0;
+        $taxRulesGroup->save();
+        SharedStorage::getStorage()->set($data['name'], $taxRulesGroup->id);
+
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $taxRule = new TaxRule();
+        $taxRule->id_tax = $tax->id;
+        $taxRule->id_tax_rules_group = $taxRulesGroup->id;
+        $taxRule->behavior = 1;
+        $taxRule->id_country = Country::getByIso($data['country']);
+        $taxRule->id_state = State::getIdByIso($data['state']);
+        $taxRule->save();
     }
 }

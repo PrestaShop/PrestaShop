@@ -220,7 +220,7 @@ module.exports = class Brands extends BOBasePage {
   async goToEditBrandPage(row = '1') {
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%TABLE', 'manufacturer').replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`
           .replace('%TABLE', 'manufacturer').replace('%ROW', row),
       ),
@@ -247,13 +247,12 @@ module.exports = class Brands extends BOBasePage {
     this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%TABLE', table).replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`
           .replace('%TABLE', table).replace('%ROW', row),
       ),
     ]);
     await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%TABLE', table).replace('%ROW', row));
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -292,9 +291,8 @@ module.exports = class Brands extends BOBasePage {
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton.replace('%TABLE', 'manufacturer')),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.bulkActionsToggleButton}[aria-expanded='true']`.replace('%TABLE', 'manufacturer'),
-        {visible: true},
       ),
     ]);
     // Click on delete and wait for modal
@@ -311,32 +309,20 @@ module.exports = class Brands extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel.replace('%TABLE', table)),
-      this.page.waitForSelector(
-        `${this.selectAllRowsLabel}:not([disabled])`.replace('%TABLE', table),
-        {visible: true},
-      ),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`.replace('%TABLE', table)),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton.replace('%TABLE', table)),
-      this.page.waitForSelector(
-        `${this.bulkActionsToggleButton}[aria-expanded='true']`.replace('%TABLE', table),
-        {visible: true},
-      ),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`.replace('%TABLE', table)),
     ]);
     // Click on delete and wait for modal
     if (table === 'manufacturer') {
       this.page.click(this.deleteBrandsButton);
-      await this.page.waitForSelector(
-        `${this.confirmDeleteModal.replace('%TABLE', 'manufacturer')}.show`,
-        {visible: true},
-      );
+      await this.waitForVisibleSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer')}.show`);
     } else if (table === 'manufacturer_address') {
       this.page.click(this.deleteAddressesButton);
-      await this.page.waitForSelector(
-        `${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`,
-        {visible: true},
-      );
+      await this.waitForVisibleSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`);
     }
     await this.clickAndWaitForNavigation(this.confirmDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -467,7 +453,7 @@ module.exports = class Brands extends BOBasePage {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
-    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 
   /**
@@ -507,7 +493,7 @@ module.exports = class Brands extends BOBasePage {
   async exportDataToCsv(table) {
     await Promise.all([
       this.page.click(this.gridActionButton.replace('%TABLE', table)),
-      this.page.waitForSelector(`${this.gridActionDropDownMenu.replace('%TABLE', table)}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${this.gridActionDropDownMenu.replace('%TABLE', table)}.show`),
     ]);
     await Promise.all([
       this.page.click(this.gridActionExportLink.replace('%TABLE', table)),

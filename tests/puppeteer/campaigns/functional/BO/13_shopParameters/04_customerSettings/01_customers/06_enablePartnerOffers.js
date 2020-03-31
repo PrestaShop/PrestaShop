@@ -11,6 +11,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CustomerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
+const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 const FOBasePage = require('@pages/FO/FObasePage');
 const LoginFOPage = require('@pages/FO/login');
 // Importing data
@@ -62,7 +63,10 @@ describe('Enable/Disable enable partner offer', async () => {
   tests.forEach((test) => {
     it(`should ${test.args.action} partner offer`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}PartnerOffer`, baseContext);
-      const result = await this.pageObjects.customerSettingsPage.setPartnerOfferStatus(test.args.enable);
+      const result = await this.pageObjects.customerSettingsPage.setOptionStatus(
+        options.OPTION_PARTNER_OFFER,
+        test.args.enable,
+      );
       await expect(result).to.contains(this.pageObjects.customerSettingsPage.successfulUpdateMessage);
     });
 

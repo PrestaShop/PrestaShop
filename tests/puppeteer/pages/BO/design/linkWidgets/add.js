@@ -34,11 +34,11 @@ module.exports = class AddLinkWidget extends BOBasePage {
   async changeLanguage(lang) {
     await Promise.all([
       this.page.click(this.changeNamelangButton),
-      this.page.waitForSelector(`${this.changeNamelangButton}[aria-expanded='false']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.changeNamelangButton}[aria-expanded='false']`),
     ]);
     await Promise.all([
       this.page.click(this.changeNameLangSpan.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.changeNamelangButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.changeNamelangButton}[aria-expanded='true']`),
     ]);
   }
 

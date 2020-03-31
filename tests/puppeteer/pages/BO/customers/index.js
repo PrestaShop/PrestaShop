@@ -214,10 +214,10 @@ module.exports = class Customers extends BOBasePage {
   async goToViewCustomerPage(row) {
     await Promise.all([
       this.page.click(this.customersListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
-        `${this.customersListTableToggleDropDown
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
+      this.waitForVisibleSelector(
+        `${this.customersListTableToggleDropDown}[aria-expanded='true']`
+          .replace('%ROW', row)
+          .replace('%COLUMN', 'actions'),
       ),
     ]);
     await this.clickAndWaitForNavigation(
@@ -246,16 +246,16 @@ module.exports = class Customers extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.customersListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
-        `${this.customersListTableToggleDropDown
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
+      this.waitForVisibleSelector(
+        `${this.customersListTableToggleDropDown}[aria-expanded='true']`
+          .replace('%ROW', row)
+          .replace('%COLUMN', 'actions'),
       ),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.customersListTableDeleteLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(this.deleteCustomerModal, {visible: true}),
+      this.waitForVisibleSelector(this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(allowRegistrationAfterDelete);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -270,17 +270,17 @@ module.exports = class Customers extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.deleteCustomerModal, {visible: true}),
+      this.waitForVisibleSelector(this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(allowRegistrationAfterDelete);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -297,7 +297,7 @@ module.exports = class Customers extends BOBasePage {
     else await this.page.click(this.deleteCustomerModalMethodInput.replace('%ID', '1'));
     // Click on delete button and wait for action to finish
     await this.clickAndWaitForNavigation(this.deleteCustomerModalDeleteButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
+    await this.waitForVisibleSelector(this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -309,12 +309,12 @@ module.exports = class Customers extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
@@ -336,7 +336,7 @@ module.exports = class Customers extends BOBasePage {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
-    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 
   /**
@@ -363,7 +363,7 @@ module.exports = class Customers extends BOBasePage {
   async exportDataToCsv() {
     await Promise.all([
       this.page.click(this.customerGridActionsButton),
-      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${this.gridActionDropDownMenu}.show`),
     ]);
     await Promise.all([
       this.page.click(this.gridActionExportLink),

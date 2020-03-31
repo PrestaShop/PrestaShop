@@ -29,6 +29,6 @@ import '@openfonts/ubuntu-condensed_latin';
 
 import PerfectScrollBar from 'perfect-scrollbar';
 
-$(document).ready(function() {
-  new PerfectScrollBar('.nav-bar');
+$(document).ready(() => {
+  new PerfectScrollBar('.nav-bar-overflow');
 });

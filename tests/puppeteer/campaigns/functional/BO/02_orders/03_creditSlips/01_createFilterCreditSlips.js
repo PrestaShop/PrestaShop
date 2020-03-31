@@ -18,9 +18,9 @@ const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 const CreditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 // Importing data
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 // Test context imports
 const testContext = require('@utils/testContext');
 
@@ -138,7 +138,7 @@ describe('Create, filter and check credit slips file', async () => {
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     const tests = [
@@ -159,7 +159,7 @@ describe('Create, filter and check credit slips file', async () => {
       it('should check the existence of the Credit slip document', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkCreditSlipDocument${index + 1}`, baseContext);
         const documentName = await this.pageObjects.viewOrderPage.getDocumentName(test.args.documentRow);
-        await expect(documentName).to.be.equal('Credit Slip');
+        await expect(documentName).to.be.equal('Credit slip');
       });
     });
   });

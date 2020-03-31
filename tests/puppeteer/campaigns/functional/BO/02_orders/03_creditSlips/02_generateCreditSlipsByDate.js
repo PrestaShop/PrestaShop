@@ -18,9 +18,9 @@ const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 const CreditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 // Importing data
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 // Test context imports
 const testContext = require('@utils/testContext');
 
@@ -33,7 +33,7 @@ const today = new Date();
 today.setFullYear(today.getFullYear() + 1);
 const futureDate = today.toISOString().slice(0, 10);
 const creditSlipsFileName = 'order-slips.pdf';
-const creditSlipDocumentName = 'Credit Slip';
+const creditSlipDocumentName = 'Credit slip';
 
 // Init objects needed
 const init = async function () {
@@ -132,7 +132,7 @@ describe('Generate Credit slip file by date', async () => {
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should add a partial refund', async function () {

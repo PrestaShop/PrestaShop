@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr id="addProductTableRow" class="d-none">
+<tr id="addProductTableRow" class="add-product d-none">
   <td colspan="2" class="pr-2">
     {{ form_row(addProductRowForm.product_id) }}
     {{ form_row(addProductRowForm.tax_rate) }}
@@ -40,24 +40,35 @@
     </div>
   </td>
   <td class="pr-2">
-    {{ form_row(addProductRowForm.price_tax_excluded) }}
-    {{ form_row(addProductRowForm.price_tax_included) }}
+   <div class="row add-product-inputs">
+     <div class="col-sm-6">
+      {{ form_widget(addProductRowForm.price_tax_excluded) }}
+     </div>
+
+     <div class="col-sm-6">
+      {{ form_widget(addProductRowForm.price_tax_included) }}
+     </div>
+   </div>
   </td>
   <td class="pr-2">
+    {{ form_row(addProductRowForm.quantity) }}
+  <td class="pr-2 add-product-quantity">
     {{ form_row(addProductRowForm.quantity, {'type':'number'}) }}
   </td>
-  <td id="addProductLocation"></td>
-  <td id="addProductRefunded"></td>
+  <td id="addProductLocation" class="cellProductLocation"></td>
+  <td id="addProductRefunded" class="cellProductRefunded"></td>
   <td id="addProductAvailable"></td>
   <td id="addProductTotalPrice"></td>
   {% if orderForViewing.hasInvoice() %}
-    <td class="pr-2">
+    <td class="addProductInvoice pr-2">
       {{ form_row(addProductRowForm.invoice) }}
     </td>
   {% endif %}
-  <td class="text-right btn-group">
-    {{ form_row(addProductRowForm.cancel) }}
-    {{ form_row(addProductRowForm.add) }}
+  <td class="text-right add-product-buttons">
+    <div class="btn-group">
+      {{ form_row(addProductRowForm.cancel) }}
+      {{ form_row(addProductRowForm.add) }}
+    </div>
   </td>
 </tr>
 <tr id="addProductNewInvoiceInfo" class="d-none">

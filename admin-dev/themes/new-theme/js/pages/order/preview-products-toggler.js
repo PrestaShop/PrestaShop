@@ -30,8 +30,9 @@ const $ = window.$;
  *
  * @param {jQuery} $gridContainer
  */
-export default function previewProductsToggler($gridContainer) {
-  $gridContainer.on('click', '.js-preview-more-products-btn', (event) => {
+export default function previewProductsToggler($row) {
+  toggleStockLocationColumn($row);
+  $row.on('click', '.js-preview-more-products-btn', (event) => {
     event.preventDefault();
 
     const $btn = $(event.currentTarget);
@@ -39,5 +40,18 @@ export default function previewProductsToggler($gridContainer) {
 
     $hiddenProducts.removeClass('d-none');
     $btn.closest('tr').remove();
+    toggleStockLocationColumn($row);
   });
+}
+
+function toggleStockLocationColumn($container) {
+  let showColumn = false;
+  $('.js-cell-product-stock-location', $container.find('tr:not(.d-none)')).filter('td').each((index, element) => {
+    if ($(element).html().trim() !== '') {
+      showColumn = true;
+      return false;
+    }
+    return true;
+  });
+  $('.js-cell-product-stock-location', $container).toggle(showColumn);
 }
