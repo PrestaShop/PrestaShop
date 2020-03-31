@@ -20,7 +20,7 @@ module.exports = class Employees extends BOBasePage {
     this.employeesListTableColumn = `${this.employeesListTableRow} td.column-%COLUMN`;
     this.employeesListTableColumnAction = this.employeesListTableColumn.replace('%COLUMN', 'actions');
     this.employeesListTableToggleDropDown = `${this.employeesListTableColumnAction} a[data-toggle='dropdown']`;
-    this.employeesListTableDeleteLink = `${this.employeesListTableColumnAction} a[data-url]`;
+    this.employeesListTableDeleteLink = `${this.employeesListTableColumnAction} a[data-confirm-button-label='Delete']`;
     this.employeesListTableEditLink = `${this.employeesListTableColumnAction} a[href*='edit']`;
     this.employeesListColumnValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')}
     i.grid-toggler-icon-valid`;
@@ -36,6 +36,9 @@ module.exports = class Employees extends BOBasePage {
     this.bulkActionsEnableButton = `${this.employeesListForm} #employee_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.employeesListForm} #employee_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.employeesListForm} #employee_grid_bulk_action_delete_selection`;
+    // Delete modal
+    this.confirmDeleteModal = '#employee-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /*
@@ -145,7 +148,6 @@ module.exports = class Employees extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteEmployee(row) {
-    this.dialogListener();
     // Click on dropDown
     await Promise.all([
       this.page.click(this.employeesListTableToggleDropDown.replace('%ROW', row)),
@@ -153,9 +155,21 @@ module.exports = class Employees extends BOBasePage {
         `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
       ),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(this.employeesListTableDeleteLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.employeesListTableDeleteLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteEmployees();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteEmployees() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**
