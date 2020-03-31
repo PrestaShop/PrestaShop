@@ -22,6 +22,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\AddProductToOrderHandler
     arguments:
       - '@translator'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand
