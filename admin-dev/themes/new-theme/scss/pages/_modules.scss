@@ -101,7 +101,7 @@
 
   .module-list-empty {
     padding: 20px;
-    background: rgba(255, 255, 255, .4);
+    background: rgba(255, 255, 255, 0.4);
     border: dashed 1px #696969;
     @include border-radius(3px);
 
@@ -147,7 +147,7 @@
       img {
         width: 100%;
         max-width: 40px;
-        margin-bottom: .5em;
+        margin-bottom: 0.5em;
       }
     }
     .module-name-list {
@@ -177,7 +177,7 @@
 
 .badges-container {
   min-height: 30px;
-  font-size: .9rem;
+  font-size: 0.9rem;
   line-height: 50%;
 }
 
@@ -330,7 +330,7 @@
   margin-bottom: 20px;
   font-family: "Open Sans", Helvetica, Arial, sans-serif !important;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   color: #1e2024 !important;
 }
 .module-addons-search {
@@ -383,7 +383,7 @@
   .module-top-menu-item {
     &.disabled {
       pointer-events: none;
-      opacity: .5;
+      opacity: 0.5;
     }
 
     h3 {
@@ -663,14 +663,14 @@ form#importDropzone {
       outline: none;
     }
 
-    &.ui-sortable-helper{
+    &.ui-sortable-helper {
       background-color: $medium-gray;
       @include border-radius(3px);
-      box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, .2);
+      box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
 
       .module-name,
       .module-description,
-      .module-column-position{
+      .module-column-position {
         color: #fff;
 
         .text-muted {
@@ -739,7 +739,7 @@ form#importDropzone {
   .module-column-description {
     display: table-cell;
     height: 50px;
-    font-size: .95em;
+    font-size: 0.95em;
     vertical-align: middle;
     .module-name {
       color: $primary;

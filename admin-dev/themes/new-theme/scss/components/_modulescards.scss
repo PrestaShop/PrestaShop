@@ -5,7 +5,7 @@
 
   border: none;
   @include border-radius(0);
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
 
   .module-item-heading-grid {
     position: relative;
@@ -27,7 +27,7 @@
       @extend .card-title;
       position: relative;
       min-height: 40px;
-      margin: 1rem 0 .5rem;
+      margin: 1rem 0 0.5rem;
       font-weight: bolder;
       text-align: center;
     }
@@ -68,9 +68,9 @@
       float: none;
       width: 92%;
       height: 32px;
-      padding: .5rem;
+      padding: 0.5rem;
       margin: 0 auto;
-      font-size: .625rem;
+      font-size: 0.625rem;
     }
     .onclick {
       margin-bottom: -7px;
@@ -84,7 +84,7 @@
     .module-read-more-grid {
       display: inline-block;
       .module-read-more-grid-btn {
-        font-weight: 600;
+        font-weight: 700;
       }
     }
   }
@@ -98,7 +98,7 @@
   display: none;
 
   height: 258px;
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
   cursor: pointer;
   user-select: none;
   .module-addons-item-wrapper-grid {
@@ -115,7 +115,6 @@
     }
   }
 }
-
 
 /**
 * Facebook-like module cards

@@ -61,7 +61,7 @@
 
   &::before {
     position: fixed;
-    top: $size-header-height - .0625rem;
+    top: $size-header-height - 0.0625rem;
     right: 0;
     left: 0;
     z-index: 400;
@@ -95,8 +95,8 @@
       background-size: 4%;
     }
     .help-box {
-      margin-top: .625rem;
-      margin-left: .625rem;
+      margin-top: 0.625rem;
+      margin-left: 0.625rem;
     }
     .form_step1_type_product,
     .form_switch_language,
@@ -117,9 +117,9 @@
 
   #bulk-combinations-container {
     width: 97%;
-    padding: 0 .9375rem;
-    margin: -1.063rem 0 .9375rem;
-    font-size: .75rem;
+    padding: 0 0.9375rem;
+    margin: -1.063rem 0 0.9375rem;
+    font-size: 0.75rem;
     font-weight: 600;
 
     #bulk-combinations-container-fields > div {
@@ -144,9 +144,9 @@
     }
     .for-switch {
       display: inline-block;
-      margin-right: .25rem;
+      margin-right: 0.25rem;
       margin-left: 1.25rem;
-      font-size: .875rem;
+      font-size: 0.875rem;
     }
     @include media-breakpoint-down(md) {
       left: 0;
@@ -214,9 +214,9 @@
   }
   .product-combination-image {
     display: inline-block;
-    margin: 0 .625rem 0 0;
+    margin: 0 0.625rem 0 0;
     border: 1px solid $gray-light;
-    @include border-radius(.1875rem);
+    @include border-radius(0.1875rem);
     outline: solid 4px #fff;
   }
 
@@ -238,14 +238,14 @@
       }
     }
     .title {
-      margin-bottom: .625rem;
+      margin-bottom: 0.625rem;
       clear: both;
-      font-size: .9375rem;
+      font-size: 0.9375rem;
     }
     .next,
     .prev {
       display: inline-block;
-      margin-bottom: .625rem;
+      margin-bottom: 0.625rem;
       cursor: pointer;
     }
     .next {
@@ -264,7 +264,7 @@
     overflow-y: hidden;
     border: none;
     @include border-bottom-radius(0);
-    @include transition(width .5s ease-out, margin .5s ease-out);
+    @include transition(width 0.5s ease-out, margin 0.5s ease-out);
 
     &.col-md-8 {
       min-height: 200px;
@@ -374,13 +374,13 @@
       padding: 2em 0;
       margin: 0;
       a {
-        font-weight: 600;
+        font-weight: 700;
       }
       i {
         font-size: 60px;
         color: $gray-light;
         filter: alpha(opacity=50);
-        opacity: .5;
+        opacity: 0.5;
       }
       small {
         font-size: 12px;
@@ -411,7 +411,7 @@
     .close {
       position: absolute;
       top: 0;
-      right: .5em;
+      right: 0.5em;
       z-index: 1;
     }
     .actions {
@@ -448,13 +448,13 @@
     .tt-menu {
       width: 100%;
       max-height: 19.5rem;
-      padding: .3125rem 0;
+      padding: 0.3125rem 0;
       overflow: auto;
       background: #fff;
       border: 1px solid $gray-medium;
     }
     .tt-suggestion {
-      padding: .3125rem .625rem;
+      padding: 0.3125rem 0.625rem;
       color: $gray-medium;
       cursor: pointer;
       &:hover {
@@ -466,7 +466,7 @@
 
   .pack-product {
     position: relative;
-    border: .0625rem solid $gray-light;
+    border: 0.0625rem solid $gray-light;
     @include border-radius($border-radius);
 
     > .cover {
@@ -474,8 +474,8 @@
     }
     > .btn-danger {
       position: absolute;
-      top: .0625rem;
-      right: .0625rem;
+      top: 0.0625rem;
+      right: 0.0625rem;
       visibility: hidden;
       opacity: 0;
     }
@@ -488,7 +488,7 @@
     }
     h4,
     .ref {
-      padding: .625rem;
+      padding: 0.625rem;
     }
     h4 {
       margin: 0;
@@ -518,7 +518,7 @@
 
   .ui-widget {
     > .form-control-label {
-      font-size: .625rem;
+      font-size: 0.625rem;
       font-weight: 600;
     }
     > .ui-autocomplete-input {
@@ -527,7 +527,7 @@
       &::-moz-placeholder,
       &:-ms-input-placeholder,
       &:-moz-placeholder {
-        font-size: .75rem;
+        font-size: 0.75rem;
       }
       /* stylelint-enable selector-no-vendor-prefix */
     }
@@ -539,9 +539,9 @@
     ul.category-tree {
       display: inline-block;
       min-width: 100%;
-      padding-top: .625rem;
+      padding-top: 0.625rem;
       .main-category {
-        font-size: .625rem;
+        font-size: 0.625rem;
         font-weight: 600;
       }
       label {
@@ -557,33 +557,33 @@
         }
       }
       ul {
-        padding-left: .75rem;
+        padding-left: 0.75rem;
       }
     }
   }
 
   .categories-tree {
-    padding: .625rem;
+    padding: 0.625rem;
     border: $gray-light 1px solid;
-    @include border-radius(.1875rem);
+    @include border-radius(0.1875rem);
 
     .categories-tree-actions {
       display: flex;
       align-items: center;
-      font-size: .625rem;
+      font-size: 0.625rem;
       font-weight: 600;
       text-transform: uppercase;
-      border-bottom: .063rem solid $gray-light;
+      border-bottom: 0.063rem solid $gray-light;
 
       [data-action="expand"],
       [data-action="reduce"] {
         cursor: pointer;
       }
       > hr {
-        margin-top: .625rem;
+        margin-top: 0.625rem;
       }
       .form-control-label {
-        padding-top: .3125rem;
+        padding-top: 0.3125rem;
       }
       .material-icons {
         font-size: 1.25rem;
@@ -667,7 +667,7 @@
     @include transition(opacity 1s ease-in-out);
     &.inactive {
       cursor: progress;
-      opacity: .3;
+      opacity: 0.3;
       > * {
         pointer-events: none;
       }
@@ -699,7 +699,7 @@
       }
       .attribute-finalprice {
         width: 10%;
-        font-size: .8125rem;
+        font-size: 0.8125rem;
       }
       .attribute-actions {
         line-height: $font-size-base;
@@ -745,7 +745,7 @@
     }
 
     .module-item-wrapper-grid {
-      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .25);
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
     }
 
     .module-render-container {
@@ -759,7 +759,7 @@
 
   #custom_fields {
     .required-custom-field {
-      padding: .375rem 1rem;
+      padding: 0.375rem 1rem;
     }
   }
 
@@ -798,7 +798,7 @@
   background-color: #fff;
   border: 1px solid #ccc;
   @include border-radius(5px);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 
   > li {
     padding: 3px 20px;
@@ -821,14 +821,14 @@
 
 #attributes-list {
   .attribute-group {
-    border: .0625rem solid $gray-light;
+    border: 0.0625rem solid $gray-light;
     border-bottom-width: 0;
     &:last-child {
-      border-bottom-width: .0625rem;
+      border-bottom-width: 0.0625rem;
     }
     .attribute-group-name {
       display: block;
-      padding: .4375rem;
+      padding: 0.4375rem;
       font-weight: $font-weight-semibold;
       color: $gray-dark;
       &:hover {
@@ -845,7 +845,7 @@
     }
     .attributes {
       height: 10.13rem;
-      padding: .4375rem;
+      padding: 0.4375rem;
       overflow-x: hidden;
       border-top: 2px solid $gray-light;
       .two-columns {
@@ -863,9 +863,9 @@
               float: left;
               width: 1rem;
               height: 1rem;
-              margin-right: .4375rem;
+              margin-right: 0.4375rem;
               content: "";
-              border: .0625rem solid $gray-light;
+              border: 0.0625rem solid $gray-light;
               &.not-color::before {
                 display: block;
                 line-height: 1rem;
@@ -896,8 +896,8 @@
 .table {
   th {
     padding: {
-      top: .625rem;
-      bottom: .625rem;
+      top: 0.625rem;
+      bottom: 0.625rem;
     }
   }
   td {
@@ -953,7 +953,7 @@
       }
       .big-input {
         width: 100%;
-        margin-bottom: .9375rem;
+        margin-bottom: 0.9375rem;
         input[type="text"] {
           height: 3.125rem;
         }
@@ -980,7 +980,7 @@
         left: 15px;
         z-index: 2;
         height: 3rem;
-        padding: .9375rem .3125rem;
+        padding: 0.9375rem 0.3125rem;
         color: #fff;
         cursor: pointer;
         background: #fff;
@@ -1009,7 +1009,7 @@
     }
     .ui-helper-hidden-accessible {
       display: inline-block;
-      margin-bottom: .9375rem;
+      margin-bottom: 0.9375rem;
     }
     .combination-form {
       padding: 0 1.25rem;
@@ -1057,11 +1057,11 @@
         background: $brand-primary;
       }
       .spinner {
-        margin-top: -.3125rem;
+        margin-top: -0.3125rem;
       }
       .dropdown {
         display: block;
-        margin-top: .625rem;
+        margin-top: 0.625rem;
         .dropdown-menu {
           top: -7.5rem;
         }

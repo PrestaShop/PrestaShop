@@ -1,5 +1,4 @@
 .stock-app {
-
   padding: 0;
 
   .table {
@@ -29,7 +28,7 @@
     }
     .fade-enter-active,
     .fade-leave-active {
-      @include transition(opacity .5s);
+      @include transition(opacity 0.5s);
     }
     .fade-enter,
     .fade-leave-to {
@@ -75,10 +74,10 @@
     background: #fff;
     border: solid 1px #b9cdd2;
     @include border-radius(2px);
-    box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, .3);
+    box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
 
     .row {
-      padding: .625rem; // 10px
+      padding: 0.625rem; // 10px
     }
   }
 
@@ -135,7 +134,6 @@
         background: $gray-light;
       }
     }
-
   }
 
   .pagination {
@@ -190,7 +188,7 @@
       .low-stock {
         background: $danger-hover;
         .stock-warning {
-          font-weight: 600;
+          font-weight: 700;
           color: $danger;
           &.ico {
             padding: 0 5px;
@@ -211,7 +209,7 @@
       }
       .update-qty {
         color: #fff;
-        @include transition(background-color .2s ease);
+        @include transition(background-color 0.2s ease);
       }
       .qty {
         padding-left: 20px;
