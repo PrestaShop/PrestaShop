@@ -1,5 +1,8 @@
 // Its not a library, no need default flag
 /* stylelint-disable scss/dollar-variable-default */
+@import "~bootstrap/scss/functions";
+@import "~prestakit/scss/variables";
+
 // Colors
 $gray-dark-text: #bebebe;
 $gray-dark-title: #bbcdd1;
@@ -29,66 +32,20 @@ $grid-gutter-width: 1.875rem;
 $enable-transitions: true;
 
 //UI Kit variables - to be removed
-$gray-soft: #fafbfc;
-$gray-light: #bbcdd2;
-$medium-gray: #6c868e;
-$gray-medium: $medium-gray;
-$gray-dark: #363a41;
-$primary: #25b9d7;
-$primary-hover: #3ed2f0;
-$secondary: $medium-gray;
-$secondary-hover: $gray-dark;
+
 $notice: #dff5f9;
-$success: #78d07d;
-$warning: #cd9321;
-$warning-hover: #fde7bb;
-$danger: #c05c67;
 $danger-hover: #fde1e1;
-$brand-primary: $primary;
-$brand-secondary: $secondary;
-$brand-info: #5bc0de !default;
-$brand-warning: #f0ad4e !default;
-$font-size-base: 0.875rem;
-$font-weight-normal: 400;
-$font-weight-semibold: 600;
-$font-size-xs: 0.625rem;
-$font-size-h1: 1.5rem;
 $nav-tabs-active-link-hover-border-color: $brand-primary;
-$link-color: $brand-primary;
-$brand-success: $success;
-$brand-danger: $danger;
 $dropdown-link-hover-color: $primary;
 $dropdown-link-hover-bg: #fff;
-$spacing-base: 30px;
-$spacing-widths: (
-  xxs: $spacing-base / 6,
-  xs: $spacing-base / 3,
-  s: $spacing-base / 2,
-  n: $spacing-base,
-  l: $spacing-base * 2,
-);
-$grid-breakpoints: (
-  xs: 0,
-  sm: 544px,
-  md: 768px,
-  lg: 1024px,
-  xl: 1300px,
-  xxl: 1600px, // PS custom
-);
-
-$card-border-color: #dbe6e9 !default;
 $module-logo-size: 45px;
 
-$card-spacer-x: 0.625rem !default;
-$card-spacer-y: 0.625rem !default;
-$card-border-width: 1px !default;
-$card-border-radius: 5px !default;
-$card-border-radius-inner: $card-border-radius !default;
-$card-cap-bg: $gray-soft !default;
-$card-bg: #fff !default;
-$card-link-hover-color: #fff !default;
-$enable-rounded: true !default;
-$enable-hover-media-query: true;
+$font-size-h1: $h1-font-size;
+$font-size-h2: $h2-font-size;
+$font-size-h3: $h3-font-size;
+$font-size-h4: $h4-font-size;
+$font-size-h5: $h5-font-size;
+$font-size-h6: $h6-font-size;
 
 $btn-primary-bg: $primary-hover;
 $btn-secondary-border: #000;
