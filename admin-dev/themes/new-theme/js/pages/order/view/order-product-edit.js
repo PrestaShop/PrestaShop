@@ -45,8 +45,7 @@ export default class OrderProductEdit {
 
   setupListener() {
     this.quantityInput.on('change keyup', (event) => {
-      const parsedQuantity = parseInt(event.target.value ? event.target.value : 0, 10);
-      const quantity = !isNaN(parsedQuantity) ? parsedQuantity : 0;
+      const quantity = Number(event.target.value);
       const available = parseInt($(event.currentTarget).data('availableQuantity'), 10) - (this.quantity - this.quantityInput.data('previousQuantity'));
       const availableOutOfStock = this.availableText.data('availableOutOfStock');
       this.availableText.text(available);
