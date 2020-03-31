@@ -185,9 +185,6 @@
 						visibility: visible
 
 		&.link-active
-			+media-breakpoint-down(md)
-				border-right: none
-
 			> .link
 				border-left: .25rem solid #25b9d7
 				padding-left: .638rem
@@ -195,6 +192,8 @@
 				.material-icons
 					&:first-child
 						color: #25b9d7
+			+media-breakpoint-down(md)
+				border-right: none
 
 		&:not(#subtab-AdminParentModulesSf)
 			i.material-icons.mi-extension

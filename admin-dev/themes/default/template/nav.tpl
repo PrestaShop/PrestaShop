@@ -10,7 +10,7 @@
         {if $level_1.active}
           {* Dashboard exception *}
           {if $level_1.class_name == 'AdminDashboard'}
-            <li class="link-levelone{if $level_1.current} link-levelone-active{/if}" id="tab-{$level_1.class_name}" data-submenu="{$level_1.id_tab}">
+            <li class="link-levelone{if $level_1.current} link-active{/if}" id="tab-{$level_1.class_name}" data-submenu="{$level_1.id_tab}">
               <a href="{if $level_1.sub_tabs|@count && isset($level_1.sub_tabs[0].href)}{$level_1.sub_tabs[0].href|escape:'html':'UTF-8'}{else}{$level_1.href|escape:'html':'UTF-8'}{/if}" class="link" >
                 <i class="material-icons">{$level_1.icon}</i>
                 <span>{if $level_1.name eq ''}{$level_1.class_name|escape:'html':'UTF-8'}{else}{$level_1.name|escape:'html':'UTF-8'}{/if}</span>
