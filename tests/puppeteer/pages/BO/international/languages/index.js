@@ -148,14 +148,18 @@ module.exports = class Languages extends LocalizationBasePage {
    * @return {Promise<textContent>}
    */
   async deleteLanguage(row = 1) {
-    this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
       this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteLanguages(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
