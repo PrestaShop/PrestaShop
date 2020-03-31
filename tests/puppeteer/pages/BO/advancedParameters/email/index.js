@@ -16,6 +16,10 @@ module.exports = class Email extends BOBasePage {
     this.emailFilterColumnInput = '#email_logs_%FILTERBY';
     this.filterSearchButton = `${this.emailsListForm} button[name='email_logs[actions][search]']`;
     this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
+    // Table rows and columns
+    this.tableBody = `${this.emailsListForm} tbody`;
+    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
   }
 
   /*
@@ -40,6 +44,17 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
+   * Reset and get number of lines
+   * @returns {Promise<integer>}
+   */
+  async resetAndGetNumberOfLines() {
+    if (await this.elementVisible(this.filterResetButton, 2000)) {
+      await this.clickAndWaitForNavigation(this.filterResetButton);
+    }
+    return this.getNumberOfElementInGrid();
+  }
+
+  /**
    * Filter list of emails
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
@@ -50,7 +65,7 @@ module.exports = class Email extends BOBasePage {
     await this.resetFilter();
     switch (filterType) {
       case 'input':
-        await this.setValue(this.emailFilterColumnInput.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.emailFilterColumnInput.replace('%FILTERBY', filterBy), value.toString());
         break;
       case 'select':
         await this.selectByVisibleText(
@@ -61,6 +76,32 @@ module.exports = class Email extends BOBasePage {
       default:
       // Do nothing
     }
+    // click on search
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Get text from Column
+   * @param columnName
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  getTextColumn(columnName, row) {
+    if (columnName === 'id_lang') {
+      return this.getTextContent(this.tableColumn.replace('%ROW', row).replace('%COLUMN', 'language'));
+    }
+    return this.getTextContent(this.tableColumn.replace('%ROW', row).replace('%COLUMN', columnName));
+  }
+
+  /**
+   * Filter emails by date
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<void>}
+   */
+  async filterEmailsByDate(dateFrom, dateTo) {
+    await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_from'), dateFrom);
+    await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_to'), dateTo);
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
