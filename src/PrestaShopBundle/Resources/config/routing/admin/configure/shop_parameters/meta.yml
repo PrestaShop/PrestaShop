@@ -34,7 +34,7 @@ admin_metas_edit:
 
 admin_metas_delete:
   path: /{metaId}/delete
-  methods: DELETE
+  methods: [DELETE, POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:delete'
     _legacy_controller: AdminMeta
