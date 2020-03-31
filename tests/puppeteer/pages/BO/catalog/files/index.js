@@ -34,7 +34,7 @@ module.exports = class Files extends BOBasePage {
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#attachment_grid_bulk_action_delete_selection';
-    this.confirmDeleteModal = '#attachment_grid_confirm_modal';
+    this.confirmDeleteModal = '#attachment-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 

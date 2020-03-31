@@ -28,7 +28,7 @@ module.exports = class Pages extends BOBasePage {
     this.bulkActionsDeleteButton = '#%TABLE_grid_bulk_action_delete_selection';
     this.bulkActionsEnableButton = '#%TABLE_grid_bulk_action_enable_selection';
     this.bulkActionsDisableButton = '#%TABLE_grid_bulk_action_disable_selection';
-    this.confirmDeleteModal = '#%TABLE_grid_confirm_modal';
+    this.confirmDeleteModal = '#%TABLE-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.filterColumn = `${this.gridTable} #%TABLE_%FILTERBY`;

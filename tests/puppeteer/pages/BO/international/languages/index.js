@@ -35,7 +35,7 @@ module.exports = class Languages extends LocalizationBasePage {
     this.bulkActionsEnableButton = '#language_grid_bulk_action_enable_selection';
     this.bulkActionsDisableButton = '#language_grid_bulk_action_disable_selection';
     this.bulkActionsDeleteButton = '#language_grid_bulk_action_delete_selection';
-    this.confirmDeleteModal = '#language_grid_confirm_modal';
+    this.confirmDeleteModal = '#language-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
