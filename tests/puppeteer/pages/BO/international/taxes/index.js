@@ -23,7 +23,7 @@ module.exports = class Taxes extends BOBasePage {
     this.deleteSelectionButton = `${this.taxesGridPanelDiv} #tax_grid_bulk_action_delete_selection`;
     this.selectAllLabel = `${this.taxesGridPanelDiv} #tax_grid tr.column-filters .md-checkbox i`;
     this.taxesGridTable = `${this.taxesGridPanelDiv} #tax_grid_table`;
-    this.confirmDeleteModal = '#tax_grid_confirm_modal';
+    this.confirmDeleteModal = '#tax-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.taxesFilterColumnInput = `${this.taxesGridTable} #tax_%FILTERBY`;
