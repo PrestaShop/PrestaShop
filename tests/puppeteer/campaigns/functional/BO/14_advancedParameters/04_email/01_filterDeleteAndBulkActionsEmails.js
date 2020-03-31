@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParameters_email_filterEmails';
+const baseContext = 'functional_BO_advancedParameters_email_filterDeleteAndBulkActionsEmails';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -50,8 +50,10 @@ const init = async function () {
 };
 
 /*
-Create an order to have 2 emails in emails table
-Filter emails list
+Create an order to have 2 email logs in email table
+Filter email logs list
+Delete email log
+Delete email logs by bulk action
  */
 describe('Filter, delete and bulk actions email log', async () => {
   // before and after functions
