@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class MetaGridDefinitionFactory is responsible for adding definition for Seo & urls list.
@@ -123,7 +124,8 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                             $this->buildDeleteAction(
                                 'admin_metas_delete',
                                 'metaId',
-                                'id_meta'
+                                'id_meta',
+                                Request::METHOD_DELETE
                             )
                         ),
                 ])
