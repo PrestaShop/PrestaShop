@@ -118,9 +118,9 @@ export default class ProductManager {
    * @private
    */
   _onRemoveProductFromCart() {
-    EventEmitter.on(eventMap.productRemovedFromCart, (response) => {
-      this._updateStockOnProductRemove(response.product);
-      EventEmitter.emit(eventMap.cartLoaded, response.cartInfo);
+    EventEmitter.on(eventMap.productRemovedFromCart, (data) => {
+      this._updateStockOnProductRemove(data.product);
+      EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
     });
   }
 
@@ -143,10 +143,10 @@ export default class ProductManager {
    */
   _onProductQtyChange() {
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, (response) => {
+    EventEmitter.on(eventMap.productQtyChanged, (data) => {
       this.productRenderer.cleanCartBlockAlerts();
-      this._updateStockOnQtyChange(response.product);
-      EventEmitter.emit(eventMap.cartLoaded, response.cartInfo);
+      this._updateStockOnQtyChange(data.product);
+      EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
     });
 
     // on failure
