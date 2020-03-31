@@ -73,8 +73,7 @@ export default class OrderProductAdd {
     });
     this.quantityInput.on('change keyup', (event) => {
       if (this.available !== null) {
-        const parsedQuantity = parseInt(event.target.value ? event.target.value : 0, 10);
-        const quantity = !isNaN(parsedQuantity) ? parsedQuantity : 0;
+        const quantity = Number(event.target.value);
         const available = this.available - quantity;
         const availableOutOfStock = this.availableText.data('availableOutOfStock');
         this.availableText.text(available);
