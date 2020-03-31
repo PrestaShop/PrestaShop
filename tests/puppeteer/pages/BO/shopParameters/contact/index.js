@@ -33,6 +33,9 @@ module.exports = class Contacts extends BOBasePage {
     this.tableHead = `${this.contactsGridPanel} thead`;
     this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
     this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
+    // Delete modal
+    this.confirmDeleteModal = '#contact-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /*
@@ -130,7 +133,6 @@ module.exports = class Contacts extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteContact(row) {
-    this.dialogListener();
     // Click on dropDown
     await Promise.all([
       this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
@@ -139,8 +141,20 @@ module.exports = class Contacts extends BOBasePage {
       ),
     ]);
     // Click on delete
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteContact();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteContact() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**
