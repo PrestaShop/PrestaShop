@@ -368,11 +368,7 @@ class PackCore extends Product
                     $line['id_image'] = $attr_name[0]['id_product_attribute_image'];
                 }
 
-                if (isset($attr_name[0]['attribute_reference'])) {
-                    $line['reference'] = $attr_name[0]['attribute_reference'];
-                } else {
-                    $line['reference'] = '';
-                }
+                $line['reference'] = $attr_name[0]['attribute_reference'] ?? '';
 
                 $line['name'] .= "\n";
                 foreach ($attr_name as $value) {
