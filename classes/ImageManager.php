@@ -34,8 +34,8 @@
 class ImageManagerCore
 {
     const ERROR_FILE_NOT_EXIST = 1;
-    const ERROR_FILE_WIDTH = 2;
-    const ERROR_MEMORY_LIMIT = 3;
+    const ERROR_FILE_WIDTH     = 2;
+    const ERROR_MEMORY_LIMIT   = 3;
 
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
@@ -67,8 +67,8 @@ class ImageManagerCore
                 return false;
             }
 
-            $x = $infos[0];
-            $y = $infos[1];
+            $x    = $infos[0];
+            $y    = $infos[1];
             $maxX = $size * 3;
 
             // Size is already ok
@@ -79,7 +79,7 @@ class ImageManagerCore
                 $ratioX = $x / ($y / $size);
                 if ($ratioX > $maxX) {
                     $ratioX = $maxX;
-                    $size = $y / ($x / $maxX);
+                    $size   = $y / ($x / $maxX);
                 }
 
                 ImageManager::resize($image, _PS_TMP_IMG_DIR_ . $cacheImage, $ratioX, $size, $imageType);
@@ -126,7 +126,7 @@ class ImageManagerCore
         if (isset($infos['bits']) && function_exists('memory_get_usage') && (int) $memoryLimit != -1) {
             $currentMemory = memory_get_usage();
 
-            $bits = $infos['bits'] / 8;
+            $bits    = $infos['bits'] / 8;
             $channel = isset($infos['channels']) ? $infos['channels'] : 1;
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
@@ -178,43 +178,43 @@ class ImageManagerCore
         }
 
         list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
-        $rotate = 0;
+        $rotate                            = 0;
         if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
             $exif = @exif_read_data($sourceFile);
 
             if ($exif && isset($exif['Orientation'])) {
                 switch ($exif['Orientation']) {
                     case 3:
-                        $sourceWidth = $tmpWidth;
+                        $sourceWidth  = $tmpWidth;
                         $sourceHeight = $tmpHeight;
-                        $rotate = 180;
+                        $rotate       = 180;
 
                         break;
 
                     case 6:
-                        $sourceWidth = $tmpHeight;
+                        $sourceWidth  = $tmpHeight;
                         $sourceHeight = $tmpWidth;
-                        $rotate = -90;
+                        $rotate       = -90;
 
                         break;
 
                     case 8:
-                        $sourceWidth = $tmpHeight;
+                        $sourceWidth  = $tmpHeight;
                         $sourceHeight = $tmpWidth;
-                        $rotate = 90;
+                        $rotate       = 90;
 
                         break;
 
                     default:
-                        $sourceWidth = $tmpWidth;
+                        $sourceWidth  = $tmpWidth;
                         $sourceHeight = $tmpHeight;
                 }
             } else {
-                $sourceWidth = $tmpWidth;
+                $sourceWidth  = $tmpWidth;
                 $sourceHeight = $tmpHeight;
             }
         } else {
-            $sourceWidth = $tmpWidth;
+            $sourceWidth  = $tmpWidth;
             $sourceHeight = $tmpHeight;
         }
 
@@ -236,21 +236,21 @@ class ImageManagerCore
             $destinationHeight = $sourceHeight;
         }
 
-        $widthDiff = $destinationWidth / $sourceWidth;
+        $widthDiff  = $destinationWidth / $sourceWidth;
         $heightDiff = $destinationHeight / $sourceHeight;
 
         $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
         if ($widthDiff > 1 && $heightDiff > 1) {
-            $nextWidth = $sourceWidth;
+            $nextWidth  = $sourceWidth;
             $nextHeight = $sourceHeight;
         } else {
             if ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
-                $nextHeight = $destinationHeight;
-                $nextWidth = round(($sourceWidth * $nextHeight) / $sourceHeight);
+                $nextHeight       = $destinationHeight;
+                $nextWidth        = round(($sourceWidth * $nextHeight) / $sourceHeight);
                 $destinationWidth = (int) (!$psImageGenerationMethod ? $destinationWidth : $nextWidth);
             } else {
-                $nextWidth = $destinationWidth;
-                $nextHeight = round($sourceHeight * $destinationWidth / $sourceWidth);
+                $nextWidth         = $destinationWidth;
+                $nextHeight        = round($sourceHeight * $destinationWidth / $sourceWidth);
                 $destinationHeight = (int) (!$psImageGenerationMethod ? $destinationHeight : $nextHeight);
             }
         }
@@ -259,7 +259,7 @@ class ImageManagerCore
             return !($error = self::ERROR_MEMORY_LIMIT);
         }
 
-        $targetWidth = $destinationWidth;
+        $targetWidth  = $destinationWidth;
         $targetHeight = $destinationHeight;
 
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
@@ -380,8 +380,8 @@ class ImageManagerCore
                 $fileMimeType = false;
             }
         } elseif (function_exists('finfo_open')) {
-            $const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
-            $finfo = finfo_open($const);
+            $const    = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
+            $finfo    = finfo_open($const);
             $mimeType = finfo_file($finfo, $filename);
             finfo_close($finfo);
         } elseif (function_exists('mime_content_type')) {
@@ -451,7 +451,8 @@ class ImageManagerCore
             return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1024, $maxFileSize / 1024), 'Admin.Notifications.Error');
         }
         if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
-            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', array(), 'Admin.Notifications.Error');
+            $typesTxt = $types ? '.' . implode(', .', $types) : '.gif, .jpg, .png';
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: %s', array($typesTxt), 'Admin.Notifications.Error');
         }
         if ($file['error']) {
             return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', array($file['error']), 'Admin.Notifications.Error');
@@ -504,18 +505,18 @@ class ImageManagerCore
 
         // Source information
         $srcInfo = getimagesize($srcFile);
-        $src = array(
-            'width' => $srcInfo[0],
-            'height' => $srcInfo[1],
+        $src     = array(
+            'width'     => $srcInfo[0],
+            'height'    => $srcInfo[1],
             'ressource' => ImageManager::create($srcInfo[2], $srcFile),
         );
 
         // Destination information
-        $dest = array();
-        $dest['x'] = $dstX;
-        $dest['y'] = $dstY;
-        $dest['width'] = null !== $dstWidth ? $dstWidth : $src['width'];
-        $dest['height'] = null !== $dstHeight ? $dstHeight : $src['height'];
+        $dest              = array();
+        $dest['x']         = $dstX;
+        $dest['y']         = $dstY;
+        $dest['width']     = null !== $dstWidth ? $dstWidth : $src['width'];
+        $dest['height']    = null !== $dstHeight ? $dstHeight : $src['height'];
         $dest['ressource'] = ImageManager::createWhiteImage($dest['width'], $dest['height']);
 
         $white = imagecolorallocate($dest['ressource'], 255, 255, 255);
@@ -585,7 +586,7 @@ class ImageManagerCore
      */
     public static function write($type, $resource, $filename)
     {
-        static $psPngQuality = null;
+        static $psPngQuality  = null;
         static $psJpegQuality = null;
 
         if ($psPngQuality === null) {
@@ -633,9 +634,9 @@ class ImageManagerCore
     public static function getMimeTypeByExtension($fileName)
     {
         $types = array(
-            'image/gif' => array('gif'),
+            'image/gif'  => array('gif'),
             'image/jpeg' => array('jpg', 'jpeg'),
-            'image/png' => array('png'),
+            'image/png'  => array('png'),
         );
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 
