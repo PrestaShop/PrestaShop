@@ -21,6 +21,10 @@ module.exports = class Email extends BOBasePage {
     this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
     this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
     this.deleteRowLink = `${this.tableRow} td.column-actions a[href*='delete']`;
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .md-checkbox i`;
+    this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
   }
 
   /*
@@ -56,13 +60,13 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
-   * Filter list of emails
+   * Filter list of email logs
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterEmails(filterType, filterBy, value = '') {
+  async filterEmailLogs(filterType, filterBy, value = '') {
     await this.resetFilter();
     switch (filterType) {
       case 'input':
@@ -82,7 +86,7 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
-   * Get text from Column
+   * Get text from column
    * @param columnName
    * @param row
    * @return {Promise<textContent>}
@@ -95,12 +99,12 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
-   * Filter emails by date
+   * Filter email logs by date
    * @param dateFrom
    * @param dateTo
    * @returns {Promise<void>}
    */
-  async filterEmailsByDate(dateFrom, dateTo) {
+  async filterEmailLogsByDate(dateFrom, dateTo) {
     await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_from'), dateFrom);
     await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_to'), dateTo);
     // click on search
@@ -108,13 +112,34 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
-   * Delete email
+   * Delete email logs
    * @param row
    * @returns {Promise<string>}
    */
-  async deleteEmail(row) {
+  async deleteEmailLog(row) {
     this.dialogListener(true);
     await this.waitForSelectorAndClick(this.deleteRowLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete email logs by bulk actions
+   * @returns {Promise<string>}
+   */
+  async deleteEmailLogsBulkActions() {
+    this.dialogListener(true);
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(this.bulkActionsToggleButton),
+    ]);
+    // Click on delete and wait for modal
+    await this.page.click(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

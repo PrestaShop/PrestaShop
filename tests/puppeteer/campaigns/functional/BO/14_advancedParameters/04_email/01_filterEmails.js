@@ -67,7 +67,7 @@ describe('Filter, delete and bulk actions email log', async () => {
   // Login into BO
   loginCommon.loginBO();
 
-  describe('Create order to have emails log', async () => {
+  describe('Create order to have email logs', async () => {
     it('should go to FO and create an order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
       // Click on view my shop
@@ -103,7 +103,7 @@ describe('Filter, delete and bulk actions email log', async () => {
     });
   });
 
-  describe('Filter email table', async () => {
+  describe('Filter email logs table', async () => {
     it('should go to \'Advanced parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
@@ -114,7 +114,7 @@ describe('Filter, delete and bulk actions email log', async () => {
       await expect(pageTitle).to.contains(this.pageObjects.emailPage.pageTitle);
     });
 
-    it('should reset all filters and get number of emails', async function () {
+    it('should reset all filters and get number of email logs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
       numberOfEmails = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
       await expect(numberOfEmails).to.be.above(0);
@@ -168,9 +168,9 @@ describe('Filter, delete and bulk actions email log', async () => {
     ];
 
     tests.forEach((test) => {
-      it(`should filter emails by '${test.args.filterBy}'`, async function () {
+      it(`should filter email logs by '${test.args.filterBy}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
-        await this.pageObjects.emailPage.filterEmails(test.args.filterType, test.args.filterBy, test.args.filterValue);
+        await this.pageObjects.emailPage.filterEmailLogs(test.args.filterType, test.args.filterBy, test.args.filterValue);
         const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
         await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
         for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
@@ -186,9 +186,9 @@ describe('Filter, delete and bulk actions email log', async () => {
       });
     });
 
-    it('should filter emails by date sent \'From\' and \'To\'', async function () {
+    it('should filter email logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
-      await this.pageObjects.emailPage.filterEmailsByDate(dateToday, dateToday);
+      await this.pageObjects.emailPage.filterEmailLogsByDate(dateToday, dateToday);
       const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
@@ -204,17 +204,17 @@ describe('Filter, delete and bulk actions email log', async () => {
     });
   });
 
-  describe('Delete email', async () => {
-    it('should filter emails by \'subject\'', async function () {
+  describe('Delete email log', async () => {
+    it('should filter email logs by \'subject\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBySubjectToDelete', baseContext);
-      await this.pageObjects.emailPage.filterEmails('input', 'subject', PaymentMethods.wirePayment.name);
+      await this.pageObjects.emailPage.filterEmailLogs('input', 'subject', PaymentMethods.wirePayment.name);
       const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
     });
 
-    it('should delete email', async function () {
+    it('should delete email log', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmail', baseContext);
-      const textResult = await this.pageObjects.emailPage.deleteEmail(1);
+      const textResult = await this.pageObjects.emailPage.deleteEmailLog(1);
       await expect(textResult).to.equal(this.pageObjects.emailPage.successfulMultiDeleteMessage);
     });
 
@@ -222,6 +222,14 @@ describe('Filter, delete and bulk actions email log', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'dateSentReset', baseContext);
       const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
       await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails - 1);
+    });
+  });
+
+  describe('Delete email logs by bulk action', async () => {
+    it('should delete all email logs', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
+      const deleteTextResult = await this.pageObjects.emailPage.deleteEmailLogsBulkActions();
+      await expect(deleteTextResult).to.be.equal(this.pageObjects.emailPage.successfulMultiDeleteMessage);
     });
   });
 });
