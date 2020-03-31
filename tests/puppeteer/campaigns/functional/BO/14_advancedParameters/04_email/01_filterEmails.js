@@ -53,7 +53,7 @@ const init = async function () {
 Create an order to have 2 emails in emails table
 Filter emails list
  */
-describe('Filter emails', async () => {
+describe('Filter, delete and bulk actions email log', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -66,136 +66,162 @@ describe('Filter emails', async () => {
 
   // Login into BO
   loginCommon.loginBO();
-  it('should go to FO and create an order', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
-    // Click on view my shop
-    page = await this.pageObjects.boBasePage.viewMyShop();
-    this.pageObjects = await init();
-    await this.pageObjects.foBasePage.changeLanguage('en');
-    // Go to the first product page
-    await this.pageObjects.homePage.goToProductPage(1);
-    // Add the created product to the cart
-    await this.pageObjects.productPage.addProductToTheCart();
-    // Proceed to checkout the shopping cart
-    await this.pageObjects.cartPage.clickOnProceedToCheckout();
-    // Checkout the order
-    // Personal information step - Login
-    await this.pageObjects.checkoutPage.clickOnSignIn();
-    await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
-    // Address step - Go to delivery step
-    const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
-    await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    // Delivery step - Go to payment step
-    const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
-    await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-    // Payment step - Choose payment step
-    await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
-    const cardTitle = await this.pageObjects.orderConfirmationPage
-      .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
-    // Check the confirmation message
-    await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-    // Logout from FO
-    await this.pageObjects.foBasePage.logout();
-    page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
-    this.pageObjects = await init();
+
+  describe('Create order to have emails log', async () => {
+    it('should go to FO and create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
+      // Click on view my shop
+      page = await this.pageObjects.boBasePage.viewMyShop();
+      this.pageObjects = await init();
+      await this.pageObjects.foBasePage.changeLanguage('en');
+      // Go to the first product page
+      await this.pageObjects.homePage.goToProductPage(1);
+      // Add the created product to the cart
+      await this.pageObjects.productPage.addProductToTheCart();
+      // Proceed to checkout the shopping cart
+      await this.pageObjects.cartPage.clickOnProceedToCheckout();
+      // Checkout the order
+      // Personal information step - Login
+      await this.pageObjects.checkoutPage.clickOnSignIn();
+      await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
+      // Address step - Go to delivery step
+      const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
+      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      // Delivery step - Go to payment step
+      const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
+      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      // Payment step - Choose payment step
+      await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
+      const cardTitle = await this.pageObjects.orderConfirmationPage
+        .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
+      // Check the confirmation message
+      await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
+      // Logout from FO
+      await this.pageObjects.foBasePage.logout();
+      page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
+      this.pageObjects = await init();
+    });
   });
 
-  it('should go to \'Advanced parameters > E-mail\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.advancedParametersLink,
-      this.pageObjects.boBasePage.emailLink,
-    );
-    const pageTitle = await this.pageObjects.emailPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.emailPage.pageTitle);
-  });
+  describe('Filter email table', async () => {
+    it('should go to \'Advanced parameters > E-mail\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
+      await this.pageObjects.boBasePage.goToSubMenu(
+        this.pageObjects.boBasePage.advancedParametersLink,
+        this.pageObjects.boBasePage.emailLink,
+      );
+      const pageTitle = await this.pageObjects.emailPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.emailPage.pageTitle);
+    });
 
-  it('should reset all filters and get number of emails', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
-    numberOfEmails = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
-    await expect(numberOfEmails).to.be.above(0);
-  });
-  const tests = [
-    {
-      args:
-        {
-          identifier: 'filterById',
-          filterType: 'input',
-          filterBy: 'id_mail',
-          filterValue: 1,
-        },
-    },
-    {
-      args:
-        {
-          identifier: 'filterByRecipient',
-          filterType: 'input',
-          filterBy: 'recipient',
-          filterValue: DefaultAccount.email,
-        },
-    },
-    {
-      args:
-        {
-          identifier: 'filterByTemplate',
-          filterType: 'input',
-          filterBy: 'template',
-          filterValue: 'order_conf',
-        },
-    },
-    {
-      args:
-        {
-          identifier: 'filterByLanguage',
-          filterType: 'select',
-          filterBy: 'id_lang',
-          filterValue: Languages.english.name,
-        },
-    },
-    {
-      args:
-        {
-          identifier: 'filterBySubject',
-          filterType: 'input',
-          filterBy: 'subject',
-          filterValue: PaymentMethods.wirePayment.name,
-        },
-    },
-  ];
+    it('should reset all filters and get number of emails', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+      numberOfEmails = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
+      await expect(numberOfEmails).to.be.above(0);
+    });
+    const tests = [
+      {
+        args:
+          {
+            identifier: 'filterById',
+            filterType: 'input',
+            filterBy: 'id_mail',
+            filterValue: 1,
+          },
+      },
+      {
+        args:
+          {
+            identifier: 'filterByRecipient',
+            filterType: 'input',
+            filterBy: 'recipient',
+            filterValue: DefaultAccount.email,
+          },
+      },
+      {
+        args:
+          {
+            identifier: 'filterByTemplate',
+            filterType: 'input',
+            filterBy: 'template',
+            filterValue: 'order_conf',
+          },
+      },
+      {
+        args:
+          {
+            identifier: 'filterByLanguage',
+            filterType: 'select',
+            filterBy: 'id_lang',
+            filterValue: Languages.english.name,
+          },
+      },
+      {
+        args:
+          {
+            identifier: 'filterBySubject',
+            filterType: 'input',
+            filterBy: 'subject',
+            filterValue: PaymentMethods.wirePayment.name.toLowerCase(),
+          },
+      },
+    ];
 
-  tests.forEach((test) => {
-    it(`should filter emails by '${test.args.filterBy}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
-      await this.pageObjects.emailPage.filterEmails(test.args.filterType, test.args.filterBy, test.args.filterValue);
+    tests.forEach((test) => {
+      it(`should filter emails by '${test.args.filterBy}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
+        await this.pageObjects.emailPage.filterEmails(test.args.filterType, test.args.filterBy, test.args.filterValue);
+        const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
+        await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
+        for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
+          const textColumn = await this.pageObjects.emailPage.getTextColumn(test.args.filterBy, row);
+          await expect(textColumn).to.contains(test.args.filterValue);
+        }
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
+        const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
+        await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
+      });
+    });
+
+    it('should filter emails by date sent \'From\' and \'To\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
+      await this.pageObjects.emailPage.filterEmailsByDate(dateToday, dateToday);
       const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
-        const textColumn = await this.pageObjects.emailPage.getTextColumn(test.args.filterBy, row);
-        await expect(textColumn).to.contains(test.args.filterValue);
+        const textColumn = await this.pageObjects.emailPage.getTextColumn('date_add', row);
+        await expect(textColumn).to.contains(dateToday);
       }
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.identifier}Reset`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'dateSentReset', baseContext);
       const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
       await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
     });
   });
 
-  it('should filter emails by date sent \'From\' and \'To\'', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
-    await this.pageObjects.emailPage.filterEmailsByDate(dateToday, dateToday);
-    const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
-    await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
-    for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
-      const textColumn = await this.pageObjects.emailPage.getTextColumn('date_add', row);
-      await expect(textColumn).to.contains(dateToday);
-    }
-  });
+  describe('Delete email', async () => {
+    it('should filter emails by \'subject\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterBySubjectToDelete', baseContext);
+      await this.pageObjects.emailPage.filterEmails('input', 'subject', PaymentMethods.wirePayment.name);
+      const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
+      await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
+    });
 
-  it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'dateSentReset', baseContext);
-    const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
-    await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails);
+    it('should delete email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteEmail', baseContext);
+      const textResult = await this.pageObjects.emailPage.deleteEmail(1);
+      await expect(textResult).to.equal(this.pageObjects.emailPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'dateSentReset', baseContext);
+      const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
+      await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails - 1);
+    });
   });
 });

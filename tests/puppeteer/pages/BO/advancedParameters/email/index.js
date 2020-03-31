@@ -20,6 +20,7 @@ module.exports = class Email extends BOBasePage {
     this.tableBody = `${this.emailsListForm} tbody`;
     this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
     this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    this.deleteRowLink = `${this.tableRow} td.column-actions a[href*='delete']`;
   }
 
   /*
@@ -104,5 +105,16 @@ module.exports = class Email extends BOBasePage {
     await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_to'), dateTo);
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Delete email
+   * @param row
+   * @returns {Promise<string>}
+   */
+  async deleteEmail(row) {
+    this.dialogListener(true);
+    await this.waitForSelectorAndClick(this.deleteRowLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
