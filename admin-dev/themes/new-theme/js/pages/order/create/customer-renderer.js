@@ -52,7 +52,7 @@ export default class CustomerRenderer {
       return;
     }
 
-    Object.entries(foundCustomers).forEach((customerId, customerResult) => {
+    Object.entries(foundCustomers).forEach(([customerId, customerResult]) => {
       const customer = {
         id: customerId,
         firstName: customerResult.firstname,
