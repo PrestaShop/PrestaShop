@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
@@ -73,17 +74,17 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
         $columns = (new ColumnCollection())
             ->add(
                 (new DataColumn('id_order_state'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_order_state',
-                ])
+                    ->setName($this->trans('ID', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_order_state',
+                    ])
             )
             ->add((new ColorColumn('name'))
-                ->setName($this->trans('Status', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'name',
-                    'color_field' => 'color',
-                ])
+            ->setName($this->trans('Status', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'name',
+                'color_field' => 'color',
+            ])
             )
             ->add(
                 (new ToggleColumn('send_email'))
@@ -123,11 +124,11 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add(
-                            (new LinkRowAction('edit'))
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    ->add(
+                        (new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
@@ -136,8 +137,8 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                                 'route_param_field' => 'id_order_state',
                                 'clickable_row' => true,
                             ])
-                        ),
-                ])
+                    ),
+            ])
             );
 
         return $columns;
@@ -151,23 +152,23 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
         $filters = (new FilterCollection())
             ->add(
                 (new Filter('id_order_state', NumberType::class))
-                ->setTypeOptions([
-                    'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                    ],
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('id_order_state')
+                    ->setTypeOptions([
+                        'attr' => [
+                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                        ],
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_order_state')
             )
             ->add(
                 (new Filter('name', TextType::class))
-                ->setTypeOptions([
-                    'attr' => [
-                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                    ],
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('name')
+                    ->setTypeOptions([
+                        'attr' => [
+                            'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                        ],
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('name')
             )
             ->add(
                 (new Filter('send_email', YesAndNoChoiceType::class))
@@ -193,14 +194,14 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                    ],
-                    'redirect_route' => 'admin_order_states',
-                ])
-                ->setAssociatedColumn('actions')
+                    ->setTypeOptions([
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
+                        ],
+                        'redirect_route' => 'admin_order_states',
+                    ])
+                    ->setAssociatedColumn('actions')
             );
 
         return $filters;
@@ -219,13 +220,13 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add(
                 (new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-                ->setIcon('code')
+                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                    ->setIcon('code')
             )
             ->add(
                 (new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-                ->setIcon('storage')
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                    ->setIcon('storage')
             );
     }
 }

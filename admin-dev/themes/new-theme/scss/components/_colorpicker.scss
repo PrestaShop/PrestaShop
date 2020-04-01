@@ -1,9 +1,9 @@
 .colorpicker {
-  border: none;
   padding: 0;
+  border: none;
 
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     border: none;
   }
 }
