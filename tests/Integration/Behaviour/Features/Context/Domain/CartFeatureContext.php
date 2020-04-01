@@ -538,6 +538,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         foreach ($cartInfo->getCartRules() as $cartRule) {
             if ($cartRuleId === $cartRule->getCartRuleId()) {
                 Assert::assertEquals($value, $cartRule->getValue());
+
+                return;
             }
         }
 

@@ -194,13 +194,13 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                (new Number((string) $discount['value_real']))->round($currency->precision)
+                (new Number((string) $discount['value_tax_exc']))->round($currency->precision)
             );
         }
 
         foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
             $giftRuleId = (int) $giftRule['id_cart_rule'];
-            $finalValue = new Number((string) $giftRule['value_real']);
+            $finalValue = new Number((string) $giftRule['value_tax_exc']);
 
             if (isset($cartRules[$giftRuleId])) {
                 // it is possible that one cart rule can have a gift product, but also have other conditions,
@@ -283,29 +283,14 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         /** @var Carrier $carrier */
         $carrier = $legacySummary['carrier'];
+        $isFreeShipping = !empty($cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING));
 
         return new CartShipping(
-            (string) $legacySummary['total_shipping'],
-            $this->getFreeShippingValue($cart),
+            $isFreeShipping ? '0' : (string) $legacySummary['total_shipping'],
+            $isFreeShipping,
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
             (int) $carrier->id ?: null
         );
-    }
-
-    private function getFreeShippingValue(Cart $cart): bool
-    {
-        $cartRules = $cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
-        $freeShipping = false;
-
-        foreach ($cartRules as $cartRule) {
-            if ($cartRule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $cart->id)) {
-                $freeShipping = true;
-
-                break;
-            }
-        }
-
-        return $freeShipping;
     }
 
     /**
