@@ -202,12 +202,14 @@ class Calculator
         $amount = new AmountImmutable();
         $isFreeShippingAppliedToAmount = false;
         foreach ($this->cartRules as $cartRule) {
-            if ($isFreeShippingAppliedToAmount && (bool) $cartRule->getRuleData()['free_shipping']) {
-                $initialShippingFees = $this->getFees()->getInitialShippingFees();
-                $amount = $amount->sub($initialShippingFees);
+            if ((bool) $cartRule->getRuleData()['free_shipping']) {
+                if ($isFreeShippingAppliedToAmount) {
+                    $initialShippingFees = $this->getFees()->getInitialShippingFees();
+                    $amount = $amount->sub($initialShippingFees);
+                }
+                $isFreeShippingAppliedToAmount = true;
             }
             $amount = $amount->add($cartRule->getDiscountApplied());
-            $isFreeShippingAppliedToAmount = (bool) $cartRule->getRuleData()['free_shipping'];
         }
 
         $allowedMaxDiscount = $this->getRowTotalWithoutDiscount();

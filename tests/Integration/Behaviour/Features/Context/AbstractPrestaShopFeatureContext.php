@@ -47,7 +47,7 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
             $fixtureNames = array_keys($fixtures);
             $firstFixtureNames = array_splice($fixtureNames, 0, $searchLength);
             $firstFixtureNamesStr = implode(',', $firstFixtureNames);
-            throw new \Exception(sprintf(
+            throw new \RuntimeException(sprintf(
                 '%s named "%s" was not added in fixtures. First %d added are: %s',
                 $fixtureName,
                 $fixtureIndex,

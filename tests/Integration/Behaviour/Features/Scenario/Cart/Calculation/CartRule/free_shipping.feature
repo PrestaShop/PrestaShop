@@ -41,7 +41,6 @@ Feature: Cart rule (amount) calculation with one cart rule offering free shippin
     Given cart rule "cartrule6" has a discount code "foo6"
     Given cart rule "cartrule7" offers free shipping
     Given cart rule "cartrule7" has a discount code "foo7"
-    Given cart rule "cartrule8" offers free shipping
     Given cart rule "cartrule8" has a discount code "foo8"
     When I add 1 items of product "product1" in my cart
     When I use the discount "cartrule5"
