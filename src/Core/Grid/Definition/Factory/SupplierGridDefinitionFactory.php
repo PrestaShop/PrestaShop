@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class SupplierGridDefinitionFactory creates definition for supplier grid.
@@ -149,7 +150,8 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                             $this->buildDeleteAction(
                                 'admin_suppliers_delete',
                                 'supplierId',
-                                'id_supplier'
+                                'id_supplier',
+                                Request::METHOD_DELETE
                             )
                         ),
                 ])
