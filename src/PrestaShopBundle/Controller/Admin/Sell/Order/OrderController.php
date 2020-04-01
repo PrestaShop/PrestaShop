@@ -1430,8 +1430,8 @@ class OrderController extends CommonController
             ),
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
-                    'Please enter a positive quantity.',
-                    'Admin.Orderscustomers.Notification'
+                    'Positive product quantity is required',
+                    'Admin.Notifications.Error'
                 ),
                 InvalidCancelProductException::QUANTITY_TOO_HIGH => $this->trans(
                     'Please enter a maximum quantity of [1].',
@@ -1478,8 +1478,8 @@ class OrderController extends CommonController
                 ),
             ],
             InvalidProductQuantityException::class => $this->trans(
-                'Please enter a positive quantity.',
-                'Admin.Orderscustomers.Notification'
+                'Positive product quantity is required',
+                'Admin.Notifications.Error'
             ),
         ];
     }
