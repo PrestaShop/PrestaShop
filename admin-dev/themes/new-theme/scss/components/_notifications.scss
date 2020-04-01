@@ -38,7 +38,8 @@
 
   .notifications {
     top: 42px;
-    right: 5px;
+    // stylelint-disable-next-line
+    right: 5px !important;
     min-width: 25rem;
     padding: 0;
     margin: 0;

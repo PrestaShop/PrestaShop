@@ -25,31 +25,7 @@ $size-navbar-link-height: 1.75rem;
 $size-header-height: 2.5rem;
 $size-header-toolbar-height: 5.313rem;
 $header-mobile-padding-y: 0.625rem;
-
-// Imported from bootstrap
-
-$grid-gutter-width: 1.875rem;
-$enable-transitions: true;
-
-//UI Kit variables - to be removed
-
-$notice: #dff5f9;
-$danger-hover: #fde1e1;
-$nav-tabs-active-link-hover-border-color: $brand-primary;
-$dropdown-link-hover-color: $primary;
-$dropdown-link-hover-bg: #fff;
 $module-logo-size: 45px;
 
-$font-size-h1: $h1-font-size;
-$font-size-h2: $h2-font-size;
-$font-size-h3: $h3-font-size;
-$font-size-h4: $h4-font-size;
-$font-size-h5: $h5-font-size;
-$font-size-h6: $h6-font-size;
-
-$btn-primary-bg: $primary-hover;
-$btn-secondary-border: #000;
-$btn-info-bg: $brand-info !default;
-$btn-success-bg: $brand-success !default;
-$btn-warning-bg: $brand-warning !default;
-$btn-danger-bg: $brand-danger !default;
+// Imported from bootstrap
+$border-radius: 0;
