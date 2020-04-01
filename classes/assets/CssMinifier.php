@@ -34,7 +34,7 @@ class CssMinifierCore
      *
      * @return string Minified data
      */
-    public static function minify(array $files, string $destination)
+    public static function minify(array $files, $destination)
     {
         $minifier = new CSS();
 
