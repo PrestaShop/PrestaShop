@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
  */
 trait DeleteActionTrait
 {
-    protected function buildDeleteAction(string $deleteRouteName, string $deleteRouteParamName, string $deleteRouteParamField): RowActionInterface
+    protected function buildDeleteAction(string $deleteRouteName, string $deleteRouteParamName, string $deleteRouteParamField, string $method = 'POST'): RowActionInterface
     {
         return (new SubmitRowAction('delete'))
             ->setName($this->trans('Delete', [], 'Admin.Actions'))
@@ -46,6 +46,7 @@ trait DeleteActionTrait
                 'route_param_name' => $deleteRouteParamName,
                 'route_param_field' => $deleteRouteParamField,
                 'confirm_message' => $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
+                'method' => $method,
                 'modal_options' => new ModalOptions([
                     'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
                     'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
