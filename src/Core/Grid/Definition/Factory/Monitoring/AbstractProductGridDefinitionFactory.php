@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines reusable grids for product listing in monitoring page
@@ -194,6 +195,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     'admin_product_unit_action',
                     'id',
                     'id_product',
+                    Request::METHOD_DELETE,
                     ['action' => 'delete'],
                     [
                         'confirm_message' => $this->trans(
