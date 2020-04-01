@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -51,6 +50,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     /**
      * @var string the URL to reset Grid filters
      */
@@ -160,18 +161,11 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'actions' => (new RowActionCollection())
                         ->add(
-                            (new LinkRowAction('delete'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'route' => 'admin_emails_delete',
-                                'route_param_name' => 'mailId',
-                                'route_param_field' => 'id_mail',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
+                            $this->buildDeleteAction(
+                                'admin_emails_delete',
+                                'mailId',
+                                'id_mail'
+                            )
                         ),
                 ])
             );
