@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class CurrencyGridDefinitionFactory is responsible for defining definition for currency list located in
@@ -140,7 +141,8 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                             $this->buildDeleteAction(
                                 'admin_currencies_delete',
                                 'currencyId',
-                                'id_currency'
+                                'id_currency',
+                                Request::METHOD_DELETE
                             )
                         ),
                 ])
