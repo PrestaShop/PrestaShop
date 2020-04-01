@@ -1096,16 +1096,16 @@ class OrderController extends CommonController
 
         $routesCollection = $this->get('router')->getRouteCollection();
 
-        if (
-            null !== $routesCollection &&
+        if (null !== $routesCollection &&
             !$orderMessageForm->isValid() &&
-            $viewRoute = $routesCollection->get('admin_orders_view')) {
+            $viewRoute = $routesCollection->get('admin_orders_view')
+        ) {
+            $attributes = $viewRoute->getDefaults();
+            $attributes['orderId'] = $orderId;
+
             return $this->forward(
                 $viewRoute->getDefault('_controller'),
-                [
-                    'orderId' => $orderId,
-                ],
-                $viewRoute->getDefaults()
+                $attributes
             );
         }
 
