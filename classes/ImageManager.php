@@ -451,7 +451,8 @@ class ImageManagerCore
             return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', array($file['size'] / 1024, $maxFileSize / 1024), 'Admin.Notifications.Error');
         }
         if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
-            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', array(), 'Admin.Notifications.Error');
+            $typesTxt = $types ? '.' . implode(', .', $types) : '.gif, .jpg, .png';
+            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: %s', array($typesTxt), 'Admin.Notifications.Error');
         }
         if ($file['error']) {
             return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', array($file['error']), 'Admin.Notifications.Error');
