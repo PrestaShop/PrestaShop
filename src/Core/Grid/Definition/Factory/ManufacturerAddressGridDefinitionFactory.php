@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ManufacturerAddressGridDefinitionFactory is responsible for creating Manufacturers address grid definition.
@@ -139,7 +140,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                             $this->buildDeleteAction(
                                 'admin_manufacturer_addresses_delete',
                                 'addressId',
-                                'id_address'
+                                'id_address',
+                                Request::METHOD_DELETE
                             )
                         ),
                 ])
