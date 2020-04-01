@@ -45,7 +45,7 @@ trait DeleteActionTrait
                 'route' => $deleteRouteName,
                 'route_param_name' => $deleteRouteParamName,
                 'route_param_field' => $deleteRouteParamField,
-                'confirm_message' => $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
+                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
                 'method' => $method,
                 'modal_options' => new ModalOptions([
                     'title' => $this->trans('Delete selection', [], 'Admin.Actions'),

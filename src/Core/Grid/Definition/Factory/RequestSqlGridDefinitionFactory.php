@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class RequestSqlGridDefinitionFactory is responsible for creating RequestSql grid definition.
@@ -162,7 +163,8 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                                 $this->buildDeleteAction(
                                     'admin_sql_requests_delete',
                                     'sqlRequestId',
-                                    'id_request_sql'
+                                    'id_request_sql',
+                                    Request::METHOD_DELETE
                                 )
                             ),
                     ])
