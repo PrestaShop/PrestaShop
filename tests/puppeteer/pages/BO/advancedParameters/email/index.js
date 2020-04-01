@@ -138,8 +138,8 @@ module.exports = class Email extends BOBasePage {
       this.page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(this.bulkActionsToggleButton),
     ]);
-    // Click on delete and wait for modal
-    await this.page.click(this.bulkActionsDeleteButton);
+    // Click on delete
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
