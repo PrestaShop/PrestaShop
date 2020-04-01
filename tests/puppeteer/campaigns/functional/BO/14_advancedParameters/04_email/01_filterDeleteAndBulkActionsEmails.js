@@ -172,7 +172,11 @@ describe('Filter, delete and bulk actions email log', async () => {
     tests.forEach((test) => {
       it(`should filter email logs by '${test.args.filterBy}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
-        await this.pageObjects.emailPage.filterEmailLogs(test.args.filterType, test.args.filterBy, test.args.filterValue);
+        await this.pageObjects.emailPage.filterEmailLogs(
+          test.args.filterType,
+          test.args.filterBy,
+          test.args.filterValue,
+        );
         const numberOfEmailsAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
         await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
         for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {

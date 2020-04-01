@@ -92,10 +92,10 @@ module.exports = class Email extends BOBasePage {
    * @return {Promise<textContent>}
    */
   getTextColumn(columnName, row) {
-    if (columnName === 'id_lang') {
-      return this.getTextContent(this.tableColumn.replace('%ROW', row).replace('%COLUMN', 'language'));
-    }
-    return this.getTextContent(this.tableColumn.replace('%ROW', row).replace('%COLUMN', columnName));
+    return this.getTextContent(this.tableColumn
+      .replace('%ROW', row)
+      .replace('%COLUMN', columnName === 'id_lang' ? 'language' : columnName),
+    );
   }
 
   /**
