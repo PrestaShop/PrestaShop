@@ -45,6 +45,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class LanguageGridDefinitionFactory creates definition for languages grid.
@@ -166,7 +167,8 @@ final class LanguageGridDefinitionFactory extends AbstractGridDefinitionFactory
                             $this->buildDeleteAction(
                                 'admin_languages_delete',
                                 'languageId',
-                                'id_lang'
+                                'id_lang',
+                                Request::METHOD_DELETE
                             )
                         ),
                 ])
