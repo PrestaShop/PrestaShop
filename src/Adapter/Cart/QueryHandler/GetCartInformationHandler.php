@@ -231,38 +231,67 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $products = [];
+        $mergedGifts = $this->mergeGiftProducts($legacySummary['gift_products']);
 
         foreach ($legacySummary['products'] as &$product) {
-            // reduce product quantity for each existing gift of that product
-            $product['quantity'] -= $this->countIdenticalGiftProductsInCart($product, $legacySummary['gift_products']);
+            $productKey = $this->generateUniqueProductKey($product);
+
+            //decrease product quantity for each identical product which is marked as gift
+            if (isset($mergedGifts[$productKey])) {
+                $identicalGiftedProduct = $mergedGifts[$productKey];
+                $product['quantity'] -= $identicalGiftedProduct['quantity'];
+            }
+
             $products[] = $this->buildCartProduct($cart, $currency, $product);
         }
 
-        foreach ($legacySummary['gift_products'] as &$product) {
-            // make sure that each gift product has quantity of 1.
-            $product['quantity'] = 1;
+        foreach ($mergedGifts as $product) {
             $products[] = $this->buildCartProduct($cart, $currency, $product);
         }
 
         return $products;
     }
 
-    private function countIdenticalGiftProductsInCart(array $product, array $giftProducts): int
+    /**
+     * @param array $giftProducts
+     *
+     * @return array
+     */
+    private function mergeGiftProducts(array $giftProducts): array
     {
-        $giftsCount = 0;
+        $mergedGifts = [];
 
         foreach ($giftProducts as $giftProduct) {
-            $matchesGiftProduct = $product['id_product'] === $giftProduct['id_product'] &&
-                $product['id_product_attribute'] === $giftProduct['id_product_attribute'] &&
-                $product['id_customization'] === $giftProduct['id_customization']
-            ;
+            $productKey = $this->generateUniqueProductKey($giftProduct);
 
-            if ($matchesGiftProduct) {
-                ++$giftsCount;
+            if (!isset($mergedGifts[$productKey])) {
+                // set first gift and make sure its quantity is 1.
+                $mergedGifts[$productKey] = $giftProduct;
+                $mergedGifts[$productKey]['quantity'] = 1;
+            } else {
+                //increase existing gift quantity by 1
+                ++$mergedGifts[$productKey]['quantity'];
             }
         }
 
-        return $giftsCount;
+        return $mergedGifts;
+    }
+
+    /**
+     * Forms a unique product key using combination and customization ids.
+     *
+     * @param array $product
+     *
+     * @return string
+     */
+    private function generateUniqueProductKey(array $product): string
+    {
+        return sprintf(
+            '%s_%s_%s',
+            (int) $product['id_product'],
+            (int) $product['id_product_attribute'],
+            (int) $product['id_customization']
+        );
     }
 
     /**
