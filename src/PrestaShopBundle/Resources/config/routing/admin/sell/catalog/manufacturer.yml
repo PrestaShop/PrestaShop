@@ -51,7 +51,7 @@ admin_manufacturers_edit:
 
 admin_manufacturers_delete:
   path: /{manufacturerId}/delete
-  methods: POST
+  methods: [POST, DELETE]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:delete'
     _legacy_controller: AdminManufacturers

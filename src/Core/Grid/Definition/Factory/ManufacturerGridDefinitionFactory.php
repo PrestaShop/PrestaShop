@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ManufacturerGridDefinitionFactory is responsible for creating Manufacturers grid definition.
@@ -148,7 +149,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                             $this->buildDeleteAction(
                                 'admin_manufacturers_delete',
                                 'manufacturerId',
-                                'id_manufacturer'
+                                'id_manufacturer',
+                                Request::METHOD_DELETE
                             )
                         ),
                 ])
