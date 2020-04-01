@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -185,7 +186,8 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                             $this->buildDeleteAction(
                                 'admin_cms_pages_delete',
                                 'cmsId',
-                                'id_cms'
+                                'id_cms',
+                                Request::METHOD_DELETE
                             )
                         ),
                 ])
