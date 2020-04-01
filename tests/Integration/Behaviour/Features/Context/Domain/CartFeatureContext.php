@@ -267,7 +267,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I use a voucher :voucherCode for a gift product :productName on the cart :cartReference
+     * @When I use a voucher :voucherCode which provides a gift product :productName on the cart :cartReference
      *
      * @param string $voucherCode
      * @param string $giftProductName
@@ -419,6 +419,52 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productName quantity in cart :cartReference should be :quantity excluding gift products
+     *
+     * @param string $cartReference
+     * @param string $productName
+     * @param int $quantity
+     */
+    public function assertPaidProductQuantity(string $cartReference, string $productName, int $quantity)
+    {
+        $this->assertProductQuantity($cartReference, $productName, $quantity, false);
+    }
+
+    /**
+     * @Then gifted product :productName quantity in cart :cartReference should be :quantity
+     *
+     * @param string $cartReference
+     * @param string $productName
+     * @param int $quantity
+     */
+    public function assertGiftedProductQuantity(string $cartReference, string $productName, int $quantity)
+    {
+        $this->assertProductQuantity($cartReference, $productName, $quantity, true);
+    }
+
+    /**
+     * @param string $cartReference
+     * @param string $productName
+     * @param int $quantity
+     * @param bool $isGift
+     */
+    public function assertProductQuantity(string $cartReference, string $productName, int $quantity, bool $isGift)
+    {
+        $productId = $this->getProductIdByName($productName);
+        $cartInfo = $this->getCartInformationByReference($cartReference);
+
+        foreach ($cartInfo->getProducts() as $product) {
+            if ($productId === $product->getProductId() && (bool) $product->isGift() === $isGift) {
+                Assert::assertEquals($quantity, $product->getQuantity());
+
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf('Product %s was not found in cart', $productName));
+    }
+
+    /**
      * @Then cart :cartReference should contain gift product :productName
      * @Given cart :cartReference contains gift product :productName
      *
@@ -491,7 +537,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given /^I use a voucher "(.+)" that provides gift product "(.+)" and free shipping on the cart "(.+)"$/
+     * @Given /^I use a voucher "(.+)" which provides a gift product "(.+)" and free shipping on the cart "(.+)"$/
      */
     public function addGiftPlusFreeShippingCartRule(string $voucherCode, string $giftProductName, string $cartReference)
     {
