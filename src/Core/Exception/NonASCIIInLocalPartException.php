@@ -24,30 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
+namespace PrestaShop\PrestaShop\Core\Exception;
 
-use PrestaShopBundle\Form\Admin\Type\EmailType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Egulias\EmailValidator\Exception\InvalidEmail;
 
 /**
- * Class TestEmailSendingType is responsible for building form type used to send testing emails.
+ * Exception thrown when email local part contains non-ascii characters
  */
-class TestEmailSendingType extends AbstractType
+class NonASCIIInLocalPartException extends InvalidEmail
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('send_email_to', EmailType::class)
-            ->add('mail_method', HiddenType::class)
-            ->add('smtp_server', HiddenType::class)
-            ->add('smtp_username', HiddenType::class)
-            ->add('smtp_password', HiddenType::class)
-            ->add('smtp_port', HiddenType::class)
-            ->add('smtp_encryption', HiddenType::class);
-    }
 }

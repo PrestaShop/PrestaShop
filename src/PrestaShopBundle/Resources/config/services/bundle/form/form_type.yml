@@ -12,6 +12,13 @@ services:
         tags:
           - { name: form.type }
 
+    form.type.email:
+        class: PrestaShopBundle\Form\Admin\Type\EmailType
+        arguments:
+          - '@prestashop.bundle.form.data_transformer.idn_converter'
+        tags:
+            - { name: form.type }
+
     form.type.product.simple_category:
         class: PrestaShopBundle\Form\Admin\Category\SimpleCategory
         arguments:

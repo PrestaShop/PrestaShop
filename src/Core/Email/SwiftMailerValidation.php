@@ -23,31 +23,50 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
+namespace PrestaShop\PrestaShop\Core\Email;
 
-use PrestaShopBundle\Form\Admin\Type\EmailType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Egulias\EmailValidator\EmailLexer;
+use Egulias\EmailValidator\Exception\InvalidEmail;
+use Egulias\EmailValidator\Validation\EmailValidation;
+use PrestaShop\PrestaShop\Core\Exception\NonASCIIInLocalPartException;
 
-/**
- * Class TestEmailSendingType is responsible for building form type used to send testing emails.
- */
-class TestEmailSendingType extends AbstractType
+class SwiftMailerValidation implements EmailValidation
 {
+    /**
+     * @var InvalidEmail|null
+     */
+    private $error;
+
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function isValid($email, EmailLexer $emailLexer)
     {
-        $builder
-            ->add('send_email_to', EmailType::class)
-            ->add('mail_method', HiddenType::class)
-            ->add('smtp_server', HiddenType::class)
-            ->add('smtp_username', HiddenType::class)
-            ->add('smtp_password', HiddenType::class)
-            ->add('smtp_port', HiddenType::class)
-            ->add('smtp_encryption', HiddenType::class);
+        if (is_string($email)) {
+            $parts = explode('@', $email);
+            if (preg_match('/[^\x00-\x7F]/', $parts[0])) {
+                $this->error = new NonASCIIInLocalPartException();
+            }
+        }
+
+        return null === $this->error;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWarnings()
+    {
+        return [];
     }
 }

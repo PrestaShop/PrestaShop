@@ -24,30 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
+declare(strict_types=1);
 
-use PrestaShopBundle\Form\Admin\Type\EmailType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+namespace PrestaShop\PrestaShop\Core\Util;
 
-/**
- * Class TestEmailSendingType is responsible for building form type used to send testing emails.
- */
-class TestEmailSendingType extends AbstractType
+class InternationalizedDomainNameConverter
 {
     /**
-     * {@inheritdoc}
+     * Convert the host part of the email from punycode to utf8 (e.g,. email@xn--e1aybc.xn--p1ai -> email@тест.рф)
+     *
+     * @param string $email
+     *
+     * @return string
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function emailToUtf8(string $email): string
     {
-        $builder
-            ->add('send_email_to', EmailType::class)
-            ->add('mail_method', HiddenType::class)
-            ->add('smtp_server', HiddenType::class)
-            ->add('smtp_username', HiddenType::class)
-            ->add('smtp_password', HiddenType::class)
-            ->add('smtp_port', HiddenType::class)
-            ->add('smtp_encryption', HiddenType::class);
+        $parts = explode('@', $email);
+        if (count($parts) !== 2) {
+            return $email;
+        }
+
+        return $parts[0] . '@' . idn_to_utf8($parts[1], 0, INTL_IDNA_VARIANT_UTS46);
     }
 }

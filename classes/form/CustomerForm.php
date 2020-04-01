@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -38,6 +39,8 @@ class CustomerFormCore extends AbstractForm
     private $customerPersister;
     private $guest_allowed;
     private $passwordRequired = true;
+
+    private $IDNConverter;
 
     public function __construct(
         Smarty $smarty,
@@ -56,6 +59,7 @@ class CustomerFormCore extends AbstractForm
         $this->context = $context;
         $this->urls = $urls;
         $this->customerPersister = $customerPersister;
+        $this->IDNConverter = new InternationalizedDomainNameConverter();
     }
 
     public function setGuestAllowed($guest_allowed = true)
@@ -71,6 +75,17 @@ class CustomerFormCore extends AbstractForm
         $this->passwordRequired = $passwordRequired;
 
         return $this;
+    }
+
+    public function fillWith(array $params = [])
+    {
+        if (!empty($params['email'])) {
+            // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
+            // we need to convert it back
+            $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
+        }
+
+        return parent::fillWith($params);
     }
 
     public function fillFromCustomer(Customer $customer)

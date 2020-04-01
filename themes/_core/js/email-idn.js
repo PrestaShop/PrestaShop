@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -23,31 +22,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import $ from 'jquery';
+import punycode from 'punycode';
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
-
-use PrestaShopBundle\Form\Admin\Type\EmailType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
-
-/**
- * Class TestEmailSendingType is responsible for building form type used to send testing emails.
- */
-class TestEmailSendingType extends AbstractType
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('send_email_to', EmailType::class)
-            ->add('mail_method', HiddenType::class)
-            ->add('smtp_server', HiddenType::class)
-            ->add('smtp_username', HiddenType::class)
-            ->add('smtp_password', HiddenType::class)
-            ->add('smtp_port', HiddenType::class)
-            ->add('smtp_encryption', HiddenType::class);
+const init = function initEmailFields(selector) {
+  const $emailFields = $(selector);
+  $.each($emailFields, (i, field) => {
+    if (!field.checkValidity()) {
+      const parts = field.value.split('@');
+      if (punycode.toASCII(parts[0]) === parts[0]) {
+        field.value = punycode.toASCII(field.value);
+      }
     }
-}
+  });
+};
+
+export default init;
