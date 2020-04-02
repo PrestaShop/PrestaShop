@@ -1282,10 +1282,9 @@ class OrderController extends CommonController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        dump($orderForViewing);
-
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', [
-            'orderForViewing' => $orderForViewing,
+            'discounts' => $orderForViewing->getDiscounts()->getDiscounts(),
+            'orderForViewingId' => $orderForViewing->getId(),
         ]);
     }
 
@@ -1301,12 +1300,11 @@ class OrderController extends CommonController
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         $orderForViewingPrices = $orderForViewing->getPrices();
-        $zeroNumber = new Number('0');
 
         return $this->json([
             'orderTotalFormatted' => $orderForViewingPrices->getTotalAmountFormatted(),
             'discountsAmountFormatted' => $orderForViewingPrices->getDiscountsAmountFormatted(),
-            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThan($zeroNumber),
+            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThan(new Number('0')),
             'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
             'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
             'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),

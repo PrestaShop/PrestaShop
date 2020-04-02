@@ -148,7 +148,8 @@
     </div>
 
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig' with {
-      'orderForViewing': orderForViewing
+      'discounts': orderForViewing.discounts.discounts,
+      'orderForViewingId': orderForViewing.id
     } %}
 
     <div class="row">

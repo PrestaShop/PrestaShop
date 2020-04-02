@@ -31,6 +31,7 @@ use CartRule;
 use Configuration;
 use Currency;
 use Customer;
+use Exception;
 use Hook;
 use Order;
 use OrderCarrier;
@@ -72,7 +73,6 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     {
         $orderDetail = new OrderDetail($command->getOrderDetailId());
         $order = new Order($command->getOrderId()->getValue());
-        dump($order);
 
         $this->assertProductCanBeDeleted($order, $orderDetail);
 
@@ -83,39 +83,44 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer));
 
-        $result = true;
-        $result &= $this->updateCart($order, $orderDetail, $cart);
-        $result &= $this->updateOrderInvoice($orderDetail);
+        try {
+            $result = true;
+            $oldCartRules = $cart->getCartRules();
+            $result &= $this->updateCart($orderDetail, $cart);
+            $result &= $this->updateCartRules($order, $oldCartRules, $cart->getCartRules());
+            $result &= $this->updateOrderInvoice($orderDetail);
 
-        // Reinject quantity in stock
-        $this->reinjectQuantity($orderDetail, $orderDetail->product_quantity, true);
+            // Reinject quantity in stock
+            $this->reinjectQuantity($orderDetail, $orderDetail->product_quantity, true);
 
-        $result &= $this->updateOrder($order, $orderDetail, $cart);
-        $result &= $this->updateOrderWeight($order);
+            $result &= $this->updateOrder($order, $orderDetail, $cart);
+            $result &= $this->updateOrderWeight($order);
 
-        if (!$result) {
-            throw new OrderException('An error occurred while attempting to delete product from order.');
+            if (!$result) {
+                throw new OrderException('An error occurred while attempting to delete product from order.');
+            }
+
+            $order = $order->refreshShippingCost();
+
+            Hook::exec('actionOrderEdited', ['order' => $order]);
+        } catch (Exception $e) {
+            $this->contextStateManager->restoreContext();
+            throw $e;
         }
-
-        $order = $order->refreshShippingCost();
-
-        Hook::exec('actionOrderEdited', ['order' => $order]);
 
         $this->contextStateManager->restoreContext();
     }
 
     /**
-     * @param Order $order
      * @param OrderDetail $orderDetail
      * @param Cart $cart
      *
      * @return bool
      */
-    private function updateCart(Order $order, OrderDetail $orderDetail, Cart &$cart)
+    private function updateCart(OrderDetail $orderDetail, Cart &$cart)
     {
-        $oldCartRules = $cart->getCartRules();
         // Update Product Quantity in the cart
-        $return = $cart->updateQty(
+        $cart->updateQty(
             $orderDetail->product_quantity,
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
@@ -126,10 +131,23 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
 
-        // Remove previous cart rules applied to order
+        return $cart->update();
+    }
+
+    /**
+     * Remove previous cart rules applied to order
+     *
+     * @param Order $order
+     * @param array $oldCartRules
+     * @param array $newCartRules
+     *
+     * @return bool
+     */
+    private function updateCartRules(Order $order, array $oldCartRules, array $newCartRules)
+    {
         $result = array_diff(
             array_map('serialize', $oldCartRules),
-            array_map('serialize', $cart->getCartRules())
+            array_map('serialize', $newCartRules)
         );
         $result = array_map('unserialize', $result);
 
@@ -142,7 +160,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             }
         }
 
-        return $cart->update();
+        return true;
     }
 
     /**
