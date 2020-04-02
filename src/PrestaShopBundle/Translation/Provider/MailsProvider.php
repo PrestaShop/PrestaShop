@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Translation\Provider;
 /**
  * Translation provider specific to email subjects.
  */
-class MailsProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class MailsProvider extends AbstractProvider
 {
     /**
      * {@inheritdoc}
