@@ -201,7 +201,7 @@ describe('Enable/Disable terms of service', async () => {
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
       });
 
-      it(`should gift checkbox visibility be '${test.args.wantedStatus}'`, async function () {
+      it(`should check that gift checkbox visibility is '${test.args.wantedStatus}'`, async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -233,19 +233,21 @@ describe('Enable/Disable terms of service', async () => {
         });
       }
 
-      it(`should recyclable package checkbox visibility be '${test.args.isRecyclablePackage}'`, async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          `checkRecyclableVisibility${test.args.testIdentifier}`,
-          baseContext,
-        );
-        const isRecyclableCheckboxVisible = await this.pageObjects.checkoutPage.isRecyclableCheckboxVisible();
-        await expect(
-          isRecyclableCheckboxVisible,
-          'Gift checkbox has not the correct status',
-        ).to.equal(test.args.isRecyclablePackage);
-      });
+      it(
+        `should check that recyclable package checkbox visibility is '${test.args.isRecyclablePackage}'`,
+        async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `checkRecyclableVisibility${test.args.testIdentifier}`,
+            baseContext,
+          );
+          const isRecyclableCheckboxVisible = await this.pageObjects.checkoutPage.isRecyclableCheckboxVisible();
+          await expect(
+            isRecyclableCheckboxVisible,
+            'Gift checkbox has not the correct status',
+          ).to.equal(test.args.isRecyclablePackage);
+        });
 
       it('should sign out from FO', async function () {
         await testContext.addContextItem(
