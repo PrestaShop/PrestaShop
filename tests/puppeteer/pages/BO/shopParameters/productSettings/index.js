@@ -30,6 +30,7 @@ module.exports = class productSettings extends BOBasePage {
     this.productsStockForm = '#configuration_fieldset_stock';
     this.allowOrderingOosLabel = `${this.productsStockForm} label[for='form_stock_allow_ordering_oos_%TOGGLE']`;
     this.enableStockManagementLabel = `${this.productsStockForm} label[for='form_stock_stock_management_%TOGGLE']`;
+    this.deliveryTimeInStockInput = '#form_stock_delivery_time_1';
     this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
     // Pagination form
     this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
@@ -195,6 +196,17 @@ module.exports = class productSettings extends BOBasePage {
   async setProductsDisplayedPerPage(numberOfProducts) {
     await this.setValue(this.productsPerPageInput, numberOfProducts.toString());
     await this.clickAndWaitForNavigation(this.savePaginationFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set delivery time text
+   * @param deliveryTimeText
+   * @return {Promise<string>}
+   */
+  async setDeliveryTimeInStocks(deliveryTimeText) {
+    await this.setValue(this.deliveryTimeInStockInput, deliveryTimeText);
+    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };
