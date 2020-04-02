@@ -155,6 +155,8 @@ services:
 
   prestashop.adapter.order.command_handler.delete_product_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
