@@ -28,16 +28,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 /**
- * This interface allows to identify a grid thanks to its Grid ID, it is used in
- * CommonController to detect which grids manage this feature.
+ * This interface allows to identify the filters associated to a Grid, which is then used
+ * to scope its parameters in request (thus allowing multi grid on same page) and as a key
+ * to persist them in database (and of course etch them afterwards).
  */
-interface IdentifiableGridDefinitionFactoryInterface extends GridDefinitionFactoryInterface
+interface FilterableGridDefinitionFactoryInterface extends GridDefinitionFactoryInterface
 {
     /**
-     * Returns a (unique) id to identify the grid, this is mainly used as a key to persist
+     * Returns a (unique) id to identify the grid filters, this is used as a key to persist
      * (and clear) the Filters associated to the grid.
      *
      * @return string
      */
-    public function getGridId(): string;
+    public function getFilterId(): string;
 }

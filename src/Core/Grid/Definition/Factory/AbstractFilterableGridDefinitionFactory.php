@@ -28,16 +28,16 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 /**
- * Class AbstractIdentifiableGridDefinitionFactory implements identified grid definition creation.
+ * Class AbstractFilterableGridDefinitionFactory implements filterable grid definition creation.
  */
-abstract class AbstractIdentifiableGridDefinitionFactory extends AbstractGridDefinitionFactory implements IdentifiableGridDefinitionFactoryInterface
+abstract class AbstractFilterableGridDefinitionFactory extends AbstractGridDefinitionFactory implements FilterableGridDefinitionFactoryInterface
 {
     /**
      * {@inheritdoc}
      *
      * Grid definition already has an internal id used or hooks, that can also be used as an identifier for filters
      */
-    public function getGridId(): string
+    public function getFilterId(): string
     {
         return $this->getId();
     }

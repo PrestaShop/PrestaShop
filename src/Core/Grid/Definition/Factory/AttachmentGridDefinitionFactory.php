@@ -46,7 +46,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Defines attachments list grid
  */
-final class AttachmentGridDefinitionFactory extends AbstractIdentifiableGridDefinitionFactory
+final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
 

@@ -47,7 +47,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Defines attribute groups grid
  */
-final class AttributeGroupGridDefinitionFactory extends AbstractIdentifiableGridDefinitionFactory
+final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     const GRID_ID = 'attribute_group';
 

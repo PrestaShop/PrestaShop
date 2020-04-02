@@ -33,8 +33,8 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\IdentifiableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
@@ -363,7 +363,7 @@ class CommonController extends FrameworkBundleAdminController
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
 
         // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
-        if (!($definitionFactory instanceof IdentifiableGridDefinitionFactoryInterface)) {
+        if (!($definitionFactory instanceof FilterableGridDefinitionFactoryInterface)) {
             /** @var ControllerResponseBuilder $responseBuilder */
             $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
 
@@ -381,7 +381,7 @@ class CommonController extends FrameworkBundleAdminController
         return $responseBuilder->buildSearchResponse(
             $definitionFactory,
             $request,
-            $definitionFactory->getGridId(),
+            $definitionFactory->getFilterId(),
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
