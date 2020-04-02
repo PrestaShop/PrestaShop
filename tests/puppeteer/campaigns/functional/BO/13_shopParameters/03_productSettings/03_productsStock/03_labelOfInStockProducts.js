@@ -77,8 +77,14 @@ describe('Test label of in-stock products', async () => {
       await expect(isVisible).to.be.equal(test.args.exist);
       const availabilityLabel = await this.pageObjects.productPage.getProductAvailabilityLabel();
       await expect(availabilityLabel).to.contains(test.args.labelToCheck);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
       page = await this.pageObjects.productPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
     });
   });
 });
