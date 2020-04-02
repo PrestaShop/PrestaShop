@@ -146,6 +146,12 @@ services:
         arguments:
             - "@prestashop.translation.extractor.smarty.legacy"
 
+    prestashop.translation.theme_extractor_cache:
+        class: PrestaShopBundle\Translation\Extractor\ThemeExtractorCache
+        arguments:
+            - "@prestashop.translation.theme_extractor"
+            - "%themes_translations_dir%"
+
     prestashop.translation.legacy_module.extractor:
         class: PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor
         arguments:
