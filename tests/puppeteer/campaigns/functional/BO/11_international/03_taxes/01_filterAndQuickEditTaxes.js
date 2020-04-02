@@ -71,9 +71,13 @@ describe('Filter And Quick Edit taxes', async () => {
         },
       },
       {
-        args: {
-          testIdentifier: 'filterRate', filterType: 'input', filterBy: 'rate', filterValue: DefaultFrTax.rate.toString(),
-        },
+        args:
+          {
+            testIdentifier: 'filterRate',
+            filterType: 'input',
+            filterBy: 'rate',
+            filterValue: DefaultFrTax.rate.toString(),
+          },
       },
       {
         args:
