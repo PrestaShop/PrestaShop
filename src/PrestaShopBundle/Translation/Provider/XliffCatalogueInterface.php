@@ -26,15 +26,11 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
 /**
  * Provide an Message Catalogue from Xliff files.
+ *
+ * @deprecated Since 1.7.6.5, no longer used
  */
 interface XliffCatalogueInterface
 {
-    /**
-     * @return MessageCatalogue
-     */
-    public function getXliffCatalogue();
 }
