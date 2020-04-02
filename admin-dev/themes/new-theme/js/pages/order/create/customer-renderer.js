@@ -69,9 +69,9 @@ export default class CustomerRenderer {
 
     // Show customer details in fancy box
     $(createOrderMap.customerDetailsBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -163,9 +163,9 @@ export default class CustomerRenderer {
 
     // Show cart details in fancy box
     $(createOrderMap.cartDetailsBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -212,7 +212,7 @@ export default class CustomerRenderer {
         'href',
         this.router.generate('admin_orders_view', {
           orderId: order.orderId,
-          liteDisplaying: 1
+          liteDisplaying: 1,
         }),
       );
 
@@ -224,9 +224,9 @@ export default class CustomerRenderer {
 
     // Show order details in fancy box
     $(createOrderMap.orderDetailsBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -320,7 +320,7 @@ export default class CustomerRenderer {
       'href',
       this.router.generate('admin_customers_view', {
         customerId: customer.id,
-        liteDisplaying: 1
+        liteDisplaying: 1,
       }),
     );
 
