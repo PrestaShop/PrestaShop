@@ -422,6 +422,7 @@ class OrderController extends CommonController
 
         $addProductRowForm = $this->createForm(AddProductRowType::class, [], [
             'order_id' => $orderId,
+            'currency_id' => $orderForViewing->getCurrencyId(),
             'symbol' => $orderCurrency->symbol,
         ]);
         $editProductRowForm = $this->createForm(EditProductRowType::class, [], [
@@ -1096,16 +1097,16 @@ class OrderController extends CommonController
 
         $routesCollection = $this->get('router')->getRouteCollection();
 
-        if (
-            null !== $routesCollection &&
+        if (null !== $routesCollection &&
             !$orderMessageForm->isValid() &&
-            $viewRoute = $routesCollection->get('admin_orders_view')) {
+            $viewRoute = $routesCollection->get('admin_orders_view')
+        ) {
+            $attributes = $viewRoute->getDefaults();
+            $attributes['orderId'] = $orderId;
+
             return $this->forward(
                 $viewRoute->getDefault('_controller'),
-                [
-                    'orderId' => $orderId,
-                ],
-                $viewRoute->getDefaults()
+                $attributes
             );
         }
 
@@ -1286,35 +1287,6 @@ class OrderController extends CommonController
             'productsTotalFormatted' => $orderForViewing->getPrices()->getProductsPriceFormatted(),
             'shippingTotalFormatted' => $orderForViewing->getPrices()->getShippingPriceFormatted(),
             'taxesTotalFormatted' => $orderForViewing->getPrices()->getTaxesAmountFormatted(),
-        ]);
-    }
-
-    /**
-     * Returns products for given order
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
-     *
-     * @param int $orderId
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getPaginatedProductsAction(int $orderId, Request $request): JsonResponse
-    {
-        $offset = $request->get('offset');
-        $limit = $request->get('limit');
-
-        /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-
-        $products = $orderForViewing->getProducts()->getProducts();
-        if (null !== $limit && null !== $offset) {
-            // @todo: Optimize this by using a GetPartialOrderForViewing query which loads only the relevant products
-            $products = array_slice($products, (int) $offset, (int) $limit);
-        }
-
-        return $this->json([
-            'products' => $products,
         ]);
     }
 

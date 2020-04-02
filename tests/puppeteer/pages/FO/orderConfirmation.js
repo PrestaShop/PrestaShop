@@ -24,4 +24,12 @@ module.exports = class OrderConfirmation extends FOBasePage {
   isFinalSummaryVisible() {
     return this.elementVisible(this.orderSummaryContent, 2000);
   }
+
+  /**
+   * Get order confirmation card title
+   * @return {Promise<string>}
+   */
+  getOrderConfirmationCardTitle() {
+    return this.getTextContent(this.orderConfirmationCardTitleH3);
+  }
 };

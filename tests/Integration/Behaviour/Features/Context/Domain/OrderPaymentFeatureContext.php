@@ -58,7 +58,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                 $data['date'],
                 $data['payment_method'],
                 $data['amount'],
-                (int) $data['id_currency'],
+                SharedStorage::getStorage()->get($data['currency'])->id,
                 isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                 $data['transaction_id']
             )
@@ -149,7 +149,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                     $data['date'],
                     $data['payment_method'],
                     $data['amount'],
-                    (int) $data['id_currency'],
+                    SharedStorage::getStorage()->get($data['currency'])->id,
                     isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                     $data['transaction_id']
                 )

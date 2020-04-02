@@ -29,6 +29,12 @@ module.exports = class productSettings extends BOBasePage {
     // Products stock form
     this.productsStockForm = '#configuration_fieldset_stock';
     this.allowOrderingOosLabel = `${this.productsStockForm} label[for='form_stock_allow_ordering_oos_%TOGGLE']`;
+    this.enableStockManagementLabel = `${this.productsStockForm} label[for='form_stock_stock_management_%TOGGLE']`;
+    this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
+    // Pagination form
+    this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
+    this.productsPerPageInput = '#form_pagination_products_per_page';
+    this.savePaginationFormButton = `${this.paginationFormBlock} .card-footer button`;
   }
 
   /*
@@ -163,7 +169,32 @@ module.exports = class productSettings extends BOBasePage {
    */
   async setAllowOrderingOutOfStockStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.allowOrderingOosLabel.replace('%TOGGLE', toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
+    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable/Disable stock management
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setEnableStockManagementStatus(toEnable = true) {
+    await this.waitForSelectorAndClick(this.enableStockManagementLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    if (toEnable) {
+      await this.waitForSelectorAndClick(this.allowOrderingOosLabel.replace('%TOGGLE', 0));
+    }
+    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set number of products displayed per page
+   * @param numberOfProducts
+   * @return {Promise<string>}
+   */
+  async setProductsDisplayedPerPage(numberOfProducts) {
+    await this.setValue(this.productsPerPageInput, numberOfProducts.toString());
+    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };

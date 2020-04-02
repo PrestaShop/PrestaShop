@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 class OrderProductsForViewing
 {
     /**
-     * hint - collection could be better
-     *
      * @var OrderProductForViewing[]
      */
     private $products = [];

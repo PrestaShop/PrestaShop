@@ -158,4 +158,12 @@ module.exports = class Home extends CommonPage {
   async goToCartPage() {
     await this.clickAndWaitForNavigation(this.cartLink);
   }
+
+  /**
+   * Go to Fo page
+   * @return {Promise<void>}
+   */
+  async goToFo() {
+    await this.goTo(global.FO.URL);
+  }
 };
