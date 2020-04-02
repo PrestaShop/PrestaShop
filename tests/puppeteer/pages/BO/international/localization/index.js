@@ -19,6 +19,10 @@ module.exports = class Localization extends LocalizationBasePage {
     this.updatepriceDisplayForGroupsCHeckbox = '#import_localization_pack_content_to_import_5';
     this.downloadPackDataSwitch = 'label[for=\'import_localization_pack_download_pack_data_%ID\']';
     this.importButton = `${this.importLocalizationPackForm} .card-footer button`;
+    // Configuration form selectors
+    this.defaultLanguageSelector = '#form_configuration_default_language';
+    this.languageFromBrowserLabel = 'label[for=\'form_configuration_detect_language_from_browser_%TOGGLE\']';
+    this.saveConfigurationFormButton = '#main-div form[name=\'form\'] .card-footer button';
   }
 
   /* Methods */
@@ -46,6 +50,21 @@ module.exports = class Localization extends LocalizationBasePage {
     await this.page.click(this.downloadPackDataSwitch.replace('%ID', downloadPackData ? 1 : 0));
     // Import the pack
     await this.clickAndWaitForNavigation(this.importButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+
+  /**
+   * Select default language
+   * @param language
+   * @param languageFromBrowser
+   * @returns {Promise<string>}
+   */
+  async setDefaultLanguage(language, languageFromBrowser = true) {
+    await this.selectByVisibleText(this.defaultLanguageSelector, language);
+    await this.waitForSelectorAndClick(this.languageFromBrowserLabel.replace('%TOGGLE', languageFromBrowser ? 1 : 0));
+    await this.waitForSelectorAndClick(this.saveConfigurationFormButton);
+    await this.page.waitFor(5000);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
