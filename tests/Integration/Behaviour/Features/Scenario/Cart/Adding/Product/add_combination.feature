@@ -3,6 +3,7 @@ Feature: Add product combination in cart
   As a customer
   I must be able to correctly add product combinations in my cart
 
+  @add-combinations-to-cart
   Scenario: Add combination in cart
     Given I have an empty default cart
     Given there is a product in the catalog named "product7" with a price of 24.324 and 1000 items in stock
@@ -12,6 +13,7 @@ Feature: Add product combination in cart
     Then I should have 11 items of combination "combi1" of product "product7" in my cart
     Then the remaining available stock for combination "combi1" of product "product7" should be 489
 
+  @add-combinations-to-cart
   Scenario: Cannot add combination in cart with quantity exceeding availability
     Given I have an empty default cart
     Given there is a product in the catalog named "product7" with a price of 19.812 and 1000 items in stock
@@ -20,6 +22,7 @@ Feature: Add product combination in cart
     Then I should have 0 items of combination "combi1" of product "product7" in my cart
     Then the remaining available stock for combination "combi1" of product "product7" should be 500
 
+  @add-combinations-to-cart
   Scenario: Be able to add out of stock combination if configuration allows it
     Given order out of stock products is allowed
     Given I have an empty default cart
