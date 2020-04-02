@@ -28,265 +28,85 @@
 namespace PrestaShopBundle\Translation\Extractor;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
-use PrestaShopBundle\Translation\Provider\ThemeProvider;
-use Symfony\Component\Translation\Dumper\DumperInterface;
-use Symfony\Component\Translation\Dumper\FileDumper;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Extract all theme translations from Theme templates.
- *
- * xliff is the default file format, you can add custom File dumpers.
+ * Extracts wordings from theme files
  */
-class ThemeExtractor
+class ThemeExtractor implements ThemeExtractorInterface
 {
-    /**
-     * @var MessageCatalogue|null the Message catalogue
-     */
-    private $catalog;
-
-    /**
-     * @var DumperInterface[] the list of Translation dumpers
-     */
-    private $dumpers = [];
-
-    /**
-     * @var string the format of extracted files
-     */
-    private $format = 'xlf';
-
-    /**
-     * @var string the output path for extraction
-     */
-    private $outputPath;
-
     /**
      * @var SmartyExtractor the Smarty Extractor
      */
     private $smartyExtractor;
 
-    /**
-     * @var ThemeProvider the Theme Provider
-     */
-    private $themeProvider;
-
-    /**
-     * @var bool checks wether we should override the database with results or not
-     */
-    private $overrideFromDatabase = false;
-
     public function __construct(SmartyExtractor $smartyExtractor)
     {
         $this->smartyExtractor = $smartyExtractor;
-        $this->dumpers[] = new XliffFileDumper();
     }
 
     /**
-     * @param ThemeProvider $themeProvider
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setThemeProvider(ThemeProvider $themeProvider)
+    public function extract(Theme $theme, $locale = self::DEFAULT_LOCALE, $forceRefresh = false)
     {
-        $this->themeProvider = $themeProvider;
+        $catalogue = new MessageCatalogue($locale);
 
-        return $this;
+        $this->smartyExtractor->extract(
+            $this->getThemeDirectory($theme),
+            $catalogue
+        );
+
+        $catalogue = $this->normalize($catalogue);
+
+        return $catalogue;
     }
 
     /**
-     * Extracts wordings from template files and dumps them as XLIFF files
-     *
      * @param Theme $theme
-     * @param string $locale
-     * @param bool $rootDir
      *
-     * @return void
-     *
-     * @throws \Exception
+     * @return string
      */
-    public function extract(Theme $theme, $locale = 'en-US', $rootDir = false)
+    private function getThemeDirectory(Theme $theme)
     {
-        $this->catalog = new MessageCatalogue($locale);
-        // remove the last "/"
-        $themeDirectory = substr($theme->getDirectory(), 0, -1);
+        // remove trailing "/"
+        return preg_replace('#/+$#', '', $theme->getDirectory());
+    }
 
-        $options = [
-            'path' => $themeDirectory,
-            'default_locale' => $locale,
-            'root_dir' => $rootDir,
-        ];
-        $this->smartyExtractor->extract($themeDirectory, $this->catalog);
+    /**
+     * Normalizes domains in a catalogue by removing dots
+     *
+     * @param MessageCatalogue $catalogue
+     *
+     * @return MessageCatalogue
+     */
+    private function normalize(MessageCatalogue $catalogue)
+    {
+        $newCatalogue = new MessageCatalogue($catalogue->getLocale());
 
-        $this->overrideFromDefaultCatalog($locale, $this->catalog);
-
-        if ($this->overrideFromDatabase) {
-            $this->overrideFromDatabase($theme->getName(), $locale, $this->catalog);
+        foreach ($catalogue->all() as $domain => $messages) {
+            $newDomain = $this->normalizeDomain($domain);
+            $newCatalogue->add($messages, $newDomain);
         }
 
-        foreach ($this->dumpers as $dumper) {
-            if ($this->format === $dumper->getExtension()) {
-                if (null !== $this->outputPath) {
-                    $options['path'] = $this->outputPath;
-                }
-
-                return $dumper->dump($this->catalog, $options);
+        foreach ($catalogue->getMetadata('', '') as $domain => $metadata) {
+            $newDomain = $this->normalizeDomain($domain);
+            foreach ($metadata as $key => $value) {
+                $newCatalogue->setMetadata($key, $value, $newDomain);
             }
         }
 
-        throw new \LogicException(sprintf('The format %s is not supported.', $this->format));
+        return $newCatalogue;
     }
 
     /**
-     * Add default catalogue in this &$catalogue when the translation exists.
+     * @param string $domain
      *
-     * @param string $locale
-     * @param MessageCatalogue $catalogue
-     */
-    private function overrideFromDefaultCatalog($locale, &$catalogue)
-    {
-        $defaultCatalogue = $this->themeProvider
-            ->setLocale($locale)
-            ->getDefaultCatalogue(false);
-
-        if (empty($defaultCatalogue)) {
-            return;
-        }
-
-        $defaultCatalogue = $defaultCatalogue->all();
-
-        if (empty($defaultCatalogue)) {
-            return;
-        }
-
-        $defaultDomainsCatalogue = $catalogue->getDomains();
-
-        foreach ($defaultCatalogue as $domain => $translation) {
-            // AdminCatalogFeature.fr-FR to AdminCatalogFeature
-            $domain = str_replace('.' . $locale, '', $domain);
-
-            // AdminCatalogFeature to Admin.Catalog.Feature
-            $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
-
-            if (in_array($domain, $defaultDomainsCatalogue, true)) {
-                foreach ($translation as $key => $trans) {
-                    if ($catalogue->has($key, $domain)) {
-                        $catalogue->set($key, $trans, $domain);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Add database catalogue in this &$catalogue.
-     *
-     * @param string $themeName
-     * @param string $locale
-     * @param MessageCatalogue $catalogue
-     *
-     * @throws \Exception
-     */
-    private function overrideFromDatabase($themeName, $locale, &$catalogue)
-    {
-        if (null === $this->themeProvider) {
-            throw new \Exception('Theme provider is required.');
-        }
-
-        $databaseCatalogue = $this->themeProvider
-            ->setLocale($locale)
-            ->setThemeName($themeName)
-            ->getDatabaseCatalogue();
-
-        $catalogue->addCatalogue($databaseCatalogue);
-    }
-
-    /**
-     * @param FileDumper $dumper
-     *
-     * @return $this
-     */
-    public function addDumper(FileDumper $dumper)
-    {
-        $this->dumpers[] = $dumper;
-
-        return $this;
-    }
-
-    /**
-     * @return DumperInterface[]
-     */
-    public function getDumpers()
-    {
-        return $this->dumpers;
-    }
-
-    /**
-     * @param string $format
-     *
-     * @return $this
-     */
-    public function setFormat($format)
-    {
-        $this->format = $format;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getFormat()
+    private function normalizeDomain($domain)
     {
-        return $this->format;
-    }
-
-    /**
-     * @param $outputPath
-     *
-     * @return $this
-     */
-    public function setOutputPath($outputPath)
-    {
-        $this->outputPath = $outputPath;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOutputPath()
-    {
-        return $this->outputPath;
-    }
-
-    /**
-     * @return MessageCatalogue|null
-     */
-    public function getCatalog()
-    {
-        return $this->catalog;
-    }
-
-    /**
-     * @return $this
-     */
-    public function disableOverridingFromDatabase()
-    {
-        $this->overrideFromDatabase = false;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function enableOverridingFromDatabase()
-    {
-        $this->overrideFromDatabase = true;
-
-        return $this;
+        return strtr($domain, ['.' => '']);
     }
 }
