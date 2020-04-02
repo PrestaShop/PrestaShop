@@ -31,7 +31,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 /**
  * Main translation provider for the Front Office
  */
-class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class FrontOfficeProvider extends AbstractProvider
 {
     const DEFAULT_THEME_NAME = 'classic';
 

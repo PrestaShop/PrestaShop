@@ -27,7 +27,6 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
@@ -36,26 +35,17 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 interface ProviderInterface
 {
     /**
-     * @return string[] List of directories to parse
-     */
-    public function getDirectories();
-
-    /**
-     * Returns a list of patterns for catalogue domain filtering (including XLF file lookup)
-     *
-     * @return string[]
-     */
-    public function getFilters();
-
-    /**
-     * Returns a list of patterns for translation domains to get from database.
+     * Returns a list of patterns used to choose which wordings will be imported from database.
+     * Patterns from this list will be run against translation domains.
      *
      * @return string[] List of Mysql compatible regexes (no regex delimiter)
      */
     public function getTranslationDomains();
 
     /**
-     * @return string Locale used to build the MessageCatalogue
+     * Returns the locale used to build the MessageCatalogue
+     *
+     * @return string
      */
     public function getLocale();
 
@@ -65,7 +55,16 @@ interface ProviderInterface
     public function getMessageCatalogue();
 
     /**
-     * @return string Unique identifier
+     * Returns the catalogue from Xliff files only.
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getXliffCatalogue();
+
+    /**
+     * Returns the provider's unique identifier
+     *
+     * @return string
      */
     public function getIdentifier();
 }

@@ -34,7 +34,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Able to search translations for a specific translation domains across multiple sources
  */
-class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface, UseModuleInterface
+class SearchProvider extends AbstractProvider implements UseModuleInterface
 {
     /**
      * @var string the "modules" directory path

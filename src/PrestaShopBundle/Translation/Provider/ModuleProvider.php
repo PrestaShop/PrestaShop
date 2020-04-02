@@ -32,7 +32,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
  * Translation provider for a specific native module (maintained by the core team)
  * Used mainly for the display in the Translations Manager of the Back Office.
  */
-class ModuleProvider extends AbstractProvider implements SearchProviderInterface, UseModuleInterface
+class ModuleProvider extends AbstractProvider implements SearchProviderInterface
 {
     /**
      * @var string the module name
