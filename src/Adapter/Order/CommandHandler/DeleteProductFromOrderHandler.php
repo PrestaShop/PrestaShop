@@ -64,6 +64,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     {
         $this->contextStateManager = $contextStateManager;
     }
+
     /**
      * {@inheritdoc}
      */
