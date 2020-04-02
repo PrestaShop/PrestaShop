@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -167,6 +168,49 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     (int) $data['amount'],
                     $data['free_shipping']
                 )
+            );
+        } catch (InvalidProductQuantityException $e) {
+            $this->lastException = $e;
+        } catch (ProductOutOfStockException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I remove product :productReference from order :orderReference
+     *
+     * @param string $productReference
+     * @param string $orderReference
+     */
+    public function removeProductsToOrderWithNewInvoiceAndTheFollowingDetails(string $productReference, string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productId = $this->getProductIdByName($productReference);
+        $orderDetailId = null;
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $products */
+        $products = $orderForViewing->getProducts()->getProducts();
+        foreach ($products as $product) {
+            if ($product->getId() == $productId) {
+                $orderDetailId = $product->getOrderDetailId();
+                break;
+            }
+        }
+        if (empty($orderDetailId)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Product %s has not been found in order %s',
+                    $productReference,
+                    $orderReference
+                )
+            );
+        }
+
+        try {
+            $this->getCommandBus()->handle(
+                new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
         } catch (InvalidProductQuantityException $e) {
             $this->lastException = $e;
