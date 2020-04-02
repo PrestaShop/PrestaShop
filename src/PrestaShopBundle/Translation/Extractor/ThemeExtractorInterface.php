@@ -1,5 +1,6 @@
-{**
- * 2007-2020 PrestaShop and Contributors
+<?php
+/**
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -21,6 +22,28 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
-{l s='Show product' d='Shop.Theme.Product'}
-{l s='Show another product' d='Shop.Theme.Product'}
+ */
+
+namespace PrestaShopBundle\Translation\Extractor;
+
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use Symfony\Component\Translation\MessageCatalogue;
+
+/**
+ * Extract all theme translations from theme templates.
+ */
+interface ThemeExtractorInterface
+{
+    const DEFAULT_LOCALE = 'en-US';
+
+    /**
+     * Extracts wordings from template files into a MessageCatalogue
+     *
+     * @param Theme $theme Theme subject the extraction
+     * @param string $locale Locale to initialize the catalogue in
+     * @param bool $forceRefresh [default=false] Force refresh cache, if there is one
+     *
+     * @return MessageCatalogue
+     */
+    public function extract(Theme $theme, $locale = self::DEFAULT_LOCALE, $forceRefresh = false);
+}
