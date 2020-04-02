@@ -27,7 +27,7 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Define contract to retrieve translations.
@@ -35,36 +35,74 @@ use Symfony\Component\Translation\MessageCatalogue;
 interface ProviderInterface
 {
     /**
-     * @return string[] List of directories to parse
-     */
-    public function getDirectories();
-
-    /**
-     * Returns a list of patterns for catalogue domain filtering (including XLF file lookup)
-     *
-     * @return string[]
-     */
-    public function getFilters();
-
-    /**
-     * Returns a list of patterns for translation domains to get from database.
+     * Returns a list of patterns used to choose which wordings will be imported from database.
+     * Patterns from this list will be run against translation domains.
      *
      * @return string[] List of Mysql compatible regexes (no regex delimiter)
      */
     public function getTranslationDomains();
 
     /**
-     * @return string Locale used to build the MessageCatalogue
+     * Returns the locale used to build the MessageCatalogue
+     *
+     * @return string
      */
     public function getLocale();
 
     /**
-     * @return MessageCatalogue A provider must return a MessageCatalogue
+     * Defines the locale to work with
+     *
+     * @param string $locale
+     *
+     * @return static
+     */
+    public function setLocale($locale);
+
+    /**
+     * Get the Catalogue from database only.
+     *
+     * @param string|null $themeName Theme name
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getDatabaseCatalogue($themeName = null);
+
+    /**
+     * Returns the default (aka not translated) catalogue
+     *
+     * @param bool $empty [default=true] Remove translations and return an empty catalogue
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getDefaultCatalogue($empty = true);
+
+    /**
+     * Returns the translated message catalogue
+     *
+     * @return MessageCatalogueInterface
      */
     public function getMessageCatalogue();
 
     /**
-     * @return string Unique identifier
+     * Returns the catalogue from Xliff files only.
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getXliffCatalogue();
+
+    /**
+     * Returns the provider's unique identifier
+     *
+     * @return string
      */
     public function getIdentifier();
+
+    /**
+     * Returns the path to the default resources directory.
+     *
+     * Most of the time, it's `app/Resources/translations/default/{locale}`
+     *
+     * @return string
+     */
+    public function getDefaultResourceDirectory();
 }

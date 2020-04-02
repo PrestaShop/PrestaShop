@@ -26,14 +26,19 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
-use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
-use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
+use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\Loader\LoaderInterface;
 
+/**
+ * Provides translations from a theme to the translation interface
+ */
 class ThemeProvider extends AbstractProvider
 {
     /**
@@ -42,29 +47,61 @@ class ThemeProvider extends AbstractProvider
     private $themeName;
 
     /**
-     * @var string the theme resources directory
+     * @var string Path to the main "themes" directory
      */
-    public $themeResourcesDirectory;
+    private $themeResourcesDirectory;
 
     /**
      * @var Filesystem
      */
-    public $filesystem;
+    private $filesystem;
 
     /**
      * @var ThemeRepository
      */
-    public $themeRepository;
+    private $themeRepository;
 
     /**
-     * @var ThemeExtractor
+     * @var ThemeExtractorInterface
      */
-    public $themeExtractor;
+    private $themeExtractor;
 
     /**
      * @var string Path to app/Resources/translations/
      */
-    public $defaultTranslationDir;
+    private $coreTranslationDir;
+
+    /**
+     * @var Theme
+     */
+    private $theme;
+
+    /**
+     * @param LoaderInterface $databaseLoader
+     * @param ThemeExtractorInterface $themeExtractor
+     * @param ThemeRepository $themeRepository
+     * @param Filesystem $filesystem
+     * @param string $themeResourcesDir Path to the themes folder
+     * @param string $coreTranslationResourcesDir Path to the directory where core translations are stored
+     */
+    public function __construct(
+        LoaderInterface $databaseLoader,
+        ThemeExtractorInterface $themeExtractor,
+        ThemeRepository $themeRepository,
+        Filesystem $filesystem,
+        $themeResourcesDir,
+        $coreTranslationResourcesDir
+    ) {
+        // resourceDirectory cannot be set because it depends on the theme, which is not set yet
+        // DO NOT USE $this->resourceDirectory, use $this->getResourceDirectory() instead
+        parent::__construct($databaseLoader, $resourceDirectory = '');
+
+        $this->themeExtractor = $themeExtractor;
+        $this->themeRepository = $themeRepository;
+        $this->filesystem = $filesystem;
+        $this->themeResourcesDirectory = $themeResourcesDir;
+        $this->coreTranslationDir = $coreTranslationResourcesDir;
+    }
 
     /**
      * Get domain.
@@ -116,33 +153,21 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getMessageCatalogue()
-    {
-        $xlfCatalogue = $this->getXliffCatalogue();
-        $databaseCatalogue = $this->getDatabaseCatalogue();
-
-        // Merge database catalogue to xliff catalogue
-        $xlfCatalogue->addCatalogue($databaseCatalogue);
-
-        return $xlfCatalogue;
-    }
-
-    /**
-     * @param string|null $baseDir
+     * Returns the path to translations directory for the current theme in the current locale
      *
-     * @return string Path to app/themes/{themeName}/translations/{locale}
+     * @param string|null $baseDir Base directory for the path. If not provided, it defaults to $this->resourceDirectory
+     *
+     * @return string Path to $baseDir/{themeName}/translations/{locale}
      */
     public function getResourceDirectory($baseDir = null)
     {
         if (null === $baseDir) {
-            $baseDir = $this->resourceDirectory;
+            $baseDir = $this->themeResourcesDirectory;
         }
 
         $resourceDirectory = implode(
             DIRECTORY_SEPARATOR,
-            [$baseDir, $this->themeName, 'translations', $this->getLocale()]
+            [$baseDir, $this->getThemeName(), 'translations', $this->getLocale()]
         );
         $this->filesystem->mkdir($resourceDirectory);
 
@@ -156,16 +181,7 @@ class ThemeProvider extends AbstractProvider
     {
         return [
             $this->getResourceDirectory(),
-            $this->getThemeResourcesDirectory(),
         ];
-    }
-
-    /**
-     * @return string the path to the Theme translations folder
-     */
-    public function getThemeResourcesDirectory()
-    {
-        return $this->getResourceDirectory($this->themeResourcesDirectory);
     }
 
     /**
@@ -175,9 +191,31 @@ class ThemeProvider extends AbstractProvider
      */
     public function setThemeName($themeName)
     {
+        // make sure the theme exists and store it cache
+        $this->theme = $this->themeRepository->getInstanceByName($themeName);
+
         $this->themeName = $themeName;
 
         return $this;
+    }
+
+    /**
+     * Returns the default (aka not translated) catalogue
+     *
+     * @param bool $empty [default=true] Remove translations and return an empty catalogue
+     * @param bool $refreshCache [default=false] Force cache to be refreshed
+     *
+     * @return MessageCatalogue|MessageCatalogueInterface
+     */
+    public function getDefaultCatalogue($empty = true, $refreshCache = false)
+    {
+        $extracted = $this->extractDefaultCatalogueFromTheme($this->getTheme(), $this->getLocale(), $refreshCache);
+
+        if ($empty) {
+            $this->emptyCatalogue($extracted);
+        }
+
+        return $extracted;
     }
 
     /**
@@ -188,50 +226,34 @@ class ThemeProvider extends AbstractProvider
     public function getDatabaseCatalogue($themeName = null)
     {
         if (null === $themeName) {
-            $themeName = $this->themeName;
+            $themeName = $this->getThemeName();
         }
 
         return parent::getDatabaseCatalogue($themeName);
     }
 
     /**
-     * @throws \Exception
-     *
-     * Will update translations files of the Theme
+     * Refresh the default catalogue cache
      */
     public function synchronizeTheme()
     {
-        $theme = $this->themeRepository->getInstanceByName($this->themeName);
-
-        $path = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->themeName . DIRECTORY_SEPARATOR . 'translations';
-
-        $this->filesystem->remove($path);
-        $this->filesystem->mkdir($path);
-
-        $this->themeExtractor
-            ->setOutputPath($path)
-            ->setThemeProvider($this)
-            ->extract($theme, $this->locale);
-
-        $translationFilesPath = $path . DIRECTORY_SEPARATOR . $this->locale;
-        Flattenizer::flatten($translationFilesPath, $translationFilesPath, $this->locale, false);
-
-        $finder = Finder::create();
-        foreach ($finder->directories()->depth('== 0')->in($translationFilesPath) as $folder) {
-            $this->filesystem->remove($folder);
-        }
+        $this->extractDefaultCatalogueFromTheme($this->getTheme(), $this->getLocale(), true);
     }
 
     /**
+     * Returns the catalogue from the Xliff files located within the theme itself
+     *
+     * @deprecated Since 1.7.6.5, use self::getXliffCatalogue instead
+     *
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
      */
     public function getThemeCatalogue()
     {
-        $path = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->themeName . DIRECTORY_SEPARATOR . 'translations';
+        @trigger_error(__FUNCTION__ . 'is deprecated since version 1.7.6.5 Use ThemeProvider::getXliffCatalogue() instead.', E_USER_DEPRECATED);
 
-        return $this->getCatalogueFromPaths($path, $this->locale, current($this->getFilters()));
+        return $this->getXliffCatalogue();
     }
 
     /**
@@ -239,6 +261,52 @@ class ThemeProvider extends AbstractProvider
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->defaultTranslationDir . DIRECTORY_SEPARATOR . $this->locale;
+        if (!$this->themeExtractor instanceof ThemeExtractorCache) {
+            throw new \LogicException(
+                'This theme provider has not been configured with a cache extractor, so there is no directory for default resources'
+            );
+        }
+
+        return $this->themeExtractor->getCachedFilesPath($this->getTheme());
+    }
+
+    /**
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    private function getThemeName()
+    {
+        if (empty($this->themeName)) {
+            throw new \RuntimeException('Theme has not been defined yet for this provider');
+        }
+
+        return $this->themeName;
+    }
+
+    /**
+     * @return Theme
+     *
+     * @throws \RuntimeException
+     */
+    private function getTheme()
+    {
+        if (empty($this->theme)) {
+            throw new \RuntimeException('Theme has not been defined yet for this provider');
+        }
+
+        return $this->theme;
+    }
+
+    /**
+     * @param Theme $theme
+     * @param string $locale
+     * @param bool $refreshCache
+     *
+     * @return \Symfony\Component\Translation\MessageCatalogue
+     */
+    private function extractDefaultCatalogueFromTheme(Theme $theme, $locale, $refreshCache)
+    {
+        return $this->themeExtractor->extract($theme, $locale, $refreshCache);
     }
 }
