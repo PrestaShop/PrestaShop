@@ -40,7 +40,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Be able to retrieve information from legacy translation files
  */
-class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface, UseModuleInterface
+class ExternalModuleLegacySystemProvider extends AbstractProvider implements SearchProviderInterface
 {
     /**
      * @var SearchProviderInterface|ModuleProvider the module provider

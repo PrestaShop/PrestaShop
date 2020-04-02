@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Translation\Provider;
 /**
  * Main translation provider of the Back Office
  */
-class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class BackOfficeProvider extends AbstractProvider
 {
     /**
      * {@inheritdoc}
