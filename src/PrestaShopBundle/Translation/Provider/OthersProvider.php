@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Translation\Provider;
  * Translations provider for keys not yet put in the right domain.
  * Equivalent to so-called main "messages" domain in the Symfony ecosystem.
  */
-class OthersProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class OthersProvider extends AbstractProvider
 {
     /**
      * {@inheritdoc}

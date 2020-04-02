@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Translation\Provider;
  * Translation provider for native modules (maintained by the core team)
  * Translations are provided by Crowdin.
  */
-class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInterface
+class ModulesProvider extends AbstractProvider
 {
     /**
      * {@inheritdoc}

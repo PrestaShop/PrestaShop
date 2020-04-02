@@ -26,17 +26,11 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogue;
-
 /**
  * Provide an Message Catalogue from the Database
+ *
+ * @deprecated Since 1.7.6.5, no longer used
  */
 interface DatabaseCatalogueInterface
 {
-    /**
-     * @param string|null $themeName the Theme name
-     *
-     * @return MessageCatalogue
-     */
-    public function getDatabaseCatalogue($themeName = null);
 }
