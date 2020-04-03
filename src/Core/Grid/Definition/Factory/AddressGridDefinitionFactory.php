@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -290,6 +291,11 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
                     ->setOptions([
                         'submit_route' => 'admin_addresses_delete_bulk',
                         'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                        'modal_options' => new ModalOptions([
+                            'title' => $this->trans('Delete selected addresses?', [], 'Admin.Actions'),
+                            'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                            'confirm_button_class' => 'btn-danger',
+                        ]),
                     ])
             );
     }
