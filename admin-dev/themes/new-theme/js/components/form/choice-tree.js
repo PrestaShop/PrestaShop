@@ -47,15 +47,28 @@ export default class ChoiceTree {
       this.toggleTree($action);
     });
 
+    this.$container.on('click', '.js-unselect-all', (event) => {
+      event.preventDefault();
+
+      const hasCheckedElement = this.$container.find('.js-input-wrapper input:checked').length > 0;
+
+      if (hasCheckedElement) {
+        this.unselectAll();
+      }
+    });
+
     return {
       enableAutoCheckChildren: () => this.enableAutoCheckChildren(),
       enableAllInputs: () => this.enableAllInputs(),
       disableAllInputs: () => this.disableAllInputs(),
+      enableRadioInputInstantSubmit: () => this.enableRadioInputInstantSubmit(),
     };
   }
 
   /**
    * Enable automatic check/uncheck of clicked item's children.
+   *
+   * @return {ChoiceTree}
    */
   enableAutoCheckChildren() {
     this.$container.on('change', 'input[type="checkbox"]', (event) => {
@@ -66,20 +79,41 @@ export default class ChoiceTree {
         .find('ul input[type="checkbox"]')
         .prop('checked', $clickedCheckbox.is(':checked'));
     });
+
+    return this;
+  }
+
+  /**
+   * If the tree is in form then it will trigger form submit if change input action is triggered.
+   *
+   * @return {ChoiceTree}
+   */
+  enableRadioInputInstantSubmit() {
+    this.$container.on('change', '.js-input-wrapper input[type="radio"]', (event) => event.currentTarget.form.submit());
+
+    return this;
   }
 
   /**
    * Enable all inputs in the choice tree.
+   *
+   * @return {ChoiceTree}
    */
   enableAllInputs() {
     this.$container.find('input').removeAttr('disabled');
+
+    return this;
   }
 
   /**
    * Disable all inputs in the choice tree.
+   *
+   * @return {ChoiceTree}
    */
   disableAllInputs() {
     this.$container.find('input').attr('disabled', 'disabled');
+
+    return this;
   }
 
   /**
@@ -154,5 +188,13 @@ export default class ChoiceTree {
     $action.data('action', config.nextAction[action]);
     $action.find('.material-icons').text($action.data(config.icon[action]));
     $action.find('.js-toggle-text').text($action.data(config.text[action]));
+  }
+
+  /**
+   * Unselects all inputs.
+   * @private
+   */
+  unselectAll() {
+    this.$container.find('.js-input-wrapper input').prop('checked', false);
   }
 }
