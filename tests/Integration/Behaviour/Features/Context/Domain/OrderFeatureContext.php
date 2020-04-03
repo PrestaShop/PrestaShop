@@ -182,7 +182,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $productReference
      * @param string $orderReference
      */
-    public function removeProductsToOrderWithNewInvoiceAndTheFollowingDetails(string $productReference, string $orderReference)
+    public function removeProductsFromOrder(string $productReference, string $orderReference)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $productId = $this->getProductIdByName($productReference);

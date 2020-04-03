@@ -39,7 +39,7 @@
         {{ discount.amountFormatted }}
       </td>
       <td class="text-right d-print-none">
-        <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewingId, 'orderCartRuleId': discount.orderCartRuleId}) }}">
+        <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderId, 'orderCartRuleId': discount.orderCartRuleId}) }}">
           <i class="material-icons">delete</i>
         </a>
       </td>

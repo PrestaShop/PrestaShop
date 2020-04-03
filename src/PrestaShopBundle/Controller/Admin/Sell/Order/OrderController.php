@@ -1284,7 +1284,7 @@ class OrderController extends CommonController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', [
             'discounts' => $orderForViewing->getDiscounts()->getDiscounts(),
-            'orderForViewingId' => $orderForViewing->getId(),
+            'orderId' => $orderId,
         ]);
     }
 
