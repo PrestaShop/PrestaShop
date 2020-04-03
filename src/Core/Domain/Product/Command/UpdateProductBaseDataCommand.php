@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 class UpdateProductBaseDataCommand
 {
     /**
-     * @var int
+     * @var ProductId
      */
     private $productId;
 
@@ -55,6 +55,14 @@ class UpdateProductBaseDataCommand
         int $productId
     ) {
         $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
     }
 
     /**

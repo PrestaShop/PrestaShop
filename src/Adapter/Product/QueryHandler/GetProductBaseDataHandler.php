@@ -28,22 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductBaseData;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductBaseDataHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBaseData;
-use Product;
 
-final class GetProductBaseDataHandler implements GetProductBaseDataHandlerInterface
+final class GetProductBaseDataHandler extends AbstractProductHandler implements GetProductBaseDataHandlerInterface
 {
     /**
      * {@inheritDoc}
      */
     public function handle(GetProductBaseData $query): ProductBaseData
     {
-        $productId = $query->getProductId()->getValue();
-        // should we load whole product or use specific sql queries somewhere?
-        //@todo: move to abstract handler. try catch. validate its id after loading
-        $product = new Product($productId);
+        $product = $this->getProduct($query->getProductId());
 
         return new ProductBaseData(
             $product->name,

@@ -28,16 +28,24 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBaseDataCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBaseDataHandlerInterface;
 
-final class UpdateProductBaseDataHandler implements UpdateProductBaseDataHandlerInterface
+final class UpdateProductBaseDataHandler extends AbstractProductHandler implements UpdateProductBaseDataHandlerInterface
 {
     /**
      * {@inheritDoc}
      */
     public function handle(UpdateProductBaseDataCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $product = $this->getProduct($command->getProductId());
+
+        if (null !== $command->getLocalizedNames()) {
+            $product->name = $command->getLocalizedNames();
+        }
+        //@todo: check what to do with product type.
+        //  it might be that the type is not updatable on product, except virtual product (because it only has is_virtual prop).
+        //  Maybe we only recognize and update type by updating certain product fields.
     }
 }
