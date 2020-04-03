@@ -16,6 +16,10 @@
 @import "config/settings";
 @import "config/keyframes";
 
+// Tools with vars overwritten
+@import "~bootstrap/scss/mixins/transition";
+@import "~bootstrap/scss/mixins/border-radius";
+
 // Components
 @import "components/layout/content_div";
 @import "components/layout/header_toolbar";
@@ -94,7 +98,7 @@ body {
   }
   > .nav-item > .nav-link {
     &.active {
-      border-bottom: 1px solid #ffffff;
+      border-bottom: 1px solid #fff;
     }
   }
 }
@@ -104,17 +108,17 @@ body {
 
 // Needed to override the default inline style of typeahead and take all the width
 span.twitter-typeahead {
-  display: block !important;
-  width: 100% !important;
+  width: 100%;
+
   input.tt-input {
-    width: 100% !important;
+    width: 100%;
   }
 }
 
 // text buttons
 .btn.btn-text {
-  cursor: pointer;
   padding: 0;
+  cursor: pointer;
   background: transparent;
 
   &:focus {
@@ -124,10 +128,10 @@ span.twitter-typeahead {
 
 // setting dropdown button
 .dropdown-toggle.tool-button {
-  &:after {
-    content: "settings";
+  &::after {
     font-size: 1.375rem;
     color: $medium-gray;
+    content: "settings";
   }
 }
 
@@ -140,7 +144,7 @@ span.twitter-typeahead {
 }
 
 table.table {
-  font-size: 0.8rem;
+  font-size: .8rem;
 }
 
 // Needed to override the default inline style of modal header in translations-app

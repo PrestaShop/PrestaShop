@@ -24,7 +24,7 @@
  */
 
 import PerfectScrollbar from 'perfect-scrollbar';
-import '@node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import getAnimationEvent from './app/utils/animations';
 import NavbarTransitionHandler from './components/navbar-transition-handler';
 
@@ -45,7 +45,9 @@ export default class NavBar {
       );
 
       $('.nav-bar-overflow').on('scroll', () => {
-        const $menuItems = $('.main-menu .link-levelone.has_submenu.ul-open');
+        const $menuItems = $(
+          '.main-menu .link-levelone.has_submenu.ul-open, .main-menu .link-levelone.has_submenu.link-hover',
+        );
 
         $($menuItems).each((i, e) => {
           const itemOffsetTop = $(e).position().top;
@@ -57,10 +59,14 @@ export default class NavBar {
 
       $navBar.find('.link-levelone').hover(
         function onMouseEnter() {
-          $(this).addClass('-hover');
+          const itemOffsetTop = $(this).position().top;
+          $(this).addClass('link-hover');
+          $(this)
+            .find('ul.submenu')
+            .css('top', itemOffsetTop);
         },
         function onMouseLeave() {
-          $(this).removeClass('-hover');
+          $(this).removeClass('link-hover');
         },
       );
 
@@ -77,7 +83,7 @@ export default class NavBar {
           .hasClass('ul-open');
 
         if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-          $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
+          $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open submenu-hover');
           $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
         } else {
           $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').slideUp({
@@ -97,7 +103,7 @@ export default class NavBar {
         $submenu.addClass('ul-open');
 
         if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-          $submenu.addClass('-hover');
+          $submenu.addClass('submenu-hover');
           $submenu.find('ul.submenu').removeAttr('style');
         } else {
           $submenu.find('ul.submenu').slideDown({
@@ -128,7 +134,7 @@ export default class NavBar {
             .text('keyboard_arrow_down');
           addMobileBodyClickListener();
         } else {
-          $('nav.nav-bar ul.main-menu > li.-active')
+          $('nav.nav-bar ul.main-menu > li.link-active')
             .addClass('ul-open open')
             .find('a > i.material-icons.sub-tabs-arrow')
             .text('keyboard_arrow_up');
@@ -164,15 +170,12 @@ export default class NavBar {
           return;
         }
         // To close submenu on mobile devices
-        $('body').on(
-          'click.mobile',
-          () => {
-            if ($('ul.main-menu li.ul-open').length > 0) {
-              $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
-              $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
-            }
-          },
-        );
+        $('body').on('click.mobile', () => {
+          if ($('ul.main-menu li.ul-open').length > 0) {
+            $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open submenu-hover');
+            $('.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu').removeAttr('style');
+          }
+        });
       }
     });
   }
@@ -186,8 +189,9 @@ export default class NavBar {
     const profileLink = $('.profile-link').attr('href');
     const $mainMenu = $('.main-menu');
 
-    $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow')
-      .text('keyboard_arrow_down');
+    $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text(
+      'keyboard_arrow_down',
+    );
     $('body').addClass('mobile');
     $('.nav-bar')
       .addClass('mobile-nav')

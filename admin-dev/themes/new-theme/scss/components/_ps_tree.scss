@@ -1,19 +1,19 @@
 .ps-tree {
   ul {
-    list-style-type: none;
-    cursor: pointer;
     padding: 0;
     margin: 0;
+    list-style-type: none;
+    cursor: pointer;
   }
 
   .tree-header {
     border-bottom: $gray-light 1px solid;
 
     button {
-      color: $gray-medium;
+      height: 1.563rem;
       font-size: .65rem;
       font-weight: 700;
-      height: 1.563rem;
+      color: $gray-medium;
     }
   }
 }
@@ -23,15 +23,15 @@
     align-items: center;
 
     button {
-      &:before {
+      &::before {
         @extend .material-icons;
         font-size: 1.25rem;
       }
-      &.open:before {
+      &.open::before {
         content: "keyboard_arrow_down";
       }
-      &.closed:before {
-        content: "keyboard_arrow_right"
+      &.closed::before {
+        content: "keyboard_arrow_right";
       }
     }
   }

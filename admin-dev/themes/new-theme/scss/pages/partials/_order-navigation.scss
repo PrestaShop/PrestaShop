@@ -9,7 +9,7 @@
   }
 
   a {
-    padding: 0.375rem 0.45rem;
+    padding: .375rem .45rem;
   }
 }
 
@@ -20,8 +20,8 @@
 
       &-left,
       &-right {
-        margin: 0;
         width: calc(50% - 7px);
+        margin: 0;
 
         a {
           display: block;
