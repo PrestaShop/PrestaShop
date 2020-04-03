@@ -33,9 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 final class ProductType
 {
     /**
-     * Simple|standard product
+     * Standard product
      */
-    const TYPE_SIMPLE = 0;
+    const TYPE_STANDARD = 0;
 
     /**
      * A pack consists multiple units of product.
@@ -43,7 +43,8 @@ final class ProductType
     const TYPE_PACK = 1;
 
     /**
-     * Items that are not in physical form and can be sold without requiring any shipping (photos, videos, software etc.)
+     * Items that are not in physical form and can be sold without requiring any shipping
+     * E.g. downloadable photos, videos, software, services etc.
      */
     const TYPE_VIRTUAL = 2;
 
@@ -79,7 +80,7 @@ final class ProductType
     private function assertProductType(int $value)
     {
         $allowedTypes = [
-            self::TYPE_SIMPLE,
+            self::TYPE_STANDARD,
             self::TYPE_PACK,
             self::TYPE_VIRTUAL
         ];
