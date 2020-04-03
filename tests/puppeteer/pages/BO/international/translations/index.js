@@ -8,7 +8,7 @@ module.exports = class Translations extends BOBasePage {
     this.pageTitle = 'Translations • ';
 
     // Selectors
-    //Export language form
+    // Export language form
     this.exportLanguageForm = 'form[action*=\'translations/export\']';
     this.exportLanguageSelect = '#form_iso_code';
     this.exportLanguageThemeSelect = '#form_theme_name';

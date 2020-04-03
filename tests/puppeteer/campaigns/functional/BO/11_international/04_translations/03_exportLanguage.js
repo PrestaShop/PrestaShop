@@ -73,7 +73,7 @@ describe('Sort taxes', async () => {
         this,
         'testIdentifier',
         `exportLanguage${test.args.language.name}Theme${test.args.theme}`,
-        baseContext
+        baseContext,
       );
       await this.pageObjects.translationsPage.exportLanguage(test.args.language.name, test.args.theme);
       const fileExist = await files.checkFileExistence(test.args.filename);
