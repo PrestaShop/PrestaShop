@@ -26,46 +26,28 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductBaseData;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductBaseDataHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBaseData;
+use Product;
 
-class GetProductBaseData
+final class GetProductBaseDataHandler implements GetProductBaseDataHandlerInterface
 {
     /**
-     * @var ProductId
+     * {@inheritDoc}
      */
-    private $productId;
-
-    /**
-     * @var CombinationId|null
-     */
-    private $combinationId;
-
-    /**
-     * @param int $productId
-     * @param int|null $combinationId
-     */
-    public function __construct(int $productId, ?int $combinationId = null)
+    public function handle(GetProductBaseData $query): ProductBaseData
     {
-        $this->productId = new ProductId($productId);
-        $this->combinationId = !$combinationId ?? new CombinationId($combinationId);
-    }
+        $productId = $query->getProductId()->getValue();
+        // should we load whole product or use specific sql queries somewhere?
+        //@todo: move to abstract handler. try catch. validate its id after loading
+        $product = new Product($productId);
 
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return CombinationId|null
-     */
-    public function getCombinationId(): ?CombinationId
-    {
-        return $this->combinationId;
+        return new ProductBaseData(
+            $product->name,
+            $product->getType()
+        );
     }
 }

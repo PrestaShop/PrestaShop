@@ -62,7 +62,7 @@ class ProductCore extends ObjectModel
     /** @var string Supplier name */
     public $supplier_name;
 
-    /** @var string Name */
+    /** @var string[] Name */
     public $name;
 
     /** @var string Long description */

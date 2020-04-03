@@ -27,8 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductBaseData;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBaseData;
 
 interface GetProductBaseDataHandlerInterface
 {
-    public function handle(GetProductBaseData $query);
+    public function handle(GetProductBaseData $query): ProductBaseData;
 }
