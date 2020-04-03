@@ -64,7 +64,6 @@ module.exports = class Localization extends LocalizationBasePage {
     await this.selectByVisibleText(this.defaultLanguageSelector, language);
     await this.waitForSelectorAndClick(this.languageFromBrowserLabel.replace('%TOGGLE', languageFromBrowser ? 1 : 0));
     await this.waitForSelectorAndClick(this.saveConfigurationFormButton);
-    await this.page.waitFor(5000);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };
