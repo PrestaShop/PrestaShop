@@ -755,7 +755,6 @@ class CartCore extends ObjectModel
 
             $givenAwayProductsIds = [];
 
-            // Do not recalculate in case of refresh
             if ($this->shouldSplitGiftProductsQuantity && $refresh) {
                 $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
                 if (count($gifts) > 0) {
