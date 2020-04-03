@@ -26,30 +26,18 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBaseDataCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBaseDataHandlerInterface;
 
-class GetProductBaseData
+final class UpdateProductBaseDataHandler implements UpdateProductBaseDataHandlerInterface
 {
     /**
-     * @var ProductId
+     * {@inheritDoc}
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct(int $productId)
+    public function handle(UpdateProductBaseDataCommand $command): void
     {
-        $this->productId = new ProductId($productId);
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
+        // TODO: Implement handle() method.
     }
 }

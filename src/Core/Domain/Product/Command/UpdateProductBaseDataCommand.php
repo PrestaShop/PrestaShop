@@ -26,30 +26,74 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 
-class GetProductBaseData
+class UpdateProductBaseDataCommand
 {
     /**
-     * @var ProductId
+     * @var int
      */
     private $productId;
 
     /**
+     * @var null|string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @var null|ProductType
+     */
+    private $productType;
+
+    /**
      * @param int $productId
      */
-    public function __construct(int $productId)
-    {
+    public function __construct(
+        int $productId
+    ) {
         $this->productId = new ProductId($productId);
     }
 
     /**
-     * @return ProductId
+     * @return string[]|null
      */
-    public function getProductId(): ProductId
+    public function getLocalizedNames(): ?array
     {
-        return $this->productId;
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     *
+     * @return UpdateProductBaseDataCommand
+     */
+    public function setLocalizedNames(array $localizedNames): UpdateProductBaseDataCommand
+    {
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return ProductType|null
+     */
+    public function getProductType(): ?ProductType
+    {
+        return $this->productType;
+    }
+
+    /**
+     * @param int $productType
+     *
+     * @return UpdateProductBaseDataCommand
+     */
+    public function setProductType(int $productType): UpdateProductBaseDataCommand
+    {
+        $this->productType = new ProductType($productType);
+
+        return $this;
     }
 }

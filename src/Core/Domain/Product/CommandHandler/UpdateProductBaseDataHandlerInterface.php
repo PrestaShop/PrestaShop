@@ -24,32 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBaseDataCommand;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-
-class GetProductBaseData
+interface UpdateProductBaseDataHandlerInterface
 {
     /**
-     * @var ProductId
+     * @param UpdateProductBaseDataCommand $command
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct(int $productId)
-    {
-        $this->productId = new ProductId($productId);
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
+    public function handle(UpdateProductBaseDataCommand $command): void;
 }
