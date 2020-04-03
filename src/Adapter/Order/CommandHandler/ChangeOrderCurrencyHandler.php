@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Cart;
 use Currency;
 use ObjectModel;
 use Order;
@@ -68,6 +69,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
             $this->updateOrderDetail($order, $oldCurrency, $newCurrency);
             $this->updateOrderCarrier((int) $order->getIdOrderCarrier(), $oldCurrency, $newCurrency);
             $this->updateInvoices($order->getInvoicesCollection(), $oldCurrency, $newCurrency);
+            $this->updateCart($order->id_cart, $newCurrency);
             $this->updateOrder($order, $oldCurrency, $newCurrency);
         } catch (PrestaShopException $e) {
             throw new OrderException(
@@ -169,6 +171,18 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
         $order->id_currency = $newCurrency->id;
         $order->conversion_rate = (float) $newCurrency->conversion_rate;
         $order->update();
+    }
+
+    /**
+     * @param int $cartId
+     * @param Currency $newCurrency
+     */
+    private function updateCart(int $cartId, Currency $newCurrency): void
+    {
+        $cart = new Cart($cartId);
+
+        $cart->id_currency = $newCurrency->id;
+        $cart->update();
     }
 
     /**
