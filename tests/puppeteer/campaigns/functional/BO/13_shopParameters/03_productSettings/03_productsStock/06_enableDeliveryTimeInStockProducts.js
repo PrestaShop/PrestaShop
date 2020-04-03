@@ -60,7 +60,7 @@ describe('Enable/Disable enable stock management', async () => {
   tests.forEach((test, index) => {
     it(`should ${test.args.action} delivery time of in-stock products`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}StockManagement`, baseContext);
-      const result = await this.pageObjects.productSettingsPage.setDeliveryTimeInStocks(test.args.deliveryTimeText);
+      const result = await this.pageObjects.productSettingsPage.setDeliveryTimeInStock(test.args.deliveryTimeText);
       await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
     });
 
@@ -83,7 +83,7 @@ describe('Enable/Disable enable stock management', async () => {
     if (test.args.enable) {
       it('should check delivery time text', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deliveryTimeBlockText${index}`, baseContext);
-        const deliveryTimeText = await this.pageObjects.foProductPage.isDeliveryInformationText();
+        const deliveryTimeText = await this.pageObjects.foProductPage.getDeliveryInformationText();
         await expect(deliveryTimeText).to.equal(test.args.deliveryTimeText);
       });
     }

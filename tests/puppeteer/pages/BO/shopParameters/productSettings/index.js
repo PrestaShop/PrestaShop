@@ -204,7 +204,7 @@ module.exports = class productSettings extends BOBasePage {
    * @param deliveryTimeText
    * @return {Promise<string>}
    */
-  async setDeliveryTimeInStocks(deliveryTimeText) {
+  async setDeliveryTimeInStock(deliveryTimeText) {
     await this.setValue(this.deliveryTimeInStockInput, deliveryTimeText);
     await this.clickAndWaitForNavigation(this.saveProductsStockForm);
     return this.getTextContent(this.alertSuccessBlock);

@@ -149,7 +149,7 @@ module.exports = class Product extends FOBasePage {
    * Get delivery information text
    * @return {Promise<string>}
    */
-  isDeliveryInformationText() {
+  getDeliveryInformationText() {
     return this.getTextContent(this.deliveryInformationSpan);
   }
 };
