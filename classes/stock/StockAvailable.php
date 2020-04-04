@@ -109,7 +109,7 @@ class StockAvailableCore extends ObjectModel
         }
         $result = $this->update();
         if ($this->id_product_attribute == 0) {
-            $id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP && $this->id_shop ? $this->id_shop : null);
+            $id_shop = ($this->id_shop && Shop::getContext() !== Shop::CONTEXT_GROUP) ? $this->id_shop : null;
             $quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT quantity as quantity ' .
                 'FROM ' . _DB_PREFIX_ . 'stock_available ' .
