@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   // show warning message when currency is changed

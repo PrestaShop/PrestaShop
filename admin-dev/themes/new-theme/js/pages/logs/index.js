@@ -32,7 +32,7 @@ import SubmitGridActionExtension from '@components/grid/extension/submit-grid-ac
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = global.$;
+const {$} = window;
 
 $(() => {
   const grid = new Grid('logs');

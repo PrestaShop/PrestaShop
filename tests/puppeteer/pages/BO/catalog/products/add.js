@@ -22,9 +22,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
-    this.productShortDescriptionTab = '#tab_description_short a';
     this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
-    this.productDescriptionTab = '#tab_description a';
     this.productDescriptionIframe = '#form_step1_description_1_ifr';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
@@ -36,6 +34,8 @@ module.exports = class AddProduct extends BOBasePage {
     // Selectors of Step 2 : Pricing
     this.addSpecificPriceButton = '#js-open-create-specific-price-form';
     this.specificPriceForm = '#specific_price_form';
+    this.productShortDescriptionTab = '#tab_description_short a';
+    this.productDescriptionTab = '#tab_description a';
     this.combinationSelect = '#form_step2_specific_price_sp_id_product_attribute';
     this.startingAtInput = '#form_step2_specific_price_sp_from_quantity';
     this.applyDiscountOfInput = '#form_step2_specific_price_sp_reduction';
@@ -57,9 +57,6 @@ module.exports = class AddProduct extends BOBasePage {
     this.friendlyUrlInput = '#form_step5_link_rewrite_1';
   }
 
-  /*
-  Methods
-   */
   /**
    * Set Name, type of product, Reference, price ttc, description and short description
    * @param productData
@@ -67,9 +64,7 @@ module.exports = class AddProduct extends BOBasePage {
    */
   async setBasicSetting(productData) {
     await this.setValue(this.productNameInput, productData.name);
-    await this.page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
-    await this.page.click(this.productShortDescriptionTab);
     await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(this.productTypeSelect, productData.type);
     await this.setValue(this.productReferenceInput, productData.reference);

@@ -29,7 +29,7 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductEdit {
   constructor(orderDetailId) {
@@ -46,7 +46,8 @@ export default class OrderProductEdit {
   setupListener() {
     this.quantityInput.on('change keyup', (event) => {
       this.quantity = parseInt(event.target.value ? event.target.value : 0, 10);
-      const available = parseInt($(event.currentTarget).data('availableQuantity'), 10) - (this.quantity - this.quantityInput.data('previousQuantity'));
+      const available = parseInt($(event.currentTarget).data('availableQuantity'), 10)
+        - (this.quantity - this.quantityInput.data('previousQuantity'));
       const availableOutOfStock = this.availableText.data('availableOutOfStock');
       this.availableText.text(available);
       this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
@@ -61,7 +62,7 @@ export default class OrderProductEdit {
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         this.taxIncluded,
         this.taxRate,
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       this.priceTaxExcludedInput.val(taxExcluded);
       this.updateTotal();
@@ -71,7 +72,7 @@ export default class OrderProductEdit {
       this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
         this.taxRate,
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       this.priceTaxIncludedInput.val(this.taxIncluded);
       this.updateTotal();
@@ -85,7 +86,7 @@ export default class OrderProductEdit {
       $btn.prop('disabled', true);
       this.editProduct(
         $(event.currentTarget).data('orderId'),
-        this.orderDetailId
+        this.orderDetailId,
       );
     });
     this.productEditCancelBtn.on('click', () => {
@@ -94,7 +95,11 @@ export default class OrderProductEdit {
   }
 
   updateTotal() {
-    const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(this.quantity, this.taxIncluded, this.currencyPrecision);
+    const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(
+      this.quantity,
+      this.taxIncluded,
+      this.currencyPrecision,
+    );
     this.priceTotalText.html(updatedTotal);
     this.productEditSaveBtn.prop('disabled', updatedTotal === this.initialTotal);
   }
@@ -118,12 +123,14 @@ export default class OrderProductEdit {
 
     // Init input values
     this.priceTaxExcludedInput.val(
-      window.ps_round(product.price_tax_excl, this.currencyPrecision)
+      window.ps_round(product.price_tax_excl, this.currencyPrecision),
     );
     this.priceTaxIncludedInput.val(
-      window.ps_round(product.price_tax_incl, this.currencyPrecision)
+      window.ps_round(product.price_tax_incl, this.currencyPrecision),
     );
-    this.quantityInput.val(product.quantity).data('availableQuantity', product.availableQuantity).data('previousQuantity', product.quantity);
+    this.quantityInput.val(product.quantity)
+      .data('availableQuantity', product.availableQuantity)
+      .data('previousQuantity', product.quantity);
     this.availableText.data('availableOutOfStock', product.availableOutOfStock);
 
     // set this product's orderInvoiceId as selected
@@ -137,14 +144,18 @@ export default class OrderProductEdit {
     this.initialTotal = this.priceTaxCalculator.calculateTotalPrice(
       product.quantity,
       product.price_tax_incl,
-      this.currencyPrecision
+      this.currencyPrecision,
     );
     this.quantity = product.quantity;
     this.taxIncluded = product.price_tax_incl;
 
     // Copy product content in cells
-    this.productEditImage.html(this.productRow.find(OrderViewPageMap.productEditImage).html());
-    this.productEditName.html(this.productRow.find(OrderViewPageMap.productEditName).html());
+    this.productEditImage.html(
+      this.productRow.find(OrderViewPageMap.productEditImage).html(),
+    );
+    this.productEditName.html(
+      this.productRow.find(OrderViewPageMap.productEditName).html(),
+    );
     this.locationText.html(product.location);
     this.availableText.html(product.availableQuantity);
     this.priceTotalText.html(this.initialTotal);
@@ -170,7 +181,7 @@ export default class OrderProductEdit {
       EventEmitter.emit(OrderViewEventMap.productUpdated, {
         orderId,
         orderDetailId,
-        newRow: response
+        newRow: response,
       });
     }, (response) => {
       if (response.responseJSON && response.responseJSON.message) {

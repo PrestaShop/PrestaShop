@@ -25,14 +25,14 @@
 
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
-import SupplierMap from './supplier-map';
 import TranslatableInput from '@components/translatable-input';
 import TranslatableField from '@components/translatable-field';
 import TaggableField from '@components/taggable-field';
 import ChoiceTree from '@components/form/choice-tree';
 import TinyMCEEditor from '@components/tinymce-editor';
+import SupplierMap from './supplier-map';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   const shopChoiceTree = new ChoiceTree('#supplier_shop_association');
@@ -41,13 +41,13 @@ $(document).ready(() => {
   new CountryStateSelectionToggler(
     SupplierMap.supplierCountrySelect,
     SupplierMap.supplierStateSelect,
-    SupplierMap.supplierStateBlock
+    SupplierMap.supplierStateBlock,
   );
 
   new CountryDniRequiredToggler(
     SupplierMap.supplierCountrySelect,
     SupplierMap.supplierDniInput,
-    SupplierMap.supplierDniInputLabel
+    SupplierMap.supplierDniInputLabel,
   );
 
   new TinyMCEEditor();
@@ -56,7 +56,7 @@ $(document).ready(() => {
   new TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
-      createTokensOnBlur: true
-    }
+      createTokensOnBlur: true,
+    },
   });
 });

@@ -44,18 +44,18 @@ function confirm_modal(
       `<p>${question}</p>` +
       `</div>` +
       `<div class="modal-footer">` +
-      `<a href="#" id="confirm_modal_left_button" class="btn btn-primary">${left_button_txt}</a>` +
-      `<a href="#" id="confirm_modal_right_button" class="btn btn-primary">${right_button_txt}</a>` +
+      `<a href="#" id="confirm-modal-left-button" class="btn btn-primary">${left_button_txt}</a>` +
+      `<a href="#" id="confirm-modal-right-button" class="btn btn-primary">${right_button_txt}</a>` +
       `</div>` +
       `</div>` +
       `</div>` +
       `</div>`
   );
-  confirmModal.find('#confirm_modal_left_button').click(() => {
+  confirmModal.find('#confirm-modal-left-button').click(() => {
     left_button_callback();
     confirmModal.modal('hide');
   });
-  confirmModal.find('#confirm_modal_right_button').click(() => {
+  confirmModal.find('#confirm-modal-right-button').click(() => {
     right_button_callback();
     confirmModal.modal('hide');
   });
@@ -104,8 +104,18 @@ function scroll_if_anchor(href) {
     }
   }
 }
-
 $(document).ready(() => {
+  const $mainMenu = $('.main-menu');
+  const $navBar = $('.nav-bar');
+  const $body = $('body');
+
+  const NavBarTransitions = new NavbarTransitionHandler(
+    $navBar,
+    $mainMenu,
+    getAnimationEvent('transition', 'end'),
+    $body
+  );
+
   $('.nav-bar-overflow').on('scroll', () => {
     const $menuItems = $('.main-menu .link-levelone.has_submenu.ul-open');
 
@@ -131,6 +141,9 @@ $(document).ready(() => {
   $('.nav-bar li.link-levelone.has_submenu > a').on('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    NavBarTransitions.toggle();
+
     const $submenu = $(this).parent();
     $('.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
     const onlyClose = $(e.currentTarget)

@@ -34,7 +34,7 @@ module.exports = class Files extends BOBasePage {
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#attachment_grid_bulk_action_delete_selection';
-    this.confirmDeleteModal = '#attachment_grid_confirm_modal';
+    this.confirmDeleteModal = '#attachment-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
@@ -85,7 +85,12 @@ module.exports = class Files extends BOBasePage {
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteFiles();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

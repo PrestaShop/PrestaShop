@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * class TaggableField is responsible for providing functionality from bootstrap-tokenfield plugin.

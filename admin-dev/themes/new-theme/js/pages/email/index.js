@@ -32,12 +32,13 @@ import FiltersResetExtension from '@components/grid/extension/filters-reset-exte
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const emailLogsGrid = new Grid('email_logs');
@@ -48,6 +49,7 @@ $(() => {
   emailLogsGrid.addExtension(new SortingExtension());
   emailLogsGrid.addExtension(new BulkActionCheckboxExtension());
   emailLogsGrid.addExtension(new SubmitBulkExtension());
+  emailLogsGrid.addExtension(new SubmitRowActionExtension());
   emailLogsGrid.addExtension(new SubmitGridExtension());
   emailLogsGrid.addExtension(new LinkRowActionExtension());
   emailLogsGrid.addExtension(new FiltersSubmitButtonEnablerExtension());

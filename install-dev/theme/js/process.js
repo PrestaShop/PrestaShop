@@ -91,13 +91,13 @@ function process_install(step)
 						process_install(process_steps[current_step]);
 				}
 			}
-			// An error occured during this step
+			// An error occurred during this step
 			else
 			{
 				install_error(step, (json) ? json.message : '');
 			}
 		},
-		// An error HTTP (page not found, json not valid, etc.) occured during this step
+		// An error HTTP (page not found, json not valid, etc.) occurred during this step
 		error: function( jqXHR, textStatus ) {
                     var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
                     install_error(step, errorMsg);
@@ -151,7 +151,7 @@ function process_install_subtask(step, current_subtask)
 			else
 				install_error(step, (json) ? json.message : '');
 		},
-		// An error HTTP (page not found, json not valid, etc.) occured during this step
+		// An error HTTP (page not found, json not valid, etc.) occurred during this step
                 error: function( jqXHR, textStatus ) {
                     var errorMsg = 'HTTP '+ jqXHR.status + ' - '+ textStatus +' - '+ jqXHR.responseText;
                     install_error(step, errorMsg);

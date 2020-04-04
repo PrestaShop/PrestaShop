@@ -25,8 +25,8 @@
 
 import ContactsPage from './ContactsPage';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
-  new ContactsPage;
+  new ContactsPage();
 });

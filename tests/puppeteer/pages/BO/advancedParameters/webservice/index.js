@@ -29,6 +29,9 @@ module.exports = class WebService extends BOBasePage {
     this.webserviceFilterInput = `${this.webserviceListForm} #webservice_key_%FILTERBY`;
     this.filterSearchButton = `${this.webserviceListForm} button[name='webservice_key[actions][search]']`;
     this.filterResetButton = `${this.webserviceListForm} button[name='webservice_key[actions][reset]']`;
+    // Delete modal
+    this.confirmDeleteModal = '#webservice_key-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /*
@@ -137,7 +140,6 @@ module.exports = class WebService extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteWebserviceKey(row) {
-    this.dialogListener();
     // Click on dropDown
     await Promise.all([
       this.page.click(this.webserviceListTableToggleDropDown.replace('%ROW', row)),
@@ -146,8 +148,20 @@ module.exports = class WebService extends BOBasePage {
       ),
     ]);
     // Click on delete
-    await this.clickAndWaitForNavigation(this.webserviceListTableDeleteLink.replace('%ROW', row));
+    await Promise.all([
+      this.page.click(this.webserviceListTableDeleteLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteWebService();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteWebService() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**

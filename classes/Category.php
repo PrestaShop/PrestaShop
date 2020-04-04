@@ -214,7 +214,8 @@ class CategoryCore extends ObjectModel
         if (!$this->doNotRegenerateNTree) {
             Category::regenerateEntireNtree();
         }
-        $this->updateGroup($this->groupBox);
+        // if access group is not set, initialize it with 3 default groups
+        $this->updateGroup(($this->groupBox !== null) ? $this->groupBox : []);
         Hook::exec('actionCategoryAdd', ['category' => $this]);
 
         return $ret;
@@ -256,11 +257,11 @@ class CategoryCore extends ObjectModel
         if ($changed) {
             if (Tools::isSubmit('checkBoxShopAsso_category')) {
                 foreach (Tools::getValue('checkBoxShopAsso_category') as $idAssoObject => $idShop) {
-                    $this->addPosition((int) Category::getLastPosition((int) $this->id_parent, (int) $idShop), (int) $idShop);
+                    $this->addPosition($this->position, (int) $idShop);
                 }
             } else {
                 foreach (Shop::getShops(true) as $shop) {
-                    $this->addPosition((int) Category::getLastPosition((int) $this->id_parent, $shop['id_shop']), $shop['id_shop']);
+                    $this->addPosition($this->position, $shop['id_shop']);
                 }
             }
         }
@@ -307,7 +308,7 @@ class CategoryCore extends ObjectModel
         $children = [];
         $subcats = $this->getSubCategories($idLang, true);
         if (($maxDepth == 0 || $currentDepth < $maxDepth) && $subcats && count($subcats)) {
-            foreach ($subcats as &$subcat) {
+            foreach ($subcats as $subcat) {
                 if (!$subcat['id_category']) {
                     break;
                 } elseif (!is_array($excludedIdsArray) || !in_array($subcat['id_category'], $excludedIdsArray)) {
@@ -1714,17 +1715,25 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Update customer groups associated to the object.
+     * Update customer groups associated to the object. Don't update group access if list is null.
      *
      * @param array $list groups
+     *
+     * @return bool
      */
     public function updateGroup($list)
     {
+        // don't update group access if list is null
+        if ($list === null) {
+            return false;
+        }
         $this->cleanGroups();
         if (empty($list)) {
             $list = [Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP')];
         }
         $this->addGroups($list);
+
+        return true;
     }
 
     /**

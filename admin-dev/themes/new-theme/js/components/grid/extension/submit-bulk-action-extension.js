@@ -25,7 +25,7 @@
 
 import ConfirmModal from '@components/modal';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Handles submit of grid actions
@@ -61,10 +61,10 @@ export default class SubmitBulkActionExtension {
     const confirmMessage = $submitBtn.data('confirm-message');
     const confirmTitle = $submitBtn.data('confirmTitle');
 
-    if (confirmMessage !== undefined && 0 < confirmMessage.length) {
+    if (confirmMessage !== undefined && confirmMessage.length > 0) {
       if (confirmTitle !== undefined) {
         this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
-      } else if (confirm(confirmMessage)) {
+      } else if (window.confirm(confirmMessage)) {
         this.postForm($submitBtn, grid);
       }
     } else {
@@ -84,7 +84,7 @@ export default class SubmitBulkActionExtension {
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
     const modal = new ConfirmModal({
-      id: `${grid.getId()}_grid_confirm_modal`,
+      id: `${grid.getId()}-grid-confirm-modal`,
       confirmTitle,
       confirmMessage,
       confirmButtonLabel,
@@ -100,7 +100,7 @@ export default class SubmitBulkActionExtension {
    * @param {Grid} grid
    */
   postForm($submitBtn, grid) {
-    const $form = $('#' + grid.getId() + '_filter_form');
+    const $form = $(`#${grid.getId()}_filter_form`);
 
     $form.attr('action', $submitBtn.data('form-url'));
     $form.attr('method', $submitBtn.data('form-method'));

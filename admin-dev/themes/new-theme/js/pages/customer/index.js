@@ -38,13 +38,13 @@ import ColumnTogglingExtension from '../../components/grid/extension/column-togg
 import DeleteCustomersBulkActionExtension
   from '../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
 import DeleteCustomerRowActionExtension
-  from "../../components/grid/extension/action/row/customer/delete-customer-row-action-extension";
+  from '../../components/grid/extension/action/row/customer/delete-customer-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '../../components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const customerGrid = new Grid('customer');

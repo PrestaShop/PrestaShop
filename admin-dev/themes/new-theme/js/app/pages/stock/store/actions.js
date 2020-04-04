@@ -25,13 +25,12 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import * as types from '@app/pages/stock/store/mutation-types';
-import { showGrowl } from '@app/utils/growl';
-import { EventBus } from '@app/utils/event-bus';
-import _ from 'lodash';
+import {showGrowl} from '@app/utils/growl';
+import {EventBus} from '@app/utils/event-bus';
 
 Vue.use(VueResource);
 
-export const getStock = ({ commit }, payload) => {
+export const getStock = ({commit}, payload) => {
   const url = window.data.apiStockUrl;
   Vue.http.get(url, {
     params: {
@@ -53,7 +52,7 @@ export const getStock = ({ commit }, payload) => {
   });
 };
 
-export const getSuppliers = ({ commit }) => {
+export const getSuppliers = ({commit}) => {
   const url = window.data.suppliersUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_SUPPLIERS, response.body);
@@ -62,7 +61,7 @@ export const getSuppliers = ({ commit }) => {
   });
 };
 
-export const getCategories = ({ commit }) => {
+export const getCategories = ({commit}) => {
   const url = window.data.categoriesUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_CATEGORIES, response.body);
@@ -71,7 +70,7 @@ export const getCategories = ({ commit }) => {
   });
 };
 
-export const getMovements = ({ commit }, payload) => {
+export const getMovements = ({commit}, payload) => {
   const url = window.data.apiMovementsUrl;
 
   Vue.http.get(url, {
@@ -95,7 +94,7 @@ export const getMovements = ({ commit }, payload) => {
   });
 };
 
-export const getTranslations = ({ commit }) => {
+export const getTranslations = ({commit}) => {
   const url = window.data.translationUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_TRANSLATIONS, response.body);
@@ -105,7 +104,7 @@ export const getTranslations = ({ commit }) => {
   });
 };
 
-export const getEmployees = ({ commit }) => {
+export const getEmployees = ({commit}) => {
   const url = window.data.employeesUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_EMPLOYEES_LIST, response.body);
@@ -114,7 +113,7 @@ export const getEmployees = ({ commit }) => {
   });
 };
 
-export const getMovementsTypes = ({ commit }) => {
+export const getMovementsTypes = ({commit}) => {
   const url = window.data.movementsTypesUrl;
   Vue.http.get(url).then((response) => {
     commit(types.SET_MOVEMENTS_TYPES, response.body);
@@ -123,29 +122,29 @@ export const getMovementsTypes = ({ commit }) => {
   });
 };
 
-export const updateOrder = ({ commit }, order) => {
+export const updateOrder = ({commit}, order) => {
   commit(types.UPDATE_ORDER, order);
 };
 
-export const updatePageIndex = ({ commit }, pageIndex) => {
+export const updatePageIndex = ({commit}, pageIndex) => {
   commit(types.SET_PAGE_INDEX, pageIndex);
 };
 
-export const updateKeywords = ({ commit }, keywords) => {
+export const updateKeywords = ({commit}, keywords) => {
   commit(types.UPDATE_KEYWORDS, keywords);
 };
 
-export const isLoading = ({ commit }) => {
+export const isLoading = ({commit}) => {
   commit(types.LOADING_STATE, true);
 };
 
-export const updateProductQty = ({ commit }, payload) => {
+export const updateProductQty = ({commit}, payload) => {
   commit(types.UPDATE_PRODUCT_QTY, payload);
 };
 
-export const updateQtyByProductId = ({ commit, state }, payload) => {
-  const url = payload.url;
-  const delta = payload.delta;
+export const updateQtyByProductId = ({commit}, payload) => {
+  const {url} = payload;
+  const {delta} = payload;
 
   Vue.http.post(url, {
     delta,
@@ -157,7 +156,7 @@ export const updateQtyByProductId = ({ commit, state }, payload) => {
   });
 };
 
-export const updateQtyByProductsId = ({ commit, state }) => {
+export const updateQtyByProductsId = ({commit, state}) => {
   const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
 
@@ -169,22 +168,22 @@ export const updateQtyByProductsId = ({ commit, state }) => {
   });
 };
 
-export const updateBulkEditQty = ({ commit }, value) => {
+export const updateBulkEditQty = ({commit}, value) => {
   commit(types.UPDATE_BULK_EDIT_QTY, value);
 };
 
-export const addProductToUpdate = ({ commit }, product) => {
+export const addProductToUpdate = ({commit}, product) => {
   commit(types.ADD_PRODUCT_TO_UPDATE, product);
 };
 
-export const removeProductToUpdate = ({ commit }, product) => {
+export const removeProductToUpdate = ({commit}, product) => {
   commit(types.REMOVE_PRODUCT_TO_UPDATE, product);
 };
 
-export const addSelectedProduct = ({ commit }, product) => {
+export const addSelectedProduct = ({commit}, product) => {
   commit(types.ADD_SELECTED_PRODUCT, product);
 };
 
-export const removeSelectedProduct = ({ commit }, product) => {
+export const removeSelectedProduct = ({commit}, product) => {
   commit(types.REMOVE_SELECTED_PRODUCT, product);
 };

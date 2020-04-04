@@ -28,6 +28,9 @@ module.exports = class Profiles extends BOBasePage {
     this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
+    // Delete modal
+    this.confirmDeleteModal = '#profile-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /*
@@ -116,9 +119,22 @@ module.exports = class Profiles extends BOBasePage {
       this.waitForVisibleSelector(
         `${this.profilesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(this.profilesListTableDeleteLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.profilesListTableDeleteLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteProfiles();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteProfiles() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**

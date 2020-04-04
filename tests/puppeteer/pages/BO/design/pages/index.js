@@ -32,7 +32,7 @@ module.exports = class Pages extends BOBasePage {
     this.bulkActionsDeleteButton = '#%TABLE_grid_bulk_action_delete_selection';
     this.bulkActionsEnableButton = '#%TABLE_grid_bulk_action_enable_selection';
     this.bulkActionsDisableButton = '#%TABLE_grid_bulk_action_disable_selection';
-    this.confirmDeleteModal = '#%TABLE_grid_confirm_modal';
+    this.confirmDeleteModal = '#%TABLE-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.filterColumn = `${this.gridTable} #%TABLE_%FILTERBY`;
@@ -105,14 +105,18 @@ module.exports = class Pages extends BOBasePage {
   async deleteRowInTable(table, row) {
     const listTableToggleDropDown = await this.replaceAll(this.listTableToggleDropDown, '%TABLE', table);
     const deleteRowLink = await this.replaceAll(this.deleteRowLink, '%TABLE', table);
+    const confirmDeleteModal = await this.replaceAll(this.confirmDeleteModal, '%TABLE', table);
     // Click on dropDown
     await Promise.all([
       this.page.click(listTableToggleDropDown.replace('%ROW', row)),
       this.waitForVisibleSelector(`${listTableToggleDropDown}[aria-expanded='true']`.replace('%ROW', row)),
     ]);
     // Click on delete and wait for modal
-    this.dialogListener();
-    await this.clickAndWaitForNavigation(deleteRowLink.replace('%ROW', row));
+    await Promise.all([
+      this.page.click(deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteFromTable(table);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -143,16 +147,16 @@ module.exports = class Pages extends BOBasePage {
       this.page.click(bulkActionsDeleteButton),
       this.waitForVisibleSelector(`${confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteWithBulkActions(table);
+    await this.confirmDeleteFromTable(table);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
   /**
-   * Confirm delete with in modal
+   * Confirm delete in modal
    * @param table
    * @return {Promise<void>}
    */
-  async confirmDeleteWithBulkActions(table) {
+  async confirmDeleteFromTable(table) {
     await this.clickAndWaitForNavigation(this.confirmDeleteButton.replace('%TABLE', table));
   }
 

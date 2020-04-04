@@ -1,33 +1,26 @@
-@import "partials/_order-navigation";
+@import "partials/order-navigation";
 
 #order-view-page {
   #historyTabContent {
     .badge {
-      font-size: 0.875rem;
-      line-height: 1.5;
       padding: 0 5px;
+      font-size: 0.875rem;
       font-weight: 600;
-    }
-  }
-
-  .order {
-    &-actions {
-      display: flex;
-      flex-wrap: wrap;
+      line-height: 1.5;
     }
   }
 
   .add-product {
     &-inputs {
-      margin-top: 24px;
       min-width: 120px;
+      margin-top: 24px;
     }
 
     &-quantity,
     &-buttons {
       .form-group {
-        margin-bottom: 0;
         margin-top: 24px;
+        margin-bottom: 0;
       }
     }
   }
@@ -35,18 +28,18 @@
   // Todo: Looks like we don't have any custom select without JS to add in a form
   .select-status {
     position: relative;
-    background: #ffffff;
-    color: #ffffff;
-    border-radius: 4px;
-    border: none;
     max-width: 280px;
+    color: #fff;
+    background: #fff;
+    border: none;
+    @include border-radius(4px);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    transition: 0.2s ease-out;
+    @include transition(0.2s ease-out);
 
     .select-status-colored {
+      color: #fff;
       background: none;
       border: none;
-      color: white;
 
       option {
         color: initial;
@@ -55,16 +48,16 @@
     }
 
     &::after {
-      content: "keyboard_arrow_down";
       position: absolute;
-      font-family: "Material Icons";
-      cursor: pointer;
-      font-size: 1.25rem;
-      color: #ffffff;
       top: 50%;
-      transform: translateY(-50%);
       right: 10px;
+      font-family: "Material Icons", Arial, sans-serif;
+      font-size: 1.25rem;
+      color: #fff;
       pointer-events: none;
+      cursor: pointer;
+      content: "keyboard_arrow_down";
+      transform: translateY(-50%);
     }
 
     &.is-bright .select-status-colored,
@@ -75,13 +68,14 @@
 
   #orderProductsPanel {
     .btn-product-pack-modal {
-      margin-top: 5px;
       display: block;
+      margin-top: 5px;
     }
 
     .info-block {
       .col-sm:not(:last-child) {
         .text-muted {
+          /* stylelint-disable-next-line */
           margin-bottom: 4px !important;
         }
       }
@@ -98,9 +92,9 @@
   #product-pack-modal-table {
     .cell-product-quantity {
       .badge {
-        font-size: 100%;
         min-width: 26px;
-        border-radius: 1000px !important;
+        font-size: 100%;
+        @include border-radius(1000px!important);
       }
     }
   }
@@ -113,6 +107,8 @@
 
   .order {
     &-actions {
+      display: flex;
+      flex-wrap: wrap;
       > * {
         margin-bottom: 0.9375rem;
 
@@ -123,7 +119,7 @@
         a,
         button,
         select {
-          transition: 0.2s ease-out;
+          @include transition(0.2s ease-out);
 
           &:not(:disabled) {
             cursor: pointer;
@@ -141,8 +137,8 @@
   #orderProductsOriginalPosition {
     .cellProductQuantity {
       .rounded-circle {
-        border-radius: 100px !important;
         min-width: 21px;
+        @include border-radius(100px!important);
       }
     }
   }
@@ -159,7 +155,7 @@
 
   > .row:not(.d-print-none) {
     @media print {
-      display: block !important;
+      display: block !important; // stylelint-disable-line
     }
   }
 
@@ -170,15 +166,15 @@
     }
 
     a {
+      color: #000;
       text-decoration: none;
-      color: #000000;
     }
 
     .left-column,
     .right-column {
       flex: 0 0 100%;
-      max-width: 100%;
       width: 100%;
+      max-width: 100%;
 
       .card,
       .tab-pane {
@@ -202,14 +198,14 @@
 
     .badge-dark,
     .badge-secondary {
-      color: black;
-      background-color: #ffffff;
+      color: #000;
+      background-color: #fff;
     }
 
     .badge-print-light {
-      color: black !important;
-      background-color: #ffffff !important;
-      font-weight: normal;
+      font-weight: 500;
+      color: #000 !important; // stylelint-disable-line
+      background-color: #fff !important; // stylelint-disable-line
     }
   }
 }
@@ -287,8 +283,8 @@
       }
 
       &-actions {
-        width: 100%;
         display: flex;
+        width: 100%;
       }
     }
 
@@ -309,8 +305,9 @@
 
       .select-status {
         .select-status-colored {
-          margin-right: 0 !important;
           max-width: inherit;
+          /* stylelint-disable-next-line */
+          margin-right: 0 !important;
         }
       }
 
@@ -323,6 +320,7 @@
         button,
         & {
           width: 100%;
+          /* stylelint-disable-next-line */
           margin-left: 0 !important;
         }
       }
@@ -366,33 +364,33 @@
 }
 
 .cancel-product-cell {
-  margin-right: 0;
-  padding-right: 0;
   max-width: 400px;
+  padding-right: 0;
+  margin-right: 0;
 
   .cancel-product-cell-elements {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
     align-items: center;
+    justify-content: flex-start;
 
     .cancel-product-selector {
-      width: 30px;
       align-self: center;
+      width: 30px;
     }
 
     .form-group {
       display: flex;
       flex-direction: row;
-      margin-bottom: 0;
       padding: 0 5px;
+      margin-bottom: 0;
 
       .form-control-label {
         flex-shrink: 0;
         align-self: center;
         padding: 0;
         margin-bottom: 0;
-        font-weight: bold;
+        font-weight: 700;
       }
 
       .input-group {
@@ -400,9 +398,9 @@
         max-width: 110px;
 
         .form-control {
-          height: 35px;
           min-width: 30px;
           max-width: 76px;
+          height: 35px;
         }
         .input-group-append {
           height: 35px;
@@ -415,8 +413,8 @@
 
       &.cancel-product-amount {
         .input-group {
-          margin-top: 12px;
           min-width: 125px;
+          margin-top: 12px;
         }
       }
     }
@@ -424,8 +422,8 @@
 }
 
 .voucher-refund-type-negative-error {
-  color: $color-error;
   display: none;
+  color: $color-error;
 }
 
 input.refund-quantity {
@@ -441,8 +439,8 @@ input#partial_refund_shipping {
 
 .cellProductActions .btn,
 .discountList .btn {
-  background-color: transparent;
   color: $medium-gray;
+  background-color: transparent;
 }
 
 .cellProductActions .btn:hover,

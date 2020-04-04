@@ -20,7 +20,7 @@ module.exports = class Brands extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
-    this.confirmDeleteModal = '#%TABLE_grid_confirm_modal';
+    this.confirmDeleteModal = '#%TABLE-grid-confirm-modal';
     this.confirmDeleteButton = 'button.btn-confirm-submit';
     // Filters
     this.filterColumn = `${this.gridTable} #%TABLE_%FILTERBY`;

@@ -35,7 +35,7 @@ module.exports = class Languages extends LocalizationBasePage {
     this.bulkActionsEnableButton = '#language_grid_bulk_action_enable_selection';
     this.bulkActionsDisableButton = '#language_grid_bulk_action_disable_selection';
     this.bulkActionsDeleteButton = '#language_grid_bulk_action_delete_selection';
-    this.confirmDeleteModal = '#language_grid_confirm_modal';
+    this.confirmDeleteModal = '#language-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
@@ -148,14 +148,18 @@ module.exports = class Languages extends LocalizationBasePage {
    * @return {Promise<textContent>}
    */
   async deleteLanguage(row = 1) {
-    this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
       this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteLanguages(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

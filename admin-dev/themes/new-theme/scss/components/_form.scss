@@ -46,9 +46,9 @@
       @extend .col-sm-4;
       @extend .col-form-label;
 
-      @include media-breakpoint-up('sm') {
-        text-align: right;
+      @include media-breakpoint-up("sm") {
         padding-right: 25px;
+        text-align: right;
       }
     }
 
@@ -59,7 +59,7 @@
 
   // make ps-switch align with label
   .ps-switch:not(.ps-switch-lg) {
-    @include media-breakpoint-up('sm') {
+    @include media-breakpoint-up("sm") {
       margin-top: 5px;
     }
   }

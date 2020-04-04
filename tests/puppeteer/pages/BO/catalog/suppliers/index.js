@@ -22,7 +22,7 @@ module.exports = class Suppliers extends BOBasePage {
     this.bulkActionsEnableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_enable_selection`;
     this.bulkActionsDisableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_disable_selection`;
     this.bulkActionsDeleteButton = `${this.gridPanel} #supplier_grid_bulk_action_delete_selection`;
-    this.confirmDeleteModal = '#supplier_grid_confirm_modal';
+    this.confirmDeleteModal = '#supplier-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.filterColumn = `${this.gridTable} #supplier_%FILTERBY`;

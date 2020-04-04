@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/* eslint-disable max-len */
+
 export default {
   mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',

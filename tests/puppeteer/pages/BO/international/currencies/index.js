@@ -35,6 +35,9 @@ module.exports = class Currencies extends LocalizationBasePage {
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    // Delete modal
+    this.confirmDeleteModal = '#currency-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* Header Methods */
@@ -172,14 +175,26 @@ module.exports = class Currencies extends LocalizationBasePage {
    * @return {Promise<textContent>}
    */
   async deleteCurrency(row = 1) {
-    this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
       this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteCurrency();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteCurrency() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 };

@@ -271,7 +271,7 @@
     <state name="Bizkaia" iso_code="ES-BI" country="ES" zone="Europe"/>
     <state name="Zamora" iso_code="ES-ZA" country="ES" zone="Europe"/>
     <state name="Zaragoza" iso_code="ES-Z" country="ES" zone="Europe"/>
-    <state name=" Ceuta" iso_code="ES-CE" country="ES" zone="Europe"/>
-    <state name=" Melilla" iso_code="ES-ML" country="ES" zone="Europe"/>
+    <state name="Ceuta" iso_code="ES-CE" country="ES" zone="Europe"/>
+    <state name="Melilla" iso_code="ES-ML" country="ES" zone="Europe"/>
   </states>
 </localizationPack>
