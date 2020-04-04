@@ -108,7 +108,7 @@ class StockAvailableCore extends ObjectModel
             return WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot update the available stock when it depends on stock.', [], 'Admin.Catalog.Notification'), 133);
         }
         $result = $this->update();
-        if ($this->id_product_attribute == 0) {
+        if ($this->id_product_attribute === 0) {
             $id_shop = ($this->id_shop && Shop::getContext() !== Shop::CONTEXT_GROUP) ? $this->id_shop : null;
             $quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT quantity as quantity ' .
