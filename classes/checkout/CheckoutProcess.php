@@ -83,6 +83,9 @@ class CheckoutProcessCore implements RenderableInterface
             }
         }
 
+        /* ordered indexes is required for the rendering */
+        $this->steps = array_values($this->steps);
+
         return $this;
     }
 
