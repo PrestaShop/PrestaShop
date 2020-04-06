@@ -15,6 +15,7 @@ module.exports = class Checkout extends FOBasePage {
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = `${this.paymentStepSection} input[name='payment-option'][data-module-name='%NAME']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
+    this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -125,5 +126,13 @@ module.exports = class Checkout extends FOBasePage {
    */
   isPasswordRequired() {
     return this.elementVisible(`${this.checkoutGuestPasswordInput}:required`, 1000);
+  }
+
+  /**
+   * Check if checkbox of condition to approve is visible
+   * @returns {boolean}
+   */
+  isConditionToApproveCheckboxVisible() {
+    return this.elementVisible(this.conditionToApproveCheckbox, 1000);
   }
 };

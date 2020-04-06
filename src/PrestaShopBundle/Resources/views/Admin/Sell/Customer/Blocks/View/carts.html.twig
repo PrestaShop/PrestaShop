@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="customer-carts-card card">
   <h3 class="card-header">
     <i class="material-icons">shopping_cart</i>
     {{ 'Carts'|trans({}, 'Admin.Global') }}
@@ -45,12 +45,12 @@
         {% for cart in customerInformation.cartsInformation %}
           {% set cartViewUrl = getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) %}
 
-          <tr>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartTotal }}</td>
-            <td class="text-right">
+          <tr class="customer-cart">
+            <td class="customer-cart-id js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
+            <td class="customer-cart-date js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
+            <td class="customer-cart-carrier js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>
+            <td class="customer-cart-total js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartTotal }}</td>
+            <td class="customer-cart-actions text-right">
               <div class="btn-group-action">
                 <div class="btn-group">
                   <a href="{{ cartViewUrl }}"

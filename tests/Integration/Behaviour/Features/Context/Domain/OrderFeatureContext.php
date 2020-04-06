@@ -211,6 +211,64 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :orderReference should have :expectedCount cart rule(s)
+     *
+     * @param string$orderReference
+     * @param int $expectedCount
+     */
+    public function checkOrderCartRulesCount(string $orderReference, int $expectedCount)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $orderProducts */
+        $orderDiscounts = $orderForViewing->getDiscounts()->getDiscounts();
+
+        if (count($orderDiscounts) == $expectedCount) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Invalid number of cart rules for order %s, expected %s but got %s instead',
+                $orderReference,
+                $expectedCount,
+                count($orderDiscounts)
+            )
+        );
+    }
+
+    /**
+     * @Then order :reference should have cart rule :cartRuleName
+     *
+     * @param string $orderReference
+     * @param string $cartRuleName
+     */
+    public function createdOrderShouldHaveCartRule(string $orderReference, string $cartRuleName)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderDiscountForViewing[] $orderDiscountsForViewing */
+        $orderDiscountsForViewing = $orderForViewing->getDiscounts()->getDiscounts();
+
+        foreach ($orderDiscountsForViewing as $discount) {
+            if ($discount->getName() == $cartRuleName) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'Order "%s" should have cart rule "%s".',
+                $orderReference,
+                $cartRuleName
+            )
+        );
+    }
+
+    /**
      * @Then order :orderReference should have :expectedCount invoices
      */
     public function checkOrderInvoicesCount(string $orderReference, int $expectedCount)
@@ -523,7 +581,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderReference should contain :quantity products :productName
+     * @Then order :orderReference should contain :quantity product(s) :productName
      *
      * @param string $orderReference
      * @param int $quantity
@@ -531,13 +589,31 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName)
     {
-        $productQuantities = $this->getProductQuantitiesByReference($orderReference, $productName);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
 
-        if ((int) $productQuantities['quantity'] === (int) $quantity) {
-            return;
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $orderProducts */
+        $orderProducts = $orderForViewing->getProducts()->getProducts();
+
+        $productQuantity = 0;
+        foreach ($orderProducts as $orderProduct) {
+            if ($orderProduct->getName() == $productName) {
+                $productQuantity += $orderProduct->getQuantity();
+            }
         }
 
-        throw new RuntimeException(sprintf('Order was expected to have "%d" products "%s" in it. Instead got "%s"', $quantity, $productName, $productQuantities['quantity']));
+        if ($productQuantity == $quantity) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Order was expected to have "%d" products "%s" in it. Instead got "%d"',
+                $quantity,
+                $productName,
+                $productQuantity
+            )
+        );
     }
 
     /**
@@ -650,6 +726,18 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :orderReference should have the following details:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function queryOrderToGetTheFollowingProperties(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $this->assertOrderPropertiesEquals(new Order($orderId), $table->getRowsHash());
+    }
+
+    /**
      * @param string $productName
      *
      * @return int
@@ -695,5 +783,25 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $productQuantities;
+    }
+
+    /**
+     * @param Order $order
+     * @param array $data
+     */
+    private function assertOrderPropertiesEquals(Order $order, array $data): void
+    {
+        foreach (array_keys($data) as $property) {
+            if (!property_exists($order, $property) || $data[$property] !== $order->$property) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Expected %s value to be equal to %s, got %s instead',
+                        $property,
+                        $data[$property],
+                        $order->$property
+                    )
+                );
+            }
+        }
     }
 }

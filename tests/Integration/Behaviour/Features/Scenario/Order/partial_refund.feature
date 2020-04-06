@@ -686,7 +686,7 @@ Feature: Refund Order from Back Office (BO)
       | date           | 2019-11-26 13:56:23 |
       | payment_method | Payments by check   |
       | transaction_id | test123             |
-      | id_currency    | 1                   |
+      | currency       | USD                 |
       | amount         | 6.00                |
     And order "bo_order_refund" has 1 payments
     And "bo_order_refund" has 0 credit slips

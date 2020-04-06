@@ -121,8 +121,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'name',
         createCategoryData.name,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page_category',
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
         1,
         'name',
       );
@@ -131,8 +130,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
 
     it('should go to FO and check the created category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO', baseContext);
-      const pageCategoryID = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page_category',
+      const pageCategoryID = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
         1,
         'id_cms_category',
       );
@@ -184,8 +182,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         createPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page',
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPage(
         1,
         'meta_title',
       );
@@ -230,8 +227,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'name',
         createCategoryData.name,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page_category',
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
         1,
         'name',
       );
@@ -266,8 +262,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'name',
         editCategoryData.name,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page_category',
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
         1,
         'name',
       );
@@ -276,8 +271,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
 
     it('should go to FO and check the updated category', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCategoryFO', baseContext);
-      const pageCategoryID = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page_category',
+      const pageCategoryID = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
         1,
         'id_cms_category',
       );
@@ -310,8 +304,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         createPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page',
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPage(
         1,
         'meta_title',
       );
@@ -339,8 +332,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         editPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page',
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPage(
         1,
         'meta_title',
       );
@@ -388,8 +380,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
         'meta_title',
         editPageData.title,
       );
-      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page',
+      const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPage(
         1,
         'meta_title',
       );

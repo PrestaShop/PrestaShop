@@ -86,6 +86,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.taxesLink = '#subtab-AdminParentTaxes';
     // Localization
     this.localizationLink = '#subtab-AdminParentLocalization';
+    // Translations
+    this.translationsLink = '#subtab-AdminTranslations';
 
     // Shop Parameters
     this.shopParametersParentLink = '#subtab-ShopParameters';
