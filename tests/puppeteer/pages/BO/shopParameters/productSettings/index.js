@@ -36,6 +36,7 @@ module.exports = class productSettings extends BOBasePage {
     this.labelInStock = '#form_stock_in_stock_label_%IDLANG';
     this.deliveryTimeInStockInput = '#form_stock_delivery_time_1';
     this.deliveryTimeOutOfStockInput = '#form_stock_oos_delivery_time_1';
+    this.oosAllowedBackordersLabel = '#form_stock_oos_allowed_backorders_1';
     this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
     // Pagination form
     this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
@@ -281,6 +282,17 @@ module.exports = class productSettings extends BOBasePage {
   async setDeliveryTimeOutOfStock(deliveryTimeText = '') {
     await this.setValue(this.deliveryTimeOutOfStockInput, deliveryTimeText);
     await this.clickAndWaitForNavigation(this.saveProductsStockForm);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set label out-of-stock allowed backorders
+   * @param label
+   * @returns {Promise<string>}
+   */
+  async setLabelOosAllowedBackorders(label) {
+    await this.setValue(this.oosAllowedBackordersLabel, label);
+    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };
