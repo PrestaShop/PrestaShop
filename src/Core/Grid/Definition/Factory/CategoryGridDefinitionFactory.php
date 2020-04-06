@@ -55,7 +55,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class CategoryGridDefinitionFactory builds Grid definition for Categories listing.
  */
-final class CategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     const GRID_ID = 'category';
 

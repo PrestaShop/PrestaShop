@@ -23,31 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters;
-
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AttachmentGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 /**
- * Defines default filters for Attachments grid.
+ * This interface allows to identify the filters associated to a Grid, which is then used
+ * to scope its parameters in request (thus allowing multi grid on same page) and as a key
+ * to persist them in database (and of course etch them afterwards).
  */
-final class AttachmentFilters extends Filters
+interface FilterableGridDefinitionFactoryInterface extends GridDefinitionFactoryInterface
 {
-    /** @var string */
-    protected $filterId = AttachmentGridDefinitionFactory::GRID_ID;
-
     /**
-     * {@inheritdoc}
+     * Returns a (unique) id to identify the grid filters, this is used as a key to persist
+     * (and clear) the Filters associated to the grid.
+     *
+     * @return string
      */
-    public static function getDefaults()
-    {
-        return [
-            'limit' => 50,
-            'offset' => 0,
-            'orderBy' => 'id_attachment',
-            'sortOrder' => 'asc',
-            'filters' => [],
-        ];
-    }
+    public function getFilterId(): string;
 }

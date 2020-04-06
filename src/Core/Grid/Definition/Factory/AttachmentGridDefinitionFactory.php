@@ -46,7 +46,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Defines attachments list grid
  */
-final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
 
@@ -220,10 +220,9 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                 (new Filter('actions', SearchAndResetType::class))
                     ->setAssociatedColumn('actions')
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [
-                            'controller' => 'attachment',
-                            'action' => 'index',
+                            'filterId' => self::GRID_ID,
                         ],
                         'redirect_route' => 'admin_attachments_index',
                     ])
