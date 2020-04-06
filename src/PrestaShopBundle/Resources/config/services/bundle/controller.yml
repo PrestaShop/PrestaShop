@@ -8,6 +8,8 @@ services:
         calls:
             - [setLogger, ['@logger']]
             - [setContainer, ['@service_container']]
+        tags:
+          - { name: prestashop_core.controllers }
 
     prestashop.core.api.stock.controller:
         class: PrestaShopBundle\Controller\Api\StockController
@@ -17,6 +19,8 @@ services:
             movements: "@prestashop.core.api.stock.movements_collection"
             stockRepository: "@prestashop.core.api.stock.repository"
             queryParams: "@prestashop.core.api.query_stock_params_collection"
+        tags:
+          - { name: prestashop_core.controllers }
 
     prestashop.core.api.stock_movement.controller:
         class: PrestaShopBundle\Controller\Api\StockMovementController
@@ -25,6 +29,8 @@ services:
         properties:
             stockMovementRepository: "@prestashop.core.api.stock_movement.repository"
             queryParams: "@prestashop.core.api.query_stock_movement_params_collection"
+        tags:
+          - { name: prestashop_core.controllers }
 
     prestashop.core.api.supplier.controller:
         class: PrestaShopBundle\Controller\Api\SupplierController
@@ -32,6 +38,8 @@ services:
         public: true
         properties:
             supplierRepository: "@prestashop.core.api.supplier.repository"
+        tags:
+          - { name: prestashop_core.controllers }
 
     prestashop.core.api.manufacturer.controller:
         class: PrestaShopBundle\Controller\Api\ManufacturerController
@@ -46,6 +54,8 @@ services:
         public: true
         properties:
             categoryRepository: "@prestashop.core.api.category.repository"
+        tags:
+          - { name: prestashop_core.controllers }
 
     prestashop.core.api.attribute.controller:
         class: PrestaShopBundle\Controller\Api\AttributeController
@@ -53,6 +63,8 @@ services:
         public: true
         properties:
             featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
+        tags:
+          - { name: prestashop_core.controllers }
 
     prestashop.core.api.feature.controller:
         class: PrestaShopBundle\Controller\Api\FeatureController
@@ -60,6 +72,8 @@ services:
         public: true
         properties:
             featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
+        tags:
+          - { name: prestashop_core.controllers }
 
     prestashop.core.api.i18n.controller:
         class: PrestaShopBundle\Controller\Api\I18nController
