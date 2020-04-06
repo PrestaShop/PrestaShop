@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
@@ -212,9 +214,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $this->getCommandBus()->handle(
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
-        } catch (InvalidProductQuantityException $e) {
-            $this->lastException = $e;
-        } catch (ProductOutOfStockException $e) {
+        } catch (OrderException | OrderNotFoundException $e) {
             $this->lastException = $e;
         }
     }

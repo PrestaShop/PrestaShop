@@ -155,7 +155,9 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             foreach ($result as $itemCartRule) {
                 if ($itemCartRule['id_cart_rule'] == $orderCartRule['id_cart_rule']) {
                     $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
-                    $orderCartRule->delete();
+                    if (!$orderCartRule->delete()) {
+                        return false;
+                    }
                 }
             }
         }
