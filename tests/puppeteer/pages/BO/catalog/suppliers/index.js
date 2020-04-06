@@ -95,17 +95,20 @@ module.exports = class Suppliers extends BOBasePage {
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteSupplier(row = 1) {
-    this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
       this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteSuppliers();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -251,8 +254,16 @@ module.exports = class Suppliers extends BOBasePage {
       this.page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+    await this.confirmDeleteSuppliers();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteSuppliers() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**
