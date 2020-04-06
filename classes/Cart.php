@@ -1025,7 +1025,8 @@ class CartCore extends ObjectModel
         $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
 
         if ($separator === '-') {
-            $separator = ' -'; // Fix #17309 Add a space before the dash between attributes
+            // Add a space before the dash between attributes
+            $separator = ' -';
         }
 
         foreach ($ipa_list as $id_product_attribute) {
