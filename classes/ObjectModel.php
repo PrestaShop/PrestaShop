@@ -1149,12 +1149,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Check field validator
         if (!in_array('validate', $skip) && !empty($data['validate'])) {
-            $callable = $data['validate'];
-            if (!is_callable($callable)) {
-                $callable = 'Validate::' . $data['validate'];
+            $functionName = $data['validate'];
+            if (!is_callable($functionName)) {
+                $functionName = 'Validate::' . $data['validate'];
             }
 
-            if (!is_callable($callable)) {
+            if (!is_callable($functionName)) {
                 throw new PrestaShopException(
                     $this->trans(
                         'Validation function not found: %s.',
@@ -1165,20 +1165,20 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
 
             if (!empty($value)) {
-                $is_valid = true;
+                $isValid = true;
                 if (Tools::strtolower($data['validate']) === 'iscleanhtml') {
-                    if (!call_user_func(['Validate', $data['validate']], $value, $ps_allow_html_iframe)) {
-                        $is_valid = false;
+                    if (!call_user_func($functionName, $value, $ps_allow_html_iframe)) {
+                        $isValid = false;
+                    }
+                } else {
+                    if (!call_user_func($functionName, $value)) {
+                        $isValid = false;
                     }
                 }
 
-                if (!call_user_func($callable, $value)) {
-                    $is_valid = false;
-                }
-
-                if (!$is_valid) {
+                if (!$isValid) {
                     if ($human_errors) {
-                        return $this->trans('The %s field is invalid.', [$this->displayFieldName($field, get_class($this))], 'Admin.Notifications.Error');
+                        return $this->trans('The %s field is invalid.', [self::displayFieldName($field, get_class($this))], 'Admin.Notifications.Error');
                     }
 
                     return $this->trans('Property %s is not valid', [get_class($this) . '->' . $field], 'Admin.Notifications.Error');
