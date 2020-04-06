@@ -30,6 +30,9 @@ module.exports = class productSettings extends BOBasePage {
     this.productsStockForm = '#configuration_fieldset_stock';
     this.allowOrderingOosLabel = `${this.productsStockForm} label[for='form_stock_allow_ordering_oos_%TOGGLE']`;
     this.enableStockManagementLabel = `${this.productsStockForm} label[for='form_stock_stock_management_%TOGGLE']`;
+    this.nameLangButton = '#form_stock_in_stock_label';
+    this.nameLangSpan = 'div.dropdown-menu[aria-labelledby=\'form_stock_in_stock_label\'] span[data-locale=\'%LANG\']';
+    this.labelInStock = '#form_stock_in_stock_label_%IDLANG';
     this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
     // Pagination form
     this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
@@ -195,6 +198,38 @@ module.exports = class productSettings extends BOBasePage {
   async setProductsDisplayedPerPage(numberOfProducts) {
     await this.setValue(this.productsPerPageInput, numberOfProducts.toString());
     await this.clickAndWaitForNavigation(this.savePaginationFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Change language for selectors
+   * @param lang
+   * @return {Promise<void>}
+   */
+  async changeLanguageForSelectors(lang = 'en') {
+    await Promise.all([
+      this.page.click(this.nameLangButton),
+      this.waitForVisibleSelector(`${this.nameLangButton}[aria-expanded='true']`),
+    ]);
+    await Promise.all([
+      this.page.click(this.nameLangSpan.replace('%LANG', lang)),
+      this.waitForVisibleSelector(`${this.nameLangButton}[aria-expanded='false']`),
+    ]);
+  }
+
+  /**
+   * Set label of in_stock products
+   * @param label
+   * @returns {Promise<string>}
+   */
+  async setLabelOfInStockProducts(label) {
+    // Fill label in english
+    await this.changeLanguageForSelectors('en');
+    await this.setValue(this.labelInStock.replace('%IDLANG', 1), label);
+    // Fill label in french
+    await this.changeLanguageForSelectors('fr');
+    await this.setValue(this.labelInStock.replace('%IDLANG', 2), label);
+    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };
