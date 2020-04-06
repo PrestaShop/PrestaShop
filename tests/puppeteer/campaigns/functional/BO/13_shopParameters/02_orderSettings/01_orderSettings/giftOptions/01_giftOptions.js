@@ -94,7 +94,7 @@ describe('Update gift options ', async () => {
           action: 'enable',
           wantedStatus: true,
           price: 1,
-          tax: DefaultFrTax.frName,
+          tax: 'FR Taux standard (20%)',
           taxValue: DefaultFrTax.rate / 100,
           isRecyclablePackage: false,
         },
