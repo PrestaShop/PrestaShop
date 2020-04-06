@@ -61,9 +61,6 @@ final class PerformanceFormHandler
         $this->formDataProvider = $formDataProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getForm()
     {
         $formBuilder = $this->formFactory->createBuilder()
@@ -83,9 +80,6 @@ final class PerformanceFormHandler
         return $formBuilder->setData($formBuilder->getData())->getForm();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(array $data)
     {
         $errors = $this->formDataProvider->setData($data);
