@@ -1,7 +1,7 @@
 require('module-alias/register');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_productsStock_abelOutOfStockWithAllowedBackorders';
+const baseContext = 'functional_BO_productSettings_productsStock_labelOutOfStock';
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
@@ -38,7 +38,7 @@ const init = async function () {
   };
 };
 
-describe('Set label out-of-stock with allowed backorders', async () => {
+describe('Set label out-of-stock with allowed/denied backorders', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -81,9 +81,34 @@ describe('Set label out-of-stock with allowed backorders', async () => {
   });
 
   const tests = [
-    {args: {action: 'enable', enable: true, label: 'You can order', labelToCheck: 'You can order'}},
-    {args: {action: 'enable', enable: true, label: ' ', labelToCheck: ''}},
-    {args: {action: 'disable', enable: false, label: ' ', labelToCheck: 'Out-of-Stock'}},
+    {
+      args: {
+        action: 'enable',
+        enable: true,
+        backordersAction: 'allowed',
+        label: 'You can order',
+        labelToCheck: 'You can order',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, backordersAction: 'allowed', label: ' ', labelToCheck: '',
+      },
+    },
+    {
+      args: {
+        action: 'disable', enable: false, backordersAction: 'denied', label: ' ', labelToCheck: '',
+      },
+    },
+    {
+      args: {
+        action: 'disable',
+        enable: false,
+        backordersAction: 'denied',
+        label: 'Out-of-Stock',
+        labelToCheck: 'Out-of-Stock',
+      },
+    },
   ];
   tests.forEach((test, index) => {
     it(`should ${test.args.action} allow ordering of out-of-stock products`, async function () {
@@ -97,18 +122,23 @@ describe('Set label out-of-stock with allowed backorders', async () => {
       await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should set Label of out-of-stock products with allowed backorders', async function () {
+    it(`should set Label of out-of-stock products with ${test.args.backordersAction} backorders`, async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
         `setLabelOutOfStock${index}`,
         baseContext,
       );
-      const result = await this.pageObjects.productSettingsPage.setLabelOosAllowedBackorders(test.args.label);
-      await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+      if (test.args.enable) {
+        const result = await this.pageObjects.productSettingsPage.setLabelOosAllowedBackorders(test.args.label);
+        await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+      } else {
+        const result = await this.pageObjects.productSettingsPage.setLabelOosDeniedBackorders(test.args.label);
+        await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+      }
     });
 
-    it('should check label out-of-stock with allowed backorders', async function () {
+    it('should check label out-of-stock', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
