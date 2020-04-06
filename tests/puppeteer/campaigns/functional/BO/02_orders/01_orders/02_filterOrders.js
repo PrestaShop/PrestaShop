@@ -100,6 +100,15 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
     {
       args:
         {
+          identifier: 'filterByCustomer',
+          filterType: 'input',
+          filterBy: 'customer',
+          filterValue: Orders.firstOrder.customer,
+        },
+    },
+    {
+      args:
+        {
           identifier: 'filterByTotalPaid',
           filterType: 'input',
           filterBy: 'total_paid_tax_incl',
