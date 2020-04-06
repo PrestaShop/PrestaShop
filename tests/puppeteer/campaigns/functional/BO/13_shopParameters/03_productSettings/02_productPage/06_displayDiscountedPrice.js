@@ -100,10 +100,18 @@ describe('Enable/Disable display discounted price', async () => {
   });
 
   const tests = [
-    {args: {action: 'disable', enable: false, textColumnToCheck: 'Unit discount', valueToCheck: unitDiscountToCheck}},
-    {args: {action: 'enable', enable: true, textColumnToCheck: 'Unit price', valueToCheck: unitPriceToCheck}},
+    {
+      args: {
+        action: 'disable', enable: false, textColumnToCheck: 'Unit discount', valueToCheck: unitDiscountToCheck,
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, textColumnToCheck: 'Unit price', valueToCheck: unitPriceToCheck,
+      },
+    },
   ];
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} display discounted price`, async function () {
       await testContext.addContextItem(
         this,
@@ -132,8 +140,14 @@ describe('Enable/Disable display discounted price', async () => {
       await expect(columnTitle).to.equal(test.args.textColumnToCheck);
       const columnValue = await this.pageObjects.productPage.getDiscountValue();
       await expect(columnValue).to.equal(test.args.valueToCheck);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
       page = await this.pageObjects.productPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
     });
   });
 
