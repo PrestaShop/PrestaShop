@@ -33,6 +33,7 @@ module.exports = class productSettings extends BOBasePage {
     this.nameLangButton = '#form_stock_in_stock_label';
     this.nameLangSpan = 'div.dropdown-menu[aria-labelledby=\'form_stock_in_stock_label\'] span[data-locale=\'%LANG\']';
     this.labelInStock = '#form_stock_in_stock_label_%IDLANG';
+    this.oosAllowedBackordersLabel = '#form_stock_oos_allowed_backorders_1';
     this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
     // Pagination form
     this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
@@ -230,6 +231,17 @@ module.exports = class productSettings extends BOBasePage {
     await this.changeLanguageForSelectors('fr');
     await this.setValue(this.labelInStock.replace('%IDLANG', 2), label);
     await this.clickAndWaitForNavigation(this.saveProductsStockForm);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set label out-of-stock allowed bachorders
+   * @param label
+   * @returns {Promise<string>}
+   */
+  async setLabelOosAllowedBackorders(label) {
+    await this.setValue(this.oosAllowedBackordersLabel, label);
+    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };
