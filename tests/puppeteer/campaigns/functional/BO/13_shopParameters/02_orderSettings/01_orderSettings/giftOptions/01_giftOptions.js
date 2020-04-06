@@ -40,7 +40,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable terms of service', async () => {
+describe('Update gift options ', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
