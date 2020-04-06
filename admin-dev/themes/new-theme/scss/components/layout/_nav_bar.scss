@@ -519,9 +519,9 @@
           display: flex !important;
           /* stylelint-enable */
           flex-direction: column-reverse;
+          margin-top: 35px;
           transform: rotate(180deg);
           transform-origin: top;
-          margin-top: 35px;
 
           li {
             transform: rotate(180deg);

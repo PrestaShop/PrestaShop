@@ -24,7 +24,7 @@
  */
 import punycode from 'punycode';
 
-const { $ } = window;
+const {$} = window;
 
 const init = function initEmailFields(selector) {
   const $emailFields = $(selector);
