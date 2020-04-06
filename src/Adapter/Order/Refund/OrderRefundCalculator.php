@@ -81,49 +81,60 @@ class OrderRefundCalculator
             $orderDetailList,
             $precision
         );
-        $refundedAmount = 0;
+
+        $numberZero = new Number('0');
+
+        $refundedAmount = $numberZero;
         foreach ($productRefunds as $orderDetailId => $productRefund) {
-            $refundedAmount += $productRefund['amount'];
+            $refundedAmount = $refundedAmount->plus(new Number((string) $productRefund['amount']));
         }
 
         $voucherChosen = false;
-        $voucherAmount = 0;
+        $voucherAmount = $numberZero;
         if ($voucherRefundType === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
-            //@todo: Check if it matches order_discount_price in legacy
-            $refundedAmount -= $voucherAmount = (float) $order->total_discounts;
+            $voucherAmount = new Number((string) $order->total_discounts);
+            $refundedAmount = $refundedAmount->minus($voucherAmount);
         } elseif ($voucherRefundType === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
             $voucherChosen = true;
             $refundedAmount = $voucherAmount = $chosenVoucherAmount;
         }
 
-        $shippingCostAmount = (float) (string) $shippingRefund;
-        if ($shippingCostAmount > 0) {
-            $shippingMaxRefund = $isTaxIncluded ? $order->total_shipping_tax_incl : $order->total_shipping_tax_excl;
+        $shippingCostAmount = $shippingRefund ?? $numberZero;
+        if ($shippingCostAmount->isPositive()) {
+            $shippingMaxRefund = new Number(
+                $isTaxIncluded ?
+                    (string) $order->total_shipping_tax_incl :
+                    (string) $order->total_shipping_tax_excl
+            );
+
             $shippingSlipResume = OrderSlip::getShippingSlipResume($order->id);
-            $shippingMaxRefund -= $shippingSlipResume['total_shipping_tax_incl'] ?? 0;
-            if ($shippingCostAmount > $shippingMaxRefund) {
+            $shippingSlipTotalTaxIncl = new Number((string) ($shippingSlipResume['total_shipping_tax_incl'] ?? 0));
+            $shippingMaxRefund = $shippingMaxRefund->minus($shippingSlipTotalTaxIncl);
+
+            if ($shippingCostAmount->isGreaterThan($shippingMaxRefund)) {
                 $shippingCostAmount = $shippingMaxRefund;
             }
             if (!$isTaxIncluded) {
-                // @todo: use https://github.com/PrestaShop/decimal for price computations
                 $taxCalculator = $this->getCarrierTaxCalculatorFromOrder($order);
-                $refundedAmount += $taxCalculator->addTaxes($shippingCostAmount);
+                $taxesAmount = $taxCalculator->addTaxes((float) (string) $shippingCostAmount);
+                $taxes = new Number((string) $taxesAmount);
+                $refundedAmount = $refundedAmount->plus($taxes);
             } else {
-                $refundedAmount += $shippingCostAmount;
+                $refundedAmount = $refundedAmount->plus($shippingCostAmount);
             }
         }
 
         // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
-        if (count($productRefunds) <= 0 && $shippingCostAmount <= 0) {
+        if (count($productRefunds) <= 0 && $refundedAmount->isLowerOrEqualThan($numberZero)) {
             throw new InvalidCancelProductException(InvalidCancelProductException::NO_REFUNDS);
         }
 
         return new OrderRefundSummary(
             $orderDetailList,
             $productRefunds,
-            $refundedAmount,
-            $shippingCostAmount,
-            $voucherAmount,
+            (float) (string) $refundedAmount,
+            (float) (string) $shippingCostAmount,
+            (float) (string) $voucherAmount,
             $voucherChosen,
             $isTaxIncluded,
             $precision

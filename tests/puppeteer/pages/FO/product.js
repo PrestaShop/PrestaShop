@@ -18,6 +18,7 @@ module.exports = class Product extends FOBasePage {
     this.productDetail = 'div.product-information a[href=\'#product-details\']';
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailabilityIcon = '#product-availability i';
+    this.productAvailability = '#product-availability';
     this.productSizeOption = '#group_1 option[title=\'%SIZE\']';
     this.productColorInput = '#group_2 input[title=\'%COLOR\']';
     this.metaLink = '#main > meta';
@@ -135,6 +136,14 @@ module.exports = class Product extends FOBasePage {
    */
   isAddToCartButtonEnabled() {
     return this.elementNotVisible(`${this.addToCartButton}:disabled`, 1000);
+  }
+
+  /**
+   * Get product availability label
+   * @returns {Promise<string>}
+   */
+  getProductAvailabilityLabel() {
+    return this.getTextContent(this.productAvailability, 1000);
   }
 
   /**

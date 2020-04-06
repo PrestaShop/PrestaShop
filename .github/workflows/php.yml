@@ -15,4 +15,4 @@ jobs:
           fetch-depth: 0
 
       - run: composer install --prefer-dist
-      - run: ./vendor/bin/php-cs-fixer fix --dry-run
+      - run: ./vendor/bin/php-cs-fixer fix --dry-run --diff

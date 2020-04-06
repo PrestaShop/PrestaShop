@@ -15,6 +15,7 @@ module.exports = class Home extends CommonPage {
     this.contactLink = '#contact-link';
     this.categoryMenu = '#category-%ID > a';
     this.languageSelectorDiv = '#_desktop_language_selector';
+    this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
@@ -91,6 +92,15 @@ module.exports = class Home extends CommonPage {
     ]);
     await this.clickAndWaitForNavigation(this.languageSelectorMenuItemLink.replace('%LANG', lang));
   }
+
+  /**
+   * Get shop language
+   * @returns {Promise<string>}
+   */
+  getShopLanguage() {
+    return this.getTextContent(this.defaultLanguageSpan);
+  }
+
 
   /**
    * Return true if language exist in FO
