@@ -28,6 +28,11 @@ module.exports = class Checkout extends FOBasePage {
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
     this.personalInformationContinueButton = `${this.checkoutLoginForm} #login-form footer button`;
+    // Gift selectors
+    this.giftCheckbox = '#input_gift';
+    this.recycableGiftCheckbox = '#input_recyclable';
+    this.cartSubtotalGiftWrappingDiv = '#cart-subtotal-gift_wrapping';
+    this.cartSubtotalGiftWrappingValueSpan = `${this.cartSubtotalGiftWrappingDiv} span.value`;
   }
 
   /*
@@ -134,5 +139,30 @@ module.exports = class Checkout extends FOBasePage {
    */
   isConditionToApproveCheckboxVisible() {
     return this.elementVisible(this.conditionToApproveCheckbox, 1000);
+  }
+
+  /**
+   * Check if gift checkbox is visible
+   * @return {boolean}
+   */
+  isGiftCheckboxVisible() {
+    return this.elementVisible(this.giftCheckbox, 1000);
+  }
+
+  /**
+   * Check if recyclable checkbox is visible
+   * @return {boolean}
+   */
+  isRecyclableCheckboxVisible() {
+    return this.elementVisible(this.recycableGiftCheckbox, 1000);
+  }
+
+  /**
+   * Get gift price from cart summary
+   * @return {Promise<string>}
+   */
+  async getGiftPrice() {
+    await this.changeCheckboxValue(this.giftCheckbox, true);
+    return this.getTextContent(this.cartSubtotalGiftWrappingValueSpan);
   }
 };
