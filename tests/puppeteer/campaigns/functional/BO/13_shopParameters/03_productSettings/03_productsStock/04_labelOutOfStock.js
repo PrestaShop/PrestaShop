@@ -129,13 +129,13 @@ describe('Set label out-of-stock with allowed/denied backorders', async () => {
         `setLabelOutOfStock${index}`,
         baseContext,
       );
+      let result = '';
       if (test.args.enable) {
-        const result = await this.pageObjects.productSettingsPage.setLabelOosAllowedBackorders(test.args.label);
-        await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+        result = await this.pageObjects.productSettingsPage.setLabelOosAllowedBackorders(test.args.label);
       } else {
-        const result = await this.pageObjects.productSettingsPage.setLabelOosDeniedBackorders(test.args.label);
-        await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+        result = await this.pageObjects.productSettingsPage.setLabelOosDeniedBackorders(test.args.label);
       }
+      await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
     });
 
     it('should check label out-of-stock', async function () {
