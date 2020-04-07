@@ -31,7 +31,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 interface TranslationsFactoryInterface
 {
-    const DEFAULT_LOCALE = 'en_US';
+    const DEFAULT_LOCALE = 'en-US';
 
     /**
      * Generates extract of global Catalogue, using domain's identifiers.
@@ -57,5 +57,10 @@ interface TranslationsFactoryInterface
      *
      * @return array Translation tree structure
      */
-    public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null);
+    public function createTranslationsArray(
+        $domainIdentifier,
+        $locale = self::DEFAULT_LOCALE,
+        $theme = null,
+        $search = null
+    );
 }

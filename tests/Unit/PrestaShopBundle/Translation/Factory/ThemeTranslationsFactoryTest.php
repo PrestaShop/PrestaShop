@@ -24,15 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace LegacyTests\PrestaShopBundle\Translation\Factory;
+namespace Tests\Unit\PrestaShopBundle\Translation\Factory;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory;
+use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
+use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Translation\MessageCatalogue;
 
-/**
- * @group sf
- */
 class ThemeTranslationsFactoryTest extends TestCase
 {
     const TEST_LOCALE = 'ab-CD';
@@ -44,13 +43,16 @@ class ThemeTranslationsFactoryTest extends TestCase
      */
     private $factory;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|ThemeProvider
+     */
     private $themeProviderMock;
 
     private $translations;
 
     protected function setUp()
     {
-        $this->themeProviderMock = $this->getMockBuilder('PrestaShopBundle\Translation\Provider\ThemeProvider')
+        $this->themeProviderMock = $this->getMockBuilder(ThemeProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -59,7 +61,7 @@ class ThemeTranslationsFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider getThemeAndLocale
+     * @dataProvider provideThemeAndLocale
      *
      * @param $theme
      * @param $locale
@@ -88,18 +90,15 @@ class ThemeTranslationsFactoryTest extends TestCase
     /**
      * @return array
      */
-    public function getThemeAndLocale()
+    public function provideThemeAndLocale()
     {
-        return array(
-            array(
-                self::TEST_THEME,
-                self::TEST_LOCALE,
-            ),
-        );
+        return [
+            [self::TEST_THEME, self::TEST_LOCALE],
+        ];
     }
 
     /**
-     * @dataProvider getThemeAndLocale
+     * @dataProvider provideThemeAndLocale
      *
      * @param $theme
      * @param $locale
@@ -129,7 +128,7 @@ class ThemeTranslationsFactoryTest extends TestCase
         $this->assertTranslationsContainDefaultAndDatabaseMessages($locale);
     }
 
-    private function getMessageCatalogue()
+    private function getDefaultCatalogue()
     {
         return new MessageCatalogue(
             self::TEST_LOCALE,
@@ -188,14 +187,20 @@ class ThemeTranslationsFactoryTest extends TestCase
         );
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThemeProvider
+     */
     protected function mockThemeProvider()
     {
-        return $this->mockProvider('PrestaShopBundle\Translation\Provider\ThemeProvider', 'theme', self::TEST_LOCALE);
+        return $this->mockProvider(ThemeProvider::class, 'theme', self::TEST_LOCALE);
     }
 
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|FrontOfficeProvider
+     */
     protected function mockFrontOfficeProvider()
     {
-        return $this->mockProvider('PrestaShopBundle\Translation\Provider\FrontOfficeProvider', 'front', self::TEST_LOCALE);
+        return $this->mockProvider(FrontOfficeProvider::class, 'front', self::TEST_LOCALE);
     }
 
     private function mockProvider($providerPath, $providerIdentifier, $locale)
@@ -226,8 +231,8 @@ class ThemeTranslationsFactoryTest extends TestCase
 
         $providerMock
             ->expects($this->any())
-            ->method('getMessageCatalogue')
-            ->willReturn($this->getMessageCatalogue());
+            ->method('getDefaultCatalogue')
+            ->willReturn($this->getDefaultCatalogue());
 
         return $providerMock;
     }
