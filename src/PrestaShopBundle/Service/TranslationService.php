@@ -117,10 +117,12 @@ class TranslationService
     }
 
     /**
-     * @param $lang
-     * @param $type
-     * @param $theme
-     * @param null $search
+     * Returns the translation tree
+     *
+     * @param string $lang
+     * @param string $type
+     * @param string $theme
+     * @param string|null $search
      *
      * @return array|mixed
      */
@@ -159,11 +161,11 @@ class TranslationService
      * @todo: we need module information here
      * @todo: we need to improve the Vuejs application to send the information
      *
-     * @param $locale
-     * @param $domain
-     * @param null $theme
-     * @param null $search
-     * @param null $module
+     * @param string $locale
+     * @param string $domain
+     * @param string|null $theme
+     * @param string|null $search
+     * @param string|null $module
      *
      * @return array
      */
