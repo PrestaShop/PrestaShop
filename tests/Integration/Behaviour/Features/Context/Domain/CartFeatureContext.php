@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCo
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -129,22 +130,23 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function addProductsToCarts(int $quantity, string $productName, string $cartReference)
     {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
-        if (!$productId) {
-            throw new RuntimeException(sprintf('Product with name "%s" does not exist', $productName));
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
         }
+
+        /** @var FoundProduct $product */
+        $product = reset($products);
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
                 SharedStorage::getStorage()->get($cartReference),
-                $productId,
+                $product->getProductId(),
                 (int) $quantity
             )
         );
-        SharedStorage::getStorage()->set($productName, $productId);
+        SharedStorage::getStorage()->set($productName, $product->getProductId());
 
         // Clear cart static cache or it will have no products in next calls
         Cart::resetStaticCache();

@@ -31,7 +31,7 @@ export default class OrderProductAutocomplete {
   constructor(input) {
     this.router = new Router();
     this.input = input;
-    this.results = {};
+    this.results = [];
     this.dropdownMenu = $(OrderViewPageMap.productSearchInputAutocompleteMenu);
     /**
      * Permit to link to each value of dropdown a callback after item is clicked
@@ -70,7 +70,7 @@ export default class OrderProductAutocomplete {
       const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
       link.on('click', event => {
         event.preventDefault();
-        this.onItemClicked($(event.target).data('id'))
+        this.onItemClicked($(event.target).data('id'));
       });
       this.dropdownMenu.append(link);
     });
@@ -78,7 +78,11 @@ export default class OrderProductAutocomplete {
   }
 
   onItemClicked(id) {
-    this.input.val(this.results[id].name);
-    this.onItemClickedCallback(this.results[id]);
+    const selectedProduct = this.results.filter(product => product.productId === id);
+
+    if (selectedProduct.length !== 0) {
+      this.input.val(selectedProduct[0].name);
+      this.onItemClickedCallback(selectedProduct[0]);
+    }
   }
 }
