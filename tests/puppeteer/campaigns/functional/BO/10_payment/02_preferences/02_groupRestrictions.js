@@ -200,10 +200,11 @@ describe('Configure group restrictions', async () => {
               await this.pageObjects.checkoutPage.clickOnSignIn();
               await this.pageObjects.checkoutPage.customerLogin(group.args.customer);
             }
+            // Address step - Add address
             if (group.args.groupName !== 'Customer' && index === 0) {
-              // Address step - Go to delivery step
               await this.pageObjects.checkoutPage.setAddress(address);
             }
+            // Address step - Go to delivery step
             if (group.args.groupName === 'Customer' || index !== 0) {
               const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
               await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
