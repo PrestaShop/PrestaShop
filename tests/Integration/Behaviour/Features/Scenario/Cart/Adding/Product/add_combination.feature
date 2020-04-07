@@ -39,8 +39,11 @@ Feature: Add product combination in cart
     Given there is a product in the catalog named "product7" with a price of 24.324 and 1000 items in stock
     Given product "product7" has a combination named "combi1" with 100 items in stock
     Given product "product7" has a combination named "combi2" with 100 items in stock
-    When I add 2 items of combination "combi1" of product "product7"
+    When I add 1 items of combination "combi1" of product "product7"
     When I add 1 items of combination "combi2" of product "product7"
-    Then I should have 2 items of combination "combi1" of product "product7" in my cart
+    Then I should have 1 items of combination "combi1" of product "product7" in my cart
     Then I should have 1 items of combination "combi2" of product "product7" in my cart
+    Then The price of each product "product7" after reduction should be 24.324
+    When I add 1 items of combination "combi2" of product "product7"
+    Then I should have 2 items of combination "combi2" of product "product7" in my cart
     Then The price of each product "product7" after reduction should be 19.324
