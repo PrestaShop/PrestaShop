@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -91,12 +92,12 @@ class ThemeProviderTest extends KernelTestCase
     public function testItLoadsCatalogueFromXliffFilesInThemeDirectory()
     {
         $provider = new ThemeProvider(
+            $this->buildNullFrontOfficeProvider(),
             $this->createMock(DatabaseTranslationLoader::class),
             $this->createMock(ThemeExtractorInterface::class),
             $this->buildThemeRepository(),
             $this->filesystem,
-            self::THEMES_DIR,
-            $this->container->getParameter('translations_dir')
+            self::THEMES_DIR
         );
 
         $provider->setThemeName($this->themeName);
@@ -118,28 +119,30 @@ class ThemeProviderTest extends KernelTestCase
     /**
      * Test it extracts the default catalogue from the theme's templates
      *
-     * @param ThemeExtractorInterface $mockExtractor
-     * @param bool $emptyCatalogue
+     * @param ThemeExtractorInterface $themeExtractor
+     * @param bool $shouldEmptyCatalogue
      * @param array[] $expectedCatalogue
      *
      * @dataProvider provideFixturesForExtractDefaultCatalogue
      */
-    public function testItExtractsDefaultThemeFromFiles(ThemeExtractorInterface $mockExtractor, $emptyCatalogue, array $expectedCatalogue)
-    {
+    public function testItExtractsDefaultCatalogueFromThemeFiles(
+        ThemeExtractorInterface $themeExtractor,
+        $shouldEmptyCatalogue,
+        array $expectedCatalogue
+    ) {
         $provider = new ThemeProvider(
+            $this->buildNullFrontOfficeProvider(),
             $this->createMock(DatabaseTranslationLoader::class),
-            // note: extractor is mocked because actual extraction is already covered by its own test
-            $mockExtractor,
+            $themeExtractor,
             $this->buildThemeRepository(),
             $this->filesystem,
-            self::THEMES_DIR,
-            $this->container->getParameter('translations_dir')
+            self::THEMES_DIR
         );
 
         $provider->setThemeName($this->themeName);
 
         // load catalogue from Xliff files within the theme
-        $catalogue = $provider->getDefaultCatalogue($emptyCatalogue);
+        $catalogue = $provider->getDefaultCatalogue($shouldEmptyCatalogue);
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -173,12 +176,13 @@ class ThemeProviderTest extends KernelTestCase
 
         return  [
             'not empty catalogue' => [
-                $this->buildThemeExtractorMock($extractedCatalogue),
+                // note: extractor is mocked because actual extraction is already covered by its own test
+                $this->buildMockThemeExtractor($extractedCatalogue),
                 false,
                 $extractedMessages,
             ],
             'empty catalogue' => [
-                $this->buildThemeExtractorMock($extractedCatalogue),
+                $this->buildMockThemeExtractor($extractedCatalogue),
                 true,
                 $emptyCatalogue,
             ],
@@ -213,7 +217,7 @@ class ThemeProviderTest extends KernelTestCase
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|ThemeExtractorInterface
      */
-    private function buildThemeExtractorMock(MessageCatalogue $catalogueToReturn)
+    private function buildMockThemeExtractor(MessageCatalogue $catalogueToReturn)
     {
         $mock = $this->createMock(ThemeExtractorInterface::class);
 
@@ -237,5 +241,21 @@ class ThemeProviderTest extends KernelTestCase
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|FrontOfficeProvider
+     */
+    private function buildNullFrontOfficeProvider()
+    {
+        $mock = $this->createMock(FrontOfficeProvider::class);
+
+        $mock->method('getDefaultCatalogue')
+            ->willReturn(new MessageCatalogue(ThemeExtractorInterface::DEFAULT_LOCALE));
+
+        $mock->method('getXliffCatalogue')
+            ->willReturn(new MessageCatalogue(ThemeExtractorInterface::DEFAULT_LOCALE));
+
+        return $mock;
     }
 }
