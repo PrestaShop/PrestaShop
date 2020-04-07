@@ -155,7 +155,7 @@ module.exports = class Email extends BOBasePage {
    * @param email
    * @return {Promise<string>}
    */
-  async sendATestEmail(email) {
+  async sendTestEmail(email) {
     await this.setValue(this.sendTestEmailInput, email);
     await this.page.click(this.sendTestEmailButton);
     return this.getTextContent(this.sendTestEmailAlertParaph);

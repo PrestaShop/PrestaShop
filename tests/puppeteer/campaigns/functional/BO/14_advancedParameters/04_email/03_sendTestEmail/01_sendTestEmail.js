@@ -55,7 +55,7 @@ describe('Send test email', async () => {
 
   it('should check successful message after sending test email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendTestEmail', baseContext);
-    const textResult = await this.pageObjects.emailPage.sendATestEmail(global.BO.EMAIL);
+    const textResult = await this.pageObjects.emailPage.sendTestEmail(global.BO.EMAIL);
     await expect(textResult).to.contains(this.pageObjects.emailPage.sendTestEmailSuccessfulMessage);
   });
 });
