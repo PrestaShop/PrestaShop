@@ -62,13 +62,12 @@ services:
     prestashop.translation.theme_provider:
         class: PrestaShopBundle\Translation\Provider\ThemeProvider
         arguments:
+            - "@prestashop.translation.frontoffice_provider"
             - "@prestashop.translation.database_loader"
             - "@prestashop.translation.theme_extractor_cache"
             - "@prestashop.core.addon.theme.repository"
             - "@filesystem"
-            - "%themes_translations_dir%"
             - "%themes_dir%"
-            - "%translations_dir%"
 
     prestashop.translation.modules_provider:
         class: PrestaShopBundle\Translation\Provider\ModulesProvider
