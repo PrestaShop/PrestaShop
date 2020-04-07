@@ -140,7 +140,7 @@ export default class CartEditor {
       productId: product.productId,
       attributeId: product.attributeId,
       customizationId: product.customizationId,
-    }).then((cartInfo) => EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo))
+    }).then((cartInfo) => EventEmitter.emit(eventMap.productRemovedFromCart, {'cartInfo': cartInfo , 'product' : product }))
       .catch((response) => window.showErrorMessage(response.responseJSON.message));
   }
 
