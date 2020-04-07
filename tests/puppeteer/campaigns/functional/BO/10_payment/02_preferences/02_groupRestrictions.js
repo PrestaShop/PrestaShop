@@ -212,7 +212,7 @@ describe('Configure group restrictions', async () => {
             // Delivery step - Go to payment step
             const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
             await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-            // Payment step - Choose payment step
+            // Payment step - Check payment module
             let isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.paymentModuleToEdit);
             await expect(isVisible).to.be.equal(test.args.wirePaymentExist);
             isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.defaultPaymentModule);
