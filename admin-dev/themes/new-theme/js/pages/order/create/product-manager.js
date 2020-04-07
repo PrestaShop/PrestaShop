@@ -98,6 +98,7 @@ export default class ProductManager {
     // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
+      this._updateStockOnProductAdd();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
@@ -327,5 +328,35 @@ export default class ProductManager {
       product: formData,
       fileSizes,
     };
+  }
+
+  /**
+   * Updates the stock when the product is added to cart in "create new order" page
+   *
+   * @private
+   */
+  _updateStockOnProductAdd() {
+    const wantedQty = Number($(createOrderMap.quantityInput).val());
+
+    for (const key in this.products) {
+      if (this.products[key].productId === this.selectedProduct.productId) {
+        // Update the stock value of "the added product" in products object
+        this.products[key].stock = Number(this.products[key].stock) - wantedQty;
+
+        if (this.selectedProduct.combinations.length !== 0) {
+          const combinationId = this.selectedCombinationId;
+
+          // Update the stock also for combination
+          this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) - wantedQty;
+
+          // Update the stock counter
+          this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
+        } else {
+          // Update the stock counter
+          this.productRenderer.renderStock(this.products[key].stock);
+        }
+        break;
+      }
+    }
   }
 }
