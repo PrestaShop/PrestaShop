@@ -118,10 +118,12 @@ class TranslationService
     }
 
     /**
+     * Returns the translation tree
+     *
      * @param string $lang
-     * @param string|null $type
+     * @param string $type
      * @param string $theme
-     * @param null $search
+     * @param string|null $search
      *
      * @return array|mixed
      */
@@ -144,7 +146,7 @@ class TranslationService
     }
 
     /**
-     * @param string|null $theme
+     * @param string $theme
      * @param string $type
      *
      * @return bool
