@@ -19,6 +19,7 @@ module.exports = class AddCustomer extends BOBasePage {
     this.dayOfBirthSelect = 'select#customer_birthday_day';
     this.enabledSwitchlabel = 'label[for=\'customer_is_enabled_%ID\']';
     this.partnerOffersSwitchlabel = 'label[for=\'customer_is_partner_offers_subscribed_%ID\']';
+    this.groupAccessCheckkbox = '#customer_group_ids_%ID +i';
     this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label .md-checkbox-control';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
     this.saveCustomerButton = 'div.card-footer button';
@@ -47,7 +48,15 @@ module.exports = class AddCustomer extends BOBasePage {
     else await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
     if (customerData.partnerOffers) await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '1'));
     else await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '0'));
-    await this.page.click(this.selectAllGroupAccessCheckbox);
+    if (customerData.defaultCustomerGroup === 'Customer') {
+      await this.page.click(this.selectAllGroupAccessCheckbox);
+    } else if (customerData.defaultCustomerGroup === 'Visitor') {
+      await this.page.click(this.groupAccessCheckkbox.replace('%ID', 1));
+      await this.page.click(this.groupAccessCheckkbox.replace('%ID', 2));
+    } else {
+      await this.page.click(this.groupAccessCheckkbox.replace('%ID', 0));
+      await this.page.click(this.groupAccessCheckkbox.replace('%ID', 2));
+    }
     await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
     // Save Customer
     await this.clickAndWaitForNavigation(this.saveCustomerButton);
