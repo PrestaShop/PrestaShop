@@ -7,7 +7,8 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    env(PS_THEME_NAME): "classic"
+    default_theme: "classic"
+    env(PS_THEME_NAME): "%default_theme%"
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
     translator.class: PrestaShopBundle\Translation\Translator
     translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
