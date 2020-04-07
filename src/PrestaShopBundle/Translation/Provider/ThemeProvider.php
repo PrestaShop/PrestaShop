@@ -169,7 +169,6 @@ class ThemeProvider extends AbstractProvider
             DIRECTORY_SEPARATOR,
             [$baseDir, $this->getThemeName(), 'translations', $this->getLocale()]
         );
-        $this->filesystem->mkdir($resourceDirectory);
 
         return $resourceDirectory;
     }
