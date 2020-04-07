@@ -135,7 +135,7 @@ class TranslationController extends ApiController
             $search = $request->query->get('search');
 
             if (in_array($type, ['modules', 'themes']) && empty($selected)) {
-                throw new Exception('This \'selected\' param is not valid.');
+                throw new Exception('The parameter \'selected\' is not valid.');
             }
 
             switch ($type) {
@@ -155,9 +155,13 @@ class TranslationController extends ApiController
                     $tree = $this->getMailsBodyTree($lang, $search);
                     break;
 
-                default:
+                case 'back':
+                case 'others':
                     $tree = $this->getNormalTree($lang, $type, null, $search);
                     break;
+
+                default:
+                    throw new Exception("The 'type' parameter is not valid");
             }
 
             return $this->jsonResponse($tree, $request);
@@ -323,17 +327,20 @@ class TranslationController extends ApiController
     }
 
     /**
-     * @param $lang
-     * @param $type
+     * Returns a translation domain tree
+     *
+     * @param string $lang
+     * @param string $type "themes", "back" or "others"
      * @param string $theme Selected theme name
-     * @param null $search
+     * @param string|null $search Search string
      *
      * @return array
      */
     private function getNormalTree($lang, $type, $theme, $search = null)
     {
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $theme, $search);
+
+        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
 
         return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
     }
