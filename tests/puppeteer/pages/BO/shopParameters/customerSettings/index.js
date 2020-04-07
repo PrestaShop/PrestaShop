@@ -53,48 +53,4 @@ module.exports = class customerSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
-
-  /**
-   * Enable/disable redisplay cart at login
-   * @param toEnable, true to enable and false to disable
-   * @return {Promise<string>}
-   */
-  async setRedisplayCartAtLoginStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.redisplayCartAtLoginLabel.replace('%TOGGLE', toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
-  }
-
-  /**
-   * Enable/Disable send email after registration
-   * @param toEnable
-   * @returns {Promise<string>}
-   */
-  async setEmailAfterRegistrationStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.sendEmailAfterRegistrationLabel.replace('%TOGGLE', toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
-  }
-
-  /**
-   * Enable/Disable ask for birth date
-   * @param toEnable
-   * @returns {Promise<string|*>}
-   */
-  async setAskForBirthDate(toEnable = true) {
-    await this.waitForSelectorAndClick(this.askForBirthDateLabel.replace('%TOGGLE', toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
-  }
-
-  /**
-   * Enable/Disable partner offer
-   * @param toEnable
-   * @returns {Promise<string>}
-   */
-  async setPartnerOfferStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.enablePartnerOfferLabel.replace('%TOGGLE', toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
-    return this.getTextContent(this.alertSuccessBlock);
-  }
 };
