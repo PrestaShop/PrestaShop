@@ -27,25 +27,23 @@
 
 namespace PrestaShopBundle\Translation\Factory;
 
-use PrestaShopBundle\Translation\Provider\AbstractProvider;
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 
 /**
  * This class returns a collection of translations, using a locale and an identifier.
- *
- * Returns MessageCatalogue object or Translation tree array.
  */
 class TranslationsFactory implements TranslationsFactoryInterface
 {
     /**
-     * @var array the list of translation providers
+     * @var ProviderInterface[] the list of translation providers
      */
     private $providers = [];
 
     /**
      * {@inheritdoc}
      */
-    public function createCatalogue($domainIdentifier, $locale = 'en_US')
+    public function createCatalogue($domainIdentifier, $locale = self::DEFAULT_LOCALE)
     {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
@@ -59,8 +57,12 @@ class TranslationsFactory implements TranslationsFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null)
-    {
+    public function createTranslationsArray(
+        $domainIdentifier,
+        $locale = self::DEFAULT_LOCALE,
+        $theme = null,
+        $search = null
+    ) {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
                 $treeBuilder = new TreeBuilder($locale, $theme);
@@ -73,10 +75,21 @@ class TranslationsFactory implements TranslationsFactoryInterface
     }
 
     /**
-     * @param AbstractProvider $provider
+     * @param ProviderInterface $provider
      */
-    public function addProvider(AbstractProvider $provider)
+    public function addProvider(ProviderInterface $provider)
     {
         $this->providers[] = $provider;
+    }
+
+    /**
+     * @param ProviderInterface[] $providers
+     */
+    public function setProviders(array $providers)
+    {
+        $this->providers = [];
+        foreach ($providers as $provider) {
+            $this->addProvider($provider);
+        }
     }
 }
