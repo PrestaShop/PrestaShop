@@ -357,7 +357,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $specificPrice = new SpecificPrice();
             $specificPrice->id_shop = 0;
             $specificPrice->id_shop_group = 0;
-            $specificPrice->id_currency = 0;
+            $specificPrice->id_currency = $order->id_currency;
             $specificPrice->id_country = 0;
             $specificPrice->id_group = 0;
             $specificPrice->id_customer = $order->id_customer;
