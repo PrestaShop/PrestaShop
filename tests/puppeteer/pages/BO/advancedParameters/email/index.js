@@ -31,7 +31,7 @@ module.exports = class Email extends BOBasePage {
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
     this.sendTestEmailInput = '#test_email_sending_send_email_to';
     this.sendTestEmailButton = `${this.sendTestEmailForm} button.js-send-test-email-btn`;
-    this.sendTestEmailAlertParaph = `${this.sendTestEmailForm} .alert-success p.alert-text`;
+    this.sendTestEmailAlertParagraph = `${this.sendTestEmailForm} .alert-success p.alert-text`;
   }
 
   /*
@@ -158,6 +158,6 @@ module.exports = class Email extends BOBasePage {
   async sendTestEmail(email) {
     await this.setValue(this.sendTestEmailInput, email);
     await this.page.click(this.sendTestEmailButton);
-    return this.getTextContent(this.sendTestEmailAlertParaph);
+    return this.getTextContent(this.sendTestEmailAlertParagraph);
   }
 };
