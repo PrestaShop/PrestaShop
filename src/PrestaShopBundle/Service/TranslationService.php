@@ -37,11 +37,25 @@ use Symfony\Component\Validator\Validation;
 
 class TranslationService
 {
+    /**
+     * @deprecated Since 1.7.6.5
+     */
     const DEFAULT_THEME = 'classic';
+
     /**
      * @var Container
      */
     public $container;
+
+    /**
+     * @var string
+     */
+    private $defaultTheme;
+
+    public function __construct($defaultTheme)
+    {
+        $this->defaultTheme = $defaultTheme;
+    }
 
     /**
      * @param string $lang
@@ -363,6 +377,6 @@ class TranslationService
      */
     private function isDefaultTheme($theme)
     {
-        return static::DEFAULT_THEME === $theme;
+        return $this->defaultTheme === $theme;
     }
 }
