@@ -341,7 +341,7 @@ module.exports = class Brands extends BOBasePage {
       this.page.click(this.deleteAddressesButton);
       await this.waitForVisibleSelector(`${this.confirmDeleteModal.replace('%TABLE', 'manufacturer_address')}.show`);
     }
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+    await this.confirmDelete(table);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
