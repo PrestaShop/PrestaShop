@@ -187,42 +187,39 @@ class TranslationService
         $translationProvider->setDomain($domain);
         $translationProvider->setLocale($locale);
 
-        $router = $this->container->get('router');
-        $domains = [
-            'info' => [
-                'edit_url' => $router->generate('api_translation_value_edit'),
-                'reset_url' => $router->generate('api_translation_value_reset'),
-            ],
-            'data' => [],
-        ];
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
-        if (!empty($theme) && !$this->isDefaultTheme($theme)) {
-            $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
-        } else {
-            $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
-        }
 
-        $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
-        $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
+        $defaultCatalog = $translationProvider->getDefaultCatalogue()->all($domain);
+        $xliffCatalog = $translationProvider->getXliffCatalogue()->all($domain);
+        $dbCatalog = $translationProvider->getDatabaseCatalogue($theme)->all($domain);
 
+        $domainData = [];
         foreach ($defaultCatalog as $key => $message) {
-            $data = [
+            $messageData = [
                 'default' => $key,
-                'xliff' => (array_key_exists($key, (array) $xliffCatalog) ? $xliffCatalog[$key] : null),
-                'database' => (array_key_exists($key, (array) $dbCatalog) ? $dbCatalog[$key] : null),
+                'xliff' => (array_key_exists($key, $xliffCatalog) ? $xliffCatalog[$key] : null),
+                'database' => (array_key_exists($key, $dbCatalog) ? $dbCatalog[$key] : null),
                 'tree_domain' => $treeDomain,
             ];
             // if search is empty or is in catalog default|xlf|database
-            if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
-                if (empty($data['xliff']) && empty($data['database'])) {
-                    array_unshift($domains['data'], $data);
+            if (empty($search) || $this->dataContainsSearchWord($search, $messageData)) {
+                if (empty($messageData['xliff']) && empty($messageData['database'])) {
+                    array_unshift($domainData, $messageData);
                 } else {
-                    $domains['data'][] = $data;
+                    $domainData[] = $messageData;
                 }
             }
         }
 
-        return $domains;
+        $router = $this->container->get('router');
+
+        return array(
+            'info' => array(
+                'edit_url' => $router->generate('api_translation_value_edit'),
+                'reset_url' => $router->generate('api_translation_value_reset'),
+            ),
+            'data' => $domainData,
+        );
     }
 
     /**
