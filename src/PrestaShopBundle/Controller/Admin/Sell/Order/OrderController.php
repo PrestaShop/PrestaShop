@@ -887,7 +887,7 @@ class OrderController extends CommonController
                     );
 
                     $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-                } catch (OrderException $e) {
+                } catch (Exception $e) {
                     $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
                 }
             } else {
