@@ -112,14 +112,14 @@ class TranslationService
      */
     public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
     {
-        $factory = $this->container->get('ps.translations_factory');
+        $factory = $this->container->get('prestashop.translation.translations_factory');
 
         if ($this->requiresThemeTranslationsFactory($theme, $type)) {
             if ($this->isDefaultTheme($theme)) {
                 $type = 'front';
             } else {
                 $type = $theme;
-                $factory = $this->container->get('ps.theme_translations_factory');
+                $factory = $this->container->get('prestashop.translation.theme_translations_factory');
             }
         }
 
