@@ -177,7 +177,7 @@ export default class CartEditor {
       newQty: product.newQty,
       attributeId: product.attributeId,
       customizationId: product.customizationId,
-    }).then((cartInfo) => EventEmitter.emit(eventMap.productQtyChanged, cartInfo))
+    }).then((cartInfo) => EventEmitter.emit(eventMap.productQtyChanged, {'cartInfo': cartInfo , 'product' : product }))
       .catch((response) => EventEmitter.emit(eventMap.productQtyChangeFailed, response));
   }
 
