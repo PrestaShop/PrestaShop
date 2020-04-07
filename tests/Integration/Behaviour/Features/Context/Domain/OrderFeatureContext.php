@@ -32,6 +32,7 @@ use Cart;
 use Context;
 use FrontController;
 use Order;
+use OrderCarrier;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -44,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceComma
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
@@ -60,6 +62,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
     private const ORDER_CART_RULE_FREE_SHIPPING = 'Free Shipping';
+    const DEFAULT_ORDER_CARRIER_ID = 1;
 
     /**
      * @var array
@@ -695,5 +698,31 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $productQuantities;
+    }
+
+    /**
+     * @Given I associate default carrier to order :orderReference
+     *
+     * @param string $orderReference
+     */
+    public function associateDefaultCarrierToOrder(string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderCarrierForViewing[] $carriers */
+        $carriers = $orderForViewing->getShipping()->getCarriers();
+        // adding carrier to order if it does not have a valid carrier
+        if (empty($carriers[0]->getCarrierId())) {
+            // legacy classes adding order carrier
+            // would be nice to find/create a handler adding carrier to newly created order
+            $orderCarrier = new OrderCarrier(self::DEFAULT_ORDER_CARRIER_ID);
+            $orderCarrier->id_order = $orderId;
+            $orderCarrier->add();
+            /** @var Order $order */
+            $order = new Order($orderId);
+            $order->id_carrier = (int) $orderCarrier->id_carrier;
+            $order->save();
+        }
     }
 }

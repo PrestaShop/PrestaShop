@@ -36,12 +36,16 @@ use Customer;
 use DateInterval;
 use DateTime;
 use Exception;
+use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartInformation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -67,6 +71,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @see createEmptyCartForCustomerNonLegacy
      * @When I create an empty cart :cartReference for customer :customerReference
      *
      * @param string $cartReference
@@ -74,18 +79,24 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function createEmptyCartForCustomer(string $cartReference, string $customerReference)
     {
-        // Clear static cache each time you create a cart
-        Cart::resetStaticCache();
         /** @var Customer $customer */
         $customer = SharedStorage::getStorage()->get($customerReference);
-
         /** @var CartId $cartIdObject */
-        $cartIdObject = $this->getCommandBus()->handle(
-            new CreateEmptyCustomerCartCommand(
-                (int) $customer->id
-            )
-        );
+        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customer->id));
+        SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
+    }
 
+    /**
+     * @When I create empty cart :cartReference for customer :customerReference
+     *
+     * @param string $cartReference
+     * @param string $customerReference
+     */
+    public function createEmptyCartForCustomerNonLegacy(string $cartReference, string $customerReference)
+    {
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+        /** @var CartId $cartIdObject */
+        $cartIdObject = $this->getCommandBus()->handle(new CreateEmptyCustomerCartCommand($customerId));
         SharedStorage::getStorage()->set($cartReference, $cartIdObject->getValue());
     }
 
@@ -156,13 +167,32 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I select address :customerAddressReference as delivery and invoice in cart :cartReference
+     *
+     * @param string $customerAddressReference
+     * @param string $cartReference
+     */
+    public function selectAddressAsDeliveryAndInvoiceInCart(string $customerAddressReference, string $cartReference)
+    {
+        $customerAddressId = SharedStorage::getStorage()->get($customerAddressReference);
+        $this->getCommandBus()->handle(
+            new UpdateCartAddressesCommand(
+                (int) SharedStorage::getStorage()->get($cartReference),
+                $customerAddressId,
+                $customerAddressId
+            )
+        );
+    }
+
+    /**
+     * @see selectAddressAsDeliveryAndInvoiceInCart for using selecting customer address in cart
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
      *
      * @param string $countryIsoCode
      * @param string $customerReference
      * @param string $cartReference
      */
-    public function selectAddressAsDeliveryAndInvoiceAddress(string $countryIsoCode, string $customerReference, string $cartReference)
+    public function selectAddressAsDeliveryAndInvoice(string $countryIsoCode, string $customerReference, string $cartReference)
     {
         $customer = SharedStorage::getStorage()->get($customerReference);
 
@@ -212,9 +242,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      * @param string $voucherCode
      * @param float $discountAmount
      * @param string $cartReference
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
      */
     public function useDiscountVoucherOnCart(string $voucherCode, float $discountAmount, string $cartReference)
     {
@@ -243,5 +270,34 @@ class CartFeatureContext extends AbstractDomainFeatureContext
                 $cartRule->id
             )
         );
+    }
+
+    /**
+     * @When I delete product :productReference from cart :cartReference
+     *
+     * @param string $productReference
+     * @param string $cartReference
+     */
+    public function deleteProductFromCart(string $productReference, string $cartReference)
+    {
+        $this->getCommandBus()->handle(new RemoveProductFromCartCommand(
+            SharedStorage::getStorage()->get($cartReference),
+            SharedStorage::getStorage()->get($productReference)
+        ));
+    }
+
+    /**
+     * @Then cart :cartReference has :numberOfProducts products
+     *
+     * @param string $cartReference
+     * @param int $numberOfProducts
+     */
+    public function cartHasProducts(string $cartReference, int $numberOfProducts)
+    {
+        /** @var CartInformation $cartInformation */
+        $cartInformation = $this->getQueryBus()->handle(
+            new GetCartInformation((SharedStorage::getStorage()->get($cartReference)))
+        );
+        Assert::assertSame($numberOfProducts, count($cartInformation->getProducts()));
     }
 }

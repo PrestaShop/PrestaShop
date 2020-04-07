@@ -156,8 +156,8 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
             (isset($data['birthday']) ? $data['birthday'] : null)
         );
 
-        /** @var CustomerId $id */
-        $id = $commandBus->handle($command);
-        SharedStorage::getStorage()->set($customerReference, $id->getValue());
+        /** @var CustomerId $customerIdObject */
+        $customerIdObject = $commandBus->handle($command);
+        SharedStorage::getStorage()->set($customerReference, $customerIdObject->getValue());
     }
 }

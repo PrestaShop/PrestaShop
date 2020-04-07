@@ -38,6 +38,8 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderShippingFeatureContext extends AbstractDomainFeatureContext
 {
+    const DEFAULT_ORDER_CARRIER_ID = 1;
+
     /**
      * @When I update order :orderReference Tracking number to :trackingNumber and Carrier to :carrier
      *
@@ -49,15 +51,13 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         string $orderReference, string $trackingNumber, string $carrier
     ) {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-
-        $oldOrderCarrierId = $this->getCarrierId($carrier);
-        $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         $newCarrierId = $this->getCarrierId($carrier);
-
         $this->getCommandBus()->handle(
             new UpdateOrderShippingDetailsCommand(
                 $orderId,
-                $oldOrderCarrierId,
+                $orderForViewing->getShipping()->getCarriers()[0]->getCarrierId(),
                 $newCarrierId,
                 $trackingNumber
             )

@@ -5,10 +5,16 @@ Feature: Order from Back Office (BO)
   As a BO user
   I need to be able to customize orders from the BO
 
-  #  todo: fix the failing scenarios/code
-  #  todo: make scenarios independent
-  #  todo: change legacy classes with domain where possible
-  #  todo: increase code re-use
+  #  fix the failing scenarios/code
+  #  make scenarios independent
+  #  change legacy classes with the usage of domain handlers where possible
+  #  increase code re-use
+  #  scenario steps like 'there is..' have very little bussiness value - prefer user action based scenarios
+  # -------------------------------------------------------------------------------------
+  #  this is important recommendation - start every scenario with a predictable database
+  #  Why? it is explained here: https://symfonycasts.com/screencast/behat/clear-data-symfony-extension#play
+  #  this tip might keep out of trouble of having dependent scenarios - they are very time consuming to figure out
+  # -------------------------------------------------------------------------------------
 
   Background:
     Given email sending is disabled
@@ -18,14 +24,10 @@ Feature: Order from Back Office (BO)
     #    todo: use domain context for Country
     And country "US" is enabled
     And the module "dummy_payment" is installed
-    #    todo: use domain context to get employee when is merged: https://github.com/PrestaShop/PrestaShop/pull/16757
     And I am logged in as "test@prestashop.com" employee
-     #    todo: use domain context to get customer: GetCustomerForViewing;
-     #    todo: find a way how to get customer object/id by its properties without using legacy objects
+    # using legacy classes to get the customer; could be refactored using SearchCustomerHandler
     And there is customer "testCustomer" with email "pub@prestashop.com"
-    And customer "testCustomer" has address in "US" country
     And I create an empty cart "dummy_cart" for customer "testCustomer"
-    #    todo: find a way to create country without legacy object
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
     And I add order "bo_order1" with the following details:
@@ -33,6 +35,7 @@ Feature: Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
+    And I associate default carrier to order "bo_order1"
 
   @order-from-bo
   Scenario: Update order status
@@ -222,15 +225,16 @@ Feature: Order from Back Office (BO)
 
   @order-from-bo
   Scenario: Add order from Back Office with free shipping
-    And I set Free shipping to the cart "dummy_cart"
+    And I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_free_shipping"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart_free_shipping"
+    And I set Free shipping to the cart "dummy_cart_free_shipping"
     And I add order "bo_order2" with the following details:
-      | cart                | dummy_cart          |
-      | message             | test                |
-      | payment module name | dummy_payment       |
-      | status              | Payment accepted    |
-    Then order "bo_order2" should have 2 products in total
+      | cart                | dummy_cart_free_shipping |
+      | message             | test                     |
+      | payment module name | dummy_payment            |
+      | status              | Payment accepted         |
     And order "bo_order2" should have free shipping
-    And order "bo_order2" should have "dummy_payment" payment method
 
   @order-from-bo
   Scenario: Update multiple orders statuses using Bulk actions
