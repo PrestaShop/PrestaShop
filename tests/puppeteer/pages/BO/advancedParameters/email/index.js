@@ -6,6 +6,7 @@ module.exports = class Email extends BOBasePage {
     super(page);
 
     this.pageTitle = 'E-mail •';
+    this.sendTestEmailSuccessfulMessage = 'A test email has been sent to the email address you provided.';
 
     // Selectors
     // List of emails
@@ -25,6 +26,12 @@ module.exports = class Email extends BOBasePage {
     this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
+
+    // Test your email configuration form
+    this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
+    this.sendTestEmailInput = '#test_email_sending_send_email_to';
+    this.sendTestEmailButton = `${this.sendTestEmailForm} button.js-send-test-email-btn`;
+    this.sendTestEmailAlertParaph = `${this.sendTestEmailForm} .alert-success p.alert-text`;
   }
 
   /*
@@ -141,5 +148,16 @@ module.exports = class Email extends BOBasePage {
     // Click on delete
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Send a test email
+   * @param email
+   * @return {Promise<string>}
+   */
+  async sendATestEmail(email) {
+    await this.setValue(this.sendTestEmailInput, email);
+    await this.page.click(this.sendTestEmailButton);
+    return this.getTextContent(this.sendTestEmailAlertParaph);
   }
 };
