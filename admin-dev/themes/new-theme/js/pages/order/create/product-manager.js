@@ -380,18 +380,7 @@ export default class ProductManager {
           // Update the stock also for combination */
           this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) + removedQty;
         }
-
-        // Update the stock counter if the removed product is the selected product
-        if (Number(this.selectedProduct.productId) === productId)
-        {
-          // Update the stock counter if the removed combination is the selected combination
-          if (combinationId && Number(this.selectedCombinationId) == combinationId)
-          {
-            this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
-          } else {
-            this.productRenderer.renderStock(this.products[key].stock);
-          }
-        }
+        this._renderStockCounter(productId, combinationId, key);
         break;
       }
     }
@@ -416,18 +405,27 @@ export default class ProductManager {
           // Update the stock also for combination */
           this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) - newQty + previousQty;
         }
-        // Update the stock counter if "the updated product" is the selected product
-        if (Number(this.selectedProduct.productId) === productId)
-        {
-          // Update the stock counter if "the updated product combination" is the selected combination
-          if (combinationId && Number(this.selectedCombinationId) === combinationId)
-          {
-            this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
-          } else {
-            this.productRenderer.renderStock(this.products[key].stock);
-          }
-        }
+        this._renderStockCounter(productId, combinationId, key);
         break;
+      }
+    }
+  }
+
+  /**
+   * Renders stock depending on product or combination
+   *
+   * @private
+   */
+  _renderStockCounter(productId, combinationId, key){
+    // Update the stock counter if "the updated product" is the selected product
+    if (Number(this.selectedProduct.productId) === productId)
+    {
+      // Update the stock counter if "the updated product combination" is the selected combination
+      if (combinationId && Number(this.selectedCombinationId) === combinationId)
+      {
+        this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
+      } else {
+        this.productRenderer.renderStock(this.products[key].stock);
       }
     }
   }
