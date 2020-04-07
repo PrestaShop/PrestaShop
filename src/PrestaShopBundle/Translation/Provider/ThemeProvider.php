@@ -199,7 +199,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setLocale($locale)
     {
@@ -229,7 +229,6 @@ class ThemeProvider extends AbstractProvider
                 $refreshCache
             )
         );
-
 
         if ($empty) {
             $this->emptyCatalogue($defaultCatalogue);
@@ -275,7 +274,7 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getXliffCatalogue()
     {
