@@ -64,9 +64,6 @@ class TranslationController extends ApiController
             $queryParamsCollection = $this->queryParams->fromRequest($request);
             $queryParams = $queryParamsCollection->getQueryParams();
 
-            /** @var TranslationService $translationService */
-            $translationService = $this->container->get('prestashop.service.translation');
-
             $locale = $request->attributes->get('locale');
             $domain = $request->attributes->get('domain');
             $theme = $request->attributes->get('theme');
@@ -80,7 +77,7 @@ class TranslationController extends ApiController
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
+            $catalog = $this->translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
             $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             ];
