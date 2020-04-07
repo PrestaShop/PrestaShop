@@ -44,12 +44,17 @@ export default class OrderProductAutocomplete {
       event.stopImmediatePropagation();
       this.updateResults(this.results);
     });
-    this.input.on('keyup', (event) => this.search(event.target.value));
+    this.input.on('keyup', (event) => this.search(event.currentTarget.value, $(event.currentTarget).data('currency')));
     $(document).on('click', () => this.dropdownMenu.hide());
   }
 
-  search(search) {
-    $.get(this.router.generate('admin_products_search', {search_phrase: search}))
+  search(search, currency) {
+    const params = {search_phrase: search};
+    if (currency) {
+      params.currency_id = currency;
+    }
+
+    $.get(this.router.generate('admin_products_search', params))
       .then((response) => this.updateResults(response));
   }
 

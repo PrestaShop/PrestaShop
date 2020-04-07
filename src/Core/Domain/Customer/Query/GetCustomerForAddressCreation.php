@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Email;
-
 /**
  * Gets customer information for address creation.
  */
@@ -49,7 +47,7 @@ class GetCustomerForAddressCreation
     }
 
     /**
-     * @return Email
+     * @return string
      */
     public function getCustomerEmail(): string
     {

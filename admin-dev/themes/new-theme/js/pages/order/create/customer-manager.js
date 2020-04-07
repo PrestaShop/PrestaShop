@@ -87,7 +87,7 @@ export default class CustomerManager {
   onCustomerSearch() {
     EventEmitter.on(eventMap.customerSearched, (response) => {
       this.activeSearchRequest = null;
-      this.customerRenderer.clearShownCustomers();
+      this.customerRenderer.hideSearchingCustomers();
 
       if (response.customers.length === 0) {
         EventEmitter.emit(eventMap.customersNotFound);
@@ -152,6 +152,7 @@ export default class CustomerManager {
   loadCustomerCarts(currentCartId) {
     const {customerId} = this;
 
+    this.customerRenderer.showLoadingCarts();
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
       this.customerRenderer.renderCarts(response.carts, currentCartId);
     }).catch((e) => {
@@ -165,6 +166,7 @@ export default class CustomerManager {
   loadCustomerOrders() {
     const {customerId} = this;
 
+    this.customerRenderer.showLoadingOrders();
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
       this.customerRenderer.renderOrders(response.orders);
     }).catch((e) => {
@@ -197,6 +199,9 @@ export default class CustomerManager {
       this.activeSearchRequest.abort();
     }
 
+    this.customerRenderer.clearShownCustomers();
+    this.customerRenderer.hideNotFoundCustomers();
+    this.customerRenderer.showSearchingCustomers();
     const $searchRequest = $.get(this.router.generate('admin_customers_search'), {
       customer_search: searchPhrase,
     });

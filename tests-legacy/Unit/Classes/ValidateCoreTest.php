@@ -243,7 +243,12 @@ class ValidateCoreTest extends TestCase
             array(true, 'john#doe@prestashop.com'),
             array(false, ''),
             array(false, 'john.doe@prestashop,com'),
-            array(false, 'john.doe@prestashop'),
+            array(true, 'john.doe@prestashop'),
+            array(true, 'john.doe@сайт.рф'),
+            array(true, 'john.doe@xn--80aswg.xn--p1ai'),
+            array(false, 'иван@prestashop.com'), // rfc6531 valid but not swift mailer compatible
+            array(true, 'xn--80adrw@prestashop.com'),
+            array(true, 'xn--80adrw@xn--80aswg.xn--p1ai'),
             array(false, 123456789),
             array(false, false),
         );

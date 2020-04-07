@@ -15,6 +15,7 @@ module.exports = class Home extends CommonPage {
     this.contactLink = '#contact-link';
     this.categoryMenu = '#category-%ID > a';
     this.languageSelectorDiv = '#_desktop_language_selector';
+    this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
@@ -93,6 +94,15 @@ module.exports = class Home extends CommonPage {
   }
 
   /**
+   * Get shop language
+   * @returns {Promise<string>}
+   */
+  getShopLanguage() {
+    return this.getTextContent(this.defaultLanguageSpan);
+  }
+
+
+  /**
    * Return true if language exist in FO
    * @param lang
    * @return {Promise<boolean|true>}
@@ -157,5 +167,13 @@ module.exports = class Home extends CommonPage {
    */
   async goToCartPage() {
     await this.clickAndWaitForNavigation(this.cartLink);
+  }
+
+  /**
+   * Go to Fo page
+   * @return {Promise<void>}
+   */
+  async goToFo() {
+    await this.goTo(global.FO.URL);
   }
 };

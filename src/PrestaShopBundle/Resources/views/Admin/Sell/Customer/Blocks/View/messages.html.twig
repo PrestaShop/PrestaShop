@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="card customer-messages-card">
   <h3 class="card-header">
     <i class="material-icons">message</i>
     {{ 'Messages'|trans({}, 'Admin.Global') }}
@@ -41,14 +41,14 @@
       </thead>
       <tbody>
       {% for message in customerInformation.messagesInformation %}
-        <tr>
-          <td>{{ message.status }}</td>
-          <td>
+        <tr class="customer-message">
+          <td class="customer-message-status">{{ message.status }}</td>
+          <td class="customer-message-message">
             <a href="{{ getAdminLink('AdminCustomerThreads', true, {'id_customer_thread': message.customerThreadId, 'viewcustomer_thread': 1}) }}">
               {{ message.message }}...
             </a>
           </td>
-          <td>{{ message.date }}</td>
+          <td class="customer-message-sent-on">{{ message.date }}</td>
         </tr>
       {% endfor %}
       </tbody>

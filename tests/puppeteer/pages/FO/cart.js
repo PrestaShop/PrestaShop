@@ -13,8 +13,10 @@ module.exports = class Cart extends FOBasePage {
     this.productPrice = `${this.productItem} div.current-price > span`;
     this.productQuantity = `${this.productItem} div.input-group input.js-cart-line-product-quantity`;
     this.proceedToCheckoutButton = '#main div.checkout a';
+    this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
     this.cartTotalTTC = '.cart-summary-totals span.value';
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
+    this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
   }
 
   /**
@@ -67,5 +69,29 @@ module.exports = class Cart extends FOBasePage {
    */
   async getTTCPrice() {
     return this.getPriceFromText(this.cartTotalTTC);
+  }
+
+  /**
+   * Is proceed to checkout button disabled
+   * @returns {boolean}
+   */
+  isProceedToCheckoutButtonDisabled() {
+    return this.elementVisible(this.disabledProceedToCheckoutButton, 1000);
+  }
+
+  /**
+   * Is alert warning for minimum purchase total visible
+   * @returns {boolean}
+   */
+  isAlertWarningForMinimumPurchaseVisible() {
+    return this.elementVisible(this.alertWarning, 1000);
+  }
+
+  /**
+   * Get alert warning
+   * @returns {Promise<string>}
+   */
+  getAlertWarning() {
+    return this.getTextContent(this.alertWarning);
   }
 };

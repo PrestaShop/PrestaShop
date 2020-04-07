@@ -24,7 +24,7 @@
  *#}
 
 {% if customerInformation.sentEmailsInformation is not empty %}
-  <div class="card">
+  <div class="card customer-sent-emails-card">
     <h3 class="card-header">
       <i class="material-icons">mail_outline</i>
       {{ 'Last emails'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -42,11 +42,11 @@
         </thead>
         <tbody>
         {% for sentEmail in customerInformation.sentEmailsInformation %}
-          <tr>
-            <td>{{ sentEmail.date }}</td>
-            <td>{{ sentEmail.language }}</td>
-            <td>{{ sentEmail.subject }}</td>
-            <td>{{ sentEmail.template }}</td>
+          <tr class="customer-sent-email">
+            <td class="customer-sent-email-date">{{ sentEmail.date }}</td>
+            <td class="customer-sent-email-language">{{ sentEmail.language }}</td>
+            <td class="customer-sent-email-subject">{{ sentEmail.subject }}</td>
+            <td class="customer-sent-email-template">{{ sentEmail.template }}</td>
           </tr>
         {% endfor %}
         </tbody>

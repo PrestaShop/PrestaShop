@@ -344,4 +344,12 @@ module.exports = class AddProduct extends BOBasePage {
   getOnlineButtonStatus() {
     return this.elementVisible(this.productOnlineTitle, 1000);
   }
+
+  /**
+   * Is quantity input visible
+   * @returns {boolean}
+   */
+  isQuantityInputVisible() {
+    return this.elementVisible(this.productQuantityInput, 1000);
+  }
 };
