@@ -101,7 +101,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 0 invoices
 
   @order-from-bo
-  Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice
+  Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice And remove this product
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should have 0 invoices
@@ -137,6 +137,21 @@ Feature: Order from Back Office (BO)
       | total_discounts_tax_excl | 15.000 |
       | total_discounts_tax_incl | 15.000 |
       | total_paid_tax_excl      | 30.8   |
+      | total_paid_tax_incl      | 32.228 |
+      | total_paid               | 32.228 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+    When I remove product "Test Product Cart Rule On Select Product" from order "bo_order1"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Select Product"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.228 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
       | total_paid_tax_incl      | 32.228 |
       | total_paid               | 32.228 |
       | total_paid_real          | 0.0    |

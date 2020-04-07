@@ -1,4 +1,4 @@
-/**
+{#**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,27 +21,29 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-
-import Router from '@components/router';
-import OrderViewPageMap from '@pages/order/OrderViewPageMap';
-
-const $ = window.$;
-
-export default class OrderPricesRefresher {
-  constructor() {
-    this.router = new Router();
-  }
-
-  refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_prices', {orderId}))
-      .then((response) => {
-        $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
-        $(OrderViewPageMap.orderDiscountsTotal).text(response.discountsAmountFormatted);
-        $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
-        $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
-        $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
-        $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
-      });
-  }
-}
+ *#}
+<table class="table discountList{% if discounts is empty %} d-none{% endif %}">
+  <thead>
+  <tr>
+    <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
+    <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
+    <th class="text-right d-print-none">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for discount in discounts %}
+    <tr>
+      <td>{{ discount.name }}</td>
+      <td>
+        {% if discount.amountRaw.greaterThan(number(0)) %}-{% endif %}
+        {{ discount.amountFormatted }}
+      </td>
+      <td class="text-right d-print-none">
+        <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderId, 'orderCartRuleId': discount.orderCartRuleId}) }}">
+          <i class="material-icons">delete</i>
+        </a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>

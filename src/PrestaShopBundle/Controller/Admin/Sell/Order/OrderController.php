@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
 use InvalidArgumentException;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -1277,16 +1278,37 @@ class OrderController extends CommonController
      *
      * @return JsonResponse
      */
-    public function getPricesAction(int $orderId): JsonResponse
+    public function getDiscountsAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', [
+            'discounts' => $orderForViewing->getDiscounts()->getDiscounts(),
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return JsonResponse
+     */
+    public function getPricesAction(int $orderId): JsonResponse
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewingPrices = $orderForViewing->getPrices();
+
         return $this->json([
-            'orderTotalFormatted' => $orderForViewing->getPrices()->getTotalAmountFormatted(),
-            'productsTotalFormatted' => $orderForViewing->getPrices()->getProductsPriceFormatted(),
-            'shippingTotalFormatted' => $orderForViewing->getPrices()->getShippingPriceFormatted(),
-            'taxesTotalFormatted' => $orderForViewing->getPrices()->getTaxesAmountFormatted(),
+            'orderTotalFormatted' => $orderForViewingPrices->getTotalAmountFormatted(),
+            'discountsAmountFormatted' => $orderForViewingPrices->getDiscountsAmountFormatted(),
+            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThan(new Number('0')),
+            'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
+            'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
+            'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),
         ]);
     }
 

@@ -28,20 +28,15 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
 const $ = window.$;
 
-export default class OrderPricesRefresher {
+export default class OrderDiscountsRefresher {
   constructor() {
     this.router = new Router();
   }
 
   refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_prices', {orderId}))
+    $.ajax(this.router.generate('admin_orders_get_discounts', {orderId}))
       .then((response) => {
-        $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
-        $(OrderViewPageMap.orderDiscountsTotal).text(response.discountsAmountFormatted);
-        $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
-        $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
-        $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
-        $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
+        $(OrderViewPageMap.productDiscountList.list).replaceWith(response);
       });
   }
 }
