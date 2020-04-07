@@ -160,6 +160,11 @@ class Datas
             'default' => 0,
             'help' => 'enable SSL for PrestaShop',
         ),
+        'rewrite_engine' => array(
+            'name' => 'rewrite',
+            'default' => 1,
+            'help' => 'enable rewrite engine for PrestaShop',
+        ),
     );
 
     protected $datas = array();
