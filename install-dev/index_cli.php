@@ -33,9 +33,12 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSI
 
 /* Redefine REQUEST_URI */
 $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes/datas.php';
+// Because some constantes need to be initialized from CLI parameters
+Datas::getInstance()->getAndCheckArgs($argv);
+
 require_once dirname(__FILE__).'/init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
-require_once _PS_INSTALL_PATH_.'classes/datas.php';
 
 try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';

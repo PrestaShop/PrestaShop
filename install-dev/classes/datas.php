@@ -226,7 +226,7 @@ class Datas
                 } else {
                     $this->$key = $row['default'];
                 }
-            } elseif (isset($row['validate']) && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
+            } elseif (isset($row['validate']) && class_exists('Validate') && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
                 $errors[] = 'Field '.$key.' is not valid';
             } else {
                 $this->$key = $args_ok[$name];
