@@ -56,6 +56,10 @@ class AdminCartRulesControllerCore extends AdminController
 
     public function ajaxProcessLoadCartRules()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(array('error' => 'You do not have the right permission')));
+        }
+
         $type = $token = $search = '';
         $limit = $count = $id_cart_rule = 0;
         if (Tools::getIsset('limit')) {
