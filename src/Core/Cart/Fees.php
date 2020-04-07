@@ -64,6 +64,11 @@ class Fees
      */
     protected $isProcessed = false;
 
+    public function __construct()
+    {
+        $this->shippingFees = new AmountImmutable();
+    }
+
     /**
      * @param Cart $cart
      * @param CartRowCollection $cartRowCollection
