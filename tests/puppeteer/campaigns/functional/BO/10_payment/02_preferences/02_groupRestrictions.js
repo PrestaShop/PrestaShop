@@ -106,7 +106,6 @@ describe('Configure group restrictions', async () => {
         this.pageObjects.boBasePage.paymentParentLink,
         this.pageObjects.boBasePage.preferencesLink,
       );
-      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.preferencesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.preferencesPage.pageTitle);
     });
