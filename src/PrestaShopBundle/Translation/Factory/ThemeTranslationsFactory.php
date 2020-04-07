@@ -46,12 +46,14 @@ class ThemeTranslationsFactory extends TranslationsFactory
     public function __construct(ThemeProvider $themeProvider)
     {
         $this->themeProvider = $themeProvider;
+
+        $this->setProviders([$this->themeProvider]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createCatalogue($themeName, $locale = 'en_US')
+    public function createCatalogue($themeName, $locale = ThemeProvider::DEFAULT_LOCALE)
     {
         return $this->themeProvider
             ->setThemeName($themeName)
@@ -62,42 +64,22 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * {@inheritdoc}
      */
-    public function createTranslationsArray($themeName, $locale = 'en_US', $theme = null, $search = null)
-    {
+    public function createTranslationsArray(
+        $themeName,
+        $locale = ThemeProvider::DEFAULT_LOCALE,
+        $theme = null,
+        $search = null
+    ) {
+        // refresh theme translations cache
         $this->themeProvider
             ->setThemeName($themeName)
             ->setLocale($locale)
             ->synchronizeTheme();
 
-        $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale, $search);
+        $translations = parent::createTranslationsArray('theme', $locale, $themeName, $search);
 
         ksort($translations);
 
         return $translations;
-    }
-
-    /**
-     * @param string $locale the catalogue locale
-     * @param string $domain the catalogue domain
-     *
-     * @return string
-     */
-    protected function removeLocaleFromDomain($locale, $domain)
-    {
-        return str_replace('.' . $locale, '', $domain);
-    }
-
-    /**
-     * @param string $themeName the theme name
-     * @param string $locale the catalogue locale
-     * @param string|null $search
-     *
-     * @throws ProviderNotFoundException
-     *
-     * @return array
-     */
-    protected function getFrontTranslationsForThemeAndLocale($themeName, $locale, $search = null)
-    {
-        return parent::createTranslationsArray('theme', $locale, $themeName, $search);
     }
 }
