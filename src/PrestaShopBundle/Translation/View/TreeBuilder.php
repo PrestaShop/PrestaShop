@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Translation\View;
 
 use Doctrine\Common\Util\Inflector;
-use PrestaShopBundle\Translation\Provider\AbstractProvider;
+use PrestaShopBundle\Translation\Provider\ProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TreeBuilder
@@ -42,21 +42,16 @@ class TreeBuilder
     }
 
     /**
-     * @param AbstractProvider $provider
+     * @param ProviderInterface $provider
      * @param null $search
      *
-     * @return array|mixed
+     * @return array
      */
-    public function makeTranslationArray(AbstractProvider $provider, $search = null)
+    public function makeTranslationArray(ProviderInterface $provider, $search = null)
     {
         $provider->setLocale($this->locale);
 
-        if ('theme' === $provider->getIdentifier()) {
-            $defaultCatalogue = $provider->getMessageCatalogue();
-        } else {
-            $defaultCatalogue = $provider->getDefaultCatalogue();
-        }
-
+        $defaultCatalogue = $provider->getDefaultCatalogue();
         $xliffCatalogue = $provider->getXliffCatalogue();
         $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme);
 
@@ -79,9 +74,7 @@ class TreeBuilder
                 if (empty($search) || $this->dataContainsSearchWord($search, array_merge(['default' => $translationKey], $data))) {
                     $translations[$domain][$translationKey] = $data;
 
-                    if (empty($data['xlf'])
-                        && empty($data['db'])
-                    ) {
+                    if (empty($data['xlf']) && empty($data['db'])) {
                         ++$missingTranslations;
                     }
                 }
