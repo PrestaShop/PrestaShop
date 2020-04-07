@@ -192,20 +192,22 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @throws FileNotFoundException
      */
     public function getXliffCatalogue()
     {
         $xlfCatalogue = new MessageCatalogue($this->locale);
 
         foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                $this->getDirectories(),
-                $this->locale,
-                $filter
-            );
-            $xlfCatalogue->addCatalogue($filteredCatalogue);
+            try {
+                $filteredCatalogue = $this->getCatalogueFromPaths(
+                    $this->getDirectories(),
+                    $this->locale,
+                    $filter
+                );
+                $xlfCatalogue->addCatalogue($filteredCatalogue);
+            } catch (FileNotFoundException $e) {
+                // there are no translation files, ignore them
+            }
         }
 
         return $xlfCatalogue;
