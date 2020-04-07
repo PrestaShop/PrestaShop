@@ -67,40 +67,40 @@ class ThemeProvider extends AbstractProvider
     private $themeExtractor;
 
     /**
-     * @var string Path to app/Resources/translations/
-     */
-    private $coreTranslationDir;
-
-    /**
      * @var Theme
      */
     private $theme;
 
     /**
+     * @var ProviderInterface
+     */
+    private $frontOfficeProvider;
+
+    /**
+     * @param ProviderInterface $frontOfficeProvider Provider for core front office translations
      * @param LoaderInterface $databaseLoader
      * @param ThemeExtractorInterface $themeExtractor
      * @param ThemeRepository $themeRepository
      * @param Filesystem $filesystem
      * @param string $themeResourcesDir Path to the themes folder
-     * @param string $coreTranslationResourcesDir Path to the directory where core translations are stored
      */
     public function __construct(
+        ProviderInterface $frontOfficeProvider,
         LoaderInterface $databaseLoader,
         ThemeExtractorInterface $themeExtractor,
         ThemeRepository $themeRepository,
         Filesystem $filesystem,
-        $themeResourcesDir,
-        $coreTranslationResourcesDir
+        $themeResourcesDir
     ) {
         // resourceDirectory cannot be set because it depends on the theme, which is not set yet
         // DO NOT USE $this->resourceDirectory, use $this->getResourceDirectory() instead
         parent::__construct($databaseLoader, $resourceDirectory = '');
 
+        $this->frontOfficeProvider = $frontOfficeProvider;
         $this->themeExtractor = $themeExtractor;
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
         $this->themeResourcesDirectory = $themeResourcesDir;
-        $this->coreTranslationDir = $coreTranslationResourcesDir;
     }
 
     /**
@@ -199,6 +199,18 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
+     * @inheritDoc
+     */
+    public function setLocale($locale)
+    {
+        parent::setLocale($locale);
+
+        $this->frontOfficeProvider->setLocale($locale);
+
+        return $this;
+    }
+
+    /**
      * Returns the default (aka not translated) catalogue
      *
      * @param bool $empty [default=true] Remove translations and return an empty catalogue
@@ -208,13 +220,22 @@ class ThemeProvider extends AbstractProvider
      */
     public function getDefaultCatalogue($empty = true, $refreshCache = false)
     {
-        $extracted = $this->extractDefaultCatalogueFromTheme($this->getTheme(), $this->getLocale(), $refreshCache);
+        $defaultCatalogue = $this->frontOfficeProvider->getDefaultCatalogue();
+
+        $defaultCatalogue->addCatalogue(
+            $this->extractDefaultCatalogueFromTheme(
+                $this->getTheme(),
+                $this->getLocale(),
+                $refreshCache
+            )
+        );
+
 
         if ($empty) {
-            $this->emptyCatalogue($extracted);
+            $this->emptyCatalogue($defaultCatalogue);
         }
 
-        return $extracted;
+        return $defaultCatalogue;
     }
 
     /**
@@ -245,14 +266,26 @@ class ThemeProvider extends AbstractProvider
      * @deprecated Since 1.7.6.5, use self::getXliffCatalogue instead
      *
      * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
      */
     public function getThemeCatalogue()
     {
         @trigger_error(__FUNCTION__ . 'is deprecated since version 1.7.6.5 Use ThemeProvider::getXliffCatalogue() instead.', E_USER_DEPRECATED);
 
         return $this->getXliffCatalogue();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getXliffCatalogue()
+    {
+        // load front office catalogue
+        $xliffCatalogue = $this->frontOfficeProvider->getXliffCatalogue();
+
+        // overwrite with the theme's own catalogue
+        $xliffCatalogue->addCatalogue(parent::getXliffCatalogue());
+
+        return $xliffCatalogue;
     }
 
     /**
@@ -298,9 +331,11 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
+     * Extracts wordings from the theme's templates
+     *
      * @param Theme $theme
      * @param string $locale
-     * @param bool $refreshCache
+     * @param bool $refreshCache Indicates if extraction cache should be refreshed
      *
      * @return \Symfony\Component\Translation\MessageCatalogue
      */
