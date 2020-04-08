@@ -339,23 +339,26 @@ export default class ProductManager {
    */
   updateStockOnProductAdd() {
     const wantedQty = Number($(createOrderMap.quantityInput).val());
+    const productKeys = Object.keys(this.products);
+    const productValues = Object.values(this.products);
 
-    for (const key in this.products) {
-      if (this.products[key].productId === this.selectedProduct.productId) {
+    for (let i = 0; i < productKeys.length; i += 1) {
+      if (productValues[i].productId === this.selectedProduct.productId) {
         // Update the stock value of "the added product" in products object
-        this.products[key].stock = Number(this.products[key].stock) - wantedQty;
+        productValues[i].stock = Number(productValues[i].stock) - wantedQty;
 
         if (this.selectedProduct.combinations.length !== 0) {
           const combinationId = this.selectedCombinationId;
 
           // Update the stock also for combination
-          this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) - wantedQty;
+          const combinationValue = Number(productValues[i].combinations[combinationId].stock) - wantedQty;
+          productValues[i].combinations[combinationId].stock = combinationValue;
 
           // Update the stock counter
-          this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
+          this.productRenderer.renderStock(productValues[i].combinations[combinationId].stock);
         } else {
           // Update the stock counter
-          this.productRenderer.renderStock(this.products[key].stock);
+          this.productRenderer.renderStock(productValues[i].stock);
         }
         break;
       }
@@ -367,20 +370,21 @@ export default class ProductManager {
    *
    * @private
    */
-  updateStockOnProductRemove(product){
-    const removedQty = Number(product.qtyToRemove);
-    const productId = product.productId;
-    const combinationId = Number(product.attributeId);
+  updateStockOnProductRemove(product) {
+    const {productId, attributeId, removedQty} = product;
+    const productKeys = Object.keys(this.products);
+    const productValues = Object.values(this.products);
 
-    for (const key in this.products) {
-      if (this.products[key].productId === productId) {
+    for (let i = 0; i < productKeys.length; i += 1) {
+      if (productValues[i].productId === productId) {
         // Update the stock value of "the removed product" in products object
-        this.products[key].stock = Number(this.products[key].stock) + removedQty;
-        if (combinationId && combinationId > 0) {
+        productValues[i].stock = Number(productValues[i].stock) + removedQty;
+        if (attributeId && attributeId > 0) {
           // Update the stock also for combination */
-          this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) + removedQty;
+          const combinationValue = Number(productValues[i].combinations[attributeId].stock) + removedQty;
+          productValues[i].combinations[attributeId].stock = combinationValue;
         }
-        this.renderStockCounter(productId, combinationId, key);
+        this.renderStockCounter(productId, attributeId, i);
         break;
       }
     }
@@ -391,21 +395,21 @@ export default class ProductManager {
    *
    * @private
    */
-  updateStockOnQtyChange(product){
-    const previousQty = Number(product.prevQty);
-    const newQty = Number(product.newQty);
-    const productId = product.productId;
-    const combinationId = Number(product.attributeId);
+  updateStockOnQtyChange(product) {
+    const {productId, attributeId, prevQty, newQty} = product;
+    const productKeys = Object.keys(this.products);
+    const productValues = Object.values(this.products);
 
-    for (const key in this.products) {
-      if (this.products[key].productId === productId) {
+    for (let i = 0; i < productKeys.length; i += 1) {
+      if (productValues[i].productId === productId) {
         // Update the stock value of "the updated product" in products object
-        this.products[key].stock = Number(this.products[key].stock) - newQty + previousQty;
-        if (combinationId && combinationId > 0) {
+        productValues[i].stock = Number(productValues[i].stock) - newQty + prevQty;
+        if (attributeId && attributeId > 0) {
           // Update the stock also for combination */
-          this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) - newQty + previousQty;
+          const combinationValue = Number(productValues[i].combinations[attributeId].stock) - newQty + prevQty;
+          productValues[i].combinations[attributeId].stock = combinationValue;
         }
-        this.renderStockCounter(productId, combinationId, key);
+        this.renderStockCounter(productId, attributeId, productValues[i]);
         break;
       }
     }
@@ -416,16 +420,14 @@ export default class ProductManager {
    *
    * @private
    */
-  renderStockCounter(productId, combinationId, key){
+  renderStockCounter(productId, attributeId, productObject) {
     // Update the stock counter if "the updated product" is the selected product
-    if (Number(this.selectedProduct.productId) === productId)
-    {
+    if (Number(this.selectedProduct.productId) === productId) {
       // Update the stock counter if "the updated product combination" is the selected combination
-      if (combinationId && Number(this.selectedCombinationId) === combinationId)
-      {
-        this.productRenderer.renderStock(this.products[key].combinations[combinationId].stock);
+      if (attributeId && Number(this.selectedCombinationId) === attributeId) {
+        this.productRenderer.renderStock(productObject.combinations[attributeId].stock);
       } else {
-        this.productRenderer.renderStock(this.products[key].stock);
+        this.productRenderer.renderStock(productObject.stock);
       }
     }
   }
