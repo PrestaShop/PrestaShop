@@ -194,6 +194,8 @@ describe('Configure group restrictions', async () => {
             await this.pageObjects.productPage.addProductToTheCart();
             // Proceed to checkout the shopping cart
             await this.pageObjects.cartPage.clickOnProceedToCheckout();
+            const isCheckoutPage = await this.pageObjects.checkoutPage.isCheckoutPage();
+            await expect(isCheckoutPage).to.be.true;
           });
 
           if (index === 0) {
