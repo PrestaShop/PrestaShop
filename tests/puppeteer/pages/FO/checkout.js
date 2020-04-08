@@ -29,7 +29,7 @@ module.exports = class Checkout extends FOBasePage {
     // Checkout address form
     this.addressStepSection = '#checkout-addresses-step';
     this.addressStepCompanyInput = `${this.addressStepSection} input[name='company']`;
-    this.addressStepAddressInput = `${this.addressStepSection} input[name='address1']`;
+    this.addressStepAddress1Input = `${this.addressStepSection} input[name='address1']`;
     this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
     this.addressStepCityInput = `${this.addressStepSection} input[name='city']`;
     this.addressStepCountrySelect = `${this.addressStepSection} select[name='id_country']`;
@@ -180,7 +180,7 @@ module.exports = class Checkout extends FOBasePage {
    */
   async setAddress(address) {
     await this.setValue(this.addressStepCompanyInput, address.company);
-    await this.setValue(this.addressStepAddressInput, address.address);
+    await this.setValue(this.addressStepAddress1Input, address.address);
     await this.setValue(this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(this.addressStepCityInput, address.city);
     await this.selectByVisibleText(this.addressStepCountrySelect, address.country);
