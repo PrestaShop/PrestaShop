@@ -34,6 +34,11 @@ require_once dirname(__FILE__).'/../config/config.inc.php';
 Context::getContext()->cart = new Cart();
 Context::getContext()->container = ContainerBuilder::getContainer('webservice', _PS_MODE_DEV_);
 
+// If the currency is not defined in the context, initialize with the default one !
+if (null === Context::getContext()->currency) {
+    Context::getContext()->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+}
+
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
     list($name, $password) = explode(':', base64_decode($matches[1]));
