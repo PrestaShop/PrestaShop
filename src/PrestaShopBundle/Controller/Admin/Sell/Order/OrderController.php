@@ -458,6 +458,7 @@ class OrderController extends CommonController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
+            'enableSidebar' => true,
             'orderCurrency' => $orderCurrency,
             'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
