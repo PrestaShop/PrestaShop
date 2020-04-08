@@ -196,14 +196,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     'id',
                     'id_product',
                     Request::METHOD_DELETE,
-                    ['action' => 'delete'],
-                    [
-                        'confirm_message' => $this->trans(
-                            'Delete selected item?',
-                            [],
-                            'Admin.Notifications.Warning'
-                        ),
-                    ]
+                    ['action' => 'delete']
                 )
             );
     }
