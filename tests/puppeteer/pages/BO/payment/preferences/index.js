@@ -47,19 +47,13 @@ module.exports = class Preferences extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setGroupRestrictions(group, paymentModule, valueWanted) {
-    await this.waitForVisibleSelector(`${this.paymentModuleCheckbox
+    const selector = this.paymentModuleCheckbox
       .replace('%PAYMENTMODULE', paymentModule)
-      .replace('%GROUPID', group)} + i`,
-    );
-    const isCheckboxSelected = await this.isCheckboxSelected(this.paymentModuleCheckbox
-      .replace('%PAYMENTMODULE', paymentModule)
-      .replace('%GROUPID', group),
-    );
+      .replace('%GROUPID', group);
+    await this.waitForVisibleSelector(`${selector} + i`);
+    const isCheckboxSelected = await this.isCheckboxSelected(selector);
     if (valueWanted !== isCheckboxSelected) {
-      await this.page.click(`${this.paymentModuleCheckbox
-        .replace('%PAYMENTMODULE', paymentModule)
-        .replace('%GROUPID', group)} + i`,
-      );
+      await this.page.click(`${selector} + i`);
     }
     await this.page.click(this.groupRestrictionsSaveButton);
     return this.getTextContent(this.alertSuccessBlock);
