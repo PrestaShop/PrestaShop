@@ -231,7 +231,11 @@ class ModuleDataProvider
                         '%parse_error%' => $exception->getMessage(),
                     ],
                     'Admin.Modules.Notification'
-                )
+                ),
+                    [
+						'object_type' => 'Module',
+						'object_id' => LegacyModule::getModuleIdByName($name),
+					]
             );
 
             return false;
@@ -254,7 +258,11 @@ class ModuleDataProvider
                             '%module%' => $name,
                             '%error_message%' => $e->getMessage(), ],
                         'Admin.Modules.Notification'
-                    )
+                    ),
+                    [
+						'object_type' => 'Module',
+						'object_id' => LegacyModule::getModuleIdByName($name),
+					]
                 );
 
                 return false;
