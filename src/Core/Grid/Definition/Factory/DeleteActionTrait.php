@@ -54,7 +54,7 @@ trait DeleteActionTrait
                 'extra_route_params' => $extraRouteParams,
                 'confirm_message' => array_key_exists('confirm_message', $translations) ?
                     $translations['confirm_message'] :
-                    $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
+                    $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
                 'method' => $method,
                 'modal_options' => new ModalOptions([
                     'title' => array_key_exists('modal_options.title', $translations) ?
