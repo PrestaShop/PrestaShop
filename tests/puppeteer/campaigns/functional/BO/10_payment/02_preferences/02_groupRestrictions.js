@@ -174,7 +174,13 @@ describe('Configure group restrictions', async () => {
             await expect(result).to.contains(this.pageObjects.preferencesPage.successfulUpdateMessage);
           });
 
-          it(`should go to FO and check the '${test.args.paymentModuleToEdit}' payment module`, async function () {
+          it('should go to FO and add the first product to the cart', async function () {
+            await testContext.addContextItem(
+              this,
+              'testIdentifier',
+              `addFirstProductToCart${index}${groupIndex}`,
+              baseContext,
+            );
             await testContext.addContextItem(
               this,
               'testIdentifier',
@@ -194,25 +200,67 @@ describe('Configure group restrictions', async () => {
             await this.pageObjects.productPage.addProductToTheCart();
             // Proceed to checkout the shopping cart
             await this.pageObjects.cartPage.clickOnProceedToCheckout();
-            // Checkout the order
+          });
+
+          if (index === 0) {
             // Personal information step - Login
-            if (index === 0) {
+            it('should login and go to address step', async function () {
+              await testContext.addContextItem(
+                this,
+                'testIdentifier',
+                `loginToFO${index}${groupIndex}`,
+                baseContext,
+              );
               await this.pageObjects.checkoutPage.clickOnSignIn();
-              await this.pageObjects.checkoutPage.customerLogin(group.args.customer);
-            }
-            // Address step - Add address
-            if (group.args.groupName !== 'Customer' && index === 0) {
-              await this.pageObjects.checkoutPage.setAddress(address);
-            }
-            // Address step - Go to delivery step
-            if (group.args.groupName === 'Customer' || index !== 0) {
+              const isStepLoginComplete = await this.pageObjects.checkoutPage.customerLogin(group.args.customer);
+              await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
+            });
+          }
+          // Address step - Add address
+          if (group.args.groupName !== 'Customer' && index === 0) {
+            it('should create address then continue to delivery step', async function () {
+              await testContext.addContextItem(
+                this,
+                'testIdentifier',
+                `createAddress${index}${groupIndex}`,
+                baseContext,
+              );
+              const isStepAddressComplete = await this.pageObjects.checkoutPage.setAddress(address);
+              await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+            });
+          }
+          // Address step - Go to delivery step
+          if (group.args.groupName === 'Customer' || index !== 0) {
+            it('should continue to delivery step', async function () {
+              await testContext.addContextItem(
+                this,
+                'testIdentifier',
+                `goToDeliveryStep${index}${groupIndex}`,
+                baseContext,
+              );
               const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
               await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-            }
-            // Delivery step - Go to payment step
+            });
+          }
+          // Delivery step - Go to payment step
+          it('should continue to payment step', async function () {
+            await testContext.addContextItem(
+              this,
+              'testIdentifier',
+              `goToPaymentStep${index}${groupIndex}`,
+              baseContext,
+            );
             const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
             await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-            // Payment step - Check payment module
+          });
+          // Payment step - Check payment module
+          it('should check the existence of the payment methods', async function () {
+            await testContext.addContextItem(
+              this,
+              'testIdentifier',
+              `checkPaymentModule${index}${groupIndex}`,
+              baseContext,
+            );
             let isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.paymentModuleToEdit);
             await expect(isVisible).to.be.equal(test.args.wirePaymentExist);
             isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.defaultPaymentModule);

@@ -115,13 +115,14 @@ module.exports = class Checkout extends FOBasePage {
   /**
    * Login in FO
    * @param customer
-   * @return {Promise<void>}
+   * @return {Promise<boolean>}
    */
   async customerLogin(customer) {
     await this.waitForVisibleSelector(this.emailInput);
     await this.setValue(this.emailInput, customer.email);
     await this.setValue(this.passwordInput, customer.password);
     await this.clickAndWaitForNavigation(this.personalInformationContinueButton);
+    return this.isStepCompleted(this.personalInformationStepForm);
   }
 
   /**
@@ -176,7 +177,7 @@ module.exports = class Checkout extends FOBasePage {
   /**
    * Set address
    * @param address
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
   async setAddress(address) {
     await this.setValue(this.addressStepCompanyInput, address.company);
@@ -186,5 +187,6 @@ module.exports = class Checkout extends FOBasePage {
     await this.selectByVisibleText(this.addressStepCountrySelect, address.country);
     await this.setValue(this.addressStepPhoneInput, address.phone);
     await this.page.click(this.addressStepContinueButton);
+    return this.isStepCompleted(this.addressStepSection);
   }
 };
