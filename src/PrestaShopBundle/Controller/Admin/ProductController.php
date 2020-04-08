@@ -959,8 +959,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     $logger->info(
                         'Products sorted: (' . implode(',', $productIdList) .
-                        ') with positions (' . implode(',', $productPositionList) . ').'
-                        , static::getLogDataContext()
+                        ') with positions (' . implode(',', $productPositionList) . ').', static::getLogDataContext()
                     );
                     $hookEventParameters = [
                         'product_list_id' => $productIdList,
@@ -1337,17 +1336,17 @@ class ProductController extends FrameworkBundleAdminController
             CannotUpdateProductException::class => $this->trans('An error occurred while updating the status for an object.', 'Admin.Notifications.Error'),
         ];
     }
-    
+
     /**
      * @return array
      */
-     private static function getLogDataContext($id_product = null, $error_code = null, $allow_duplicate = null) : array
-     {
-			return [
-				'object_type' => 'Product',
-				'object_id' => $id_product,
-				'error_code' => $error_code,
-				'allow_duplicate' => $allow_duplicate,
-			];
-	 }
+    private static function getLogDataContext($id_product = null, $error_code = null, $allow_duplicate = null): array
+    {
+        return [
+                'object_type' => 'Product',
+                'object_id' => $id_product,
+                'error_code' => $error_code,
+                'allow_duplicate' => $allow_duplicate,
+            ];
+    }
 }

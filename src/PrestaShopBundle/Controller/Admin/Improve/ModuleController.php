@@ -469,7 +469,7 @@ class ModuleController extends ModuleAbstractController
             );
 
             $logger = $this->container->get('logger');
-            $logger->error($response[$module]['msg'], ['object_type' => 'Module', 'object_id'=> $moduleAccessedId]);
+            $logger->error($response[$module]['msg'], ['object_type' => 'Module', 'object_id' => $moduleAccessedId]);
         }
 
         if ($response[$module]['status'] === true && $action != 'uninstall') {
