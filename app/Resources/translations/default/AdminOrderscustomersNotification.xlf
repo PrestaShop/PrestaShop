@@ -919,11 +919,6 @@
         <target>A return product was successfully created.</target>
         <note>Line: 552</note>
       </trans-unit>
-      <trans-unit id="4c8098d3dded08ff50537ed2814277ca">
-        <source>You cannot edit the cart once the order delivered</source>
-        <target>You cannot edit the cart once the order delivered</target>
-        <note>Line: 1405</note>
-      </trans-unit>
       <trans-unit id="918093e8ad4567f6b99e9851eab8bc69">
         <source>Order #%d cannot be loaded.</source>
         <target>Order #%d cannot be loaded.</target>
