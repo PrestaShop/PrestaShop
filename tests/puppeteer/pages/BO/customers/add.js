@@ -48,14 +48,20 @@ module.exports = class AddCustomer extends BOBasePage {
     else await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
     if (customerData.partnerOffers) await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '1'));
     else await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '0'));
-    if (customerData.defaultCustomerGroup === 'Customer') {
-      await this.page.click(this.selectAllGroupAccessCheckbox);
-    } else if (customerData.defaultCustomerGroup === 'Visitor') {
-      await this.page.click(this.groupAccessCheckkbox.replace('%ID', 1));
-      await this.page.click(this.groupAccessCheckkbox.replace('%ID', 2));
-    } else {
-      await this.page.click(this.groupAccessCheckkbox.replace('%ID', 0));
-      await this.page.click(this.groupAccessCheckkbox.replace('%ID', 2));
+    switch (customerData.defaultCustomerGroup) {
+      case 'Customer':
+        await this.changeCheckboxValue(this.selectAllGroupAccessCheckbox);
+        break;
+      case 'Visitor':
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 1));
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 2));
+        break;
+      case 'Guest':
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 0));
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 2));
+        break;
+      default:
+        throw new Error(`${customerData.defaultCustomerGroup} was not found as a group access`);
     }
     await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
     // Save Customer
