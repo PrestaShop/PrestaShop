@@ -307,13 +307,13 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse([
-                'isoCode' => $referenceCurrency->getIsoCode(),
-                'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
-                'precision' => $referenceCurrency->getPrecision(),
-                'names' => $referenceCurrency->getNames(),
-                'symbols' => $referenceCurrency->getSymbols(),
-                'patterns' => $referenceCurrency->getPatterns(),
-                'exchangeRate' => $exchangeRateValue,
+            'isoCode' => $referenceCurrency->getIsoCode(),
+            'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
+            'precision' => $referenceCurrency->getPrecision(),
+            'names' => $referenceCurrency->getNames(),
+            'symbols' => $referenceCurrency->getSymbols(),
+            'patterns' => $referenceCurrency->getPatterns(),
+            'exchangeRate' => $exchangeRateValue,
         ]);
     }
 
@@ -385,9 +385,9 @@ class CurrencyController extends FrameworkBundleAdminController
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
-                    'status' => false,
-                    'message' => $this->getDemoModeErrorMessage(),
-                ],
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -396,12 +396,12 @@ class CurrencyController extends FrameworkBundleAdminController
 
         if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
             return $this->json([
-                    'status' => false,
-                    'message' => $this->trans(
-                        'You need permission to edit this.',
-                        'Admin.Notifications.Error'
-                    ),
-                ],
+                'status' => false,
+                'message' => $this->trans(
+                    'You need permission to edit this.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
                 Response::HTTP_UNAUTHORIZED
             );
         }

@@ -58,9 +58,9 @@ class ValidateCore
     public static function isEmail($email)
     {
         return !empty($email) && (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
-                new RFCValidation(),
-                new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
-            ]));
+            new RFCValidation(),
+            new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
+        ]));
     }
 
     /**

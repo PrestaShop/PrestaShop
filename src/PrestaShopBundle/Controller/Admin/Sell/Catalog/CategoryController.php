@@ -178,7 +178,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'categoryForm' => $categoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                ->getUrl(0, '{friendy-url}'),
+                    ->getUrl(0, '{friendy-url}'),
             ]
         );
     }
@@ -227,7 +227,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'rootCategoryForm' => $rootCategoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                ->getUrl(0, '{friendy-url}'),
+                    ->getUrl(0, '{friendy-url}'),
             ]
         );
     }
@@ -298,7 +298,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'editableCategory' => $editableCategory,
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                ->getUrl($categoryId, '{friendy-url}'),
+                    ->getUrl($categoryId, '{friendy-url}'),
             ]
         );
     }
@@ -364,7 +364,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'editableCategory' => $editableCategory,
                 'defaultGroups' => $defaultGroups,
                 'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                ->getUrl($categoryId, '{friendy-url}'),
+                    ->getUrl($categoryId, '{friendy-url}'),
             ]
         );
     }

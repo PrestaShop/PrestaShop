@@ -436,10 +436,10 @@ class OrderController extends CommonController
         try {
             $this->dispatchHook(
                 'actionGetAdminOrderButtons', [
-                'controller' => $this,
-                'id_order' => $orderId,
-                'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-            ]);
+                    'controller' => $this,
+                    'id_order' => $orderId,
+                    'actions_bar_buttons_collection' => $backOfficeOrderButtons,
+                ]);
 
             $cancelProductForm = $formBuilder->getFormFor($orderId);
         } catch (Exception $e) {
