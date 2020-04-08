@@ -553,6 +553,9 @@ INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
 ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `original_wholesale_price`;
 ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_incl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `total_refunded_tax_excl`;
 
+ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value` `value` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value_tax_excl` `value_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
 UPDATE
     `PREFIX_order_detail` `od`
 SET
