@@ -37,8 +37,7 @@ export const ValidateAddresses = (addresses) => {
   let deliveryValid = false;
   let invoiceValid = false;
 
-  /* eslint-disable-next-line guard-for-in,no-restricted-syntax */
-  for (const address in Object.values(addresses)) {
+  addresses.forEach((address) => {
     if (address.delivery) {
       deliveryValid = true;
     }
@@ -46,13 +45,9 @@ export const ValidateAddresses = (addresses) => {
     if (address.invoice) {
       invoiceValid = true;
     }
+  });
 
-    if (deliveryValid && invoiceValid) {
-      return true;
-    }
-  }
-
-  return false;
+  return deliveryValid && invoiceValid;
 };
 
 export default ValidateAddresses;
