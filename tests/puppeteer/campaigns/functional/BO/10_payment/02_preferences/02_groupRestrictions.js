@@ -181,12 +181,6 @@ describe('Configure group restrictions', async () => {
               `addFirstProductToCart${index}${groupIndex}`,
               baseContext,
             );
-            await testContext.addContextItem(
-              this,
-              'testIdentifier',
-              `check_${test.args.paymentModuleToEdit + index + groupIndex}`,
-              baseContext,
-            );
             // Click on view my shop
             page = await this.pageObjects.boBasePage.viewMyShop();
             this.pageObjects = await init();
