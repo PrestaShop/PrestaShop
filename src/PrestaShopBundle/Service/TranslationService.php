@@ -305,7 +305,7 @@ class TranslationService
 
             $updatedTranslationSuccessfully = true;
         } catch (Exception $exception) {
-            $logger->error($violation->getMessage(), $log_context);
+            $logger->error($exception->getMessage(), $log_context);
         }
 
         return $updatedTranslationSuccessfully;
