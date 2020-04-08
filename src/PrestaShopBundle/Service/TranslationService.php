@@ -287,9 +287,10 @@ class TranslationService
 
         $validator = Validation::createValidator();
         $violations = $validator->validate($translation, new PassVsprintf());
+        $log_context = ['object_type' => 'Translation'];
         if (0 !== count($violations)) {
             foreach ($violations as $violation) {
-                $logger->error($violation->getMessage());
+                $logger->error($violation->getMessage(), $log_context);
             }
 
             return false;
@@ -303,7 +304,7 @@ class TranslationService
 
             $updatedTranslationSuccessfully = true;
         } catch (Exception $exception) {
-            $logger->error($exception->getMessage());
+            $logger->error($violation->getMessage(), $log_context);
         }
 
         return $updatedTranslationSuccessfully;
