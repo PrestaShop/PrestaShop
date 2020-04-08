@@ -1433,7 +1433,7 @@ class OrderController extends CommonController
         }
 
         return [
-            CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
+            CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered.', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded.',
@@ -1454,8 +1454,8 @@ class OrderController extends CommonController
             ),
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
-                    'Please enter a positive quantity.',
-                    'Admin.Orderscustomers.Notification'
+                    'Positive product quantity is required.',
+                    'Admin.Notifications.Error'
                 ),
                 InvalidCancelProductException::QUANTITY_TOO_HIGH => $this->trans(
                     'Please enter a maximum quantity of [1].',
@@ -1502,8 +1502,8 @@ class OrderController extends CommonController
                 ),
             ],
             InvalidProductQuantityException::class => $this->trans(
-                'Please enter a positive quantity.',
-                'Admin.Orderscustomers.Notification'
+                'Positive product quantity is required.',
+                'Admin.Notifications.Error'
             ),
         ];
     }
@@ -1557,7 +1557,7 @@ class OrderController extends CommonController
         return [
             OrderNotFoundException::class => $exception instanceof OrderNotFoundException ?
                 $this->trans(
-                    'Order #%d cannot be loaded',
+                    'Order #%d cannot be loaded.',
                     'Admin.Orderscustomers.Notification',
                     ['#%d' => $exception->getOrderId()->getValue()]
                 ) : '',
