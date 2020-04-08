@@ -15,6 +15,7 @@ module.exports = class Home extends FOBasePage {
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = `${this.productArticle} span[aria-label="Price"]`;
     this.newFlag = `${this.productArticle} .product-flag.new`;
+    this.searchInput = '#search_widget input.ui-autocomplete-input';
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
@@ -36,10 +37,7 @@ module.exports = class Home extends FOBasePage {
    * @param id, product id
    */
   async goToProductPage(id) {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.productImg.replace('%NUMBER', id)),
-    ]);
+    await this.clickAndWaitForNavigation(this.productImg.replace('%NUMBER', id));
   }
 
   /**
@@ -63,7 +61,7 @@ module.exports = class Home extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
-      this.page.waitForSelector(this.quickViewModalDiv, {visible: true}),
+      this.waitForVisibleSelector(this.quickViewModalDiv),
       this.page.$eval(this.productQuickViewLink.replace('%NUMBER', id), el => el.click()),
     ]);
   }
@@ -78,7 +76,7 @@ module.exports = class Home extends FOBasePage {
     await this.quickViewProduct(id);
     await this.setValue(this.quantityWantedInput, quantity_wanted.toString());
     await Promise.all([
-      this.page.waitForSelector(this.blockCartModalDiv, {visible: true}),
+      this.waitForVisibleSelector(this.blockCartModalDiv),
       this.page.click(this.addToCartButton),
     ]);
   }
@@ -88,10 +86,7 @@ module.exports = class Home extends FOBasePage {
    * @return {Promise<void>}
    */
   async proceedToCheckout() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.blockCartModalCheckoutLink),
-    ]);
+    await this.clickAndWaitForNavigation(this.blockCartModalCheckoutLink);
   }
 
   /**
@@ -110,5 +105,24 @@ module.exports = class Home extends FOBasePage {
    */
   async isNewFlagVisible(id = 1) {
     return this.elementVisible(this.newFlag.replace('%NUMBER', id), 1000);
+  }
+
+  /**
+   * Search product
+   * @param productName
+   * @returns {Promise<void>}
+   */
+  async searchProduct(productName) {
+    await this.setValue(this.searchInput, productName);
+    await this.page.keyboard.press('Enter');
+    await this.page.waitForNavigation({waitUntil: 'networkidle0'});
+  }
+
+  /**
+   * Go to home category page by clicking on all products
+   * @return {Promise<void>}
+   */
+  async goToAllProductsPage() {
+    await this.clickAndWaitForNavigation(this.allProductLink);
   }
 };

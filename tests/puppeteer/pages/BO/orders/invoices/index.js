@@ -114,7 +114,6 @@ module.exports = class Invoice extends BOBasePage {
    */
   async setInputOptions(data) {
     await this.setValue(this.invoiceNumberInput, data.invoiceNumber);
-    await this.setValue(this.legalFreeTextInput, data.legalFreeText);
     await this.setValue(this.footerTextInput, data.footerText);
   }
 

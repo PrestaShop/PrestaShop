@@ -27,12 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -77,31 +74,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'merchandiseReturnsGrid' => $gridPresenter->present($gridFactory->getGrid($filters)),
             'merchandiseReturnsOptionsForm' => $optionsForm->createView(),
         ]);
-    }
-
-    /**
-     * Prepares filtering response
-     *
-     * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_merchandise_return_index"
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function filterAction(Request $request): RedirectResponse
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.merchandise_return'),
-            $request,
-            MerchandiseReturnGridDefinitionFactory::GRID_ID,
-            'admin_merchandise_returns_index'
-        );
     }
 
     /**

@@ -50,7 +50,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -92,7 +91,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
 
-        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, ['categories_to_delete_parent' => (int) $currentCategoryId], []);
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CATEGORIES_CARD)
@@ -584,10 +583,12 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
+        $idParent = $this->configuration->getInt('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
             try {
                 $categoriesDeleteData = $deleteCategoriesForm->getData();
+                $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
                 $categoryIds = array_map(function ($categoryId) {
                     return (int) $categoryId;
                 }, $categoriesDeleteData['categories_to_delete']);
@@ -608,7 +609,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_categories_index');
+        return $this->redirectToRoute('admin_categories_index', ['categoryId' => $idParent]);
     }
 
     /**
@@ -629,9 +630,11 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
+        $idParent = $this->configuration->getInt('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
             $categoriesDeleteData = $deleteCategoriesForm->getData();
+            $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
 
             try {
                 $command = new DeleteCategoryCommand(
@@ -647,7 +650,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_categories_index');
+        return $this->redirectToRoute('admin_categories_index', ['categoryId' => $idParent]);
     }
 
     /**

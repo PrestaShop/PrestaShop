@@ -77,19 +77,19 @@ class AddPaymentCommand
      * @param int $orderId
      * @param string $paymentDate
      * @param string $paymentMethod
-     * @param float $paymentAmount
-     * @param float $paymentCurrencyId
+     * @param string $paymentAmount
+     * @param int $paymentCurrencyId
      * @param int|null $orderInvoiceId
      * @param string|null $transactionId transaction ID, usually payment ID from payment gateway
      */
     public function __construct(
-        $orderId,
-        $paymentDate,
-        $paymentMethod,
-        $paymentAmount,
-        $paymentCurrencyId,
-        $orderInvoiceId = null,
-        $transactionId = null
+        int $orderId,
+        string $paymentDate,
+        string $paymentMethod,
+        string $paymentAmount,
+        int $paymentCurrencyId,
+        ?int $orderInvoiceId = null,
+        ?string $transactionId = null
     ) {
         $amount = new Number($paymentAmount);
         $this->assertAmountIsPositive($amount);

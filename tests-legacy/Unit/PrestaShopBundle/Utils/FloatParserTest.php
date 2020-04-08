@@ -27,6 +27,7 @@
 namespace LegacyTests\Unit\PrestaShopBundle\Utils;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Util\ArabicToLatinDigitConverter;
 use PrestaShopBundle\Utils\FloatParser;
 
 class FloatParserTest extends TestCase
@@ -43,7 +44,7 @@ class FloatParserTest extends TestCase
      */
     public function testItParsesNumbersFromString($string, $expected)
     {
-        $this->assertSame($expected, (new FloatParser())->fromString($string));
+        $this->assertSame($expected, (new FloatParser(new ArabicToLatinDigitConverter()))->fromString($string));
     }
 
     /**
@@ -58,7 +59,7 @@ class FloatParserTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        (new FloatParser())->fromString($value);
+        (new FloatParser(new ArabicToLatinDigitConverter()))->fromString($value);
     }
 
     public function provideValidStrings()

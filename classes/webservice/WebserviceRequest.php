@@ -307,6 +307,7 @@ class WebserviceRequestCore
             'manufacturers' => ['description' => 'The product brands', 'class' => 'Manufacturer'],
             'messages' => ['description' => 'The Messages', 'class' => 'Message'],
             'order_carriers' => ['description' => 'The Order carriers', 'class' => 'OrderCarrier'],
+            'order_cart_rules' => ['description' => 'The Order cart rules', 'class' => 'OrderCartRule'],
             'order_details' => ['description' => 'Details of an order', 'class' => 'OrderDetail'],
             'order_histories' => ['description' => 'The Order histories', 'class' => 'OrderHistory'],
             'order_invoices' => ['description' => 'The Order invoices', 'class' => 'OrderInvoice'],

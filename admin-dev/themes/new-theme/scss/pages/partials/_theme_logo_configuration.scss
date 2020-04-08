@@ -2,40 +2,18 @@
   padding: inherit;
 
   .logo-card {
-    border-radius: 0;
     border: 0;
+    @include border-radius(0);
 
     .logo-card-title {
       font-size: 1rem;
-      font-weight: 600;
       font-style: normal;
+      font-weight: 600;
       font-stretch: normal;
       line-height: normal;
-      letter-spacing: -0.01875rem;
-      text-align: center;
       color: #4a4a4a;
-    }
-
-    .nav-pills {
-      .nav-item {
-        padding-right: 1.25rem;
-      }
-
-      border-top: 0;
-      border-bottom: 0;
-
-      .nav-link {
-        &.active {
-          color: #363a41;
-          background-color: inherit;
-        }
-
-        color: #afbbbe;
-        height: 1.65rem;
-        padding-top: 0;
-        padding-left: 0;
-        padding-right: 0;
-      }
+      text-align: center;
+      letter-spacing: -.01875rem;
     }
 
     .tab-content {
@@ -47,21 +25,21 @@
     }
 
     .logo-card-description {
-      font-size: 0.75rem;
-      font-weight: normal;
+      height: 34px;
+      margin-top: 20px;
+      font-size: .75rem;
       font-style: normal;
+      font-weight: 400;
       font-stretch: normal;
       line-height: normal;
-      letter-spacing: -0.0125rem;
       color: #6c868e;
-      margin-top: 20px;
-      height: 34px;
+      letter-spacing: -.0125rem;
     }
 
     .logo-image-container {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 6.625rem;
       margin-top: 2rem;
       margin-bottom: 1.6875rem;
@@ -75,15 +53,36 @@
 
       .favicon-logo {
         width: 2.41875rem;
-        height: 2.41875rem;;
-        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+        height: 2.41875rem;
         border: 1px solid transparent;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3);
       }
     }
   }
 
   .logo-card:not(:last-child) {
-    border-right: 0.0625rem solid #dedede;
+    border-right: .0625rem solid #dedede;
   }
 
+  .nav-pills {
+    .nav-item {
+      padding-right: 1.25rem;
+    }
+
+    border-top: 0;
+    border-bottom: 0;
+
+    .nav-link {
+      &.active {
+        color: #363a41;
+        background-color: inherit;
+      }
+      height: 1.65rem;
+      padding-top: 0;
+      padding-right: 0;
+      padding-left: 0;
+
+      color: #afbbbe;
+    }
+  }
 }

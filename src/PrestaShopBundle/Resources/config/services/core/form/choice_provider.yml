@@ -66,6 +66,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
       - '@prestashop.adapter.data_provider.order_state'
+      - '@prestashop.core.util.color_brightness_calculator'
 
   prestashop.core.form.choice_provider.invoice_model_by_name:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider'

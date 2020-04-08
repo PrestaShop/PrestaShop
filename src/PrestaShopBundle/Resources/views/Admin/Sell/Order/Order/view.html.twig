@@ -41,7 +41,7 @@
         {{ displayAdminOrderTopHookContent|raw }}
       </div>
     {% endif %}
-      <div class="col-md-12">
+      <div class="order-actions col-md-12">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
       </div>
     </div>
@@ -66,10 +66,10 @@
       <div class="col-md-4 left-column">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
 
-        {{ renderhook('displayBackOfficeOrderActions', {'id_order': orderForViewing.id}) }}
+        {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
 
-        {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
+        {{ renderhook('displayAdminOrderSideBottom', {'id_order': orderForViewing.id}) }}
       </div>
 
       <div class="col-md-8 d-print-block right-column">
@@ -80,13 +80,17 @@
 
         {{ renderhook('displayAdminOrderMain', {'id_order': orderForViewing.id}) }}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
+
+        {{ renderhook('displayAdminOrderMainBottom', {'id_order': orderForViewing.id}) }}
       </div>
     </div>
 
     {{ renderhook('displayAdminOrder', {'id_order': orderForViewing.id}) }}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_shipping_modal.html.twig' %}
-    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig' %}
+    {% if orderForViewing.customer is not null %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig' %}
+    {% endif %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_all_messages_modal.html.twig' %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_product_pack_modal.html.twig' %}
   </div>

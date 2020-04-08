@@ -11,7 +11,7 @@ const InvoicesPage = require('@pages/BO/orders/invoices/index');
 const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 const InvoiceOptionsFaker = require('@data/faker/invoice');
 // Test context imports
 const testContext = require('@utils/testContext');
@@ -100,7 +100,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'UpdateStatusForUpdatedPrefix', baseContext);
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-        await expect(result).to.be.true;
+        await expect(result).to.equal(Statuses.shipped.status);
       });
 
       it(`should check that the invoice file name contain the prefix '${invoiceData.prefix}'`, async function () {

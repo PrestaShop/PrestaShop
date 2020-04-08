@@ -45,8 +45,10 @@
 </template>
 
 <script>
+  import {showGrowl} from '@app/utils/growl';
   import LanguageList from './LanguageList';
   import CurrencyModal from './CurrencyModal';
+
 
   export default {
     name: 'CurrencyFormatter',
@@ -86,6 +88,8 @@
 
         this.currencyData.transformations[language.id] = '';
         this.currencyData.symbols[language.id] = language.currencySymbol;
+
+        showGrowl('notice', this.$t('list.reset.success'));
       },
       applyCustomization(customData) {
         const selectedPattern = this.selectedLanguage.transformations[customData.transformation];

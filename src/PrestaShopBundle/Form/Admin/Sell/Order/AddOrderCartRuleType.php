@@ -86,6 +86,7 @@ class AddOrderCartRuleType extends AbstractType
             $this->orderInvoiceByIdChoiceProvider->getChoices([
                 'id_order' => $options['order_id'],
                 'id_lang' => $this->contextLangId,
+                'display_total' => true,
             ]) : [];
 
         $builder
@@ -105,7 +106,8 @@ class AddOrderCartRuleType extends AbstractType
             ])
             ->add('value', NumberType::class, [
                 'attr' => [
-                    'step' => 0.01,
+                    'step' => 1,
+                    'class' => 'input-group-text',
                 ],
                 'constraints' => new Type([
                     'type' => 'numeric',

@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -46,20 +45,27 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class SupplierGridDefinitionFactory creates definition for supplier grid.
  */
 final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    public const GRID_ID = 'supplier';
+
     use BulkDeleteActionTrait;
+    use DeleteActionTrait;
 
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'supplier';
+        return self::GRID_ID;
     }
 
     /**
@@ -140,20 +146,13 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route_param_field' => 'id_supplier',
                             ])
                         )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'method' => 'DELETE',
-                                'route' => 'admin_suppliers_delete',
-                                'route_param_name' => 'supplierId',
-                                'route_param_field' => 'id_supplier',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
+                        ->add(
+                            $this->buildDeleteAction(
+                                'admin_suppliers_delete',
+                                'supplierId',
+                                'id_supplier',
+                                Request::METHOD_DELETE
+                            )
                         ),
                 ])
             )
@@ -202,10 +201,9 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'supplier',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_suppliers_index',
                 ])

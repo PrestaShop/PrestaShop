@@ -12,7 +12,7 @@ const DeliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 // Test context imports
 const testContext = require('@utils/testContext');
 
@@ -22,10 +22,8 @@ let browser;
 let page;
 const today = new Date();
 // Create a future date that there is no delivery slips (yyy-mm-dd)
-const day = (`0${today.getDate()}`).slice(-2); // Current day
-const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const year = today.getFullYear() + 1; // Next year
-const futureDate = `${year}-${month}-${day}`;
+today.setFullYear(today.getFullYear() + 1);
+const futureDate = today.toISOString().slice(0, 10);
 const fileName = 'deliveries.pdf';
 
 // Init objects needed
@@ -69,6 +67,7 @@ describe('Generate Delivery slip file by date', async () => {
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
       );
+      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
     });
@@ -83,7 +82,7 @@ describe('Generate Delivery slip file by date', async () => {
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should check the delivery slip document Name', async function () {

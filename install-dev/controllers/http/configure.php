@@ -59,7 +59,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     'visitorType' => 1,
                     'source' => 'installer',
                 ));
-                Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+                Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
             }
 
             // If password fields are empty, but are already stored in session, do not fill them again

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\OrderMessageConstraint;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -77,7 +78,7 @@ class OrderMessageType extends AbstractType
             ])
             ->add('message', TextWithLengthCounterType::class, [
                 'input' => 'textarea',
-                'max_length' => 600,
+                'max_length' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,
                 'position' => 'after',
                 'constraints' => [
                     new NotBlank([
@@ -96,10 +97,10 @@ class OrderMessageType extends AbstractType
                         ]
                     ),
                     new Length([
-                        'max' => 600,
+                        'max' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 600],
+                            ['%limit%' => OrderMessageConstraint::MAX_MESSAGE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),

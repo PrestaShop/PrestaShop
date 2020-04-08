@@ -233,7 +233,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then I should get error that refund quantity is too high and max is :maxRefund
-     * @then I should get error that cancel quantity is too high and max is :maxRefund
+     * @Then I should get error that cancel quantity is too high and max is :maxRefund
      */
     public function assertLastErrorIsRefundQuantityTooHigh(int $maxRefund)
     {
@@ -279,24 +279,24 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that order has unexpected invoice
+     * @Then I should get error that order is already paid
      */
-    public function assertLastErrorIsOrderHasUnexpectedInvoice()
+    public function assertLastErrorIsOrderIsAlreadyPaid()
     {
         $this->assertLastErrorIs(
             InvalidOrderStateException::class,
-            InvalidOrderStateException::UNEXPECTED_INVOICE
+            InvalidOrderStateException::ALREADY_PAID
         );
     }
 
     /**
-     * @Then I should get error that order has no invoice
+     * @Then I should get error that order is not paid
      */
-    public function assertLastErrorIsOrderHasNoInvoice()
+    public function assertLastErrorIsOrderIsNotPaid()
     {
         $this->assertLastErrorIs(
             InvalidOrderStateException::class,
-            InvalidOrderStateException::INVOICE_NOT_FOUND
+            InvalidOrderStateException::NOT_PAID
         );
     }
 
@@ -386,7 +386,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
      *
      * @return IssueStandardRefundCommand
      *
@@ -398,8 +397,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         array $refunds,
         bool $generateCreditSlip,
         bool $generateVoucher,
-        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
-        ?float $voucherRefundAmount = null
+        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
     ): IssueStandardRefundCommand {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
@@ -429,8 +427,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $refundShippingCost,
             $generateCreditSlip,
             $generateVoucher,
-            $voucherRefundType,
-            $voucherRefundAmount
+            $voucherRefundType
         );
     }
 
@@ -441,7 +438,6 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
      *
      * @return IssueReturnProductCommand
      *
@@ -454,8 +450,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         bool $restockRefundedProducts,
         bool $generateCreditSlip,
         bool $generateVoucher,
-        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
-        ?float $voucherRefundAmount = null
+        int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
     ): IssueReturnProductCommand {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
@@ -486,8 +481,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             $refundShippingCost,
             $generateCreditSlip,
             $generateVoucher,
-            $voucherRefundType,
-            $voucherRefundAmount
+            $voucherRefundType
         );
     }
 

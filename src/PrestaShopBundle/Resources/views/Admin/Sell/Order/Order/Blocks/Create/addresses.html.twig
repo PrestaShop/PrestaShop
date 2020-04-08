@@ -55,7 +55,7 @@
 
         <div class="card mt-3">
           <div class="card-body clearfix">
-            <a class="btn btn-outline-primary float-right" id="js-invoice-addresss-edit-btn">{{ 'Edit'|trans({}, 'Admin.Actions') }}</a>
+            <a class="btn btn-outline-primary float-right" id="js-invoice-address-edit-btn">{{ 'Edit'|trans({}, 'Admin.Actions') }}</a>
             <div id="invoice-address-details"></div>
           </div>
         </div>
@@ -63,7 +63,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <a class="btn btn-primary" id="js-add-address-btn" href="{{ path('admin_addresses_create') }}">
+        <a class="btn btn-primary" id="js-add-address-btn" href="{{ path('admin_addresses_create', {'liteDisplaying': 1, 'submitFormAjax': 1}) }}">
           {{ 'Add a new address'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       </div>

@@ -102,8 +102,8 @@ describe('Sort taxes', async () => {
       await this.pageObjects.taxesPage.sortTable(test.args.sortBy, test.args.sortDirection);
       let sortedTable = await this.pageObjects.taxesPage.getAllRowsColumnContent(test.args.sortBy);
       if (test.args.isFloat) {
-        nonSortedTable = await nonSortedTable.map(text => parseFloat(text, 10));
-        sortedTable = await sortedTable.map(text => parseFloat(text, 10));
+        nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+        sortedTable = await sortedTable.map(text => parseFloat(text));
       }
       const expectedResult = await this.pageObjects.taxesPage.sortArray(nonSortedTable, test.args.isFloat);
       if (test.args.sortDirection === 'asc') {

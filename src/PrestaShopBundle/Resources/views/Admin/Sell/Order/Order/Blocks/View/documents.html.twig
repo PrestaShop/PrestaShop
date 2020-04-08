@@ -48,7 +48,7 @@
     {% for document in orderForViewing.documents.documents %}
       <tr>
         <td>
-          {{ document.createdAt|date('Y-m-d') }}
+          {{ document.createdAt|date_format_lite }}
         </td>
         <td>
           {% if document.type == 'invoice' %}

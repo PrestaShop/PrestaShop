@@ -9,7 +9,7 @@ module.exports = class Stocks extends BOBasePage {
     this.successfulUpdateMessage = 'Stock successfully updated';
 
     // Selectors
-    this.MovementNavItemLink = '#head_tabs li:nth-child(2) > a';
+    this.movementsNavItemLink = '#head_tabs li:nth-child(2) > a';
     this.searchForm = 'form.search-form';
     this.searchInput = `${this.searchForm} input.input`;
     this.searchButton = `${this.searchForm} button.search-button`;
@@ -23,7 +23,8 @@ module.exports = class Stocks extends BOBasePage {
     this.applyNewQuantityButton = 'button.update-qty';
 
     this.productList = 'table.table';
-    this.productRow = `${this.productList} tbody tr:nth-child(%ROW)`;
+    this.productRows = `${this.productList} tbody tr`;
+    this.productRow = `${this.productRows}:nth-child(%ROW)`;
     this.productRowNameColumn = `${this.productRow} td:nth-child(1) div.media-body p`;
     this.productRowReferenceColumn = `${this.productRow} td:nth-child(2)`;
     this.productRowSupplierColumn = `${this.productRow} td:nth-child(3)`;
@@ -44,6 +45,12 @@ module.exports = class Stocks extends BOBasePage {
     this.filterStatusEnabledLabel = '#enable + label';
     this.filterStatusDisabledLabel = '#disable + label';
     this.filterStatusAllLabel = '#all + label';
+    // Filter category
+    this.filterCategoryDiv = `${this.filtersContainerDiv} div.filter-categories`;
+    this.filterCategoryExpandButton = `${this.filterCategoryDiv} button:nth-child(1)`;
+    this.filterCategoryCollapseButton = `${this.filterCategoryDiv} button:nth-child(2)`;
+    this.filterCategoryTreeItems = `${this.filterCategoryDiv} div.ps-tree-items[label='%CATEGORY']`;
+    this.filterCategoryCheckBoxDiv = `${this.filterCategoryTreeItems} .md-checkbox`;
   }
 
   /*
@@ -55,7 +62,8 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabMovements() {
-    await this.page.click(this.MovementNavItemLink, {waitUntil: 'networkidle2'});
+    await this.page.click(this.movementsNavItemLink);
+    await this.waitForVisibleSelector(`${this.movementsNavItemLink}.active`);
   }
 
   /**
@@ -64,7 +72,7 @@ module.exports = class Stocks extends BOBasePage {
    */
   async getNumberOfProductsFromList() {
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
-    return (await this.page.$$(this.productRow.replace('%ROW', 1))).length;
+    return (await this.page.$$(this.productRows)).length;
   }
 
   /**
@@ -90,7 +98,7 @@ module.exports = class Stocks extends BOBasePage {
     await this.page.type(this.searchInput, value);
     await Promise.all([
       this.page.click(this.searchButton),
-      this.page.waitForSelector(this.productListLoading),
+      this.waitForVisibleSelector(this.productListLoading),
     ]);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
   }
@@ -120,6 +128,20 @@ module.exports = class Stocks extends BOBasePage {
     }
   }
 
+
+  /**
+   * Get all products names from table
+   * @return {Promise<[]>}
+   */
+  async getAllProductsName() {
+    const productsNames = [];
+    const numberOfProductsInlist = await this.getNumberOfProductsFromList();
+    for (let row = 1; row <= numberOfProductsInlist; row++) {
+      await productsNames.push(await this.getTextColumnFromTableStocks(row, 'name'));
+    }
+    return productsNames;
+  }
+
   /**
    * Get
    * @param row, row in table
@@ -144,7 +166,7 @@ module.exports = class Stocks extends BOBasePage {
     // Wait for check button before click
     await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton.replace('%ROW', row));
     // Wait for alert-Box after update quantity and close alert-Box
-    await this.page.waitForSelector(this.alertBoxTextSpan, {visible: true});
+    await this.waitForVisibleSelector(this.alertBoxTextSpan);
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
     await this.page.click(this.alertBoxButtonClose);
     return textContent;
@@ -163,7 +185,7 @@ module.exports = class Stocks extends BOBasePage {
     // Wait for check button before click
     await this.page.click(this.applyNewQuantityButton);
     // Wait for alert-Box after update quantity and close alert-Box
-    await this.page.waitForSelector(this.alertBoxTextSpan, {visible: true});
+    await this.waitForVisibleSelector(this.alertBoxTextSpan);
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
     await this.page.click(this.alertBoxButtonClose);
     return textContent;
@@ -175,10 +197,7 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterByStatus(status) {
-    await Promise.all([
-      this.page.click(this.advancedFiltersButton),
-      this.page.waitForSelector(`${this.advancedFiltersButton}[aria-expanded='true']`, {visible: true}),
-    ]);
+    await this.openCloseAdvancedFilter();
     switch (status) {
       case 'enabled':
         await this.page.click(this.filterStatusEnabledLabel);
@@ -192,5 +211,43 @@ module.exports = class Stocks extends BOBasePage {
       default:
         throw Error(`${status} was not found as an option`);
     }
+  }
+
+  /**
+   * Filter stocks by product's category
+   * @param category
+   * @return {Promise<void>}
+   */
+  async filterByCategory(category) {
+    await this.openCloseAdvancedFilter();
+    await this.page.click(this.filterCategoryExpandButton);
+    await Promise.all([
+      this.waitForVisibleSelector(this.productListLoading),
+      this.page.click(this.filterCategoryCheckBoxDiv.replace('%CATEGORY', category)),
+    ]);
+    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    await this.page.click(this.filterCategoryCollapseButton);
+    await this.openCloseAdvancedFilter(false);
+  }
+
+  /**
+   * Open / close advanced filter
+   * @param toOpen
+   * @return {Promise<void>}
+   */
+  async openCloseAdvancedFilter(toOpen = true) {
+    await Promise.all([
+      this.page.click(this.advancedFiltersButton),
+      this.waitForVisibleSelector(`${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
+    ]);
+  }
+
+  /**
+   * Reset and get number of products in list
+   * @return {Promise<int>}
+   */
+  async resetAndGetNumberOfProductsFromList() {
+    await this.reloadPage();
+    return this.getNumberOfProductsFromList();
   }
 };

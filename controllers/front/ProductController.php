@@ -520,8 +520,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
             }
         }
+        unset($quantity_discount);
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute);
+        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute, 6, null, false, false);
 
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
@@ -712,7 +713,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // wash attributes list (if some attributes are unavailables and if allowed to wash it)
             if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) {
                 foreach ($groups as &$group) {
-                    foreach ($group['attributes_quantity'] as $key => &$quantity) {
+                    foreach ($group['attributes_quantity'] as $key => $quantity) {
                         if ($quantity <= 0) {
                             unset($group['attributes'][$key]);
                         }
@@ -733,6 +734,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $attribute_list = rtrim($attribute_list, ',');
                 $this->combinations[$id_product_attribute]['list'] = $attribute_list;
             }
+            unset($group);
 
             $this->context->smarty->assign([
                 'groups' => $groups,

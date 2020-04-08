@@ -101,8 +101,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'name',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page_category',
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
         1,
         'name',
       );
@@ -124,8 +123,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
           'cms_page_category',
         );
         for (let i = 1; i <= numberOfCategoriesInGrid; i++) {
-          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTable(
-            'cms_page_category',
+          const textColumn = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
             i,
             'active',
           );
@@ -144,8 +142,7 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
         'name',
         'todelete',
       );
-      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTable(
-        'cms_page_category',
+      const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
         1,
         'name',
       );

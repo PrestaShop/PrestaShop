@@ -23,7 +23,7 @@ module.exports = class Taxes extends BOBasePage {
     this.deleteSelectionButton = `${this.taxesGridPanelDiv} #tax_grid_bulk_action_delete_selection`;
     this.selectAllLabel = `${this.taxesGridPanelDiv} #tax_grid tr.column-filters .md-checkbox i`;
     this.taxesGridTable = `${this.taxesGridPanelDiv} #tax_grid_table`;
-    this.confirmDeleteModal = '#tax_grid_confirm_modal';
+    this.confirmDeleteModal = '#tax-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.taxesFilterColumnInput = `${this.taxesGridTable} #tax_%FILTERBY`;
@@ -192,19 +192,18 @@ module.exports = class Taxes extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.taxesGridColumnToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.taxesGridColumnToggleDropDown}[aria-expanded='true']`
           .replace('%ROW', row)
           .replace('%COLUMN', 'actions'),
-        {visible: true},
       ),
     ]);
-    // Click on delete
+    // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.taxesGridDeleteLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
+    await this.confirmDeleteTaxes();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -217,19 +216,15 @@ module.exports = class Taxes extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllLabel),
-      this.page.waitForSelector(`${this.selectAllLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click to change status
-    await Promise.all([
-      this.page.click(enable ? this.enableSelectionButton : this.disableSelectionButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-    ]);
+    await this.clickAndWaitForNavigation(enable ? this.enableSelectionButton : this.disableSelectionButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -241,17 +236,17 @@ module.exports = class Taxes extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllLabel),
-      this.page.waitForSelector(`${this.selectAllLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.deleteSelectionButton),
-      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteTaxes();
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -291,11 +286,7 @@ module.exports = class Taxes extends BOBasePage {
       await this.page.click(this.useEcoTaxSwitchlabel.replace('%ID', '0'));
     }
     // Click on save tax Option
-    await Promise.all([
-      this.page.click(this.saveTaxOptionButton),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-    ]);
+    await this.clickAndWaitForNavigation(this.saveTaxOptionButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -322,6 +313,6 @@ module.exports = class Taxes extends BOBasePage {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
-    await this.page.waitForSelector(sortColumnDiv, {visible: true});
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

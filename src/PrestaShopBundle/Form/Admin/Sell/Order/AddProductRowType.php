@@ -87,6 +87,7 @@ class AddProductRowType extends TranslatorAwareType
                     'class' => 'col-sm-12',
                     'autocomplete' => 'off',
                     'placeholder' => $this->trans('Search for a product', 'Admin.Orderscustomers.Feature'),
+                    'data-currency' => $options['currency_id'],
                 ],
             ])
             ->add('addProductCombinations', ChoiceType::class, [
@@ -161,8 +162,10 @@ class AddProductRowType extends TranslatorAwareType
             ->setRequired(['symbol'])
             ->setDefaults([
                 'order_id' => null,
+                'currency_id' => null,
             ])
             ->setAllowedTypes('order_id', ['int', 'null'])
+            ->setAllowedTypes('currency_id', ['int', 'null'])
             ->setAllowedTypes('symbol', ['string'])
         ;
     }

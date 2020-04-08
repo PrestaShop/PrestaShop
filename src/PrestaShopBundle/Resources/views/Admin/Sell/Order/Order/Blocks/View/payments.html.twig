@@ -56,7 +56,7 @@
       <tbody>
       {% for payment in orderForViewing.payments.payments %}
         <tr>
-          <td>{{ payment.date|date('Y-m-d H:i:s') }}</td>
+          <td>{{ payment.date|date_format_full }}</td>
           <td>{{ payment.paymentMethod }}</td>
           <td>{{ payment.transactionId }}</td>
           <td>{{ payment.amount }}</td>

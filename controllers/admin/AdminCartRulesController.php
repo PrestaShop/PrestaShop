@@ -170,9 +170,9 @@ class AdminCartRulesControllerCore extends AdminController
                     // Add a new rule group
                     $rule_group_id = 1;
                     if (is_array($rule_group_array)) {
-                        // Empty for (with a ; at the end), that just find the first rule_group_id available in rule_group_array
-                        for ($rule_group_id = 1; in_array($rule_group_id, $rule_group_array); ++$rule_group_id) {
-                            42;
+                        // Find the first rule_group_id that is not available in the array
+                        while (in_array($rule_group_id, $rule_group_array)) {
+                            ++$rule_group_id;
                         }
                         $_POST['product_rule_group'][] = $rule_group_id;
                     } else {
@@ -268,6 +268,10 @@ class AdminCartRulesControllerCore extends AdminController
         }
         if (Tools::getValue('submitFormAjax')) {
             $this->redirect_after = false;
+            if ($cart_rule) {
+                $this->context->smarty->assign('refresh_cart', true);
+                $this->display = 'edit';
+            }
         }
 
         return $cart_rule;

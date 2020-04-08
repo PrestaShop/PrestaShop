@@ -73,7 +73,10 @@ describe('Create, read, update and delete Standard product with combinations in 
   it('should create Product with Combinations', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
     await this.pageObjects.productsPage.goToAddProductPage();
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productWithCombinations);
+    await this.pageObjects.addProductPage.createEditBasicProduct(productWithCombinations);
+    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
+      productWithCombinations,
+    );
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
@@ -81,38 +84,39 @@ describe('Create, read, update and delete Standard product with combinations in 
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct1', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
-    const result = await this.pageObjects.foProductPage.checkProduct(productWithCombinations);
+    const result = await this.pageObjects.foProductPage.getProductInformation(productWithCombinations);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
     this.pageObjects = await init();
     // Check that all Product attribute are correct
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity_wanted).to.be.true,
-      expect(result.description).to.be.true,
+      expect(result.name).to.equal(productWithCombinations.name),
+      expect(result.price).to.equal(productWithCombinations.price),
+      expect(result.description).to.contains(productWithCombinations.description),
     ]);
   });
 
   it('should edit Product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
-    const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(editedProductWithCombinations,
-      false);
+    await this.pageObjects.addProductPage.createEditBasicProduct(editedProductWithCombinations);
+    const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
+      editedProductWithCombinations,
+    );
     await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
   });
 
   it('should preview and check product in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
     page = await this.pageObjects.addProductPage.previewProduct();
+
     this.pageObjects = await init();
-    const result = await this.pageObjects.foProductPage.checkProduct(editedProductWithCombinations);
+    const result = await this.pageObjects.foProductPage.getProductInformation(editedProductWithCombinations);
     page = await this.pageObjects.foProductPage.closePage(browser, 1);
     this.pageObjects = await init();
     // Check that all Product attribute are correct
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity_wanted).to.be.true,
-      expect(result.description).to.be.true,
+      expect(result.name).to.equal(editedProductWithCombinations.name),
+      expect(result.price).to.equal(editedProductWithCombinations.price),
+      expect(result.description).to.contains(editedProductWithCombinations.description),
     ]);
   });
 

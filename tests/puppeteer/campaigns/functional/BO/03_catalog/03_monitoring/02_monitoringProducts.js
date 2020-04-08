@@ -20,23 +20,12 @@ let browser;
 let page;
 let numberOfProducts = 0;
 let numberOfProductsIngrid = 0;
-const productWithoutCombinations = new ProductFaker(
-  {type: 'Standard product', productHasCombinations: false},
-);
-const productWithoutCombinationsWithoutQuantity = new ProductFaker(
-  {type: 'Standard product', productHasCombinations: false, quantity: '0'},
-);
-const productWithCombinationsWithoutQuantity = new ProductFaker(
-  {type: 'Standard product', productHasCombinations: true, quantity: '0'},
-);
-const productWithoutPrice = new ProductFaker(
-  {type: 'Standard product', productHasCombinations: false, price: '0'},
-);
-const productWithoutDescription = new ProductFaker(
-  {
-    type: 'Standard product', productHasCombinations: false, description: '', summary: '',
-  },
-);
+const productWithoutImage = new ProductFaker({type: 'Standard product'});
+const disabledProduct = new ProductFaker({type: 'Standard product', status: false});
+const productWithoutCombinationsWithoutQuantity = new ProductFaker({type: 'Standard product', quantity: 0});
+const productWithCombinationsWithoutQuantity = new ProductFaker({type: 'Standard product', quantity: 0});
+const productWithoutPrice = new ProductFaker({type: 'Standard product', price: 0});
+const productWithoutDescription = new ProductFaker({type: 'Standard product', description: '', summary: ''});
 
 // Init objects needed
 const init = async function () {
@@ -74,9 +63,8 @@ describe('Create different products and delete them from monitoring page', async
         {
           testIdentifier: 'productWithoutImage',
           productType: 'without image',
-          productToCreate: productWithoutCombinations,
+          productToCreate: productWithoutImage,
           gridName: 'product_without_image',
-          enabled: true,
         },
     },
     {
@@ -84,9 +72,8 @@ describe('Create different products and delete them from monitoring page', async
         {
           testIdentifier: 'disabledProduct',
           productType: 'disabled',
-          productToCreate: productWithoutCombinations,
+          productToCreate: disabledProduct,
           gridName: 'disabled_product',
-          enabled: false,
         },
     },
     {
@@ -96,7 +83,6 @@ describe('Create different products and delete them from monitoring page', async
           productType: 'without combinations and without available quantities',
           productToCreate: productWithoutCombinationsWithoutQuantity,
           gridName: 'no_qty_product_without_combination',
-          enabled: true,
         },
     },
     {
@@ -105,7 +91,7 @@ describe('Create different products and delete them from monitoring page', async
         productType: 'with combinations and without available quantities',
         productToCreate: productWithCombinationsWithoutQuantity,
         gridName: 'no_qty_product_with_combination',
-        enabled: true,
+        hasCombinations: true,
       },
     },
     {
@@ -114,7 +100,6 @@ describe('Create different products and delete them from monitoring page', async
         productType: 'without price',
         productToCreate: productWithoutPrice,
         gridName: 'product_without_price',
-        enabled: true,
       },
     },
     {
@@ -123,7 +108,6 @@ describe('Create different products and delete them from monitoring page', async
         productType: 'without description',
         productToCreate: productWithoutDescription,
         gridName: 'product_without_description',
-        enabled: true,
       },
     },
   ];
@@ -156,11 +140,14 @@ describe('Create different products and delete them from monitoring page', async
       it('should create product and check the products number', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}_create`, baseContext);
         await this.pageObjects.productsPage.goToAddProductPage();
-        const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(
+        let createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(
           test.args.productToCreate,
-          test.args.enabled,
         );
-
+        if (test.args.hasCombinations) {
+          createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
+            test.args.productToCreate,
+          );
+        }
         await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
       });
     });

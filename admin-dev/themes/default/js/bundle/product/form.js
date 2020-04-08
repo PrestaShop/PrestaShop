@@ -63,26 +63,18 @@ $(document).ready(function() {
     $(this).val(parsedValue);
   });
 
-  /** Attach date picker */
-  $('.datepicker').datetimepicker({
-    locale: full_language_code,
-    format: 'YYYY-MM-DD'
-  });
-
   /** tooltips should be hidden when we move to another tab */
   $('#form-nav').on('click','.nav-item', function clearTooltipsAndPopovers() {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
   });
-
-  $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
 });
 
 /**
  * Reset active tinyMce editor (triggered when switch language, or switching tabs)
  */
 function resetEditor() {
-  const languageEditorsSelector = '.summary-description-container .panel.active div.translation-field.active textarea.autoload_rte';
+  const languageEditorsSelector = '.summary-description-container div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each(function(index, textarea) {
     const editor = tinyMCE.get(textarea.id);
     if (editor) {

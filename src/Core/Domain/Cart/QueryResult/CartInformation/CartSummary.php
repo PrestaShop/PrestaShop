@@ -49,6 +49,11 @@ class CartSummary
     /**
      * @var string
      */
+    private $totalShippingWithoutTaxes;
+
+    /**
+     * @var string
+     */
     private $totalTaxes;
 
     /**
@@ -75,6 +80,7 @@ class CartSummary
      * @param string $totalProductsPrice
      * @param string $totalDiscount
      * @param string $totalShippingPrice
+     * @param string $totalShippingWithoutTaxes
      * @param string $totalTaxes
      * @param string $totalPriceWithTaxes
      * @param string $totalPriceWithoutTaxes
@@ -85,6 +91,7 @@ class CartSummary
         string $totalProductsPrice,
         string $totalDiscount,
         string $totalShippingPrice,
+        string $totalShippingWithoutTaxes,
         string $totalTaxes,
         string $totalPriceWithTaxes,
         string $totalPriceWithoutTaxes,
@@ -94,6 +101,7 @@ class CartSummary
         $this->totalProductsPrice = $totalProductsPrice;
         $this->totalDiscount = $totalDiscount;
         $this->totalShippingPrice = $totalShippingPrice;
+        $this->totalShippingWithoutTaxes = $totalShippingWithoutTaxes;
         $this->totalTaxes = $totalTaxes;
         $this->totalPriceWithTaxes = $totalPriceWithTaxes;
         $this->totalPriceWithoutTaxes = $totalPriceWithoutTaxes;
@@ -123,6 +131,14 @@ class CartSummary
     public function getTotalShippingPrice(): string
     {
         return $this->totalShippingPrice;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalShippingWithoutTaxes(): string
+    {
+        return $this->totalShippingWithoutTaxes;
     }
 
     /**

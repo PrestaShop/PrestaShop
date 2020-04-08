@@ -4,6 +4,8 @@
 *.log
 npm-debug.log.*
 .sass-cache/
+*.swp
+.cache/
 
 # Cache
 /cache/*

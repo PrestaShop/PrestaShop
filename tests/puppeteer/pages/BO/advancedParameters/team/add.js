@@ -40,10 +40,8 @@ module.exports = class AddPageEmployee extends BOBasePage {
     await this.selectByVisibleText(this.languageSelect, employeeData.language);
     await this.selectDefaultPage(employeeData.defaultPage);
     // replace %ID by 1 in the selector if active = YES / 0 if active = NO
-    if (employeeData.active) await this.page.click(this.activeSwitchlabel.replace('%ID', '1'));
-    else await this.page.click(this.activeSwitchlabel.replace('%ID', '0'));
+    await this.page.click(this.activeSwitchlabel.replace('%ID', employeeData.active ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -55,7 +53,7 @@ module.exports = class AddPageEmployee extends BOBasePage {
   async selectDefaultPage(defaultPage) {
     await Promise.all([
       this.page.click(this.defaultPageSpan),
-      this.page.waitForSelector(`${this.defaultPageSpan}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.defaultPageSpan}[aria-expanded='true']`),
     ]);
     await this.page.keyboard.type(defaultPage);
     await this.page.keyboard.press('Enter');
