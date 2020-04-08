@@ -34,7 +34,7 @@ Feature: Check cart to order data copy
     Then current cart order total discount should be 9.910000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 10.3 tax included and 9.91 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 10.300000 tax included and 9.905000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 1 product in cart, 2 cart rules
@@ -71,8 +71,8 @@ Feature: Check cart to order data copy
     Then current cart order total discount should be 14.860000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 10.3 tax included and 9.91 tax excluded
-    Then current cart order should have a discount in position 2 with an amount of 5.15 tax included and 4.95 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 10.300000 tax included and 9.905000 tax excluded
+    Then current cart order should have a discount in position 2 with an amount of 5.150000 tax included and 4.952500 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 3 product in cart, 1 cart rule
@@ -112,7 +112,7 @@ Feature: Check cart to order data copy
     Then current cart order total discount should be 57.290000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 59.58 tax included and 57.29 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 59.575000 tax included and 57.290000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 3 product in cart, 3 cart rules
@@ -155,8 +155,8 @@ Feature: Check cart to order data copy
     Then current cart order total discount should be 85.940000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 59.58 tax included and 57.29 tax excluded
-    Then current cart order should have a discount in position 2 with an amount of 29.79 tax included and 28.65 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 59.575000 tax included and 57.290000 tax excluded
+    Then current cart order should have a discount in position 2 with an amount of 29.787500 tax included and 28.645000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 1 product in cart, 1 cart rule with too-much amount
@@ -190,9 +190,9 @@ Feature: Check cart to order data copy
     Then current cart order total discount should be 19.810000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 20.6 tax included and 19.81 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 20.600000 tax included and 19.810000 tax excluded
     Then customer "customer1" should have 1 cart rules that apply to him
-    Then cart rule for customer "customer1" in position 1 should apply a discount of 480.19
+    Then cart rule for customer "customer1" in position 1 should apply a discount of 480.190000
 
   Scenario: 1 product in cart, 1 cart rule offering free gift
     Given I have an empty default cart
@@ -228,7 +228,7 @@ Feature: Check cart to order data copy
     Then current cart order total discount should be 35.570000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 36.99 tax included and 35.57 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 36.989680 tax included and 35.567000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 2 product in cart, 1 cart rule offering free gift, offering same product as already existing in cart
@@ -266,5 +266,5 @@ Feature: Check cart to order data copy
     Then current cart order total discount should be 35.570000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 36.99 tax included and 35.57 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 36.989680 tax included and 35.567000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
