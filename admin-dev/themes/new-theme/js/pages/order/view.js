@@ -125,15 +125,8 @@ $(() => {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
     const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
-    const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
-
-    $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', event => {
-      const isChecked = $(event.currentTarget).is(':checked');
-
-      $invoiceSelect.attr('disabled', isChecked);
-    });
 
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', event => {
       const selectedCartRuleType = $(event.currentTarget).val();
