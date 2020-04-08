@@ -98,7 +98,7 @@ export default class ProductManager {
     // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
-      this._updateStockOnProductAdd();
+      this.updateStockOnProductAdd();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
     });
 
@@ -115,7 +115,7 @@ export default class ProductManager {
    */
   onRemoveProductFromCart() {
     EventEmitter.on(eventMap.productRemovedFromCart, (data) => {
-      this._updateStockOnProductRemove(data.product);
+      this.updateStockOnProductRemove(data.product);
       EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
     });
   }
@@ -141,7 +141,7 @@ export default class ProductManager {
     // on success
     EventEmitter.on(eventMap.productQtyChanged, (data) => {
       this.productRenderer.cleanCartBlockAlerts();
-      this._updateStockOnQtyChange(data.product);
+      this.updateStockOnQtyChange(data.product);
       EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
     });
 
@@ -337,7 +337,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _updateStockOnProductAdd() {
+  updateStockOnProductAdd() {
     const wantedQty = Number($(createOrderMap.quantityInput).val());
 
     for (const key in this.products) {
@@ -367,7 +367,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _updateStockOnProductRemove(product){
+  updateStockOnProductRemove(product){
     const removedQty = Number(product.qtyToRemove);
     const productId = product.productId;
     const combinationId = Number(product.attributeId);
@@ -380,7 +380,7 @@ export default class ProductManager {
           // Update the stock also for combination */
           this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) + removedQty;
         }
-        this._renderStockCounter(productId, combinationId, key);
+        this.renderStockCounter(productId, combinationId, key);
         break;
       }
     }
@@ -391,7 +391,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _updateStockOnQtyChange(product){
+  updateStockOnQtyChange(product){
     const previousQty = Number(product.prevQty);
     const newQty = Number(product.newQty);
     const productId = product.productId;
@@ -405,7 +405,7 @@ export default class ProductManager {
           // Update the stock also for combination */
           this.products[key].combinations[combinationId].stock = Number(this.products[key].combinations[combinationId].stock) - newQty + previousQty;
         }
-        this._renderStockCounter(productId, combinationId, key);
+        this.renderStockCounter(productId, combinationId, key);
         break;
       }
     }
@@ -416,7 +416,7 @@ export default class ProductManager {
    *
    * @private
    */
-  _renderStockCounter(productId, combinationId, key){
+  renderStockCounter(productId, combinationId, key){
     // Update the stock counter if "the updated product" is the selected product
     if (Number(this.selectedProduct.productId) === productId)
     {
