@@ -233,9 +233,9 @@ class ModuleDataProvider
                     'Admin.Modules.Notification'
                 ),
                     [
-						'object_type' => 'Module',
-						'object_id' => LegacyModule::getModuleIdByName($name),
-					]
+                        'object_type' => 'Module',
+                        'object_id' => LegacyModule::getModuleIdByName($name),
+                    ]
             );
 
             return false;
@@ -260,9 +260,9 @@ class ModuleDataProvider
                         'Admin.Modules.Notification'
                     ),
                     [
-						'object_type' => 'Module',
-						'object_id' => LegacyModule::getModuleIdByName($name),
-					]
+                        'object_type' => 'Module',
+                        'object_id' => LegacyModule::getModuleIdByName($name),
+                    ]
                 );
 
                 return false;
