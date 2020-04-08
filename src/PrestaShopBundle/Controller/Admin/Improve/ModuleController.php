@@ -376,7 +376,7 @@ class ModuleController extends ModuleAbstractController
         $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         // Get accessed module object
-        $moduleAccessed = $moduleRepository->getModule($module_name);
+        $moduleAccessed = $moduleRepository->getModule($module);
         // Get accessed module DB Id
         $moduleAccessedId = (int) $moduleAccessed->database->get('id');
         $response = [$module => []];
