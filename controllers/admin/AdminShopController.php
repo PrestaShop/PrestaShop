@@ -515,8 +515,8 @@ class AdminShopControllerCore extends AdminController
         );*/
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                        ->buildRepository()
-                        ->getList();
+            ->buildRepository()
+            ->getList();
 
         $this->fields_form['input'][] = [
             'type' => 'theme',
@@ -603,8 +603,8 @@ class AdminShopControllerCore extends AdminController
 
         if (!$obj->theme_name) {
             $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                            ->buildRepository()
-                            ->getList();
+                ->buildRepository()
+                ->getList();
             $theme = array_pop($themes);
             $theme_name = $theme->getName();
         } else {

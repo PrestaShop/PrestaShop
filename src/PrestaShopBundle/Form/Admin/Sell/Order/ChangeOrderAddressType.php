@@ -62,10 +62,10 @@ class ChangeOrderAddressType extends AbstractType
                 'choices' => $this->customerAddressProvider->getChoices($options),
             ])
             ->add('address_type', HiddenType::class, [
-                    'constraints' => [
-                        new Choice($this->getAvailableAddressTypes()),
-                    ],
-                ]
+                'constraints' => [
+                    new Choice($this->getAvailableAddressTypes()),
+                ],
+            ]
             );
     }
 

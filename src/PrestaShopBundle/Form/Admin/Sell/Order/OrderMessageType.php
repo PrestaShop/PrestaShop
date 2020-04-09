@@ -87,14 +87,14 @@ class OrderMessageType extends AbstractType
                         ),
                     ]),
                     new CleanHtml([
-                            'message' => $this->trans(
-                                'The %s field is not valid',
-                                [
-                                    sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
-                                ],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]
+                        'message' => $this->trans(
+                            'The %s field is not valid',
+                            [
+                                sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]
                     ),
                     new Length([
                         'max' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,

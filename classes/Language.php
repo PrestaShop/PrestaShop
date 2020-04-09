@@ -170,8 +170,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         $themes = (new ThemeManagerBuilder(Context::getContext(), Db::getInstance()))
-                        ->buildRepository()
-                        ->getList();
+            ->buildRepository()
+            ->getList();
         foreach ($themes as $theme) {
             /** @var Theme $theme */
             $theme_dir = $theme->getDirectory();
