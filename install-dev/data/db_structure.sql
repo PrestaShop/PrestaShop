@@ -2267,6 +2267,7 @@ CREATE TABLE `PREFIX_log` (
   `id_shop` int(10) unsigned DEFAULT NULL,
   `id_shop_group` int(10) unsigned DEFAULT NULL,
   `id_lang` int(10) unsigned DEFAULT NULL,
+  `in_all_shop` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `id_employee` int(10) unsigned DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,

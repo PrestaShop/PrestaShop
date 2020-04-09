@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -60,7 +62,6 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * LogGridDefinitionFactory constructor.
      *
-     * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetActionUrl
      * @param string $redirectionUrl
      */
@@ -161,6 +162,15 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ])
             )
             ->add(
+                (new BooleanColumn('in_all_shop'))
+                ->setName($this->trans('All shops', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'in_all_shop',
+                    'true_name' => $this->trans('Yes', [], 'Admin.Global'),
+                    'false_name' => $this->trans('No', [], 'Admin.Global'),
+                ])
+            )
+            ->add(
                 (new DataColumn('error_code'))
                 ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
                 ->setOptions([
@@ -249,6 +259,10 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'required' => false,
                 ])
                 ->setAssociatedColumn('id_lang')
+            )
+            ->add(
+                (new Filter('in_all_shop', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('in_all_shop')
             )
             ->add(
                 (new Filter('error_code', TextType::class))
