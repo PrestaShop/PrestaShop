@@ -27,283 +27,152 @@
 namespace PrestaShopBundle\Translation\View;
 
 use Doctrine\Common\Util\Inflector;
-use PrestaShopBundle\Translation\Provider\ProviderInterface;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TreeBuilder
 {
-    private $locale;
-    private $theme;
-
-    public function __construct($locale, $theme)
-    {
-        $this->locale = $locale;
-        $this->theme = $theme;
-    }
 
     /**
-     * @param ProviderInterface $provider
-     * @param null $search
+     * Builds a domain metadata tree.
+     *
+     * Returns a structure like this:
+     *
+     * ```
+     * [
+     *     '__metadata' => [
+     *         'count' => 11,
+     *         'missing_translations' => 5
+     *     ],
+     *     'Admin' => [
+     *         '__metadata' => [
+     *             'count' => 11,
+     *             'missing_translations' => 5
+     *         ],
+     *         'Foo' => [
+     *             '__metadata' => [
+     *                 'count' => 4,
+     *                 'missing_translations' => 3
+     *             ],
+     *             'Bar' => [
+     *                 '__metadata' => [
+     *                     'count' => 2,
+     *                     'missing_translations' => 1
+     *                 ],
+     *             ],
+     *             'Baz' => [
+     *                 '__metadata' => [
+     *                     'count' => 2,
+     *                     'missing_translations' => 2
+     *                 ],
+     *             ],
+     *         ],
+     *         'Plop' => [
+     *             '__metadata' => [
+     *                 'count' => 7,
+     *                 'missing_translations' => 2
+     *             ],
+     *             'Foo' => [
+     *                 '__metadata' => [
+     *                     'count' => 2,
+     *                     'missing_translations' => 0
+     *                 ],
+     *             ],
+     *             'Bar' => [
+     *                 '__metadata' => [
+     *                     'count' => 3,
+     *                     'missing_translations' => 1
+     *                 ],
+     *             ],
+     *         ],
+     *     ],
+     * ];
+     * ```
+     *
+     * @param array $catalogue
      *
      * @return array
      */
-    public function makeTranslationArray(ProviderInterface $provider, $search = null)
+    public function buildDomainMetadataTree($catalogue)
     {
-        $provider->setLocale($this->locale);
-
-        $defaultCatalogue = $provider->getDefaultCatalogue();
-        $xliffCatalogue = $provider->getXliffCatalogue();
-        $databaseCatalogue = $provider->getDatabaseCatalogue($this->theme);
-
-        $translations = [];
-
-        foreach ($defaultCatalogue->all() as $domain => $messages) {
-            $missingTranslations = 0;
-
-            foreach ($messages as $translationKey => $translationValue) {
-                $data = [
-                    'xlf' => $xliffCatalogue->defines($translationKey, $domain)
-                        ? $xliffCatalogue->get($translationKey, $domain)
-                        : null,
-                    'db' => $databaseCatalogue->defines($translationKey, $domain)
-                        ? $databaseCatalogue->get($translationKey, $domain)
-                        : null,
-                ];
-
-                // if search is empty or is in catalog default|xlf|database
-                if (empty($search) || $this->dataContainsSearchWord($search, array_merge(['default' => $translationKey], $data))) {
-                    $translations[$domain][$translationKey] = $data;
-
-                    if (empty($data['xlf']) && empty($data['db'])) {
-                        ++$missingTranslations;
-                    }
-                }
-            }
-
-            $translations[$domain]['__metadata'] = ['missing_translations' => $missingTranslations];
-        }
-
-        ksort($translations);
-
-        return $translations;
-    }
-
-    /**
-     * Check if data contains search word.
-     *
-     * @param $search
-     * @param $data
-     *
-     * @return bool
-     */
-    private function dataContainsSearchWord($search, $data)
-    {
-        if (is_string($search)) {
-            $search = strtolower($search);
-
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xlf']), $search) ||
-                false !== strpos(strtolower($data['db']), $search);
-        }
-
-        if (is_array($search)) {
-            $contains = true;
-            foreach ($search as $s) {
-                $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xlf']), $s) ||
-                    false !== strpos(strtolower($data['db']), $s);
-            }
-
-            return $contains;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return array
-     */
-    public function makeTranslationsTree($catalogue)
-    {
-        $translationsTree = [];
-
-        foreach ($catalogue as $domain => $messages) {
-            $tableisedDomain = Inflector::tableize($domain);
-            // the third component of the domain may have underscores, so we need to limit pieces to 3
-            $parts = explode('_', $tableisedDomain, 3);
-            $subtree = &$translationsTree;
-
-            foreach ($parts as $part) {
-                $subdomain = ucfirst($part);
-
-                if (!array_key_exists($subdomain, $subtree)) {
-                    $subtree[$subdomain] = [];
-                }
-
-                $subtree = &$subtree[$subdomain];
-            }
-
-            $subtree['__messages'] = [$domain => $messages];
-            if (isset($messages['__metadata'])) {
-                $subtree['__fixed_length_id'] = '_' . sha1($domain);
-                list($subtree['__domain']) = explode('.', $domain);
-                $subtree['__metadata'] = $messages['__metadata'];
-                $subtree['__metadata']['domain'] = $subtree['__domain'];
-                unset($messages['__metadata']);
-            }
-        }
-
-        return $translationsTree;
-    }
-
-    /**
-     * Clean tree to use it with the new API system.
-     *
-     * @param $tree
-     * @param Router $router
-     * @param null $theme
-     * @param null $search
-     * @param null $module
-     *
-     * @return array
-     */
-    public function cleanTreeToApi($tree, Router $router, $theme = null, $search = null, $module = null)
-    {
-        $rootTree = [
-            'tree' => [
-                'total_translations' => 0,
-                'total_missing_translations' => 0,
-                'children' => [],
-            ],
+        // template for initializing metadata
+        $emptyMeta = [
+            'count' => 0,
+            'missing_translations' => 0,
         ];
 
-        $cleanTree = &$rootTree['tree']['children'];
+        $tree = [
+            '__metadata' => $emptyMeta,
+        ];
 
-        $index1 = 0;
-        foreach ($tree as $k1 => $t1) {
-            $index2 = 0;
-            if (is_array($t1) && '__' !== substr($k1, 0, 2)) {
-                $this->addTreeInfo($router, $cleanTree, $index1, $k1, $k1, $this->theme, $search, $module);
+        // initialize tree structure
+        foreach ($catalogue as $domain => $content) {
+            $parts = $this->splitDomain($domain);
 
-                if (array_key_exists('__messages', $t1)) {
-                    $nbMessage = count(current($t1['__messages']));
-                    if (array_key_exists('__metadata', $t1)) {
-                        --$nbMessage;
-                    }
+            // start at the root
+            $subtree =& $tree;
+            $currentSubdomainName = '';
 
-                    $cleanTree[$index1]['total_translations'] += $nbMessage;
-                    $rootTree['tree']['total_translations'] += $nbMessage;
+            foreach ($parts as $partNumber => $part) {
+                $subdomainPartName = ucfirst($part);
+                $currentSubdomainName .= $subdomainPartName;
 
-                    if (array_key_exists('__metadata', $t1) && array_key_exists('missing_translations', $t1['__metadata'])) {
-                        $cleanTree[$index1]['total_missing_translations'] += (int) $t1['__metadata']['missing_translations'];
-                        $rootTree['tree']['total_missing_translations'] += (int) $t1['__metadata']['missing_translations'];
-                    }
+                // create domain part branch if it doesn't exist
+                if (!array_key_exists($subdomainPartName, $subtree)) {
+                    // only initialize tree leaves subtree with catalogue metadata
+                    // branches are initialized with empty metadata (which will be updated later)
+                    $isLastDomainPart = $partNumber === (count($parts) - 1);
+                    $subtree[$subdomainPartName]['__metadata'] = ($isLastDomainPart && isset($content['__metadata']))
+                        ? $content['__metadata']
+                        : $emptyMeta;
                 }
 
-                foreach ($t1 as $k2 => $t2) {
-                    $index3 = 0;
-                    if (is_array($t2) && '__' !== substr($k2, 0, 2)) {
-                        $this->addTreeInfo($router, $cleanTree[$index1]['children'], $index2, $k2, $k1 . $k2, $this->theme, $search, $module);
-
-                        if (array_key_exists('__messages', $t2)) {
-                            $nbMessage = count(current($t2['__messages']));
-                            if (array_key_exists('__metadata', $t2)) {
-                                --$nbMessage;
-                            }
-
-                            $cleanTree[$index1]['children'][$index2]['total_translations'] += $nbMessage;
-                            $cleanTree[$index1]['total_translations'] += $nbMessage;
-                            $rootTree['tree']['total_translations'] += $nbMessage;
-
-                            if (array_key_exists('__metadata', $t2) && array_key_exists('missing_translations', $t2['__metadata'])) {
-                                $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int) $t2['__metadata']['missing_translations'];
-                                $cleanTree[$index1]['total_missing_translations'] += (int) $t2['__metadata']['missing_translations'];
-                                $rootTree['tree']['total_missing_translations'] += (int) $t2['__metadata']['missing_translations'];
-                            }
-                        }
-
-                        foreach ($t2 as $k3 => $t3) {
-                            if (is_array($t3) && '__' !== substr($k3, 0, 2)) {
-                                $this->addTreeInfo($router, $cleanTree[$index1]['children'][$index2]['children'], $index3, $k3, $k1 . $k2 . $k3, $this->theme, $search, $module);
-
-                                if (array_key_exists('__messages', $t3)) {
-                                    $nbMessage = count(current($t3['__messages']));
-                                    if (array_key_exists('__metadata', $t3)) {
-                                        --$nbMessage;
-                                    }
-
-                                    $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_translations'] += $nbMessage;
-                                    $cleanTree[$index1]['children'][$index2]['total_translations'] += $nbMessage;
-                                    $cleanTree[$index1]['total_translations'] += $nbMessage;
-                                    $rootTree['tree']['total_translations'] += $nbMessage;
-                                }
-
-                                if (array_key_exists('__metadata', $t3) && array_key_exists('missing_translations', $t3['__metadata'])) {
-                                    $cleanTree[$index1]['children'][$index2]['children'][$index3]['total_missing_translations'] += (int) $t3['__metadata']['missing_translations'];
-                                    $cleanTree[$index1]['children'][$index2]['total_missing_translations'] += (int) $t3['__metadata']['missing_translations'];
-                                    $cleanTree[$index1]['total_missing_translations'] += (int) $t3['__metadata']['missing_translations'];
-                                    $rootTree['tree']['total_missing_translations'] += (int) $t3['__metadata']['missing_translations'];
-                                }
-
-                                if (empty($cleanTree[$index1]['children'][$index2]['children'][$index3]['children'])) {
-                                    unset($cleanTree[$index1]['children'][$index2]['children'][$index3]['children']);
-                                }
-                                ++$index3;
-                            }
-                        }
-
-                        if (empty($cleanTree[$index1]['children'][$index2]['children'])) {
-                            unset($cleanTree[$index1]['children'][$index2]['children']);
-                        }
-                        ++$index2;
-                    }
-                }
-
-                if (empty($cleanTree[$index1]['children'])) {
-                    unset($cleanTree[$index1]['children']);
-                }
-                ++$index1;
+                // move pointer to said branch
+                $subtree =& $subtree[$subdomainPartName];
             }
         }
 
-        return $rootTree;
+        // update tree by aggregating branch metadata
+        // eg. branch.meta = (child1.meta = (subchild1.meta + subchild2.meta + ... ) + child2.meta + ...)
+        $this->updateCounters($tree);
+
+        return $tree;
     }
 
     /**
-     * @param Router $router
-     * @param $tree
-     * @param $index
-     * @param $name
-     * @param $fullName
-     * @param bool $theme
-     * @param null $search
-     * @param null $module
+     * Updates counters of this subtree by adding the sum of children's counters
      *
-     * @return mixed
+     * @param array $subtree
+     *
+     * @return array Array of [sum of count, sum of missing_translations]
      */
-    private function addTreeInfo(Router $router, &$tree, $index, $name, $fullName, $theme = false, $search = null, $module = false)
+    private function updateCounters(array &$subtree)
     {
-        if (!isset($tree[$index])) {
-            $routeParams = [
-                'locale' => $this->locale,
-                'domain' => $fullName,
-                'theme' => $theme,
-                'module' => $module,
-            ];
-
-            if (!empty($search)) {
-                $routeParams['search'] = $search;
+        foreach ($subtree as $key => $values) {
+            if ($key === '__metadata') {
+                continue;
             }
 
-            $tree[$index]['name'] = $name;
-            $tree[$index]['full_name'] = $fullName;
-            $tree[$index]['domain_catalog_link'] = $router->generate('api_translation_domain_catalog', $routeParams);
-            $tree[$index]['total_translations'] = 0;
-            $tree[$index]['total_missing_translations'] = 0;
-            $tree[$index]['children'] = [];
+            // update child and get its counters
+            list($count, $missing) = $this->updateCounters($subtree[$key]);
+
+            // update this tree's counters by adding the child's
+            $subtree['__metadata']['count'] += $count;
+            $subtree['__metadata']['missing_translations'] += $missing;
         }
 
-        return $tree;
+        return [
+            $subtree['__metadata']['count'],
+            $subtree['__metadata']['missing_translations'],
+        ];
+    }
+
+    /**
+     * @param string $domain
+     *
+     * @return string[]
+     */
+    private function splitDomain($domain) {
+        $tableizedDomain = Inflector::tableize($domain);
+        // the third component of the domain may have underscores, so we need to limit pieces to 3
+        return explode('_', $tableizedDomain, 3);
     }
 }

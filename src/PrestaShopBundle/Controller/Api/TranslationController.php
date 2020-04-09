@@ -32,6 +32,7 @@ use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
+use PrestaShopBundle\Translation\View\TranslationApiTreeBuilder;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -340,9 +341,9 @@ class TranslationController extends ApiController
     {
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $theme, $search);
 
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
+        $locale = $this->translationService->langToLocale($lang);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
+        return $this->getCleanTree($locale, $catalogue, $theme, $search);
     }
 
     /**
@@ -350,36 +351,38 @@ class TranslationController extends ApiController
      * @param string $selectedModuleName Selected module name
      * @param string|null $search
      *
-     * @return array
+     * @return array[]
      */
     private function getModulesTree($lang, $selectedModuleName, $search = null)
     {
         $theme = null;
         $locale = $this->translationService->langToLocale($lang);
 
+        $factory = $this->container->get('prestashop.translation.translations_factory');
         $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
+
+        // this will magically update the module provider inside the factory (yes, this is horrible)
         $moduleProvider->setModuleName($selectedModuleName);
 
-        $treeBuilder = new TreeBuilder($locale, $theme);
-        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
+        $catalogue = $factory->createTranslationsArray($moduleProvider->getIdentifier(), $locale, $theme, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search, $selectedModuleName);
+        return $this->getCleanTree($locale, $catalogue, $theme, $search, $selectedModuleName);
     }
 
     /**
      * @param string $lang Two-letter iso code
      * @param null $search
      *
-     * @return array
+     * @return array[]
      */
     private function getMailsSubjectTree($lang, $search = null)
     {
         $theme = null;
+        $locale = $this->translationService->langToLocale($lang);
 
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails', $theme, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
+        return $this->getCleanTree($locale, $catalogue, $theme, $search);
     }
 
     /**
@@ -391,29 +394,27 @@ class TranslationController extends ApiController
     private function getMailsBodyTree($lang, $search = null)
     {
         $theme = null;
+        $locale = $this->translationService->langToLocale($lang);
 
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails_body', $theme, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
+        return $this->getCleanTree($locale, $catalogue, $theme, $search);
     }
 
     /**
      * Make final tree.
      *
-     * @param TreeBuilder $treeBuilder
-     * @param $catalogue
+     * @param string $locale
+     * @param array $catalogue
      * @param string|null $theme
      * @param string|null $search
      * @param string|null $module
      *
      * @return array
      */
-    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $theme, $search = null, $module = null)
+    private function getCleanTree($locale, array $catalogue, $theme, $search = null, $module = null)
     {
-        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme, $search, $module);
-
-        return $translationsTree;
+        $apiBuilder = new TranslationApiTreeBuilder($this->container->get('router'), new TreeBuilder());
+        return $apiBuilder->buildDomainTreeForApi($catalogue, $locale, $theme, $search, $module);
     }
 }
