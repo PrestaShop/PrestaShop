@@ -186,6 +186,7 @@ export default class ProductManager {
       return;
     }
 
+    this.productRenderer.renderSearching();
     if (this.activeSearchRequest !== null) {
       this.activeSearchRequest.abort();
     }
