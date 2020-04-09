@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,7 +48,7 @@ abstract class TreeToolbarButtonCore
     public function setAttribute($name, $value)
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         $this->_attributes[$name] = $value;
@@ -75,7 +75,7 @@ abstract class TreeToolbarButtonCore
     public function getAttributes()
     {
         if (!isset($this->_attributes)) {
-            $this->_attributes = array();
+            $this->_attributes = [];
         }
 
         return $this->_attributes;
@@ -212,7 +212,7 @@ abstract class TreeToolbarButtonCore
     {
         $last = $directory[strlen($directory) - 1];
 
-        if (in_array($last, array('/', '\\'))) {
+        if (in_array($last, ['/', '\\'])) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 
             return $directory;

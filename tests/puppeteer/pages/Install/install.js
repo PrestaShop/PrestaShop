@@ -43,6 +43,7 @@ module.exports = class Install extends CommonPage {
     // Selectors for step 5
     this.fifthStepPageTitle = '#dbPart h2';
     this.dbLoginInput = '#dbLogin';
+    this.dbNameInput = '#dbName';
     this.dbPasswordInput = '#dbPassword';
     this.testDbConnectionButton = '#btTestDB';
     this.createDbButton = '#btCreateDB';
@@ -70,7 +71,7 @@ module.exports = class Install extends CommonPage {
    * @return {Promise<*>}
    */
   async checkStepTitle(selector, pageTitle) {
-    await this.page.waitForSelector(selector, {visible: true});
+    await this.waitForVisibleSelector(selector);
     const title = await this.getTextContent(selector);
     if (Array.isArray(pageTitle)) {
       return pageTitle.some(arrVal => title.includes(arrVal));
@@ -89,7 +90,7 @@ module.exports = class Install extends CommonPage {
    * Go to next step
    */
   async nextStep() {
-    await this.page.waitForSelector(this.nextStepButton, {visible: true});
+    await this.waitForVisibleSelector(this.nextStepButton);
     await this.page.click(this.nextStepButton, {waitUntil: 'domcontentloaded'});
   }
 
@@ -120,6 +121,7 @@ module.exports = class Install extends CommonPage {
    * Fill Database Form in step 5
    */
   async fillDatabaseForm() {
+    await this.setValue(this.dbNameInput, global.INSTALL.DB_NAME);
     await this.setValue(this.dbLoginInput, global.INSTALL.DB_USER);
     await this.setValue(this.dbPasswordInput, global.INSTALL.DB_PASSWD);
   }
@@ -143,17 +145,17 @@ module.exports = class Install extends CommonPage {
    */
   async isInstallationSuccessful() {
     await Promise.all([
-      this.page.waitForSelector(this.installationProgressBar, {visible: true}),
-      this.page.waitForSelector(this.generateSettingsFileStep, {visible: true}),
-      this.page.waitForSelector(this.installDatabaseStep, {visible: true, timeout: 60000}),
-      this.page.waitForSelector(this.installDefaultDataStep, {visible: true, timeout: 120000}),
-      this.page.waitForSelector(this.populateDatabaseStep, {visible: true, timeout: 180000}),
-      this.page.waitForSelector(this.configureShopStep, {visible: true, timeout: 240000}),
-      this.page.waitForSelector(this.installModulesStep, {visible: true, timeout: 360000}),
-      this.page.waitForSelector(this.installModulesAddons, {visible: true, timeout: 360000}),
-      this.page.waitForSelector(this.installThemeStep, {visible: true, timeout: 360000}),
-      this.page.waitForSelector(this.installFixturesStep, {visible: true, timeout: 360000}),
-      this.page.waitForSelector(this.finalStepPageTitle, {visible: true, timeout: 360000}),
+      this.waitForVisibleSelector(this.installationProgressBar, 30000),
+      this.waitForVisibleSelector(this.generateSettingsFileStep, 30000),
+      this.waitForVisibleSelector(this.installDatabaseStep, 60000),
+      this.waitForVisibleSelector(this.installDefaultDataStep, 120000),
+      this.waitForVisibleSelector(this.populateDatabaseStep, 180000),
+      this.waitForVisibleSelector(this.configureShopStep, 240000),
+      this.waitForVisibleSelector(this.installModulesStep, 360000),
+      this.waitForVisibleSelector(this.installModulesAddons, 360000),
+      this.waitForVisibleSelector(this.installThemeStep, 360000),
+      this.waitForVisibleSelector(this.installFixturesStep, 360000),
+      this.waitForVisibleSelector(this.finalStepPageTitle, 360000),
     ]);
     return this.checkStepTitle(this.finalStepPageTitle, this.finalStepEnTitle);
   }
@@ -162,7 +164,7 @@ module.exports = class Install extends CommonPage {
    * Go to FO after Installation and check that Prestashop logo exist
    */
   async goToFOAfterInstall() {
-    await this.page.waitForSelector(this.discoverFoButton, {visible: true});
+    await this.waitForVisibleSelector(this.discoverFoButton);
     return this.openLinkWithTargetBlank(this.page, this.discoverFoButton, false);
   }
 };

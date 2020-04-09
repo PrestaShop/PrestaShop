@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -81,9 +81,7 @@ final class ToggleColumn extends AbstractColumn
                 return $options['route_param_id'];
             }
 
-            throw new MissingOptionsException(
-                sprintf('Option "%s" is missing for "%s" column options.', 'route_param_name', self::class)
-            );
+            throw new MissingOptionsException(sprintf('Option "%s" is missing for "%s" column options.', 'route_param_name', self::class));
         });
     }
 }

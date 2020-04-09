@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,8 +36,8 @@ class JavascriptManagerCore extends AbstractAssetManager
         $default = [];
         foreach ($this->valid_position as $position) {
             $default[$position] = [
-                'external' => array(),
-                'inline' => array(),
+                'external' => [],
+                'inline' => [],
             ];
         }
 
@@ -87,7 +87,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             $type = ($inline) ? 'inline' : 'external';
         }
 
-        $this->list[$position][$type][$id] = array(
+        $this->list[$position][$type][$id] = [
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
@@ -95,7 +95,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             'priority' => $priority,
             'attribute' => $attribute,
             'server' => $server,
-        );
+        ];
     }
 
     public function getList()

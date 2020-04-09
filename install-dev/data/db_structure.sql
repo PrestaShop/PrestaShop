@@ -610,6 +610,7 @@ CREATE TABLE `PREFIX_currency_lang` (
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(255) NOT NULL,
   `symbol` varchar(255) NOT NULL,
+  `pattern` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_currency`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
@@ -1374,6 +1375,8 @@ CREATE TABLE `PREFIX_order_detail` (
   `purchase_supplier_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `original_product_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   `original_wholesale_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
+  `total_refunded_tax_incl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   PRIMARY KEY (`id_order_detail`),
   KEY `order_detail_order` (`id_order`),
   KEY `product_id` (
@@ -1663,6 +1666,8 @@ CREATE TABLE `PREFIX_product` (
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_product`),
+  INDEX reference_idx(`reference`),
+  INDEX supplier_reference_idx(`supplier_reference`),
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`, `id_product`),
   KEY `id_category_default` (`id_category_default`),

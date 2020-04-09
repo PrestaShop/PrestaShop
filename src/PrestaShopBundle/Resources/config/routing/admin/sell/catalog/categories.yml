@@ -13,7 +13,7 @@ admin_categories_search:
     path: /search
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Category:searchGrid
         _legacy_controller: AdminCategories
         _legacy_link: AdminCategories:submitFiltercategory
         gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.category

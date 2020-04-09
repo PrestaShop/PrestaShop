@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,9 +55,9 @@ class AddonsStoreController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_module_catalog');
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', array(
+        return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', [
             'pageContent' => $pageContent,
-            'layoutHeaderToolbarBtn' => array(),
+            'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
@@ -66,7 +66,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
-        ));
+        ]);
     }
 
     /**

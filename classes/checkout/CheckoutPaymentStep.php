@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,7 +41,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         $this->conditionsToApproveFinder = $conditionsToApproveFinder;
     }
 
-    public function handleRequest(array $requestParams = array())
+    public function handleRequest(array $requestParams = [])
     {
         $cart = $this->getCheckoutSession()->getCart();
         $allProductsInStock = $cart->isAllProductsInStock();
@@ -53,9 +53,9 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
                 'cart',
                 null,
                 $this->context->language->id,
-                array(
+                [
                     'action' => 'show',
-                ),
+                ],
                 false,
                 null,
                 false
@@ -70,7 +70,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Payment',
-                array(),
+                [],
                 'Shop.Theme.Checkout'
             )
         );
@@ -81,7 +81,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
      *
      * @return string
      */
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         $isFree = 0 == (float) $this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH);
         $paymentOptions = $this->paymentOptionsFinder->present($isFree);
@@ -96,14 +96,14 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         }
         unset($selectedDeliveryOption['product_list']);
 
-        $assignedVars = array(
+        $assignedVars = [
             'is_free' => $isFree,
             'payment_options' => $paymentOptions,
             'conditions_to_approve' => $conditionsToApprove,
             'selected_payment_option' => $this->selected_payment_option,
             'selected_delivery_option' => $selectedDeliveryOption,
             'show_final_summary' => Configuration::get('PS_FINAL_SUMMARY_ENABLED'),
-        );
+        ];
 
         return $this->renderTemplate($this->getTemplate(), $extraParams, $assignedVars);
     }

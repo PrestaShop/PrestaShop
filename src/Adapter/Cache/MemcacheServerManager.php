@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,18 +60,18 @@ class MemcacheServerManager
      */
     public function addServer($serverIp, $serverPort, $serverWeight)
     {
-        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', array(
+        $this->connection->executeUpdate('INSERT INTO ' . $this->tableName . ' (ip, port, weight) VALUES(:serverIp, :serverPort, :serverWeight)', [
             'serverIp' => $serverIp,
             'serverPort' => (int) $serverPort,
             'serverWeight' => (int) $serverWeight,
-        ));
+        ]);
 
-        return array(
+        return [
             'id' => $this->connection->lastInsertId(),
             'server_ip' => $serverIp,
             'server_port' => $serverPort,
             'server_weight' => $serverWeight,
-        );
+        ];
     }
 
     /**
@@ -104,7 +104,7 @@ class MemcacheServerManager
      */
     public function deleteServer($serverId)
     {
-        $deletionSuccess = $this->connection->delete($this->tableName, array('id_memcached_server' => $serverId));
+        $deletionSuccess = $this->connection->delete($this->tableName, ['id_memcached_server' => $serverId]);
 
         return 1 === $deletionSuccess;
     }
@@ -116,6 +116,6 @@ class MemcacheServerManager
      */
     public function getServers()
     {
-        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, array());
+        return $this->connection->fetchAll('SELECT * FROM ' . $this->tableName, []);
     }
 }

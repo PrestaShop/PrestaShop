@@ -113,6 +113,7 @@ GitHub contributors:
 - CINS
 - cippest
 - Claire Meuriot
+- Clotaire 202 ecommerce
 - cmouleyre
 - cocoweb
 - Code Utopia
@@ -325,6 +326,7 @@ GitHub contributors:
 - Joris Hart
 - Jose Cruz
 - joseantgv
+- Ibrahima Sow
 - jtogrul
 - Juan G. Jordán
 - JuanjoSCu
@@ -414,6 +416,7 @@ GitHub contributors:
 - MaX3315
 - Maxence
 - Maxence de Flotte
+- Maxim Krizhanovsky
 - Maxime
 - Maxime - Vaisonet
 - Maxime Aknin
@@ -435,6 +438,7 @@ GitHub contributors:
 - Michael Käfer
 - Michael Salihi
 - Michael Schloh von Bennewitz
+- Michael Voříšek
 - michaesc
 - Michal Špaček
 - Michel Antoine
@@ -516,6 +520,7 @@ GitHub contributors:
 - pilothuy
 - Piotr Kaczor
 - Piotr Moćko
+- PK André
 - Pliciweb - Nicolas
 - Praneeth Nidarshan
 - Presta Module
@@ -534,6 +539,7 @@ GitHub contributors:
 - Pronux
 - proydsl
 - psandmore
+- PululuK
 - pxls
 - quadrateam
 - Quentin Delecroix
@@ -650,6 +656,7 @@ GitHub contributors:
 - Thoma
 - thoma202
 - Thomas
+- Thomas Baccelli
 - Thomas Blanc
 - Thomas Ferney
 - Thomas Leviandier
@@ -680,6 +687,7 @@ GitHub contributors:
 - Tyson Andre
 - unlocomqx
 - Valentin M
+- Valentin Szczupak
 - Valerii Savchenko
 - vAugagneur
 - venditdevs

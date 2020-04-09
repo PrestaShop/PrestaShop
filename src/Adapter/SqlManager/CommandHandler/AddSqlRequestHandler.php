@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,18 +57,12 @@ final class AddSqlRequestHandler implements AddSqlRequestHandlerInterface
             $entity->add();
 
             if (0 >= $entity->id) {
-                throw new CannotAddSqlRequestException(
-                    sprintf('Invalid entity id after creation: %s', $entity->id)
-                );
+                throw new CannotAddSqlRequestException(sprintf('Invalid entity id after creation: %s', $entity->id));
             }
 
             return new SqlRequestId($entity->id);
         } catch (PrestaShopException $e) {
-            throw new SqlRequestException(
-                'Failed to create SqlRequest',
-                0,
-                $e
-            );
+            throw new SqlRequestException('Failed to create SqlRequest', 0, $e);
         }
     }
 }

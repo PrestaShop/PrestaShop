@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -64,9 +64,7 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
 
         $controllerActions = $this->getControllerActions($controller);
         if (null === $controllerActions) {
-            throw new RouteNotFoundException(
-                sprintf('Could not find a route matching for legacy controller: %s', $controller)
-            );
+            throw new RouteNotFoundException(sprintf('Could not find a route matching for legacy controller: %s', $controller));
         }
 
         return array_keys($controllerActions);
@@ -81,17 +79,13 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
 
         $controllerActions = $this->getControllerActions($controller);
         if (null === $controllerActions) {
-            throw new RouteNotFoundException(
-                sprintf('Could not find a route matching for legacy controller: %s', $controller)
-            );
+            throw new RouteNotFoundException(sprintf('Could not find a route matching for legacy controller: %s', $controller));
         }
 
         $action = LegacyRoute::isIndexAction($action) ? 'index' : $action;
         $routeName = $this->getRouteName($controllerActions, $action);
         if (null === $routeName) {
-            throw new RouteNotFoundException(
-                sprintf('Could not find a route matching for legacy action: %s', $controller . ':' . $action)
-            );
+            throw new RouteNotFoundException(sprintf('Could not find a route matching for legacy action: %s', $controller . ':' . $action));
         }
 
         return $this->getLegacyRoutes()[$routeName];

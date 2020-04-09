@@ -4,10 +4,7 @@
     <currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" conversion_rate="1.00" format="2" decimals="1"/>
   </currencies>
   <languages>
-    <language iso_code="ca"/>
     <language iso_code="es"/>
-    <language iso_code="gl"/>
-    <language iso_code="eu"/>
   </languages>
   <taxes>
     <tax id="1" name="IVA ES 21%" rate="21" eu-tax-group="virtual"/>
@@ -67,7 +64,7 @@
       <taxRule iso_code_country="sk" id_tax="1"/>
       <taxRule iso_code_country="fi" id_tax="1"/>
       <taxRule iso_code_country="se" id_tax="1"/>
-      <taxRule iso_code_country="uk" id_tax="1"/>
+      <taxRule iso_code_country="gb" id_tax="1"/>
     </taxRulesGroup>
     <taxRulesGroup name="ES Reduced Rate (10%)">
       <taxRule iso_code_country="be" id_tax="2"/>
@@ -96,7 +93,7 @@
       <taxRule iso_code_country="sk" id_tax="2"/>
       <taxRule iso_code_country="fi" id_tax="2"/>
       <taxRule iso_code_country="se" id_tax="2"/>
-      <taxRule iso_code_country="uk" id_tax="2"/>
+      <taxRule iso_code_country="gb" id_tax="2"/>
     </taxRulesGroup>
     <taxRulesGroup name="ES Super Reduced Rate (4%)">
       <taxRule iso_code_country="be" id_tax="3"/>
@@ -125,7 +122,7 @@
       <taxRule iso_code_country="sk" id_tax="3"/>
       <taxRule iso_code_country="fi" id_tax="3"/>
       <taxRule iso_code_country="se" id_tax="3"/>
-      <taxRule iso_code_country="uk" id_tax="3"/>
+      <taxRule iso_code_country="gb" id_tax="3"/>
     </taxRulesGroup>
     <taxRulesGroup name="ES Foodstuff Rate (4%)">
       <taxRule iso_code_country="be" id_tax="3"/>
@@ -154,7 +151,7 @@
       <taxRule iso_code_country="sk" id_tax="3"/>
       <taxRule iso_code_country="fi" id_tax="3"/>
       <taxRule iso_code_country="se" id_tax="3"/>
-      <taxRule iso_code_country="uk" id_tax="3"/>
+      <taxRule iso_code_country="gb" id_tax="3"/>
     </taxRulesGroup>
     <taxRulesGroup name="ES Books Rate (4%)">
       <taxRule iso_code_country="be" id_tax="3"/>
@@ -183,7 +180,7 @@
       <taxRule iso_code_country="sk" id_tax="3"/>
       <taxRule iso_code_country="fi" id_tax="3"/>
       <taxRule iso_code_country="se" id_tax="3"/>
-      <taxRule iso_code_country="uk" id_tax="3"/>
+      <taxRule iso_code_country="gb" id_tax="3"/>
     </taxRulesGroup>
     <taxRulesGroup name="EU VAT For Virtual Products" auto-generated="1" eu-tax-group="virtual">
       <taxRule iso_code_country="es" id_tax="1"/>
@@ -274,7 +271,7 @@
     <state name="Bizkaia" iso_code="ES-BI" country="ES" zone="Europe"/>
     <state name="Zamora" iso_code="ES-ZA" country="ES" zone="Europe"/>
     <state name="Zaragoza" iso_code="ES-Z" country="ES" zone="Europe"/>
-    <state name=" Ceuta" iso_code="ES-CE" country="ES" zone="Europe"/>
-    <state name=" Melilla" iso_code="ES-ML" country="ES" zone="Europe"/>
+    <state name="Ceuta" iso_code="ES-CE" country="ES" zone="Europe"/>
+    <state name="Melilla" iso_code="ES-ML" country="ES" zone="Europe"/>
   </states>
 </localizationPack>

@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -26,11 +26,19 @@
 
 {block name='page_header_container'}{/block}
 
-{block name='left_column'}
-  <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
-    {widget name="ps_contactinfo" hook='displayLeftColumn'}
-  </div>
-{/block}
+{if $layout === 'layouts/layout-left-column.tpl'}
+  {block name="left_column"}
+    <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
+      {widget name="ps_contactinfo" hook='displayLeftColumn'}
+    </div>
+  {/block}
+{else if $layout === 'layouts/layout-right-column.tpl'}
+  {block name="right_column"}
+    <div id="right-column" class="col-xs-12 col-sm-4 col-md-3">
+      {widget name="ps_contactinfo" hook='displayRightColumn'}
+    </div>
+  {/block}
+{/if}
 
 {block name='page_content'}
   {widget name="contactform"}

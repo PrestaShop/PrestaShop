@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -94,6 +94,11 @@ class AddManufacturerAddressCommand
     private $other;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * @param string $lastName
      * @param string $firstName
      * @param string $address
@@ -106,6 +111,7 @@ class AddManufacturerAddressCommand
      * @param string|null $homePhone
      * @param string $mobilePhone
      * @param string|null $other
+     * @param string|null $dni
      *
      * @throws AddressConstraintException
      */
@@ -121,7 +127,8 @@ class AddManufacturerAddressCommand
         $stateId = null,
         $homePhone = null,
         $mobilePhone = null,
-        $other = null
+        $other = null,
+        $dni = null
     ) {
         $this->assertIsNullOrNonNegativeInt($manufacturerId);
         $this->manufacturerId = $manufacturerId;
@@ -136,6 +143,7 @@ class AddManufacturerAddressCommand
         $this->homePhone = $homePhone;
         $this->mobilePhone = $mobilePhone;
         $this->other = $other;
+        $this->dni = $dni;
     }
 
     /**
@@ -235,6 +243,14 @@ class AddManufacturerAddressCommand
     }
 
     /**
+     * @return string|null
+     */
+    public function getDni()
+    {
+        return $this->dni;
+    }
+
+    /**
      * @param $value
      *
      * @throws AddressConstraintException
@@ -245,9 +261,6 @@ class AddManufacturerAddressCommand
             return;
         }
 
-        throw new AddressConstraintException(
-            sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)),
-            AddressConstraintException::INVALID_MANUFACTURER_ID
-        );
+        throw new AddressConstraintException(sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)), AddressConstraintException::INVALID_MANUFACTURER_ID);
     }
 }

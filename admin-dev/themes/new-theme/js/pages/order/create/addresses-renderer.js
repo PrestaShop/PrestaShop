@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,86 +18,98 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import createOrderPageMap from './create-order-map';
+import createOrderMap from './create-order-map';
+import Router from '../../../components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Renders Delivery & Invoice addresses select
  */
 export default class AddressesRenderer {
+  constructor() {
+    this.router = new Router();
+  }
 
   /**
    * @param {Array} addresses
    */
   render(addresses) {
-    let deliveryAddressDetailsContent = '';
-    let invoiceAddressDetailsContent = '';
-
-    const $deliveryAddressDetails = $(createOrderPageMap.deliveryAddressDetails);
-    const $invoiceAddressDetails = $(createOrderPageMap.invoiceAddressDetails);
-    const $deliveryAddressSelect = $(createOrderPageMap.deliveryAddressSelect);
-    const $invoiceAddressSelect = $(createOrderPageMap.invoiceAddressSelect);
-
-    const $addressesContent = $(createOrderPageMap.addressesContent);
-    const $addressesWarningContent = $(createOrderPageMap.addressesWarning);
-
-    $deliveryAddressDetails.empty();
-    $invoiceAddressDetails.empty();
-    $deliveryAddressSelect.empty();
-    $invoiceAddressSelect.empty();
-
+    this.cleanAddresses();
     if (addresses.length === 0) {
-      $addressesWarningContent.removeClass('d-none');
-      $addressesContent.addClass('d-none');
+      this.hideAddressesContent();
+      this.showEmptyAddressesWarning();
+      this.showAddressesBlock();
 
       return;
     }
 
-    $addressesContent.removeClass('d-none');
-    $addressesWarningContent.addClass('d-none');
+    this.showAddressesContent();
+    this.hideEmptyAddressesWarning();
 
-    for (const key in Object.keys(addresses)) {
-      const address = addresses[key];
+    Object.values(addresses).forEach((address) => {
+      this.renderDeliveryAddress(address);
+      this.renderInvoiceAddress(address);
+    });
 
-      const deliveryAddressOption = {
-        value: address.addressId,
-        text: address.alias,
-      };
+    this.showAddressesBlock();
+  }
 
-      const invoiceAddressOption = {
-        value: address.addressId,
-        text: address.alias,
-      };
+  /**
+   * Renders delivery address content
+   *
+   * @param address
+   *
+   * @private
+   */
+  renderDeliveryAddress(address) {
+    const deliveryAddressOption = {
+      value: address.addressId,
+      text: address.alias,
+    };
 
-      if (address.delivery) {
-        deliveryAddressDetailsContent = address.formattedAddress;
-        deliveryAddressOption.selected = 'selected';
-      }
-
-      if (address.invoice) {
-        invoiceAddressDetailsContent = address.formattedAddress;
-        invoiceAddressOption.selected = 'selected';
-      }
-
-      $deliveryAddressSelect.append($('<option>', deliveryAddressOption));
-      $invoiceAddressSelect.append($('<option>', invoiceAddressOption));
+    if (address.delivery) {
+      $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
+      deliveryAddressOption.selected = 'selected';
+      $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+        addressId: address.addressId,
+        liteDisplaying: 1,
+        submitFormAjax: 1,
+      }));
     }
 
-    if (deliveryAddressDetailsContent) {
-      $deliveryAddressDetails.html(deliveryAddressDetailsContent);
+    $(createOrderMap.deliveryAddressSelect).append($('<option>', deliveryAddressOption));
+  }
+
+  /**
+   * Renders invoice address content
+   *
+   * @param address
+   *
+   * @private
+   */
+  renderInvoiceAddress(address) {
+    const invoiceAddressOption = {
+      value: address.addressId,
+      text: address.alias,
+    };
+
+    if (address.invoice) {
+      $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
+      invoiceAddressOption.selected = 'selected';
+      $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+        addressId: address.addressId,
+        liteDisplaying: 1,
+        submitFormAjax: 1,
+      }));
     }
 
-    if (invoiceAddressDetailsContent) {
-      $invoiceAddressDetails.html(invoiceAddressDetailsContent);
-    }
-
-    this._showAddressesBlock();
+    $(createOrderMap.invoiceAddressSelect).append($('<option>', invoiceAddressOption));
   }
 
   /**
@@ -105,7 +117,57 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _showAddressesBlock() {
-    $(createOrderPageMap.addressesBlock).removeClass('d-none');
+  showAddressesBlock() {
+    $(createOrderMap.addressesBlock).removeClass('d-none');
+  }
+
+  /**
+   * Empties addresses content
+   *
+   * @private
+   */
+  cleanAddresses() {
+    $(createOrderMap.deliveryAddressDetails).empty();
+    $(createOrderMap.deliveryAddressSelect).empty();
+    $(createOrderMap.invoiceAddressDetails).empty();
+    $(createOrderMap.invoiceAddressSelect).empty();
+  }
+
+  /**
+   * Shows addresses content and hides warning
+   *
+   * @private
+   */
+  showAddressesContent() {
+    $(createOrderMap.addressesContent).removeClass('d-none');
+    $(createOrderMap.addressesWarning).addClass('d-none');
+  }
+
+  /**
+   * Hides addresses content and shows warning
+   *
+   * @private
+   */
+  hideAddressesContent() {
+    $(createOrderMap.addressesContent).addClass('d-none');
+    $(createOrderMap.addressesWarning).removeClass('d-none');
+  }
+
+  /**
+   * Shows warning empty addresses warning
+   *
+   * @private
+   */
+  showEmptyAddressesWarning() {
+    $(createOrderMap.addressesWarning).removeClass('d-none');
+  }
+
+  /**
+   * Hides empty addresses warning
+   *
+   * @private
+   */
+  hideEmptyAddressesWarning() {
+    $(createOrderMap.addressesWarning).addClass('d-none');
   }
 }

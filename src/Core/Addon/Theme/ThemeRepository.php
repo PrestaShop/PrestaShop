@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -127,7 +127,7 @@ class ThemeRepository implements AddonRepositoryInterface
         $suffix = 'config/theme.yml';
         $themeDirectories = glob($this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . '*/' . $suffix, GLOB_NOSORT);
 
-        $themes = array();
+        $themes = [];
         foreach ($themeDirectories as $directory) {
             $name = basename(substr($directory, 0, -strlen($suffix)));
             $theme = $this->getInstanceByName($name);
@@ -142,10 +142,7 @@ class ThemeRepository implements AddonRepositoryInterface
     private function getConfigFromFile($file)
     {
         if (!$this->filesystem->exists($file)) {
-            throw new PrestaShopException(sprintf(
-                '[ThemeRepository] Theme configuration file not found for theme at `%s`.',
-                $file
-            ));
+            throw new PrestaShopException(sprintf('[ThemeRepository] Theme configuration file not found for theme at `%s`.', $file));
         }
 
         $content = file_get_contents($file);

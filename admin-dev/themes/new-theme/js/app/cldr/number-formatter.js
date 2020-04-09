@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -26,9 +26,9 @@
  * These placeholders are used in CLDR number formatting templates.
  * They are meant to be replaced by the correct localized symbols in the number formatting process.
  */
-import NumberSymbol from './number-symbol';
-import PriceSpecification from './specifications/price';
-import NumberSpecification from './specifications/number';
+import NumberSymbol from '@app/cldr/number-symbol';
+import PriceSpecification from '@app/cldr/specifications/price';
+import NumberSpecification from '@app/cldr/specifications/number';
 
 const escapeRE = require('lodash.escaperegexp');
 
@@ -80,7 +80,7 @@ class NumberFormatter {
     }
 
     // Get the good CLDR formatting pattern. Sign is important here !
-    const pattern = this.getCldrPattern(majorDigits < 0);
+    const pattern = this.getCldrPattern(number < 0);
     formattedNumber = this.addPlaceholders(formattedNumber, pattern);
     formattedNumber = this.replaceSymbols(formattedNumber);
 
@@ -226,8 +226,8 @@ class NumberFormatter {
   strtr(str, pairs) {
     const substrs = Object.keys(pairs).map(escapeRE);
     return str.split(RegExp(`(${substrs.join('|')})`))
-              .map(part => pairs[part] || part)
-              .join('');
+      .map((part) => pairs[part] || part)
+      .join('');
   }
 
 
@@ -284,7 +284,13 @@ class NumberFormatter {
   }
 
   static build(specifications) {
-    const symbol = new NumberSymbol(...specifications.symbol);
+    let symbol;
+    if (undefined !== specifications.numberSymbols) {
+      symbol = new NumberSymbol(...specifications.numberSymbols);
+    } else {
+      symbol = new NumberSymbol(...specifications.symbol);
+    }
+
     let specification;
     if (specifications.currencySymbol) {
       specification = new PriceSpecification(

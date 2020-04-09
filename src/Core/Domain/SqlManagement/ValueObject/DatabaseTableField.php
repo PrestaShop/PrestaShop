@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -74,10 +74,7 @@ class DatabaseTableField
     private function setName($name)
     {
         if (!is_string($name) || empty($name)) {
-            throw new SqlManagementConstraintException(
-                sprintf('Invalid database table field name %s supplied', var_export($name, true)),
-                SqlManagementConstraintException::INVALID_DATABASE_TABLE_FIELD_NAME
-            );
+            throw new SqlManagementConstraintException(sprintf('Invalid database table field name %s supplied', var_export($name, true)), SqlManagementConstraintException::INVALID_DATABASE_TABLE_FIELD_NAME);
         }
 
         $this->name = $name;
@@ -103,10 +100,7 @@ class DatabaseTableField
     private function setType($type)
     {
         if (!is_string($type) || empty($type)) {
-            throw new SqlManagementConstraintException(
-                sprintf('Invalid database table field type %s supplied', var_export($type, true)),
-                SqlManagementConstraintException::INVALID_DATABASE_TABLE_FIELD_TYPE
-            );
+            throw new SqlManagementConstraintException(sprintf('Invalid database table field type %s supplied', var_export($type, true)), SqlManagementConstraintException::INVALID_DATABASE_TABLE_FIELD_TYPE);
         }
 
         $this->type = $type;

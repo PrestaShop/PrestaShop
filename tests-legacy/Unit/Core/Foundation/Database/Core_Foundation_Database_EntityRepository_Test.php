@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,8 +50,6 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
         );
     }
 
-    /**
-     */
     public function testCallToInvalidMethodThrowsException()
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\Database\Exception::class);
@@ -61,11 +59,11 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 
     public function testCallToFindByDoesNotThrow()
     {
-        $this->repository->findByStuff('hey');
+        $this->assertInternalType('array', $this->repository->findByStuff('hey'));
     }
 
     public function testCallToFindOneByDoesNotThrow()
     {
-        $this->repository->findOneByStuff('hey');
+        $this->assertNull($this->repository->findOneByStuff('hey'));
     }
 }

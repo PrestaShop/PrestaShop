@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -113,6 +113,10 @@ class StockManager implements StockInterface
             $updatePhysicalQuantityQuery .= ' AND sa.id_product = ' . (int) $idProduct;
         }
 
+        if ($idOrder) {
+            $updatePhysicalQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = ' . (int) $idOrder . ')';
+        }
+
         $updatePhysicalQuantityQuery = str_replace('{table_prefix}', _DB_PREFIX_, $updatePhysicalQuantityQuery);
 
         return Db::getInstance()->execute($updatePhysicalQuantityQuery);
@@ -149,12 +153,12 @@ class StockManager implements StockInterface
             WHERE sa.id_shop = :shop_id
         ';
 
-        $strParams = array(
+        $strParams = [
             '{table_prefix}' => _DB_PREFIX_,
             ':shop_id' => (int) $shopId,
             ':error_state' => (int) $errorState,
             ':cancellation_state' => (int) $cancellationState,
-        );
+        ];
 
         if ($idProduct) {
             $updateReservedQuantityQuery .= ' AND sa.id_product = :product_id';

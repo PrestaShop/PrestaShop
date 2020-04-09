@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,11 +40,6 @@ class CartProduct
      * @var int
      */
     private $attributeId;
-
-    /**
-     * @var int
-     */
-    private $customizationId;
 
     /**
      * @var string
@@ -81,11 +76,15 @@ class CartProduct
     private $imageLink;
 
     /**
+     * @var Customization|null
+     */
+    private $customization;
+
+    /**
      * CartProduct constructor.
      *
      * @param int $productId
      * @param int $attributeId
-     * @param int $customizationId
      * @param string $name
      * @param string $attribute
      * @param string $reference
@@ -93,22 +92,22 @@ class CartProduct
      * @param int $quantity
      * @param string $price
      * @param string $imageLink
+     * @param Customization|null $customization
      */
     public function __construct(
         int $productId,
         int $attributeId,
-        int $customizationId,
         string $name,
         string $attribute,
         string $reference,
         string $unitPrice,
         int $quantity,
         string $price,
-        string $imageLink
+        string $imageLink,
+        ?Customization $customization
     ) {
         $this->productId = $productId;
         $this->attributeId = $attributeId;
-        $this->customizationId = $customizationId;
         $this->name = $name;
         $this->attribute = $attribute;
         $this->reference = $reference;
@@ -116,6 +115,7 @@ class CartProduct
         $this->quantity = $quantity;
         $this->price = $price;
         $this->imageLink = $imageLink;
+        $this->customization = $customization;
     }
 
     /**
@@ -175,14 +175,6 @@ class CartProduct
     }
 
     /**
-     * @return int
-     */
-    public function getCustomizationId(): int
-    {
-        return $this->customizationId;
-    }
-
-    /**
      * @return string
      */
     public function getName(): string
@@ -196,5 +188,13 @@ class CartProduct
     public function getAttribute(): string
     {
         return $this->attribute;
+    }
+
+    /**
+     * @return Customization|null
+     */
+    public function getCustomization(): ?Customization
+    {
+        return $this->customization;
     }
 }

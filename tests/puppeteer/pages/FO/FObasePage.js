@@ -6,28 +6,36 @@ module.exports = class Home extends CommonPage {
     super(page);
 
     // Selectors for home page
+    this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.cartProductsCount = '#_desktop_cart span.cart-products-count';
+    this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
     this.contactLink = '#contact-link';
     this.categoryMenu = '#category-%ID > a';
     this.languageSelectorDiv = '#_desktop_language_selector';
+    this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
+    this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
 
     // footer
     this.siteMapLink = '#link-static-page-sitemap-2';
-    this.languageSelectorDiv = '#_desktop_language_selector';
-    this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
-    this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
+    // footer links
+    this.footerLinksDiv = '#footer div.links';
+    this.wrapperDiv = `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(%POSITION)`;
+    this.wrapperTitle = `${this.wrapperDiv} p`;
+    this.wrapperSubmenu = `${this.wrapperDiv} ul[id*='footer_sub_menu']`;
+    this.wrapperSubmenuItemLink = `${this.wrapperSubmenu} li a`;
   }
 
   /**
    * go to the home page
    */
   async goToHomePage() {
-    await this.waitForSelectorAndClick(this.desktopLogo);
+    await this.waitForVisibleSelector(this.desktopLogo);
+    await this.clickAndWaitForNavigation(this.desktopLogo);
   }
 
   /**
@@ -53,10 +61,7 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<void>}
    */
   async goToLoginPage() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.userInfoLink),
-    ]);
+    await this.clickAndWaitForNavigation(this.userInfoLink);
   }
 
   /**
@@ -72,10 +77,7 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<void>}
    */
   async logout() {
-    await Promise.all([
-      this.page.click(this.logoutLink),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(this.logoutLink);
   }
 
   /**
@@ -86,11 +88,92 @@ module.exports = class Home extends CommonPage {
   async changeLanguage(lang = 'en') {
     await Promise.all([
       this.page.click(this.languageSelectorExpandIcon),
-      this.page.waitForSelector(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
+      this.waitForVisibleSelector(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
     ]);
+    await this.clickAndWaitForNavigation(this.languageSelectorMenuItemLink.replace('%LANG', lang));
+  }
+
+  /**
+   * Get shop language
+   * @returns {Promise<string>}
+   */
+  getShopLanguage() {
+    return this.getTextContent(this.defaultLanguageSpan);
+  }
+
+
+  /**
+   * Return true if language exist in FO
+   * @param lang
+   * @return {Promise<boolean|true>}
+   */
+  async languageExists(lang = 'en') {
+    await this.page.click(this.languageSelectorExpandIcon);
+    return this.elementVisible(this.languageSelectorMenuItemLink.replace('%LANG', lang), 1000);
+  }
+
+  /**
+   * Change currency in FO
+   * @param currency
+   * @return {Promise<void>}
+   */
+  async changeCurrency(currency = 'EUR €') {
     await Promise.all([
+      this.selectByVisibleText(this.currencySelect, currency),
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
     ]);
+  }
+
+  /**
+   * Get text content of footer links
+   * @param position, position of links
+   * @return {Promise<!Promise<!Object|undefined>|any>}
+   */
+  async getFooterLinksTextContent(position) {
+    return this.page.$$eval(
+      this.wrapperSubmenuItemLink.replace('%POSITION', position),
+      all => all.map(el => el.textContent.trim()),
+    );
+  }
+
+  /**
+   * Get Title of Block that contains links in footer
+   * @param position
+   * @return {Promise<textContent>}
+   */
+  async getFooterLinksBlockTitle(position) {
+    return this.getTextContent(this.wrapperTitle.replace('%POSITION', position));
+  }
+
+  /**
+   * Get cart notifications number
+   * @returns {Promise<integer>}
+   */
+  async getCartNotificationsNumber() {
+    return this.getNumberFromText(this.cartProductsCount);
+  }
+
+  /**
+   * Go to siteMap page
+   * @returns {Promise<void>}
+   */
+  async goToSiteMapPage() {
+    await this.clickAndWaitForNavigation(this.siteMapLink);
+  }
+
+  /**
+   * Go to cart page
+   * @returns {Promise<void>}
+   */
+  async goToCartPage() {
+    await this.clickAndWaitForNavigation(this.cartLink);
+  }
+
+  /**
+   * Go to Fo page
+   * @return {Promise<void>}
+   */
+  async goToFo() {
+    await this.goTo(global.FO.URL);
   }
 };

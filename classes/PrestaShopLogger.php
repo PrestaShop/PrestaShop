@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,7 +46,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
     /** @var int Object ID */
     public $object_id;
-
+  
     /** @var int Shop ID */
     public $id_shop;
 
@@ -71,7 +71,7 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'log',
         'primary' => 'id_log',
         'fields' => array(
@@ -90,7 +90,7 @@ class PrestaShopLoggerCore extends ObjectModel
         ),
     );
 
-    protected static $is_present = array();
+    protected static $is_present = [];
 
     /**
      * Send e-mail to the shop owner only if the minimal severity level has been reached.
@@ -107,11 +107,11 @@ class PrestaShopLoggerCore extends ObjectModel
                 'log_alert',
                 Context::getContext()->getTranslator()->trans(
                     'Log: You have a new alert from your shop',
-                    array(),
+                    [],
                     'Emails.Subject',
                     $language->locale
                 ),
-                array(),
+                [],
                 Configuration::get('PS_SHOP_EMAIL')
             );
         }

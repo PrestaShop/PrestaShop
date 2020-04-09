@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,26 +19,24 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
+use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\EditCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
-use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use Currency;
 use PrestaShopException;
-use PrestaShopDatabaseException;
 
 /**
  * Class EditOfficialCurrencyHandler is responsible for updating currencies.
@@ -48,95 +46,27 @@ use PrestaShopDatabaseException;
 final class EditOfficialCurrencyHandler extends AbstractCurrencyHandler implements EditCurrencyHandlerInterface
 {
     /**
-     * @var CurrencyCommandValidator
-     */
-    private $validator;
-
-    /**
-     * @param LocaleRepository $localeRepository
-     * @param LanguageInterface[] $languages
-     * @param CurrencyCommandValidator $validator
-     */
-    public function __construct(
-        LocaleRepository $localeRepository,
-        array $languages,
-        CurrencyCommandValidator $validator
-    ) {
-        parent::__construct($localeRepository, $languages);
-        $this->validator = $validator;
-    }
-
-    /**
      * {@inheritdoc}
      *
+     * @throws CannotDisableDefaultCurrencyException
+     * @throws CannotUpdateCurrencyException
      * @throws CurrencyException
+     * @throws CurrencyNotFoundException
+     * @throws DefaultCurrencyInMultiShopException
+     * @throws LocalizationException
+     * @throws LanguageNotFoundException
      */
     public function handle(EditCurrencyCommand $command)
     {
         try {
             $entity = new Currency($command->getCurrencyId()->getValue());
             if (0 >= $entity->id) {
-                throw new CurrencyNotFoundException(
-                    sprintf(
-                        'Currency object with id "%s" was not found for currency update',
-                        $command->getCurrencyId()->getValue()
-                    )
-                );
+                throw new CurrencyNotFoundException(sprintf('Currency object with id "%s" was not found for currency update', $command->getCurrencyId()->getValue()));
             }
             $this->verify($entity, $command);
             $this->updateEntity($entity, $command);
         } catch (PrestaShopException $exception) {
-            throw new CurrencyException(
-                sprintf(
-                    'An error occurred when updating currency object with id "%s"',
-                    $command->getCurrencyId()->getValue()
-                ),
-                0,
-                $exception
-            );
-        }
-    }
-
-    /**
-     * @param Currency $entity
-     * @param EditCurrencyCommand $command
-     *
-     * @throws CannotUpdateCurrencyException
-     * @throws PrestaShopException
-     * @throws PrestaShopDatabaseException
-     * @throws LocalizationException
-     */
-    private function updateEntity(Currency $entity, EditCurrencyCommand $command)
-    {
-        if (null !== $command->getExchangeRate()) {
-            $entity->conversion_rate = $command->getExchangeRate()->getValue();
-        }
-        if (null !== $command->getPrecision()) {
-            $entity->precision = $command->getPrecision()->getValue();
-        }
-        $entity->active = $command->isEnabled();
-
-        if (!empty($command->getLocalizedNames())) {
-            $entity->setLocalizedNames($command->getLocalizedNames());
-        }
-        if (!empty($command->getLocalizedSymbols())) {
-            $entity->setLocalizedSymbols($command->getLocalizedSymbols());
-        }
-
-        $this->refreshLocalizedData($entity);
-
-        if (false === $entity->update()) {
-            throw new CannotUpdateCurrencyException(
-                sprintf(
-                    'An error occurred when updating currency object with id "%s"',
-                    $command->getCurrencyId()->getValue()
-                )
-            );
-        }
-
-        if (!empty($command->getShopIds())) {
-            $this->associateWithShops($entity, $command->getShopIds());
-            $this->associateConversionRateToShops($entity, $command->getShopIds());
+            throw new CurrencyException(sprintf('An error occurred when updating currency object with id "%s"', $command->getCurrencyId()->getValue()), 0, $exception);
         }
     }
 

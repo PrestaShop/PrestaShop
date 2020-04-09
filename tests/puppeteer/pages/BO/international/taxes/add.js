@@ -30,11 +30,11 @@ module.exports = class AddTax extends BOBasePage {
   async changeInputLanguage(lang) {
     await Promise.all([
       this.page.click(this.inputLangDropdownButton),
-      this.page.waitForSelector(`${this.inputLangDropdownButton}[aria-expanded='true']`),
+      this.waitForVisibleSelector(`${this.inputLangDropdownButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
       this.page.click(this.inputLangChoiceSpan.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.inputLangDropdownButton}[aria-expanded='false']`),
+      this.waitForVisibleSelector(`${this.inputLangDropdownButton}[aria-expanded='false']`),
     ]);
   }
 
@@ -56,7 +56,6 @@ module.exports = class AddTax extends BOBasePage {
     }
     // Save Tax
     await this.clickAndWaitForNavigation(this.saveTaxButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

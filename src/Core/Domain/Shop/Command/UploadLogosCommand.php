@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -140,10 +140,7 @@ class UploadLogosCommand
     public function setUploadedFavicon(UploadedFile $uploadedFavicon)
     {
         if (ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION !== $uploadedFavicon->getClientOriginalExtension()) {
-            throw new NotSupportedFaviconExtensionException(sprintf(
-                'Not supported "%s" favicon extension. Supported extension is "ico".',
-                $uploadedFavicon->getClientOriginalExtension()
-            ));
+            throw new NotSupportedFaviconExtensionException(sprintf('Not supported "%s" favicon extension. Supported extension is "ico".', $uploadedFavicon->getClientOriginalExtension()));
         }
 
         $this->assertNativeFileValidationDoesNotFail($uploadedFavicon);
@@ -160,12 +157,7 @@ class UploadLogosCommand
     {
         $extension = $uploadedFile->getClientOriginalExtension();
         if (!in_array($extension, ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS, true)) {
-            throw new NotSupportedLogoImageExtensionException(
-                sprintf(
-                    'Not supported "%s" image logo extension. Supported extensions are ""',
-                    implode(',', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)
-                )
-            );
+            throw new NotSupportedLogoImageExtensionException(sprintf('Not supported "%s" image logo extension. Supported extensions are ""', implode(',', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)));
         }
     }
 
@@ -181,10 +173,7 @@ class UploadLogosCommand
         $errorCode = $uploadedFile->getError();
 
         if ($errorCode !== UPLOAD_ERR_OK) {
-            throw new FileUploadException(
-                $uploadedFile->getErrorMessage(),
-                $errorCode
-            );
+            throw new FileUploadException($uploadedFile->getErrorMessage(), $errorCode);
         }
     }
 }

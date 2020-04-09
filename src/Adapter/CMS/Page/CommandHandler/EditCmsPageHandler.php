@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,22 +55,13 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
                 throw new CmsPageException('Cms page contains invalid field values');
             }
             if (false === $cms->update()) {
-                throw new CannotEditCmsPageException(
-                    sprintf('Failed to update cms page with id %s', $command->getCmsPageId()->getValue())
-                );
+                throw new CannotEditCmsPageException(sprintf('Failed to update cms page with id %s', $command->getCmsPageId()->getValue()));
             }
             if (null !== $command->getShopAssociation()) {
                 $this->associateWithShops($cms, $command->getShopAssociation());
             }
         } catch (PrestaShopException $e) {
-            throw new CmsPageException(
-                sprintf(
-                    'An unexpected error occurred when editing cms page with id %s',
-                    $command->getCmsPageId()->getValue()
-                ),
-                0,
-                $e
-            );
+            throw new CmsPageException(sprintf('An unexpected error occurred when editing cms page with id %s', $command->getCmsPageId()->getValue()), 0, $e);
         }
     }
 

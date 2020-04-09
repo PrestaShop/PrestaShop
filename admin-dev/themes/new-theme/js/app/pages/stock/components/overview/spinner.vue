@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -36,35 +36,38 @@
       placeholder="0"
       pattern="\d*"
       step="1"
-      buttons="true"
-      hoverButtons="true"
-      :value="qty"
+      :buttons="true"
+      :hover-buttons="true"
+      :value="getQuantity()"
       @change="onChange"
       @keyup="onKeyup($event)"
       @focus="focusIn"
       @blur="focusOut($event)"
     />
     <transition name="fade">
-      <button v-if="isActive" class="check-button"><i class="material-icons">check</i></button>
+      <button
+        v-if="isActive"
+        class="check-button"
+      >
+        <i class="material-icons">check</i>
+      </button>
     </transition>
   </form>
 </template>
 
 <script>
-  import PSNumber from 'app/widgets/ps-number';
+  import PSNumber from '@app/widgets/ps-number';
 
-  const $ = global.$;
+  const {$} = window;
 
   export default {
-    props: ['product'],
-    computed: {
-      qty() {
-        if (!this.product.qty) {
-          this.isEnabled = false;
-          this.value = '';
-        }
-        return this.product.qty;
+    props: {
+      product: {
+        type: Object,
+        required: true,
       },
+    },
+    computed: {
       id() {
         return `qty-${this.product.product_id}-${this.product.combination_id}`;
       },
@@ -76,6 +79,13 @@
       },
     },
     methods: {
+      getQuantity() {
+        if (!this.product.qty) {
+          this.isEnabled = false;
+          this.value = '';
+        }
+        return parseInt(this.product.qty, 10);
+      },
       onChange(val) {
         this.value = val;
         this.isEnabled = !!val;
@@ -101,14 +111,14 @@
       },
       focusOut(event) {
         const value = parseInt(this.value, 10);
-        if (!$(event.target).hasClass('ps-number') && (isNaN(value) || value === 0)) {
+        if (!$(event.target).hasClass('ps-number') && (Number.isNaN(value) || value === 0)) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;
       },
       sendQty() {
         const postUrl = this.product.edit_url;
-        if (parseInt(this.product.qty, 10) !== 0 && !isNaN(parseInt(this.value, 10))) {
+        if (parseInt(this.product.qty, 10) !== 0 && !Number.isNaN(parseInt(this.value, 10))) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
             delta: this.value,
@@ -138,7 +148,7 @@
 
 <style lang="scss" type="text/scss" scoped>
   @import "~jquery-ui-dist/jquery-ui.css";
-  *{
+  * {
     outline: none;
   }
   .fade-enter-active, .fade-leave-active {

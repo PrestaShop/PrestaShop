@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,10 +53,10 @@ class IdentityControllerCore extends FrontController
         if (Tools::isSubmit('submitCreate')) {
             $customer_form->fillWith(Tools::getAllValues());
             if ($customer_form->submit()) {
-                $this->success[] = $this->trans('Information successfully updated.', array(), 'Shop.Notifications.Success');
+                $this->success[] = $this->trans('Information successfully updated.', [], 'Shop.Notifications.Success');
                 $should_redirect = true;
             } else {
-                $this->errors[] = $this->trans('Could not update your information, please check your data.', array(), 'Shop.Notifications.Error');
+                $this->errors[] = $this->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
             }
         } else {
             $customer_form->fillFromCustomer(
@@ -81,6 +81,11 @@ class IdentityControllerCore extends FrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Your personal information', [], 'Shop.Theme.Customeraccount'),
+            'url' => $this->context->link->getPageLink('identity'),
+        ];
 
         return $breadcrumb;
     }

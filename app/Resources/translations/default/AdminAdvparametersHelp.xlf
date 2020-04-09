@@ -14,7 +14,7 @@
       <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
         <source>or</source>
         <target>or</target>
-        <note>Line: 1063
+        <note>Line: 1066
 Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
     </body>
@@ -140,7 +140,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
         <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
         <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
-        <note>Line: 89</note>
+        <note>Line: 90</note>
       </trans-unit>
     </body>
   </file>
@@ -149,17 +149,87 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
         <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
         <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
-        <note>Line: 162</note>
+        <note>Line: 163</note>
       </trans-unit>
       <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
         <source>ID of the warehouse to set as storage.</source>
         <target>ID of the warehouse to set as storage.</target>
-        <note>Line: 170</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
         <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
         <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
-        <note>Line: 154</note>
+        <note>Line: 155</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CombineCompressCacheType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="021007c7da195ab112330b846e0b1cbb">
+        <source>This will add directives to your .htaccess file, which should improve caching and compression.</source>
+        <target>This will add directives to your .htaccess file, which should improve caching and compression.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/DebugModeType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="853f64470ff7bb429d4d1febf19a2d58">
+        <source>Enable or disable debug mode.</source>
+        <target>Enable or disable debug mode.</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/MediaServersType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7d7364eb90dcf245641e4139c6ab1a7c">
+        <source>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="80ca4dd5f99b6572c93cec540caff504">
+        <source>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="1e4e1915fcb0b296ce2ffb029b27d730">
+        <source>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/OptionalFeaturesType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dadb7368382c41e65db131dde4acbddd">
+        <source>Choose "No" to disable Product Combinations.</source>
+        <target>Choose "No" to disable Product Combinations.</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="31d21c53f8b07a3adcac80c8fab067db">
+        <source>You cannot set this parameter to No when combinations are already used by some of your products</source>
+        <target>You cannot set this parameter to No when combinations are already used by some of your products</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="755b5f88357c721918923199f02a127d">
+        <source>Choose "No" to disable Product Features.</source>
+        <target>Choose "No" to disable Product Features.</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="07e451f21d83658a364e0548c86926b3">
+        <source>Choose "No" to disable Customer Groups.</source>
+        <target>Choose "No" to disable Customer Groups.</target>
+        <note>Line: 77</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/SmartyType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="30c802194b54f04e24a2abdc774c2f7e">
+        <source>Should be enabled if you want to avoid to store the smarty cache on NFS.</source>
+        <target>Should be enabled if you want to avoid to store the smarty cache on NFS.</target>
+        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>
@@ -327,6 +397,11 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>Read more about the CSV format at:</target>
         <note>Line: 43</note>
       </trans-unit>
+      <trans-unit id="de7b4d4ecc0e454c441f08058fdac203">
+        <source>https://doc.prestashop.com/display/PS17/Import</source>
+        <target>https://doc.prestashop.com/display/PS17/Import</target>
+        <note>Line: 39</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Email/Blocks/email_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -343,17 +418,17 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="a60bc065c0296646c5a07e55c0cfff6e">
         <source>Fully qualified domain name (keep this field empty if you don't know).</source>
         <target>Fully qualified domain name (keep this field empty if you don't know).</target>
-        <note>Line: 36</note>
+        <note>Line: 37</note>
       </trans-unit>
       <trans-unit id="2a3c280f73a3389c6ba4b2d87c8aa15f">
         <source>IP address or server name (e.g. smtp.mydomain.com).</source>
         <target>IP address or server name (e.g. smtp.mydomain.com).</target>
-        <note>Line: 44</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="a5d35e0a66d41c7d12c0df6e643fa0ff">
         <source>Leave blank if not applicable.</source>
         <target>Leave blank if not applicable.</target>
-        <note>Line: 60</note>
+        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>
@@ -377,17 +452,17 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="c4e326fcaa83c6b1ca3856175bb86d2e">
         <source>This page will be displayed just after login.</source>
         <target>This page will be displayed just after login.</target>
-        <note>Line: 211</note>
+        <note>Line: 206</note>
       </trans-unit>
       <trans-unit id="d970370797ba19bba5524b480d3526fb">
         <source>Allow or disallow this employee to log in to the Admin panel.</source>
         <target>Allow or disallow this employee to log in to the Admin panel.</target>
-        <note>Line: 221</note>
+        <note>Line: 216</note>
       </trans-unit>
       <trans-unit id="1a7f0b984884e66e95a86b9b5d857b5b">
         <source>Select the shops the employee is allowed to access.</source>
         <target>Select the shops the employee is allowed to access.</target>
-        <note>Line: 236</note>
+        <note>Line: 231</note>
       </trans-unit>
     </body>
   </file>
@@ -533,69 +608,24 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>This will display notifications when new messages are posted in your shop.</target>
         <note>Line: 153</note>
       </trans-unit>
+      <trans-unit id="b67a6169f1139b421eabe8278277b0ae">
+        <source>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</source>
+        <target>When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.</target>
+        <note>Line: 64</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="30c802194b54f04e24a2abdc774c2f7e">
-        <source>Should be enabled if you want to avoid to store the smarty cache on NFS.</source>
-        <target>Should be enabled if you want to avoid to store the smarty cache on NFS.</target>
-        <note>Line: 60</note>
-      </trans-unit>
-      <trans-unit id="853f64470ff7bb429d4d1febf19a2d58">
-        <source>Enable or disable debug mode.</source>
-        <target>Enable or disable debug mode.</target>
-        <note>Line: 115</note>
-      </trans-unit>
       <trans-unit id="bb3656a5447418f8f2644f3ac91b5c6f">
         <source>Some features can be disabled in order to improve performance.</source>
         <target>Some features can be disabled in order to improve performance.</target>
-        <note>Line: 144</note>
-      </trans-unit>
-      <trans-unit id="dadb7368382c41e65db131dde4acbddd">
-        <source>Choose "No" to disable Product Combinations.</source>
-        <target>Choose "No" to disable Product Combinations.</target>
-        <note>Line: 149</note>
-      </trans-unit>
-      <trans-unit id="31d21c53f8b07a3adcac80c8fab067db">
-        <source>You cannot set this parameter to No when combinations are already used by some of your products</source>
-        <target>You cannot set this parameter to No when combinations are already used by some of your products</target>
-        <note>Line: 159</note>
-      </trans-unit>
-      <trans-unit id="755b5f88357c721918923199f02a127d">
-        <source>Choose "No" to disable Product Features.</source>
-        <target>Choose "No" to disable Product Features.</target>
-        <note>Line: 165</note>
-      </trans-unit>
-      <trans-unit id="07e451f21d83658a364e0548c86926b3">
-        <source>Choose "No" to disable Customer Groups.</source>
-        <target>Choose "No" to disable Customer Groups.</target>
-        <note>Line: 172</note>
+        <note>Line: 93</note>
       </trans-unit>
       <trans-unit id="ecffc19cb5ada347980c0fd06ca337f4">
         <source>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</source>
         <target>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</target>
-        <note>Line: 200</note>
-      </trans-unit>
-      <trans-unit id="021007c7da195ab112330b846e0b1cbb">
-        <source>This will add directives to your .htaccess file, which should improve caching and compression.</source>
-        <target>This will add directives to your .htaccess file, which should improve caching and compression.</target>
-        <note>Line: 218</note>
-      </trans-unit>
-      <trans-unit id="7d7364eb90dcf245641e4139c6ab1a7c">
-        <source>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</source>
-        <target>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</target>
-        <note>Line: 250</note>
-      </trans-unit>
-      <trans-unit id="80ca4dd5f99b6572c93cec540caff504">
-        <source>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</source>
-        <target>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</target>
-        <note>Line: 257</note>
-      </trans-unit>
-      <trans-unit id="1e4e1915fcb0b296ce2ffb029b27d730">
-        <source>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</source>
-        <target>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</target>
-        <note>Line: 264</note>
+        <note>Line: 121</note>
       </trans-unit>
     </body>
   </file>

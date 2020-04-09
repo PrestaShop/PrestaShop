@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -115,14 +115,15 @@ class CartRuleCalculator
                     && ($product['id_product_attribute'] == $cartRule->gift_product_attribute
                         || !(int) $cartRule->gift_product_attribute)
                 ) {
-                    $cartRuleData->addDiscountApplied($cartRow->getFinalUnitPrice());
-                    $cartRow->applyFlatDiscount($cartRow->getFinalUnitPrice());
+                    $cartRuleData->addDiscountApplied($cartRow->getInitialUnitPrice());
+                    $cartRow->applyFlatDiscount($cartRow->getInitialUnitPrice());
                 }
             }
         }
 
-        // Discount (%) on the whole order
+        // Percentage discount
         if ((float) $cartRule->reduction_percent > 0) {
+            // Discount (%) on the whole order
             if ($cartRule->reduction_product == 0) {
                 foreach ($this->cartRows as $cartRow) {
                     $product = $cartRow->getRowData();
@@ -176,8 +177,8 @@ class CartRuleCalculator
                 if (is_array($selected_products)) {
                     foreach ($this->cartRows as $cartRow) {
                         $product = $cartRow->getRowData();
-                        if (in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
-                            || in_array($product['id_product'] . '-0', $selected_products)
+                        if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+                                || in_array($product['id_product'] . '-0', $selected_products))
                             && (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                                 || !$cartRule->reduction_exclude_special)) {
                             $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
@@ -188,7 +189,7 @@ class CartRuleCalculator
             }
         }
 
-        // Discount (¤) : weighted calculation on all concerned rows
+        // Amount discount (¤) : weighted calculation on all concerned rows
         //                weight factor got from price with same tax (incl/excl) as voucher
         if ((float) $cartRule->reduction_amount > 0) {
             $concernedRows = new CartRowCollection();

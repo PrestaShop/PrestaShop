@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -88,8 +88,8 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_product',
-                        'route' => 'admin_monitoring_index', //@todo: implement toggle status action
-                        'route_param_name' => 'id_product',
+                        'route' => 'admin_product_toggle_status',
+                        'route_param_name' => 'productId',
                     ])
             )
             ->add(
@@ -149,7 +149,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                         'reset_route_params' => [
                             'filterId' => $this::GRID_ID,
                         ],
-                        'redirect_route' => 'admin_monitoring_index',
+                        'redirect_route' => 'admin_monitorings_index',
                     ])
                     ->setAssociatedColumn('actions')
             );
@@ -181,8 +181,8 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
-                        'route' => 'admin_monitoring_index', //@todo: implement edit action
-                        'route_param_name' => 'productId',
+                        'route' => 'admin_product_form',
+                        'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
                     ])
             )
@@ -191,9 +191,11 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ->setName($this->trans('Delete', [], 'Admin.Actions'))
                     ->setIcon('delete')
                     ->setOptions([
-                        'route' => 'admin_monitoring_index', //@todo: implement delete action
-                        'route_param_name' => 'productId',
+                        'route' => 'admin_product_unit_action',
+                        'route_param_name' => 'id',
                         'route_param_field' => 'id_product',
+                        'extra_route_params' => ['action' => 'delete'],
+                        'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
                     ])
             );
     }

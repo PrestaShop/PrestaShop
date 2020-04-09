@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -83,16 +83,10 @@ final class ThemeZipUploader implements ThemeUploaderInterface
         }
 
         if (in_array($uploadedTheme->getError(), [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])) {
-            throw new ThemeUploadException(
-                'Allowed file size exceeded for uploaded theme.',
-                ThemeUploadException::FILE_SIZE_EXCEEDED_ERROR
-            );
+            throw new ThemeUploadException('Allowed file size exceeded for uploaded theme.', ThemeUploadException::FILE_SIZE_EXCEEDED_ERROR);
         }
 
-        throw new ThemeUploadException(
-            sprintf('Unknown error "%s" occurred while uploading theme.', $uploadedTheme->getError()),
-            ThemeUploadException::UNKNOWN_ERROR
-        );
+        throw new ThemeUploadException(sprintf('Unknown error "%s" occurred while uploading theme.', $uploadedTheme->getError()), ThemeUploadException::UNKNOWN_ERROR);
     }
 
     /**
@@ -105,10 +99,7 @@ final class ThemeZipUploader implements ThemeUploaderInterface
         preg_match('#application/zip#', $uploadedTheme->getMimeType(), $matches);
 
         if (empty($matches)) {
-            throw new ThemeUploadException(
-                'Invalid mime type of theme zip. Allowed mime type is application/zip.',
-                ThemeUploadException::INVALID_MIME_TYPE
-            );
+            throw new ThemeUploadException('Invalid mime type of theme zip. Allowed mime type is application/zip.', ThemeUploadException::INVALID_MIME_TYPE);
         }
     }
 }

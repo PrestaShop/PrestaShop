@@ -29,7 +29,7 @@ module.exports = class moduleCatalog extends BOBasePage {
   async searchModule(moduleTag, moduleName) {
     await this.page.type(this.searchModuleTagInput, moduleTag);
     await this.page.click(this.searchModuleButton);
-    await this.page.waitForSelector(this.moduleBloc.replace('%MODULENAME', moduleName), {visible: true});
+    await this.waitForVisibleSelector(this.moduleBloc.replace('%MODULENAME', moduleName));
   }
 
   /**
@@ -39,7 +39,6 @@ module.exports = class moduleCatalog extends BOBasePage {
    */
   async installModule(moduleName) {
     await this.page.click(this.installModuleButton.replace('%MODULENAME', moduleName));
-    await this.page.waitForSelector(this.growlMessageBloc, {visible: true});
-    return this.getTextContent(this.growlMessageBloc);
+    return this.getTextContent(this.growlMessageBlock);
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,7 +49,7 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'template_compilation' => $this->configuration->get('PS_SMARTY_FORCE_COMPILE'),
             'cache' => $this->configuration->getBoolean('PS_SMARTY_CACHE'),
             'multi_front_optimization' => $this->configuration->getBoolean('PS_SMARTY_LOCAL'),
@@ -57,7 +57,7 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
             'clear_cache' => $this->configuration->get('PS_SMARTY_CLEAR_CACHE'),
             'smarty_console' => $this->configuration->get('PS_SMARTY_CONSOLE'),
             'smarty_console_key' => $this->configuration->get('PS_SMARTY_CONSOLE_KEY'),
-        );
+        ];
     }
 
     /**
@@ -75,7 +75,7 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_SMARTY_CLEAR_CACHE', $configuration['clear_cache']);
         }
 
-        return array();
+        return [];
     }
 
     /**

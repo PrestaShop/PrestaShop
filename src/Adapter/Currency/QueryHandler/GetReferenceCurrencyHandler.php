@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -74,6 +74,7 @@ class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterfac
     {
         $localizedNames = [];
         $localizedSymbols = [];
+        $localizedPatterns = [];
         $currency = null;
         /** @var LanguageInterface $language */
         foreach ($this->languages as $language) {
@@ -87,13 +88,11 @@ class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterfac
                 $localizedNames[$language->getId()] = $query->getIsoCode()->getValue();
                 $localizedSymbols[$language->getId()] = $query->getIsoCode()->getValue();
             }
+            $localizedPatterns[$language->getId()] = $locale->getCurrencyPattern();
         }
 
         if (null === $currency) {
-            throw new CurrencyNotFoundException(sprintf(
-                'Can not find reference currency with ISO code %s',
-                $query->getIsoCode()->getValue()
-            ));
+            throw new CurrencyNotFoundException(sprintf('Can not find reference currency with ISO code %s', $query->getIsoCode()->getValue()));
         }
 
         return new ReferenceCurrency(
@@ -101,6 +100,7 @@ class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterfac
             $currency->getNumericIsoCode(),
             $localizedNames,
             $localizedSymbols,
+            $localizedPatterns,
             $currency->getDecimalDigits()
         );
     }

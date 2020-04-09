@@ -2,20 +2,29 @@
 This file will explain to you how to run tests in puppeteer with docker-compose.
 
 ### LinkChecker
+To create shop and run LinkChecker
 
 ```bash
-# Create Shop and running test
 docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml up --build
 docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="linkchecker" tests bash /tmp/run-tests.sh
 ```
 
 ### Sanity tests
+To create shop and run sanity tests
 
 ```bash
-# Create Shop and running test
 docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml up --build
 docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="sanity-tests" tests bash /tmp/run-tests.sh
 ```
+
+### Functional tests
+To create shop and run functional tests
+
+```bash
+docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml up --build
+docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -e COMMAND="functional-tests" tests bash /tmp/run-tests.sh
+```
+
 ### Upgrade test
 For this specific test you need to specify which Prestashop Version you need to install.
 

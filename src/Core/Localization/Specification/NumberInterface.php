@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,6 +34,13 @@ namespace PrestaShop\PrestaShop\Core\Localization\Specification;
  */
 interface NumberInterface
 {
+    /**
+     * Latin numbering system is the "occidental" numbering system. Number digits are 0123456789.
+     * This is the default numbering system in PrestaShop, even for arabian or asian languages, until we
+     * provide a way to configure this in admin.
+     */
+    const NUMBERING_SYSTEM_LATIN = 'latn';
+
     /**
      * Get all specified symbols lists, indexed by available numbering system.
      *
@@ -51,7 +58,7 @@ interface NumberInterface
      *
      * @return NumberSymbolList
      */
-    public function getSymbolsByNumberingSystem($numberingSystem = null);
+    public function getSymbolsByNumberingSystem($numberingSystem = NumberInterface::NUMBERING_SYSTEM_LATIN);
 
     /**
      * Get the formatting rules for this number (when positive).

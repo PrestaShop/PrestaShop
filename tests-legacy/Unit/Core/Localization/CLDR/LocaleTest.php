@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -196,7 +196,7 @@ class LocaleTest extends TestCase
      */
     public function testGetNumberSymbolsByNumberingSystemWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->getNumberSymbolsByNumberingSystem('foobar');
     }
@@ -227,7 +227,7 @@ class LocaleTest extends TestCase
      */
     public function testGetDecimalPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->getDecimalPattern('foobar');
     }
@@ -258,7 +258,7 @@ class LocaleTest extends TestCase
      */
     public function testGetPercentPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->getPercentPattern('foobar');
     }
@@ -289,7 +289,7 @@ class LocaleTest extends TestCase
      */
     public function testGetCurrencyPatternWithUnknownNumberingSystem()
     {
-        $this->setExpectedException(LocalizationException::class);
+        $this->expectException(LocalizationException::class);
 
         $this->cldrLocale->getCurrencyPattern('foobar');
     }

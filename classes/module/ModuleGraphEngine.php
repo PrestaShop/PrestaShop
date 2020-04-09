@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,13 +51,13 @@ abstract class ModuleGraphEngineCore extends Module
             WHERE h.`name` = \'displayAdminStatsGraphEngine\'
         ');
 
-        $array_engines = array();
+        $array_engines = [];
         foreach ($result as $module) {
             $instance = Module::getInstanceByName($module['name']);
             if (!$instance) {
                 continue;
             }
-            $array_engines[$module['name']] = array($instance->displayName, $instance->description);
+            $array_engines[$module['name']] = [$instance->displayName, $instance->description];
         }
 
         return $array_engines;

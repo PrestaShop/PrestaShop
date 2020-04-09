@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Address\AbstractManufacturerAddressHandler;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\EditManufacturerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShopException;
 
 /**
@@ -49,17 +50,13 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
 
         try {
             if (false === $address->validateFields(false) || false === $address->validateFieldsLang(false)) {
-                throw new AddressException('Address contains invalid field values');
+                throw new InvalidAddressFieldException('Address contains invalid field values');
             }
             if (!$address->update()) {
-                throw new AddressException(
-                    sprintf('Cannot update address with id "%s"', $address->id)
-                );
+                throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
             }
         } catch (PrestaShopException $e) {
-            throw new AddressException(
-                sprintf('Cannot update address with id "%s"', $address->id)
-            );
+            throw new AddressException(sprintf('Cannot update address with id "%s"', $address->id));
         }
     }
 
@@ -106,6 +103,9 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
         }
         if (null !== $command->getOther()) {
             $address->other = $command->getOther();
+        }
+        if (null !== $command->getDni()) {
+            $address->dni = $command->getDni();
         }
     }
 }

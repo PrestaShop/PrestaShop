@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,12 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class CountryByIdChoiceProvider provides country choices with ID values.
  */
-final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
+final class CountryByIdChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
 {
     /**
      * @var CountryDataProvider
@@ -43,6 +44,21 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
      * @var int
      */
     private $langId;
+
+    /**
+     * @var array
+     */
+    private $countries;
+
+    /**
+     * @var int[]
+     */
+    private $dniCountriesId;
+
+    /**
+     * @var int[]
+     */
+    private $postcodeCountriesId;
 
     /**
      * @param int $langId
@@ -63,7 +79,7 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $countries = $this->countryDataProvider->getCountries($this->langId);
+        $countries = $this->getCountries();
         $choices = [];
 
         foreach ($countries as $country) {
@@ -71,5 +87,60 @@ final class CountryByIdChoiceProvider implements FormChoiceProviderInterface
         }
 
         return $choices;
+    }
+
+    /**
+     * @return array
+     */
+    public function getChoicesAttributes()
+    {
+        $countries = $this->getCountries();
+        $dniCountriesId = $this->getDniCountriesId();
+        $postcodeCountriesId = $this->getPostcodeCountriesId();
+        $choicesAttributes = [];
+
+        foreach ($countries as $country) {
+            if (in_array($country['id_country'], $dniCountriesId)) {
+                $choicesAttributes[$country['name']]['need_dni'] = 1;
+            }
+            if (in_array($country['id_country'], $postcodeCountriesId)) {
+                $choicesAttributes[$country['name']]['need_postcode'] = 1;
+            }
+        }
+
+        return $choicesAttributes;
+    }
+
+    /**
+     * @return array
+     */
+    private function getCountries()
+    {
+        if (null === $this->countries) {
+            $this->countries = $this->countryDataProvider->getCountries($this->langId);
+        }
+
+        return $this->countries;
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getDniCountriesId()
+    {
+        if (null === $this->dniCountriesId) {
+            $this->dniCountriesId = $this->countryDataProvider->getCountriesIdWhichNeedDni();
+        }
+
+        return $this->dniCountriesId;
+    }
+
+    private function getPostcodeCountriesId()
+    {
+        if (null === $this->postcodeCountriesId) {
+            $this->postcodeCountriesId = $this->countryDataProvider->getCountriesIdWhichNeedPostcode();
+        }
+
+        return $this->postcodeCountriesId;
     }
 }

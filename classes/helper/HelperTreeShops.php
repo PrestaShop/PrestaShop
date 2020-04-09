@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -100,7 +100,7 @@ class HelperTreeShopsCore extends TreeCore
     public function getSelectedShops()
     {
         if (!isset($this->_selected_shops)) {
-            $this->_selected_shops = array();
+            $this->_selected_shops = [];
         }
 
         return $this->_selected_shops;
@@ -122,7 +122,7 @@ class HelperTreeShopsCore extends TreeCore
         }
 
         if ($use_default_actions) {
-            $this->setActions(array(
+            $this->setActions([
                 new TreeToolbarLink(
                     'Collapse All',
                     '#',
@@ -147,7 +147,7 @@ class HelperTreeShopsCore extends TreeCore
                     'uncheckAllAssociatedShops($(\'#' . $this->getId() . '\')); return false;',
                     'icon-check-empty'
                 ),
-            ));
+            ]);
         }
 
         if ($use_selected_shop) {
@@ -175,17 +175,17 @@ class HelperTreeShopsCore extends TreeCore
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeFolderTemplate()),
                     $this->getContext()->smarty
-                )->assign($this->getAttributes())->assign(array(
+                )->assign($this->getAttributes())->assign([
                     'children' => $this->renderNodes($item['shops']),
                     'node' => $item,
-                ))->fetch();
+                ])->fetch();
             } else {
                 $html .= $this->getContext()->smarty->createTemplate(
                     $this->getTemplateFile($this->getNodeItemTemplate()),
                     $this->getContext()->smarty
-                )->assign($this->getAttributes())->assign(array(
+                )->assign($this->getAttributes())->assign([
                     'node' => $item,
-                ))->fetch();
+                ])->fetch();
             }
         }
 
