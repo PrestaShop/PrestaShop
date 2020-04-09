@@ -585,6 +585,7 @@ abstract class PaymentModuleCore extends Module
                         $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
                         $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
                         $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
+                        $orderLanguage = new Language((int) $order->id_lang);
 
                         $data = [
                             '{firstname}' => $this->context->customer->firstname,
@@ -648,12 +649,17 @@ abstract class PaymentModuleCore extends Module
 
                         // Join PDF invoice
                         if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
+                            $currentLanguage = $this->context->language;
+                            $this->context->language = $orderLanguage;
+                            $this->context->getTranslator()->setLocale($orderLanguage->locale);
                             $order_invoice_list = $order->getInvoicesCollection();
                             Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                             $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                             $file_attachement['content'] = $pdf->render(false);
                             $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
                             $file_attachement['mime'] = 'application/pdf';
+                            $this->context->language = $currentLanguage;
+                            $this->context->getTranslator()->setLocale($currentLanguage->locale);
                         } else {
                             $file_attachement = null;
                         }
@@ -662,13 +668,11 @@ abstract class PaymentModuleCore extends Module
                             PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                         }
 
-                        $orderLanguage = new Language((int) $order->id_lang);
-
                         if (Validate::isEmail($this->context->customer->email)) {
                             Mail::Send(
                                 (int) $order->id_lang,
                                 'order_conf',
-                                Context::getContext()->getTranslator()->trans(
+                                $this->context->getTranslator()->trans(
                                     'Order confirmation',
                                     [],
                                     'Emails.Subject',
