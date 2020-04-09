@@ -46,7 +46,7 @@ interface TranslationsFactoryInterface
     public function createCatalogue($identifier, $locale = self::DEFAULT_LOCALE);
 
     /**
-     * Generates Translation tree in Back Office.
+     * Generates a list of translations by domain.
      *
      * @param string $domainIdentifier Domain identifier
      * @param string $locale Locale identifier
