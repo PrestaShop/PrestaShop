@@ -32,15 +32,6 @@ services:
         tags:
             - { name: twig.extension }
 
-    prestashop.twig.extension.translation:
-        class: PrestaShopBundle\Twig\TranslationsExtension
-        arguments: ["@service_container", "@router"]
-        properties:
-            logger: "@logger"
-            translator: "@translator"
-        tags:
-            - { name: twig.extension }
-
     prestashop.twig.extension.data_formatter:
         class: PrestaShopBundle\Twig\DataFormatterExtension
         tags:
