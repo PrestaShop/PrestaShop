@@ -48,6 +48,7 @@ export default class OrderProductAdd {
     this.totalPriceText = $(OrderViewPageMap.productAddTotalPriceText);
     this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
     this.freeShippingSelect = $(OrderViewPageMap.productAddFreeShippingSelect);
+    this.productAddMenuBtn = $(OrderViewPageMap.productAddBtn);
     this.available = null;
     this.setupListener();
     this.product = {};
@@ -118,6 +119,7 @@ export default class OrderProductAdd {
       );
     });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
+    this.productAddMenuBtn.on('click', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
