@@ -211,7 +211,7 @@
 									{elseif $field['type'] == 'color'}
 										<div class="col-lg-2">
 											<div class="input-group">
-												<input type="color" size="{$field['size']}" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$field['name']}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
+												<input type="color" data-hex="true" {if isset($input.class)}class="{$field['class']}" {else}class="color mColorPickerInput"{/if} name="{$key}" class="{if isset($field['class'])}{$field['class']}{/if}" value="{$field['value']|escape:'html':'UTF-8'}" />
 											</div>
 							            </div>
 									{elseif $field['type'] == 'price'}
