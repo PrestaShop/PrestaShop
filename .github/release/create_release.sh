@@ -29,7 +29,7 @@ node replace_version.js --version $versiong
 
 
 e_arrow "Installing PHP dependencies with composer"
-cd $rootPath; composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+cd $rootPath; composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
 
 
 e_arrow "Building assets with NPM"
