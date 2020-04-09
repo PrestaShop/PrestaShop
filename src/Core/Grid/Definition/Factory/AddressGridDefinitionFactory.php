@@ -290,7 +290,7 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
                     ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
                     ->setOptions([
                         'submit_route' => 'admin_addresses_delete_bulk',
-                        'confirm_message' => $this->trans('Are you sure you want to delete the selected address(es)?', [], 'Admin.Notifications.Warning'),
+                        'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Notifications.Warning'),
                         'modal_options' => new ModalOptions([
                             'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
                             'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
