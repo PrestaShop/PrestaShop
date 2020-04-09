@@ -146,7 +146,7 @@ class TranslationService
     }
 
     /**
-     * @param string $theme
+     * @param string|null $theme
      * @param string $type
      *
      * @return bool
