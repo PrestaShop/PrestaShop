@@ -65,9 +65,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
     ) {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
-                $treeBuilder = new TreeBuilder($locale, $theme);
-
-                return $treeBuilder->makeTranslationArray($provider, $search);
+                return $this->makeTranslationArray($provider, $locale, $theme, $search);
             }
         }
 
@@ -76,14 +74,20 @@ class TranslationsFactory implements TranslationsFactoryInterface
 
     /**
      * @param ProviderInterface $provider
+     *
+     * @return static
      */
     public function addProvider(ProviderInterface $provider)
     {
         $this->providers[] = $provider;
+
+        return $this;
     }
 
     /**
      * @param ProviderInterface[] $providers
+     *
+     * @return static
      */
     public function setProviders(array $providers)
     {
@@ -91,5 +95,93 @@ class TranslationsFactory implements TranslationsFactoryInterface
         foreach ($providers as $provider) {
             $this->addProvider($provider);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param ProviderInterface $provider
+     * @param string $locale
+     * @param string|null $theme
+     * @param string|null $search
+     *
+     * @return array
+     */
+    private function makeTranslationArray(ProviderInterface $provider, $locale, $theme, $search = null)
+    {
+        $provider->setLocale($locale);
+
+        $defaultCatalogue = $provider->getDefaultCatalogue();
+        $xliffCatalogue = $provider->getXliffCatalogue();
+        $databaseCatalogue = $provider->getDatabaseCatalogue($theme);
+
+        $translations = [];
+
+        foreach ($defaultCatalogue->all() as $domain => $messages) {
+            $missingTranslations = 0;
+
+            foreach ($messages as $translationKey => $translationValue) {
+                $data = array(
+                    'default' => $translationKey,
+                    'xlf' => $xliffCatalogue->defines($translationKey, $domain)
+                        ? $xliffCatalogue->get($translationKey, $domain)
+                        : null,
+                    'db' => $databaseCatalogue->defines($translationKey, $domain)
+                        ? $databaseCatalogue->get($translationKey, $domain)
+                        : null,
+                );
+
+                // if search is empty or is in catalog default|xlf|database
+                if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
+                    $translations[$domain][$translationKey] = $data;
+
+                    if (null === $data['xlf'] && null === $data['db']) {
+                        ++$missingTranslations;
+                    }
+                }
+            }
+
+            $translations[$domain]['__metadata'] = array(
+                'count' => count($translations[$domain]),
+                'missing_translations' => $missingTranslations
+            );
+        }
+
+        ksort($translations);
+
+        return $translations;
+    }
+
+    /**
+     * Check if data contains search word.
+     *
+     * @param $search
+     * @param $data
+     *
+     * @return bool
+     */
+    private function dataContainsSearchWord($search, $data)
+    {
+        if (is_string($search)) {
+            $search = strtolower($search);
+
+            return false !== strpos(strtolower($data['default']), $search) ||
+                false !== strpos(strtolower($data['xlf']), $search) ||
+                false !== strpos(strtolower($data['db']), $search);
+        }
+
+        if (is_array($search)) {
+            $contains = true;
+            foreach ($search as $s) {
+                $s = strtolower($s);
+                $contains &= false !== strpos(strtolower($data['default']), $s) ||
+                    false !== strpos(strtolower($data['xlf']), $s) ||
+                    false !== strpos(strtolower($data['db']), $s);
+            }
+
+            return $contains;
+        }
+
+        return false;
     }
 }
