@@ -130,7 +130,6 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddAvailableText).html('');
     $(OrderViewPageMap.productAddLocationText).html('');
     $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
-    $(OrderViewPageMap.productAddInvoiceSelect).val(0);
     $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
   }
 
