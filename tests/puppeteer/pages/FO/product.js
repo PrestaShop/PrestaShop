@@ -22,6 +22,10 @@ module.exports = class Product extends FOBasePage {
     this.productSizeOption = '#group_1 option[title=\'%SIZE\']';
     this.productColorInput = '#group_2 input[title=\'%COLOR\']';
     this.metaLink = '#main > meta';
+    // Product prices block
+    this.productPricesBlock = 'div.product-prices';
+    this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
+    this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
   }
 
   /**
@@ -140,5 +144,21 @@ module.exports = class Product extends FOBasePage {
    */
   getProductAvailabilityLabel() {
     return this.getTextContent(this.productAvailability, 1000);
+  }
+
+  /**
+   * Check if delivery information text is visible
+   * @return {boolean}
+   */
+  isDeliveryInformationVisible() {
+    return this.elementVisible(this.deliveryInformationSpan, 1000);
+  }
+
+  /**
+   * Get delivery information text
+   * @return {Promise<string>}
+   */
+  getDeliveryInformationText() {
+    return this.getTextContent(this.deliveryInformationSpan);
   }
 };

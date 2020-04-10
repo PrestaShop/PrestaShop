@@ -33,6 +33,7 @@ module.exports = class productSettings extends BOBasePage {
     this.nameLangButton = '#form_stock_in_stock_label';
     this.nameLangSpan = 'div.dropdown-menu[aria-labelledby=\'form_stock_in_stock_label\'] span[data-locale=\'%LANG\']';
     this.labelInStock = '#form_stock_in_stock_label_%IDLANG';
+    this.deliveryTimeInStockInput = '#form_stock_delivery_time_1';
     this.saveProductsStockForm = `${this.productsStockForm} .card-footer button`;
     // Pagination form
     this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
@@ -229,6 +230,17 @@ module.exports = class productSettings extends BOBasePage {
     // Fill label in french
     await this.changeLanguageForSelectors('fr');
     await this.setValue(this.labelInStock.replace('%IDLANG', 2), label);
+    await this.clickAndWaitForNavigation(this.saveProductsStockForm);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set delivery time text
+   * @param deliveryTimeText
+   * @return {Promise<string>}
+   */
+  async setDeliveryTimeInStock(deliveryTimeText) {
+    await this.setValue(this.deliveryTimeInStockInput, deliveryTimeText);
     await this.clickAndWaitForNavigation(this.saveProductsStockForm);
     return this.getTextContent(this.alertSuccessBlock);
   }
