@@ -289,7 +289,6 @@ module.exports = class productSettings extends BOBasePage {
 
   /**
    * Set label out-of-stock allowed backorders
-   * Set label out-of-stock allowed backorders
    * @param label
    * @returns {Promise<string>}
    */
