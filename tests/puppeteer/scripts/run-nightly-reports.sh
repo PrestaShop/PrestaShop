@@ -16,8 +16,10 @@ DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
 REPORT_PATH="${DIR_PATH}/campaigns"
 TESTS_DIR="${DIR_PATH}/prestashop/tests/puppeteer"
+LOG_DIR="/var/log/ps-reports/"
+LOG_PATH="${LOG_DIR}${REPORT_NAME}.log"
 
-exec &> >(tee -a "/var/log/ps-${REPORT_NAME}.log")
+exec &> >(tee -a $LOG_PATH)
 
 if [ ! -d $DIR_PATH ]; then
   # Always exit 0 since this script is ran
@@ -33,6 +35,8 @@ if [ -n "$(ls ${REPORT_PATH})" ]; then
   mkdir -p "${DIR_PATH}/reports"
   ./scripts/combine-reports.py "${REPORT_PATH}" "${DIR_PATH}/reports/${REPORT_NAME}.json"
   nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${DIR_PATH}/reports/${REPORT_NAME}.json" -o "${DIR_PATH}/reports" -f "${REPORT_NAME}.html"
+
+  cp $LOG_PATH "${DIR_PATH}/reports"
 
   # Send file, remove directory, and shutdown if everything is ok
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly

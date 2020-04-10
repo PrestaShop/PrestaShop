@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2020 PrestaShop SA and Contributors
  *
@@ -22,26 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
-import Router from '@components/router';
-import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-const {$} = window;
-
-export default class OrderPricesRefresher {
-  constructor() {
-    this.router = new Router();
-  }
-
-  refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_prices', {orderId}))
-      .then((response) => {
-        $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
-        $(OrderViewPageMap.orderDiscountsTotal).text(response.discountsAmountFormatted);
-        $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
-        $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
-        $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
-        $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
-      });
-  }
+/**
+ * Class AbstractFilterableGridDefinitionFactory implements filterable grid definition creation.
+ */
+abstract class AbstractFilterableGridDefinitionFactory extends AbstractGridDefinitionFactory implements FilterableGridDefinitionFactoryInterface
+{
+    /**
+     * {@inheritdoc}
+     *
+     * Grid definition already has an internal id used or hooks, that can also be used as an identifier for filters
+     */
+    public function getFilterId(): string
+    {
+        return $this->getId();
+    }
 }

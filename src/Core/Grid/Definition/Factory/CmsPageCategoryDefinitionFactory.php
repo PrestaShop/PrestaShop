@@ -52,7 +52,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Class CmsPageCategoryDefinitionFactory builds Grid definition for Cms page category listing.
  */
-final class CmsPageCategoryDefinitionFactory extends AbstractGridDefinitionFactory
+final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;

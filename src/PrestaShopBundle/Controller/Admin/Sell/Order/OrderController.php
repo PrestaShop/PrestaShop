@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use Exception;
 use InvalidArgumentException;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
@@ -457,6 +458,7 @@ class OrderController extends CommonController
 
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
+            'enableSidebar' => true,
             'orderCurrency' => $orderCurrency,
             'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -1277,16 +1279,37 @@ class OrderController extends CommonController
      *
      * @return JsonResponse
      */
-    public function getPricesAction(int $orderId): JsonResponse
+    public function getDiscountsAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig', [
+            'discounts' => $orderForViewing->getDiscounts()->getDiscounts(),
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return JsonResponse
+     */
+    public function getPricesAction(int $orderId): JsonResponse
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewingPrices = $orderForViewing->getPrices();
+
         return $this->json([
-            'orderTotalFormatted' => $orderForViewing->getPrices()->getTotalAmountFormatted(),
-            'productsTotalFormatted' => $orderForViewing->getPrices()->getProductsPriceFormatted(),
-            'shippingTotalFormatted' => $orderForViewing->getPrices()->getShippingPriceFormatted(),
-            'taxesTotalFormatted' => $orderForViewing->getPrices()->getTaxesAmountFormatted(),
+            'orderTotalFormatted' => $orderForViewingPrices->getTotalAmountFormatted(),
+            'discountsAmountFormatted' => $orderForViewingPrices->getDiscountsAmountFormatted(),
+            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThan(new Number('0')),
+            'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
+            'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
+            'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),
         ]);
     }
 
@@ -1410,7 +1433,7 @@ class OrderController extends CommonController
         }
 
         return [
-            CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered', 'Admin.Orderscustomers.Notification'),
+            CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered.', 'Admin.Orderscustomers.Notification'),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded.',
@@ -1431,8 +1454,8 @@ class OrderController extends CommonController
             ),
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
-                    'Please enter a positive quantity.',
-                    'Admin.Orderscustomers.Notification'
+                    'Positive product quantity is required.',
+                    'Admin.Notifications.Error'
                 ),
                 InvalidCancelProductException::QUANTITY_TOO_HIGH => $this->trans(
                     'Please enter a maximum quantity of [1].',
@@ -1479,8 +1502,8 @@ class OrderController extends CommonController
                 ),
             ],
             InvalidProductQuantityException::class => $this->trans(
-                'Please enter a positive quantity.',
-                'Admin.Orderscustomers.Notification'
+                'Positive product quantity is required.',
+                'Admin.Notifications.Error'
             ),
         ];
     }
@@ -1534,7 +1557,7 @@ class OrderController extends CommonController
         return [
             OrderNotFoundException::class => $exception instanceof OrderNotFoundException ?
                 $this->trans(
-                    'Order #%d cannot be loaded',
+                    'Order #%d cannot be loaded.',
                     'Admin.Orderscustomers.Notification',
                     ['#%d' => $exception->getOrderId()->getValue()]
                 ) : '',
