@@ -39,13 +39,12 @@ use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\DeleteProductFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use Tools;
 use Validate;
 
 /**
@@ -59,11 +58,17 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     private $contextStateManager;
 
     /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
      * @param ContextStateManager $contextStateManager
      */
-    public function __construct(ContextStateManager $contextStateManager)
+    public function __construct(ContextStateManager $contextStateManager, OrderAmountUpdater $orderAmountUpdater)
     {
         $this->contextStateManager = $contextStateManager;
+        $this->orderAmountUpdater = $orderAmountUpdater;
     }
 
     /**
@@ -195,41 +200,9 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      */
     private function updateOrder(Order $order, OrderDetail $orderDetail, Cart $cart)
     {
-        // @todo: use https://github.com/PrestaShop/decimal for price computations
-        $computingPrecision = new ComputingPrecision();
         $currency = new Currency((int) $cart->id_currency);
-        $precision = $computingPrecision->getPrecision($currency->precision);
-        $totalMethod = $orderDetail->id_order_invoice != 0 ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
 
-        $orderProducts = $order->getCartProducts();
-
-        $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
-        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-
-        $order->total_paid = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-            $precision
-        );
-        $order->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
-            $precision
-        );
-        $order->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-            $precision
-        );
-
-        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts);
-        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts);
-
-        $order->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
-        $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts);
-        $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
-
-        $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
-        $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
-        $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
+        $order = $this->orderAmountUpdater->updateAmount($cart, $currency, $order, $orderDetail);
 
         return $order->update();
     }
