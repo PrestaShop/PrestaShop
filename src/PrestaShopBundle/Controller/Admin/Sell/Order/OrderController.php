@@ -30,6 +30,7 @@ use Exception;
 use InvalidArgumentException;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartInformation;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
@@ -886,7 +887,7 @@ class OrderController extends CommonController
                     );
 
                     $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-                } catch (OrderException $e) {
+                } catch (Exception $e) {
                     $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
                 }
             } else {
@@ -1451,6 +1452,13 @@ class OrderController extends CommonController
             InvalidAmountException::class => $this->trans(
                 'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
+            ),
+            InvalidCartRuleDiscountValueException::class => sprintf(
+                '%s<ol><li>%s</li><li>%s</li><li>%s</li></ol>',
+                $this->trans('It looks like the value is invalid:', 'Admin.Orderscustomers.Notification'),
+                $this->trans('Percent or amount value must be greater than 0.', 'Admin.Orderscustomers.Notification'),
+                $this->trans('Percent value cannot exceed 100.', 'Admin.Orderscustomers.Notification'),
+                $this->trans('Discount value cannot exceed the total price of this order.', 'Admin.Orderscustomers.Notification')
             ),
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
