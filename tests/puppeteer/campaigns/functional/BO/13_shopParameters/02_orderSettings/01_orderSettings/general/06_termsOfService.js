@@ -37,7 +37,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable terms of service', async () => {
+describe('Enable terms of service', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

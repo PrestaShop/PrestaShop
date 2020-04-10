@@ -39,7 +39,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable final summary', async () => {
+describe('Enable final summary', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

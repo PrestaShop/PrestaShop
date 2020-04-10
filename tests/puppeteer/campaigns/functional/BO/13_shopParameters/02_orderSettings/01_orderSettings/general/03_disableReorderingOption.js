@@ -35,7 +35,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable reordering option', async () => {
+describe('Enable reordering option', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

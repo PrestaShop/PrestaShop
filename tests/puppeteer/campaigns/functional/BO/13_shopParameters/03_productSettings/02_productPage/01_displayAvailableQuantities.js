@@ -35,7 +35,7 @@ Check that quantity is not displayed
 Enable display available quantities on product page
 Check that quantity is displayed
  */
-describe('Enable/Disable display available quantities on the product page', async () => {
+describe('Display available quantities on the product page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
