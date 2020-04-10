@@ -1,6 +1,6 @@
-/* eslint-disable indent,comma-dangle */
+<?php
 /**
- * 2007-2020 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,20 +16,29 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 /**
- * Three mode available:
- *  build = production mode
- *  dev = development mode
+ * Class AbstractFilterableGridDefinitionFactory implements filterable grid definition creation.
  */
-const prod = require('./.webpack/prod.js');
-const dev = require('./.webpack/dev.js');
-
-module.exports = (env, argv) => (argv !== undefined && argv.mode === 'production' ? prod() : dev());
+abstract class AbstractFilterableGridDefinitionFactory extends AbstractGridDefinitionFactory implements FilterableGridDefinitionFactoryInterface
+{
+    /**
+     * {@inheritdoc}
+     *
+     * Grid definition already has an internal id used or hooks, that can also be used as an identifier for filters
+     */
+    public function getFilterId(): string
+    {
+        return $this->getId();
+    }
+}

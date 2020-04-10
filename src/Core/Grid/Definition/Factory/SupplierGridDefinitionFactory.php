@@ -50,7 +50,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class SupplierGridDefinitionFactory creates definition for supplier grid.
  */
-final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     /**
      * @var string

@@ -1406,7 +1406,6 @@ class CartCore extends ObjectModel
                     $id_customization
                 );
                 $updateQuantity = '- ' . $quantity;
-                $newProductQuantity = $productQuantity + $quantity;
 
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0

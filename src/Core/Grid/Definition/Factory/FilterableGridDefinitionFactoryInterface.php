@@ -1,6 +1,6 @@
-/* eslint-disable indent,comma-dangle */
+<?php
 /**
- * 2007-2020 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,20 +16,29 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 /**
- * Three mode available:
- *  build = production mode
- *  dev = development mode
+ * This interface allows to identify the filters associated to a Grid, which is then used
+ * to scope its parameters in request (thus allowing multi grid on same page) and as a key
+ * to persist them in database (and of course etch them afterwards).
  */
-const prod = require('./.webpack/prod.js');
-const dev = require('./.webpack/dev.js');
-
-module.exports = (env, argv) => (argv !== undefined && argv.mode === 'production' ? prod() : dev());
+interface FilterableGridDefinitionFactoryInterface extends GridDefinitionFactoryInterface
+{
+    /**
+     * Returns a (unique) id to identify the grid filters, this is used as a key to persist
+     * (and clear) the Filters associated to the grid.
+     *
+     * @return string
+     */
+    public function getFilterId(): string;
+}

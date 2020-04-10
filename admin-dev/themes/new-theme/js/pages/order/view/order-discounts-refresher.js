@@ -1,6 +1,5 @@
-/* eslint-disable indent,comma-dangle */
 /**
- * 2007-2020 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +15,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2020 PrestaShop SA and Contributors
@@ -24,12 +23,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-/**
- * Three mode available:
- *  build = production mode
- *  dev = development mode
- */
-const prod = require('./.webpack/prod.js');
-const dev = require('./.webpack/dev.js');
+import Router from '@components/router';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-module.exports = (env, argv) => (argv !== undefined && argv.mode === 'production' ? prod() : dev());
+const {$} = window;
+
+export default class OrderDiscountsRefresher {
+  constructor() {
+    this.router = new Router();
+  }
+
+  refresh(orderId) {
+    $.ajax(this.router.generate('admin_orders_get_discounts', {orderId}))
+      .then((response) => {
+        $(OrderViewPageMap.productDiscountList.list).replaceWith(response);
+      });
+  }
+}

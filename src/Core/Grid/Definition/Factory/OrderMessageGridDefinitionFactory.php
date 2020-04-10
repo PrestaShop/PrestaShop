@@ -45,7 +45,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Creates definition for order message grid
  */
-final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     public const GRID_ID = 'order_message';
 
