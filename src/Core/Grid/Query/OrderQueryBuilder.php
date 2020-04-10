@@ -90,6 +90,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->getBaseQueryBuilder($searchCriteria->getFilters())
             ->addSelect($this->getCustomerField() . ' AS `customer`')
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
+            ->addSelect('o.id_currency, cur.iso_code')
             ->addSelect('o.current_state, o.id_customer')
             ->addSelect('cu.`id_customer` IS NULL as `deleted_customer`')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
@@ -137,6 +138,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'orders', 'o')
             ->leftJoin('o', $this->dbPrefix . 'customer', 'cu', 'o.id_customer = cu.id_customer')
+            ->leftJoin('o', $this->dbPrefix . 'currency', 'cur', 'o.id_currency = cur.id_currency')
             ->innerJoin('o', $this->dbPrefix . 'address', 'a', 'o.id_address_delivery = a.id_address')
             ->innerJoin('a', $this->dbPrefix . 'country', 'c', 'a.id_country = c.id_country')
             ->innerJoin(

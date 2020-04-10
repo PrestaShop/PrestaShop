@@ -113,6 +113,10 @@ export default {
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
   productEditTotalPriceText: '.editProductTotalPrice',
+  // Product Discount List
+  productDiscountList: {
+    list: '.table.discountList',
+  },
   // Product Pack Modal
   productPackModal: {
     modal: '#product-pack-modal',
@@ -131,6 +135,7 @@ export default {
   },
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
+  orderDiscountsTotalContainer: '#order-discounts-total-container',
   orderDiscountsTotal: '#orderDiscountsTotal',
   orderWrappingTotal: '#orderWrappingTotal',
   orderShippingTotal: '#orderShippingTotal',

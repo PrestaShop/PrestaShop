@@ -31,7 +31,7 @@ export default class OrderProductAutocomplete {
   constructor(input) {
     this.router = new Router();
     this.input = input;
-    this.results = {};
+    this.results = [];
     this.dropdownMenu = $(OrderViewPageMap.productSearchInputAutocompleteMenu);
     /**
      * Permit to link to each value of dropdown a callback after item is clicked
@@ -44,12 +44,17 @@ export default class OrderProductAutocomplete {
       event.stopImmediatePropagation();
       this.updateResults(this.results);
     });
-    this.input.on('keyup', event => this.search(event.target.value));
+    this.input.on('keyup', event => this.search(event.currentTarget.value, $(event.currentTarget).data('currency')));
     $(document).on('click', () => this.dropdownMenu.hide());
   }
 
-  search(search) {
-    $.get(this.router.generate('admin_products_search', {search_phrase: search}))
+  search(search, currency) {
+    const params = {search_phrase: search};
+    if (currency) {
+      params.currency_id = currency;
+    }
+
+    $.get(this.router.generate('admin_products_search', params))
       .then(response => this.updateResults(response));
   }
 
@@ -65,7 +70,7 @@ export default class OrderProductAutocomplete {
       const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
       link.on('click', event => {
         event.preventDefault();
-        this.onItemClicked($(event.target).data('id'))
+        this.onItemClicked($(event.target).data('id'));
       });
       this.dropdownMenu.append(link);
     });
@@ -73,7 +78,11 @@ export default class OrderProductAutocomplete {
   }
 
   onItemClicked(id) {
-    this.input.val(this.results[id].name);
-    this.onItemClickedCallback(this.results[id]);
+    const selectedProduct = this.results.filter(product => product.productId === id);
+
+    if (selectedProduct.length !== 0) {
+      this.input.val(selectedProduct[0].name);
+      this.onItemClickedCallback(selectedProduct[0]);
+    }
   }
 }

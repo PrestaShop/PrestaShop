@@ -40,8 +40,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -51,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use Product;
 use RuntimeException;
@@ -171,6 +175,47 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (InvalidProductQuantityException $e) {
             $this->lastException = $e;
         } catch (ProductOutOfStockException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I remove product :productReference from order :orderReference
+     *
+     * @param string $productReference
+     * @param string $orderReference
+     */
+    public function removeProductsFromOrder(string $productReference, string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productId = $this->getProductIdByName($productReference);
+        $orderDetailId = null;
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $products */
+        $products = $orderForViewing->getProducts()->getProducts();
+        foreach ($products as $product) {
+            if ($product->getId() == $productId) {
+                $orderDetailId = $product->getOrderDetailId();
+                break;
+            }
+        }
+        if (empty($orderDetailId)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Product %s has not been found in order %s',
+                    $productReference,
+                    $orderReference
+                )
+            );
+        }
+
+        try {
+            $this->getCommandBus()->handle(
+                new DeleteProductFromOrderCommand($orderId, $orderDetailId)
+            );
+        } catch (OrderException | OrderNotFoundException $e) {
             $this->lastException = $e;
         }
     }
@@ -744,15 +789,16 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     private function getProductIdByName(string $productName)
     {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
         }
 
-        return (int) $productId;
+        /** @var FoundProduct $product */
+        $product = reset($products);
+
+        return (int) $product->getProductId();
     }
 
     /**

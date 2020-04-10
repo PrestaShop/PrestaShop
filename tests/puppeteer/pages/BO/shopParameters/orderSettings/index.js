@@ -17,6 +17,12 @@ module.exports = class OrderSettings extends BOBasePage {
     this.enableTermsOfServiceLabel = `${this.generalForm} label[for='form_general_enable_tos_%TOGGLE']`;
     this.pageForTermsAndConditionsSelect = '#form_general_tos_cms_id';
     this.saveGeneralFormButton = `${this.generalForm} .card-footer button`;
+    // Gift options form
+    this.giftWrappingToogle = `${this.generalForm} label[for='form_gift_options_enable_gift_wrapping_%TOGGLE']`;
+    this.giftWrappingPriceInput = '#form_gift_options_gift_wrapping_price';
+    this.giftWrappingTaxSelect = '#form_gift_options_gift_wrapping_tax_rules_group';
+    this.recycledPackagingToogle = `${this.generalForm} label[for='form_gift_options_offer_recyclable_pack_%TOGGLE']`;
+    this.saveGiftOptionsFormButton = `${this.generalForm} div:nth-of-type(2) .card-footer button`;
   }
 
   /*
@@ -79,6 +85,25 @@ module.exports = class OrderSettings extends BOBasePage {
       await this.selectByVisibleText(this.pageForTermsAndConditionsSelect, pageName);
     }
     await this.clickAndWaitForNavigation(this.saveGeneralFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set gift options form
+   * @param wantedStatus
+   * @param price
+   * @param tax
+   * @param recyclePackagingStatus
+   * @return {Promise<string>}
+   */
+  async setGiftOptions(wantedStatus = false, price = 0, tax = 'none', recyclePackagingStatus = false) {
+    await this.page.click(this.giftWrappingToogle.replace('%TOGGLE', wantedStatus ? 1 : 0));
+    if (wantedStatus) {
+      await this.setValue(this.giftWrappingPriceInput, price.toString());
+      await this.selectByVisibleText(this.giftWrappingTaxSelect, tax);
+    }
+    await this.page.click(this.recycledPackagingToogle.replace('%TOGGLE', recyclePackagingStatus ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveGiftOptionsFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };

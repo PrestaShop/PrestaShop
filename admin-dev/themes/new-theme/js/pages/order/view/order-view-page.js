@@ -27,6 +27,7 @@ import OrderProductManager from '@pages/order/view/order-product-manager';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import {EventEmitter} from '@components/event-emitter';
+import OrderDiscountsRefresher from '@pages/order/view/order-discounts-refresher';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import Router from '@components/router';
@@ -37,6 +38,7 @@ const $ = window.$;
 
 export default class OrderViewPage {
   constructor() {
+    this.orderDiscountsRefresher = new OrderDiscountsRefresher();
     this.orderProductManager = new OrderProductManager();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
@@ -74,6 +76,7 @@ export default class OrderViewPage {
 
       this.orderProductRenderer.updateNumProducts(numProducts - 1);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderDiscountsRefresher.refresh(event.orderId);
     });
 
     EventEmitter.on(OrderViewEventMap.productEditionCanceled, (event) => {
@@ -92,6 +95,7 @@ export default class OrderViewPage {
       );
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderDiscountsRefresher.refresh(event.orderId);
       this.listenForProductDelete();
       this.listenForProductEdit();
 
@@ -130,6 +134,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.updateNumProducts(numProducts + 1);
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
     });

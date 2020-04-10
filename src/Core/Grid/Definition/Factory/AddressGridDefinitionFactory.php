@@ -51,7 +51,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class is responsible for defining 'Sell > Customer > Addresses' grid.
  */
-final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     public const GRID_ID = 'address';
 

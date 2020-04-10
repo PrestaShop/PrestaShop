@@ -6,6 +6,7 @@ module.exports = class Email extends BOBasePage {
     super(page);
 
     this.pageTitle = 'E-mail •';
+    this.sendTestEmailSuccessfulMessage = 'A test email has been sent to the email address you provided.';
 
     // Selectors
     // List of emails
@@ -16,6 +17,21 @@ module.exports = class Email extends BOBasePage {
     this.emailFilterColumnInput = '#email_logs_%FILTERBY';
     this.filterSearchButton = `${this.emailsListForm} button[name='email_logs[actions][search]']`;
     this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
+    // Table rows and columns
+    this.tableBody = `${this.emailsListForm} tbody`;
+    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    this.deleteRowLink = `${this.tableRow} td.column-actions a[href*='delete']`;
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .md-checkbox i`;
+    this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
+
+    // Test your email configuration form
+    this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
+    this.sendTestEmailInput = '#test_email_sending_send_email_to';
+    this.sendTestEmailButton = `${this.sendTestEmailForm} button.js-send-test-email-btn`;
+    this.sendTestEmailAlertParagraph = `${this.sendTestEmailForm} .alert-success p.alert-text`;
   }
 
   /*
@@ -40,17 +56,28 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
-   * Filter list of emails
+   * Reset and get number of lines
+   * @returns {Promise<integer>}
+   */
+  async resetAndGetNumberOfLines() {
+    if (await this.elementVisible(this.filterResetButton, 2000)) {
+      await this.clickAndWaitForNavigation(this.filterResetButton);
+    }
+    return this.getNumberOfElementInGrid();
+  }
+
+  /**
+   * Filter list of email logs
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
-  async filterEmails(filterType, filterBy, value = '') {
+  async filterEmailLogs(filterType, filterBy, value = '') {
     await this.resetFilter();
     switch (filterType) {
       case 'input':
-        await this.setValue(this.emailFilterColumnInput.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.emailFilterColumnInput.replace('%FILTERBY', filterBy), value.toString());
         break;
       case 'select':
         await this.selectByVisibleText(
@@ -63,5 +90,74 @@ module.exports = class Email extends BOBasePage {
     }
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Get text from column
+   * @param columnName
+   * @param row
+   * @return {Promise<textContent>}
+   */
+  getTextColumn(columnName, row) {
+    return this.getTextContent(this.tableColumn
+      .replace('%ROW', row)
+      .replace('%COLUMN', columnName === 'id_lang' ? 'language' : columnName),
+    );
+  }
+
+  /**
+   * Filter email logs by date
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<void>}
+   */
+  async filterEmailLogsByDate(dateFrom, dateTo) {
+    await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_from'), dateFrom);
+    await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_to'), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(this.filterSearchButton);
+  }
+
+  /**
+   * Delete email logs
+   * @param row
+   * @returns {Promise<string>}
+   */
+  async deleteEmailLog(row) {
+    this.dialogListener(true);
+    await this.waitForSelectorAndClick(this.deleteRowLink.replace('%ROW', row));
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete email logs by bulk actions
+   * @returns {Promise<string>}
+   */
+  async deleteEmailLogsBulkActions() {
+    this.dialogListener(true);
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(this.bulkActionsToggleButton),
+    ]);
+    // Click on delete
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Send a test email
+   * @param email
+   * @return {Promise<string>}
+   */
+  async sendTestEmail(email) {
+    await this.setValue(this.sendTestEmailInput, email);
+    await this.page.click(this.sendTestEmailButton);
+    return this.getTextContent(this.sendTestEmailAlertParagraph);
   }
 };

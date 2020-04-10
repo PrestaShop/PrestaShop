@@ -39,6 +39,7 @@ export default {
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customer-search-result-template',
   customerSearchEmptyResultWarning: '#customer-search-empty-result-warn',
+  customerSearchLoadingNotice: '#customer-search-loading-notice',
   customerAddBtn: '#customer-add-btn',
   changeCustomerBtn: '.js-change-customer-btn',
   customerSearchRow: '.js-search-customer-row',
@@ -74,6 +75,7 @@ export default {
   orderPaymentMethod: '.js-order-payment-method',
   orderStatusField: '.js-order-status',
   emptyListRowTemplate: '#js-empty-list-row',
+  loadingListRowTemplate: '#js-loading-list-row',
   emptyListRow: '.js-empty-row',
 
   // selectors related to cartRules block

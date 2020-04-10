@@ -8,6 +8,7 @@ module.exports = class Home extends CommonPage {
     // Selectors for home page
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
+    this.desktopLogoLink = `${this.desktopLogo} a`;
     this.cartProductsCount = '#_desktop_cart span.cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
@@ -15,6 +16,7 @@ module.exports = class Home extends CommonPage {
     this.contactLink = '#contact-link';
     this.categoryMenu = '#category-%ID > a';
     this.languageSelectorDiv = '#_desktop_language_selector';
+    this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
@@ -34,7 +36,7 @@ module.exports = class Home extends CommonPage {
    */
   async goToHomePage() {
     await this.waitForVisibleSelector(this.desktopLogo);
-    await this.clickAndWaitForNavigation(this.desktopLogo);
+    await this.clickAndWaitForNavigation(this.desktopLogoLink);
   }
 
   /**
@@ -91,6 +93,15 @@ module.exports = class Home extends CommonPage {
     ]);
     await this.clickAndWaitForNavigation(this.languageSelectorMenuItemLink.replace('%LANG', lang));
   }
+
+  /**
+   * Get shop language
+   * @returns {Promise<string>}
+   */
+  getShopLanguage() {
+    return this.getTextContent(this.defaultLanguageSpan);
+  }
+
 
   /**
    * Return true if language exist in FO

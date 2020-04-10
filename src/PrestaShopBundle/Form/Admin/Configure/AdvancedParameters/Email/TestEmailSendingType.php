@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email;
 
+use PrestaShopBundle\Form\Admin\Type\EmailType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 

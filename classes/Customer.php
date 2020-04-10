@@ -1119,11 +1119,23 @@ class CustomerCore extends ObjectModel
         $this->cleanGroups();
         $this->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
         $this->id_default_group = Configuration::get('PS_CUSTOMER_GROUP');
+        $this->stampResetPasswordToken();
         if ($this->update()) {
             $vars = [
                 '{firstname}' => $this->firstname,
                 '{lastname}' => $this->lastname,
                 '{email}' => $this->email,
+                '{url}' => Context::getContext()->link->getPageLink(
+                    'password',
+                    true,
+                    null,
+                    sprintf(
+                        'token=%s&id_customer=%s&reset_token=%s',
+                        $this->secure_key,
+                        (int) $this->id,
+                        $this->reset_password_token
+                    )
+                ),
             ];
             Mail::Send(
                 (int) $idLang,

@@ -36,6 +36,7 @@ use Configuration;
 use Context;
 use Currency;
 use Customer;
+use Exception;
 use Hook;
 use Order;
 use OrderCarrier;

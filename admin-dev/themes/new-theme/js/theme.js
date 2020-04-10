@@ -61,8 +61,10 @@ new Header();
 
 import initDatePickers from '@js/app/utils/datepicker';
 import initInvalidFields from '@js/app/utils/fields';
+import initEmailFields from '@js/app/utils/email-idn';
 
 $(() => {
   initDatePickers();
   initInvalidFields();
+  initEmailFields('input[type="email"]');
 });

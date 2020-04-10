@@ -221,10 +221,7 @@ module.exports = class Stocks extends BOBasePage {
   async filterByCategory(category) {
     await this.openCloseAdvancedFilter();
     await this.page.click(this.filterCategoryExpandButton);
-    await Promise.all([
-      this.waitForVisibleSelector(this.productListLoading),
-      this.page.click(this.filterCategoryCheckBoxDiv.replace('%CATEGORY', category)),
-    ]);
+    await this.page.click(this.filterCategoryCheckBoxDiv.replace('%CATEGORY', category));
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
     await this.page.click(this.filterCategoryCollapseButton);
     await this.openCloseAdvancedFilter(false);
