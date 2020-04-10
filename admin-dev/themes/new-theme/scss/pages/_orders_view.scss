@@ -328,10 +328,15 @@
     }
 
     .product-row {
-      > div:first-child {
-        order: 2;
-      }
+      > div {
+        &:first-child {
+          order: 1;
+        }
 
+        &:last-child {
+          order: 2;
+        }
+      }
       .nav-tabs {
         display: flex;
         overflow-y: scroll;
