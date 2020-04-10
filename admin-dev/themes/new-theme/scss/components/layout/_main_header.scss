@@ -549,14 +549,14 @@ $header-text-color: #4e6167 !default;
       text-align: center;
     }
 
-    .profile-link {
-      margin: 0 auto !important;
-      border: 1px solid #899EA5;
-      border-radius: 1px;
-      color: #576C72;
-      min-width: 130px;
-      width: auto;
+    .profile-link.dropdown-item {
       display: table;
+      width: auto;
+      min-width: 130px;
+      margin: 0 auto;
+      color: #576c72;
+      border: 1px solid #899ea5;
+      @include border-radius(1px);
 
       &:hover {
         color: $primary;
