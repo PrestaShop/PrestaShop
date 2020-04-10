@@ -74,6 +74,7 @@ class UpdateProductNameCommand
      */
     public function setLocalizedNames(array $localizedNames): UpdateProductNameCommand
     {
+        //@todo: assert name regex/length ?
         $this->localizedNames = $localizedNames;
 
         return $this;
