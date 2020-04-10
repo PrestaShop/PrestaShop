@@ -32,4 +32,9 @@ class ProductConstraintException extends ProductException
      * Code is used when invalid id is supplied.
      */
     const INVALID_ID = 10;
+
+    /**
+     * When invalid product type is supplied.
+     */
+    const INVALID_PRODUCT_TYPE = 20;
 }
