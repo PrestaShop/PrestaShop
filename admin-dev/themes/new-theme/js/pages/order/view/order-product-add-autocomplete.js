@@ -78,7 +78,7 @@ export default class OrderProductAutocomplete {
   }
 
   onItemClicked(id) {
-    const selectedProduct = this.results.filter(product => product.productId === id);
+    const selectedProduct = this.results.filter((product) => product.productId === id);
 
     if (selectedProduct.length !== 0) {
       this.input.val(selectedProduct[0].name);
