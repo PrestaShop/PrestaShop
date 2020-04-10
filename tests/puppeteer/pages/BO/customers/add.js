@@ -19,6 +19,7 @@ module.exports = class AddCustomer extends BOBasePage {
     this.dayOfBirthSelect = 'select#customer_birthday_day';
     this.enabledSwitchlabel = 'label[for=\'customer_is_enabled_%ID\']';
     this.partnerOffersSwitchlabel = 'label[for=\'customer_is_partner_offers_subscribed_%ID\']';
+    this.groupAccessCheckkbox = '#customer_group_ids_%ID +i';
     this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label .md-checkbox-control';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
     this.saveCustomerButton = 'div.card-footer button';
@@ -47,7 +48,21 @@ module.exports = class AddCustomer extends BOBasePage {
     else await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
     if (customerData.partnerOffers) await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '1'));
     else await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '0'));
-    await this.page.click(this.selectAllGroupAccessCheckbox);
+    switch (customerData.defaultCustomerGroup) {
+      case 'Customer':
+        await this.changeCheckboxValue(this.selectAllGroupAccessCheckbox);
+        break;
+      case 'Visitor':
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 1));
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 2));
+        break;
+      case 'Guest':
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 0));
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 2));
+        break;
+      default:
+        throw new Error(`${customerData.defaultCustomerGroup} was not found as a group access`);
+    }
     await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
     // Save Customer
     await this.clickAndWaitForNavigation(this.saveCustomerButton);
