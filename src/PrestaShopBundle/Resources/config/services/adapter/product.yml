@@ -71,3 +71,9 @@ services:
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductBaseData
+
+    prestashop.adapter.product.command_handler.update_product_name_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductNameHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductNameCommand

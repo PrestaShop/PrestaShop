@@ -26,26 +26,56 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBaseDataCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBaseDataHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-final class UpdateProductBaseDataHandler extends AbstractProductHandler implements UpdateProductBaseDataHandlerInterface
+class UpdateProductNameCommand
 {
     /**
-     * {@inheritDoc}
+     * @var ProductId
      */
-    public function handle(UpdateProductBaseDataCommand $command): void
-    {
-        $product = $this->getProduct($command->getProductId());
+    private $productId;
 
-        if (null !== $command->getLocalizedNames()) {
-            $product->name = $command->getLocalizedNames();
-        }
-        //@todo: check what to do with product type.
-        //  it might be that the type is not updatable on product, except virtual product (because it only has is_virtual prop).
-        //  Maybe we only recognize and update type by updating certain product fields.
+    /**
+     * @var null|string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(
+        int $productId
+    ) {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedNames(): ?array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     *
+     * @return UpdateProductNameCommand
+     */
+    public function setLocalizedNames(array $localizedNames): UpdateProductNameCommand
+    {
+        $this->localizedNames = $localizedNames;
+
+        return $this;
     }
 }

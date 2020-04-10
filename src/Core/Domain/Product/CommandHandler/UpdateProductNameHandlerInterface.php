@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBaseDataCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductNameCommand;
 
-interface UpdateProductBaseDataHandlerInterface
+interface UpdateProductNameHandlerInterface
 {
     /**
-     * @param UpdateProductBaseDataCommand $command
+     * @param UpdateProductNameCommand $command
      */
-    public function handle(UpdateProductBaseDataCommand $command): void;
+    public function handle(UpdateProductNameCommand $command): void;
 }
