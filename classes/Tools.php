@@ -52,6 +52,9 @@ class ToolsCore
 
     public static $round_mode = null;
 
+    /**
+     * @param Request $request
+     */
     public function __construct(Request $request = null)
     {
         if ($request) {
@@ -172,6 +175,8 @@ class ToolsCore
     /**
      * Redirect user to another page.
      *
+     * Warning: uses exit
+     *
      * @param string $url Desired URL
      * @param string $base_uri Base URI (optional)
      * @param Link $link
@@ -222,6 +227,8 @@ class ToolsCore
     /**
      * Redirect URLs already containing PS_BASE_URI.
      *
+     * Warning: uses exit
+     *
      * @param string $url Desired URL
      */
     public static function redirectLink($url)
@@ -244,7 +251,9 @@ class ToolsCore
     }
 
     /**
-     * Redirect user to another admin page.
+     * Redirect user to another page (using header Location)
+     *
+     * Warning: uses exit
      *
      * @param string $url Desired URL
      */
@@ -255,7 +264,7 @@ class ToolsCore
     }
 
     /**
-     * getShopProtocol return the available protocol for the current shop in use
+     * Returns the available protocol for the current shop in use
      * SSL if Configuration is set on and available for the server.
      *
      * @return string
@@ -269,7 +278,7 @@ class ToolsCore
     }
 
     /**
-     * getProtocol return the set protocol according to configuration (http[s]).
+     * Returns the set protocol according to configuration (http[s]).
      *
      * @param bool $use_ssl true if require ssl
      *
@@ -281,12 +290,13 @@ class ToolsCore
     }
 
     /**
-     * getHttpHost return the <b>current</b> host used, with the protocol (http or https) if $http is true
+     * Returns the <b>current</b> host used, with the protocol (http or https) if $http is true
      * This function should not be used to choose http or https domain name.
      * Use Tools::getShopDomain() or Tools::getShopDomainSsl instead.
      *
      * @param bool $http
      * @param bool $entities
+     * @param bool $ignore_port
      *
      * @return string host
      */
@@ -312,7 +322,7 @@ class ToolsCore
     }
 
     /**
-     * getShopDomain returns domain name according to configuration and ignoring ssl.
+     * Returns domain name according to configuration and ignoring ssl.
      *
      * @param bool $http if true, return domain name with protocol
      * @param bool $entities if true, convert special chars to HTML entities
@@ -335,7 +345,7 @@ class ToolsCore
     }
 
     /**
-     * getShopDomainSsl returns domain name according to configuration and depending on ssl activation.
+     * Returns domain name according to configuration and depending on ssl activation.
      *
      * @param bool $http if true, return domain name with protocol
      * @param bool $entities if true, convert special chars to HTML entities
@@ -359,6 +369,7 @@ class ToolsCore
 
     /**
      * Get the server variable SERVER_NAME.
+     * Relies on $_SERVER
      *
      * @return string server name
      */
@@ -405,8 +416,9 @@ class ToolsCore
 
     /**
      * Check if the current page use SSL connection on not.
+     * Relies on $_SERVER global being filled
      *
-     * @return bool uses SSL
+     * @return bool true if SSL is used
      */
     public static function usingSecureMode()
     {
@@ -1106,6 +1118,8 @@ class ToolsCore
      *
      * @param string $file File path
      * @param array $exclude_files Excluded files
+     *
+     * @return bool
      */
     public static function deleteFile($file, $exclude_files = [])
     {
@@ -1114,8 +1128,10 @@ class ToolsCore
         }
 
         if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false) {
-            unlink($file);
+            return unlink($file);
         }
+
+        return false;
     }
 
     /**
@@ -1301,6 +1317,8 @@ class ToolsCore
      * Get token to prevent CSRF.
      *
      * @param string $token token to encrypt
+     *
+     * @return string
      */
     public static function getToken($page = true, Context $context = null)
     {
@@ -1317,13 +1335,21 @@ class ToolsCore
     /**
      * Tokenize a string.
      *
-     * @param string $string string to encript
+     * @param string $string String to encrypt
+     *
+     * @return string|bool false if given string is empty
      */
     public static function getAdminToken($string)
     {
         return !empty($string) ? Tools::hash($string) : false;
     }
 
+    /**
+     * @param string $tab
+     * @param Context $context
+     *
+     * @return bool|string
+     */
     public static function getAdminTokenLite($tab, Context $context = null)
     {
         if (!$context) {
@@ -1333,7 +1359,13 @@ class ToolsCore
         return Tools::getAdminToken($tab . (int) Tab::getIdFromClassName($tab) . (int) $context->employee->id);
     }
 
-    public static function getAdminTokenLiteSmarty($params, &$smarty)
+    /**
+     * @param array $params
+     * @param $smarty unused parameter, please ignore (@todo: remove in next major)
+     *
+     * @return bool|string
+     */
+    public static function getAdminTokenLiteSmarty($params, &$smarty = null)
     {
         $context = Context::getContext();
 
@@ -1344,7 +1376,9 @@ class ToolsCore
      * Get a valid URL to use from BackOffice.
      *
      * @param string $url An URL to use in BackOffice
-     * @param bool $entites Set to true to use htmlentities function on URL param
+     * @param bool $entities Set to true to use htmlentities function on URL param
+     *
+     * @return string
      */
     public static function getAdminUrl($url = null, $entities = false)
     {
@@ -1361,7 +1395,9 @@ class ToolsCore
      * Get a valid image URL to use from BackOffice.
      *
      * @param string $image Image name
-     * @param bool $entites Set to true to use htmlentities function on image param
+     * @param bool $entities Set to true to use htmlentities function on image param
+     *
+     * @return string
      */
     public static function getAdminImageUrl($image = null, $entities = false)
     {
@@ -1391,7 +1427,7 @@ class ToolsCore
      *
      * @param string $str
      *
-     * @return string
+     * @return string|bool
      */
     public static function str2url($str)
     {
@@ -2000,7 +2036,7 @@ class ToolsCore
     }
 
     /**
-     * returns the rounded value up of $value to specified precision.
+     * Returns the rounded value up of $value to specified precision.
      *
      * @param float $value
      * @param int $precision
@@ -2024,7 +2060,7 @@ class ToolsCore
     }
 
     /**
-     * returns the rounded value down of $value to specified precision.
+     * Returns the rounded value down of $value to specified precision.
      *
      * @param float $value
      * @param int $precision
@@ -2078,7 +2114,7 @@ class ToolsCore
     }
 
     /**
-     * refresh a local cacert file.
+     * Refresh local CACert file.
      */
     public static function refreshCACertFile()
     {
@@ -2106,6 +2142,15 @@ class ToolsCore
         }
     }
 
+    /**
+     * @param string $url
+     * @param int $curl_timeout
+     * @param array $opts
+     *
+     * @return bool|string
+     *
+     * @throws Exception
+     */
     private static function file_get_contents_curl(
         $url,
         $curl_timeout,
@@ -2304,20 +2349,24 @@ class ToolsCore
     /**
      * Transform a CamelCase string to underscore_case string.
      *
+     * 'CMSCategories' => 'cms_categories'
+     * 'RangePrice' => 'range_price'
+     *
      * @param string $string
      *
      * @return string
      */
     public static function toUnderscoreCase($string)
     {
-        // 'CMSCategories' => 'cms_categories'
-        // 'RangePrice' => 'range_price'
         return Tools::strtolower(trim(preg_replace('/([A-Z][a-z])/', '_$1', $string), '_'));
     }
 
     /**
      * Converts SomethingLikeThis to something-like-this
-     * The name comes from Perl, we like Perl.
+     *
+     * @param string $string
+     *
+     * @return string
      */
     public static function camelCaseToKebabCase($string)
     {
@@ -2326,6 +2375,11 @@ class ToolsCore
         );
     }
 
+    /**
+     * @param string $hex
+     *
+     * @return float|int|string
+     */
     public static function getBrightness($hex)
     {
         if (Tools::strtolower($hex) == 'transparent') {
@@ -2508,7 +2562,7 @@ class ToolsCore
         // Write data in .htaccess file
         fwrite($write_fd, "# ~~start~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again\n");
         fwrite($write_fd, "# .htaccess automaticaly generated by PrestaShop e-commerce open-source solution\n");
-        fwrite($write_fd, "# http://www.prestashop.com - http://www.prestashop.com/forums\n\n");
+        fwrite($write_fd, "# https://www.prestashop.com - https://www.prestashop.com/forums\n\n");
 
         if ($disable_modsec) {
             fwrite($write_fd, "<IfModule mod_security.c>\nSecFilterEngine Off\nSecFilterScanPOST Off\n</IfModule>\n\n");
@@ -2714,6 +2768,11 @@ FileETag none
         return true;
     }
 
+    /**
+     * @param bool $executeHook
+     *
+     * @return bool
+     */
     public static function generateRobotsFile($executeHook = false)
     {
         $robots_file = _PS_ROOT_DIR_ . '/robots.txt';
@@ -2733,13 +2792,13 @@ FileETag none
 
         // PS Comments
         fwrite($write_fd, "# robots.txt automatically generated by PrestaShop e-commerce open-source solution\n");
-        fwrite($write_fd, "# http://www.prestashop.com - http://www.prestashop.com/forums\n");
+        fwrite($write_fd, "# https://www.prestashop.com - https://www.prestashop.com/forums\n");
         fwrite($write_fd, "# This file is to prevent the crawling and indexing of certain parts\n");
         fwrite($write_fd, "# of your site by web crawlers and spiders run by sites like Yahoo!\n");
         fwrite($write_fd, "# and Google. By telling these \"robots\" where not to go on your site,\n");
         fwrite($write_fd, "# you save bandwidth and server resources.\n");
         fwrite($write_fd, "# For more information about the robots.txt standard, see:\n");
-        fwrite($write_fd, "# http://www.robotstxt.org/robotstxt.html\n");
+        fwrite($write_fd, "# https://www.robotstxt.org/robotstxt.html\n");
 
         // User-Agent
         fwrite($write_fd, "User-agent: *\n");
@@ -2837,6 +2896,9 @@ FileETag none
         return true;
     }
 
+    /**
+     * @return array
+     */
     public static function getRobotsContent()
     {
         $tab = [];
@@ -2897,6 +2959,9 @@ FileETag none
         PrestaShopAutoload::getInstance()->generateIndex();
     }
 
+    /**
+     * @return string php file to be run
+     */
     public static function getDefaultIndexContent()
     {
         return '<?php
@@ -2908,7 +2973,7 @@ FileETag none
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/osl-3.0.php
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -2917,11 +2982,11 @@ FileETag none
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-' . date('Y') . ' PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -3002,7 +3067,9 @@ exit;
      * jsonDecode convert json string to php array / object
      *
      * @param string $data
-     * @param bool $assoc (since 1.4.2.4) if true, convert to associativ array
+     * @param bool $assoc (since 1.4.2.4) if true, convert to associative array
+     * @param int $depth
+     * @param int $options
      *
      * @return array
      */
@@ -3017,6 +3084,8 @@ exit;
      * Convert an array to json string
      *
      * @param array $data
+     * @param int $depth
+     * @param int $options
      *
      * @return string json
      */
@@ -3027,6 +3096,8 @@ exit;
 
     /**
      * Display a warning message indicating that the method is deprecated.
+     *
+     * @param string $message
      */
     public static function displayAsDeprecated($message = null)
     {
@@ -3140,7 +3211,7 @@ exit;
     }
 
     /**
-     * @desc identify the version of php
+     * Identify the version of php
      *
      * @return string
      */
@@ -3154,7 +3225,7 @@ exit;
             $version = phpversion('');
         }
 
-        //Case management system of ubuntu, php version return 5.2.4-2ubuntu5.2
+        // Specific ubuntu usecase: php version returns 5.2.4-2ubuntu5.2
         if (strpos($version, '-') !== false) {
             $version = substr($version, 0, strpos($version, '-'));
         }
@@ -3163,7 +3234,9 @@ exit;
     }
 
     /**
-     * @desc try to open a zip file in order to check if it's valid
+     * Try to open a zip file in order to check if it's valid
+     *
+     * @param string $from_file
      *
      * @return bool success
      */
@@ -3185,9 +3258,12 @@ exit;
     }
 
     /**
-     * @desc extract a zip file to the given directory
+     * Extract a zip file to the given directory
      *
-     * @return bool success
+     * @param string $from_file
+     * @param string $to_dir
+     *
+     * @return bool
      */
     public static function ZipExtract($from_file, $to_dir)
     {
@@ -3203,6 +3279,12 @@ exit;
         return false;
     }
 
+    /**
+     * @param string $path
+     * @param int $filemode
+     *
+     * @return bool
+     */
     public static function chmodr($path, $filemode)
     {
         if (!is_dir($path)) {
@@ -3354,7 +3436,7 @@ exit;
     /**
      * Convert \n and \r\n and \r to <br />.
      *
-     * @param string $string String to transform
+     * @param string $str String to transform
      *
      * @return string New string
      */
@@ -3367,6 +3449,11 @@ exit;
      * Clear cache for Smarty.
      *
      * @param Smarty $smarty
+     * @param bool $tpl
+     * @param string $cache_id
+     * @param string $compile_id
+     *
+     * @return int|null number of cache files deleted
      */
     public static function clearCache($smarty = null, $tpl = false, $cache_id = null, $compile_id = null)
     {
@@ -3375,7 +3462,7 @@ exit;
         }
 
         if ($smarty === null) {
-            return;
+            return null;
         }
 
         if (!$tpl && $cache_id === null && $compile_id === null) {
@@ -3391,6 +3478,10 @@ exit;
 
     /**
      * Clear compile for Smarty.
+     *
+     * @param Smarty $smarty
+     *
+     * @return int|null number of template files deleted
      */
     public static function clearCompile($smarty = null)
     {
@@ -3399,7 +3490,7 @@ exit;
         }
 
         if ($smarty === null) {
-            return;
+            return null;
         }
 
         $ret = $smarty->clearCompiledTemplate();
@@ -3421,6 +3512,8 @@ exit;
 
     /**
      * Clear Symfony cache.
+     *
+     * @param string $env
      */
     public static function clearSf2Cache($env = null)
     {
@@ -3446,6 +3539,9 @@ exit;
         Tools::clearSf2Cache();
     }
 
+    /**
+     * @param int|bool $id_product
+     */
     public static function clearColorListCache($id_product = false)
     {
         // Change template dir if called from the BackOffice
@@ -3456,7 +3552,7 @@ exit;
     }
 
     /**
-     * getMemoryLimit allow to get the memory limit in octet.
+     * Allow to get the memory limit in octets.
      *
      * @since 1.4.5.0
      *
@@ -3470,11 +3566,11 @@ exit;
     }
 
     /**
-     * getOctet allow to gets the value of a configuration option in octet.
+     * Gets the value of a configuration option in octets.
      *
      * @since 1.5.0
      *
-     * @return int the value of a configuration option in octet
+     * @return int the value of a configuration option in octets
      */
     public static function getOctets($option)
     {
@@ -4340,6 +4436,12 @@ function cmpPriceAsc($a, $b)
     return 0;
 }
 
+/**
+ * @param array $a
+ * @param array $b
+ *
+ * @return int
+ */
 function cmpPriceDesc($a, $b)
 {
     if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {

@@ -44,4 +44,13 @@ class MyAccountControllerCore extends FrontController
         parent::initContent();
         $this->setTemplate('customer/my-account');
     }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
+
+        return $breadcrumb;
+    }
 }

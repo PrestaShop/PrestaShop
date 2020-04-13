@@ -66,6 +66,46 @@ export default class CreateOrderPage {
 
     this.initListeners();
     this.loadCartFromUrlParams();
+
+    return {
+      refreshAddressesList: (refreshCartAddresses) => this.refreshAddressesList(refreshCartAddresses),
+      refreshCart: (refreshCart) => this.refreshCart(refreshCart),
+      search: (string) => this.customerManager.search(string),
+    };
+  }
+
+  /**
+   * Checks if correct addresses are selected.
+   * There is a case when options list cannot contain cart addresses 'selected' values
+   *  because those are outdated in db (e.g. deleted after cart creation or country is disabled)
+   *
+   * @param {Array} addresses
+   *
+   * @returns {boolean}
+   */
+  static validateSelectedAddresses(addresses) {
+    let deliveryValid = false;
+    let invoiceValid = false;
+
+    const keys = Object.keys(addresses);
+
+    for (let i = 0; i < keys.length; i += 1) {
+      const address = addresses[keys[i]];
+
+      if (address.delivery) {
+        deliveryValid = true;
+      }
+
+      if (address.invoice) {
+        invoiceValid = true;
+      }
+
+      if (deliveryValid && invoiceValid) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -113,6 +153,39 @@ export default class CreateOrderPage {
     this.onCartLoaded();
     this.onCustomersNotFound();
     this.onCustomerSelected();
+    this.initAddressButtonsIframe();
+    this.initCartRuleButtonsIframe();
+  }
+
+  /**
+   * @private
+   */
+  initAddressButtonsIframe() {
+    $(createOrderMap.addressAddBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
+
+    $(createOrderMap.invoiceAddressEditBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
+
+    $(createOrderMap.deliveryAddressEditBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
+  }
+
+  initCartRuleButtonsIframe() {
+    $('#js-add-cart-rule-btn').fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
   }
 
   /**
@@ -451,6 +524,7 @@ export default class CreateOrderPage {
     this.preselectCartLanguage(cartInfo.langId);
 
     $(createOrderMap.cartBlock).removeClass('d-none');
+    $(createOrderMap.cartBlock).data('cartId', cartInfo.cartId);
   }
 
   /**
@@ -487,5 +561,33 @@ export default class CreateOrderPage {
     };
 
     this.cartEditor.changeCartAddresses(this.cartId, addresses);
+  }
+
+  /**
+   * Refresh addresses list
+   *
+   * @param {boolean} refreshCartAddresses optional
+   *
+   * @private
+   */
+  refreshAddressesList(refreshCartAddresses) {
+    const cartId = $(createOrderMap.cartBlock).data('cartId');
+    $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
+      this.addressesRenderer.render(cartInfo.addresses);
+
+      if (refreshCartAddresses) {
+        this.changeCartAddresses();
+      }
+    }).catch((e) => {
+      window.showErrorMessage(e.responseJSON.message);
+    });
+  }
+
+  /**
+   * proxy to allow other scripts within the page to refresh addresses list
+   */
+  refreshCart() {
+    const cartId = $(createOrderMap.cartBlock).data('cartId');
+    this.cartProvider.getCart(cartId);
   }
 }

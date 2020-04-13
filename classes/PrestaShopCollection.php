@@ -402,6 +402,21 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     }
 
     /**
+     * Retrieve the last result.
+     *
+     * @return ObjectModel|false
+     */
+    public function getLast()
+    {
+        $this->getAll();
+        if (!count($this)) {
+            return false;
+        }
+
+        return $this[count($this) - 1];
+    }
+
+    /**
      * Get results array.
      *
      * @return array

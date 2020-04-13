@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import {EventEmitter} from './event-emitter';
 
 const {$} = window;
 
@@ -163,25 +162,13 @@ class TinyMCEEditor {
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
-          const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
           if (editor) {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
           }
-
-          EventEmitter.emit('languageSelected', {
-            selectedLocale: textareaLocale,
-            form,
-          });
         });
       }
-    });
-
-    EventEmitter.on('languageSelected', (data) => {
-      const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
-
-      $(textareaLinkSelector).click();
     });
   }
 

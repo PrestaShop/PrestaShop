@@ -81,12 +81,16 @@ $(() => {
   initHookTabs();
 
   function initHookTabs() {
-    $(OrderViewPageMap.orderHookTabsContainer).find('.nav-tabs li:first-child a').tab('show');
+    $(OrderViewPageMap.orderHookTabsContainer)
+      .find('.nav-tabs li:first-child a')
+      .tab('show');
   }
 
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
-      const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
+      const $paymentDetailRow = $(event.currentTarget)
+        .closest('tr')
+        .next(':first');
 
       $paymentDetailRow.toggleClass('d-none');
     });
@@ -112,9 +116,8 @@ $(() => {
   function handlePrivateNoteChange() {
     const $submitBtn = $(OrderViewPageMap.privateNoteSubmitBtn);
 
-    $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
-      const note = $(event.currentTarget).val();
-      $submitBtn.prop('disabled', !note);
+    $(OrderViewPageMap.privateNoteInput).on('input', () => {
+      $submitBtn.prop('disabled', false);
     });
   }
 
@@ -159,9 +162,15 @@ $(() => {
 
   function handleUpdateOrderStatusButton() {
     const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
+    const $wrapper = $(OrderViewPageMap.updateOrderStatusActionInputWrapper);
 
     $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
-      const selectedOrderStatusId = $(event.currentTarget).val();
+      const $element = $(event.currentTarget);
+      const $option = $('option:selected', $element);
+      const selectedOrderStatusId = $element.val();
+
+      $wrapper.css('background-color', $option.data('background-color'));
+      $wrapper.toggleClass('is-bright', $option.data('is-bright') !== undefined);
 
       $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
     });

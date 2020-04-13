@@ -5,7 +5,7 @@ NOTICE OF LICENSE
 This source file is subject to the Open Software License (OSL 3.0)
 that is bundled with this package in the file LICENSE.txt.
 It is also available through the world-wide-web at this URL:
-http://opensource.org/licenses/osl-3.0.php
+https://opensource.org/licenses/osl-3.0.php
 If you did not receive a copy of the license and are unable to
 obtain it through the world-wide-web, please send an email
 to license@prestashop.com so we can send you a copy immediately.
@@ -14,15 +14,36 @@ DISCLAIMER
 
 Do not edit or add to this file if you wish to upgrade PrestaShop to newer
 versions in the future. If you wish to customize PrestaShop for your
-needs please refer to http://www.prestashop.com for more information.
+needs please refer to https://www.prestashop.com for more information.
 
 @author    PrestaShop SA <contact@prestashop.com>
 @copyright 2007-2020 PrestaShop SA and Contributors
-@license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+@license   https://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 International Registered Trademark & Property of PrestaShop SA
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+
+####################################
+#   v1.7.6.4 - (2020-03-02)
+####################################
+- Back Office:
+  - Bug fix:
+    - #17711: Fix a bug on safari where SEO preview on create page was not updated (by @NeOMakinG)
+    - #17613: Files translations.css and product_page.css do not exist (by @PierreRambaud)
+    - #17395: Can't explore a category when all subcats are disabled (by @PululuK)
+- Front Office:
+  - Improvement:
+    - #17638: Prevent email enumeration (by @PierreRambaud)
+  - Bug fix:
+    - #17457: Disable add-to-cart button when product/attribute combination is not available (by @sowbiba)
+    - #16616: Fix round remaining value of reduction amount (backport #16531) (by @matks)
+    - #17608: Email subject doesn't support html entities (by @Progi1984)
+- Core:
+  - Bug fix:
+    - #17846: Fix exception thrown when editing a customer with a bad email address (by @atomiix)
+    - #17433: Do not escape translations when using the legacy translator from the new one (by @Progi1984)
+    - #17306: Do not force memory_limit in index_cli.php (by @PierreRambaud)
 
 ####################################
 #   v1.7.6.3 - (2020-01-20)

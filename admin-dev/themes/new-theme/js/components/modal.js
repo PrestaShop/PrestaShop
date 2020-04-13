@@ -73,7 +73,7 @@ export default function ConfirmModal(params, confirmCallback) {
  *
  */
 function Modal({
-  id = 'confirm_modal',
+  id = 'confirm-modal',
   confirmTitle,
   confirmMessage = '',
   closeButtonLabel = 'Close',

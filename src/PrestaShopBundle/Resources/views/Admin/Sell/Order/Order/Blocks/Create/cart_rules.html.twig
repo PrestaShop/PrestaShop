@@ -44,7 +44,11 @@
       </div>
       <div class="col">
         <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
-        <a class="btn btn-primary" href="{{ getAdminLink('AdminCartRules', true, {'addcart_rule': 1}) }}">
+        <a
+          class="btn btn-primary"
+          id="js-add-cart-rule-btn"
+          href="{{ getAdminLink('AdminCartRules', true, {'liteDisplaying': 1, 'submitFormAjax': 1, 'addcart_rule': 1}) }}"
+        >
           {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       </div>

@@ -53,11 +53,6 @@ final class OrderGridDataFactory implements GridDataFactoryInterface
     private $contextLocale;
 
     /**
-     * @var string
-     */
-    private $contextCurrencyIsoCode;
-
-    /**
      * @var ConfigurationInterface
      */
     private $configuration;
@@ -67,19 +62,16 @@ final class OrderGridDataFactory implements GridDataFactoryInterface
      * @param RepositoryInterface $localeRepository
      * @param ConfigurationInterface $configuration
      * @param string $contextLocale
-     * @param string $contextCurrencyIsoCode
      */
     public function __construct(
         GridDataFactoryInterface $dataFactory,
         RepositoryInterface $localeRepository,
         ConfigurationInterface $configuration,
-        $contextLocale,
-        $contextCurrencyIsoCode
+        $contextLocale
     ) {
         $this->dataFactory = $dataFactory;
         $this->localeRepository = $localeRepository;
         $this->contextLocale = $contextLocale;
-        $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
         $this->configuration = $configuration;
     }
 
@@ -101,7 +93,7 @@ final class OrderGridDataFactory implements GridDataFactoryInterface
 
             $record['total_paid_tax_incl'] = $locale->formatPrice(
                 $record['total_paid_tax_incl'],
-                $this->contextCurrencyIsoCode
+                $record['iso_code']
             );
 
             $record['is_invoice_available'] = $isInvoicesEnabled && $record['invoice_number'];

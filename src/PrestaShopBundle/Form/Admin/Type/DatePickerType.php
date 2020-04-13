@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,11 +40,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class DatePickerType extends AbstractType
 {
     /**
+     * @var DataTransformerInterface
+     */
+    private $arabicToLatinDigitDataTransformer;
+
+    public function __construct(DataTransformerInterface $arabicToLatinDigitDataTransformer)
+    {
+        $this->arabicToLatinDigitDataTransformer = $arabicToLatinDigitDataTransformer;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getParent()
     {
         return TextType::class;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addViewTransformer($this->arabicToLatinDigitDataTransformer);
     }
 
     /**

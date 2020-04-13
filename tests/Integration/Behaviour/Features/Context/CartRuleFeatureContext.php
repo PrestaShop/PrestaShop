@@ -167,6 +167,16 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" has no discount code$/
+     */
+    public function cartRuleNamedHasNoCode($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->code = '';
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
      * @Given /^cart rule "(.+)" is restricted to product "(.+)"$/
      */
     public function cartRuleNamedIsRestrictedToProductNamed($cartRuleName, $productName)

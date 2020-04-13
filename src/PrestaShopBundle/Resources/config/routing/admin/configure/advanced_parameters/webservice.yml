@@ -44,7 +44,7 @@ admin_webservice_keys_edit:
 
 admin_webservice_keys_delete:
     path: /{webserviceKeyId}/delete
-    methods: DELETE
+    methods: [DELETE, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Webservice:delete'
         _legacy_controller: AdminWebservice

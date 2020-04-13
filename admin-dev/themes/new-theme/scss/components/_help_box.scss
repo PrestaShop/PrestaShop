@@ -1,22 +1,22 @@
 .help-box {
-  display: inline-block;
   box-sizing: border-box;
-  color: $brand-primary;
-  background-color: $notice;
-  height: 1rem;
+  display: inline-block;
   width: 1rem;
-  font-weight: bold;
-  font-size: 10px;
-  line-height: 12px;
-  vertical-align: middle;
-  text-align: center;
-  border: 2px solid $brand-primary;
-  cursor: pointer;
+  height: 1rem;
   padding: 0;
   margin: 0 5px 2px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 12px;
+  color: $brand-primary;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: $notice;
+  border: 2px solid $brand-primary;
 
-  &:after {
-    content: '?'
+  &::after {
+    content: "?";
   }
 
   &:focus {

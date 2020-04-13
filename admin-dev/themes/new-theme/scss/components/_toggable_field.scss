@@ -4,10 +4,10 @@
   height: auto;
   input.token-input[type="text"] {
     display: inline-block;
+    max-width: 100%;
+    background-color: transparent;
     border: 0;
     outline: none;
-    background-color: transparent;
-    max-width: 100%;
   }
 
   .token {
@@ -29,11 +29,11 @@
     }
 
     .close {
-      margin: 0 0.4rem;
+      margin: 0 .4rem;
+      font-size: .875rem;
+      font-weight: 400;
       color: $gray-dark;
       text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 400;
       text-shadow: none;
 
       &:hover {
@@ -43,7 +43,9 @@
   }
 
   .token-input {
+    /* stylelint-disable declaration-no-important */
     width: auto !important;
+    /* stylelint-enable declaration-no-important */
   }
 }
 

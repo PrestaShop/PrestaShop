@@ -23,6 +23,8 @@ module.exports = class Login extends FOBasePage {
     this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
+    this.partnerOfferCheckbox = `${this.createAccountForm} input[name='optin']`;
+    this.companyInput = `${this.createAccountForm} input[name='company']`;
     this.saveButton = `${this.createAccountForm} .form-control-submit`;
   }
 
@@ -38,10 +40,7 @@ module.exports = class Login extends FOBasePage {
   async customerLogin(customer) {
     await this.setValue(this.emailInput, customer.email);
     await this.setValue(this.passwordInput, customer.password);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.signInButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.signInButton);
   }
 
   /**
@@ -62,5 +61,45 @@ module.exports = class Login extends FOBasePage {
       await this.page.click(this.psgdprCheckbox);
     }
     await this.page.click(this.saveButton);
+  }
+
+  /**
+   * Go to create account page
+   * @returns {Promise<void>}
+   */
+  async goToCreateAccountPage() {
+    await this.waitForSelectorAndClick(this.displayRegisterFormLink);
+  }
+
+  /**
+   * Is partner offer required
+   * @returns {Promise<boolean>}
+   */
+  async isPartnerOfferRequired() {
+    return this.elementVisible(`${this.partnerOfferCheckbox}:required`, 1000);
+  }
+
+  /**
+   * Is birth date input visible
+   * @returns {Promise<boolean>}
+   */
+  async isBirthDateVisible() {
+    return this.elementVisible(this.birthdateInput, 1000);
+  }
+
+  /**
+   * Is partner offer visible
+   * @returns {Promise<boolean>}
+   */
+  async isPartnerOfferVisible() {
+    return this.elementVisible(this.partnerOfferCheckbox, 1000);
+  }
+
+  /**
+   * Is company input visible
+   * @returns {Promise<boolean>}
+   */
+  async isCompanyInputVisible() {
+    return this.elementVisible(this.companyInput, 1000);
   }
 };

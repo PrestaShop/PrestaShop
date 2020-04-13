@@ -146,11 +146,6 @@
       <title>Product footer</title>
       <description>This hook adds new blocks under the product's description</description>
     </hook>
-    <hook id="displayFooterCategory">
-      <name>displayFooterCategory</name>
-      <title>Category footer</title>
-      <description>This hook adds new blocks under the products listing in a category/search</description>
-    </hook>
     <hook id="displayInvoice">
       <name>displayInvoice</name>
       <title>Invoice</title>
@@ -2128,17 +2123,27 @@
     <hook id="displayBackOfficeOrderActions">
       <name>displayBackOfficeOrderActions</name>
       <title>Admin Order Actions</title>
-      <description>This hook displays content in the order view page in the side column under the customer view</description>
+      <description>This hook displays content in the order view page after action buttons (or aliased to side column in migrated page)</description>
     </hook>
     <hook id="displayAdminOrderSide">
       <name>displayAdminOrderSide</name>
       <title>Admin Order Side Column</title>
-      <description>This hook displays content in the order view page at the end of the side column</description>
+      <description>This hook displays content in the order view page in the side column under the customer view</description>
+    </hook>
+    <hook id="displayAdminOrderBottom">
+      <name>displayAdminOrderBottom</name>
+      <title>Admin Order Side Column Bottom</title>
+      <description>This hook displays content in the order view page at the bottom of the side column</description>
     </hook>
     <hook id="displayAdminOrderMain">
       <name>displayAdminOrderMain</name>
       <title>Admin Order Main Column</title>
-      <description>This hook displays content in the order view page at the end of the main column</description>
+      <description>This hook displays content in the order view page in the main column under the details view</description>
+    </hook>
+    <hook id="displayAdminOrderMainBottom">
+      <name>displayAdminOrderMainBottom</name>
+      <title>Admin Order Main Column Bottom</title>
+      <description>This hook displays content in the order view page at the bottom of the main column</description>
     </hook>
     <hook id="displayAdminOrderTabLink">
       <name>displayAdminOrderTabLink</name>
@@ -2153,7 +2158,7 @@
     <hook id="actionGetAdminOrderButtons">
       <name>actionGetAdminOrderButtons</name>
       <title>Admin Order Buttons</title>
-      <description>This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)</description>
+      <description>This hook is used to generate the buttons collection on the order view page (see ActionsBarButtonsCollection)</description>
     </hook>
     <hook id="actionPresentCart">
       <name>actionPresentCart</name>
@@ -2746,7 +2751,12 @@
     <hook id="displayAdditionalCustomerAddressFields">
       <name>displayAdditionalCustomerAddressFields</name>
       <title>Display additional customer address fields</title>
-      <description>This hook allows to display the extra field values added in an address from using hook 'additionalCustomerAddressFields'</description>
+      <description>This hook allows to display extra field values added in an address form using hook 'additionalCustomerAddressFields'</description>
+    </hook>
+    <hook id="displayFooterCategory">
+      <name>displayFooterCategory</name>
+      <title>Category footer</title>
+      <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
   </entities>
 </entity_hook>

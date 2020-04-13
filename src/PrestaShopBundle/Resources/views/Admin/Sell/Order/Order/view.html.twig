@@ -41,9 +41,8 @@
         {{ displayAdminOrderTopHookContent|raw }}
       </div>
     {% endif %}
-      <div class="row col-md-12">
+      <div class="order-actions col-md-12">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_navigation.html.twig' %}
       </div>
     </div>
 
@@ -67,10 +66,10 @@
       <div class="col-md-4 left-column">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
 
-        {{ renderhook('displayBackOfficeOrderActions', {'id_order': orderForViewing.id}) }}
+        {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
 
-        {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
+        {{ renderhook('displayAdminOrderSideBottom', {'id_order': orderForViewing.id}) }}
       </div>
 
       <div class="col-md-8 d-print-block right-column">
@@ -81,6 +80,8 @@
 
         {{ renderhook('displayAdminOrderMain', {'id_order': orderForViewing.id}) }}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
+
+        {{ renderhook('displayAdminOrderMainBottom', {'id_order': orderForViewing.id}) }}
       </div>
     </div>
 

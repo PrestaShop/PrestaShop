@@ -29,8 +29,8 @@
 	<div class="warnBlock">
 		<img src="theme/img/pict_error.png" alt="" style="vertical-align: middle;" /> &nbsp;
 		<?php echo $this->translator->trans(
-			'<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>',
-			array('%version%' => $this->ps_version, '%doc%' => $this->getDocumentationUpgradeLink()),
+			'<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please use the 1-Click Upgrade module and follow its instructions.',
+			array('%version%' => $this->ps_version),
      'Install'
  ); ?></div>
 <?php endif; ?>

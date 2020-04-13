@@ -20,12 +20,11 @@ module.exports = class AddProfile extends BOBasePage {
   /**
    * Fill form for add/edit page profile
    * @param profileData
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async createEditProfile(profileData) {
     await this.setValue(this.nameInput, profileData.name);
     await this.clickAndWaitForNavigation(this.saveButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

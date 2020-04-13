@@ -47,7 +47,7 @@ class PrestaShopLoggerCore extends ObjectModel
     /** @var int Object ID */
     public $object_id;
 
-    /** @var int Object ID */
+    /** @var int Employee ID */
     public $id_employee;
 
     /** @var string Object creation date */

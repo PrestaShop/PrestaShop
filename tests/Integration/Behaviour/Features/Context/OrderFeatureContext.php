@@ -27,11 +27,13 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
+use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
+use PHPUnit\Framework\Assert as Assert;
 use RuntimeException;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
@@ -150,6 +152,29 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         }
         if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxExcluded, $orderCartRule->value_tax_excl));
+        }
+    }
+
+    /**
+     * @Then order :reference should have following details:
+     */
+    public function checkOrderDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        foreach ($orderData as $orderField => $orderValue) {
+            Assert::assertEquals(
+                (float) $orderValue,
+                $order->{$orderField},
+                sprintf(
+                    'Invalid order field %s, expected %s instead of %s',
+                    $orderField,
+                    $orderValue,
+                    $order->{$orderField}
+                )
+            );
         }
     }
 

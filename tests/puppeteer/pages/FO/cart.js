@@ -13,21 +13,21 @@ module.exports = class Cart extends FOBasePage {
     this.productPrice = `${this.productItem} div.current-price > span`;
     this.productQuantity = `${this.productItem} div.input-group input.js-cart-line-product-quantity`;
     this.proceedToCheckoutButton = '#main div.checkout a';
+    this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
     this.cartTotalTTC = '.cart-summary-totals span.value';
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
+    this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
   }
 
   /**
-   * To check the cart details (product name, price, quantity)
-   * @param cartData, cart data to check
-   * @param productID, product id to check
+   * Get Product detail from cart (product name, price, quantity)
+   * @param row, product row in cart
    */
-  async checkProductInCart(cartData, productID) {
+  async getProductDetail(row) {
     return {
-      name: await this.checkTextValue(this.productName.replace('%NUMBER', productID), cartData.name),
-      price: await this.checkTextValue(this.productPrice.replace('%NUMBER', productID), cartData.price),
-      quantity: await this.checkAttributeValue(this.productQuantity.replace('%NUMBER', productID), 'value',
-        cartData.quantity),
+      name: await this.getTextContent(this.productName.replace('%NUMBER', row)),
+      price: await this.getTextContent(this.productPrice.replace('%NUMBER', row)),
+      quantity: parseFloat(await this.getAttributeContent(this.productQuantity.replace('%NUMBER', row), 'value')),
     };
   }
 
@@ -35,7 +35,7 @@ module.exports = class Cart extends FOBasePage {
    * Click on Proceed to checkout button
    */
   async clickOnProceedToCheckout() {
-    await this.page.waitForSelector(this.proceedToCheckoutButton, {visible: true});
+    await this.waitForVisibleSelector(this.proceedToCheckoutButton);
     await this.clickAndWaitForNavigation(this.proceedToCheckoutButton);
   }
 
@@ -69,5 +69,29 @@ module.exports = class Cart extends FOBasePage {
    */
   async getTTCPrice() {
     return this.getPriceFromText(this.cartTotalTTC);
+  }
+
+  /**
+   * Is proceed to checkout button disabled
+   * @returns {boolean}
+   */
+  isProceedToCheckoutButtonDisabled() {
+    return this.elementVisible(this.disabledProceedToCheckoutButton, 1000);
+  }
+
+  /**
+   * Is alert warning for minimum purchase total visible
+   * @returns {boolean}
+   */
+  isAlertWarningForMinimumPurchaseVisible() {
+    return this.elementVisible(this.alertWarning, 1000);
+  }
+
+  /**
+   * Get alert warning
+   * @returns {Promise<string>}
+   */
+  getAlertWarning() {
+    return this.getTextContent(this.alertWarning);
   }
 };

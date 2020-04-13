@@ -51,7 +51,6 @@ module.exports = class AddCustomer extends BOBasePage {
     await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
     // Save Customer
     await this.clickAndWaitForNavigation(this.saveCustomerButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

@@ -31,7 +31,12 @@
             <a href="{$product.url}" title="{$product.name}">
               <img
                 src="{$product.cover.medium.url}"
-                alt="{$product.cover.legend}"
+                {if !empty($product.cover.legend)}
+                  alt="{$product.cover.legend}"
+                  title="{$product.cover.legend}"
+                {else}
+                  alt="{$product.name}"
+                {/if}
                 data-full-size-image-url="{$product.cover.large.url}"
               >
             </a>
