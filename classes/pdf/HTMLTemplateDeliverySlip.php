@@ -34,6 +34,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
      */
     public $order;
 
+    /** @var OrderInvoice Order invoice */
+    public $order_invoice;
+
     /**
      * @var OrderInvoice
      */
