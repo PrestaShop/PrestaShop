@@ -43,11 +43,6 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
     public $id_cart;
 
     /**
-     * @var int
-     */
-    private $id_cart;
-
-    /**
      * @param OrderSlip $order_slip
      * @param Smarty $smarty
      *
