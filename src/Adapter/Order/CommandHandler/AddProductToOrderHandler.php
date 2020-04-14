@@ -168,11 +168,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Update Tax lines
             $orderDetail->updateTaxAmount($order);
 
-            // Delete specific price if exists
-            if (null !== $specificPrice) {
-                $specificPrice->delete();
-            }
-
             $order = $order->refreshShippingCost();
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
@@ -208,6 +203,12 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             // Update totals amount of order
             $order = $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
+
+            // Delete specific price if exists
+            if (null !== $specificPrice) {
+                $specificPrice->delete();
+            }
+
             $order->update();
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();
