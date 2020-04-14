@@ -108,12 +108,12 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 0 cart rule
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
-      | total_products_wt        | 25.228 |
+      | total_products_wt        | 25.230000 |
       | total_discounts_tax_excl | 0.0    |
       | total_discounts_tax_incl | 0.0    |
       | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.228 |
-      | total_paid               | 32.228 |
+      | total_paid_tax_incl      | 32.230000 |
+      | total_paid               | 32.230000 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.0    |
@@ -133,12 +133,12 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
     Then order "bo_order1" should have following details:
       | total_products           | 38.800 |
-      | total_products_wt        | 40.228 |
+      | total_products_wt        | 40.230000 |
       | total_discounts_tax_excl | 15.000 |
       | total_discounts_tax_incl | 15.000 |
       | total_paid_tax_excl      | 30.8   |
-      | total_paid_tax_incl      | 32.228 |
-      | total_paid               | 32.228 |
+      | total_paid_tax_incl      | 32.230000 |
+      | total_paid               | 32.230000 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.0    |
@@ -148,12 +148,12 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 0 cart rule
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
-      | total_products_wt        | 25.228 |
+      | total_products_wt        | 25.230000 |
       | total_discounts_tax_excl | 0.0    |
       | total_discounts_tax_incl | 0.0    |
       | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.228 |
-      | total_paid               | 32.228 |
+      | total_paid_tax_incl      | 32.230000 |
+      | total_paid               | 32.230000 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.0    |
@@ -255,7 +255,7 @@ Feature: Order from Back Office (BO)
       | product_price               | 11.9   |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.9   |
-      | total_price_tax_incl        | 25.228 |
+      | total_price_tax_incl        | 25.230000 |
       | total_price_tax_excl        | 23.8   |
 
   @order-from-bo
@@ -270,7 +270,7 @@ Feature: Order from Back Office (BO)
       | product_price               | 11.9   |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.9   |
-      | total_price_tax_incl        | 25.228 |
+      | total_price_tax_incl        | 25.230000 |
       | total_price_tax_excl        | 23.8   |
 
   @order-from-bo
