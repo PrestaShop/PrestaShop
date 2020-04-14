@@ -12,7 +12,7 @@ const ImportPage = require('@pages/BO/advancedParameters/import');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParameters_webservice_helpCard';
+const baseContext = 'functional_BO_advancedParameters_import_downloadSampleFiles';
 
 let browser;
 let page;
