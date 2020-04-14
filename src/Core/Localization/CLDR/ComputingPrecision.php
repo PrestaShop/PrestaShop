@@ -32,6 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
  */
 final class ComputingPrecision implements ComputingPrecisionInterface
 {
+    const MULTIPLIER = 1;
     const MINIMAL_VALUE = 2;
 
     /**
@@ -39,9 +40,9 @@ final class ComputingPrecision implements ComputingPrecisionInterface
      */
     public function getPrecision(int $displayPrecision)
     {
-        /*
-         * For now, in order to avoid rounding issues, the computing precision is hardcoded, its value is 2
-         */
-        return self::MINIMAL_VALUE;
+        // the MULTIPLIER attribute is set to 1 for now, so that it matches display precision
+        $computingPrecision = $displayPrecision * self::MULTIPLIER;
+
+        return ($computingPrecision < self::MINIMAL_VALUE) ? self::MINIMAL_VALUE : $computingPrecision;
     }
 }
