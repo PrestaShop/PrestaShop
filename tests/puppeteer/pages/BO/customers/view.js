@@ -11,52 +11,30 @@ module.exports = class ViewCustomer extends BOBasePage {
     // Personnel information
     this.personnalInformationDiv = '.customer-personal-informations-card';
     this.personnalInformationEditButton = `${this.personnalInformationDiv} a[data-original-title='Edit']`;
-    this.socialTitleDiv = `${this.personnalInformationDiv} .customer-social-title`;
-    this.birthDayDiv = `${this.personnalInformationDiv} .customer-birthday`;
-    this.registrationDateDiv = `${this.personnalInformationDiv} .customer-registration-date`;
-    this.lastVisitDateDiv = `${this.personnalInformationDiv} .customer-last-visit-date`;
-    this.languageNameDiv = `${this.personnalInformationDiv} .customer-language-name`;
-    this.newsLetterSubscriptionSpan = `${this.personnalInformationDiv} .customer-newsletter-subscription-status`;
-    this.partnerOfferStatusSpan = `${this.personnalInformationDiv} .customer-partner-offers-status`;
-    this.lastUpdateDiv = `${this.personnalInformationDiv} .customer-latest-update`;
-    this.statusSpan = `${this.personnalInformationDiv} .customer-status`;
     // Orders
     this.ordersDiv = '.customer-orders-card';
-    this.ordersTitleDiv = `${this.ordersDiv} .card-header`;
-    this.invalidOrdersTr = `${this.ordersDiv} .customer-invalid-order`;
+    this.ordersViewButton = `${this.ordersDiv} a[data-original-title='View'] i`;
     // Carts
     this.cartsDiv = '.customer-carts-card';
-    this.cartsTitleDiv = `${this.cartsDiv} .card-header`;
-    this.cartTr = `${this.cartsDiv} .customer-cart`;
+    this.cartsViewButton = `${this.cartsDiv} a[data-original-title='View'] i`;
     // Viewed products
     this.viewedProductsDiv = '.customer-viewed-products-card';
-    this.viewedProductsTitleDiv = `${this.viewedProductsDiv} .card-header`;
-    this.viewedProductTr = `${this.viewedProductsDiv} .customer-viewed-product`;
     // Private note
     this.privateNoteDiv = '.customer-private-note-card';
     this.privateNoteTextArea = '#private_note_note';
     this.privateNoteSaveButton = `${this.privateNoteDiv} .btn-primary`;
-
     // Messages
     this.messagesDiv = '.customer-messages-card';
-    this.messagesTitleDiv = `${this.messagesDiv} .card-header`;
-    this.messagesTr = `${this.messagesDiv} .customer-message`;
     // Vouchers
     this.vouchersDiv = '.customer-discounts-card';
-    this.vouchersTitleDiv = `${this.vouchersDiv} .card-header`;
     // Last emails
     this.lastEmailsDiv = '.customer-sent-emails-card';
-    this.lastEmailsTitleDiv = `${this.lastEmailsDiv} .card-header`;
     // Last connections
     this.lastConnectionsDiv = '.customer-last-connections-card';
-    this.lastConnectionsTitleDiv = `${this.lastConnectionsDiv} .card-header`;
-    this.lastConnectionTr = `${this.lastConnectionsDiv} .customer-last-connection`;
     // Groups
     this.groupsDiv = '.customer-groups-card';
-    this.groupsTitleDiv = `${this.groupsDiv} .card-header`;
     // Addresses
     this.addressesDiv = '.customer-addresses-card';
-    this.addresstr = `${this.addressesDiv} .customer-address`;
   }
 
   /*
@@ -64,82 +42,127 @@ module.exports = class ViewCustomer extends BOBasePage {
    */
 
   /**
-   * get text from card header
-   * @return {Promise<textContent>}
-   */
-  async getTextFromPersonnelInformationForm() {
-    return this.getTextContent(this.personnalInformationDiv);
-  }
-
-  /**
    * Get number of element from title
    * @param cardTitle
-   * @returns {Promise<string>}
+   * @returns {Promise<integer>}
    */
   getNumberOfElementFromTitle(cardTitle) {
     let selector;
     switch (cardTitle) {
       case 'Orders':
-        selector = this.ordersTitleDiv;
+        selector = this.ordersDiv;
         break;
       case 'Carts':
-        selector = this.cartsTitleDiv;
+        selector = this.cartsDiv;
         break;
       case 'Viewed products':
-        selector = this.viewedProductsTitleDiv;
+        selector = this.viewedProductsDiv;
         break;
       case 'Messages':
-        selector = this.messagesTitleDiv;
+        selector = this.messagesDiv;
         break;
       case 'Vouchers':
-        selector = this.vouchersTitleDiv;
+        selector = this.vouchersDiv;
         break;
-      case 'LAst emails':
-        selector = this.lastEmailsTitleDiv;
+      case 'Last emails':
+        selector = this.lastEmailsDiv;
         break;
       case 'Last connections':
-        selector = this.lastConnectionsTitleDiv;
+        selector = this.lastConnectionsDiv;
         break;
       case 'Groups':
-        selector = this.groupsTitleDiv;
+        selector = this.groupsDiv;
         break;
       default:
         throw new Error(`${cardTitle} was not found`);
     }
-    return this.getTextContent(`${selector} span`);
+    return this.getTextContent(`${selector} .card-header span`);
   }
 
-  getOrders() {
-    return this.getTextContent(this.invalidOrdersTr);
+  /**
+   * Get personal information title
+   * @returns {Promise<string>}
+   */
+  getPersonalInformationTitle() {
+    return this.getTextContent(this.personnalInformationDiv);
   }
 
-  getCustomerCarts() {
-    return this.getTextContent(this.cartTr);
+  /**
+   * Get text from element
+   * @param element
+   * @returns {Promise<string>}
+   */
+  getTextFromElement(element) {
+    let selector;
+    switch (element) {
+      case 'Personal information':
+        selector = this.personnalInformationDiv;
+        break;
+      case 'Orders':
+        selector = this.ordersDiv;
+        break;
+      case 'Carts':
+        selector = this.cartsDiv;
+        break;
+      case 'Viewed products':
+        selector = this.viewedProductsDiv;
+        break;
+      case 'Addresses':
+        selector = this.addressesDiv;
+        break;
+      case 'Messages':
+        selector = this.messagesDiv;
+        break;
+      case 'Vouchers':
+        selector = this.vouchersDiv;
+        break;
+      case 'Last emails':
+        selector = this.lastEmailsDiv;
+        break;
+      case 'Last connections':
+        selector = this.lastConnectionsDiv;
+        break;
+      case 'Groups':
+        selector = this.groupsDiv;
+        break;
+      default:
+        throw new Error(`${element} was not found`);
+    }
+    return this.getTextContent(`${selector} .card-body`);
   }
 
-  getViewedProduct() {
-    return this.getTextContent(this.viewedProductTr);
-  }
-
-  getAddress() {
-    return this.getTextContent(this.addresstr);
-  }
-
-  getLastConnections() {
-    return this.getTextContent(this.lastConnectionTr);
-  }
-
-  getMessages() {
-    return this.getTextContent(this.messagesTr);
-  }
-
+  /**
+   * Se private note
+   * @param note
+   * @returns {Promise<string>}
+   */
   async setPrivateNote(note) {
     await this.setValue(this.privateNoteTextArea, note);
     await this.page.click(this.privateNoteSaveButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 
+  /**
+   * Go to edit customer page
+   * @returns {Promise<void>}
+   */
   async goToEditCustomerPage() {
     await this.clickAndWaitForNavigation(this.personnalInformationEditButton);
+  }
+
+  /**
+   * Go to view order page
+   * @returns {Promise<void>}
+   */
+  async goToViewOrderPage() {
+    await this.clickAndWaitForNavigation(this.ordersViewButton);
+  }
+
+  /**
+   * Go to view cart page
+   * @returns {Promise<void>}
+   */
+  async goToViewCartPage() {
+    await this.clickAndWaitForNavigation(this.cartsViewButton);
   }
 };

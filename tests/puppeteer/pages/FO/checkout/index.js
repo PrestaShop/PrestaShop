@@ -199,7 +199,7 @@ module.exports = class Checkout extends FOBasePage {
     await this.setValue(this.addressStepAddress1Input, address.address);
     await this.setValue(this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(this.addressStepCityInput, address.city);
-    await this.selectByVisibleText(this.addressStepCountrySelect, address.country);
+    await this.page.type(this.addressStepPhoneInput, address.phone, {delay: 50});
     await this.setValue(this.addressStepPhoneInput, address.phone);
     await this.page.click(this.addressStepContinueButton);
     return this.isStepCompleted(this.addressStepSection);
