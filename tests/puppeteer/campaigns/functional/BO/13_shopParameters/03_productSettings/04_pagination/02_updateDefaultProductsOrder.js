@@ -129,7 +129,7 @@ describe('Update default product order', async () => {
       });
 
       it(
-        `should check that products are order by: '${test.args.orderBy} - ${test.args.orderMethod}'`,
+        `should check that products are ordered by: '${test.args.orderBy} - ${test.args.orderMethod}'`,
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductsOrder${index + 1}`, baseContext);
           const defaultProductOrder = await this.pageObjects.categoryPageFO.getSortByValue();
