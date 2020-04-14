@@ -28,5 +28,5 @@ import ModuleCard from '@components/module-card';
 const {$} = window;
 
 $(() => {
-  new ModuleCard().init();
+  new ModuleCard();
 });
