@@ -8,8 +8,6 @@ module.exports = class Checkout extends FOBasePage {
     // Selectors
     this.checkoutPageBody = 'body#checkout';
     this.personalInformationStepSection = '#checkout-personal-information-step';
-    this.deleveryStepSection = '#checkout-delivery-step';
-    this.deleveryStepContinueButton = `${this.deleveryStepSection} button[name='confirmDeliveryOption']`;
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = `${this.paymentStepSection} input[name='payment-option'][data-module-name='%NAME']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
@@ -35,6 +33,11 @@ module.exports = class Checkout extends FOBasePage {
     this.addressStepCountrySelect = `${this.addressStepSection} select[name='id_country']`;
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
+    // Shipping method step
+    this.deleveryStepSection = '#checkout-delivery-step';
+    this.deliveryOptionLabel = `${this.deleveryStepSection} label[for='delivery_option_%ID']`;
+    this.deliveryMessage = '#delivery_message';
+    this.deleveryStepContinueButton = `${this.deleveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
     this.giftCheckbox = '#input_gift';
     this.recycableGiftCheckbox = '#input_recyclable';
@@ -73,8 +76,20 @@ module.exports = class Checkout extends FOBasePage {
   }
 
   /**
+   * Choose shipping method and add a comment
+   * @param shippingMethod
+   * @param comment
+   * @returns {Promise<boolean>}
+   */
+  async chooseShippingMethodAndAddComment(shippingMethod, comment) {
+    await this.waitForSelectorAndClick(this.deliveryOptionLabel.replace('%ID', shippingMethod));
+    await this.setValue(this.deliveryMessage, comment);
+    return this.goToPaymentStep();
+  }
+
+  /**
    * Go to Payment Step and check that delivery step is complete
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async goToPaymentStep() {
     await this.clickAndWaitForNavigation(this.deleveryStepContinueButton);
