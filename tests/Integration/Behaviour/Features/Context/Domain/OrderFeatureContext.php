@@ -761,7 +761,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add discount to order :orderReference with selected single invoice and following details:
+     * @When I add discount to order :orderReference on last invoice and following details:
      *
      * @param string $orderReference
      * @param TableNode $table
@@ -775,29 +775,29 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
 
         $invoices = $this->getOrderInvoices($orderId);
-        Assert::assertEquals(1, $invoices->count());
+        Assert::assertGreaterThanOrEqual(1, $invoices->count());
 
         $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
             $orderId,
             $data['name'],
             $data['type'],
             $data['value'],
-            (int) $invoices->getFirst()->id
+            (int) $invoices->getLast()->id
         ));
     }
 
     /**
-     * @Then invoice for order :orderReference should have following prices:
+     * @Then last invoice for order :orderReference should have following prices:
      */
-    public function assertInvoicePrices(string $orderReference, TableNode $table)
+    public function assertLastInvoicePrices(string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
 
         $invoices = $this->getOrderInvoices($orderId);
-        Assert::assertEquals(1, $invoices->count());
+        Assert::assertGreaterThanOrEqual(1, $invoices->count());
 
-        $invoice = $invoices->getFirst();
+        $invoice = $invoices->getLast();
         Assert::assertEquals((float) $data['products'], $invoice->total_products);
         Assert::assertEquals((float) $data['discounts tax excluded'], $invoice->total_discount_tax_excl);
         Assert::assertEquals((float) $data['discounts tax included'], $invoice->total_discount_tax_incl);

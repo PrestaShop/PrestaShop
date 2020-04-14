@@ -21,12 +21,25 @@ Feature: Add discounts to order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
     And tax "Sales-taxes US-FL 6%" is applied to order bo_order1
+    And order "bo_order1" should have following details:
+      | total_products           | 23.8   |
+      | total_products_wt        | 25.228 |
+      | total_shipping           | 7.42   |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.8   |
+      | total_paid_tax_incl      | 32.648 |
+      | total_paid               | 32.648 |
+      | total_paid_real          | 0      |
+    # Displayed prices are tax excluded because of the customer's group
     And Order "bo_order1" has following prices:
       | products      | $23.80   |
       | discounts     | $0.00    |
       | shipping      | $7.00    |
-      | taxes         | $1.43    |
-      | total         | $32.23   |
+      | taxes         | $1.85    |
+      | total         | $30.80   |
 
   @add-discounts-to-order
   Scenario: Add amount type discount to order which has no invoices
@@ -35,12 +48,24 @@ Feature: Add discounts to order from Back Office (BO)
       | name      | discount fpf |
       | type      | amount       |
       | value     | 5.50         |
-    Then Order "bo_order1" should have following prices:
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.8      |
+      | total_products_wt        | 25.228    |
+      | total_shipping           | 7.42      |
+      | total_shipping_tax_excl  | 7.0       |
+      | total_shipping_tax_incl  | 7.42      |
+      | total_discounts_tax_excl | 5.188679  |
+      | total_discounts_tax_incl | 5.5       |
+      | total_paid_tax_excl      | 25.611321 |
+      | total_paid_tax_incl      | 27.148    |
+      | total_paid               | 27.148    |
+      | total_paid_real          | 0         |
+    And Order "bo_order1" should have following prices:
       | products      | $23.80    |
-      | discounts     | $5.50     |
+      | discounts     | $5.19     |
       | shipping      | $7.00     |
-      | taxes         | $1.43     |
-      | total         | $26.73    |
+      | taxes         | $1.54     |
+      | total         | $25.61    |
 
   @add-discounts-to-order
   Scenario: Add percent type discount to order which has no invoices
@@ -49,55 +74,143 @@ Feature: Add discounts to order from Back Office (BO)
       | name      | discount fifty-fifty |
       | type      | percent              |
       | value     | 50                   |
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.8   |
+      | total_products_wt        | 25.228 |
+      | total_shipping           | 7.42   |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+      | total_discounts_tax_excl | 15.4   |
+      | total_discounts_tax_incl | 16.324 |
+      | total_paid_tax_excl      | 15.4   |
+      | total_paid_tax_incl      | 16.324 |
+      | total_paid               | 16.324 |
+      | total_paid_real          | 0      |
+    Then Order "bo_order1" should have following prices:
+      | products      | $23.80 |
+      | discounts     | $15.40 |
+      | shipping      | $7.00  |
+      | taxes         | $0.92  |
+      | total         | $15.40 |
+
+  @add-discounts-to-order
+  Scenario: Add amount discount matching fifty percent on whole total
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount fifty-fifty |
+      | type      | amount               |
+      | value     | 16.324               |
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.8   |
+      | total_products_wt        | 25.228 |
+      | total_shipping           | 7.42   |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+      | total_discounts_tax_excl | 15.4   |
+      | total_discounts_tax_incl | 16.324 |
+      | total_paid_tax_excl      | 15.4   |
+      | total_paid_tax_incl      | 16.324 |
+      | total_paid               | 16.324 |
+      | total_paid_real          | 0      |
+    Then Order "bo_order1" should have following prices:
+      | products      | $23.80 |
+      | discounts     | $15.40 |
+      | shipping      | $7.00  |
+      | taxes         | $0.92  |
+      | total         | $15.40 |
+
+  @add-discounts-to-order
+  Scenario: Add amount discount matching fifty percent on products only
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name      | discount fifty-fifty |
+      | type      | amount               |
+      | value     | 12.614               |
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.8   |
+      | total_products_wt        | 25.228 |
+      | total_shipping           | 7.42   |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+      | total_discounts_tax_excl | 11.9   |
+      | total_discounts_tax_incl | 12.614 |
+      | total_paid_tax_excl      | 18.9   |
+      | total_paid_tax_incl      | 20.034 |
+      | total_paid               | 20.034 |
+      | total_paid_real          | 0      |
     Then Order "bo_order1" should have following prices:
       | products      | $23.80    |
-      | discounts     | $15.40    |
+      | discounts     | $11.90    |
       | shipping      | $7.00     |
-      | taxes         | $1.43     |
-      | total         | $16.83    |
+      | taxes         | $1.13     |
+      | total         | $18.90    |
 
   @add-discounts-to-order
   Scenario: Add amount type discount to order and update single invoice
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
-    When I add discount to order "bo_order1" with selected single invoice and following details:
+    When I add discount to order "bo_order1" on last invoice and following details:
       | name      | discount fpf |
       | type      | amount       |
       | value     | 5.50         |
-    Then Order "bo_order1" should have following prices:
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.8      |
+      | total_products_wt        | 25.228    |
+      | total_shipping           | 7.42      |
+      | total_shipping_tax_excl  | 7.0       |
+      | total_shipping_tax_incl  | 7.42      |
+      | total_discounts_tax_excl | 5.188679  |
+      | total_discounts_tax_incl | 5.5       |
+      | total_paid_tax_excl      | 25.611321 |
+      | total_paid_tax_incl      | 27.148    |
+      | total_paid               | 27.148    |
+      | total_paid_real          | 0         |
+    And Order "bo_order1" should have following prices:
       | products      | $23.80    |
-      | discounts     | $5.50     |
+      | discounts     | $5.19     |
       | shipping      | $7.00     |
-      | taxes         | $1.43     |
-      | total         | $26.73    |
-    And invoice for order "bo_order1" should have following prices:
+      | taxes         | $1.54     |
+      | total         | $25.61    |
+    And last invoice for order "bo_order1" should have following prices:
       | products                  | 23.80     |
-      | discounts tax excluded    | 5.50      |
+      | discounts tax excluded    | 5.188679  |
       | discounts tax included    | 5.50      |
       | shipping tax excluded     | 7.00      |
-      | shipping tax included     | 7.00      |
-      | total paid tax excluded   | 25.30     |
-      | total paid tax included   | 26.73     |
+      | shipping tax included     | 7.42      |
+      | total paid tax excluded   | 25.611321 |
+      | total paid tax included   | 27.148    |
 
   @add-discounts-to-order
   Scenario: Add percent type discount to order and update single invoice
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
-    When I add discount to order "bo_order1" with selected single invoice and following details:
+    When I add discount to order "bo_order1" on last invoice and following details:
       | name      | discount fifty-fifty |
       | type      | percent              |
       | value     | 50                   |
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.8   |
+      | total_products_wt        | 25.228 |
+      | total_shipping           | 7.42   |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+      | total_discounts_tax_excl | 15.4   |
+      | total_discounts_tax_incl | 16.324 |
+      | total_paid_tax_excl      | 15.4   |
+      | total_paid_tax_incl      | 16.324 |
+      | total_paid               | 16.324 |
+      | total_paid_real          | 0      |
     Then Order "bo_order1" should have following prices:
-      | products      | $23.80    |
-      | discounts     | $15.40    |
-      | shipping      | $7.00     |
-      | taxes         | $0.00     |
-      | total         | $15.40    |
-    And invoice for order "bo_order1" should have following prices:
-      | products                  | 23.80     |
-      | discounts tax excluded    | 15.40     |
-      | discounts tax included    | 15.40     |
-      | shipping tax excluded     | 7.00      |
-      | shipping tax included     | 7.00      |
-      | total paid tax excluded   | 15.40     |
-      | total paid tax included   | 15.40     |
+      | products      | $23.80 |
+      | discounts     | $15.40 |
+      | shipping      | $7.00  |
+      | taxes         | $0.92  |
+      | total         | $15.40 |
+    And last invoice for order "bo_order1" should have following prices:
+      | products                  | 23.80  |
+      | discounts tax excluded    | 15.40  |
+      | discounts tax included    | 16.324 |
+      | shipping tax excluded     | 7.00   |
+      | shipping tax included     | 7.42   |
+      | total paid tax excluded   | 15.40  |
+      | total paid tax included   | 16.324 |
