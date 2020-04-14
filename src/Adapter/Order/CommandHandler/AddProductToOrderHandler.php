@@ -124,7 +124,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $combination
             );
 
-            $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
+            try {
+                $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
+            } catch (Exception $exception) {
+                if (null !== $specificPrice) {
+                    $specificPrice->delete();
+                }
+                throw $exception;
+            }
 
             // Fetch Cart Product
             $productCart = $this->getCartProductData($cart, $product, $command->getProductQuantity());
