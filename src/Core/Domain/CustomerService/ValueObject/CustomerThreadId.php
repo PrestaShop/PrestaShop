@@ -43,7 +43,7 @@ class CustomerThreadId
      */
     public function __construct($customerThreadId)
     {
-        if (!is_int($customerThreadId) || 0 > $customerThreadId) {
+        if (!is_int($customerThreadId) || 0 >= $customerThreadId) {
             throw new CustomerServiceException('CustomerThreadId must be of type int and greater than zero.');
         }
 
