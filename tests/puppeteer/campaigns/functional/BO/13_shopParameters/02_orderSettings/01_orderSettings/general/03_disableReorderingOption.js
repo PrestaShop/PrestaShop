@@ -14,7 +14,7 @@ const OrderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
 const FOLoginPage = require('@pages/FO/login');
 const FOBasePage = require('@pages/FO/FObasePage');
 const MyAccountPage = require('@pages/FO/myAccount');
-const OrderHistoryPage = require('@pages/FO/orderHistory');
+const OrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 // Importing data
 const {DefaultAccount} = require('@data/demo/customer');
 
