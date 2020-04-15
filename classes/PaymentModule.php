@@ -1087,8 +1087,9 @@ abstract class PaymentModuleCore extends Module
             //  The voucher is cloned with a new value corresponding to the remainder
             $cartRuleReductionAmountConverted = $cartRule->reduction_amount;
             if ((int) $cartRule->reduction_currency !== $cart->id_currency) {
-                $cartRuleReductionAmountConverted = Tools::convertPrice(
+                $cartRuleReductionAmountConverted = Tools::convertPriceFull(
                     $cartRule->reduction_amount,
+                    new \Currency((int) $cartRule->reduction_currency),
                     new \Currency($cart->id_currency)
                 );
             }
