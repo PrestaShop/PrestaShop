@@ -113,6 +113,11 @@ export default class ProductRenderer {
     }
   }
 
+  renderSearching() {
+    this.reset();
+    this.toggleSearchingNotice(true);
+  }
+
   /**
    * Renders cart products search results block
    *
@@ -120,6 +125,7 @@ export default class ProductRenderer {
    */
   renderSearchResults(foundProducts) {
     this._cleanSearchResults();
+    this.toggleSearchingNotice(false);
     if (foundProducts.length === 0) {
       this._showNotFound();
       this._hideTaxWarning();
@@ -138,6 +144,7 @@ export default class ProductRenderer {
     this._cleanSearchResults();
     this._hideTaxWarning();
     this._hideResultBlock();
+    this.toggleSearchingNotice(false);
   }
 
   /**
@@ -453,5 +460,14 @@ export default class ProductRenderer {
    */
   _hideNotFound() {
     $(createOrderMap.noProductsFoundWarning).addClass('d-none');
+  }
+
+  /**
+   * Toggles searching product notice
+   *
+   * @private
+   */
+  toggleSearchingNotice(visible) {
+    $(createOrderMap.searchingProductsNotice).toggleClass('d-none', !visible);
   }
 }
