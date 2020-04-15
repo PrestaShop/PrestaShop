@@ -119,7 +119,6 @@ export default class OrderProductAdd {
       );
     });
     this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
-    this.productAddMenuBtn.on('click', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
