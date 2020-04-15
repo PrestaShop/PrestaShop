@@ -34,6 +34,7 @@ use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Entity\Repository\StockRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use PrestaShopBundle\Exception\ProductNotFoundException;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,6 +65,10 @@ class StockController extends ApiController
      */
     public function listProductsAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::READ], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {
@@ -150,6 +155,10 @@ class StockController extends ApiController
      */
     public function listProductsExportAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::READ], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {
