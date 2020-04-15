@@ -256,7 +256,7 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Process the import.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", redirectRoute="admin_import")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", redirectRoute="admin_import")
      * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
