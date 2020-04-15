@@ -34,7 +34,7 @@ const init = async function () {
   };
 };
 
-describe('Test separator of attribute anchor on the product links', async () => {
+describe('Update separator of attribute anchor on the product links', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

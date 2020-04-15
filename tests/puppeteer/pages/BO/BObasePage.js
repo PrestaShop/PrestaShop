@@ -47,6 +47,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.brandsAndSuppliersLink = '#subtab-AdminParentManufacturers';
     // files
     this.filesLink = '#subtab-AdminAttachments';
+    // Discounts
+    this.discountsLink = '#subtab-AdminParentCartRules';
     // Stocks
     this.stocksLink = '#subtab-AdminStockManagement';
 
@@ -108,6 +110,8 @@ module.exports = class BOBasePage extends CommonPage {
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
     // E-mail
     this.emailLink = '#subtab-AdminEmails';
+    // Import
+    this.importLink = '#subtab-AdminImport';
     // Team
     this.teamLink = '#subtab-AdminParentEmployees';
     // Database

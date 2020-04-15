@@ -12,6 +12,7 @@ const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 const FOBasePage = require('@pages/FO/FObasePage');
 const HomePage = require('@pages/FO/home');
+const FOLoginPage = require('@pages/FO/login');
 const ProductPage = require('@pages/FO/product');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
@@ -43,6 +44,7 @@ const init = async function () {
     viewOrderPage: new ViewOrderPage(page),
     foBasePage: new FOBasePage(page),
     homePage: new HomePage(page),
+    foLoginPage: new FOLoginPage(page),
     productPage: new ProductPage(page),
     cartPage: new CartPage(page),
     checkoutPage: new CheckoutPage(page),
@@ -95,22 +97,39 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
   });
 
   describe('Create new order in FO', async () => {
-    it('should go to FO and create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
       // Click on view my shop
-      page = await this.pageObjects.boBasePage.viewMyShop();
+      page = await this.pageObjects.invoicesPage.viewMyShop();
       this.pageObjects = await init();
-      await this.pageObjects.foBasePage.changeLanguage('en');
+      await this.pageObjects.homePage.changeLanguage('en');
+      const isHomePage = await this.pageObjects.homePage.isHomePage();
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
+      await this.pageObjects.homePage.goToLoginPage();
+      const pageTitle = await this.pageObjects.foLoginPage.getPageTitle();
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(this.pageObjects.foLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await this.pageObjects.foLoginPage.customerLogin(DefaultAccount);
+      const isCustomerConnected = await this.pageObjects.foLoginPage.isCustomerConnected();
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    it('should create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+      await this.pageObjects.foLoginPage.goToHomePage();
       // Go to the first product page
       await this.pageObjects.homePage.goToProductPage(1);
       // Add the created product to the cart
       await this.pageObjects.productPage.addProductToTheCart();
       // Proceed to checkout the shopping cart
       await this.pageObjects.cartPage.clickOnProceedToCheckout();
-      // Checkout the order
-      // Personal information step - Login
-      await this.pageObjects.checkoutPage.clickOnSignIn();
-      await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
       // Address step - Go to delivery step
       const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
@@ -119,14 +138,24 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
       // Payment step - Choose payment step
       await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
-      const cardTitle = await this.pageObjects.orderConfirmationPage
-        .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
+      const cardTitle = await this.pageObjects.orderConfirmationPage.getOrderConfirmationCardTitle();
       // Check the confirmation message
       await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-      // Logout from FO
-      await this.pageObjects.foBasePage.logout();
+    });
+
+    it('should sign out from FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
+      await this.pageObjects.orderConfirmationPage.logout();
+      const isCustomerConnected = await this.pageObjects.orderConfirmationPage.isCustomerConnected();
+      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
       page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
     });
   });
 

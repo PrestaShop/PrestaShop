@@ -25,6 +25,7 @@ module.exports = class productSettings extends BOBasePage {
     this.remainingQuantityInput = '#form_page_display_last_quantities';
     this.displayUnavailableAttributesLabel = 'label[for=\'form_page_display_unavailable_attributes_%TOGGLE\']';
     this.separatorAttributeOnProductPageSelect = '#form_page_attribute_anchor_separator';
+    this.displayDiscountedPriceLabel = 'label[for=\'form_page_display_discount_price_%TOGGLE\']';
     this.saveProductPageFormButton = `${this.productPageForm} .card-footer button`;
     // Products stock form
     this.productsStockForm = '#configuration_fieldset_stock';
@@ -38,6 +39,8 @@ module.exports = class productSettings extends BOBasePage {
     // Pagination form
     this.paginationFormBlock = '#configuration_fieldset_order_by_pagination';
     this.productsPerPageInput = '#form_pagination_products_per_page';
+    this.productsDefaultOrderBySelect = '#form_pagination_default_order_by';
+    this.productsDefaultOrderMethodSelect = '#form_pagination_default_order_way';
     this.savePaginationFormButton = `${this.paginationFormBlock} .card-footer button`;
   }
 
@@ -242,6 +245,30 @@ module.exports = class productSettings extends BOBasePage {
   async setDeliveryTimeInStock(deliveryTimeText) {
     await this.setValue(this.deliveryTimeInStockInput, deliveryTimeText);
     await this.clickAndWaitForNavigation(this.saveProductsStockForm);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set display discounted price
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setDisplayDiscountedPriceStatus(toEnable = true) {
+    await this.waitForSelectorAndClick(this.displayDiscountedPriceLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveProductPageFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Set default order for products on products list in FO
+   * @param orderBy, the order in which products will be displayed in the product list
+   * @param orderMethod, order method for product list
+   * @return {Promise<string>}
+   */
+  async setDefaultProductsOrder(orderBy, orderMethod = 'Ascending') {
+    await this.selectByVisibleText(this.productsDefaultOrderBySelect, orderBy);
+    await this.selectByVisibleText(this.productsDefaultOrderMethodSelect, orderMethod);
+    await this.clickAndWaitForNavigation(this.savePaginationFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
 };
