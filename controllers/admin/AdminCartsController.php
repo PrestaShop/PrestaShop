@@ -788,7 +788,18 @@ class AdminCartsControllerCore extends AdminController
 
     public function ajaxReturnVars()
     {
-        $id_cart = (int) $this->context->cart->id;
+        if ((int) Tools::getValue('id_cart')) {
+            $this->context->cookie->id_cart = $id_cart = (int) Tools::getValue('id_cart');
+        } elseif (!$this->context->cookie->id_cart) {
+            $cart = new Cart;
+            $cart->id_currency = $this->context->currency->id;
+            $cart->id_lang = $this->context->language->id;
+            $cart->save();
+            $this->context->cookie->id_cart = $cart->id;
+            $id_cart = (int) $cart->id;
+        } else {
+            $id_cart = (int) $this->context->cart->id;
+        }
         $message_content = '';
         if ($message = Message::getMessageByCartId((int) $this->context->cart->id)) {
             $message_content = $message['message'];
