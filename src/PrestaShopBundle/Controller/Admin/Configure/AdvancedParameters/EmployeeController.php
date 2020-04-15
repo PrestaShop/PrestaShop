@@ -298,6 +298,7 @@ class EmployeeController extends FrameworkBundleAdminController
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
             'showAddonsConnectButton' => false,
+            'enableSidebar' => true,
         ];
 
         return $this->render(
