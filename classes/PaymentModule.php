@@ -1085,9 +1085,16 @@ abstract class PaymentModuleCore extends Module
             //  This is an "amount" reduction, not a reduction in % or a gift
             // THEN
             //  The voucher is cloned with a new value corresponding to the remainder
-            $remainingValue = $cartRule->reduction_amount - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
+            $cartRuleReductionAmountConverted = $cartRule->reduction_amount;
+            if ((int) $cartRule->reduction_currency !== $cart->id_currency) {
+                $cartRuleReductionAmountConverted = Tools::convertPrice(
+                    $cartRule->reduction_amount,
+                    new \Currency($cart->id_currency)
+                );
+            }
+            $remainingValue = $cartRuleReductionAmountConverted - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
             $remainingValue = Tools::ps_round($remainingValue, _PS_PRICE_COMPUTE_PRECISION_);
-            if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0) {
+            if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRuleReductionAmountConverted > 0) {
                 // Create a new voucher from the original
                 $voucher = new CartRule((int) $cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
                 unset($voucher->id);
