@@ -76,7 +76,7 @@ Feature: Cart rule (amount) calculation with multiple cart rules
     When I add 1 item of product "product8" in my cart
     Then my cart total should be precisely 2.35 tax included
     Then my cart total should be 2.4 tax included
-    Then my cart total using previous calculation method should be 2.3 tax included
+    Then my cart total using previous calculation method should be 2.4 tax included
 
   Scenario: One product in my cart, one 10€ global cartRule, 2 free gifts global cartRules
     Given I have an empty default cart
