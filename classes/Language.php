@@ -1504,7 +1504,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         );
 
         if (!empty($tableData)) {
-
             $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
             $shopDefaultLanguage = new Language($shopDefaultLangId);
 
