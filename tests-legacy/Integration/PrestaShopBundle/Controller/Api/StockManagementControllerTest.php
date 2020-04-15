@@ -212,7 +212,7 @@ class StockManagementControllerTest extends ApiTestCase
         /** @var \Symfony\Component\HttpFoundation\ResponseHeaderBag $headers */
         $headers = $response->headers;
         $this->assertTrue($headers->has('Total-Pages'), 'The response headers should contain the total pages.');
-        $this->assertSame(
+        $this->assertEquals(
             $expectedTotalPages,
             $headers->get('Total-Pages'),
             sprintf(
