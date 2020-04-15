@@ -29,6 +29,7 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
+import ConfirmModal from '@components/modal';
 
 const $ = window.$;
 
@@ -119,7 +120,10 @@ export default class OrderProductAdd {
         this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
       );
     });
-    this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
+    this.productAddActionBtn.on('click', (event) => {
+      this.showCreateNewInvoiceConfirmModal();
+      this.addProduct($(event.currentTarget).data('orderId'));
+    });
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
@@ -181,5 +185,19 @@ export default class OrderProductAdd {
         $.growl.error({message: response.responseJSON.message});
       }
     });
+  }
+
+  showCreateNewInvoiceConfirmModal() {
+    const modalTranslations = $('#createInvoiceConfirmModalTranslations').data('translations');
+
+    const modal = new ConfirmModal({
+      id: 'modal-test',
+      confirmTitle: modalTranslations['modal.title'],
+      confirmMessage: modalTranslations['modal.body'],
+      confirmButtonLabel: modalTranslations['modal.apply'],
+      closeButtonLabel: modalTranslations['modal.cancel'],
+    });
+
+    modal.show();
   }
 }
