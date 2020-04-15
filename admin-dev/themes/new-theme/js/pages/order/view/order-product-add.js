@@ -200,7 +200,7 @@ export default class OrderProductAdd {
 
       modal.show();
     } else {
-      this.addProduct(orderId)
+      this.addProduct(orderId);
     }
   }
 
