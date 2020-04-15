@@ -596,11 +596,6 @@
         <target>Edit symbol / format</target>
         <note>Line: 43</note>
       </trans-unit>
-      <trans-unit id="dd98afec66045fb7203704d56c07cb7c">
-        <source>Price: %price% (Special discount %discount%)</source>
-        <target>Price: %price% (Special discount %discount%)</target>
-        <note>Line: 45</note>
-      </trans-unit>
       <trans-unit id="7d9ccccf4e5cc7d7949f26f0a2f5f341">
         <source>Select a currency</source>
         <target>Select a currency</target>
@@ -615,11 +610,6 @@
         <source>Decimals</source>
         <target>Decimals</target>
         <note>Line: 97</note>
-      </trans-unit>
-      <trans-unit id="f3bb5960ffe8ac0fb3c9231a681de701">
-        <source>Reset default settings</source>
-        <target>Reset default settings</target>
-        <note>Line: 119</note>
       </trans-unit>
       <trans-unit id="60bc390fb7113b18e8526d72ddee6474">
         <source>Loading currency data</source>
