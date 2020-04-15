@@ -55,6 +55,7 @@ export default class OrderProductAdd {
     this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.priceTaxCalculator = new OrderPrices();
     this.orderProductRenderer = new OrderProductRenderer();
+    this.confirmNewInvoiceModalTranslations = $(OrderViewPageMap.productAddConfirmNewInvoiceModalTranslations)
   }
 
   setupListener() {
@@ -118,10 +119,7 @@ export default class OrderProductAdd {
         this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
       );
     });
-    this.productAddActionBtn.on('click', (event) => {
-      this.showCreateNewInvoiceConfirmModal();
-      this.addProduct($(event.currentTarget).data('orderId'));
-    });
+    this.productAddActionBtn.on('click', event => this.handleAddProductWithConfirmationModal(event));
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
@@ -185,17 +183,28 @@ export default class OrderProductAdd {
     });
   }
 
-  showCreateNewInvoiceConfirmModal() {
-    const modalTranslations = $('#createInvoiceConfirmModalTranslations').data('translations');
+  handleAddProductWithConfirmationModal(event) {
+    const invoiceId = parseInt(this.invoiceSelect.val(), 10);
+    const orderId = $(event.currentTarget).data('orderId');
 
-    const modal = new ConfirmModal({
-      id: 'modal-test',
-      confirmTitle: modalTranslations['modal.title'],
-      confirmMessage: modalTranslations['modal.body'],
-      confirmButtonLabel: modalTranslations['modal.apply'],
-      closeButtonLabel: modalTranslations['modal.cancel'],
-    });
+    if (invoiceId === 0) {
+      const modalTranslations = this.confirmNewInvoiceModalTranslations.data('translations');
 
-    modal.show();
+      const modal = new ConfirmModal({
+        id: 'modal-test',
+        confirmTitle: modalTranslations['modal.title'],
+        confirmMessage: modalTranslations['modal.body'],
+        confirmButtonLabel: modalTranslations['modal.apply'],
+        closeButtonLabel: modalTranslations['modal.cancel'],
+      }, () => this.onAddProductWithNewInvoiceClick(orderId));
+
+      modal.show();
+    } else {
+      this.addProduct(orderId)
+    }
+  }
+
+  async onAddProductWithNewInvoiceClick(orderId) {
+    await this.addProduct(orderId);
   }
 }
