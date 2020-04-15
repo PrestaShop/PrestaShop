@@ -1089,8 +1089,8 @@ abstract class PaymentModuleCore extends Module
             if ((int) $cartRule->reduction_currency !== $cart->id_currency) {
                 $cartRuleReductionAmountConverted = Tools::convertPriceFull(
                     $cartRule->reduction_amount,
-                    new \Currency((int) $cartRule->reduction_currency),
-                    new \Currency($cart->id_currency)
+                    new Currency((int) $cartRule->reduction_currency),
+                    new Currency($cart->id_currency)
                 );
             }
             $remainingValue = $cartRuleReductionAmountConverted - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
