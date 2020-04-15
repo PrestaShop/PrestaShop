@@ -391,11 +391,11 @@ class AdminSearchConfControllerCore extends AdminController
             $this->errors[] = $this->trans('Aliases and results are both required.', array(), 'Admin.Shopparameters.Notification');
         }
         if (!Validate::isValidSearch($search)) {
-            $this->errors[] = $search . ' ' . $this->trans('Is not a valid result', array(), 'Admin.Shopparameters.Notification');
+            $this->errors[] = Tools::safeOutput($search) . ' ' . $this->trans('Is not a valid result', array(), 'Admin.Shopparameters.Notification');
         }
         foreach ($aliases as $alias) {
             if (!Validate::isValidSearch($alias)) {
-                $this->errors[] = $alias . ' ' . $this->trans('Is not a valid alias', array(), 'Admin.Shopparameters.Notification');
+                $this->errors[] = Tools::safeOutput($alias) . ' ' . $this->trans('Is not a valid alias', array(), 'Admin.Shopparameters.Notification');
             }
         }
 
