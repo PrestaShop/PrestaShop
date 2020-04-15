@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import ConfirmModal from '@components/modal';
+
 const $ = window.$;
 
 /**
@@ -40,28 +42,63 @@ export default class SubmitRowActionExtension {
 
       const $button = $(event.currentTarget);
       const confirmMessage = $button.data('confirm-message');
+      const confirmTitle = $button.data('confirmTitle');
 
-      if (confirmMessage.length && !confirm(confirmMessage)) {
-        return;
+      if (confirmMessage !== undefined && 0 < confirmMessage.length) {
+        if (confirmTitle !== undefined) {
+          this.showConfirmModal($button, grid, confirmMessage, confirmTitle);
+        } else if (confirm(confirmMessage)) {
+          this.submitForm($button, grid);
+        }
+      } else {
+        this.submitForm($button, grid);
       }
-
-      const method = $button.data('method');
-      const isGetOrPostMethod = ['GET', 'POST'].includes(method);
-
-      const $form = $('<form>', {
-        'action': $button.data('url'),
-        'method': isGetOrPostMethod ? method : 'POST',
-      }).appendTo('body');
-
-      if (!isGetOrPostMethod) {
-        $form.append($('<input>', {
-          'type': '_hidden',
-          'name': '_method',
-          'value': method
-        }));
-      }
-
-      $form.submit();
     });
+  }
+
+  /**
+   * @param {jQuery} $submitBtn
+   * @param {Grid} grid
+   * @param {string} confirmMessage
+   * @param {string} confirmTitle
+   */
+  showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle) {
+    const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
+    const closeButtonLabel = $submitBtn.data('closeButtonLabel');
+    const confirmButtonClass = $submitBtn.data('confirmButtonClass');
+
+    const modal = new ConfirmModal({
+      id: `${grid.getId()}_grid_confirm_modal`,
+      confirmTitle,
+      confirmMessage,
+      confirmButtonLabel,
+      closeButtonLabel,
+      confirmButtonClass,
+    }, () => this.submitForm($submitBtn));
+
+    modal.show();
+  }
+
+  /**
+   * @param $button
+   */
+  submitForm($button) {
+    const method = $button.data('method');
+    const isGetOrPostMethod = ['GET', 'POST'].includes(method);
+
+    const $form = $('<form>', {
+      action: $button.data('url'),
+      method: isGetOrPostMethod ? method : 'POST',
+    }).appendTo('body');
+
+    if (!isGetOrPostMethod) {
+      $form.append($('<input>', {
+        type: '_hidden',
+        name: '_method',
+        value: method,
+      }));
+    }
+
+    $form.submit();
   }
 }

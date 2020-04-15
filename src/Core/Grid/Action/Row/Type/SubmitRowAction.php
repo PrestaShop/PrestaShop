@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\Type;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AbstractRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -66,6 +67,7 @@ final class SubmitRowAction extends AbstractRowAction
                 'confirm_message_type' => self::MESSAGE_TYPE_STATIC,
                 'dynamic_message_field' => '',
                 'extra_route_params' => [],
+                'modal_options' => null,
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
@@ -76,6 +78,7 @@ final class SubmitRowAction extends AbstractRowAction
             ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
             ->setAllowedTypes('dynamic_message_field', 'string')
             ->setAllowedTypes('confirm_message_type', 'string')
+            ->setAllowedTypes('modal_options', [ModalOptions::class, 'null'])
         ;
     }
 

@@ -122,6 +122,12 @@ final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefi
                                     [],
                                     'Admin.Notifications.Warning'
                                 ),
+                                'modal_options' => new ModalOptions([
+                                    'title' => $this->trans('Order messages', [], 'Admin.Orderscustomers.Feature'),
+                                    'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                                    'confirm_button_class' => 'btn-danger',
+                                    'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                                ]),
                             ])
                         ),
                 ])
