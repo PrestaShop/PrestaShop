@@ -15,7 +15,7 @@ const FOBasePage = require('@pages/FO/FObasePage');
 const HomePage = require('@pages/FO/home');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const files = require('@utils/files');
 // Importing data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
