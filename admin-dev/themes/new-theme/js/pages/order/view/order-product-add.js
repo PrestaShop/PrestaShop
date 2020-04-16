@@ -196,15 +196,11 @@ export default class OrderProductAdd {
         confirmMessage: modalTranslations['modal.body'],
         confirmButtonLabel: modalTranslations['modal.apply'],
         closeButtonLabel: modalTranslations['modal.cancel'],
-      }, () => this.onAddProductWithNewInvoiceClick(orderId));
+      }, () => this.addProduct(orderId));
 
       modal.show();
     } else {
       this.addProduct(orderId);
     }
-  }
-
-  async onAddProductWithNewInvoiceClick(orderId) {
-    await this.addProduct(orderId);
   }
 }
