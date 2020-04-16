@@ -161,6 +161,86 @@ class AddBasicProductCommand
     }
 
     /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return ProductType
+     */
+    public function getType(): ProductType
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return Number
+     */
+    public function getPrice(): Number
+    {
+        return $this->price;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @return CategoryId[]
+     */
+    public function getCategoryIds(): array
+    {
+        return $this->categoryIds;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedSummaries(): array
+    {
+        return $this->localizedSummaries;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedDescriptions(): array
+    {
+        return $this->localizedDescriptions;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @return ManufacturerId|null
+     */
+    public function getManufacturerId(): ?ManufacturerId
+    {
+        return $this->manufacturerId;
+    }
+
+    /**
+     * @return TaxRulesGroupId|null
+     */
+    public function getTaxRulesGroupId(): ?TaxRulesGroupId
+    {
+        return $this->taxRulesGroupId;
+    }
+
+    /**
      * @param int $taxRulesGroupId
      *
      * @return AddBasicProductCommand
