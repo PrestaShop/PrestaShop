@@ -134,9 +134,6 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
                 $camelizedDefinitionId = Container::camelize($definitionId);
                 yield $camelizedDefinitionId;
             } catch (Exception $e) {
-                Logger::addLog(
-                    sprintf('Unable to load service: %s . %s', $serviceId, $e->getMessage())
-                );
                 $io->error(
                     sprintf('Unable to load service %s . %s', $serviceId, $e->getMessage())
                 );
