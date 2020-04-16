@@ -272,6 +272,10 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'asc',
         $view = 'full'
     ) {
+        if (!$this->isGranted([PageVoter::READ], self::PRODUCT_OBJECT)) {
+            return $this->redirect('admin_dashboard');
+        }
+
         /** @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');

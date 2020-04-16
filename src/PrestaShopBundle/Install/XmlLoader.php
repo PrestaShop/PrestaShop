@@ -179,8 +179,7 @@ class XmlLoader
         // Browse all XML files from data/xml directory
         $entities = [];
         $dependencies = [];
-        $fd = opendir($this->data_path);
-        while ($file = readdir($fd)) {
+        foreach (scandir($this->data_path) as $file) {
             if (preg_match('#^(.+)\.xml$#', $file, $m)) {
                 $entity = $m[1];
                 $xml = $this->loadEntity($entity);
@@ -199,7 +198,6 @@ class XmlLoader
                 $entities[] = $entity;
             }
         }
-        closedir($fd);
 
         // Sort entities to populate database in good order (E.g. zones before countries)
         do {

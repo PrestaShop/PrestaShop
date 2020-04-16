@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShopBundle\Service\Routing\Router as PrestaShopRouter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Admin controller to manage security pages.
@@ -37,6 +38,11 @@ class SecurityController extends FrameworkBundleAdminController
     public function compromisedAccessAction(Request $request)
     {
         $requestUri = urldecode($request->query->get('uri'));
+        $url = new Assert\Url();
+        $violations = $this->get('validator')->validate($requestUri, [$url]);
+        if ($violations->count()) {
+            return $this->redirect('dashboard');
+        }
 
         // getToken() actually generate a new token
         $username = $this->get('prestashop.user_provider')->getUsername();
@@ -47,8 +53,11 @@ class SecurityController extends FrameworkBundleAdminController
 
         $newUri = PrestaShopRouter::generateTokenizedUrl($requestUri, $newToken);
 
-        return $this->render('@PrestaShop/Admin/Security/compromised.html.twig', [
-            'requestUri' => $newUri,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Security/compromised.html.twig',
+            [
+                'requestUri' => $newUri,
+            ]
+        );
     }
 }

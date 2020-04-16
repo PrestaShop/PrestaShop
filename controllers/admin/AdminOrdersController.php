@@ -1323,6 +1323,25 @@ class AdminOrdersControllerCore extends AdminController
                         $order_detail->updateTaxAmount($order);
                     }
 
+                    foreach ($order->getCartRules() as $cartRule) {
+                        $orderCartRule = new OrderCartRule((int) $cartRule['id_order_cart_rule']);
+                        if ($cartRule['value'] > 0) {
+                            $orderCartRule->value = Tools::convertPriceFull(
+                                (float) $cartRule['value'],
+                                $old_currency,
+                                $currency
+                            );
+                        }
+                        if ($cartRule['value_tax_excl'] > 0) {
+                            $orderCartRule->value_tax_excl = Tools::convertPriceFull(
+                                (float) $cartRule['value_tax_excl'],
+                                $old_currency,
+                                $currency
+                            );
+                        }
+                        $orderCartRule->update();
+                    }
+
                     $id_order_carrier = (int) $order->getIdOrderCarrier();
                     if ($id_order_carrier) {
                         $order_carrier = $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
