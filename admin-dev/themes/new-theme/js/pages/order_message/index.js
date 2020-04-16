@@ -33,7 +33,7 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
-import SubmitBulkActionExtension from '../../components/grid/extension/submit-bulk-action-extension';
+import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
 
 const $ = window.$;
 

@@ -27,9 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -48,6 +46,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'order_message';
 
     /**
@@ -181,18 +181,7 @@ final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefi
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_order_messages_bulk_delete',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                        'modal_options' => new ModalOptions([
-                            'title' => $this->trans('Order messages', [], 'Admin.Orderscustomers.Feature'),
-                            'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
-                            'confirm_button_class' => 'btn-danger',
-                            'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
-                        ]),
-                    ])
+                $this->buildBulkDeleteAction('admin_order_messages_bulk_delete')
             );
     }
 
