@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,10 +38,12 @@ class AttachementProductController extends FrameworkBundleAdminController
     /**
      * Manage form add product attachment.
      *
+     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     *
      * @param int $idProduct
      * @param Request $request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function addAction($idProduct, Request $request)
     {
