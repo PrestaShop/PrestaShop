@@ -284,7 +284,7 @@ module.exports = class Product extends BOBasePage {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
-    await this.waitForVisibleSelector(this.filterSearchButton);
+    await this.waitForVisibleSelector(this.filterSearchButton, 2000);
   }
 
   /**
