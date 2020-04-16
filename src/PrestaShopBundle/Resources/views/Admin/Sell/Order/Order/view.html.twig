@@ -94,18 +94,6 @@
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_all_messages_modal.html.twig' %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_product_pack_modal.html.twig' %}
   </div>
-
-  <script type="text/html" id="modalTranslationsAddProductWithNewInvoice"
-     data-translations="{{
-       {
-         'modal.title': 'Create a new invoice'|trans({}, 'Admin.Actions'),
-         'modal.apply': 'Create'|trans({}, 'Admin.Actions'),
-         'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
-         'modal.close': 'Close'|trans({}, 'Admin.Actions'),
-         'modal.body': 'Are you sure you want to create a new invoice?'|trans({}, 'Admin.Actions')
-       }|json_encode|replace("'", "&#39;")|raw|trim
-     }}"
-  ></script>
 {% endblock %}
 
 {% block javascripts %}

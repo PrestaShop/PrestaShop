@@ -188,10 +188,9 @@ export default class OrderProductAdd {
     const orderId = $(event.currentTarget).data('orderId');
 
     if (invoiceId === 0) {
-      const modalTranslations = this.confirmNewInvoiceModalTranslations.data('translations');
-
+      const modalTranslations = this.invoiceSelect.data('modal-translations');
       const modal = new ConfirmModal({
-        id: 'modal-test',
+        id: 'modal-confirm-new-invoice',
         confirmTitle: modalTranslations['modal.title'],
         confirmMessage: modalTranslations['modal.body'],
         confirmButtonLabel: modalTranslations['modal.apply'],
