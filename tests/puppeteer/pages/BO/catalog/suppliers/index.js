@@ -128,6 +128,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row = 1, valueWanted = true) {
+    await this.waitForVisibleSelector(this.enableColumn.replace('%ROW', row));
     if (await this.getToggleColumnValue(row) !== valueWanted) {
       await this.clickAndWaitForNavigation(this.enableColumn.replace('%ROW', row));
       return true;

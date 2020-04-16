@@ -284,6 +284,7 @@ module.exports = class Product extends BOBasePage {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
+    await this.waitForVisibleSelector(this.filterSearchButton);
   }
 
   /**
@@ -411,6 +412,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
+    await this.waitForVisibleSelector(this.productsListTableColumnStatus.replace('%ROW', row), 2000);
     const actualValue = await this.getToggleColumnValue(row);
     if (actualValue !== valueWanted) {
       await this.clickAndWaitForNavigation(this.productsListTableColumnStatus.replace('%ROW', row));

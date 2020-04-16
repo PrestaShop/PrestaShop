@@ -121,6 +121,10 @@ module.exports = class WebService extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
+    await this.waitForVisibleSelector(
+      this.webserviceListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'),
+      2000,
+    );
     if (await this.getToggleColumnValue(row) !== valueWanted) {
       this.page.click(this.webserviceListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
       await this.waitForVisibleSelector(
