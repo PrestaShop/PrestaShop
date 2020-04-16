@@ -1594,6 +1594,7 @@
                 "log",
                 "plugin"
             ],
+            "abandoned": true,
             "time": "2014-10-13T03:31:43+00:00"
         },
         {
@@ -1645,6 +1646,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2018-07-31T13:22:33+00:00"
         },
         {
@@ -1695,6 +1697,7 @@
                 "Guzzle",
                 "stream"
             ],
+            "abandoned": true,
             "time": "2014-10-12T19:18:40+00:00"
         },
         {
@@ -3789,16 +3792,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.0.6",
+            "version": "v3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "2b8a461669715c9989aa223f2205f45e608b5d23"
+                "reference": "6f7b97e77b0fca30c0acf74316996cfc82a263a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/2b8a461669715c9989aa223f2205f45e608b5d23",
-                "reference": "2b8a461669715c9989aa223f2205f45e608b5d23",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/6f7b97e77b0fca30c0acf74316996cfc82a263a9",
+                "reference": "6f7b97e77b0fca30c0acf74316996cfc82a263a9",
                 "shasum": ""
             },
             "require": {
@@ -3834,7 +3837,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2019-07-01T16:31:53+00:00"
+            "time": "2020-03-25T10:24:43+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -3966,16 +3969,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "3.0.3",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "3e21e7b3ff481fdf07e078b881b1099e57d0c187"
+                "reference": "8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/3e21e7b3ff481fdf07e078b881b1099e57d0c187",
-                "reference": "3e21e7b3ff481fdf07e078b881b1099e57d0c187",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a",
+                "reference": "8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a",
                 "shasum": ""
             },
             "require": {
@@ -4003,7 +4006,7 @@
             ],
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
-            "time": "2019-05-09T16:31:33+00:00"
+            "time": "2020-04-15T14:45:38+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -4135,16 +4138,16 @@
         },
         {
             "name": "prestashop/ps_socialfollow",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_socialfollow.git",
-                "reference": "ffa1c3ad947cc045939f50d410f47793d1ca7793"
+                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/ffa1c3ad947cc045939f50d410f47793d1ca7793",
-                "reference": "ffa1c3ad947cc045939f50d410f47793d1ca7793",
+                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/2a1bb73cbcdcf929b876b624f033d87c8b101133",
+                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133",
                 "shasum": ""
             },
             "require": {
@@ -4153,7 +4156,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4163,7 +4166,7 @@
             ],
             "description": "PrestaShop module ps_socialfollow",
             "homepage": "https://github.com/PrestaShop/ps_socialfollow",
-            "time": "2017-02-01T13:17:47+00:00"
+            "time": "2020-04-15T15:03:48+00:00"
         },
         {
             "name": "prestashop/ps_themecusto",
@@ -6939,6 +6942,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -8580,5 +8584,6 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "5.6.0"
-    }
+    },
+    "plugin-api-version": "1.1.0"
 }
