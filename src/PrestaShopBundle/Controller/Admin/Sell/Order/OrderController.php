@@ -871,8 +871,6 @@ class OrderController extends CommonController
             if ($addOrderCartRuleForm->isValid()) {
                 $data = $addOrderCartRuleForm->getData();
 
-                $invoiceId = $data['apply_on_all_invoices'] ? null : (int) $data['invoice_id'];
-
                 try {
                     $this->getCommandBus()->handle(
                         new AddCartRuleToOrderCommand(
@@ -880,7 +878,7 @@ class OrderController extends CommonController
                             $data['name'],
                             $data['type'],
                             $data['value'] ?? null,
-                            $invoiceId
+                            (int) $data['invoice_id']
                         )
                     );
 
