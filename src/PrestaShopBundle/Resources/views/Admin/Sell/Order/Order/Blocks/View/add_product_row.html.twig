@@ -62,10 +62,10 @@
       {{ form_row(addProductRowForm.invoice, {
         'attr': {
           'data-modal-translations':        {
-            'modal.title': 'Create a new invoice'|trans({}, 'Admin.Actions'),
+            'modal.title': 'Create a new invoice'|trans({}, 'Admin.Orderscustomers.Feature'),
             'modal.apply': 'Create'|trans({}, 'Admin.Actions'),
             'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
-            'modal.body': 'Are you sure you want to create a new invoice?'|trans({}, 'Admin.Actions')
+            'modal.body': 'Are you sure you want to create a new invoice?'|trans({}, 'Admin.Orderscustomers.Notification')
           }|json_encode|replace("'", "&#39;")|raw|trim
         }
       }) }}
