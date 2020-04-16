@@ -101,7 +101,6 @@ module.exports = class Checkout extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isPaymentMethodExist(paymentModuleName) {
-    await this.waitForVisibleSelector(this.paymentConfirmationButton, 2000);
     return this.elementVisible(this.paymentOptionInput.replace('%NAME', paymentModuleName), 2000);
   }
 
