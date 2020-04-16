@@ -72,11 +72,6 @@ class AddBasicProductCommand
     private $localizedDescriptions = [];
 
     /**
-     * @var array
-     */
-    private $features = [];
-
-    /**
      * @var string
      */
     private $reference = '';
@@ -147,15 +142,6 @@ class AddBasicProductCommand
         $this->manufacturerId = $manufacturerId;
 
         return $this;
-    }
-
-    /**
-     * @param array $features
-     */
-    public function setFeatures(array $features): void
-    {
-        //@todo: do we need features on basic product creation at all
-        // or should we just allow Adding features to existing product
     }
 
     /**
