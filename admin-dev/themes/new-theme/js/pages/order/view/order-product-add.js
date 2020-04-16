@@ -55,7 +55,6 @@ export default class OrderProductAdd {
     this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.priceTaxCalculator = new OrderPrices();
     this.orderProductRenderer = new OrderProductRenderer();
-    this.confirmNewInvoiceModalTranslations = $(OrderViewPageMap.productAddConfirmNewInvoiceModalTranslations)
   }
 
   setupListener() {
