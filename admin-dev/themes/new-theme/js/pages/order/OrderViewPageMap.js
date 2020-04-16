@@ -82,7 +82,6 @@ export default {
   productsTableCustomizationRows: '#orderProductsTable .order-product-customization',
   productEditBtn: '.js-order-product-edit-btn',
   productAddBtn: '#addProductBtn',
-  productAddConfirmNewInvoiceModalTranslations: '#modalTranslationsAddProductWithNewInvoice',
   productActionBtn: '.js-product-action-btn',
   productAddActionBtn: '#add_product_row_add',
   productCancelAddBtn: '#add_product_row_cancel',
