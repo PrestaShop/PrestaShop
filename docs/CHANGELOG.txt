@@ -25,6 +25,32 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
+#   v1.7.6.5 - (2020-04-16)
+####################################
+- Back Office:
+  - Bug fix:
+    - #18637: Fix sidebar not displayed in BO Add employee page (by @Progi1984)
+    - #18607: Fix wrong number of "Last emails" in BO - Customer View page (by @PululuK)
+    - #17920: Wrong redirection when using the quick search for a category (by @PululuK)
+    - #18064: Fix error when trying to translate Serbian using the BO interface (by @eternoendless)
+- Front Office:
+  - Bug fix:
+    - #18633: Convert cart rule value when order currency is different (by @sowbiba)
+    - #18493: Change product redirection rules to redirect to valid attribute url (by @jolelievre)
+    - #18103: Duplicate address when submitting a form with errors (by @PierreRambaud)
+- Core:
+  - Improvement:
+    - #18638: Update version to 1.7.6.5 (by @PierreRambaud)
+    - #18013: Add PululuK as a contributor (by @LouiseBonnard)
+- Installer:
+  - Bug fix:
+    - #18491: Installation under CLI doesn't take BASE_URI and Apache rewrite in consideration (by @PierreRambaud)
+    - #18451: Use scandir instead of readdir to get sorted entities (by @PierreRambaud)
+- Tests:
+  - Bug fix:
+    - #18309: Change test fixtures that need to be in the future (by @jolelievre)
+
+####################################
 #   v1.7.6.4 - (2020-03-02)
 ####################################
 - Back Office:
