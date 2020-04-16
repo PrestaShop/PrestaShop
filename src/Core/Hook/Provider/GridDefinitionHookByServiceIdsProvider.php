@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
 use Exception;
 use Generator;
-use Logger;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
