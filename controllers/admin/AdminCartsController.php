@@ -795,7 +795,7 @@ class AdminCartsControllerCore extends AdminController
             $cart->id_currency = $this->context->currency->id;
             $cart->id_lang = $this->context->language->id;
             $cart->save();
-            $this->context->cookie->id_cart = $cart->id;
+            $this->context->cookie->id_cart = $id_cart = (int) $cart->id;
             $id_cart = (int) $cart->id;
         } else {
             $id_cart = (int) $this->context->cart->id;
