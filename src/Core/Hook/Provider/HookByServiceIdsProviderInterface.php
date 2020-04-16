@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
+use Symfony\Component\Console\Style\SymfonyStyle;
+
 /**
  * Defines contract for providing hooks by using service ids.
  */
@@ -36,5 +38,5 @@ interface HookByServiceIdsProviderInterface
      *
      * @return string[]
      */
-    public function getHookNames(array $gridDefinitionServiceIds);
+    public function getHookNames(array $gridDefinitionServiceIds, SymfonyStyle $io);
 }

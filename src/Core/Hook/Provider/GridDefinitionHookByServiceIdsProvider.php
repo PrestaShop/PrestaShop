@@ -30,6 +30,7 @@ use Exception;
 use Generator;
 use Logger;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -61,10 +62,10 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
     /**
      * {@inheritdoc}
      */
-    public function getHookNames(array $gridDefinitionServiceIds)
+    public function getHookNames(array $gridDefinitionServiceIds, SymfonyStyle $io)
     {
         /** @var Generator $gridDefinitionIds */
-        $gridDefinitionIds = $this->getGridDefinitionIds($gridDefinitionServiceIds);
+        $gridDefinitionIds = $this->getGridDefinitionIds($gridDefinitionServiceIds, $io);
 
         $gridDefinitionHookNames = [];
         $gridQueryBuilderHookNames = [];
@@ -120,7 +121,7 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
      *
      * @return Generator
      */
-    private function getGridDefinitionIds(array $gridDefinitionServiceIds)
+    private function getGridDefinitionIds(array $gridDefinitionServiceIds, SymfonyStyle $io)
     {
         foreach ($gridDefinitionServiceIds as $serviceId) {
             try {
@@ -133,7 +134,12 @@ final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsPr
                 $camelizedDefinitionId = Container::camelize($definitionId);
                 yield $camelizedDefinitionId;
             } catch (Exception $e) {
-                Logger::addLog(sprintf('Error while loading service: %s . Error: %s', $serviceId, $e));
+                Logger::addLog(
+                    sprintf('Unable to load service: %s . %s', $serviceId, $e->getMessage())
+                );
+                $io->error(
+                    sprintf('Unable to load service %s . %s', $serviceId, $e->getMessage())
+                );
             }
         }
     }

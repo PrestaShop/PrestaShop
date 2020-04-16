@@ -67,7 +67,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
             return;
         }
 
-        $hookNames = $this->getHookNames();
+        $hookNames = $this->getHookNames($io);
         $hookDescriptions = $this->getHookDescriptions($hookNames);
 
         try {
@@ -106,7 +106,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
      *
      * @return string[]
      */
-    private function getHookNames()
+    private function getHookNames(SymfonyStyle $io)
     {
         $container = $this->getContainer();
 
@@ -122,7 +122,7 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
             'prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider'
         );
 
-        $gridDefinitionHookNames = $gridDefinitionHooksProvider->getHookNames($gridServiceIds);
+        $gridDefinitionHookNames = $gridDefinitionHooksProvider->getHookNames($gridServiceIds, $io);
 
         $identifiableObjectHookNames = $identifiableObjectFormTypeProvider->getHookNames($identifiableObjectFormTypes);
 
