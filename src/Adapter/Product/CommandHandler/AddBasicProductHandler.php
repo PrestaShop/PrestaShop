@@ -39,18 +39,29 @@ use Product;
 final class AddBasicProductHandler implements AddBasicProductHandlerInterface
 {
     /**
+     * @var int
+     */
+    private $defaultLangId;
+
+    /**
+     * @param int $defaultLangId
+     */
+    public function __construct(int $defaultLangId)
+    {
+        $this->defaultLangId = $defaultLangId;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function handle(AddBasicProductCommand $command): ProductId
     {
-        $product = new Product();
-        $product->name = $command->getLocalizedNames();
-        //@todo: check is there anything more than this for product type
-        $product->is_virtual = $command->getType() === ProductType::TYPE_VIRTUAL;
-        $product->price = $command->getPrice();
-        $product->quantity = $command->getQuantity();
+        $product = $this->createProduct($command);
+        $this->addOptionalProperties($product, $command);
 
         try {
+            //@todo: Check old ProductController::517 for hooks
+            //  will those hooks in new form handler be enough to replace old ones?
             if (!$product->add()) {
                 throw new ProductException('Failed to add new basic product');
             }
@@ -60,6 +71,47 @@ final class AddBasicProductHandler implements AddBasicProductHandlerInterface
 
         $product->addToCategories($command->getCategoryIds());
 
-        return new ProductId((int) $product->id);
+        return new ProductId((int)$product->id);
+    }
+
+    /**
+     * @param AddBasicProductCommand $command
+     *
+     * @return Product
+     */
+    private function createProduct(AddBasicProductCommand $command): Product
+    {
+        //@todo: dont forget multishop when specs are prepared.
+        $product = new Product();
+        $product->name = $command->getLocalizedNames();
+        //@todo: check if there is anything more for product type
+        $product->is_virtual = $command->getType() === ProductType::TYPE_VIRTUAL;
+        $product->price = $command->getPrice();
+        $product->quantity = $command->getQuantity();
+
+        return $product;
+    }
+
+    /**
+     * @param Product $product
+     * @param AddBasicProductCommand $command
+     */
+    private function addOptionalProperties(Product $product, AddBasicProductCommand $command): void
+    {
+        if ($command->getLocalizedShortDescriptions()) {
+            $product->description_short = $command->getLocalizedShortDescriptions();
+        }
+        if ($command->getLocalizedDescriptions()) {
+            $product->description = $command->getLocalizedDescriptions();
+        }
+        if ($command->getReference()) {
+            $product->reference = $command->getReference();
+        }
+        if ($command->getManufacturerId()) {
+            $product->id_manufacturer = $command->getManufacturerId()->getValue();
+        }
+        if ($command->getTaxRulesGroupId()) {
+            $product->id_tax_rules_group = $command->getTaxRulesGroupId()->getValue();
+        }
     }
 }

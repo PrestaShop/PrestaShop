@@ -62,19 +62,19 @@ class AddBasicProductCommand
     private $categoryIds;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    private $localizedSummaries = [];
+    private $localizedShortDescriptions;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    private $localizedDescriptions = [];
+    private $localizedDescriptions;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $reference = '';
+    private $reference;
 
     /**
      * @var ManufacturerId|null
@@ -109,13 +109,13 @@ class AddBasicProductCommand
     }
 
     /**
-     * @param string[] $localizedSummaries
+     * @param string[] $localizedShortDescriptions
      *
      * @return AddBasicProductCommand
      */
-    public function setLocalizedSummaries(array $localizedSummaries): AddBasicProductCommand
+    public function setLocalizedShortDescriptions(array $localizedShortDescriptions): AddBasicProductCommand
     {
-        $this->localizedSummaries = $localizedSummaries;
+        $this->localizedShortDescriptions = $localizedShortDescriptions;
 
         return $this;
     }
@@ -133,13 +133,13 @@ class AddBasicProductCommand
     }
 
     /**
-     * @param ManufacturerId|null $manufacturerId
+     * @param int $manufacturerId
      *
      * @return AddBasicProductCommand
      */
-    public function setManufacturerId(?ManufacturerId $manufacturerId): AddBasicProductCommand
+    public function setManufacturerId(int $manufacturerId): AddBasicProductCommand
     {
-        $this->manufacturerId = $manufacturerId;
+        $this->manufacturerId = new ManufacturerId($manufacturerId);
 
         return $this;
     }
@@ -150,14 +150,6 @@ class AddBasicProductCommand
     public function setReference(string $reference): void
     {
         $this->reference = $reference;
-    }
-
-    /**
-     * @param int $manufacturerId
-     */
-    public function setManufacturer(int $manufacturerId): void
-    {
-        $this->manufacturerId = new ManufacturerId($manufacturerId);
     }
 
     /**
@@ -203,9 +195,9 @@ class AddBasicProductCommand
     /**
      * @return string[]
      */
-    public function getLocalizedSummaries(): array
+    public function getLocalizedShortDescriptions(): array
     {
-        return $this->localizedSummaries;
+        return $this->localizedShortDescriptions;
     }
 
     /**
