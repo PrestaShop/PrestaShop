@@ -478,4 +478,12 @@ class CartRow
             $taxExcluded / $quantity
         );
     }
+
+    /**
+     * @return string
+     */
+    public function getRoundType()
+    {
+        return $this->roundType;
+    }
 }
