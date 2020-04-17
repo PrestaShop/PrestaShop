@@ -126,6 +126,10 @@ module.exports = class Taxes extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row, valueWanted = true) {
+    await this.waitForVisibleSelector(
+      this.taxesGridColumn.replace('%ROW', row).replace('%COLUMN', 'active'),
+      2000,
+    );
     if (await this.getToggleColumnValue(row, 'active') !== valueWanted) {
       await this.clickAndWaitForNavigation(this.taxesGridColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
       return true;

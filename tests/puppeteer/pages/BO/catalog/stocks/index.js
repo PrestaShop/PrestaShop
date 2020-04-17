@@ -71,6 +71,7 @@ module.exports = class Stocks extends BOBasePage {
    * @returns {Promise<*>}
    */
   async getNumberOfProductsFromList() {
+    await this.waitForVisibleSelector(this.searchButton, 2000);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
     return (await this.page.$$(this.productRows)).length;
   }

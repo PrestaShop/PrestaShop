@@ -185,6 +185,7 @@ module.exports = class Brands extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row, valueWanted = true) {
+    await this.waitForVisibleSelector(this.brandsTableEnableColumn.replace('%ROW', row), 2000);
     if (await this.getToggleColumnValue(row) !== valueWanted) {
       await this.clickAndWaitForNavigation(this.brandsTableEnableColumn.replace('%ROW', row));
       return true;

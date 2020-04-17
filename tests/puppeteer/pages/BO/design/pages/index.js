@@ -174,6 +174,10 @@ module.exports = class Pages extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(table, row, valueWanted = true) {
+    await this.waitForVisibleSelector(
+      this.listTableColumn.replace('%TABLE', table).replace('%ROW', row).replace('%COLUMN', 'active'),
+      2000,
+    );
     if (await this.getToggleColumnValue(table, row) !== valueWanted) {
       this.page.click(this.listTableColumn
         .replace('%TABLE', table)
