@@ -46,6 +46,7 @@ use OrderInvoice;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -68,11 +69,6 @@ use Validate;
 final class AddProductToOrderHandler extends AbstractOrderHandler implements AddProductToOrderHandlerInterface
 {
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var Context
      */
     private $context;
@@ -83,14 +79,28 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $contextStateManager;
 
     /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
      */
-    public function __construct(TranslatorInterface $translator, ContextStateManager $contextStateManager)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        ContextStateManager $contextStateManager,
+        OrderAmountUpdater $orderAmountUpdater
+    ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
         $this->contextStateManager = $contextStateManager;
+        $this->orderAmountUpdater = $orderAmountUpdater;
     }
 
     /**
@@ -136,8 +146,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 [$productCart]
             );
 
-            $totalMethod = $command->getOrderInvoiceId() ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
-
             // Create Order detail information
             $orderDetail = $this->createOrderDetail(
                 $order,
@@ -145,33 +153,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $cart,
                 [$productCart]
             );
-
-            // update totals amount of order
-            // @todo: use https://github.com/PrestaShop/decimal for prices computations
-            $orderProducts = $order->getCartProducts();
-            $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts);
-            $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts);
-
-            $precision = $this->getPrecisionFromCart($cart);
-            $order->total_paid = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_paid_tax_excl = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_paid_tax_incl = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
-            $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts);
-            $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
-
-            $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
-            $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
-            $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
 
             StockAvailable::synchronize($product->id);
 
@@ -225,23 +206,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $orderCartRule->add();
             }
 
-            // @todo: use https://github.com/PrestaShop/decimal
-            $order->total_paid = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_paid_tax_excl = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_paid_tax_incl = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-            $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
-            $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-
+            // Update totals amount of order
+            $order = $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
             $order->update();
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();

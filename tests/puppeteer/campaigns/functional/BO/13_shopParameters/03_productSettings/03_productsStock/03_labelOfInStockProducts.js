@@ -29,7 +29,7 @@ const init = async function () {
   };
 };
 
-describe('Test label of in-stock products', async () => {
+describe('Update label of in-stock products', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

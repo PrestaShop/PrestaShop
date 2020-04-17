@@ -47,7 +47,7 @@ Enable send an email after registration
 Create customer account
 Check that there is an email sent to the new customer in 'Advanced Parameters > Email'
  */
-describe('Enable/Disable send an email after registration', async () => {
+describe('Enable send an email after registration', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

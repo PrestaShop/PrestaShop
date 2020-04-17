@@ -11,6 +11,8 @@ module.exports = class Category extends FOBasePage {
     this.productsSection = '#products';
     this.productListDiv = '#js-product-list';
     this.productItemListDiv = `${this.productListDiv} .products div[itemprop='itemListElement']`;
+    this.sortByDiv = `${this.productsSection} div.sort-by-row`;
+    this.sortByButton = `${this.sortByDiv} button.select-title`;
   }
 
   /* Methods */
@@ -28,5 +30,13 @@ module.exports = class Category extends FOBasePage {
    */
   async getNumberOfProductsDisplayed() {
     return (await this.page.$$(this.productItemListDiv)).length;
+  }
+
+  /**
+   * Get sort by value from button
+   * @return {Promise<string>}
+   */
+  getSortByValue() {
+    return this.getTextContent(this.sortByButton);
   }
 };

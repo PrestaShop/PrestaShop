@@ -31,7 +31,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable ask for birth date ', async () => {
+describe('Enable ask for birth date', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
