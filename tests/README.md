@@ -4,7 +4,7 @@ Tests
 This is PrestaShop automated tests folder.
 
 Multiple type of tests are available:
-- `puppeteer`  folder contains end-to-end tests ("e2e" tests), see below
+- `puppeteer` folder contains end-to-end tests ("e2e" tests), see below
 - `Unit` folder contains unit tests, see below
 - `Integration` folder contains integration tests, see below
 
