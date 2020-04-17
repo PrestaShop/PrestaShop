@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Service;
 
 use Exception;
 use PrestaShopBundle\Entity\Translation;
+use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Provider\UseModuleInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -57,7 +58,7 @@ class TranslationService
      *
      * @return mixed
      *
-     * @throws Exception
+     * @throws InvalidLanguageException
      */
     public function findLanguageByLocale($locale)
     {
@@ -66,7 +67,7 @@ class TranslationService
         $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
 
         if (!$lang) {
-            throw new Exception('The language for this locale is not available');
+            throw InvalidLanguageException::localeNotFound($locale);
         }
 
         return $lang;

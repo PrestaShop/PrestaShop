@@ -58,15 +58,25 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
             }
 
             foreach ($customersResult as $customerArray) {
-                if ($customerArray['active']) {
-                    $customerArray['fullname_and_email'] = sprintf(
-                        '%s %s - %s',
-                        $customerArray['firstname'],
-                        $customerArray['lastname'],
-                        $customerArray['email']
-                    );
-                    $customers[$customerArray['id_customer']] = $customerArray;
+                if (!$customerArray['active']) {
+                    continue;
                 }
+
+                $customerArray['fullname_and_email'] = sprintf(
+                    '%s %s - %s',
+                    $customerArray['firstname'],
+                    $customerArray['lastname'],
+                    $customerArray['email']
+                );
+
+                unset(
+                    $customerArray['passwd'],
+                    $customerArray['secure_key'],
+                    $customerArray['last_passwd_gen'],
+                    $customerArray['reset_password_token'],
+                    $customerArray['reset_password_validity']
+                );
+                $customers[$customerArray['id_customer']] = $customerArray;
             }
         }
 

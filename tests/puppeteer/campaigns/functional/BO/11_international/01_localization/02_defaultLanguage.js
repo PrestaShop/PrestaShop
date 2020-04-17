@@ -29,7 +29,7 @@ const init = async function () {
     homePage: new HomePage(page),
   };
 };
-describe('Test default language', async () => {
+describe('Update default language', async () => {
   const tests = [
     {args: {language: Languages.french.name, defaultBrowserLanguage: false, languageToCheck: 'Français'}},
     {args: {language: Languages.english.name, defaultBrowserLanguage: false, languageToCheck: 'English'}},

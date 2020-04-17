@@ -168,6 +168,7 @@ export default {
   productRemoveBtn: '.js-product-remove-btn',
   productTaxWarning: '.js-tax-warning',
   noProductsFoundWarning: '.js-no-products-found',
+  searchingProductsNotice: '.js-searching-products',
   productAddForm: '#js-add-product-form',
   cartErrorAlertBlock: '#js-cart-error-block',
   cartErrorAlertText: '#js-cart-error-block .alert-text',

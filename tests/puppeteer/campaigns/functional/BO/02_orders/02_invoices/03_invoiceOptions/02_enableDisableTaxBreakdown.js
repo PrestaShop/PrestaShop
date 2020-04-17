@@ -73,7 +73,7 @@ Generate the invoice and check the tax breakdown
 Disable tax breakdown
 Generate the invoice and check that there is no tax breakdown
  */
-describe('Test enable/disable tax breakdown', async () => {
+describe('Enable tax breakdown', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -224,8 +224,14 @@ describe('Test enable/disable tax breakdown', async () => {
           .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
         // Check the confirmation message
         await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
+      });
+
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
         page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
         this.pageObjects = await init();
+        const pageTitle = await this.pageObjects.addProductPage.getPageTitle();
+        await expect(pageTitle).to.contains(this.pageObjects.addProductPage.pageTitle);
       });
     });
 

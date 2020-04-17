@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -35,6 +36,8 @@ class I18nController extends ApiController
 {
     /**
      * Show translation for page-app build with vue-js.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

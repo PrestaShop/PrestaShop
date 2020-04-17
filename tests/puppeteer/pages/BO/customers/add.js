@@ -19,7 +19,8 @@ module.exports = class AddCustomer extends BOBasePage {
     this.dayOfBirthSelect = 'select#customer_birthday_day';
     this.enabledSwitchlabel = 'label[for=\'customer_is_enabled_%ID\']';
     this.partnerOffersSwitchlabel = 'label[for=\'customer_is_partner_offers_subscribed_%ID\']';
-    this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label .md-checkbox-control';
+    this.groupAccessCheckkbox = '#customer_group_ids_%ID';
+    this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
     this.saveCustomerButton = 'div.card-footer button';
   }
@@ -31,11 +32,10 @@ module.exports = class AddCustomer extends BOBasePage {
   /**
    * Fill form for add/edit customer
    * @param customerData
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async createEditCustomer(customerData) {
-    if (customerData.socialTitle === 'Mr.') await this.page.click(this.socialTitleInput.replace('%ID', '0'));
-    else await this.page.click(this.socialTitleInput.replace('%ID', '1'));
+    await this.page.click(this.socialTitleInput.replace('%ID', customerData.socialTitle === 'Mr.' ? 0 : 1));
     await this.setValue(this.firstNameInput, customerData.firstName);
     await this.setValue(this.lastNameInput, customerData.lastName);
     await this.setValue(this.emailInput, customerData.email);
@@ -43,14 +43,51 @@ module.exports = class AddCustomer extends BOBasePage {
     await this.page.select(this.yearOfBirthSelect, customerData.yearOfBirth);
     await this.page.select(this.monthOfBirthSelect, customerData.monthOfBirth);
     await this.page.select(this.dayOfBirthSelect, customerData.dayOfBirth);
-    if (customerData.enabled) await this.page.click(this.enabledSwitchlabel.replace('%ID', '1'));
-    else await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
-    if (customerData.partnerOffers) await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '1'));
-    else await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', '0'));
-    await this.page.click(this.selectAllGroupAccessCheckbox);
+    await this.page.click(this.enabledSwitchlabel.replace('%ID', customerData.enabled ? 1 : 0));
+    await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', customerData.partnerOffers ? 1 : 0));
+    await this.setCustomerGroupAccess(customerData.defaultCustomerGroup);
     await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
     // Save Customer
     await this.clickAndWaitForNavigation(this.saveCustomerButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Set customer group access in form
+   * @param customerGroup
+   * @return {Promise<void>}
+   */
+  async setCustomerGroupAccess(customerGroup) {
+    switch (customerGroup) {
+      case 'Customer':
+        await this.changeCheckboxValue(this.selectAllGroupAccessCheckbox);
+        break;
+      case 'Guest':
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 0), false);
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 2), false);
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 1));
+        break;
+      case 'Visitor':
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 1), false);
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 2), false);
+        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 0));
+        break;
+      default:
+        throw new Error(`${customerGroup} was not found as a group access`);
+    }
+  }
+
+  /**
+   * @override
+   * Select, unselect checkbox
+   * @param checkboxSelector, selector of checkbox
+   * @param valueWanted, true if we want to select checkBox, else otherwise
+   * @return {Promise<void>}
+   */
+  async changeCheckboxValue(checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
+      // The selector is not visible, that why '+ i' is required here
+      await this.page.click(`${checkboxSelector} + i`);
+    }
   }
 };

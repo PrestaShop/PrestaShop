@@ -329,6 +329,7 @@ export default class CreateOrderPage {
   onCartLanguageChanged() {
     EventEmitter.on(eventMap.cartLanguageChanged, (cartInfo) => {
       this.preselectCartLanguage(cartInfo.langId);
+      this.renderCartInfo(cartInfo);
     });
   }
 
