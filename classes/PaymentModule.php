@@ -788,7 +788,7 @@ abstract class PaymentModuleCore extends Module
     /**
      * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
      *
-     * @return Currency|false
+     * @return Currency|array|false
      */
     public function getCurrency($current_id_currency = null)
     {
