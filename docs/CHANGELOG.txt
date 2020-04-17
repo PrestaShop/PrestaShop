@@ -25,7 +25,7 @@ Release Notes for PrestaShop 1.7
 --------------------------------
 
 ####################################
-#   v1.7.6.5 - (2020-04-16)
+#   v1.7.6.5 - (2020-04-17)
 ####################################
 - Back Office:
   - Bug fix:
@@ -41,6 +41,22 @@ Release Notes for PrestaShop 1.7
 - Core:
   - Improvement:
     - #18638: Update version to 1.7.6.5 (by @PierreRambaud)
+  - Bug fix:
+    - #GHSA-cvjj-grfv-f56w - Improper access control on product page with combinations, attachments and specific prices (by @PierreRambaud)
+    - #GHSA-4wxg-33h3-3w5r - Improper access control on product attributes page (by @PierreRambaud)
+    - #GHSA-r6rp-6gv6-r9hq - Improper access control on customers search (by @PierreRambaud)
+    - #GHSA-74vp-ww64-w2gm - Improper Access Control (by @PierreRambaud)
+    - #GHSA-98j8-hvjv-x47j - Reflected XSS related in import page (by @PierreRambaud)
+    - #GHSA-j3r6-33hf-m8wh - Reflected XSS with back parameter (by @PierreRambaud)
+    - #GHSA-mrpj-67mq-3fr5 - Reflected XSS on Exception page (by @PierreRambaud)
+    - #GHSA-q6pr-42v5-v97q - Reflected XSS on AdminCarts page (by @PierreRambaud)
+    - #GHSA-rpg3-f23r-jmqv - Reflected XSS on Search page (by @PierreRambaud)
+    - #GHSA-m2x6-c2c6-pjrx - Reflected XSS with dashboard calendar (by @PierreRambaud)
+    - #GHSA-375w-q56h-h7qc - Open redirection when using back parameter (by @PierreRambaud)
+    - #GHSA-87jh-7xpg-6v93 - Reflected XSS on AdminFeatures page (by @PierreRambaud)
+    - #GHSA-7fmr-5vcc-329j - Reflected XSS on AdminAttributesGroups page (by @PierreRambaud)
+    - #GHSA-48vj-vvr6-jj4f - Reflected XSS in security compromised page (by @PierreRambaud)
+
 - Installer:
   - Bug fix:
     - #18491: Installation under CLI doesn't take BASE_URI and Apache rewrite in consideration (by @PierreRambaud)
