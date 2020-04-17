@@ -22,7 +22,7 @@ Feature: Cart calculation with rounding type ITEM
     Given specific shop configuration for "rounding type" is set to round each article
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
     When I add 3 items of product "product1" in my cart
-    Then my cart total should be precisely 66.44 tax included
+    Then my cart total should be precisely 66.43 tax included
     Then my cart total using previous calculation method should be precisely 66.43 tax included
 
   Scenario: 3 products in cart, several quantities
@@ -36,3 +36,11 @@ Feature: Cart calculation with rounding type ITEM
     When I add 1 items of product "product3" in my cart
     Then my cart total should be precisely 162.4 tax included
     Then my cart total using previous calculation method should be precisely 162.4 tax included
+
+    Scenario: 1 product in quart, with a quantity of 2 and a tricky price
+      Given I have an empty default cart
+      Given specific shop configuration for "rounding type" is set to round each article
+      Given there is a product in the catalog named "product1" with a price of 35.32552 and 1000 items in stock
+      When I add 2 items of product "product1" in my cart
+      Then my cart total should be precisely 77.66 tax included
+      Then my cart total using previous calculation method should be precisely 77.66 tax included
