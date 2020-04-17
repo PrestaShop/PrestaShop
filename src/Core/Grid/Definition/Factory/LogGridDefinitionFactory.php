@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SubmitGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -140,6 +142,37 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
+                (new DataColumn('id_shop'))
+                    ->setName($this->trans('Shop', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_shop',
+                    ])
+            )
+            ->add(
+                (new DataColumn('id_shop_group'))
+                    ->setName($this->trans('Shop group', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_shop_group',
+                    ])
+            )
+            ->add(
+                (new DataColumn('id_lang'))
+                    ->setName($this->trans('Language', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_lang',
+                    ])
+            )
+            ->add(
+                (new BooleanColumn('in_all_shop'))
+                    ->setName($this->trans('All shops', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'in_all_shop',
+                        'true_name' => $this->trans('Yes', [], 'Admin.Global'),
+                        'false_name' => $this->trans('No', [], 'Admin.Global'),
+                        'clickable' => true,
+                    ])
+            )
+            ->add(
                 (new DataColumn('error_code'))
                     ->setName($this->trans('Error code', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
@@ -207,6 +240,34 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'required' => false,
                     ])
                     ->setAssociatedColumn('object_id')
+            )
+            ->add(
+                (new Filter('id_shop', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_shop')
+            )
+            ->add(
+                (new Filter('id_shop_group', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_shop_group')
+            )
+            ->add(
+                (new Filter('id_lang', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_lang')
+            )
+            ->add(
+                (new Filter('in_all_shop', YesAndNoChoiceType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('in_all_shop')
             )
             ->add(
                 (new Filter('error_code', TextType::class))
