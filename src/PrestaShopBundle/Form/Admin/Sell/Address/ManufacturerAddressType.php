@@ -226,7 +226,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
-                'withDniAttr' => true,
+                'with_dni_attr' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
