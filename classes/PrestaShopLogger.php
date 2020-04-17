@@ -46,7 +46,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
     /** @var int Object ID */
     public $object_id;
-  
+
     /** @var int Shop ID */
     public $id_shop;
 
@@ -55,7 +55,7 @@ class PrestaShopLoggerCore extends ObjectModel
 
     /** @var int Language ID */
     public $id_lang;
-    
+
     /** @var bool In all shop */
     public $in_all_shop;
 
@@ -74,21 +74,21 @@ class PrestaShopLoggerCore extends ObjectModel
     public static $definition = [
         'table' => 'log',
         'primary' => 'id_log',
-        'fields' => array(
-            'severity' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'error_code' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'message' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
-            'object_id' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_shop_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_lang' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'in_all_shop' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'object_type' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-        ),
-    );
+        'fields' => [
+            'severity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'error_code' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'message' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true],
+            'object_id' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'in_all_shop' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
     protected static $is_present = [];
 
@@ -151,15 +151,14 @@ class PrestaShopLoggerCore extends ObjectModel
             $log->object_id = (int) $objectId;
         }
 
-       $log->id_lang = (int) Context::getContext()->language->id ?? null;
+        $log->id_lang = (int) Context::getContext()->language->id ?? null;
 
-       if (Shop::getContext() == Shop::CONTEXT_ALL) {
+        if (Shop::getContext() == Shop::CONTEXT_ALL) {
             $log->in_all_shop = true;
-       } else {
-			$log->id_shop = (int) Context::getContext()->shop->getContextualShopId() ;
-            $log->id_shop_group = (int) Context::getContext()->shop->getContextShopGroupID() ;
-       }
-
+        } else {
+            $log->id_shop = (int) Context::getContext()->shop->getContextualShopId();
+            $log->id_shop_group = (int) Context::getContext()->shop->getContextShopGroupID();
+        }
 
         if ($objectType != 'Swift_Message') {
             PrestaShopLogger::sendByMail($log);

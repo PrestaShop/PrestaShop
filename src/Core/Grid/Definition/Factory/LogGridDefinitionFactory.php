@@ -62,6 +62,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * LogGridDefinitionFactory constructor.
      *
+     * @param HookDispatcherInterface $hookDispatcher
      * @param string $resetActionUrl
      * @param string $redirectionUrl
      */
@@ -142,33 +143,34 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('id_shop'))
-                ->setName($this->trans('Shop', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_shop',
-                ])
+                    ->setName($this->trans('Shop', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_shop',
+                    ])
             )
             ->add(
                 (new DataColumn('id_shop_group'))
-                ->setName($this->trans('Shop group', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_shop_group',
-                ])
+                    ->setName($this->trans('Shop group', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_shop_group',
+                    ])
             )
             ->add(
                 (new DataColumn('id_lang'))
-                ->setName($this->trans('Language', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_lang',
-                ])
+                    ->setName($this->trans('Language', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_lang',
+                    ])
             )
             ->add(
                 (new BooleanColumn('in_all_shop'))
-                ->setName($this->trans('All shops', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'in_all_shop',
-                    'true_name' => $this->trans('Yes', [], 'Admin.Global'),
-                    'false_name' => $this->trans('No', [], 'Admin.Global'),
-                ])
+                    ->setName($this->trans('All shops', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'in_all_shop',
+                        'true_name' => $this->trans('Yes', [], 'Admin.Global'),
+                        'false_name' => $this->trans('No', [], 'Admin.Global'),
+                        'clickable' => true,
+                    ])
             )
             ->add(
                 (new DataColumn('error_code'))
@@ -241,28 +243,31 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new Filter('id_shop', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('id_shop')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_shop')
             )
             ->add(
                 (new Filter('id_shop_group', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('id_shop_group')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_shop_group')
             )
             ->add(
                 (new Filter('id_lang', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('id_lang')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_lang')
             )
             ->add(
                 (new Filter('in_all_shop', YesAndNoChoiceType::class))
-                ->setAssociatedColumn('in_all_shop')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('in_all_shop')
             )
             ->add(
                 (new Filter('error_code', TextType::class))
