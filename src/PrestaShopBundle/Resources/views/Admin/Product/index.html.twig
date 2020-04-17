@@ -1,0 +1,18 @@
+{#
+//@todo: this is just a test template for vue component
+#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+
+  <div id="productPageVue">
+    <image-upload></image-upload>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/product_test.bundle.js') }}"></script>
+{% endblock %}

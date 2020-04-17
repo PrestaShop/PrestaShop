@@ -124,6 +124,10 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
+        //@todo: remove rendering test vue template
+        return $this->render('@PrestaShop/Admin/Product/index.html.twig');
+
+
         if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }

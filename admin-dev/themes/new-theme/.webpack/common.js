@@ -87,6 +87,8 @@ module.exports = {
     order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
+    //@todo: for testing vue only.
+    product_test: './js/vue/pages/product',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
     sql_manager: './js/pages/sql-manager',
