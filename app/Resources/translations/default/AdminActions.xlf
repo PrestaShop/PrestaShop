@@ -809,15 +809,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d959346bf784b9cd8f47fd90c803ebb2">
-        <source>Reset settings</source>
-        <target>Reset settings</target>
-        <note>Line: 44</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Tax/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">

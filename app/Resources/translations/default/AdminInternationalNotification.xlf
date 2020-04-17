@@ -648,11 +648,6 @@ Comment: @todo Throw exception</note>
         <target>%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled</target>
         <note>Line: 527</note>
       </trans-unit>
-      <trans-unit id="bcc2336ae2365acdaade018271fead34">
-        <source>Cannot find a real currency matching this couple of ISO code and numeric ISO code</source>
-        <target>Cannot find a real currency matching this couple of ISO code and numeric ISO code</target>
-        <note>Line: 504</note>
-      </trans-unit>
       <trans-unit id="2751c5e3327bc580a6e62973524440ad">
         <source><![CDATA[Oops... it looks like this ISO code already exists. If you are: <ul><li>trying to create an alternative currency, you must type a different ISO code</li><li>trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box</li></ul>]]></source>
         <target><![CDATA[Oops... it looks like this ISO code already exists. If you are: <ul><li>trying to create an alternative currency, you must type a different ISO code</li><li>trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box</li></ul>]]></target>
