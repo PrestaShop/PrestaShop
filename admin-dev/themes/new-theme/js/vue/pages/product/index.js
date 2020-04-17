@@ -1,9 +1,9 @@
 import Vue from 'vue';
-import ImageUpload from './imageUpload.vue';
+import ProductImageUpload from './ProductImageUpload';
 
 export default new Vue({
   el: '#productPageVue',
   components: {
-    ImageUpload,
+    ProductImageUpload,
   },
 });
