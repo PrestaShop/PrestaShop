@@ -1,0 +1,76 @@
+{#**
+ * 2007-2020 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<div role="tabpanel" class="form-contenttab tab-pane active" id="step1">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="container-fluid">
+        <div class="row">
+          {# LEFT #}
+          <div class="col-md-9 left-column">
+            {{ renderhook('displayAdminProductsMainStepLeftColumnMiddle', { 'id_product': productId }) }}
+          </div>
+
+          {# RIGHT #}
+          <div class="col-md-3 right-column">
+            <div class="row">
+              <div class="col-md-12">
+                {% if is_combination_active %}
+                  <form-group class="mb-3" title="{{ "Combinations"|trans({}, 'Admin.Catalog.Feature') }}" helpbox="{{ "Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?"|trans({}, 'Admin.Catalog.Help') }}">
+                    <radio-buttons store-name="productType" chosen="{% if not has_combinations %}0{% else %}1{% endif %}">
+                      <template slot="radios" scope="props">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="show_variations" value="0" @click="props.setter(0)" :checked="!props.chosen ? 'checked' : 'false'">
+                            {{ "Simple product"|trans({}, 'Admin.Catalog.Feature') }}
+                          </label>
+                        </div>
+
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="show_variations" value="1" @click="props.setter(1)" :checked="props.chosen ? 'checked' : 'false'">
+                            {{ "Product with combinations"|trans({}, 'Admin.Catalog.Feature') }}
+                          </label>
+                        </div>
+                      </template>
+                    </radio-buttons> 
+
+                    <div id="product_type_combinations_shortcut">
+                        <span class="small font-secondary">
+                          {# First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed). #}
+                          {{ "Advanced settings in [1][2]Combinations[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="#tab-step3" onclick="$(\'a[href=\\\'#step3\\\']\').click();" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                        </span>
+                    </div>
+                  </form-group>
+                {% endif %}
+
+                {{ renderhook('displayAdminProductsMainStepRightColumnBottom', { 'id_product': productId }) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
