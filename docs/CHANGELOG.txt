@@ -41,6 +41,22 @@ Release Notes for PrestaShop 1.7
 - Core:
   - Improvement:
     - #18638: Update version to 1.7.6.5 (by @PierreRambaud)
+  - Security fix:
+    - Improper access control on product page with combinations, attachments and specific prices
+    - Improper access control on product attributes page
+    - Improper access control on customers search
+    - Improper Access Control
+    - Reflected XSS related in import page
+    - Reflected XSS with back parameter
+    - Reflected XSS on Exception page
+    - Reflected XSS on AdminCarts page
+    - Reflected XSS on Search page
+    - Reflected XSS with dashboard calendar
+    - Open redirection when using back parameter
+    - Reflected XSS on AdminFeatures page
+    - Reflected XSS on AdminAttributesGroups page
+    - Reflected XSS in security compromised page
+
 - Installer:
   - Bug fix:
     - #18491: Installation under CLI doesn't take BASE_URI and Apache rewrite in consideration (by @PierreRambaud)
