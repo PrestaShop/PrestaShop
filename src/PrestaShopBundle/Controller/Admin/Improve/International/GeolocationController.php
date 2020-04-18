@@ -68,7 +68,7 @@ class GeolocationController extends FrameworkBundleAdminController
      * Process geolocation configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_geolocation"
      * )

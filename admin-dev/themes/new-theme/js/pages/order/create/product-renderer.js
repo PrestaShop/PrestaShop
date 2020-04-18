@@ -112,6 +112,11 @@ export default class ProductRenderer {
     });
   }
 
+  renderSearching() {
+    this.reset();
+    this.toggleSearchingNotice(true);
+  }
+
   /**
    * Renders cart products search results block
    *
@@ -119,6 +124,7 @@ export default class ProductRenderer {
    */
   renderSearchResults(foundProducts) {
     this.cleanSearchResults();
+    this.toggleSearchingNotice(false);
     if (foundProducts.length === 0) {
       this.showNotFound();
       this.hideTaxWarning();
@@ -137,6 +143,7 @@ export default class ProductRenderer {
     this.cleanSearchResults();
     this.hideTaxWarning();
     this.hideResultBlock();
+    this.toggleSearchingNotice(false);
   }
 
   /**
@@ -249,10 +256,22 @@ export default class ProductRenderer {
     Object.values(customizationFields).forEach((customField) => {
       const $template = templateTypeMap[customField.type].clone();
 
-      $template.find(createOrderMap.productCustomInput)
+      if (customField.type === fieldTypeFile) {
+        $template.on('change', (e) => {
+          const fileName = e.target.files[0].name;
+
+          $(e.target)
+            .next('.custom-file-label')
+            .html(fileName);
+        });
+      }
+
+      $template
+        .find(createOrderMap.productCustomInput)
         .attr('name', `customizations[${customField.customizationFieldId}]`)
         .data('customization-field-id', customField.customizationFieldId);
-      $template.find(createOrderMap.productCustomInputLabel)
+      $template
+        .find(createOrderMap.productCustomInputLabel)
         .attr('for', `customizations[${customField.customizationFieldId}]`)
         .text(customField.name);
 
@@ -336,6 +355,15 @@ export default class ProductRenderer {
    */
   showResultBlock() {
     $(createOrderMap.productResultBlock).removeClass('d-none');
+  }
+
+  /**
+   * Hides result block
+   *
+   * @private
+   */
+  hideResultBlock() {
+    $(createOrderMap.productResultBlock).addClass('d-none');
   }
 
   /**
@@ -426,5 +454,14 @@ export default class ProductRenderer {
    */
   hideNotFound() {
     $(createOrderMap.noProductsFoundWarning).addClass('d-none');
+  }
+
+  /**
+   * Toggles searching product notice
+   *
+   * @private
+   */
+  toggleSearchingNotice(visible) {
+    $(createOrderMap.searchingProductsNotice).toggleClass('d-none', !visible);
   }
 }

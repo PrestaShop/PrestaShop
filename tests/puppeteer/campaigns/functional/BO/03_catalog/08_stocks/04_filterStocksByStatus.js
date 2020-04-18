@@ -20,7 +20,7 @@ const baseContext = 'functional_BO_catalog_stocks_filterStocksByStatus';
 let browser;
 let page;
 let numberOfProducts = 0;
-const productData = new ProductFaker({type: 'Standard product', productHasCombinations: false});
+const productData = new ProductFaker({type: 'Standard product', status: false});
 
 // creating pages objects in a function
 const init = async function () {
@@ -73,7 +73,7 @@ describe('Filter stocks by status', async () => {
     it('should create Product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
       await this.pageObjects.productsPage.goToAddProductPage();
-      const createProductMessage = await this.pageObjects.addProductPage.createEditProduct(productData, false);
+      const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
       await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
     });
   });

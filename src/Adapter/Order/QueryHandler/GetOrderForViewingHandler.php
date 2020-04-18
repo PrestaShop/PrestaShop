@@ -34,23 +34,22 @@ use Country;
 use Currency;
 use Customer;
 use DateTimeImmutable;
-use Db;
 use Gender;
-use Group;
-use Image;
-use ImageManager;
 use Module;
 use Order;
 use OrderInvoice;
 use OrderPayment;
-use OrderReturn;
 use OrderSlip;
-use Pack;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -66,9 +65,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderMessagesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPaymentsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPricesForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationsForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnsForViewing;
@@ -77,29 +73,20 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use Shop;
 use State;
-use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 use Validate;
-use Warehouse;
-use WarehouseProductLocation;
 
 /**
  * Handle getting order for viewing
  *
  * @internal
  */
-final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterface
+final class GetOrderForViewingHandler extends AbstractOrderHandler implements GetOrderForViewingHandlerInterface
 {
-    /**
-     * @var ImageTagSourceParserInterface
-     */
-    private $imageTagSourceParser;
-
     /**
      * @var Locale
      */
@@ -126,29 +113,34 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     private $context;
 
     /**
+     * @var GetOrderProductsForViewingHandlerInterface
+     */
+    private $getOrderProductsForViewingHandler;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
      * @param Locale $locale
      * @param Context $context
      * @param CustomerDataProvider $customerDataProvider
+     * @param GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler
      */
     public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser,
         TranslatorInterface $translator,
         int $contextLanguageId,
         Locale $locale,
         Context $context,
-        CustomerDataProvider $customerDataProvider
+        CustomerDataProvider $customerDataProvider,
+        GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler
     ) {
-        $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
         $this->locale = $locale;
-        $this->imageTagSourceParser = $imageTagSourceParser;
         $this->translator = $translator;
         $this->context = $context;
         $this->customerDataProvider = $customerDataProvider;
+        $this->getOrderProductsForViewingHandler = $getOrderProductsForViewingHandler;
     }
 
     /**
@@ -179,6 +171,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $taxMethod,
             $isTaxIncluded,
             (bool) $order->valid,
+            $order->hasBeenPaid(),
             $order->hasInvoice(),
             $order->hasBeenDelivered(),
             $order->hasBeenShipped(),
@@ -187,7 +180,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
             $this->getOrderInvoiceAddress($order),
-            $this->getOrderProducts($order),
+            $this->getOrderProducts($query->getOrderId()),
             $this->getOrderHistory($order),
             $this->getOrderDocuments($order),
             $this->getOrderShipping($order),
@@ -220,12 +213,17 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     /**
      * @param Order $order
      *
-     * @return OrderCustomerForViewing
+     * @return OrderCustomerForViewing|null
      */
-    private function getOrderCustomer(Order $order): OrderCustomerForViewing
+    private function getOrderCustomer(Order $order): ?OrderCustomerForViewing
     {
         $currency = new Currency($order->id_currency);
         $customer = new Customer($order->id_customer);
+
+        if (!Validate::isLoadedObject($customer)) {
+            return null;
+        }
+
         $gender = new Gender($customer->id_gender);
         $genderName = '';
 
@@ -245,7 +243,8 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             new DateTimeImmutable($customer->date_add),
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
-            $customer->note
+            $customer->note,
+            (bool) $customer->is_guest
         );
     }
 
@@ -318,239 +317,6 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     /**
      * @param Order $order
      *
-     * @return OrderProductsForViewing
-     */
-    private function getOrderProducts(Order $order): OrderProductsForViewing
-    {
-        $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
-
-        $products = $order->getProducts();
-        $currency = new Currency((int) $order->id_currency);
-
-        $display_out_of_stock_warning = false;
-        $current_order_state = $order->getCurrentOrderState();
-        if (Configuration::get('PS_STOCK_MANAGEMENT') && (!Validate::isLoadedObject($current_order_state) || ($current_order_state->delivery != 1 && $current_order_state->shipped != 1))) {
-            $display_out_of_stock_warning = true;
-        }
-
-        foreach ($products as &$product) {
-            if ($product['image'] instanceof Image) {
-                $name = 'product_mini_' . (int) $product['product_id'] . (isset($product['product_attribute_id']) ? '_' . (int) $product['product_attribute_id'] : '') . '.jpg';
-                // generate image cache, only for back office
-                $product['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_ . 'p/' . $product['image']->getExistingImgPath() . '.jpg', $name, 45, 'jpg');
-                if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                    $product['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
-                } else {
-                    $product['image_size'] = false;
-                }
-            }
-
-            // Get total customized quantity for current product
-            $customized_product_quantity = 0;
-
-            $customizations = [];
-            if (is_array($product['customizedDatas'])) {
-                foreach ($product['customizedDatas'] as $customizationPerAddress) {
-                    foreach ($customizationPerAddress as $customizationId => $customization) {
-                        $customized_product_quantity += (int) $customization['quantity'];
-                        foreach ($customization['datas'] as $datas) {
-                            foreach ($datas as $data) {
-                                $customizations[] = new OrderProductCustomizationForViewing((int) $data['type'], $data['name'], $data['value']);
-                            }
-                        }
-                    }
-                }
-            }
-
-            $product['customizations'] = !empty($customizations) ? new OrderProductCustomizationsForViewing($customizations) : null;
-            $product['customized_product_quantity'] = $customized_product_quantity;
-            $product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
-            $product['quantity_refundable'] = $product['product_quantity'] - $product['product_quantity_return'] - $product['product_quantity_refunded'];
-            $product['amount_refundable'] = $product['total_price_tax_excl'] - $product['total_refunded_tax_excl'];
-            $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $product['total_refunded_tax_incl'];
-            $product['displayed_max_refundable'] = $taxCalculationMethod === PS_TAX_EXC ? $product['amount_refundable'] : $product['amount_refundable_tax_incl'];
-            $resumeAmountKey = $taxCalculationMethod === PS_TAX_EXC ? 'total_refunded_tax_excl' : 'total_refunded_tax_incl';
-            $product['amount_refunded'] = $product[$resumeAmountKey] ?? 0;
-            $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
-            $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
-
-            if ($product['id_warehouse'] != 0) {
-                $warehouse = new Warehouse((int) $product['id_warehouse']);
-                $product['warehouse_name'] = $warehouse->name;
-                $warehouse_location = WarehouseProductLocation::getProductLocation($product['product_id'], $product['product_attribute_id'], $product['id_warehouse']);
-                if (!empty($warehouse_location)) {
-                    $product['warehouse_location'] = $warehouse_location;
-                } else {
-                    $product['warehouse_location'] = false;
-                }
-            } else {
-                $product['warehouse_name'] = '--';
-                $product['warehouse_location'] = false;
-            }
-
-            if (!empty($product['location'])) {
-                $stockLocationIsAvailable = true;
-            }
-
-            $pack_items = $product['cache_is_pack'] ? Pack::getItemTable($product['id_product'], $this->contextLanguageId, true) : [];
-            foreach ($pack_items as &$pack_item) {
-                $pack_item['current_stock'] = StockAvailable::getQuantityAvailableByProduct($pack_item['id_product'], $pack_item['id_product_attribute'], $pack_item['id_shop']);
-                // if the current stock requires a warning
-                if ($product['current_stock'] <= 0 && $display_out_of_stock_warning) {
-                    // @todo
-                    // $this->displayWarning($this->trans('This product, included in package (' . $product['product_name'] . ') is out of stock: ', array(), 'Admin.Orderscustomers.Notification') . ' ' . $pack_item['product_name']);
-                }
-                $this->setProductImageInformation($pack_item);
-                if ($pack_item['image'] instanceof Image) {
-                    $name = 'product_mini_' . (int) $pack_item['id_product'] . (isset($pack_item['id_product_attribute']) ? '_' . (int) $pack_item['id_product_attribute'] : '') . '.jpg';
-                    // generate image cache, only for back office
-                    $pack_item['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_ . 'p/' . $pack_item['image']->getExistingImgPath() . '.jpg', $name, 45, 'jpg');
-                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                        $pack_item['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
-                    } else {
-                        $pack_item['image_size'] = false;
-                    }
-                }
-            }
-
-            unset($pack_item);
-
-            $product['pack_items'] = $pack_items;
-        }
-
-        unset($product);
-
-        ksort($products);
-
-        $productsForViewing = [];
-
-        $isOrderTaxExcluded = ($taxCalculationMethod == PS_TAX_EXC);
-        $computingPrecision = new ComputingPrecision();
-
-        foreach ($products as $product) {
-            $unitPrice = $isOrderTaxExcluded ?
-                $product['unit_price_tax_excl'] :
-                $product['unit_price_tax_incl']
-            ;
-
-            $totalPrice = $unitPrice *
-                (!empty($product['customizedDatas']) ? $product['customizationQuantityTotal'] : $product['product_quantity']);
-
-            $unitPriceFormatted = $this->locale->formatPrice($unitPrice, $currency->iso_code);
-            $totalPriceFormatted = $this->locale->formatPrice($totalPrice, $currency->iso_code);
-
-            $imagePath = isset($product['image_tag']) ?
-                $this->imageTagSourceParser->parse($product['image_tag']) :
-                null;
-            $product['product_quantity_refunded'] = $product['product_quantity_refunded'] ?: false;
-
-            $productType = !empty($product['pack_items']) ? OrderProductForViewing::TYPE_PACK :
-                OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
-
-            $orderInvoice = new OrderInvoice($product['id_order_invoice']);
-
-            $packItems = [];
-            foreach ($product['pack_items'] as $pack_item) {
-                $packItemType = !empty($pack_item['pack_items']) ? OrderProductForViewing::TYPE_PACK :
-                    OrderProductForViewing::TYPE_PRODUCT_WITHOUT_COMBINATIONS;
-                $packItemImagePath = isset($pack_item['image_tag']) ?
-                    $this->imageTagSourceParser->parse($pack_item['image_tag']) :
-                    null;
-                $packItems[] = new OrderProductForViewing(
-                    null,
-                    $pack_item['id_product'],
-                    $pack_item['name'],
-                    $pack_item['reference'],
-                    $pack_item['supplier_reference'],
-                    $pack_item['pack_quantity'],
-                    0,
-                    0,
-                    $pack_item['current_stock'],
-                    $packItemImagePath,
-                    Tools::ps_round(0, $computingPrecision->getPrecision($currency->precision)),
-                    Tools::ps_round(0, $computingPrecision->getPrecision($currency->precision)),
-                    0,
-                    $this->locale->formatPrice(0, $currency->iso_code),
-                    0,
-                    $this->locale->formatPrice(0, $currency->iso_code),
-                    0,
-                    $pack_item['location'],
-                    null,
-                    '',
-                    $packItemType
-                );
-            }
-
-            $productsForViewing[] = new OrderProductForViewing(
-                $product['id_order_detail'],
-                $product['product_id'],
-                $product['product_name'],
-                $product['product_reference'],
-                $product['product_supplier_reference'],
-                $product['product_quantity'],
-                $unitPriceFormatted,
-                $totalPriceFormatted,
-                $product['current_stock'],
-                $imagePath,
-                Tools::ps_round(
-                    $product['unit_price_tax_excl'],
-                    $computingPrecision->getPrecision($currency->precision)
-                ),
-                Tools::ps_round(
-                    $product['unit_price_tax_incl'],
-                    $computingPrecision->getPrecision($currency->precision)
-                ),
-                $product['tax_rate'],
-                $this->locale->formatPrice($product['amount_refunded'], $currency->iso_code),
-                $product['product_quantity_refunded'] + $product['product_quantity_return'],
-                $this->locale->formatPrice($product['displayed_max_refundable'], $currency->iso_code),
-                $product['displayed_max_refundable'],
-                $product['location'],
-                !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
-                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
-                $productType,
-                $packItems,
-                $product['customizations']
-            );
-        }
-
-        return new OrderProductsForViewing($productsForViewing);
-    }
-
-    /**
-     * @param $pack_item
-     */
-    private function setProductImageInformation(&$pack_item): void
-    {
-        if (isset($pack_item['id_product_attribute']) && $pack_item['id_product_attribute']) {
-            $id_image = Db::getInstance()->getValue('
-                SELECT `image_shop`.id_image
-                FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai' .
-                Shop::addSqlAssociation('image', 'pai', true) . '
-                WHERE id_product_attribute = ' . (int) $pack_item['id_product_attribute']);
-        }
-
-        if (!isset($id_image) || !$id_image) {
-            $id_image = Db::getInstance()->getValue(
-                '
-                SELECT `image_shop`.id_image
-                FROM `' . _DB_PREFIX_ . 'image` i' .
-                Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
-                WHERE i.id_product = ' . (int) $pack_item['id_product']
-            );
-        }
-
-        $pack_item['image'] = null;
-        $pack_item['image_size'] = null;
-
-        if ($id_image) {
-            $pack_item['image'] = new Image($id_image);
-        }
-    }
-
-    /**
-     * @param Order $order
-     *
      * @return OrderHistoryForViewing
      */
     private function getOrderHistory(Order $order): OrderHistoryForViewing
@@ -578,6 +344,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderDocumentsForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderDocuments(Order $order): OrderDocumentsForViewing
     {
         $currency = new Currency($order->id_currency);
@@ -678,6 +451,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderShippingForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderShipping(Order $order): OrderShippingForViewing
     {
         $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
@@ -737,6 +517,11 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderReturnsForViewing
+     */
     private function getOrderReturns(Order $order): OrderReturnsForViewing
     {
         $returns = $order->getReturn();
@@ -773,6 +558,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderReturnsForViewing($orderReturns);
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderPaymentsForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderPayments(Order $order): OrderPaymentsForViewing
     {
         $currency = new Currency($order->id_currency);
@@ -830,6 +622,11 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderMessagesForViewing
+     */
     private function getOrderMessages(Order $order): OrderMessagesForViewing
     {
         $orderMessagesForOrderPage = $this->customerDataProvider->getCustomerMessages(
@@ -863,6 +660,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         return new OrderMessagesForViewing($messages, $orderMessagesForOrderPage['total']);
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderPricesForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderPrices(Order $order): OrderPricesForViewing
     {
         $currency = new Currency($order->id_currency);
@@ -897,13 +701,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         $totalAmount = (float) $order->total_paid_tax_incl;
 
         return new OrderPricesForViewing(
-            $productsPrice,
-            $discountsAmount,
-            $wrappingPrice,
-            $shippingPrice,
-            $shippingRefundable,
-            $taxesAmount,
-            $totalAmount,
+            new Number((string) $productsPrice),
+            new Number((string) $discountsAmount),
+            new Number((string) $wrappingPrice),
+            new Number((string) $shippingPrice),
+            new Number((string) $shippingRefundable),
+            new Number((string) $taxesAmount),
+            new Number((string) $totalAmount),
             Tools::displayPrice($productsPrice, $currency),
             Tools::displayPrice($discountsAmount, $currency),
             Tools::displayPrice($wrappingPrice, $currency),
@@ -914,6 +718,13 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
         );
     }
 
+    /**
+     * @param Order $order
+     *
+     * @return OrderDiscountsForViewing
+     *
+     * @throws LocalizationException
+     */
     private function getOrderDiscounts(Order $order): OrderDiscountsForViewing
     {
         $currency = new Currency($order->id_currency);
@@ -924,7 +735,7 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
             $discountsForViewing[] = new OrderDiscountForViewing(
                 (int) $discount['id_order_cart_rule'],
                 $discount['name'],
-                (float) $discount['value'],
+                new Number((string) $discount['value']),
                 Tools::displayPrice($discount['value'], $currency)
             );
         }
@@ -933,14 +744,16 @@ final class GetOrderForViewingHandler implements GetOrderForViewingHandlerInterf
     }
 
     /**
-     * @param Order $order
+     * @param OrderId $orderId
      *
-     * @return int
+     * @return OrderProductsForViewing
+     *
+     * @throws OrderException
      */
-    private function getOrderTaxCalculationMethod(Order $order): int
+    private function getOrderProducts(OrderId $orderId): OrderProductsForViewing
     {
-        $customer = new Customer($order->id_customer);
-
-        return Group::getPriceDisplayMethod((int) $customer->id_default_group);
+        return $this->getOrderProductsForViewingHandler->handle(
+            GetOrderProductsForViewing::all($orderId->getValue())
+        );
     }
 }

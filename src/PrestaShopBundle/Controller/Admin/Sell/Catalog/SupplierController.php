@@ -89,33 +89,6 @@ class SupplierController extends FrameworkBundleAdminController
     }
 
     /**
-     * Filters list results.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.supplier');
-        $supplierDefinition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($supplierDefinition);
-
-        $searchParametersForm->handleRequest($request);
-        $filters = [];
-
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_suppliers_index', ['filters' => $filters]);
-    }
-
-    /**
      * Displays supplier creation form and handles form submit which creates new supplier.
      *
      * @AdminSecurity(
@@ -344,10 +317,10 @@ class SupplierController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
 
-            if ($e instanceof SupplierNotFoundException || $e instanceof AddressNotFoundException) {
-                return $this->redirectToRoute('admin_suppliers_index');
-            }
+        if (!isset($supplierForm) || !isset($editableSupplier)) {
+            return $this->redirectToRoute('admin_suppliers_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/edit.html.twig', [
@@ -526,8 +499,8 @@ class SupplierController extends FrameworkBundleAdminController
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
                     'Maximum image size: %s.', 'Admin.Global', [
-                    $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                        $iniConfig->getUploadMaxSizeInBytes(),
+                    ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'

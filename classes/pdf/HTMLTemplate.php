@@ -29,14 +29,29 @@
  */
 abstract class HTMLTemplateCore
 {
+    /**
+     * @var string
+     */
     public $title;
+
+    /**
+     * @var string
+     */
     public $date;
+
+    /**
+     * @var bool
+     */
     public $available_in_your_account = true;
 
-    /** @var Smarty */
+    /**
+     * @var Smarty
+     */
     public $smarty;
 
-    /** @var Shop */
+    /**
+     * @var Shop
+     */
     public $shop;
 
     /**
@@ -93,6 +108,8 @@ abstract class HTMLTemplateCore
 
     /**
      * Returns the invoice logo.
+     *
+     * @return string|null
      */
     protected function getLogo()
     {

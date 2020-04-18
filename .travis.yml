@@ -19,7 +19,7 @@ cache:
     - $HOME/.composer/cache
 
 os: linux
-dist: trusty
+dist: xenial
 
 php:
   - 7.1
@@ -76,8 +76,11 @@ before_install:
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
+  # Always test with non-unity MySQL autoincrement
+  - mysql -e 'SET @@GLOBAL.auto_increment_increment = 2, @@GLOBAL.auto_increment_offset = 2;'
+
 install:
-  - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi

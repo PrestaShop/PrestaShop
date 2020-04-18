@@ -173,7 +173,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 'visitorType' => 1,
                 'source' => 'installer',
             ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
         }
     }
 
@@ -246,18 +246,19 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->initializeContext();
 
         return $this->model_install->configureShop(array(
-            'shop_name' =>                $this->datas->shop_name,
-            'shop_activity' =>            $this->datas->shop_activity,
-            'shop_country' =>            $this->datas->shop_country,
-            'shop_timezone' =>            $this->datas->timezone,
-            'use_smtp' =>                false,
-            'admin_firstname' =>        $this->datas->admin_firstname,
-            'admin_lastname' =>            $this->datas->admin_lastname,
-            'admin_password' =>            $this->datas->admin_password,
-            'admin_email' =>            $this->datas->admin_email,
-            'configuration_agrement' =>    true,
+            'shop_name' => $this->datas->shop_name,
+            'shop_activity' => $this->datas->shop_activity,
+            'shop_country' => $this->datas->shop_country,
+            'shop_timezone' => $this->datas->timezone,
+            'use_smtp' => false,
+            'admin_firstname' => $this->datas->admin_firstname,
+            'admin_lastname' => $this->datas->admin_lastname,
+            'admin_password' => $this->datas->admin_password,
+            'admin_email' => $this->datas->admin_email,
+            'configuration_agrement' => true,
             'send_informations' => true,
             'enable_ssl' => $this->datas->enable_ssl,
+            'rewrite_engine' => $this->datas->rewrite_engine,
         ));
     }
 

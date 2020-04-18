@@ -15,11 +15,11 @@ const HomePage = require('@pages/FO/home');
 const ProductPage = require('@pages/FO/product');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 // Importing data
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
 // Test context imports
 const testContext = require('@utils/testContext');
@@ -134,7 +134,6 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
       );
-
       const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
     });
@@ -149,7 +148,7 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should check that the delivery slip file name contain the \'Delivery slip number\'', async function () {

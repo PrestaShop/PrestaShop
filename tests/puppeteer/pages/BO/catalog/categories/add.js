@@ -39,7 +39,6 @@ module.exports = class AddCategory extends BOBasePage {
     await this.page.click(this.selectAllGroupAccessCheckbox);
     // Save Category
     await this.clickAndWaitForNavigation(this.saveCategoryButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

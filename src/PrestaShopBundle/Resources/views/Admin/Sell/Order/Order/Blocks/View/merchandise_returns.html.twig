@@ -37,7 +37,7 @@
       <tbody>
       {% for return in orderForViewing.returns.orderReturns %}
         <tr>
-          <td>{{ return.date|date('Y-m-d H:i:s') }}</td>
+          <td>{{ return.date|date_format_full }}</td>
           <td>{{ return.type }}</td>
           <td>{{ return.stateName }}</td>
           <td class="text-right">

@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 const {Invoices} = require('@data/demo/invoices');
 const files = require('@utils/files');
 // Importing pages
@@ -22,10 +22,8 @@ let browser;
 let page;
 const today = new Date();
 // Create a future date that there is no invoices (yyy-mm-dd)
-const day = (`0${today.getDate()}`).slice(-2); // Current day
-const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const year = today.getFullYear() + 1; // Next year
-const futureDate = `${year}-${month}-${day}`;
+today.setFullYear(today.getFullYear() + 1);
+const futureDate = today.toISOString().slice(0, 10);
 
 // Init objects needed
 const init = async function () {
@@ -69,6 +67,7 @@ describe('Generate PDF file by date', async () => {
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.ordersLink,
         );
+        await this.pageObjects.boBasePage.closeSfToolBar();
         const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
       });
@@ -83,7 +82,7 @@ describe('Generate PDF file by date', async () => {
       it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index + 1}`, baseContext);
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(orderToEdit.args.status);
-        await expect(result).to.be.true;
+        await expect(result).to.equal(orderToEdit.args.status);
       });
     });
   });

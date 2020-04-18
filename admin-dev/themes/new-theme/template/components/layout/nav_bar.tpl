@@ -28,95 +28,98 @@
     <i class="material-icons">chevron_left</i>
   </span>
 
-  <ul class="main-menu{if $collapse_menu} sidebar-closed{/if}">
-    {foreach $tabs as $level1}
-      {if $level1.active}
+  <div class="nav-bar-overflow">
+      <ul class="main-menu{if $collapse_menu} sidebar-closed{/if}">
+      {foreach $tabs as $level1}
+        {if $level1.active}
 
-        {$level1Href = $level1.href|escape:'html':'UTF-8'}
-        {if $level1.sub_tabs|@count && isset($level1.sub_tabs[0].href)}
-          {$level1Href = $level1.sub_tabs[0].href|escape:'html':'UTF-8'}
-        {/if}
+          {$level1Href = $level1.href|escape:'html':'UTF-8'}
+          {if $level1.sub_tabs|@count && isset($level1.sub_tabs[0].href)}
+            {$level1Href = $level1.sub_tabs[0].href|escape:'html':'UTF-8'}
+          {/if}
 
-        {$level1Name = $level1.name|escape:'html':'UTF-8'}
-        {if $level1.name eq ''}
-          {$level1Name = $level1.class_name|escape:'html':'UTF-8'}
-        {/if}
+          {$level1Name = $level1.name|escape:'html':'UTF-8'}
+          {if $level1.name eq ''}
+            {$level1Name = $level1.class_name|escape:'html':'UTF-8'}
+          {/if}
 
-        {if $level1.icon != ''}
-          <li class="link-levelone {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
-            <a href="{$level1Href}" class="link" >
-              <i class="material-icons">{$level1.icon}</i> <span>{$level1Name}</span>
-            </a>
-          </li>
+          {if $level1.icon != ''}
 
-        {else}
+            <li class="link-levelone{if $level1.current} link-levelone-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
+              <a href="{$level1Href}" class="link" >
+                <i class="material-icons">{$level1.icon}</i> <span>{$level1Name}</span>
+              </a>
+            </li>
 
-          <li class="category-title {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
-              <span class="title">{$level1Name}</span>
-          </li>
+          {else}
 
-            {foreach $level1.sub_tabs as $level2}
-              {if $level2.active}
+            <li class="category-title{if $level1.current} link-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
+                <span class="title">{$level1Name}</span>
+            </li>
 
-                {$level2Href = $level2.href|escape:'html':'UTF-8'}
+              {foreach $level1.sub_tabs as $level2}
+                {if $level2.active}
 
-                {$level2Name = $level2.name|escape:'html':'UTF-8'}
-                {if $level2.name eq ''}
-                  {$level2Name = $level2.class_name|escape:'html':'UTF-8'}
-                {/if}
-                {assign var="levelOneClass" value=''}
+                  {$level2Href = $level2.href|escape:'html':'UTF-8'}
 
-                {if $level2.current and not $collapse_menu}
-                    {assign var="levelOneClass" value=" -active open ul-open"}
-                {elseif $level2.current and $collapse_menu}
-                    {assign var="levelOneClass" value=" -active"}
-                {/if}
+                  {$level2Name = $level2.name|escape:'html':'UTF-8'}
+                  {if $level2.name eq ''}
+                    {$level2Name = $level2.class_name|escape:'html':'UTF-8'}
+                  {/if}
+                  {assign var="levelOneClass" value=''}
 
-                <li class="link-levelone{if $level2.sub_tabs|@count} has_submenu{/if}{$levelOneClass}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
-                  <a href="{$level2Href}" class="link">
-                    <i class="material-icons mi-{$level2.icon}">{$level2.icon}</i>
-                    <span>
-                    {$level2Name}
-                    </span>
-                      {if $level1.sub_tabs|@count}
-                          <i class="material-icons sub-tabs-arrow">
-                              {if $level2.current}
-                                  keyboard_arrow_up
-                              {else}
-                                  keyboard_arrow_down
+                  {if $level2.current and not $collapse_menu}
+                      {assign var="levelOneClass" value=" link-active open ul-open"}
+                  {elseif $level2.current and $collapse_menu}
+                      {assign var="levelOneClass" value=" link-active"}
+                  {/if}
+
+                  <li class="link-levelone{if $level2.sub_tabs|@count} has_submenu{/if}{$levelOneClass}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
+                    <a href="{$level2Href}" class="link">
+                      <i class="material-icons mi-{$level2.icon}">{$level2.icon}</i>
+                      <span>
+                      {$level2Name}
+                      </span>
+                        {if $level1.sub_tabs|@count}
+                            <i class="material-icons sub-tabs-arrow">
+                                {if $level2.current}
+                                    keyboard_arrow_up
+                                {else}
+                                    keyboard_arrow_down
+                                {/if}
+                            </i>
+                        {/if}
+                    </a>
+                      {if $level2.sub_tabs|@count}
+                        <ul id="collapse-{$level2.id_tab}" class="submenu panel-collapse">
+                          {foreach $level2.sub_tabs as $level3}
+                            {if $level3.active}
+
+                              {$level3Href = $level3.href|escape:'html':'UTF-8'}
+
+                              {$level3Name = $level3.name|escape:'html':'UTF-8'}
+                              {if $level3.name eq ''}
+                                {$level3Name = $level3.class_name|escape:'html':'UTF-8'}
                               {/if}
-                          </i>
-                      {/if}
-                  </a>
-                    {if $level2.sub_tabs|@count}
-                      <ul id="collapse-{$level2.id_tab}" class="submenu panel-collapse">
-                        {foreach $level2.sub_tabs as $level3}
-                          {if $level3.active}
 
-                            {$level3Href = $level3.href|escape:'html':'UTF-8'}
+                              <li class="link-leveltwo{if $level3.current} link-active{/if}" data-submenu="{$level3.id_tab}" id="subtab-{$level3.class_name}">
+                                <a href="{$level3Href}" class="link"> {$level3Name}
+                                </a>
+                              </li>
 
-                            {$level3Name = $level3.name|escape:'html':'UTF-8'}
-                            {if $level3.name eq ''}
-                              {$level3Name = $level3.class_name|escape:'html':'UTF-8'}
                             {/if}
+                          {/foreach}
+                        </ul>
+                      {/if}
+                  </li>
+                {/if}
+              {/foreach}
 
-                            <li class="link-leveltwo {if $level3.current}-active{/if}" data-submenu="{$level3.id_tab}" id="subtab-{$level3.class_name}">
-                              <a href="{$level3Href}" class="link"> {$level3Name}
-                              </a>
-                            </li>
-
-                          {/if}
-                        {/foreach}
-                      </ul>
-                    {/if}
-                </li>
-              {/if}
-            {/foreach}
+          {/if}
 
         {/if}
-
-      {/if}
-    {/foreach}
-  </ul>
+      {/foreach}
+    </ul>
+  </div>
   {hook h='displayAdminNavBarBeforeEnd'}
 </nav>

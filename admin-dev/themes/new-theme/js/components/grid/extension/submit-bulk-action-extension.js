@@ -84,7 +84,7 @@ export default class SubmitBulkActionExtension {
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
     const modal = new ConfirmModal({
-      id: `${grid.getId()}_grid_confirm_modal`,
+      id: `${grid.getId()}-grid-confirm-modal`,
       confirmTitle,
       confirmMessage,
       confirmButtonLabel,

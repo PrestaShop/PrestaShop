@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 use Context;
 use Order;
 use OrderCarrier;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundSummary;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
@@ -103,10 +104,10 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
 
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
-        if (!$order->hasInvoice()) {
+        if (!$order->hasBeenPaid() && !$order->hasPayments()) {
             throw new InvalidOrderStateException(
-                InvalidOrderStateException::INVOICE_NOT_FOUND,
-                'Can not perform standard refund on order with no invoice'
+                InvalidOrderStateException::NOT_PAID,
+                'Can not perform standard refund on an order which is not paid'
             );
         }
         if ($order->hasBeenDelivered()) {
@@ -116,7 +117,7 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
             );
         }
 
-        $shippingRefundAmount = $command->refundShippingCost() ? $order->total_shipping_tax_incl : 0;
+        $shippingRefundAmount = new Number((string) ($command->refundShippingCost() ? $order->total_shipping_tax_incl : 0));
         /** @var OrderRefundSummary $orderRefundSummary */
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,
@@ -149,7 +150,6 @@ class IssueStandardRefundHandler extends AbstractOrderCommandHandler implements 
 
         // Update refund details (standard refund only happen for an order not delivered, so it can't return products)
         $this->refundUpdater->updateRefundData(
-            $order,
             $orderRefundSummary,
             false,
             true

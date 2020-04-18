@@ -16,6 +16,7 @@ import './address';
 import prestashop from 'prestashop';
 import EventEmitter from 'events';
 import {psShowHide} from './common';
+import initEmailFields from './email-idn';
 
 // "inherit" EventEmitter
 for (var i in EventEmitter.prototype) {
@@ -24,4 +25,5 @@ for (var i in EventEmitter.prototype) {
 
 $(document).ready(() => {
   psShowHide();
+  initEmailFields('input[type="email"]');
 });

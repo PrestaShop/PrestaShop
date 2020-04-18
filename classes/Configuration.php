@@ -440,10 +440,9 @@ class ConfigurationCore extends ObjectModel
         }
 
         if ($html) {
-            foreach ($values as &$value) {
-                $value = Tools::purifyHTML($value);
-            }
-            unset($value);
+            $values = array_map(function ($v) {
+                return Tools::purifyHTML($v);
+            }, $values);
         }
 
         $result = true;

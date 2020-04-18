@@ -76,6 +76,11 @@ class OrderCustomerForViewing
     private $privateNote;
 
     /**
+     * @var bool
+     */
+    private $isGuest;
+
+    /**
      * @param int $id
      * @param string $firstName
      * @param string $lastName
@@ -85,6 +90,7 @@ class OrderCustomerForViewing
      * @param string $totalSpentSinceRegistration
      * @param int $validOrdersPlaced
      * @param string|null $privateNote
+     * @param bool $isGuest
      */
     public function __construct(
         int $id,
@@ -95,7 +101,8 @@ class OrderCustomerForViewing
         DateTimeImmutable $accountRegistrationDate,
         string $totalSpentSinceRegistration,
         int $validOrdersPlaced,
-        ?string $privateNote
+        ?string $privateNote,
+        bool $isGuest
     ) {
         $this->id = $id;
         $this->firstName = $firstName;
@@ -106,6 +113,7 @@ class OrderCustomerForViewing
         $this->totalSpentSinceRegistration = $totalSpentSinceRegistration;
         $this->validOrdersPlaced = $validOrdersPlaced;
         $this->privateNote = $privateNote;
+        $this->isGuest = $isGuest;
     }
 
     /**
@@ -178,5 +186,13 @@ class OrderCustomerForViewing
     public function getPrivateNote(): ?string
     {
         return $this->privateNote;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGuest(): bool
+    {
+        return $this->isGuest;
     }
 }

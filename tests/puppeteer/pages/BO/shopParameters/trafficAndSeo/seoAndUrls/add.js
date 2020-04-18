@@ -31,11 +31,11 @@ module.exports = class AddSeoUrl extends BOBasePage {
   async changeLanguageForSelectors(lang = 'en') {
     await Promise.all([
       this.page.click(this.pageTitleLangButton),
-      this.page.waitForSelector(`${this.pageTitleLangButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.pageTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
       this.page.click(this.pageTitleLangSpan.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.pageTitleLangButton}[aria-expanded='false']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.pageTitleLangButton}[aria-expanded='false']`),
     ]);
   }
 

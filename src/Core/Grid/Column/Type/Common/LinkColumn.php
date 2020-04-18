@@ -63,9 +63,11 @@ final class LinkColumn extends AbstractColumn
             ])
             ->setDefined([
                 'icon',
+                'target',
             ])
             ->setAllowedTypes('field', ['string', 'null'])
             ->setAllowedTypes('icon', ['string', 'null'])
+            ->setAllowedTypes('target', ['string', 'null'])
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')

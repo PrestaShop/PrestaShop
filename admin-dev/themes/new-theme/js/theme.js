@@ -36,11 +36,6 @@ import 'typeahead.js/dist/typeahead.jquery';
 import 'typeahead.js/dist/bloodhound.min';
 import 'sprintf-js';
 
-// Plugins CSS
-import 'dropzone/dist/min/dropzone.min.css';
-import 'magnific-popup/dist/magnific-popup.css';
-
-// Theme SCSS
 import '@scss/theme.scss';
 
 // Theme Javascript
@@ -56,6 +51,7 @@ import Header from '@js/header';
 
 import initDatePickers from '@js/app/utils/datepicker';
 import initInvalidFields from '@js/app/utils/fields';
+import initEmailFields from '@js/app/utils/email-idn';
 
 const {$} = window;
 
@@ -68,4 +64,5 @@ new Header();
 $(() => {
   initDatePickers();
   initInvalidFields();
+  initEmailFields('input[type="email"]');
 });

@@ -44,6 +44,7 @@ export default {
   cartRuleHelpText: '.js-cart-rule-value-help',
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
+  updateOrderStatusActionInputWrapper: '#update_order_status_action_input_wrapper',
   updateOrderStatusActionForm: '#update_order_status_action_form',
   showOrderShippingUpdateModalBtn: '.js-update-shipping-btn',
   updateOrderShippingTrackingNumberInput: '#update_order_shipping_tracking_number',
@@ -75,7 +76,9 @@ export default {
   productsTableRow: (productId) => `#orderProduct_${productId}`,
   productsTableRowEdited: (productId) => `#editOrderProduct_${productId}`,
   productsCellLocation: 'tr .cellProductLocation',
+  productsCellRefunded: 'tr .cellProductRefunded',
   productsCellLocationDisplayed: 'tr:not(.d-none) .cellProductLocation',
+  productsCellRefundedDisplayed: 'tr:not(.d-none) .cellProductRefunded',
   productsTableCustomizationRows: '#orderProductsTable .order-product-customization',
   productEditBtn: '.js-order-product-edit-btn',
   productAddBtn: '#addProductBtn',
@@ -112,6 +115,10 @@ export default {
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
   productEditTotalPriceText: '.editProductTotalPrice',
+  // Product Discount List
+  productDiscountList: {
+    list: '.table.discountList',
+  },
   // Product Pack Modal
   productPackModal: {
     modal: '#product-pack-modal',
@@ -130,6 +137,7 @@ export default {
   },
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
+  orderDiscountsTotalContainer: '#order-discounts-total-container',
   orderDiscountsTotal: '#orderDiscountsTotal',
   orderWrappingTotal: '#orderWrappingTotal',
   orderShippingTotal: '#orderShippingTotal',

@@ -39,6 +39,8 @@ export default {
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customer-search-result-template',
   customerSearchEmptyResultWarning: '#customer-search-empty-result-warn',
+  customerSearchLoadingNotice: '#customer-search-loading-notice',
+  customerAddBtn: '#customer-add-btn',
   changeCustomerBtn: '.js-change-customer-btn',
   customerSearchRow: '.js-search-customer-row',
   chooseCustomerBtn: '.js-choose-customer-btn',
@@ -73,6 +75,7 @@ export default {
   orderPaymentMethod: '.js-order-payment-method',
   orderStatusField: '.js-order-status',
   emptyListRowTemplate: '#js-empty-list-row',
+  loadingListRowTemplate: '#js-loading-list-row',
   emptyListRow: '.js-empty-row',
 
   // selectors related to cartRules block
@@ -124,7 +127,7 @@ export default {
   shippingForm: '.js-shipping-form',
   noCarrierBlock: '.js-no-carrier-block',
   deliveryOptionSelect: '#delivery-option-select',
-  totalShippingField: '.js-total-shipping',
+  totalShippingField: '.js-total-shipping-tax-inc',
   freeShippingSwitch: '.js-free-shipping-switch',
 
   // selectors related to cart block
@@ -165,6 +168,7 @@ export default {
   productRemoveBtn: '.js-product-remove-btn',
   productTaxWarning: '.js-tax-warning',
   noProductsFoundWarning: '.js-no-products-found',
+  searchingProductsNotice: '.js-searching-products',
   productAddForm: '#js-add-product-form',
   cartErrorAlertBlock: '#js-cart-error-block',
   cartErrorAlertText: '#js-cart-error-block .alert-text',

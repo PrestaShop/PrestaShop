@@ -24,7 +24,7 @@
  *#}
 
 {% if customerInformation.productsInformation.viewedProductsInformation is not empty %}
-  <div class="card">
+  <div class="card customer-viewed-products-card">
     <h3 class="card-header">
       <i class="material-icons">remove_red_eye</i>
       {{ 'Viewed products'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -40,10 +40,10 @@
         </thead>
         <tbody>
           {% for product in customerInformation.productsInformation.viewedProductsInformation %}
-            <tr>
-              <td>{{ product.productId }}</td>
-              <td>
-                <a href="{{ product.productUrl }}">
+            <tr class="customer-viewed-product">
+              <td class="customer-viewed-product-id">{{ product.productId }}</td>
+              <td class="customer-viewed-product-name">
+                <a class="customer-viewed-product-link" href="{{ product.productUrl }}">
                   {{ product.productName }}
                 </a>
               </td>
