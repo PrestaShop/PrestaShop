@@ -8,13 +8,12 @@ module.exports = class Checkout extends FOBasePage {
     // Selectors
     this.checkoutPageBody = 'body#checkout';
     this.personalInformationStepSection = '#checkout-personal-information-step';
-    this.addressStepSection = '#checkout-addresses-step';
-    this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
     this.deleveryStepSection = '#checkout-delivery-step';
     this.deleveryStepContinueButton = `${this.deleveryStepSection} button[name='confirmDeliveryOption']`;
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = `${this.paymentStepSection} input[name='payment-option'][data-module-name='%NAME']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
+    this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -27,6 +26,20 @@ module.exports = class Checkout extends FOBasePage {
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
     this.passwordInput = `${this.checkoutLoginForm} input[name='password']`;
     this.personalInformationContinueButton = `${this.checkoutLoginForm} #login-form footer button`;
+    // Checkout address form
+    this.addressStepSection = '#checkout-addresses-step';
+    this.addressStepCompanyInput = `${this.addressStepSection} input[name='company']`;
+    this.addressStepAddress1Input = `${this.addressStepSection} input[name='address1']`;
+    this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
+    this.addressStepCityInput = `${this.addressStepSection} input[name='city']`;
+    this.addressStepCountrySelect = `${this.addressStepSection} select[name='id_country']`;
+    this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
+    this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
+    // Gift selectors
+    this.giftCheckbox = '#input_gift';
+    this.recycableGiftCheckbox = '#input_recyclable';
+    this.cartSubtotalGiftWrappingDiv = '#cart-subtotal-gift_wrapping';
+    this.cartSubtotalGiftWrappingValueSpan = `${this.cartSubtotalGiftWrappingDiv} span.value`;
   }
 
   /*
@@ -102,13 +115,14 @@ module.exports = class Checkout extends FOBasePage {
   /**
    * Login in FO
    * @param customer
-   * @return {Promise<void>}
+   * @return {Promise<boolean>}
    */
   async customerLogin(customer) {
     await this.waitForVisibleSelector(this.emailInput);
     await this.setValue(this.emailInput, customer.email);
     await this.setValue(this.passwordInput, customer.password);
     await this.clickAndWaitForNavigation(this.personalInformationContinueButton);
+    return this.isStepCompleted(this.personalInformationStepForm);
   }
 
   /**
@@ -125,5 +139,54 @@ module.exports = class Checkout extends FOBasePage {
    */
   isPasswordRequired() {
     return this.elementVisible(`${this.checkoutGuestPasswordInput}:required`, 1000);
+  }
+
+  /**
+   * Check if checkbox of condition to approve is visible
+   * @returns {boolean}
+   */
+  isConditionToApproveCheckboxVisible() {
+    return this.elementVisible(this.conditionToApproveCheckbox, 1000);
+  }
+
+  /**
+   * Check if gift checkbox is visible
+   * @return {boolean}
+   */
+  isGiftCheckboxVisible() {
+    return this.elementVisible(this.giftCheckbox, 1000);
+  }
+
+  /**
+   * Check if recyclable checkbox is visible
+   * @return {boolean}
+   */
+  isRecyclableCheckboxVisible() {
+    return this.elementVisible(this.recycableGiftCheckbox, 1000);
+  }
+
+  /**
+   * Get gift price from cart summary
+   * @return {Promise<string>}
+   */
+  async getGiftPrice() {
+    await this.changeCheckboxValue(this.giftCheckbox, true);
+    return this.getTextContent(this.cartSubtotalGiftWrappingValueSpan);
+  }
+
+  /**
+   * Set address
+   * @param address
+   * @returns {Promise<boolean>}
+   */
+  async setAddress(address) {
+    await this.setValue(this.addressStepCompanyInput, address.company);
+    await this.setValue(this.addressStepAddress1Input, address.address);
+    await this.setValue(this.addressStepPostCodeInput, address.postalCode);
+    await this.setValue(this.addressStepCityInput, address.city);
+    await this.selectByVisibleText(this.addressStepCountrySelect, address.country);
+    await this.setValue(this.addressStepPhoneInput, address.phone);
+    await this.page.click(this.addressStepContinueButton);
+    return this.isStepCompleted(this.addressStepSection);
   }
 };

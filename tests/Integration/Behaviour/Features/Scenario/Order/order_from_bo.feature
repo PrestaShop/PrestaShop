@@ -52,7 +52,7 @@ Feature: Order from Back Office (BO)
       | date           | 2019-11-26 13:56:22 |
       | payment_method | Payments by check   |
       | transaction_id | test!@#$%%^^&* OR 1 |
-      | id_currency    | 1                   |
+      | currency       | USD                 |
       | amount         | -5.548              |
     Then I should get error that payment amount is negative
     And order "bo_order1" has 0 payments
@@ -63,7 +63,7 @@ Feature: Order from Back Office (BO)
       | date           | 2019-11-26 13:56:23 |
       | payment_method | Payments by check   |
       | transaction_id | test123             |
-      | id_currency    | 1                   |
+      | currency       | USD                 |
       | amount         | 6.00                |
     Then order "bo_order1" payments should have the following details:
       | date           | 2019-11-26 13:56:23 |
@@ -99,6 +99,64 @@ Feature: Order from Back Office (BO)
       | free_shipping | true                    |
     Then order "bo_order1" should contain 3 products "Mug Today is a good day"
     Then order "bo_order1" should have 0 invoices
+
+  @order-from-bo
+  Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice And remove this product
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.228 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.228 |
+      | total_paid               | 32.228 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
+    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 500.0 with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
+    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 15                                        |
+      | free_shipping | true                                      |
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
+    Then order "bo_order1" should have following details:
+      | total_products           | 38.800 |
+      | total_products_wt        | 40.228 |
+      | total_discounts_tax_excl | 15.000 |
+      | total_discounts_tax_incl | 15.000 |
+      | total_paid_tax_excl      | 30.8   |
+      | total_paid_tax_incl      | 32.228 |
+      | total_paid               | 32.228 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
+    When I remove product "Test Product Cart Rule On Select Product" from order "bo_order1"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Select Product"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.228 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.228 |
+      | total_paid               | 32.228 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.0    |
 
   @order-from-bo
   Scenario: Add product to an existing Order with invoice with free shipping to new invoice

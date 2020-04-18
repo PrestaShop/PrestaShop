@@ -35,7 +35,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable guest checkout', async () => {
+describe('Enable guest checkout', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

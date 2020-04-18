@@ -48,10 +48,6 @@ export default class PreviewExtension {
 
     this.$gridContainer.find('tbody tr').on('mouseover mouseleave', (event) => this.handleIconHovering(event));
     this.$gridContainer.find(this.previewToggleSelector).on('click', (event) => this.togglePreview(event));
-
-    if (typeof this.previewCustomization === 'function') {
-      this.previewCustomization(this.$gridContainer);
-    }
   }
 
   /**
@@ -126,16 +122,21 @@ export default class PreviewExtension {
   renderPreviewContent($columnRow, content) {
     const rowColumnCount = $columnRow.find('td').length;
 
-    const previewTemplate = `
+    const $previewTemplate = $(`
         <tr class="preview-row">
           <td colspan="${rowColumnCount}">${content}</td>
         </tr>
-      `;
+      `);
 
     $columnRow.addClass(this.previewOpenClass);
     this.showCollapseIcon($columnRow);
     this.hideExpandIcon($columnRow);
-    $columnRow.after(previewTemplate);
+
+    if (typeof this.previewCustomization === 'function') {
+      this.previewCustomization($previewTemplate);
+    }
+
+    $columnRow.after($previewTemplate);
   }
 
   /**

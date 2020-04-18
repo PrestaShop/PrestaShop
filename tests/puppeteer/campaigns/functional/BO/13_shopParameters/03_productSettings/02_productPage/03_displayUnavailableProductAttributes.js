@@ -45,7 +45,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable display unavailable product attributes on the product page', async () => {
+describe('Display unavailable product attributes on the product page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

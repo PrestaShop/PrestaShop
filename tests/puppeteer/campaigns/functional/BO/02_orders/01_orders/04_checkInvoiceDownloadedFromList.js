@@ -12,10 +12,11 @@ const DashboardPage = require('@pages/BO/dashboard');
 const OrdersPage = require('@pages/BO/orders/index');
 const FOBasePage = require('@pages/FO/FObasePage');
 const HomePage = require('@pages/FO/home');
+const FOLoginPage = require('@pages/FO/login');
 const ProductPage = require('@pages/FO/product');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 // Importing data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
@@ -37,6 +38,7 @@ const init = async function () {
     ordersPage: new OrdersPage(page),
     foBasePage: new FOBasePage(page),
     homePage: new HomePage(page),
+    foLoginPage: new FOLoginPage(page),
     productPage: new ProductPage(page),
     cartPage: new CartPage(page),
     checkoutPage: new CheckoutPage(page),
@@ -63,26 +65,38 @@ describe('Check invoice downloaded from list', async () => {
     await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${invoiceFilename}`);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  describe('Create order in FO', async () => {
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await this.pageObjects.homePage.goToFo();
+      await this.pageObjects.homePage.changeLanguage('en');
+      const isHomePage = await this.pageObjects.homePage.isHomePage();
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
 
-  describe('Create an order in FO', async () => {
-    it('should go to FO and create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
-      // Click on view my shop
-      page = await this.pageObjects.boBasePage.viewMyShop();
-      this.pageObjects = await init();
-      await this.pageObjects.foBasePage.changeLanguage('en');
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+      await this.pageObjects.homePage.goToLoginPage();
+      const pageTitle = await this.pageObjects.foLoginPage.getPageTitle();
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(this.pageObjects.foLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await this.pageObjects.foLoginPage.customerLogin(DefaultAccount);
+      const isCustomerConnected = await this.pageObjects.foLoginPage.isCustomerConnected();
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    it('should create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+      await this.pageObjects.foLoginPage.goToHomePage();
       // Go to the first product page
       await this.pageObjects.homePage.goToProductPage(1);
       // Add the created product to the cart
       await this.pageObjects.productPage.addProductToTheCart();
       // Proceed to checkout the shopping cart
       await this.pageObjects.cartPage.clickOnProceedToCheckout();
-      // Checkout the order
-      // Personal information step - Login
-      await this.pageObjects.checkoutPage.clickOnSignIn();
-      await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
       // Address step - Go to delivery step
       const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
@@ -91,18 +105,23 @@ describe('Check invoice downloaded from list', async () => {
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
       // Payment step - Choose payment step
       await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
-      const cardTitle = await this.pageObjects.orderConfirmationPage
-        .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
+      const cardTitle = await this.pageObjects.orderConfirmationPage.getOrderConfirmationCardTitle();
       // Check the confirmation message
       await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-      // Logout from FO
-      await this.pageObjects.foBasePage.logout();
-      page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
-      this.pageObjects = await init();
+    });
+
+    it('should sign out from FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
+      await this.pageObjects.orderConfirmationPage.logout();
+      const isCustomerConnected = await this.pageObjects.orderConfirmationPage.isCustomerConnected();
+      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
   });
 
   describe('Check invoice file in BO', async () => {
+    // Login into BO
+    loginCommon.loginBO();
+
     it('should go to the orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(

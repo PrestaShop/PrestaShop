@@ -28,13 +28,13 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\Contact;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
@@ -83,13 +83,13 @@ class ContactType extends AbstractType
                 'options' => [
                     'constraints' => [
                         new Regex([
-                                'pattern' => '/^[^<>={}]*$/u',
-                                'message' => $this->trans(
-                                    '%s is invalid.',
-                                    [],
-                                    'Admin.Notifications.Error'
-                                ),
-                            ]
+                            'pattern' => '/^[^<>={}]*$/u',
+                            'message' => $this->trans(
+                                '%s is invalid.',
+                                [],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
                         ),
                     ],
                 ],

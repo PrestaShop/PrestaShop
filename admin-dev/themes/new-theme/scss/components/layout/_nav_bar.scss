@@ -443,6 +443,8 @@
     overflow: visible !important;
 
     .main-menu {
+      overflow: hidden;
+
       .category-title > .title,
       .link-levelone span {
         display: none;
@@ -509,14 +511,15 @@
     @media (max-height: 870px) {
       // this two tabs need to be flipped, otherwise
       // css issue with bottom of the page
-      #subtab-ShopParameters:hover,
-      #subtab-AdminAdvancedParameters:hover {
+      #subtab-ShopParameters.ul-open,
+      #subtab-AdminAdvancedParameters.ul-open {
         ul.submenu {
           /* stylelint-disable declaration-no-important */
           top: 0 !important;
           display: flex !important;
           /* stylelint-enable */
           flex-direction: column-reverse;
+          margin-top: 35px;
           transform: rotate(180deg);
           transform-origin: top;
 

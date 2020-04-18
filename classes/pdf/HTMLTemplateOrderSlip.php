@@ -29,16 +29,26 @@
  */
 class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 {
+    /**
+     * @var Order
+     */
     public $order;
+
+    /**
+     * @var OrderSlip
+     */
     public $order_slip;
+
+    /** @var int Cart id */
+    public $id_cart;
 
     /**
      * @param OrderSlip $order_slip
-     * @param $smarty
+     * @param Smarty $smarty
      *
      * @throws PrestaShopException
      */
-    public function __construct(OrderSlip $order_slip, $smarty)
+    public function __construct(OrderSlip $order_slip, Smarty $smarty)
     {
         $this->order_slip = $order_slip;
         $this->order = new Order((int) $order_slip->id_order);
@@ -258,6 +268,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         return $breakdowns;
     }
 
+    /**
+     * @return array
+     */
     public function getProductTaxesBreakdown()
     {
         // $breakdown will be an array with tax rates as keys and at least the columns:

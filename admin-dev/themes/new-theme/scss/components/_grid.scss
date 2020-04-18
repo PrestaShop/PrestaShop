@@ -230,6 +230,10 @@ table .column-filters td:last-child .grid-reset-button {
               font-weight: 600;
             }
           }
+
+          &.date_time-type {
+            word-break: normal;
+          }
         }
       }
     }

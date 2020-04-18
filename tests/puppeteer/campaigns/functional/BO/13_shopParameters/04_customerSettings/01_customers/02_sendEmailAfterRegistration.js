@@ -47,7 +47,7 @@ Enable send an email after registration
 Create customer account
 Check that there is an email sent to the new customer in 'Advanced Parameters > Email'
  */
-describe('Enable/Disable send an email after registration', async () => {
+describe('Enable send an email after registration', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -120,7 +120,7 @@ describe('Enable/Disable send an email after registration', async () => {
 
     it('should check if there is a welcome email for the new customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `searchNewCustomerEmail${index + 1}`, baseContext);
-      await this.pageObjects.emailPage.filterEmails('input', 'recipient', test.args.customer.email);
+      await this.pageObjects.emailPage.filterEmailLogs('input', 'recipient', test.args.customer.email);
       const numberOfEmailAfterFilter = await this.pageObjects.emailPage.getNumberOfElementInGrid();
       await expect(numberOfEmailAfterFilter).to.be.equal(test.args.nbrAfterFilter);
     });

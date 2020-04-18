@@ -163,8 +163,8 @@ export default class ImportPage {
 
     const fileData = `${fileName} (${this.humanizeSize(fileSize)})`;
 
-    $alert.find('.js-file-data').html(fileData);
-    $alert.find('.js-error-message').html(message);
+    $alert.find('.js-file-data').text(fileData);
+    $alert.find('.js-error-message').text(message);
     $alert.removeClass('d-none');
   }
 

@@ -12,13 +12,17 @@
 
   .token {
     display: inline-block;
-    padding: .4rem;
-    margin: .1rem;
+    padding: 0.4rem;
+    margin: 0.1rem;
     line-height: 1;
     color: #fff;
     text-align: center;
     vertical-align: baseline;
     background-color: $brand-primary;
+
+    &.invalid {
+      background-color: $brand-warning;
+    }
 
     > .token-label {
       white-space: nowrap;

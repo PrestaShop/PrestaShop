@@ -178,6 +178,7 @@ class AdminOrdersControllerCore extends AdminController
             $order = new Order((int) Tools::getValue('id_order'));
             $this->context->cart = new Cart($order->id_cart);
             $this->context->customer = new Customer($order->id_customer);
+            $this->context->currency = new Currency($order->id_currency);
         }
 
         $this->bulk_actions = [
@@ -1320,6 +1321,25 @@ class AdminOrdersControllerCore extends AdminController
 
                         $order_detail->update();
                         $order_detail->updateTaxAmount($order);
+                    }
+
+                    foreach ($order->getCartRules() as $cartRule) {
+                        $orderCartRule = new OrderCartRule((int) $cartRule['id_order_cart_rule']);
+                        if ($cartRule['value'] > 0) {
+                            $orderCartRule->value = Tools::convertPriceFull(
+                                (float) $cartRule['value'],
+                                $old_currency,
+                                $currency
+                            );
+                        }
+                        if ($cartRule['value_tax_excl'] > 0) {
+                            $orderCartRule->value_tax_excl = Tools::convertPriceFull(
+                                (float) $cartRule['value_tax_excl'],
+                                $old_currency,
+                                $currency
+                            );
+                        }
+                        $orderCartRule->update();
                     }
 
                     $id_order_carrier = (int) $order->getIdOrderCarrier();

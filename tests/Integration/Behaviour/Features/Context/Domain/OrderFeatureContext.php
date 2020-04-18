@@ -40,8 +40,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -51,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use Product;
 use RuntimeException;
@@ -176,6 +180,47 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I remove product :productReference from order :orderReference
+     *
+     * @param string $productReference
+     * @param string $orderReference
+     */
+    public function removeProductsFromOrder(string $productReference, string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productId = $this->getProductIdByName($productReference);
+        $orderDetailId = null;
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $products */
+        $products = $orderForViewing->getProducts()->getProducts();
+        foreach ($products as $product) {
+            if ($product->getId() == $productId) {
+                $orderDetailId = $product->getOrderDetailId();
+                break;
+            }
+        }
+        if (empty($orderDetailId)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Product %s has not been found in order %s',
+                    $productReference,
+                    $orderReference
+                )
+            );
+        }
+
+        try {
+            $this->getCommandBus()->handle(
+                new DeleteProductFromOrderCommand($orderId, $orderDetailId)
+            );
+        } catch (OrderException | OrderNotFoundException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @When I add products to order :orderReference to last invoice and the following products details:
      *
      * @param string $orderReference
@@ -208,6 +253,64 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (InvalidProductQuantityException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @Then order :orderReference should have :expectedCount cart rule(s)
+     *
+     * @param string$orderReference
+     * @param int $expectedCount
+     */
+    public function checkOrderCartRulesCount(string $orderReference, int $expectedCount)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $orderProducts */
+        $orderDiscounts = $orderForViewing->getDiscounts()->getDiscounts();
+
+        if (count($orderDiscounts) == $expectedCount) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Invalid number of cart rules for order %s, expected %s but got %s instead',
+                $orderReference,
+                $expectedCount,
+                count($orderDiscounts)
+            )
+        );
+    }
+
+    /**
+     * @Then order :reference should have cart rule :cartRuleName
+     *
+     * @param string $orderReference
+     * @param string $cartRuleName
+     */
+    public function createdOrderShouldHaveCartRule(string $orderReference, string $cartRuleName)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderDiscountForViewing[] $orderDiscountsForViewing */
+        $orderDiscountsForViewing = $orderForViewing->getDiscounts()->getDiscounts();
+
+        foreach ($orderDiscountsForViewing as $discount) {
+            if ($discount->getName() == $cartRuleName) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'Order "%s" should have cart rule "%s".',
+                $orderReference,
+                $cartRuleName
+            )
+        );
     }
 
     /**
@@ -523,7 +626,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderReference should contain :quantity products :productName
+     * @Then order :orderReference should contain :quantity product(s) :productName
      *
      * @param string $orderReference
      * @param int $quantity
@@ -531,13 +634,31 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName)
     {
-        $productQuantities = $this->getProductQuantitiesByReference($orderReference, $productName);
+        $orderId = SharedStorage::getStorage()->get($orderReference);
 
-        if ((int) $productQuantities['quantity'] === (int) $quantity) {
-            return;
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $orderProducts */
+        $orderProducts = $orderForViewing->getProducts()->getProducts();
+
+        $productQuantity = 0;
+        foreach ($orderProducts as $orderProduct) {
+            if ($orderProduct->getName() == $productName) {
+                $productQuantity += $orderProduct->getQuantity();
+            }
         }
 
-        throw new RuntimeException(sprintf('Order was expected to have "%d" products "%s" in it. Instead got "%s"', $quantity, $productName, $productQuantities['quantity']));
+        if ($productQuantity == $quantity) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Order was expected to have "%d" products "%s" in it. Instead got "%d"',
+                $quantity,
+                $productName,
+                $productQuantity
+            )
+        );
     }
 
     /**
@@ -650,21 +771,34 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :orderReference should have the following details:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function queryOrderToGetTheFollowingProperties(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $this->assertOrderPropertiesEquals(new Order($orderId), $table->getRowsHash());
+    }
+
+    /**
      * @param string $productName
      *
      * @return int
      */
     private function getProductIdByName(string $productName)
     {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
         }
 
-        return (int) $productId;
+        /** @var FoundProduct $product */
+        $product = reset($products);
+
+        return (int) $product->getProductId();
     }
 
     /**
@@ -695,5 +829,25 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $productQuantities;
+    }
+
+    /**
+     * @param Order $order
+     * @param array $data
+     */
+    private function assertOrderPropertiesEquals(Order $order, array $data): void
+    {
+        foreach (array_keys($data) as $property) {
+            if (!property_exists($order, $property) || $data[$property] !== $order->$property) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Expected %s value to be equal to %s, got %s instead',
+                        $property,
+                        $data[$property],
+                        $order->$property
+                    )
+                );
+            }
+        }
     }
 }

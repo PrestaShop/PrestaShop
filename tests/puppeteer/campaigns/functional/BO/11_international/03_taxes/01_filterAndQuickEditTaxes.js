@@ -62,7 +62,7 @@ describe('Filter And Quick Edit taxes', async () => {
     const tests = [
       {
         args: {
-          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_tax', filterValue: DefaultFrTax.id,
+          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_tax', filterValue: DefaultFrTax.id.toString(),
         },
       },
       {
@@ -71,9 +71,13 @@ describe('Filter And Quick Edit taxes', async () => {
         },
       },
       {
-        args: {
-          testIdentifier: 'filterRate', filterType: 'input', filterBy: 'rate', filterValue: DefaultFrTax.rate,
-        },
+        args:
+          {
+            testIdentifier: 'filterRate',
+            filterType: 'input',
+            filterBy: 'rate',
+            filterValue: DefaultFrTax.rate.toString(),
+          },
       },
       {
         args:

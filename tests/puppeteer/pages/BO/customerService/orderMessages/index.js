@@ -33,6 +33,9 @@ module.exports = class OrderMessages extends BOBasePage {
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#order_message_grid_bulk_action_delete_selection';
+    // Delete modal
+    this.confirmDeleteModal = '#order_message_grid_confirm_modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* Header Methods */
@@ -132,7 +135,6 @@ module.exports = class OrderMessages extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteWithBulkActions() {
-    this.dialogListener(true);
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
@@ -144,7 +146,20 @@ module.exports = class OrderMessages extends BOBasePage {
       this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
+    await Promise.all([
+      this.page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    // Click on delete and wait for modal
+    await this.confirmDeleteOrderMessages();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteOrderMessages() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 };
