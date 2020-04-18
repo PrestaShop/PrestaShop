@@ -389,14 +389,13 @@ class ToolsCore
      */
     public static function getRemoteAddr()
     {
-        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])
-            && (
-                empty($_SERVER['REMOTE_ADDR'])
-                || preg_match('/^127\..*/i', $_SERVER['REMOTE_ADDR']) 
+        if (
+            !empty($_SERVER['HTTP_X_FORWARDED_FOR'])
+            && (empty($_SERVER['REMOTE_ADDR'])
+                || preg_match('/^127\..*/i', $_SERVER['REMOTE_ADDR'])
                 || preg_match('/^172\.(16|17|18|19|2\d|30|31)\.*/i', $_SERVER['REMOTE_ADDR'])
-                || preg_match('/^192\.168\.*/i', $_SERVER['REMOTE_ADDR']) 
-                || preg_match('/^10\..*/i', $_SERVER['REMOTE_ADDR'])
-            )
+                || preg_match('/^192\.168\.*/i', $_SERVER['REMOTE_ADDR'])
+                || preg_match('/^10\..*/i', $_SERVER['REMOTE_ADDR']))
         ) {
             return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
         }
