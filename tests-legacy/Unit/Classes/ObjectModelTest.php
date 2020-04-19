@@ -36,11 +36,19 @@ class ObjectModelTest extends UnitTestCase
      */
     protected function setUp()
     {
+        # Old retro compatible way
         Alias::$definition['fields']['fullname'] = [
         'type' => Alias::TYPE_STRING,
         'validate' => 'isString'
         ];
 
+        # What should be documented post 1.7.8
+        Alias::$definition['fields']['whatever'] = [
+            'type' => Alias::TYPE_INT,
+            'validate' => 'Validate::isInt'
+        ];
+
+        # What is also possible post 1.7.8
         Alias::$definition['fields']['gender'] = [
             'type' => Alias::TYPE_STRING,
             'validate' => 'LegacyTests\Unit\Classes\CustomValidator::isValidGender',
@@ -54,6 +62,7 @@ class ObjectModelTest extends UnitTestCase
     {
         unset(
             Alias::$definition['fields']['fullname'],
+            Alias::$definition['fields']['whatever'],
             Alias::$definition['fields']['gender']
         );
     }
@@ -63,10 +72,14 @@ class ObjectModelTest extends UnitTestCase
         $alias = new Alias();
 
         self::assertTrue($alias->validateField('fullname', 'Mickaël Andrieu'));
+        self::assertNotTrue($alias->validateField('whatever', 'not a number'));
         self::assertTrue($alias->validateField('gender', 'MALE'));
     }
 }
 
+/**
+ * This class must be only used for this test !
+ */
 class CustomValidator {
     public static function isValidGender($value)
     {
