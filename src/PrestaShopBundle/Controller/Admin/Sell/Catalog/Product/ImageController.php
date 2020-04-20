@@ -30,11 +30,13 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class ImageController extends FrameworkBundleAdminController
 {
-    public function uploadAction(): JsonResponse
+    public function uploadAction(Request $request): JsonResponse
     {
+        dump($request);
         return $this->json([
             //@todo: test
             'message' => 'test response'
