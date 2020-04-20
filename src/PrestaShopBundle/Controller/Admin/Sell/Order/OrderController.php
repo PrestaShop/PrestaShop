@@ -878,7 +878,7 @@ class OrderController extends CommonController
                             $data['name'],
                             $data['type'],
                             $data['value'] ?? null,
-                            (int) $data['invoice_id']
+                            empty($data['invoice_id']) ? null : (int) $data['invoice_id']
                         )
                     );
 
