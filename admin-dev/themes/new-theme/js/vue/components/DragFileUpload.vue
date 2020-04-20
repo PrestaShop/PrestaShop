@@ -17,8 +17,7 @@
       });
       document.querySelector(this.dropzoneSelector).addEventListener('drop', (e) => {
         e.preventDefault();
-        //@todo: fire event to parent with the file?
-        this.$emit('fileDropped', e);
+        this.$emit('file-dropped', e.dataTransfer.files);
       });
     },
   };
