@@ -38,8 +38,8 @@ class ObjectModelTest extends UnitTestCase
     {
         # Old retro compatible way
         Alias::$definition['fields']['fullname'] = [
-        'type' => Alias::TYPE_STRING,
-        'validate' => 'isString'
+            'type' => Alias::TYPE_STRING,
+            'validate' => 'isString'
         ];
 
         # What should be documented post 1.7.8
