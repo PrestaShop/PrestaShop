@@ -39,3 +39,8 @@ _attribute_group:
 _cart_rule:
     resource: "cart_rule.yml"
     prefix: /cart-rules
+
+# @todo: v2 temporary name/prefix, until better idea
+_products_v2:
+    resource: "products/products_v2.yml"
+    prefix: /products/v2
