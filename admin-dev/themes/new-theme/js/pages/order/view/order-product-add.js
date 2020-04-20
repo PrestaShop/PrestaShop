@@ -187,13 +187,12 @@ export default class OrderProductAdd {
     const orderId = $(event.currentTarget).data('orderId');
 
     if (invoiceId === 0) {
-      const modalTranslations = this.invoiceSelect.data('modal-translations');
       const modal = new ConfirmModal({
         id: 'modal-confirm-new-invoice',
-        confirmTitle: modalTranslations['modal.title'],
-        confirmMessage: modalTranslations['modal.body'],
-        confirmButtonLabel: modalTranslations['modal.apply'],
-        closeButtonLabel: modalTranslations['modal.cancel'],
+        confirmTitle: this.invoiceSelect.data('modal-title'),
+        confirmMessage: this.invoiceSelect.data('modal-body'),
+        confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
+        closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
       }, () => this.addProduct(orderId));
 
       modal.show();
