@@ -61,14 +61,12 @@
     <td class="addProductInvoice pr-2">
       {{ form_row(addProductRowForm.invoice, {
         'attr': {
-          'data-modal-translations':        {
-            'modal.title': 'Create a new invoice'|trans({}, 'Admin.Orderscustomers.Feature'),
-            'modal.apply': 'Create'|trans({}, 'Admin.Actions'),
-            'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
-            'modal.body': 'Are you sure you want to create a new invoice?'|trans({}, 'Admin.Orderscustomers.Notification')
-          }|json_encode|replace("'", "&#39;")|raw|trim
-        }
-      }) }}
+          'data-modal-title': 'Create a new invoice'|trans({}, 'Admin.Orderscustomers.Feature'),
+          'data-modal-apply': 'Create'|trans({}, 'Admin.Actions'),
+          'data-modal-cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+          'data-modal-body': 'Are you sure you want to create a new invoice?'|trans({}, 'Admin.Orderscustomers.Notification')
+        }})
+      }}
     </td>
   {% endif %}
   <td class="text-right add-product-buttons">
