@@ -251,11 +251,12 @@ class CartController extends FrameworkBundleAdminController
         }
 
         $data = [];
+        $keys_headers = array_keys($headers);
 
         foreach ($cartGrid->getData()->getRecords()->all() as $record) {
             $item = [];
 
-            foreach (array_keys($headers) as $header) {
+            foreach ($keys_headers as $header) {
                 $item[$header] = $record[$header];
             }
 
