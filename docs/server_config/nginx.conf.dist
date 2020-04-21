@@ -162,6 +162,10 @@ server {
             deny all;
         }
     }
+    
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
 
     # PHP FPM part
     location ~ \.php$ {
