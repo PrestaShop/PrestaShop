@@ -28,8 +28,7 @@ const init = async function () {
     stocksPage: new StocksPage(page),
   };
 };
-/*
- */
+
 describe('Filter stocks by category', async () => {
   // before and after functions
   before(async function () {
@@ -52,7 +51,7 @@ describe('Filter stocks by category', async () => {
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
-    numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+    numberOfProducts = await this.pageObjects.stocksPage.getTotalNumberOfProducts();
     await expect(numberOfProducts).to.be.above(0);
   });
 

@@ -55,7 +55,7 @@ describe('Simple filter stocks', async () => {
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
-    numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+    numberOfProducts = await this.pageObjects.stocksPage.getTotalNumberOfProducts();
     await expect(numberOfProducts).to.be.above(0);
   });
 

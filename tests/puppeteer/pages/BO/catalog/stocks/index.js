@@ -72,10 +72,10 @@ module.exports = class Stocks extends BOBasePage {
   }
 
   /**
-   * Get the number of lines in the main table
+   * Get the total number of products
    * @returns {Promise<int>}
    */
-  async getNumberOfProductsFromList() {
+  async getTotalNumberOfProducts() {
     await this.waitForVisibleSelector(this.searchButton, 2000);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
     // If pagination that return number of products in this page
@@ -90,6 +90,16 @@ module.exports = class Stocks extends BOBasePage {
       numberOfProducts += (await this.page.$$(this.productRows)).length;
     }
     return numberOfProducts;
+  }
+
+  /**
+   * Get the number of lines in the main table
+   * @returns {Promise<int>}
+   */
+  async getNumberOfProductsFromList() {
+    await this.waitForVisibleSelector(this.searchButton, 2000);
+    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    return (await this.page.$$(this.productRows)).length;
   }
 
   /**
@@ -124,7 +134,7 @@ module.exports = class Stocks extends BOBasePage {
       await closeButton.click();
     }
     /* eslint-enable no-restricted-syntax */
-    return this.getNumberOfProductsFromList();
+    return this.getTotalNumberOfProducts();
   }
 
   /**
@@ -173,7 +183,7 @@ module.exports = class Stocks extends BOBasePage {
    */
   async getAllProductsName() {
     const productsNames = [];
-    const numberOfProductsInlist = await this.getNumberOfProductsFromList();
+    const numberOfProductsInlist = await (await this.page.$$(this.productRows)).length;
     for (let row = 1; row <= numberOfProductsInlist; row++) {
       await productsNames.push(await this.getTextColumnFromTableStocks(row, 'name'));
     }
@@ -283,6 +293,6 @@ module.exports = class Stocks extends BOBasePage {
    */
   async resetAndGetNumberOfProductsFromList() {
     await this.reloadPage();
-    return this.getNumberOfProductsFromList();
+    return this.getTotalNumberOfProducts();
   }
 };
