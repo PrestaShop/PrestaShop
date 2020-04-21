@@ -37,7 +37,7 @@ module.exports = class Stocks extends BOBasePage {
     this.productRowQuantityUpdateButton = `${this.productRowQuantityColumn} button.check-button`;
 
     // loader
-    this.productListLoading = `${this.productRow.replace('%ROW', 1)} td:nth-child(1) div.ps-loader`;
+    this.productListLoading = `${this.productRows} td:nth-child(1) div.ps-loader`;
 
     // Filters containers
     this.filtersContainerDiv = '#filters-container';
@@ -51,6 +51,11 @@ module.exports = class Stocks extends BOBasePage {
     this.filterCategoryCollapseButton = `${this.filterCategoryDiv} button:nth-child(2)`;
     this.filterCategoryTreeItems = `${this.filterCategoryDiv} div.ps-tree-items[label='%CATEGORY']`;
     this.filterCategoryCheckBoxDiv = `${this.filterCategoryTreeItems} .md-checkbox`;
+
+    // Pagination
+    this.paginationList = 'nav ul.pagination';
+    this.paginationListItem = `${this.paginationList} li.page-item`;
+    this.paginationListItemLink = `${this.paginationListItem}:nth-child(%ID) a`;
   }
 
   /*
@@ -68,12 +73,44 @@ module.exports = class Stocks extends BOBasePage {
 
   /**
    * Get the number of lines in the main table
-   * @returns {Promise<*>}
+   * @returns {Promise<int>}
    */
   async getNumberOfProductsFromList() {
     await this.waitForVisibleSelector(this.searchButton, 2000);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
-    return (await this.page.$$(this.productRows)).length;
+    // If pagination that return number of products in this page
+    const pagesLength = await this.getProductsPagesLength();
+    if (pagesLength === 0) {
+      return (await this.page.$$(this.productRows)).length;
+    }
+    // Get number of products in all pages
+    let numberOfProducts = 0;
+    for (let i = pagesLength; i > 0; i--) {
+      await this.paginateTo(i);
+      numberOfProducts += (await this.page.$$(this.productRows)).length;
+    }
+    return numberOfProducts;
+  }
+
+  /**
+   * Get number of products pages stocks page
+   * @return {Promise<int>}
+   */
+  async getProductsPagesLength() {
+    return (await this.page.$$(this.paginationListItem)).length;
+  }
+
+  /**
+   * Paginate to a product page
+   * @param pageNumber
+   * @return {Promise<void>}
+   */
+  async paginateTo(pageNumber = 1) {
+    await Promise.all([
+      this.page.click(this.paginationListItemLink.replace('%ID', pageNumber)),
+      this.waitForVisibleSelector(this.productListLoading),
+    ]);
+    await this.page.waitForSelector(this.productListLoading, {hidden: true});
   }
 
   /**

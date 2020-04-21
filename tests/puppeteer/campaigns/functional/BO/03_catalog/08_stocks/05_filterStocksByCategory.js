@@ -49,6 +49,7 @@ describe('Filter stocks by category', async () => {
       this.pageObjects.stocksPage.catalogParentLink,
       this.pageObjects.stocksPage.stocksLink,
     );
+    await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
     numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
