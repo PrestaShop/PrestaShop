@@ -206,18 +206,22 @@ class StateCore extends ObjectModel
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
-    public static function getStatesByIdCountry($idCountry, $active = false)
+    public static function getStatesByIdCountry($idCountry, $active = false, $orderBy = null)
     {
         if (empty($idCountry)) {
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->executeS(
-            '
-			SELECT *
-			FROM `' . _DB_PREFIX_ . 'state` s
-			WHERE s.`id_country` = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : '')
-        );
+        $sql = new DbQuery();
+        $sql->select('*');
+        $sql->from('state', 's');
+        $sql->where('s.id_country = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : ''));
+
+        if (array_key_exists($orderBy, self::$definition['fields'])) {
+            $sql->orderBy($orderBy);
+        }
+
+        return Db::getInstance()->executeS($sql);
     }
 
     /**
