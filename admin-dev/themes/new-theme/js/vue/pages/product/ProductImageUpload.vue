@@ -4,8 +4,7 @@
       style="width: 800px; height: 300px; border: 1px solid black"
       @dragover.prevent
       @drop.prevent="uploadImages"
-    >
-    </div>
+    />
   </div>
 </template>
 
@@ -17,13 +16,12 @@
   export default {
     name: 'ProductImageUpload',
     methods: {
-      async uploadImages(fileList) {
+      async uploadImages(event) {
         const formData = new FormData();
 
-        for (const file in Object.values(fileList)) {
-            //@todo: still not working
-          formData.append(file.name + file.lastModified, file);
-        }
+        Array.from(event.dataTransfer.files).forEach((file) => {
+          formData.append(`${file.name}${file.lastModified}`, file);
+        });
 
         try {
           const response = await fetch(router.generate('admin_products_v2_images'), {

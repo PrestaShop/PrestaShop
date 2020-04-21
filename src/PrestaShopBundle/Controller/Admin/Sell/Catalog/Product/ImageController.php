@@ -36,7 +36,7 @@ class ImageController extends FrameworkBundleAdminController
 {
     public function uploadAction(Request $request): JsonResponse
     {
-        dump($request);
+        dump($request->files);
         return $this->json([
             //@todo: test
             'message' => 'test response'
