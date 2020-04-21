@@ -59,7 +59,7 @@ describe('Bulk Edit Quantity', async () => {
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProducts', baseContext);
-    numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
+    numberOfProducts = await this.pageObjects.stocksPage.getTotalNumberOfProducts();
     await expect(numberOfProducts).to.be.above(0);
   });
 
