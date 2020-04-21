@@ -936,7 +936,16 @@ class DispatcherCore
                     }
                 } else {
                     if ($params[$key]) {
-                        $replace = $route['keywords'][$key]['prepend'] . $params[$key] . $route['keywords'][$key]['append'];
+                        $parameter = $params[$key];
+                        if (is_array($params[$key])) {
+                            if (array_key_exists($id_lang, $params[$key])) {
+                                $parameter = $params[$key][$id_lang];
+                            } else {
+                                // made the choice to return the first element of the array
+                                $parameter = reset($params[$key]);
+                            }
+                        }
+                        $replace = $route['keywords'][$key]['prepend'] . $parameter . $route['keywords'][$key]['append'];
                     } else {
                         $replace = '';
                     }
