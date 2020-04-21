@@ -1035,6 +1035,10 @@ class Install extends AbstractInstall
     /**
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
+     *
+     * @param string|null $module Module to install. If not provided, installs all modules.
+     *
+     * @return bool
      */
     public function installModules($module = null)
     {

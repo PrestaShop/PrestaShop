@@ -686,7 +686,7 @@ abstract class DbCore
      * @param string|DbQuery $sql
      * @param bool $use_cache
      *
-     * @return string|false|null
+     * @return string|false Returns false if no results
      */
     public function getValue($sql, $use_cache = true)
     {

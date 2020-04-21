@@ -677,7 +677,7 @@ abstract class CacheCore
     /**
      * @param string $key
      *
-     * @return mixed
+     * @return mixed|null The cache item if found, null otherwise
      */
     public static function retrieve($key)
     {
