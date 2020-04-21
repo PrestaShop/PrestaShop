@@ -57,11 +57,11 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
         $matches1 = [];
         $matches2 = [];
         preg_match($pattern1, $expression, $matches1);
-        preg_match($pattern2, $expression, $matches2);
 
         if (count($matches1) > 1) {
             return $matches1[1];
         }
+        preg_match($pattern2, $expression, $matches2);
         if (count($matches2) > 1) {
             return $matches2[1];
         }
