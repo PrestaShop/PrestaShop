@@ -222,67 +222,67 @@ final class CartGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new FilterCollection())
             ->add((new Filter('id_cart', NumberType::class))
-            ->setTypeOptions([
-                'attr' => [
-                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                ],
-                'required' => false,
-            ])
-            ->setAssociatedColumn('id_cart')
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('id_cart')
             )
             // from db it uses status field value but show them in Order ID column
             ->add((new Filter('status', DatalistType::class))
-            ->setTypeOptions([
-                'choices' => [
-                    $this->trans('Not placed', [], 'Admin.Orderscustomers.Feature') => CartStatusType::NOT_ORDERED,
-                    $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatusType::ABANDONED_CART,
-                ],
-                'attr' => [
-                    'placeholder' => $this->trans('Search Order ID', [], 'Admin.Actions'),
-                ],
-                'required' => false,
-            ])
-            ->setAssociatedColumn('status')
+                ->setTypeOptions([
+                    'choices' => [
+                        $this->trans('Not placed', [], 'Admin.Orderscustomers.Feature') => CartStatusType::NOT_ORDERED,
+                        $this->trans('Abandoned cart', [], 'Admin.Orderscustomers.Feature') => CartStatusType::ABANDONED_CART,
+                    ],
+                    'attr' => [
+                        'placeholder' => $this->trans('Search Order ID', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('status')
             )
             ->add((new Filter('customer_name', TextType::class))
-            ->setTypeOptions([
-                'attr' => [
-                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                ],
-                'required' => false,
-            ])
-            ->setAssociatedColumn('customer_name')
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('customer_name')
             )
             ->add((new Filter('carrier_name', TextType::class))
-            ->setTypeOptions([
-                'attr' => [
-                    'placeholder' => $this->trans('Search carrier', [], 'Admin.Actions'),
-                ],
-                'required' => false,
-            ])
-            ->setAssociatedColumn('carrier_name')
+                ->setTypeOptions([
+                    'attr' => [
+                        'placeholder' => $this->trans('Search carrier', [], 'Admin.Actions'),
+                    ],
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('carrier_name')
             )
             ->add((new Filter('date_add', DateRangeType::class))
-            ->setTypeOptions([
-                'required' => false,
-            ])
-            ->setAssociatedColumn('date_add')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('date_add')
             )
             ->add((new Filter('online', YesAndNoChoiceType::class))
-            ->setTypeOptions([
-                'required' => false,
-            ])
-            ->setAssociatedColumn('online')
+                ->setTypeOptions([
+                    'required' => false,
+                ])
+                ->setAssociatedColumn('online')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-            ->setTypeOptions([
-                'reset_route' => 'admin_common_reset_search_by_filter_id',
-                'reset_route_params' => [
-                    'filterId' => self::GRID_ID,
-                ],
-                'redirect_route' => 'admin_carts_index',
-            ])
-            ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'admin_carts_index',
+                ])
+                ->setAssociatedColumn('actions')
             );
     }
 
