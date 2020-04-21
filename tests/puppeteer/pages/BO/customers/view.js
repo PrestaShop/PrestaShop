@@ -6,6 +6,7 @@ module.exports = class ViewCustomer extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Information about customer';
+    this.updateSuccessfulMessage = 'Update successful';
 
     // Selectors
     // Personnel information
@@ -13,10 +14,10 @@ module.exports = class ViewCustomer extends BOBasePage {
     this.personnalInformationEditButton = `${this.personnalInformationDiv} a[data-original-title='Edit']`;
     // Orders
     this.ordersDiv = '.customer-orders-card';
-    this.ordersViewButton = `${this.ordersDiv} a[data-original-title='View'] i`;
+    this.ordersViewButton = `${this.ordersDiv} tr:nth-child(%ID) a[data-original-title='View'] i`;
     // Carts
     this.cartsDiv = '.customer-carts-card';
-    this.cartsViewButton = `${this.cartsDiv} a[data-original-title='View'] i`;
+    this.cartsViewButton = `${this.cartsDiv} tr:nth-child(%ID) a[data-original-title='View'] i`;
     // Viewed products
     this.viewedProductsDiv = '.customer-viewed-products-card';
     // Private note
@@ -35,6 +36,7 @@ module.exports = class ViewCustomer extends BOBasePage {
     this.groupsDiv = '.customer-groups-card';
     // Addresses
     this.addressesDiv = '.customer-addresses-card';
+    this.addressesEditButton = `${this.addressesDiv} tr:nth-child(%ID) a[data-original-title='Edit'] i`;
   }
 
   /*
@@ -151,18 +153,26 @@ module.exports = class ViewCustomer extends BOBasePage {
   }
 
   /**
-   * Go to view order page
+   * Go to view/edit page
+   * @param page
+   * @param id
    * @returns {Promise<void>}
    */
-  async goToViewOrderPage() {
-    await this.clickAndWaitForNavigation(this.ordersViewButton);
-  }
-
-  /**
-   * Go to view cart page
-   * @returns {Promise<void>}
-   */
-  async goToViewCartPage() {
-    await this.clickAndWaitForNavigation(this.cartsViewButton);
+  async goToPage(cardTitle, id = 1) {
+    let selector;
+    switch (cardTitle) {
+      case 'Orders':
+        selector = this.ordersViewButton;
+        break;
+      case 'Carts':
+        selector = this.cartsViewButton;
+        break;
+      case 'Addresses':
+        selector = this.addressesEditButton;
+        break;
+      default:
+        throw new Error(`${cardTitle} was not found`);
+    }
+    return this.clickAndWaitForNavigation(selector.replace('%ID', id));
   }
 };
