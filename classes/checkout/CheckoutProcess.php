@@ -100,26 +100,23 @@ class CheckoutProcessCore implements RenderableInterface
         return $this;
     }
 
-    public function removeStepByIdentifier(string $stepIdentifier): self
-    {
-        foreach ($this->steps as $index => $step) {
-            if ($step->getIdentifier() === $stepIdentifier) {
-                unset($this->steps[$index]);
-            }
-        }
-
-        /* ordered indexes is required for the rendering */
-        $this->steps = array_values($this->steps);
-
-        return $this;
-    }
-
     /**
      * @return CheckoutStepInterface[]
      */
     public function getSteps()
     {
         return $this->steps;
+    }
+
+    /**
+     * @param CheckoutStepInterface[] $steps
+     */
+    public function setSteps(array $steps): self
+    {
+        /* ordered indexes is required for the rendering */
+        $this->steps = array_values($this->steps);
+
+        return $this;
     }
 
     /**

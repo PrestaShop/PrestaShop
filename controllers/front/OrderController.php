@@ -121,19 +121,31 @@ class OrderControllerCore extends FrontController
             $session
         );
 
-        $this->checkoutProcess
-            ->addStep(new CheckoutPersonalInformationStep(
-                $this->context,
-                $translator,
-                $this->makeLoginForm(),
-                $this->makeCustomerForm()
-            ))
-            ->addStep(new CheckoutAddressesStep(
-                $this->context,
-                $translator,
-                $this->makeAddressForm()
-            ));
+        $checkoutSteps = [];
 
+        /*
+         * Added step to login or create a new account.
+         */
+        $checkoutSteps[] = new CheckoutPersonalInformationStep(
+            $this->context,
+            $translator,
+            $this->makeLoginForm(),
+            $this->makeCustomerForm()
+        );
+
+        /*
+         * Added step to set delivery and billing addresses.
+         */
+        $checkoutSteps[] = new CheckoutAddressesStep(
+            $this->context,
+            $translator,
+            $this->makeAddressForm()
+        );
+
+        /*
+         * Added step to set delivery method/address,
+         * happens if at least 1 product needs to be physically delivered.
+         */
         if (!$this->context->cart->isVirtualCart()) {
             $checkoutDeliveryStep = new CheckoutDeliveryStep(
                 $this->context,
@@ -154,21 +166,28 @@ class OrderControllerCore extends FrontController
                     )
                 );
 
-            $this->checkoutProcess->addStep($checkoutDeliveryStep);
+            $checkoutSteps[] = $checkoutDeliveryStep;
         }
 
-        $this->checkoutProcess
-            ->addStep(new CheckoutPaymentStep(
+        /*
+         * Added step to set payment method.
+         */
+        $checkoutSteps[] = new CheckoutPaymentStep(
+            $this->context,
+            $translator,
+            new PaymentOptionsFinder(),
+            new ConditionsToApproveFinder(
                 $this->context,
-                $translator,
-                new PaymentOptionsFinder(),
-                new ConditionsToApproveFinder(
-                    $this->context,
-                    $translator
-                )
-            ));
+                $translator
+            )
+        );
 
-        Hook::exec('actionCheckoutProcess', ['checkoutProcess' => $this->checkoutProcess]);
+        Hook::exec('actionCheckoutProcess', [
+            'checkoutProcess' => $this->checkoutProcess,
+            'steps' => &$checkoutSteps,
+        ]);
+
+        $this->checkoutProcess->setSteps($checkoutSteps);
     }
 
     /**
