@@ -203,6 +203,7 @@ class StateCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      * @param bool $active true if the state must be active
+     * @param string $orderBy order by field
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -217,7 +218,7 @@ class StateCore extends ObjectModel
         $sql->from('state', 's');
         $sql->where('s.id_country = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : ''));
 
-        if (array_key_exists($orderBy, self::$definition['fields'])) {
+        if (array_key_exists($orderBy, static::$definition['fields'])) {
             $sql->orderBy($orderBy);
         }
 
