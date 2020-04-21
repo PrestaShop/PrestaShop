@@ -1,26 +1,21 @@
 <template>
   <div>
     <div
-      id="productImageDropzone"
       style="width: 800px; height: 300px; border: 1px solid black"
+      @dragover.prevent
+      @drop.prevent="uploadImages"
     >
-      <drag-file-upload
-        dropzone-selector="#productImageDropzone"
-        @file-dropped="uploadImages"
-      />
     </div>
   </div>
 </template>
 
 <script>
   import Router from '@components/router.js';
-  import DragFileUpload from '../../components/DragFileUpload';
 
   const router = new Router();
 
   export default {
     name: 'ProductImageUpload',
-    components: {DragFileUpload},
     methods: {
       async uploadImages(fileList) {
         const formData = new FormData();
