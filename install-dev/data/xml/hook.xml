@@ -2758,9 +2758,9 @@
       <title>Category footer</title>
       <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
-    <hook id="actionCheckoutProcess">
-      <name>actionCheckoutProcess</name>
-      <title>Alter the Checkout Process</title>
+    <hook id="actionBootstrapCheckoutProcess">
+      <name>actionBootstrapCheckoutProcess</name>
+      <title>Alter the Checkout Process at Bootstrap</title>
       <description>This hook allows the developers to add/remove steps in the Checkout Process in the Front Office</description>
     </hook>
   </entities>

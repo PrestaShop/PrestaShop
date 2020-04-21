@@ -182,7 +182,7 @@ class OrderControllerCore extends FrontController
             )
         );
 
-        Hook::exec('actionCheckoutProcess', [
+        Hook::exec('actionBootstrapCheckoutProcess', [
             'checkoutProcess' => $this->checkoutProcess,
             'steps' => &$checkoutSteps,
         ]);
