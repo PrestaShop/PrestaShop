@@ -2,19 +2,30 @@
   <div>
     <div>
       <div
-        type="file"
         style="width: 800px; height: 300px; border: 1px solid black"
         @dragover.prevent
         @drop.prevent="onDragUpload"
         @click="triggerFileInput"
-      />
-      <input
-        type="file"
-        multiple
-        id="onclick-img-upload"
-        style="display:none"
-        @change="onClickUpload"
       >
+        <input
+          type="file"
+          multiple
+          id="onclick-img-upload"
+          style="display:none"
+          @change="onClickUpload"
+        >
+        <div>
+          <div
+            v-for="(image, index) in images"
+            :key="index"
+          >
+            <img
+              :src="image.url"
+              :alt="image.url"
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -26,6 +37,14 @@
 
   const productImageUpload = {
     name: 'ProductImageUpload',
+    data() {
+      return {
+        images: [],
+      };
+    },
+    mounted() {
+      this.loadImages();
+    },
     methods: {
       triggerFileInput() {
         const fileInput = document.getElementById('onclick-img-upload');
@@ -35,6 +54,8 @@
         uploadImages(event.currentTarget.files).then((resp) => {
           // @todo success.
           console.log(resp);
+          // @todo: just to make sure component rerenders on update. Use loadImages when api ready.
+          this.images.push({url: 'test-3'});
         });
       },
       onDragUpload(event) {
@@ -42,6 +63,17 @@
           // @todo success.
           console.log(resp);
         });
+      },
+      loadImages() {
+        // @todo use ajax to get real existing images.
+        this.images = [
+          {
+            url: 'test-1',
+          },
+          {
+            url: 'test-2',
+          },
+        ];
       },
     },
   };
