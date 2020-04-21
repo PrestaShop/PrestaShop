@@ -46,7 +46,7 @@ module.exports = class ViewCustomer extends BOBasePage {
   /**
    * Get number of element from title
    * @param cardTitle
-   * @returns {Promise<integer>}
+   * @returns {Promise<string>}
    */
   getNumberOfElementFromTitle(cardTitle) {
     let selector;
@@ -154,7 +154,7 @@ module.exports = class ViewCustomer extends BOBasePage {
 
   /**
    * Go to view/edit page
-   * @param page
+   * @param cardTitle
    * @param id
    * @returns {Promise<void>}
    */
