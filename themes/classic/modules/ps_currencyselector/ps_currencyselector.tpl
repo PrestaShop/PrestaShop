@@ -33,13 +33,13 @@
     <ul class="dropdown-menu hidden-sm-down" aria-labelledby="currency-selector-label">
       {foreach from=$currencies item=currency}
         <li {if $currency.current} class="current" {/if}>
-          <a title="{$currency.name}" rel="nofollow" href="{$currency.url}" class="dropdown-item">{$currency.iso_code} {$currency.sign}</a>
+          <a title="{$currency.name}" rel="nofollow" href="{$currency.url}" class="dropdown-item">{$currency.iso_code}{if $currency.sign !== $currency.iso_code} {$currency.sign}{/if}</a>
         </li>
       {/foreach}
     </ul>
     <select class="link hidden-md-up" aria-labelledby="currency-selector-label">
       {foreach from=$currencies item=currency}
-        <option value="{$currency.url}"{if $currency.current} selected="selected"{/if}>{$currency.iso_code} {$currency.sign}</option>
+        <option value="{$currency.url}"{if $currency.current} selected="selected"{/if}>{$currency.iso_code}{if $currency.sign !== $currency.iso_code} {$currency.sign}{/if}</option>
       {/foreach}
     </select>
   </div>
