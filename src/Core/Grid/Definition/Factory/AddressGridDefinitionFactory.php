@@ -54,6 +54,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'address';
 
     /**
@@ -286,18 +288,7 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_addresses_delete_bulk',
-                        'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Notifications.Warning'),
-                        'modal_options' => new ModalOptions([
-                            'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
-                            'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
-                            'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
-                            'confirm_button_class' => 'btn-danger',
-                        ]),
-                    ])
+                $this->buildBulkDeleteAction('admin_cms_pages_bulk_delete')
             );
     }
 }
