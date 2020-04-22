@@ -26,24 +26,44 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class ImageController extends FrameworkBundleAdminController
+class AddProductImageCommand
 {
-    public function uploadAction(Request $request): JsonResponse
-    {
-        //@todo: call AddProductImage command to create new image object in db.
-        //@todo: then call ProductImageUploader to move the UploadedFile to specific image dir
-        //@todo: check hooks, image deletion from tmp and etc. AdminProductsController::ajaxProcessaddProductImage
-        //@todo: it should be multiple images so do it all in a loop?
+    /**
+     * @var ProductId
+     */
+    private $productId;
 
-        return $this->json([
-            //@todo: test
-            'message' => 'test response'
-        ]);
+    /**
+     * @todo: should i rename it to smth like ..localizedNames?
+     * @var string[]
+     */
+    private $localizedLegends;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedLegends(): array
+    {
+        return $this->localizedLegends;
     }
 }

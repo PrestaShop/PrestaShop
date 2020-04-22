@@ -24,26 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler;
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-
-class ImageController extends FrameworkBundleAdminController
+interface AddProductImageHandlerInterface
 {
-    public function uploadAction(Request $request): JsonResponse
-    {
-        //@todo: call AddProductImage command to create new image object in db.
-        //@todo: then call ProductImageUploader to move the UploadedFile to specific image dir
-        //@todo: check hooks, image deletion from tmp and etc. AdminProductsController::ajaxProcessaddProductImage
-        //@todo: it should be multiple images so do it all in a loop?
-
-        return $this->json([
-            //@todo: test
-            'message' => 'test response'
-        ]);
-    }
+    /**
+     * @param AddProductImageCommand $command
+     *
+     * @return ImageId
+     */
+    public function handle(AddProductImageCommand $command): ImageId;
 }
