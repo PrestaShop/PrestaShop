@@ -124,7 +124,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
 
     it('should check customer personal information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCustomerInfo', baseContext);
-      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextFromCardHeader(1);
+      const cardHeaderText = await this.pageObjects.viewCustomerPage.getPersonalInformationTitle();
       await expect(cardHeaderText).to.contains(createCustomerData.firstName);
       await expect(cardHeaderText).to.contains(createCustomerData.lastName);
       await expect(cardHeaderText).to.contains(createCustomerData.email);
@@ -204,7 +204,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
 
     it('should check customer personal information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCustomerInfo', baseContext);
-      const cardHeaderText = await this.pageObjects.viewCustomerPage.getTextFromCardHeader(1);
+      const cardHeaderText = await this.pageObjects.viewCustomerPage.getPersonalInformationTitle();
       await expect(cardHeaderText).to.contains(editCustomerData.firstName);
       await expect(cardHeaderText).to.contains(editCustomerData.lastName);
       await expect(cardHeaderText).to.contains(editCustomerData.email);
