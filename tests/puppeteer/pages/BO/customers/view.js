@@ -37,6 +37,8 @@ module.exports = class ViewCustomer extends BOBasePage {
     // Addresses
     this.addressesDiv = '.customer-addresses-card';
     this.addressesEditButton = `${this.addressesDiv} tr:nth-child(%ID) a[data-original-title='Edit'] i`;
+    // Purchased products
+    this.purchasedProductsDiv = '.customer-bought-products-card';
   }
 
   /*
@@ -74,6 +76,9 @@ module.exports = class ViewCustomer extends BOBasePage {
         break;
       case 'Groups':
         selector = this.groupsDiv;
+        break;
+      case 'Purchased products':
+        selector = this.purchasedProductsDiv;
         break;
       default:
         throw new Error(`${cardTitle} was not found`);
@@ -126,6 +131,9 @@ module.exports = class ViewCustomer extends BOBasePage {
         break;
       case 'Groups':
         selector = this.groupsDiv;
+        break;
+      case 'Purchased products':
+        selector = this.purchasedProductsDiv;
         break;
       default:
         throw new Error(`${element} was not found`);

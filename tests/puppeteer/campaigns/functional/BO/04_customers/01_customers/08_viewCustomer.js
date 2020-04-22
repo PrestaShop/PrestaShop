@@ -459,6 +459,19 @@ describe('View information about customer', async () => {
       expect(carts).to.contains(Statuses.shipped.status);
       expect(carts).to.contains(Products.demo_1.finalPrice);
     });
+
+    it('should check purchased products number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'CheckPurchasedProductsNumber', baseContext);
+      const cardHeaderText = await this.pageObjects.viewCustomerPage.getNumberOfElementFromTitle('Purchased products');
+      await expect(cardHeaderText).to.contains(1);
+    });
+
+    it('should check purchased products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPurchasedProduct', baseContext);
+      const purchasedProduct = await this.pageObjects.viewCustomerPage.getTextFromElement('Purchased products');
+      expect(purchasedProduct).to.contains(todayDate);
+      expect(purchasedProduct).to.contains(Products.demo_1.name);
+    });
   });
   // 7 : Edit address then check customer information page
   describe('Edit address then view customer', async () => {
