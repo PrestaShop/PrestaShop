@@ -66,7 +66,7 @@ export default class FormSubmitButton {
       if ($btn.data('method')) {
         const btnMethod = $btn.data('method');
         const isGetOrPostMethod = ['GET', 'POST'].includes(btnMethod);
-        method = isGetOrPostMethod ? method : 'POST';
+        method = isGetOrPostMethod ? btnMethod : 'POST';
 
         if (!isGetOrPostMethod) {
           addInput = $('<input>', {
