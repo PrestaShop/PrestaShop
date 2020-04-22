@@ -36,6 +36,8 @@ const $ = window.$;
  *
  * <button class="js-form-submit-btn"
  *         data-form-submit-url="/my-custom-url"          // (required) URL to which form will be submitted
+ *         data-method="GET|POST|DELETE|PATCH"            // (optional) specify the verb to use for the request.
+ *                                                        // POST is taken by default if not value is set
  *         data-form-csrf-token="my-generated-csrf-token" // (optional) to increase security
  *         data-form-confirm-message="Are you sure?"      // (optional) to confirm action before submit
  *         type="button"                                  // make sure its simple button

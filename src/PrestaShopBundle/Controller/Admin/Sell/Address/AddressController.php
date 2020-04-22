@@ -132,7 +132,7 @@ class AddressController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction(int $addressId): RedirectResponse
+    public function deleteAction(Request $request, int $addressId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteAddressCommand($addressId));
@@ -142,6 +142,11 @@ class AddressController extends FrameworkBundleAdminController
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        $redirectUrl = $request->query->get('redirectUrl');
+        if ($redirectUrl) {
+            return $this->redirect($redirectUrl);
         }
 
         return $this->redirectToRoute('admin_addresses_index');
