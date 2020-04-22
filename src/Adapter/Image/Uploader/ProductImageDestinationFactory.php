@@ -24,49 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
+use Image;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use Supplier;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 
-/**
- * Uploads supplier logo image
- */
-final class SupplierImageUploader extends AbstractImageUploader implements ImageUploaderInterface
+//@todo does it need interface?
+class ProductImageDestinationFactory
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function upload($supplierId, UploadedFile $image, ?ImageId $imageId = null)
+    public function createDestinationPath(ImageId $imageId): string
     {
-        $this->checkImageIsAllowedForUpload($image);
-        $tempImageName = $this->createTemporaryImage($image);
-        $this->deleteOldImage($supplierId);
+        $image = new Image($imageId);
 
-        $destination = _PS_SUPP_IMG_DIR_ . $supplierId . '.jpg';
-        $this->uploadFromTemp($tempImageName, $destination);
-
-        if (file_exists($destination)) {
-            $this->generateDifferentSize($supplierId, _PS_SUPP_IMG_DIR_, 'suppliers');
+        if ($path = $image->getPathForCreation()) {
+            return $path;
         }
-    }
 
-    /**
-     * Deletes old image
-     *
-     * @param $id
-     */
-    private function deleteOldImage($id)
-    {
-        $supplier = new Supplier($id);
-        $supplier->deleteImage();
-
-        $currentLogo = _PS_TMP_IMG_DIR_ . 'supplier_mini_' . $id . '.jpg';
-
-        if (file_exists($currentLogo)) {
-            unlink($currentLogo);
-        }
+        throw new ImageUploadException(sprintf(
+            'Error occurred when trying to create folder for product #%s image',
+            $image->id_product
+        ));
     }
 }

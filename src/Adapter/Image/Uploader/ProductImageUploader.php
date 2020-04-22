@@ -24,49 +24,51 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
+use Image;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use Supplier;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * Uploads supplier logo image
- */
-final class SupplierImageUploader extends AbstractImageUploader implements ImageUploaderInterface
+final class ProductImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function upload($supplierId, UploadedFile $image, ?ImageId $imageId = null)
+    public function upload($entityId, UploadedFile $uploadedImage, ?ImageId $imageId = null)
     {
-        $this->checkImageIsAllowedForUpload($image);
-        $tempImageName = $this->createTemporaryImage($image);
-        $this->deleteOldImage($supplierId);
-
-        $destination = _PS_SUPP_IMG_DIR_ . $supplierId . '.jpg';
-        $this->uploadFromTemp($tempImageName, $destination);
-
-        if (file_exists($destination)) {
-            $this->generateDifferentSize($supplierId, _PS_SUPP_IMG_DIR_, 'suppliers');
+        if (!$imageId) {
+            throw new ImageUploadException('Image id is required to create path for product image');
         }
+
+        $this->checkImageIsAllowedForUpload($uploadedImage);
+        $this->generateDifferentSize($entityId, $this->createDestinationPath($imageId), 'products');
+        //@todo:check unlink, hook and shop associations.
+        //      AdminProductsController:2881-2919
     }
 
     /**
-     * Deletes old image
+     * @param ImageId $imageId
      *
-     * @param $id
+     * @return string
+     *
+     * @throws ImageUploadException
      */
-    private function deleteOldImage($id)
+    private function createDestinationPath(ImageId $imageId): string
     {
-        $supplier = new Supplier($id);
-        $supplier->deleteImage();
+        $image = new Image($imageId);
 
-        $currentLogo = _PS_TMP_IMG_DIR_ . 'supplier_mini_' . $id . '.jpg';
-
-        if (file_exists($currentLogo)) {
-            unlink($currentLogo);
+        if ($path = $image->getPathForCreation()) {
+            return $path;
         }
+
+        throw new ImageUploadException(sprintf(
+            'Error occurred when trying to create directory for product #%s image',
+            $image->id_product
+        ));
     }
 }

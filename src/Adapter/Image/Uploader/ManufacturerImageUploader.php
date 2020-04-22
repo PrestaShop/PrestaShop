@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use Configuration;
 use ImageManager;
 use ImageType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
@@ -44,7 +45,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
     /**
      * {@inheritdoc}
      */
-    public function upload($manufacturerId, UploadedFile $image)
+    public function upload($manufacturerId, UploadedFile $image, ?ImageId $imageId = null)
     {
         $this->checkImageIsAllowedForUpload($image);
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');

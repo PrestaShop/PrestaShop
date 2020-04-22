@@ -46,6 +46,14 @@ class ImageId
         $this->value = $value;
     }
 
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->value;
+    }
+
     private function assertGreaterThanZero(int $value): void
     {
         if ($value > 0) {

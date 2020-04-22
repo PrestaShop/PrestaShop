@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Image\Uploader;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -38,6 +39,7 @@ interface ImageUploaderInterface
      *
      * @param int $entityId
      * @param UploadedFile $uploadedImage
+     * @param ImageId|null $imageId provide ImageId if image is identifiable in data storage
      */
-    public function upload($entityId, UploadedFile $uploadedImage);
+    public function upload($entityId, UploadedFile $uploadedImage, ?ImageId $imageId = null);
 }

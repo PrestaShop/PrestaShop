@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use ImageManager;
 use ImageType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -46,7 +47,7 @@ final class CategoryThumbnailImageUploader extends AbstractImageUploader impleme
      * @throws ImageUploadException
      * @throws ImageOptimizationException
      */
-    public function upload($id, UploadedFile $uploadedImage)
+    public function upload($id, UploadedFile $uploadedImage, ?ImageId $imageId = null)
     {
         $imagesTypes = ImageType::getImagesTypes('categories');
         $formattedName = ImageType::getFormattedName('small');

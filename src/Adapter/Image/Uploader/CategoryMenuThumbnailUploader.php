@@ -31,6 +31,7 @@ use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
@@ -59,7 +60,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
      *
      * @throws ImageUploadException
      */
-    public function upload($categoryId, UploadedFile $uploadedImage)
+    public function upload($categoryId, UploadedFile $uploadedImage, ?ImageId $imageId = null)
     {
         //Get total of image already present in directory
         $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);

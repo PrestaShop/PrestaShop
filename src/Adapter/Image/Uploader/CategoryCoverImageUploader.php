@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use Category;
 use ImageManager;
 use ImageType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
@@ -51,7 +52,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader implements 
      * @throws ImageUploadException
      * @throws UploadedImageConstraintException
      */
-    public function upload($id, UploadedFile $uploadedImage)
+    public function upload($id, UploadedFile $uploadedImage, ?ImageId $imageId = null)
     {
         $this->checkImageIsAllowedForUpload($uploadedImage);
         $this->deleteOldImage($id);
