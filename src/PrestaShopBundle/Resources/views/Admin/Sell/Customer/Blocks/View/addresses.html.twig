@@ -92,12 +92,15 @@
                     ></a>
 
                     <div class="dropdown-menu dropdown-menu-right">
-                      <a class="btn tooltip-link dropdown-item"
-                         href="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'deleteaddress': 1, 'back': app.request.uri}) }}"
+                      <button type="button"
+                              class="btn tooltip-link dropdown-item js-form-submit-btn"
+                              data-form-confirm-message="{{ 'Are you sure you want to delete the selected item(s)?'|trans({}, 'Admin.Global') }}"
+                              data-form-submit-url="{{ getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'deleteaddress': 1, 'back': app.request.uri}) }}"
+                              data-method="DELETE"
                       >
                         <i class="material-icons">delete</i>
                         {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                      </a>
+                      </button>
 
                       {{ renderhook('displayAdminCustomersAddressesItemAction', {'id_address': address.addressId}) }}
                     </div>
