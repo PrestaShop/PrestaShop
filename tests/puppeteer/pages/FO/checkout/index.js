@@ -34,10 +34,10 @@ module.exports = class Checkout extends FOBasePage {
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
     // Shipping method step
-    this.deleveryStepSection = '#checkout-delivery-step';
-    this.deliveryOptionLabel = `${this.deleveryStepSection} label[for='delivery_option_%ID']`;
+    this.deliveryStepSection = '#checkout-delivery-step';
+    this.deliveryOptionLabel = `${this.deliveryStepSection} label[for='delivery_option_%ID']`;
     this.deliveryMessage = '#delivery_message';
-    this.deleveryStepContinueButton = `${this.deleveryStepSection} button[name='confirmDeliveryOption']`;
+    this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
     this.giftCheckbox = '#input_gift';
     this.recycableGiftCheckbox = '#input_recyclable';
@@ -92,8 +92,8 @@ module.exports = class Checkout extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async goToPaymentStep() {
-    await this.clickAndWaitForNavigation(this.deleveryStepContinueButton);
-    return this.isStepCompleted(this.deleveryStepSection);
+    await this.clickAndWaitForNavigation(this.deliveryStepContinueButton);
+    return this.isStepCompleted(this.deliveryStepSection);
   }
 
   /**
