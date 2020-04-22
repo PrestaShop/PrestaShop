@@ -134,7 +134,7 @@ module.exports = class ViewCustomer extends BOBasePage {
   }
 
   /**
-   * Se private note
+   * Set private note
    * @param note
    * @returns {Promise<string>}
    */
