@@ -19,7 +19,7 @@ module.exports = {
    * @param fileExtension
    * @return boolean, true if exist, false if not
    */
-  async doesdoesFileExist(fileName, timeDelay = 5000, isPartialName = false, fileExtension = '') {
+  async doesFileExist(fileName, timeDelay = 5000, isPartialName = false, fileExtension = '') {
     let found = false;
     for (let i = 0; i <= timeDelay && !found; i += 100) {
       await (new Promise(resolve => setTimeout(resolve, 10)));
