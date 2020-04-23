@@ -218,7 +218,7 @@ class ModuleDataProvider
             return false;
         }
 
-        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::ONLY_PHP7);
 
         try {
             $parser->parse(file_get_contents($file_path));

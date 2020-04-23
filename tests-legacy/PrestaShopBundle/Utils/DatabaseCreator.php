@@ -26,6 +26,7 @@
 
 namespace LegacyTests\PrestaShopBundle\Utils;
 
+use Context;
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
@@ -45,6 +46,7 @@ class DatabaseCreator
         require_once __DIR__ . '/../../../install-dev/init.php';
 
         $install = new Install();
+        $install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
         if (!$install->installDatabase(true)) {
