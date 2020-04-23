@@ -19,7 +19,8 @@ module.exports = class Email extends BOBasePage {
     this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
     // Table rows and columns
     this.tableBody = `${this.emailsListForm} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableRows = `${this.tableBody} tr`;
+    this.tableRow = `${this.tableRows}:nth-child(%ROW)`;
     this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
     this.deleteRowLink = `${this.tableRow} td.column-actions a[href*='delete']`;
     // Bulk Actions
@@ -48,11 +49,19 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
+   * Get total of email created
+   * @return {Promise<int>}
+   */
+  async getTotalElementInGrid() {
+    return this.getNumberFromText(this.emailGridTitle);
+  }
+
+  /**
+   * Get number of elements in grid (displayed in page)
    * @return {Promise<integer>}
    */
   async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.emailGridTitle);
+    return (await this.page.$$(this.tableRows)).length;
   }
 
   /**
