@@ -28,7 +28,7 @@ const init = async function () {
   };
 };
 
-describe('Sort taxes', async () => {
+describe('Export languages in translations page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

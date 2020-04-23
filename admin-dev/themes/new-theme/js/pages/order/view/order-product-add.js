@@ -48,6 +48,7 @@ export default class OrderProductAdd {
     this.totalPriceText = $(OrderViewPageMap.productAddTotalPriceText);
     this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
     this.freeShippingSelect = $(OrderViewPageMap.productAddFreeShippingSelect);
+    this.productAddMenuBtn = $(OrderViewPageMap.productAddBtn);
     this.available = null;
     this.setupListener();
     this.product = {};

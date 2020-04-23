@@ -55,6 +55,8 @@ export default class OrderInvoicesRefresher {
           $paymentInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
           $productEditInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
         });
+
+        document.querySelector(OrderViewPageMap.productAddInvoiceSelect).selectedIndex = 0;
       });
   }
 }
