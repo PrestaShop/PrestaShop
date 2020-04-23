@@ -533,9 +533,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function mapStep2FormData(Product $product)
     {
         // ecotax is stored with tax included but form uses the tax excluded value
+        // using a precision of 6 digits as `AdminProductsController::_removeTaxFromEcotax()`
+        // which does the opposite uses 6 digits too
         $ecotax = $this->tools->round(
             $product->ecotax * (1 + $this->taxRuleDataProvider->getProductEcotaxRate() / 100),
-            2
+            6
         );
 
         return [
