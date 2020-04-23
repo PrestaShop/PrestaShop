@@ -37,6 +37,11 @@
 
   const productImageUpload = {
     name: 'ProductImageUpload',
+    props: {
+      productId: {
+        Type: Number,
+      },
+    },
     data() {
       return {
         images: [],
@@ -51,7 +56,7 @@
         fileInput.click();
       },
       onClickUpload(event) {
-        uploadImages(event.currentTarget.files).then((resp) => {
+        uploadImages(this.productId, event.currentTarget.files).then((resp) => {
           // @todo success.
           console.log(resp);
           // @todo: just to make sure component rerenders on update. Use loadImages when api ready.
@@ -59,7 +64,7 @@
         });
       },
       onDragUpload(event) {
-        uploadImages(event.dataTransfer.files).then((resp) => {
+        uploadImages(this.productId, event.dataTransfer.files).then((resp) => {
           // @todo success.
           console.log(resp);
         });
@@ -78,13 +83,13 @@
     },
   };
 
-  async function uploadImages(fileList) {
-    return fetch(router.generate('admin_products_v2_images', {
-      productId: 1//@todo: where do i store product id?
-    }), {
+  async function uploadImages(productId, fileList) {
+    return fetch(router.generate('admin_products_v2_images', {productId}), {
       method: 'POST',
       body: formatBody(fileList),
-    }).then((resp) => resp.json());
+    }).then((resp) => {
+      console.log(resp);
+    });
   }
 
   function formatBody(fileList) {

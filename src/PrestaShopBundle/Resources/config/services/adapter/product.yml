@@ -65,3 +65,9 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled
+
+    prestashop.adapter.product.image.command_handler.add_product_image_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\AddProductImageHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
