@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
-use Configuration;
+use ErrorException;
 use Hook;
 use Image;
 use ImageManager;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -39,11 +41,41 @@ use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationExcepti
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
-use Shop;
+use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class ProductImageUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
+    /**
+     * @var array
+     */
+    private $contextShopIdsList;
+
+    /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
+     * @var bool
+     */
+    private $isLegacyImageMode;
+
+    /**
+     * @param array $contextShopIdsList
+     * @param int $contextShopId
+     * @param bool $isLegacyImageMode
+     */
+    public function __construct(
+        array $contextShopIdsList,
+        int $contextShopId,
+        bool $isLegacyImageMode
+    ) {
+        $this->contextShopIdsList = $contextShopIdsList;
+        $this->contextShopId = $contextShopId;
+        $this->isLegacyImageMode = $isLegacyImageMode;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -66,18 +98,21 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
             'products'
         );
 
-        unlink($temporaryImageName);
         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $productId]);
         $this->updateCover($image);
+        $image->associateTo($this->contextShopIdsList);
 
-        //@todo: inject shops
-        $shops = Shop::getContextListShopID();
-        $image->associateTo($shops);
+        try {
+            //@todo: this line was originally executed before the hook 'actionWatermark'. does it matter? AdminProductsController::2881
+            unlink($temporaryImageName);
 
-        //@todo: do not suppress?
-        @unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $productId . '.jpg');
-        //@todo: inject context shop id
-        @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $productId . '_' . $this->context->shop->id . '.jpg');
+            unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $productId . '.jpg');
+            unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $productId . '_' . $this->contextShopId . '.jpg');
+        } catch (ErrorException $e) {
+            //@todo in controller when catching this exception use a warning instead of error as in AttachmentController ?
+            throw new CannotUnlinkImageException($e->getMessage());
+        }
+
     }
 
     /**
@@ -130,16 +165,25 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
     }
 
     /**
-     * @param Image $image
+     * @param Image $image\
+     * @todo: check if this is really necessary
      */
     private function updateCover(Image $image): void
     {
-        if (!$image->update()) {
-            throw new ImageUpdateException(sprintf(
-                'Error occurred when updating image #%s cover',
-                $image->id
-            ));
+        try {
+            if (!$image->update()) {
+                throw new ImageUpdateException(sprintf(
+                    'Error occurred when updating image #%s cover',
+                    $image->id
+                ));
+            }
+        } catch (PrestaShopException $e) {
+            throw new ImageException(sprintf('Error occurred when updating image #%s cover', $image->id),
+                0,
+                $e
+            );
         }
+
     }
 
     /**
@@ -171,7 +215,7 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
      */
     private function createDestinationDirectory(Image $image): void
     {
-        if (!Configuration::get('PS_LEGACY_IMAGES') || $image->createImgFolder()) {
+        if (!$this->isLegacyImageMode || $image->createImgFolder()) {
             return;
         }
 
@@ -189,8 +233,7 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
      */
     private function getDestinationPath(Image $image, bool $withExtension): string
     {
-        //@todo: inject configuration
-        if (Configuration::get('PS_LEGACY_IMAGES')) {
+        if ($this->isLegacyImageMode) {
             $path = $image->id_product . '-' . $image->id;
         } else {
             $path = $image->getImgPath();
