@@ -29,6 +29,9 @@ module.exports = class Addresses extends BOBasePage {
     this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
+    // Modal Dialog
+    this.deleteAddressModal = '#address_grid_confirm_modal.show';
+    this.deleteCustomerModalDeleteButton = `${this.deleteAddressModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.addressesListForm} thead`;
     this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
@@ -158,7 +161,6 @@ module.exports = class Addresses extends BOBasePage {
    * @return {Promise<string>}
    */
   async deleteAddressesBulkActions() {
-    this.dialogListener();
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
@@ -169,8 +171,12 @@ module.exports = class Addresses extends BOBasePage {
       this.page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
-    // Click on delete
-    await this.page.click(this.bulkActionsDeleteButton);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(this.deleteAddressModal),
+    ]);
+    await this.page.click(this.deleteCustomerModalDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
