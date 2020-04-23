@@ -286,7 +286,7 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_cms_pages_bulk_delete')
+                $this->buildBulkDeleteAction('admin_addresses_delete_bulk')
             );
     }
 }
