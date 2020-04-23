@@ -27,32 +27,21 @@
 namespace LegacyTests\Unit\Classes;
 
 use LegacyTests\TestCase\UnitTestCase;
-use Alias;
+use ObjectModel;
 
 class ObjectModelTest extends UnitTestCase
 {
+    /**
+     * @var ObjectModel
+     */
+    private $dummyObjectModel;
+
     /**
      * {@inheritdoc}
      */
     protected function setUp()
     {
-        # Old retro compatible way
-        Alias::$definition['fields']['fullname'] = [
-        'type' => Alias::TYPE_STRING,
-        'validate' => 'isString'
-        ];
-
-        # What should be documented post 1.7.8
-        Alias::$definition['fields']['whatever'] = [
-            'type' => Alias::TYPE_INT,
-            'validate' => 'Validate::isInt'
-        ];
-
-        # What is also possible post 1.7.8
-        Alias::$definition['fields']['gender'] = [
-            'type' => Alias::TYPE_STRING,
-            'validate' => 'LegacyTests\Unit\Classes\CustomValidator::isValidGender',
-        ];
+        $this->dummyObjectModel = $this->getDummyObject();
     }
 
     /**
@@ -60,20 +49,35 @@ class ObjectModelTest extends UnitTestCase
      */
     public function teardown()
     {
-        unset(
-            Alias::$definition['fields']['fullname'],
-            Alias::$definition['fields']['whatever'],
-            Alias::$definition['fields']['gender']
-        );
+        $this->dummyObjectModel = null;
     }
 
     public function testValidateField()
     {
-        $alias = new Alias();
+        self::assertTrue($this->dummyObjectModel->validateField('fullname', 'Mickaël Andrieu'));
+        self::assertNotTrue($this->dummyObjectModel->validateField('whatever', 'not a number'));
+        self::assertTrue($this->dummyObjectModel->validateField('gender', 'MALE'));
+    }
 
-        self::assertTrue($alias->validateField('fullname', 'Mickaël Andrieu'));
-        self::assertNotTrue($alias->validateField('whatever', 'not a number'));
-        self::assertTrue($alias->validateField('gender', 'MALE'));
+    private function getDummyObject(): ObjectModel
+    {
+        /**
+         * We (sadly) require to have a real table behind for hydratation.
+         */
+        return new class() extends ObjectModel {
+            public static $definition = [
+                'table' => 'product',
+                'primary' => 'id_product',
+                'fields' => [
+                    'fullname' => ['type' => ObjectModel::TYPE_STRING, 'validate' => 'isString'],
+                    'whatever' => ['type' => ObjectModel::TYPE_INT, 'validate' => 'Validate::isInt'],
+                    'gender' => [
+                        'type' => ObjectModel::TYPE_STRING,
+                        'validate' => 'LegacyTests\Unit\Classes\CustomValidator::isValidGender'
+                    ],
+                ],
+            ];
+        };
     }
 }
 
