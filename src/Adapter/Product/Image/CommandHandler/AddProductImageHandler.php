@@ -72,7 +72,7 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
                 throw new ImageException('Failed to add new image');
             }
         } catch (PrestaShopException $e) {
-            throw new ImageException('Error occured when trying to add new image', 0, $e);
+            throw new ImageException('Error occurred when trying to add new image', 0, $e);
         }
 
         return new ImageId((int) $image->id);
