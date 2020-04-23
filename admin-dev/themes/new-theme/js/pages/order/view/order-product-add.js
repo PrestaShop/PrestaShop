@@ -74,12 +74,13 @@ export default class OrderProductAdd {
     });
     this.quantityInput.on('change keyup', (event) => {
       if (this.available !== null) {
-        const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
+        const quantity = Number(event.target.value);
         const available = this.available - quantity;
         const availableOutOfStock = this.availableText.data('availableOutOfStock');
         this.availableText.text(available);
         this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
-        this.productAddActionBtn.prop('disabled', !availableOutOfStock && available < 0);
+        const disableAddActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock) ? true : false;
+        this.productAddActionBtn.prop('disabled', disableAddActionBtn);
         this.invoiceSelect.prop('disabled', !availableOutOfStock && available < 0);
 
         const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
