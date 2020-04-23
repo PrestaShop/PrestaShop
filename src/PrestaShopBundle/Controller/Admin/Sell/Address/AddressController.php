@@ -144,12 +144,9 @@ class AddressController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        $redirectUrl = $request->query->get('redirectUrl');
-        if ($redirectUrl) {
-            return $this->redirect($redirectUrl);
-        }
-
-        return $this->redirectToRoute('admin_addresses_index');
+        return $request->query->has('redirectUrl') ?
+            $this->redirect($request->query->get('redirectUrl')) :
+            $this->redirectToRoute('admin_addresses_index');
     }
 
     /**

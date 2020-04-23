@@ -94,7 +94,7 @@
                     <div class="dropdown-menu dropdown-menu-right">
                       <button type="button"
                               class="btn tooltip-link dropdown-item js-form-submit-btn"
-                              data-form-confirm-message="{{ 'Are you sure you want to delete the selected item(s)?'|trans({}, 'Admin.Global') }}"
+                              data-form-confirm-message="{{ 'Delete selected item?'|trans({}, 'Admin.Notifications.Warning') }}"
                               data-form-submit-url="{{ path('admin_addresses_delete', {'addressId': address.addressId, 'redirectUrl': app.request.uri }) }}"
                               data-method="DELETE"
                       >
