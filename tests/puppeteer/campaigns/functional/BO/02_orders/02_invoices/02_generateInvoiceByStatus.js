@@ -120,7 +120,7 @@ describe('Generate PDF file by status', async () => {
       await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.paymentAccepted.id);
       await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.shipped.id);
       await this.pageObjects.invoicesPage.generatePDFByStatus();
-      const exist = await files.checkFileExistence(Invoices.moreThanAnInvoice.fileName);
+      const exist = await files.fileExist(Invoices.moreThanAnInvoice.fileName);
       await expect(exist).to.be.true;
     });
   });

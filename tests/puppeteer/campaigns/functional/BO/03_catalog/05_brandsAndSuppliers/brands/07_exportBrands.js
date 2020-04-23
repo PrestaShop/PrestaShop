@@ -68,7 +68,7 @@ describe('Export brands', async () => {
   it('should export brands to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportBrands', baseContext);
     await this.pageObjects.brandsPage.exportBrandsDataToCsv();
-    const fileExist = await files.checkFileExistence('manufacturer_', 5000, true, 'csv');
+    const fileExist = await files.fileExist('manufacturer_', 5000, true, 'csv');
     await expect(fileExist, 'Export of data has failed').to.be.true;
   });
 
@@ -78,7 +78,7 @@ describe('Export brands', async () => {
     fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'manufacturer_', '.csv');
     for (let row = 1; row <= numberOfCategories; row++) {
       const brandInCsvFormat = await this.pageObjects.brandsPage.getBrandInCsvFormat(row);
-      const textExist = await files.checkTextInFile(fileName, brandInCsvFormat, true, true);
+      const textExist = await files.isTextInFile(fileName, brandInCsvFormat, true, true);
       await expect(textExist, `${brandInCsvFormat} was not found in the file`).to.be.true;
     }
   });

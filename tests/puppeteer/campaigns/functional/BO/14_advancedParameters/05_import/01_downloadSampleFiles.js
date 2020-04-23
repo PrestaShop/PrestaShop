@@ -137,13 +137,13 @@ describe('Download import sample csv files', async () => {
       it(`should download ${sampleFile.args.type} sample file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}DownloadFile`, baseContext);
         await this.pageObjects.importPage.downloadSampleFile(sampleFile.args.type);
-        const fileExist = await files.checkFileExistence(`${sampleFile.args.type}.csv`);
+        const fileExist = await files.fileExist(`${sampleFile.args.type}.csv`);
         await expect(fileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
       });
 
       it(`should check ${sampleFile.args.type} sample text file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}checkTextFile`, baseContext);
-        const textExist = await files.checkTextInFile(`${sampleFile.args.type}.csv`, sampleFile.args.textToCheck);
+        const textExist = await files.isTextInFile(`${sampleFile.args.type}.csv`, sampleFile.args.textToCheck);
         await expect(textExist, `Text was not found in ${sampleFile.args.type} sample file`).to.be.true;
       });
 

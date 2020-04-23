@@ -91,7 +91,7 @@ describe('Generate db backup and download it', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'DownloadDbBackup', baseContext);
       dbBackupFilename = await this.pageObjects.dbBackupPage.getBackupFilename(1);
       await this.pageObjects.dbBackupPage.downloadDbBackup();
-      const found = await files.checkFileExistence(dbBackupFilename);
+      const found = await files.fileExist(dbBackupFilename);
       await expect(found, 'Download backup file failed').to.be.true;
     });
   });

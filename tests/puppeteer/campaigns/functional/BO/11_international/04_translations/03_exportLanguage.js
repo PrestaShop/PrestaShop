@@ -76,7 +76,7 @@ describe('Sort taxes', async () => {
         baseContext,
       );
       await this.pageObjects.translationsPage.exportLanguage(test.args.language.name, test.args.theme);
-      const fileExist = await files.checkFileExistence(test.args.filename);
+      const fileExist = await files.fileExist(test.args.filename);
       await expect(fileExist, `File ${test.args.filename} was not downloaded`).to.be.true;
       await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${test.args.filename}`);
     });

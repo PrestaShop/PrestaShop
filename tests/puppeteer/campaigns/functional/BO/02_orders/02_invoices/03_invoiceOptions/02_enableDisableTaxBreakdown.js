@@ -263,17 +263,17 @@ describe('Enable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceTaxBreakdown', baseContext);
         firstInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
         await this.pageObjects.viewOrderPage.downloadInvoice();
-        const exist = await files.checkFileExistence(`${firstInvoiceFileName}.pdf`);
+        const exist = await files.fileExist(`${firstInvoiceFileName}.pdf`);
         await expect(exist).to.be.true;
       });
 
       it('should check the tax breakdown', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTaxBreakdownInFile', baseContext);
         // Check the existence of the first tax
-        let exist = await files.checkTextInPDF(`${firstInvoiceFileName}.pdf`, '10.000 %');
+        let exist = await files.isTextInPDF(`${firstInvoiceFileName}.pdf`, '10.000 %');
         await expect(exist).to.be.true;
         // Check the existence of the second tax
-        exist = await files.checkTextInPDF(`${firstInvoiceFileName}.pdf`, '20.000 %');
+        exist = await files.isTextInPDF(`${firstInvoiceFileName}.pdf`, '20.000 %');
         await expect(exist).to.be.true;
         // Delete the invoice file
         await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
@@ -323,18 +323,18 @@ describe('Enable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceNoTaxBreakdown', baseContext);
         secondInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
         await this.pageObjects.viewOrderPage.downloadInvoice();
-        const exist = await files.checkFileExistence(`${secondInvoiceFileName}.pdf`);
+        const exist = await files.fileExist(`${secondInvoiceFileName}.pdf`);
         await expect(exist).to.be.true;
       });
 
       it('should check that there is no tax breakdown', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkNoTaxBreakdownInFile', baseContext);
-        let exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`, '10.000 %');
+        let exist = await files.isTextInPDF(`${secondInvoiceFileName}.pdf`, '10.000 %');
         await expect(exist).to.be.false;
-        exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`, '20.000 %');
+        exist = await files.isTextInPDF(`${secondInvoiceFileName}.pdf`, '20.000 %');
         // Check that there is only one tax line 30.000 %
         await expect(exist).to.be.false;
-        exist = await files.checkTextInPDF(`${secondInvoiceFileName}.pdf`, '30.000 %');
+        exist = await files.isTextInPDF(`${secondInvoiceFileName}.pdf`, '30.000 %');
         await expect(exist).to.be.true;
       });
     });
