@@ -113,8 +113,10 @@ class CheckoutProcessCore implements RenderableInterface
      */
     public function setSteps(array $steps): self
     {
-        /* ordered indexes is required for the rendering */
-        $this->steps = array_values($steps);
+        $this->steps = [];
+        foreach ($steps as $step) {
+            $this->addStep($step);
+        }
 
         return $this;
     }
