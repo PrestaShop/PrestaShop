@@ -38,17 +38,18 @@ class AddProductImageCommand
     private $productId;
 
     /**
-     * @todo: should i rename it to smth like ..localizedNames?
      * @var string[]
      */
     private $localizedLegends;
 
     /**
      * @param int $productId
+     * @param array $localizedLegends
      */
-    public function __construct(int $productId)
+    public function __construct(int $productId, array $localizedLegends)
     {
         $this->productId = new ProductId($productId);
+        $this->localizedLegends = $localizedLegends;
     }
 
     /**
