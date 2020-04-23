@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
@@ -225,13 +226,13 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     private function findNumberOfDecimals($value): int
     {
         if (!is_string($value)) {
-            throw new \InvalidArgumentException('Expected string');
+            throw new InvalidArgumentException('Expected string');
         }
 
         $numberOfDecimals = 0;
         $explodedValue = explode('.', $value);
 
-        if (count($explodedValue) > 1) {
+        if (isset($explodedValue[1])) {
             $numberOfDecimals = strlen($explodedValue[1]);
         }
 
