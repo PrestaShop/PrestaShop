@@ -79,7 +79,9 @@
   };
 
   async function uploadImages(fileList) {
-    return fetch(router.generate('admin_products_v2_images'), {
+    return fetch(router.generate('admin_products_v2_images', {
+      productId: 1//@todo: where do i store product id?
+    }), {
       method: 'POST',
       body: formatBody(fileList),
     }).then((resp) => resp.json());

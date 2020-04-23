@@ -28,15 +28,20 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ImageController extends FrameworkBundleAdminController
 {
-    public function uploadAction(Request $request): JsonResponse
+    public function uploadAction(int $productId, Request $request): JsonResponse
     {
-        //@todo: call AddProductImage command to create new image object in db.
+        $this->getCommandBus()->handle(new AddProductImageCommand(
+            $productId,
+            //@todo: what goes here?
+            []
+        ));
         //@todo: then call ProductImageUploader to move the UploadedFile to specific image dir
         //@todo: check hooks, image deletion from tmp and etc. AdminProductsController::ajaxProcessaddProductImage
         //@todo: it should be multiple images so do it all in a loop?

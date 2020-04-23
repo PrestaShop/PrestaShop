@@ -1,8 +1,10 @@
 #@todo: think of better approach for product routes
 admin_products_v2_images:
-  path: /images
+  path: /{productId}/images
   methods: POST
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:upload
+  requirements:
+    productId: \d+
   options:
     expose: true
