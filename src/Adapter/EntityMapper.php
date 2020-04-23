@@ -73,6 +73,7 @@ class EntityMapper
             }
 
             if ($object_datas = Db::getInstance()->getRow($sql)) {
+                $objectVars = get_object_vars($entity);
                 if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
                     $sql = 'SELECT *
 							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
@@ -82,7 +83,7 @@ class EntityMapper
                     if ($object_datas_lang = Db::getInstance()->executeS($sql)) {
                         foreach ($object_datas_lang as $row) {
                             foreach ($row as $key => $value) {
-                                if ($key != $entity_defs['primary'] && array_key_exists($key, $entity)) {
+                                if ($key != $entity_defs['primary'] && array_key_exists($key, $objectVars)) {
                                     if (!isset($object_datas[$key]) || !is_array($object_datas[$key])) {
                                         $object_datas[$key] = [];
                                     }
@@ -93,10 +94,11 @@ class EntityMapper
                         }
                     }
                 }
+
                 $entity->id = (int) $id;
                 foreach ($object_datas as $key => $value) {
                     if (array_key_exists($key, $entity_defs['fields'])
-                        || array_key_exists($key, $entity)) {
+                        || array_key_exists($key, $objectVars)) {
                         $entity->{$key} = $value;
                     } else {
                         unset($object_datas[$key]);

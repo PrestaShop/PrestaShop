@@ -984,6 +984,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 				LEFT JOIN `' . _DB_PREFIX_ . 'lang_shop` ls ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
+        if (!is_array($result)) {
+            // executeS method can returns false
+            return;
+        }
 
         foreach ($result as $row) {
             $idLang = (int) $row['id_lang'];
