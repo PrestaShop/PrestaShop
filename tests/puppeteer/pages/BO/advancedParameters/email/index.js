@@ -57,7 +57,7 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
-   * Get number of elements in grid (displayed in page)
+   * Get number of elements in grid (displayed in one page)
    * @return {Promise<integer>}
    */
   async getNumberOfElementInGrid() {
