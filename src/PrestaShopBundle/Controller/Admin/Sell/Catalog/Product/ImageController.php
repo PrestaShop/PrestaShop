@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,18 +38,28 @@ class ImageController extends FrameworkBundleAdminController
 {
     public function uploadAction(int $productId, Request $request): JsonResponse
     {
-        $this->getCommandBus()->handle(new AddProductImageCommand(
+        //@todo: handle multiple files
+        $imageFile = $request->files->all()[0];
+        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
             $productId,
             //@todo: what goes here?
             []
         ));
-        //@todo: then call ProductImageUploader to move the UploadedFile to specific image dir
-        //@todo: check hooks, image deletion from tmp and etc. AdminProductsController::ajaxProcessaddProductImage
+
+        $this->getProductImageUploader()->upload($productId, $imageFile, $imageId);
         //@todo: it should be multiple images so do it all in a loop?
 
         return $this->json([
             //@todo: test
             'message' => 'test response'
         ]);
+    }
+
+    /**
+     * @return ImageUploaderInterface
+     */
+    private function getProductImageUploader(): ImageUploaderInterface
+    {
+        return $this->get('prestashop.adapter.image.uploader.product_image_uploader');
     }
 }

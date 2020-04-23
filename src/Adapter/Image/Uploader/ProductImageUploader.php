@@ -85,16 +85,18 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
             throw new ImageUploadException('Image id is required to create path for product image');
         }
 
+        $this->checkImageIsAllowedForUpload($uploadedImage);
+
         $temporaryImageName = $this->moveToTemporaryDir($uploadedImage);
         $image = $this->loadImageEntity($imageId);
 
         $this->checkMemory($temporaryImageName);
         $this->createDestinationDirectory($image);
         $this->copyToDestination($temporaryImageName, $image);
-        $this->checkImageIsAllowedForUpload($uploadedImage);
+        //@todo: abstract method seems to not fit for product. check AdminProductsController:2865
         $this->generateDifferentSize(
             $productId,
-            $temporaryImageName-$this->getDestinationPath($image, false),
+            _PS_PROD_IMG_DIR_,
             'products'
         );
 
@@ -215,7 +217,7 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
      */
     private function createDestinationDirectory(Image $image): void
     {
-        if (!$this->isLegacyImageMode || $image->createImgFolder()) {
+        if ($this->isLegacyImageMode || $image->createImgFolder()) {
             return;
         }
 
@@ -239,6 +241,7 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
             $path = $image->getImgPath();
         }
 
+        //@todo: it seems that jpg is hardcoded. AdminProductsController:2836
         if ($withExtension) {
             $path .= sprintf('.%s', $image->image_format);
         }

@@ -95,8 +95,8 @@
   function formatBody(fileList) {
     const formData = new FormData();
 
-    Array.from(fileList).forEach((file) => {
-      formData.append(`${file.name}${file.lastModified}`, file);
+    Array.from(fileList).forEach((file, index) => {
+      formData.append(`${index}`, file);
     });
 
     return formData;
