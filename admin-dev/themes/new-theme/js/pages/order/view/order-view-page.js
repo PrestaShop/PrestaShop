@@ -102,6 +102,7 @@ export default class OrderViewPage {
       this.orderDocumentsRefresher.refresh(event.orderId);
       this.listenForProductDelete();
       this.listenForProductEdit();
+      this.resetToolTips();
 
       const editRowsLeft = $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).length;
       if (editRowsLeft > 0) {
@@ -121,6 +122,7 @@ export default class OrderViewPage {
       );
       this.listenForProductDelete();
       this.listenForProductEdit();
+      this.resetToolTips();
 
       if ($(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').length >= numRowsPerPage) {
         // Update pagination
@@ -148,7 +150,15 @@ export default class OrderViewPage {
   listenForProductDelete() {
     $(OrderViewPageMap.productDeleteBtn)
       .off('click')
-      .on('click', event => this.orderProductManager.handleDeleteProductEvent(event));
+      .on('click', event => {
+        this.orderProductManager.handleDeleteProductEvent(event);
+      }
+    );
+  }
+
+  resetToolTips() {
+    $(OrderViewPageMap.productEditBtn).pstooltip();
+    $(OrderViewPageMap.productDeleteBtn).pstooltip();
   }
 
   listenForProductEdit() {
@@ -254,6 +264,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.paginate(event.numPage);
       this.listenForProductDelete();
       this.listenForProductEdit();
+      this.resetToolTips();
     });
   }
 
