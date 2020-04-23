@@ -28,10 +28,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
+use Configuration;
+use Hook;
 use Image;
+use ImageManager;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use Shop;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class ProductImageUploader extends AbstractImageUploader implements ImageUploaderInterface
@@ -39,36 +47,159 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
     /**
      * {@inheritDoc}
      */
-    public function upload($entityId, UploadedFile $uploadedImage, ?ImageId $imageId = null)
+    public function upload($productId, UploadedFile $uploadedImage, ?ImageId $imageId = null)
     {
         if (!$imageId) {
             throw new ImageUploadException('Image id is required to create path for product image');
         }
 
+        $temporaryImageName = $this->moveToTemporaryDir($uploadedImage);
+        $image = $this->loadImageEntity($imageId);
+
+        $this->checkMemory($temporaryImageName);
+        $this->createDestinationDirectory($image);
+        $this->copyToDestination($temporaryImageName, $image);
         $this->checkImageIsAllowedForUpload($uploadedImage);
-        $this->generateDifferentSize($entityId, $this->createDestinationPath($imageId), 'products');
-        //@todo:check unlink, hook and shop associations.
-        //      AdminProductsController:2881-2919
+        $this->generateDifferentSize(
+            $productId,
+            $temporaryImageName-$this->getDestinationPath($image, false),
+            'products'
+        );
+
+        unlink($temporaryImageName);
+        Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $productId]);
+        $this->updateCover($image);
+
+        //@todo: inject shops
+        $shops = Shop::getContextListShopID();
+        $image->associateTo($shops);
+
+        //@todo: do not suppress?
+        @unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $productId . '.jpg');
+        //@todo: inject context shop id
+        @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $productId . '_' . $this->context->shop->id . '.jpg');
+    }
+
+    /**
+     * @param string $tmpImageName
+     * @param Image $image
+     *
+     * @throws ImageOptimizationException
+     */
+    private function copyToDestination(string $tmpImageName, Image $image)
+    {
+        if (!ImageManager::resize($tmpImageName, $this->getDestinationPath($image, true))) {
+            throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+    }
+
+    /**
+     * Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+     *
+     * @param string $tmpImageName
+     *
+     * @throws MemoryLimitException
+     */
+    private function checkMemory(string $tmpImageName): void
+    {
+        if (!ImageManager::checkImageMemoryLimit($tmpImageName)) {
+            throw new MemoryLimitException('Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.');
+        }
+    }
+
+    /**
+     * @param UploadedFile $uploadedImage
+     *
+     * @return string temporary image name
+     *
+     * @throws ImageUploadException
+     */
+    private function moveToTemporaryDir(UploadedFile $uploadedImage): string
+    {
+        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+
+        if (!$temporaryImageName) {
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+
+        if (!move_uploaded_file($uploadedImage->getPathname(), $temporaryImageName)) {
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+
+        return $temporaryImageName;
+    }
+
+    /**
+     * @param Image $image
+     */
+    private function updateCover(Image $image): void
+    {
+        if (!$image->update()) {
+            throw new ImageUpdateException(sprintf(
+                'Error occurred when updating image #%s cover',
+                $image->id
+            ));
+        }
     }
 
     /**
      * @param ImageId $imageId
      *
-     * @return string
+     * @return Image
+     *
+     * @throws ImageNotFoundException
+     */
+    private function loadImageEntity(ImageId $imageId): Image
+    {
+        $imageIdValue = $imageId->getValue();
+        $image = new Image($imageIdValue);
+
+        if ((int) $image->id !== $imageIdValue) {
+            throw new ImageNotFoundException(sprintf(
+                'Image entity with id #%s does not exist',
+                $imageIdValue
+            ));
+        }
+
+        return $image;
+    }
+
+    /**
+     * @param Image $image
      *
      * @throws ImageUploadException
      */
-    private function createDestinationPath(ImageId $imageId): string
+    private function createDestinationDirectory(Image $image): void
     {
-        $image = new Image($imageId);
-
-        if ($path = $image->getPathForCreation()) {
-            return $path;
+        if (!Configuration::get('PS_LEGACY_IMAGES') || $image->createImgFolder()) {
+            return;
         }
 
         throw new ImageUploadException(sprintf(
             'Error occurred when trying to create directory for product #%s image',
             $image->id_product
         ));
+    }
+
+    /**
+     * @param Image $image
+     * @param bool $withExtension
+     *
+     * @return string
+     */
+    private function getDestinationPath(Image $image, bool $withExtension): string
+    {
+        //@todo: inject configuration
+        if (Configuration::get('PS_LEGACY_IMAGES')) {
+            $path = $image->id_product . '-' . $image->id;
+        } else {
+            $path = $image->getImgPath();
+        }
+
+        if ($withExtension) {
+            $path .= sprintf('.%s', $image->image_format);
+        }
+
+        return _PS_PROD_IMG_DIR_ . $path;
     }
 }
