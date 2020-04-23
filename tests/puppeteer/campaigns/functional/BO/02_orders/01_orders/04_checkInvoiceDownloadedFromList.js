@@ -143,8 +143,8 @@ describe('Check invoice downloaded from list', async () => {
     it('should download invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
       await this.pageObjects.ordersPage.downloadInvoice(1);
-      const fileExist = await files.fileExist('IN', 5000, true, '.pdf');
-      await expect(fileExist).to.be.true;
+      const doesFileExist = await files.doesFileExist('IN', 5000, true, '.pdf');
+      await expect(doesFileExist).to.be.true;
     });
 
     it('should check invoice pdf text', async function () {

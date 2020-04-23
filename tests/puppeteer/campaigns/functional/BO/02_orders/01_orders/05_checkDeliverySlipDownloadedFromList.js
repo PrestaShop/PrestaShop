@@ -143,8 +143,8 @@ describe('Check delivery slip downloaded from list', async () => {
     it('should download delivery slip', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
       await this.pageObjects.ordersPage.downloadDeliverySlip(1);
-      const fileExist = await files.fileExist('DE', 5000, true, '.pdf');
-      await expect(fileExist).to.be.true;
+      const doesFileExist = await files.doesFileExist('DE', 5000, true, '.pdf');
+      await expect(doesFileExist).to.be.true;
     });
 
     it('should check delivery slip pdf text', async function () {

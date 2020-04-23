@@ -61,8 +61,8 @@ describe('Export categories', async () => {
   it('should export categories to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportCategories', baseContext);
     await this.pageObjects.categoriesPage.exportDataToCsv();
-    const fileExist = await files.fileExist('category_', 5000, true, 'csv');
-    await expect(fileExist, 'Export of data has failed').to.be.true;
+    const doesFileExist = await files.doesFileExist('category_', 5000, true, 'csv');
+    await expect(doesFileExist, 'Export of data has failed').to.be.true;
   });
 
   it('should check existence of categories data in csv file', async function () {

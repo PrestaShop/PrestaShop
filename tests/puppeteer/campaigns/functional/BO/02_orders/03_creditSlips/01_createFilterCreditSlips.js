@@ -297,7 +297,7 @@ describe('Create, filter and check credit slips file', async () => {
       it(`should download the ${creditSlip.args.number} credit slip and check the file existence`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `download${creditSlip.args.number}`, baseContext);
         await this.pageObjects.creditSlipsPage.downloadCreditSlip();
-        const exist = await files.fileExist(creditSlip.args.fileName);
+        const exist = await files.doesFileExist(creditSlip.args.fileName);
         await expect(exist).to.be.true;
       });
     });

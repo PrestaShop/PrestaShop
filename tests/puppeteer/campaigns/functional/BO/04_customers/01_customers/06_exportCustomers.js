@@ -66,8 +66,8 @@ describe('Export customers', async () => {
   it('should export customers to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportCustomers', baseContext);
     await this.pageObjects.customersPage.exportDataToCsv();
-    const fileExist = await files.fileExist('customer_', 5000, true, 'csv');
-    await expect(fileExist, 'Export of data has failed').to.be.true;
+    const doesFileExist = await files.doesFileExist('customer_', 5000, true, 'csv');
+    await expect(doesFileExist, 'Export of data has failed').to.be.true;
   });
 
   it('should check existence of customers data in csv file', async function () {

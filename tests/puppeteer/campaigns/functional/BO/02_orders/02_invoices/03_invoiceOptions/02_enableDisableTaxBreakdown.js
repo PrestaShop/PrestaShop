@@ -263,7 +263,7 @@ describe('Enable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceTaxBreakdown', baseContext);
         firstInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
         await this.pageObjects.viewOrderPage.downloadInvoice();
-        const exist = await files.fileExist(`${firstInvoiceFileName}.pdf`);
+        const exist = await files.doesFileExist(`${firstInvoiceFileName}.pdf`);
         await expect(exist).to.be.true;
       });
 
@@ -323,7 +323,7 @@ describe('Enable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceNoTaxBreakdown', baseContext);
         secondInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
         await this.pageObjects.viewOrderPage.downloadInvoice();
-        const exist = await files.fileExist(`${secondInvoiceFileName}.pdf`);
+        const exist = await files.doesFileExist(`${secondInvoiceFileName}.pdf`);
         await expect(exist).to.be.true;
       });
 

@@ -187,7 +187,7 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceUpdatedOptions', baseContext);
       fileName = await this.pageObjects.viewOrderPage.getFileName();
       await this.pageObjects.viewOrderPage.downloadInvoice();
-      const exist = await files.fileExist(`${fileName}.pdf`);
+      const exist = await files.doesFileExist(`${fileName}.pdf`);
       await expect(exist).to.be.true;
     });
 

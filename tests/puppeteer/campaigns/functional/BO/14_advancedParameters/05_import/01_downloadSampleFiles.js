@@ -137,8 +137,8 @@ describe('Download import sample csv files', async () => {
       it(`should download ${sampleFile.args.type} sample file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}DownloadFile`, baseContext);
         await this.pageObjects.importPage.downloadSampleFile(sampleFile.args.type);
-        const fileExist = await files.fileExist(`${sampleFile.args.type}.csv`);
-        await expect(fileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
+        const doesFileExist = await files.doesFileExist(`${sampleFile.args.type}.csv`);
+        await expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
       });
 
       it(`should check ${sampleFile.args.type} sample text file`, async function () {

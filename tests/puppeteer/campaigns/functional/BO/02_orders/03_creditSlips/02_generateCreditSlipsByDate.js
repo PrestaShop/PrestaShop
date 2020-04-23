@@ -184,9 +184,9 @@ describe('Generate Credit slip file by date', async () => {
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'generatePdfAndfileExist', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'generatePdfAnddoesFileExist', baseContext);
       await this.pageObjects.creditSlipsPage.generatePDFByDate();
-      const exist = await files.fileExist(creditSlipsFileName);
+      const exist = await files.doesFileExist(creditSlipsFileName);
       await expect(exist).to.be.true;
     });
 

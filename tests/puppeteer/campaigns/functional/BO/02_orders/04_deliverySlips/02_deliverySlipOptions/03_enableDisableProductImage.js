@@ -185,7 +185,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
           );
           fileName = await this.pageObjects.viewOrderPage.getFileName(3);
           await this.pageObjects.viewOrderPage.downloadDeliverySlip();
-          const exist = await files.fileExist(`${fileName}.pdf`);
+          const exist = await files.doesFileExist(`${fileName}.pdf`);
           await expect(exist).to.be.true;
         });
 
