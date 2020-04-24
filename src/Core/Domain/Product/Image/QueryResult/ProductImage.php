@@ -50,16 +50,32 @@ class ProductImage
      */
     private $localizedLegends;
 
+    /**
+     * @var int
+     */
+    private $position;
+
+    /**
+     * @todo: combination/pack image?
+     *
+     * @param int $imageId
+     * @param int $productId
+     * @param string $url
+     * @param array $localizedLegends
+     * @param int $position
+     */
     public function __construct(
         int $imageId,
         int $productId,
         string $url,
-        array $localizedLegends
+        array $localizedLegends,
+        int $position
     ) {
         $this->imageId = $imageId;
         $this->productId = $productId;
         $this->url = $url;
         $this->localizedLegends = $localizedLegends;
+        $this->position = $position;
     }
 
     /**
@@ -92,5 +108,13 @@ class ProductImage
     public function getLocalizedLegends(): array
     {
         return $this->localizedLegends;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
     }
 }
