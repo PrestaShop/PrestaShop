@@ -1373,11 +1373,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <target>Invalid value: the payment must be a positive amount.</target>
         <note>Line: 1448</note>
       </trans-unit>
-      <trans-unit id="54834273df5a4c3df242f4650d466f37">
-        <source>Invalid action: this order already has an invoice.</source>
-        <target>Invalid action: this order already has an invoice.</target>
-        <note>Line: 1453</note>
-      </trans-unit>
       <trans-unit id="546710db975c663e306008fda9fc5865">
         <source>Invalid action: this order has not been delivered.</source>
         <target>Invalid action: this order has not been delivered.</target>
@@ -1387,11 +1382,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <source>Invalid action: this order has already been delivered.</source>
         <target>Invalid action: this order has already been delivered.</target>
         <note>Line: 1461</note>
-      </trans-unit>
-      <trans-unit id="d7e0d7d693c1018b5a7a7c41c440fc6c">
-        <source>Invalid action: this order has no invoice.</source>
-        <target>Invalid action: this order has no invoice.</target>
-        <note>Line: 1465</note>
       </trans-unit>
     </body>
   </file>
