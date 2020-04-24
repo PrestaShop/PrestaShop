@@ -34,7 +34,6 @@ export default {
   privateNoteInput: '#private_note_note',
   privateNoteSubmitBtn: '.js-private-note-btn',
   addCartRuleModal: '#addOrderDiscountModal',
-  addCartRuleApplyOnAllInvoicesCheckbox: '#add_order_cart_rule_apply_on_all_invoices',
   addCartRuleInvoiceIdSelect: '#add_order_cart_rule_invoice_id',
   addCartRuleTypeSelect: '#add_order_cart_rule_type',
   addCartRuleValueInput: '#add_order_cart_rule_value',
