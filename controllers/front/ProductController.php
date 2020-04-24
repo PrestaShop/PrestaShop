@@ -331,7 +331,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
             $this->context->smarty->assign('packItems', $presentedPackItems);
             $this->context->smarty->assign('noPackPrice', $this->product->getNoPackPrice());
-            $this->context->smarty->assign('displayPackPrice', ($pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id))) ? true : false);
+            $this->context->smarty->assign(
+                'displayPackPrice',
+                ($pack_items && $productPrice < Pack::noPackPrice((int) $this->product->id))) ? true : false
+            );
             $this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
             $accessories = $this->product->getAccessories($this->context->language->id);
