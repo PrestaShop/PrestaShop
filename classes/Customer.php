@@ -451,7 +451,7 @@ class CustomerCore extends ObjectModel
         }
         if (($plaintextPassword && !Validate::isPlaintextPassword($plaintextPassword))) {
             throw new \InvalidArgumentException(
-                'Cannot get customer by email as given password is not a valid password',
+                'Cannot get customer by email as given password is not a valid password'
             );
         }
 
