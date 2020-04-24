@@ -187,7 +187,7 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceUpdatedOptions', baseContext);
       fileName = await this.pageObjects.viewOrderPage.getFileName();
       await this.pageObjects.viewOrderPage.downloadInvoice();
-      const exist = await files.checkFileExistence(`${fileName}.pdf`);
+      const exist = await files.doesFileExist(`${fileName}.pdf`);
       await expect(exist).to.be.true;
     });
 
@@ -200,7 +200,7 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
     it('should check that the invoice contain the \'Footer text\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedFooterText', baseContext);
       // Check the existence of the Footer text
-      const exist = await files.checkTextInPDF(`${fileName}.pdf`, invoiceData.footerText);
+      const exist = await files.isTextInPDF(`${fileName}.pdf`, invoiceData.footerText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
     });
   });

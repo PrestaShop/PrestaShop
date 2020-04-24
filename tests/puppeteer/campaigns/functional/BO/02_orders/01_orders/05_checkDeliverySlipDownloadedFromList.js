@@ -143,8 +143,8 @@ describe('Check delivery slip downloaded from list', async () => {
     it('should download delivery slip', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
       await this.pageObjects.ordersPage.downloadDeliverySlip(1);
-      const fileExist = await files.checkFileExistence('DE', 5000, true, '.pdf');
-      await expect(fileExist).to.be.true;
+      const doesFileExist = await files.doesFileExist('DE', 5000, true, '.pdf');
+      await expect(doesFileExist).to.be.true;
     });
 
     it('should check delivery slip pdf text', async function () {
@@ -152,25 +152,25 @@ describe('Check delivery slip downloaded from list', async () => {
       deliverySlipFilename = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'DE', '.pdf');
       const orderInformation = await this.pageObjects.ordersPage.getOrderFromTable(1);
       // Check Reference in pdf
-      const referenceExist = await files.checkTextInPDF(deliverySlipFilename, orderInformation.reference);
+      const referenceExist = await files.isTextInPDF(deliverySlipFilename, orderInformation.reference);
       await expect(
         referenceExist,
         `Reference '${orderInformation.reference}' does not exist in delivery slip`,
       ).to.be.true;
       // Check country name in delivery Address in pdf
-      const deliveryExist = await files.checkTextInPDF(deliverySlipFilename, orderInformation.delivery);
+      const deliveryExist = await files.isTextInPDF(deliverySlipFilename, orderInformation.delivery);
       await expect(
         deliveryExist,
         `Country name '${orderInformation.delivery}' does not exist in delivery slip`,
       ).to.be.true;
       // Check customer name in pdf
-      const customerExist = await files.checkTextInPDF(deliverySlipFilename, orderInformation.customer.slice(3));
+      const customerExist = await files.isTextInPDF(deliverySlipFilename, orderInformation.customer.slice(3));
       await expect(
         customerExist,
         `Country name '${orderInformation.customer}' does not exist in delivery slip`,
       ).to.be.true;
       // Check total paid in pdf
-      const totalPaidExist = await files.checkTextInPDF(deliverySlipFilename, orderInformation.totalPaid);
+      const totalPaidExist = await files.isTextInPDF(deliverySlipFilename, orderInformation.totalPaid);
       await expect(
         totalPaidExist,
         `Total paid '${orderInformation.totalPaid}' does not exist in delivery slip`,

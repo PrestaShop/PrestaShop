@@ -223,7 +223,7 @@ describe('Enable product image in invoices', async () => {
           );
           fileName = await this.pageObjects.viewOrderPage.getFileName();
           await this.pageObjects.viewOrderPage.downloadInvoice();
-          const exist = await files.checkFileExistence(`${fileName}.pdf`);
+          const exist = await files.doesFileExist(`${fileName}.pdf`);
           await expect(exist).to.be.true;
         });
 

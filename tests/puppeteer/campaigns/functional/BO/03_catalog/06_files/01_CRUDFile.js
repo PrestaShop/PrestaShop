@@ -93,7 +93,7 @@ describe('Create, update and delete file', async () => {
     it('should view file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedFile', baseContext);
       await this.pageObjects.filesPage.viewFile(1);
-      const found = await files.checkFileExistence(createFileData.filename);
+      const found = await files.doesFileExist(createFileData.filename);
       await expect(found, `${createFileData.filename} was not downloaded`).to.be.true;
     });
   });
@@ -117,7 +117,7 @@ describe('Create, update and delete file', async () => {
     it('should view file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedFile', baseContext);
       await this.pageObjects.filesPage.viewFile(1);
-      const found = await files.checkFileExistence(editFileData.filename);
+      const found = await files.doesFileExist(editFileData.filename);
       await expect(found, `${editFileData.filename} was not downloaded`).to.be.true;
     });
   });

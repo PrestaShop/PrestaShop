@@ -106,7 +106,7 @@ describe('Generate Delivery slip file by date', async () => {
     it('should generate PDF file by date and check the file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateDeliverySlips', baseContext);
       await this.pageObjects.deliverySlipsPage.generatePDFByDate();
-      const exist = await files.checkFileExistence(fileName);
+      const exist = await files.doesFileExist(fileName);
       await expect(exist).to.be.true;
     });
 
