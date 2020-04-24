@@ -196,6 +196,11 @@ Comment: Confirm uninstall</note>
         <target>or upload file</target>
         <note>Line: 47</note>
       </trans-unit>
+      <trans-unit id="3802717a7a0a4552fa6da61712da155b">
+        <source>Choose SVG for best customization. Other accepted file formats: jpg, png, gif</source>
+        <target>Choose SVG for best customization. Other accepted file formats: jpg, png, gif</target>
+        <note>Line: 55</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/language.tpl" source-language="en-US" target-language="en" datatype="plaintext">
