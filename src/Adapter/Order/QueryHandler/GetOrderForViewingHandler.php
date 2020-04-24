@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
 
 use Address;
 use Carrier;
+use CartRule;
 use Configuration;
 use Context;
 use Country;
@@ -732,11 +733,22 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $discountsForViewing = [];
 
         foreach ($discounts as $discount) {
+            $discountValue = $discount['value'];
+
+            $cartRule = new CartRule((int) $discount['id_cart_rule']);
+            if ((int) $cartRule->reduction_currency !== $order->id_currency) {
+                $discountValue = Tools::convertPriceFull(
+                    $discount['value'],
+                    new Currency((int) $cartRule->reduction_currency),
+                    new Currency((int) $order->id_currency)
+                );
+            }
+
             $discountsForViewing[] = new OrderDiscountForViewing(
                 (int) $discount['id_order_cart_rule'],
                 $discount['name'],
-                new Number((string) $discount['value']),
-                Tools::displayPrice($discount['value'], $currency)
+                new Number((string) $discountValue),
+                Tools::displayPrice($discountValue, $currency)
             );
         }
 

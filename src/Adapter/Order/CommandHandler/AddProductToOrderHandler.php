@@ -206,7 +206,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             // Delete specific price if exists
             if (null !== $specificPrice) {
-                $specificPrice->delete();
+                //$specificPrice->delete();
             }
 
             $order->update();
@@ -357,6 +357,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // @todo: use private method to create specific price object
             $specificPrice = new SpecificPrice();
             $specificPrice->id_shop = 0;
+            $specificPrice->id_cart = $cart->id;
             $specificPrice->id_shop_group = 0;
             $specificPrice->id_currency = $order->id_currency;
             $specificPrice->id_country = 0;
