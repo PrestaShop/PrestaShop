@@ -186,11 +186,7 @@ class Calculator
     {
         $amount = new AmountImmutable();
         foreach ($this->cartRows as $cartRow) {
-            if ($cartRow->getRoundType() !== $cartRow::ROUND_MODE_ITEM) {
-                $amount = $amount->add($cartRow->getInitialTotalPrice());
-            } else {
-                $amount = $amount->add($cartRow->getFinalTotalPrice());
-            }
+            $amount = $amount->add($cartRow->getInitialTotalPrice());
         }
 
         return $amount;
