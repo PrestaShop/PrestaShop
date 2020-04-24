@@ -61,7 +61,7 @@ module.exports = class Email extends BOBasePage {
    * @return {Promise<integer>}
    */
   async getNumberOfElementInGrid() {
-    return (await this.page.$$(this.tableRows)).length;
+    return (await this.page.$$(`${this.tableRows}:not(.empty_row)`)).length;
   }
 
   /**
@@ -72,7 +72,7 @@ module.exports = class Email extends BOBasePage {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
-    return this.getNumberOfElementInGrid();
+    return this.getTotalElementInGrid();
   }
 
   /**

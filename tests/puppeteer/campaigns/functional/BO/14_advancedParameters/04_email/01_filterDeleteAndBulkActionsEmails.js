@@ -225,7 +225,7 @@ describe('Filter, delete and bulk actions email log', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'dateSentReset', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
       const numberOfEmailsAfterReset = await this.pageObjects.emailPage.resetAndGetNumberOfLines();
       await expect(numberOfEmailsAfterReset).to.be.equal(numberOfEmails - 1);
     });
