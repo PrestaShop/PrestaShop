@@ -268,11 +268,21 @@ class CartRow
         $rowData = $this->getRowData();
         $quantity = (int) $rowData['cart_quantity'];
         $this->initialUnitPrice = $this->getProductPrice($cart, $rowData);
-        // store not rounded values
-        $this->initialTotalPrice = new AmountImmutable(
-            $this->initialUnitPrice->getTaxIncluded() * $quantity,
-            $this->initialUnitPrice->getTaxExcluded() * $quantity
-        );
+
+        // store not rounded values, except in round_mode_item, we still need to round individual items
+        if ($this->roundType == self::ROUND_MODE_ITEM) {
+            $tools = new Tools();
+            $this->initialTotalPrice = new AmountImmutable(
+                $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision) * $quantity,
+                $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision) * $quantity
+            );
+        } else {
+            $this->initialTotalPrice = new AmountImmutable(
+                $this->initialUnitPrice->getTaxIncluded() * $quantity,
+                $this->initialUnitPrice->getTaxExcluded() * $quantity
+            );
+        }
+
         $this->finalTotalPrice = clone $this->initialTotalPrice;
         $this->applyRound();
         // store state
@@ -416,7 +426,6 @@ class CartRow
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,
                     $this->initialUnitPrice->getTaxExcluded() * $quantity
                 );
-
                 break;
         }
     }
@@ -477,5 +486,13 @@ class CartRow
             $taxIncluded / $quantity,
             $taxExcluded / $quantity
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoundType()
+    {
+        return $this->roundType;
     }
 }
