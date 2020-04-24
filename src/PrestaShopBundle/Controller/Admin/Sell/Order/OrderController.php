@@ -682,7 +682,7 @@ class OrderController extends CommonController
         $choices = $choiceProvider->getChoices([
             'id_order' => $orderId,
             'id_lang' => $this->getContextLangId(),
-            'display_total' => false,
+            'display_total' => true,
         ]);
 
         return $this->json([
