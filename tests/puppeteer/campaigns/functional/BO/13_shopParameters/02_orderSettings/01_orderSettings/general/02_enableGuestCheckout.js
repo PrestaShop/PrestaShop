@@ -80,7 +80,7 @@ describe('Enable guest checkout', async () => {
       await expect(isHomePage, 'Home page is not displayed').to.be.true;
     });
 
-    it('should go to FO and verify the guest checkout', async function () {
+    it('should verify the guest checkout', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',

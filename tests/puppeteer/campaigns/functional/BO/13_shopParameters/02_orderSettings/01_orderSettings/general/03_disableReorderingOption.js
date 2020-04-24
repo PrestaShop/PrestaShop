@@ -80,7 +80,7 @@ describe('Enable reordering option', async () => {
       await expect(isHomePage, 'Home page is not displayed').to.be.true;
     });
 
-    it('should go to FO and verify the reordering option', async function () {
+    it('should verify the reordering option', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',

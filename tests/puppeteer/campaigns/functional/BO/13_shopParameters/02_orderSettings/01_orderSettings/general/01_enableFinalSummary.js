@@ -84,7 +84,7 @@ describe('Enable final summary', async () => {
       await expect(isHomePage, 'Home page is not displayed').to.be.true;
     });
 
-    it('should go to FO and check the final summary after checkout', async function () {
+    it('should check the final summary after checkout', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',

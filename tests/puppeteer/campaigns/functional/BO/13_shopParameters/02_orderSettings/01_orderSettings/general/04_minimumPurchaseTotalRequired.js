@@ -84,7 +84,7 @@ describe('Test minimum purchase total required in order to validate the order', 
       await expect(isHomePage, 'Home page is not displayed').to.be.true;
     });
 
-    it('should go to FO and verify the minimum purchase total value', async function () {
+    it('should verify the minimum purchase total value', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',

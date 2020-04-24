@@ -72,7 +72,7 @@ describe('Enable terms of service', async () => {
       await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
     });
 
-    it('should go to FO and check terms of service checkbox', async function () {
+    it('should check terms of service checkbox', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
