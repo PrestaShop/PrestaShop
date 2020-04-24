@@ -104,8 +104,14 @@ describe('Enable terms of service', async () => {
       // Check terms of service checkbox existence
       const isVisible = await this.pageObjects.checkoutPage.isConditionToApproveCheckboxVisible();
       await expect(isVisible).to.be.equal(test.args.enable);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier',`${test.args.action}CheckAndBackToBO`, baseContext);
       page = await this.pageObjects.checkoutPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
     });
   });
 });
