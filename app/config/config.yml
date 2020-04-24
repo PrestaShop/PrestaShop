@@ -21,7 +21,7 @@ services:
     PrestaShopBundle\Controller\:
         resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
         exclude: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
-        tags: ['prestashop.core.controllers']
+        tags: ['prestashop.core.controllers', 'controller.service_arguments']
 
 framework:
     assets:
