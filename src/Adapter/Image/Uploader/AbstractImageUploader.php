@@ -112,15 +112,15 @@ abstract class AbstractImageUploader
     /**
      * Generates different size images
      *
-     * @param int $id
-     * @param string $imageDir
-     * @param string $belongsTo to whom the image belongs (for example 'suppliers' or 'categories')
+     * @param string $path
+     * @param string $belongsTo to whom the image belongs (e.g. 'suppliers', 'categories', 'products')
+     * @param string $extension
      *
      * @return bool
      *
      * @throws ImageOptimizationException
      */
-    protected function generateDifferentSize($id, $imageDir, $belongsTo)
+    protected function generateDifferentSize(string $path, string $belongsTo, string $extension = 'jpg')
     {
         $resized = true;
 
@@ -128,7 +128,7 @@ abstract class AbstractImageUploader
             $imageTypes = ImageType::getImagesTypes($belongsTo);
 
             foreach ($imageTypes as $imageType) {
-                $resized &= $this->resize($id, $imageDir, $imageType);
+                $resized &= $this->resize($path, $imageType, $extension);
             }
         } catch (PrestaShopException $e) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
@@ -144,27 +144,26 @@ abstract class AbstractImageUploader
     /**
      * Resizes the image depending from its type
      *
-     * @param int $id
-     * @param string $imageDir
+     * @param string $path
      * @param array $imageType
+     * @param string $extension
      *
      * @return bool
      */
-    private function resize($id, $imageDir, array $imageType)
+    private function resize(string $path, array $imageType, string $extension)
     {
-        $ext = '.jpg';
         $width = $imageType['width'];
         $height = $imageType['height'];
 
         if (Configuration::get('PS_HIGHT_DPI')) {
-            $ext = '2x.jpg';
+            $extension = '2x' . $extension;
             $width *= 2;
             $height *= 2;
         }
 
         return ImageManager::resize(
-            $imageDir . $id . '.jpg',
-            $imageDir . $id . '-' . stripslashes($imageType['name']) . $ext,
+            $path . '.' . $extension,
+            $path . '-' . stripslashes($imageType['name']) . '.' . $extension,
             (int) $width,
             (int) $height
         );
