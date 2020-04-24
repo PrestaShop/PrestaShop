@@ -95,9 +95,9 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
         $this->copyToDestination($temporaryImageName, $image);
         //@todo: abstract method seems to not fit for product. check AdminProductsController:2865
         $this->generateDifferentSize(
-            $this->getDestinationPath($image, false),
-            'products',
-            $image->image_format
+            $productId,
+            _PS_PROD_IMG_DIR_,
+            'products'
         );
 
         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $productId]);

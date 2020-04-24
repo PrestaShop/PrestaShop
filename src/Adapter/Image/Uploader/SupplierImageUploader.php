@@ -49,7 +49,7 @@ final class SupplierImageUploader extends AbstractImageUploader implements Image
         $this->uploadFromTemp($tempImageName, $destination);
 
         if (file_exists($destination)) {
-            $this->generateDifferentSize(_PS_SUPP_IMG_DIR_ . $supplierId, 'suppliers');
+            $this->generateDifferentSize($supplierId, _PS_SUPP_IMG_DIR_, 'suppliers');
         }
     }
 
