@@ -56,26 +56,32 @@ class ProductImage
     private $position;
 
     /**
-     * @todo: combination/pack image?
-     *
+     * @var bool
+     */
+    private $cover;
+
+    /**
      * @param int $imageId
      * @param int $productId
      * @param string $url
      * @param array $localizedLegends
      * @param int $position
+     * @param bool $cover
      */
     public function __construct(
         int $imageId,
         int $productId,
         string $url,
         array $localizedLegends,
-        int $position
+        int $position,
+        bool $cover
     ) {
         $this->imageId = $imageId;
         $this->productId = $productId;
         $this->url = $url;
         $this->localizedLegends = $localizedLegends;
         $this->position = $position;
+        $this->cover = $cover;
     }
 
     /**
@@ -116,5 +122,13 @@ class ProductImage
     public function getPosition(): int
     {
         return $this->position;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCover(): bool
+    {
+        return $this->cover;
     }
 }

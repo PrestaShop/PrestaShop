@@ -70,21 +70,22 @@
         });
       },
       loadImages() {
-        // @todo use ajax to get real existing images.
-        this.images = [
-          {
-            url: 'test-1',
-          },
-          {
-            url: 'test-2',
-          },
-        ];
+        //@todo: handle error cases
+        getImages(this.productId).then((resp) => {
+          this.images = resp.images;
+        });
       },
     },
   };
 
+  async function getImages(productId) {
+    return fetch(router.generate('admin_products_v2_images_get_images', {productId})).then((resp) => {
+      console.log(resp);
+    });
+  }
+
   async function uploadImages(productId, fileList) {
-    return fetch(router.generate('admin_products_v2_images', {productId}), {
+    return fetch(router.generate('admin_products_v2_images_upload', {productId}), {
       method: 'POST',
       body: formatBody(fileList),
     }).then((resp) => {

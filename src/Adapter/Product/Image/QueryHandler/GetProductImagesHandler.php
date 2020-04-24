@@ -29,17 +29,39 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImageProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
 
 final class GetProductImagesHandler extends AbstractProductHandler implements GetProductImagesHandlerInterface
 {
     /**
+     * @var ProductImageProvider
+     */
+    private $productImageProvider;
+
+    /**
+     * @param ProductImageProvider $productImageProvider
+     */
+    public function __construct(ProductImageProvider $productImageProvider)
+    {
+        $this->productImageProvider = $productImageProvider;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function handle(GetProductImages $query): ProductImages
     {
-        //@todo: implementation
+        $images = $this->productImageProvider->getImages($query->getProductId()->getValue());
+
+        $productImages = [];
+        foreach ($images as $image) {
+            //@todo: build product image.
+        }
+
+        return new ProductImages($productImages);
     }
 }

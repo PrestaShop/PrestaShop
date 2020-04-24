@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -52,6 +53,21 @@ class ImageController extends FrameworkBundleAdminController
         return $this->json([
             //@todo: test
             'message' => 'test response'
+        ]);
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
+    public function getImagesAction(int $productId): JsonResponse
+    {
+        $images = $this->getQueryBus()->handle(new GetProductImages($productId));
+        //@todo: check edgecases/errors etc.
+
+        return $this->json([
+            'images' => $images,
         ]);
     }
 
