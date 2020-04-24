@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
-use PrestaShop\PrestaShop\Core\Form\AbstractFormHandler;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -35,7 +34,7 @@ use Symfony\Component\Form\FormFactoryInterface;
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-final class PerformanceFormHandler extends AbstractFormHandler
+final class PerformanceFormHandler
 {
     /**
      * @var FormFactoryInterface
@@ -62,9 +61,6 @@ final class PerformanceFormHandler extends AbstractFormHandler
         $this->formDataProvider = $formDataProvider;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getForm()
     {
         $formBuilder = $this->formFactory->createBuilder()
@@ -84,9 +80,6 @@ final class PerformanceFormHandler extends AbstractFormHandler
         return $formBuilder->setData($formBuilder->getData())->getForm();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save(array $data)
     {
         $errors = $this->formDataProvider->setData($data);
