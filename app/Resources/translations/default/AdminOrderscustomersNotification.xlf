@@ -899,6 +899,11 @@
         <target>An error occurred while sending the e-mail to the customer.</target>
         <note>Line: 1413</note>
       </trans-unit>
+      <trans-unit id="aeddc664f1e95691c69ea44a5c1c18f5">
+        <source>This product is out of stock: </source>
+        <target>This product is out of stock:</target>
+        <note>Line: 1814</note>
+      </trans-unit>
       <trans-unit id="4174f012bc63b679f092acd1a933bf5c">
         <source>The email was sent to your customer.</source>
         <target>The email was sent to your customer.</target>
