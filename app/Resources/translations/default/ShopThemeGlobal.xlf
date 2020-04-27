@@ -9,12 +9,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/AddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
         <source>Addresses</source>
         <target>Addresses</target>
-        <note>Line: 116</note>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -23,17 +23,17 @@
       <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
         <source>None</source>
         <target>None</target>
-        <note>Line: 187</note>
+        <note>Line: 192</note>
       </trans-unit>
       <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b">
         <source>No</source>
         <target>No</target>
-        <note>Line: 103</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="93cba07454f06a4a960172bbd6e2a435">
         <source>Yes</source>
         <target>Yes</target>
-        <note>Line: 105</note>
+        <note>Line: 110</note>
       </trans-unit>
     </body>
   </file>
@@ -127,22 +127,22 @@
       <trans-unit id="1f87346a16cf80c372065de3c54c86d9">
         <source>(tax incl.)</source>
         <target>(tax incl.)</target>
-        <note>Line: 430</note>
+        <note>Line: 431</note>
       </trans-unit>
       <trans-unit id="21034ae6d01a83e702839a72ba8a77b0">
         <source>(tax excl.)</source>
         <target>(tax excl.)</target>
-        <note>Line: 431</note>
+        <note>Line: 432</note>
       </trans-unit>
       <trans-unit id="e3ddbe6b144e01554bfa072db9bcca2f">
         <source>(tax included)</source>
         <target>(tax included)</target>
-        <note>Line: 433</note>
+        <note>Line: 434</note>
       </trans-unit>
       <trans-unit id="e9e7ca277da652bde67ef5faafb755dc">
         <source>(tax excluded)</source>
         <target>(tax excluded)</target>
-        <note>Line: 434</note>
+        <note>Line: 435</note>
       </trans-unit>
     </body>
   </file>

@@ -37,6 +37,11 @@
         <target>Training</target>
         <note>Line: 87</note>
       </trans-unit>
+      <trans-unit id="7286baef44d09300636a4b99c533523c">
+        <source>Load time:</source>
+        <target>Load time:</target>
+        <note>Line: 34</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

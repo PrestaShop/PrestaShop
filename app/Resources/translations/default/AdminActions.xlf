@@ -437,40 +437,35 @@
   </file>
   <file original="src/Core/Grid/Definition/Factory/AddressGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
-        <source>Delete selected</source>
-        <target>Delete selected</target>
-        <note>Line: 289</note>
-      </trans-unit>
       <trans-unit id="e98936d7a5973d99a4b50b1f43400494">
         <source>Search first name</source>
         <target>Search first name</target>
-        <note>Line: 190</note>
+        <note>Line: 191</note>
       </trans-unit>
       <trans-unit id="402456650e9401a17e766d619ef691ec">
         <source>Search last name</source>
         <target>Search last name</target>
-        <note>Line: 200</note>
+        <note>Line: 201</note>
       </trans-unit>
       <trans-unit id="1b24f089e060676ad7ee2e3b3d3d6d5e">
         <source>Search post code</source>
         <target>Search post code</target>
-        <note>Line: 220</note>
+        <note>Line: 221</note>
       </trans-unit>
       <trans-unit id="da6b6493b1cc2156ad63965bd59ca491">
         <source>Search city</source>
         <target>Search city</target>
-        <note>Line: 230</note>
+        <note>Line: 231</note>
       </trans-unit>
       <trans-unit id="14b65dabcecbbcb0724ed1efe27c6335">
         <source>Search ID</source>
         <target>Search ID</target>
-        <note>Line: 180</note>
+        <note>Line: 181</note>
       </trans-unit>
       <trans-unit id="e3ff649d2ad58aafa4adee523917e380">
         <source>Search address</source>
         <target>Search address</target>
-        <note>Line: 210</note>
+        <note>Line: 211</note>
       </trans-unit>
     </body>
   </file>
@@ -544,6 +539,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/EmailLogsDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
+        <source>Delete selected</source>
+        <target>Delete selected</target>
+        <note>Line: 282</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/LanguageGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="56b533c60a6c6d0b172c4ba5ec971eeb">
@@ -583,30 +587,20 @@
   </file>
   <file original="src/Core/Grid/Definition/Factory/OrderGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c3085acc31575490a830676b3bf8504a">
-        <source>Search Reference</source>
-        <target>Search Reference</target>
-        <note>Line: 307</note>
+      <trans-unit id="6861d21ea3a14378d5fab68eb542c76f">
+        <source>Search customer</source>
+        <target>Search customer</target>
+        <note>Line: 323</note>
       </trans-unit>
-      <trans-unit id="8b4a1bc5d57e6921d9cc8df069530500">
-        <source>Search Customer</source>
-        <target>Search Customer</target>
-        <note>Line: 322</note>
+      <trans-unit id="8b82a7ba57cf0f052ea074b9d89abaa7">
+        <source>Search total</source>
+        <target>Search total</target>
+        <note>Line: 332</note>
       </trans-unit>
-      <trans-unit id="345c4b9b987c82907571f84f98683262">
-        <source>Search Total</source>
-        <target>Search Total</target>
-        <note>Line: 331</note>
-      </trans-unit>
-      <trans-unit id="1bd9f7be451c1efcb1226ff089a87d58">
-        <source>Search Payment</source>
-        <target>Search Payment</target>
-        <note>Line: 340</note>
-      </trans-unit>
-      <trans-unit id="e4c992f6eb00a4488881837f25b09d40">
-        <source>Search Company</source>
-        <target>Search Company</target>
-        <note>Line: 388</note>
+      <trans-unit id="015762a0ffcfd7d3ad995dffb5c67e42">
+        <source>Search payment</source>
+        <target>Search payment</target>
+        <note>Line: 341</note>
       </trans-unit>
     </body>
   </file>
@@ -615,7 +609,7 @@
       <trans-unit id="0a437c4cc00815ee2f70116ebc0000d5">
         <source>Search message</source>
         <target>Search message</target>
-        <note>Line: 158</note>
+        <note>Line: 159</note>
       </trans-unit>
     </body>
   </file>
@@ -651,7 +645,7 @@
       <trans-unit id="656c3be690ee43df4b845bd2a2ebe587">
         <source>New product</source>
         <target>New product</target>
-        <note>Line: 368</note>
+        <note>Line: 372</note>
       </trans-unit>
     </body>
   </file>
@@ -660,7 +654,7 @@
       <trans-unit id="f7931413dee107ddf5289c8886baf7ec">
         <source>Edit: %s</source>
         <target>Edit: %s</target>
-        <note>Line: 190</note>
+        <note>Line: 163</note>
       </trans-unit>
     </body>
   </file>
@@ -806,6 +800,15 @@
         <source>Choose layouts</source>
         <target>Choose layouts</target>
         <note>Line: 37</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2bd339d85ee3b33e513359ce781b60cc">
+        <source>Restore</source>
+        <target>Restore</target>
+        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>
@@ -1036,10 +1039,15 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b7cea4f6e8dd41e0cc16f0da290a71df">
-        <source>Change address</source>
-        <target>Change address</target>
+      <trans-unit id="9fd1fd8420be3ace7cba8b711181345f">
+        <source>Select another address</source>
+        <target>Select another address</target>
         <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="e0626222614bdee31951d84c64e5e9ff">
+        <source>Select</source>
+        <target>Select</target>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>
@@ -1048,12 +1056,12 @@
       <trans-unit id="a082e30c2da0ebd57cf7f4a2014daca8">
         <source>View full details</source>
         <target>View full details</target>
-        <note>Line: 50</note>
+        <note>Line: 53</note>
       </trans-unit>
-      <trans-unit id="cda7288d7ba9a2a79bec223efc5d15d7">
-        <source>Edit address</source>
-        <target>Edit address</target>
-        <note>Line: 171</note>
+      <trans-unit id="9f020d7e71751e8997cf5c8c01735f95">
+        <source>Edit existing address</source>
+        <target>Edit existing address</target>
+        <note>Line: 166</note>
       </trans-unit>
     </body>
   </file>
@@ -1062,7 +1070,7 @@
       <trans-unit id="1dda0a32a88a31cac7f6b103ff13e2ac">
         <source>View pack content</source>
         <target>View pack content</target>
-        <note>Line: 167</note>
+        <note>Line: 169</note>
       </trans-unit>
     </body>
   </file>

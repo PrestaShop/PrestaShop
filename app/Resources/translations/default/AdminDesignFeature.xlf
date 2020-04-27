@@ -472,15 +472,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/MailTheme/Blocks/translate_mails_body_form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f2da6ec917773c24b879f1bc8e8f5da1">
-        <source>Translate emails</source>
-        <target>Translate emails</target>
-        <note>Line: 32</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="837a54ae4874c4501c804173cd3c0fdf">

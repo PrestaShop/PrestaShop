@@ -539,7 +539,7 @@ class CartController extends FrameworkBundleAdminController
             ],
             LanguageException::class => [
                 LanguageException::NOT_ACTIVE => $this->trans(
-                    'Selected language cannot be used because is disabled.',
+                    'Selected language cannot be used because it is disabled',
                     'Admin.Notifications.Error'
                 ),
             ],

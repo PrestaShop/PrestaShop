@@ -1229,7 +1229,7 @@ final class ProductImportHandler extends AbstractImportHandler
             if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                 $this->warning(
                     $this->translator->trans(
-                        'Advanced stock management has incorrect value. Not set for product %name% ',
+                        'Advanced stock management has incorrect value. Not set for product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
@@ -1237,7 +1237,7 @@ final class ProductImportHandler extends AbstractImportHandler
             } elseif (!$asmEnabled && $product->advanced_stock_management == 1) {
                 $this->warning(
                     $this->translator->trans(
-                        'Advanced stock management is not enabled, cannot enable on product %name% ',
+                        'Advanced stock management is not enabled, cannot enable on product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
@@ -1256,7 +1256,7 @@ final class ProductImportHandler extends AbstractImportHandler
             if (!$asmEnabled) {
                 $this->warning(
                     $this->translator->trans(
-                        'Advanced stock management is not enabled, warehouse not set on product %name% ',
+                        'Advanced stock management is not enabled, warehouse not set on product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
@@ -1278,7 +1278,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 } else {
                     $this->warning(
                         $this->translator->trans(
-                            'Warehouse did not exist, cannot set on product  %name% ',
+                            'Warehouse did not exist, cannot set on product %name%',
                             ['%name%' => $product->name[$this->languageId]],
                             'Admin.Advparameters.Notification'
                         )
@@ -1300,7 +1300,7 @@ final class ProductImportHandler extends AbstractImportHandler
             if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
                 $this->warning(
                     $this->translator->trans(
-                        'Incorrect value for "Depends on stock" for product %name% ',
+                        'Incorrect value for "Depends on stock" for product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
@@ -1308,7 +1308,7 @@ final class ProductImportHandler extends AbstractImportHandler
             } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                 $this->warning(
                     $this->translator->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ',
+                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
                         ['%name%' => $product->name[$this->languageId]],
                         'Admin.Advparameters.Notification'
                     )
