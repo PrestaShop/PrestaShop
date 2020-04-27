@@ -678,11 +678,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Fuzzy search</target>
         <note>Line: 191</note>
       </trans-unit>
-      <trans-unit id="11d0f577ed9bb03f4a328cbd64a656ac">
-        <source>Maximum approximate strings allowed by fuzzy search</source>
-        <target>Maximum approximate strings allowed by fuzzy search</target>
-        <note>Line: 215</note>
-      </trans-unit>
       <trans-unit id="91ef1a24c02b7efb35b5ff3c79230d5c">
         <source>Maximum word length (in characters)</source>
         <target>Maximum word length (in characters)</target>

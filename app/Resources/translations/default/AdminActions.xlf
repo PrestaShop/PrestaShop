@@ -587,11 +587,6 @@
   </file>
   <file original="src/Core/Grid/Definition/Factory/OrderGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c3085acc31575490a830676b3bf8504a">
-        <source>Search Reference</source>
-        <target>Search Reference</target>
-        <note>Line: 307</note>
-      </trans-unit>
       <trans-unit id="6861d21ea3a14378d5fab68eb542c76f">
         <source>Search customer</source>
         <target>Search customer</target>
