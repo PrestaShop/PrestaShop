@@ -75,7 +75,7 @@ describe('Test minimum purchase total required in order to validate the order', 
     });
 
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier',`${test.args.action}AndViewMyShop`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
       // Click on view my shop
       page = await this.pageObjects.orderSettingsPage.viewMyShop();
       this.pageObjects = await init();
@@ -108,7 +108,7 @@ describe('Test minimum purchase total required in order to validate the order', 
     });
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier',`${test.args.action}CheckAndBackToBO`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
       page = await this.pageObjects.cartPage.closePage(browser, 1);
       this.pageObjects = await init();
       const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
