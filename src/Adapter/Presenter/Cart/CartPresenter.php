@@ -31,7 +31,6 @@ use CartRule;
 use Configuration;
 use Context;
 use Hook;
-use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
