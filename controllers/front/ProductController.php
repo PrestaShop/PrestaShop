@@ -1089,7 +1089,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $minimal_quantity = $this->product->minimal_quantity;
         }
 
-        return $minimal_quantity;
+        return max($minimal_quantity, 1);
     }
 
     /**
