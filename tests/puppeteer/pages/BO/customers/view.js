@@ -28,6 +28,9 @@ module.exports = class ViewCustomer extends BOBasePage {
     this.messagesDiv = '.customer-messages-card';
     // Vouchers
     this.vouchersDiv = '.customer-discounts-card';
+    this.voucherEditButton = `${this.vouchersDiv} a[data-original-title='Edit']`;
+    this.voucherToggleDropdown = `${this.vouchersDiv} a[data-toggle='dropdown']`;
+    this.voucherDeleteButton = `${this.vouchersDiv} .dropdown-menu a`;
     // Last emails
     this.lastEmailsDiv = '.customer-sent-emails-card';
     // Last connections
@@ -182,5 +185,23 @@ module.exports = class ViewCustomer extends BOBasePage {
         throw new Error(`${cardTitle} was not found`);
     }
     return this.clickAndWaitForNavigation(selector.replace('%ID', id));
+  }
+
+  /**
+   * Go to edit voucher page
+   * @returns {Promise<void>}
+   */
+  async goToEditVoucherPage() {
+    await this.clickAndWaitForNavigation(this.voucherEditButton);
+  }
+
+  /**
+   * Delete voucher
+   * @returns {Promise<string|*>}
+   */
+  async deleteVoucher() {
+    await this.waitForSelectorAndClick(this.voucherToggleDropdown);
+    await this.waitForSelectorAndClick(this.voucherDeleteButton);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };
