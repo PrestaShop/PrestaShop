@@ -12,23 +12,24 @@ module.exports = class Order extends BOBasePage {
     this.gridTable = '#order_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
-    this.filterColumn = `${this.gridTable} #order_%FILTERBY`;
+    this.filterColumn = filterBy => `${this.gridTable} #order_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='order[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='order[actions][reset]']`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
-    this.tableColumnStatus = `${this.tableRow} td.column-osname`;
-    this.updateStatusInTablebutton = `${this.tableColumnStatus} button`;
-    this.updateStatusInTabledropdown = `${this.tableColumnStatus} div.js-choice-options`;
-    this.updateStatusInTabledropdownChoice = `${this.updateStatusInTabledropdown} button[data-value='%STATUSID']`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+    this.tableColumnStatus = row => `${this.tableRow(row)} td.column-osname`;
+    this.updateStatusInTableButton = row => `${this.tableColumnStatus(row)} button`;
+    this.updateStatusInTableDropdown = row => `${this.tableColumnStatus(row)} div.js-choice-options`;
+    this.updateStatusInTableDropdownChoice = (row, statusId) => `${this.updateStatusInTableDropdown(row)}`
+      + ` button[data-value='${statusId}']`;
     // Column actions selectors
-    this.actionsColumn = `${this.tableRow} td.column-actions`;
-    this.viewRowLink = `${this.actionsColumn} a[data-original-title='View']`;
-    this.viewInvoiceRowLink = `${this.actionsColumn} a[data-original-title='View invoice']`;
-    this.viewDeliverySlipsRowLink = `${this.actionsColumn} a[data-original-title='View delivery slip']`;
+    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
+    this.viewRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View']`;
+    this.viewInvoiceRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View invoice']`;
+    this.viewDeliverySlipsRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View delivery slip']`;
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
     this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'order-grid-actions-button\']';
@@ -37,8 +38,8 @@ module.exports = class Order extends BOBasePage {
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
-    this.tableColumnOrderBulk = `${this.tableRow} td.column-orders_bulk`;
-    this.tableColumnOrderBulkCheckboxLabel = `${this.tableColumnOrderBulk} .md-checkbox i`;
+    this.tableColumnOrderBulk = row => `${this.tableRow(row)} td.column-orders_bulk`;
+    this.tableColumnOrderBulkCheckboxLabel = row => `${this.tableColumnOrderBulk(row)} .md-checkbox i`;
     // Order status modal
     this.updateOrdersStatusModal = '#changeOrdersStatusModal';
     this.updateOrdersStatusModalSelect = '#change_orders_status_new_order_status_id';
@@ -73,10 +74,10 @@ module.exports = class Order extends BOBasePage {
   async filterOrders(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value.toString());
+        await this.setValue(this.filterColumn(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.filterColumn.replace('%FILTERBY', filterBy), value);
+        await this.selectByVisibleText(this.filterColumn(filterBy), value);
         break;
       default:
       // Do nothing
@@ -118,7 +119,7 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToOrder(orderRow) {
-    await this.clickAndWaitForNavigation(this.viewRowLink.replace('%ROW', orderRow));
+    await this.clickAndWaitForNavigation(this.viewRowLink(orderRow));
   }
 
   /**
@@ -129,13 +130,9 @@ module.exports = class Order extends BOBasePage {
    */
   async getTextColumn(columnName, row) {
     if (columnName === 'osname') {
-      return this.getTextContent(this.updateStatusInTablebutton.replace('%ROW', row));
+      return this.getTextContent(this.updateStatusInTableButton(row));
     }
-    return this.getTextContent(
-      this.tableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', columnName),
-    );
+    return this.getTextContent(this.tableColumn(row, columnName));
   }
 
   /**
@@ -181,13 +178,11 @@ module.exports = class Order extends BOBasePage {
    */
   async setOrderStatus(row, status) {
     await Promise.all([
-      this.page.click(this.updateStatusInTablebutton.replace('%ROW', row)),
-      this.waitForVisibleSelector(`${this.updateStatusInTabledropdown.replace('%ROW', row)}.show`),
+      this.page.click(this.updateStatusInTableButton(row)),
+      this.waitForVisibleSelector(`${this.updateStatusInTableDropdown(row)}.show`),
     ]);
     await this.clickAndWaitForNavigation(
-      this.updateStatusInTabledropdownChoice
-        .replace('%STATUSID', status.id)
-        .replace('%ROW', row),
+      this.updateStatusInTableDropdownChoice(row, status.id),
     );
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
@@ -198,7 +193,7 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadInvoice(row) {
-    await this.page.click(this.viewInvoiceRowLink.replace('%ROW', row));
+    await this.page.click(this.viewInvoiceRowLink(row));
   }
 
   /**
@@ -207,7 +202,7 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadDeliverySlip(row) {
-    await this.page.click(this.viewDeliverySlipsRowLink.replace('%ROW', row));
+    await this.page.click(this.viewDeliverySlipsRowLink(row));
   }
 
   /**
@@ -226,7 +221,7 @@ module.exports = class Order extends BOBasePage {
       ]);
     } else {
       for (let i = 0; i < rows.length; i++) {
-        await this.page.click(this.tableColumnOrderBulkCheckboxLabel.replace('%ROW', rows[i]));
+        await this.page.click(this.tableColumnOrderBulkCheckboxLabel(rows[i]));
       }
       await this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`);
     }

@@ -71,7 +71,7 @@ describe('Enable reordering option', async () => {
     });
 
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier',`${test.args.action}AndViewMyShop`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
       // Click on view my shop
       page = await this.pageObjects.orderSettingsPage.viewMyShop();
       this.pageObjects = await init();
@@ -100,7 +100,7 @@ describe('Enable reordering option', async () => {
     });
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier',`${test.args.action}CheckAndBackToBO`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
       // Logout FO
       await this.pageObjects.orderHistoryPage.logout();
       page = await this.pageObjects.orderHistoryPage.closePage(browser, 1);
