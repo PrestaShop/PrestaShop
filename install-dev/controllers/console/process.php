@@ -164,17 +164,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         foreach (Language::getLanguages() as $lang) {
             Language::updateMultilangTable($lang['iso_code']);
         }
-
-        if ($this->datas->newsletter) {
-            $params = http_build_query(array(
-                'email' => $this->datas->admin_email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $this->datas->lang,
-                'visitorType' => 1,
-                'source' => 'installer',
-            ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
-        }
     }
 
     /**
@@ -256,7 +245,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             'admin_password' => $this->datas->admin_password,
             'admin_email' => $this->datas->admin_email,
             'configuration_agrement' => true,
-            'send_informations' => true,
             'enable_ssl' => $this->datas->enable_ssl,
             'rewrite_engine' => $this->datas->rewrite_engine,
         ));
