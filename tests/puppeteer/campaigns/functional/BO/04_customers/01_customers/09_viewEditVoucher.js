@@ -20,7 +20,7 @@ const CartRuleFaker = require('@data/faker/cartRule');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customers_customers_createEditViewVoucher';
+const baseContext = 'functional_BO_customers_customers_viewEditVoucher';
 
 let browser;
 let page;
