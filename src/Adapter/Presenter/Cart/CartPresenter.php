@@ -543,7 +543,7 @@ class CartPresenter implements PresenterInterface
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
 
-            if (array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product']) {
+            if ($this->cartVoucherHasGiftProductReduction($cartVoucher)) {
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
