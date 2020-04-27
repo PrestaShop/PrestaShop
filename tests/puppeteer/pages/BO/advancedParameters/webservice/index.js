@@ -16,7 +16,7 @@ module.exports = class WebService extends BOBasePage {
     this.webserviceGridTitle = `${this.webserviceGridPanel} h3.card-header-title`;
     this.webserviceListForm = '#webservice_key_grid';
     this.webserviceListTableRow = row => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
-    this.webserviceListTableColumn = (row, column) => `${this.webserviceListTableRow} td.column-${column}`;
+    this.webserviceListTableColumn = (row, column) => `${this.webserviceListTableRow(row)} td.column-${column}`;
     this.webserviceListTableColumnAction = row => this.webserviceListTableColumn(row, 'actions');
     this.webserviceListTableToggleDropDown = row => `${this.webserviceListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
