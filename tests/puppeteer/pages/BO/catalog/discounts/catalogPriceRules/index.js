@@ -1,5 +1,4 @@
 require('module-alias/register');
-require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
 module.exports = class CatalogPriceRules extends BOBasePage {
