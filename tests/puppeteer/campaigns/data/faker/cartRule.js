@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-module.exports = class Category {
+module.exports = class CartRule {
   constructor(cartRuleToCreate = {}) {
     this.name = cartRuleToCreate.name || faker.commerce.department();
     this.description = faker.lorem.sentence();
