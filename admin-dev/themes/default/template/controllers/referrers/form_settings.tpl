@@ -29,7 +29,7 @@
 					<h3>
 						<i class="icon-fullscreen"></i> {l s='Indexing' d='Admin.Shopparameters.Feature'}
 					</h3>
-					<div class="alert alert-info">{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "Refresh index" button. This process may take a while, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.' d='Admin.Shopparameters.Help'}</div>
+					<div class="alert alert-info">{l s='There is a huge quantity of data, so each connection corresponding to a referrer is indexed. You can also refresh this index by clicking the "%refresh_index_label%" button. This process may take a while, and it\'s only needed if you modified or added a referrer, or if you want changes to be retroactive.' d='Admin.Shopparameters.Help' sprintf=['%refresh_index_label%' => {l s='Refresh index' d='Admin.Shopparameters.Feature'}]}</div>
 					<button type="submit" class="btn btn-default" name="submitRefreshIndex" id="submitRefreshIndex">
 						<i class="icon-refresh"></i> {l s='Refresh index' d='Admin.Shopparameters.Feature'}
 					</button>
@@ -42,7 +42,7 @@
 					<h3>
 						<i class="icon-briefcase"></i> {l s='Cache' d='Admin.Shopparameters.Feature'}
 					</h3>
-					<div class="alert alert-info">{l s='Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "Refresh cache" button.' d='Admin.Shopparameters.Help'}</div>
+					<div class="alert alert-info">{l s='Your data is cached in order to sort it and filter it. You can refresh the cache by clicking on the "%refresh_cache_label%" button.' d='Admin.Shopparameters.Help' sprintf=['%refresh_cache_label%' => {l s='Refresh cache' d='Admin.Shopparameters.Feature'}]}</div>
 					<button type="submit" class="btn btn-default" name="submitRefreshCache" id="submitRefreshCache">
 						<i class="icon-refresh"></i> {l s='Refresh cache' d='Admin.Shopparameters.Feature'}
 					</button>

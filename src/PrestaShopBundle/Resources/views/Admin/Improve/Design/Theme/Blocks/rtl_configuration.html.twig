@@ -34,7 +34,7 @@
     <div class="card-text">
       <div class="alert alert-info">
         <p class="alert-text">
-          {{ 'Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.'|trans({}, 'Admin.Design.Help') }}
+          {{ 'Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you enable the "%generate_rtl_label%" option, any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.'|trans({'%generate_rtl_label%': 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature')}, 'Admin.Design.Help') }}
         </p>
       </div>
 

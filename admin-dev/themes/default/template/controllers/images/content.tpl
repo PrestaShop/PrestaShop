@@ -40,7 +40,7 @@
             </h3>
             <div class="alert alert-warning">
                 <p>{l s='You can choose to keep your images stored in the previous system. There\'s nothing wrong with that.' d='Admin.Design.Notification'}</p>
-                <p>{l s='You can also decide to move your images to the new storage system. In this case, click on the "Move images" button below. Please be patient. This can take several minutes.' d='Admin.Design.Notification'}</p>
+                <p>{l s='You can also decide to move your images to the new storage system. In this case, click on the "%move_images_label%" button below. Please be patient. This can take several minutes.' d='Admin.Design.Notification' sprintf=['%move_images_label%' => {l s='Move images' d='Admin.Design.Feature'}]}</p>
             </div>
             <div class="alert alert-info">&nbsp;
                 {l s='After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.' d='Admin.Design.Notification'}

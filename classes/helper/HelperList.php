@@ -426,7 +426,15 @@ class HelperListCore extends Helper
         }
 
         if (!array_key_exists('Copy images too?', self::$cache_lang)) {
-            self::$cache_lang['Copy images too?'] = Context::getContext()->getTranslator()->trans('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', [], 'Admin.Catalog.Notification');
+            $translator = Context::getContext()->getTranslator();
+            self::$cache_lang['Copy images too?'] = $translator->trans(
+                'This will copy the images too. If you wish to proceed, click "%yes_label%". If not, click "%no_label%".',
+                [
+                    '%yes_label%' => $translator->trans('Yes', [], 'Admin.Global'),
+                    '%no_label%' => $translator->trans('No', [], 'Admin.Global'),
+                ],
+                'Admin.Catalog.Notification'
+            );
         }
 
         $duplicate = $this->currentIndex . '&' . $this->identifier . '=' . $id . '&duplicate' . $this->table;

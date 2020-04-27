@@ -720,7 +720,13 @@ class AdminImagesControllerCore extends AdminController
             $this->max_execution_time = (int) ini_get('max_execution_time');
             $result = Image::moveToNewFileSystem($this->max_execution_time);
             if ($result === 'timeout') {
-                $this->errors[] = $this->trans('Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.', [], 'Admin.Design.Notification');
+                $this->errors[] = $this->trans(
+                    'Not all images have been moved. The server timed out before finishing. Click on "%move_images_label%" again to resume the moving process.',
+                    [
+                        '%move_images_label%' => $this->trans('Move images', [], 'Admin.Design.Feature'),
+                    ],
+                    'Admin.Design.Notification'
+                );
             } elseif ($result === false) {
                 $this->errors[] = $this->trans('Error: Some -- or all -- images cannot be moved.', [], 'Admin.Design.Notification');
             }

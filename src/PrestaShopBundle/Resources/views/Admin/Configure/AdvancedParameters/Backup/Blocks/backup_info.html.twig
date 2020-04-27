@@ -42,12 +42,12 @@
         <li>{{ 'Connect to "phpMyAdmin" and select your current database.'|trans({}, 'Admin.Advparameters.Help') }}</li>
         <li>{{ 'Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.'|trans({}, 'Admin.Advparameters.Help') }}</li>
         <li>{{ 'At the top of the screen, please select the "Import" tab'|trans({}, 'Admin.Advparameters.Help') }}</li>
-        <li>{{ 'Click on the "Browse" button and select the backup file from your hard drive.'|trans({}, 'Admin.Advparameters.Help') }}</li>
+        <li>{{ 'Click on the "%phpmyadmin_browse_label%" button and select the backup file from your hard drive.'|trans({'%phpmyadmin_browse_label%': 'Browse'|trans({}, 'Admin.Actions')}, 'Admin.Advparameters.Help') }}</li>
         <li>
           {{ 'Check the maximum filesize allowed (e.g. Max: 16MB)'|trans({}, 'Admin.Advparameters.Help') }} <br>
           {{ 'If your backup file exceeds this limit, contact your hosting provider for assistance. '|trans({}, 'Admin.Advparameters.Help') }}
         </li>
-        <li>{{ 'Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.'|trans({}, 'Admin.Advparameters.Help') }} <br></li>
+        <li>{{ 'Click on the "%phpmyadmin_go_label%" button and please wait patiently for the import process to conclude. This may take several minutes.'|trans({'%phpmyadmin_go_label%': 'Go'|trans({}, 'Admin.Actions')}, 'Admin.Advparameters.Help') }} <br></li>
       </ol>
     {% endif %}
   </div>

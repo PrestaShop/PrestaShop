@@ -72,7 +72,7 @@
 <div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{l s='This is the code users should enter to apply the voucher to a cart. Either create your own code or generate one by clicking on "Generate".' d='Admin.Catalog.Help'}">
+		title="{{l s='This is the code users should enter to apply the voucher to a cart. Either create your own code or generate one by clicking on "%generate_label%".' d='Admin.Catalog.Help'  sprintf=['%generate_label%' => {l s='Generate' d='Admin.Actions'}]}|escape:"html"}">
 			{l s='Code' d='Admin.Global'}
 		</span>
 	</label>
