@@ -24,7 +24,7 @@ module.exports = class Order extends BOBasePage {
     this.updateStatusInTableButton = row => `${this.tableColumnStatus(row)} button`;
     this.updateStatusInTableDropdown = row => `${this.tableColumnStatus(row)} div.js-choice-options`;
     this.updateStatusInTableDropdownChoice = (row, statusId) => `${this.updateStatusInTableDropdown(row)}`
-      + `button[data-value='${statusId}']`;
+      + ` button[data-value='${statusId}']`;
     // Column actions selectors
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.viewRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View']`;
