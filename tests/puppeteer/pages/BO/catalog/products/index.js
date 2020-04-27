@@ -379,15 +379,15 @@ module.exports = class Product extends BOBasePage {
     // Then delete first product and only product shown
     await Promise.all([
       this.waitForVisibleSelector(this.productBulkMenuButton),
-      this.page.click(this.selectAllBulkCheckboxLabel(1)),
+      this.page.click(this.selectAllBulkCheckboxLabel),
     ]);
     await Promise.all([
       this.waitForVisibleSelector(`${this.productBulkMenuButton}[aria-expanded='true']`),
-      this.page.click(this.productBulkMenuButton(1)),
+      this.page.click(this.productBulkMenuButton),
     ]);
     await Promise.all([
       this.waitForVisibleSelector(this.catalogDeletionModalDialog),
-      this.page.click(this.productBulkDeleteLink(1)),
+      this.page.click(this.productBulkDeleteLink),
     ]);
     await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
