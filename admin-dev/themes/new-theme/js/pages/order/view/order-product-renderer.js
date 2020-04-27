@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,7 +46,17 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsCount).html(numProducts);
   }
 
-  editProductFromList(orderDetailId, quantity, priceTaxIncl, priceTaxExcl, taxRate, location, availableQuantity, orderInvoiceId) {
+  editProductFromList(
+    orderDetailId,
+    quantity,
+    priceTaxIncl,
+    priceTaxExcl,
+    taxRate,
+    location,
+    availableQuantity,
+    availableOutOfStock,
+    orderInvoiceId,
+  ) {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -55,6 +65,7 @@ export default class OrderProductRenderer {
       quantity,
       location,
       availableQuantity,
+      availableOutOfStock,
       orderInvoiceId,
     });
     $(OrderViewPageMap.productAddActionBtn).addClass('d-none');
@@ -68,6 +79,7 @@ export default class OrderProductRenderer {
   }
 
   moveProductsPanelToRefundPosition() {
+    this.resetAllEditRows();
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`).addClass('d-none');
     this.moveProductPanelToTop();
   }
@@ -80,8 +92,9 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsPanel).detach().appendTo($modificationPosition);
     $modificationPosition.closest('.row').removeClass('d-none');
 
-    // Show column location
-    this.toggleColumnLocation(OrderViewPageMap.productsCellLocation, true);
+    // Show column location & refunded
+    this.toggleColumn(OrderViewPageMap.productsCellLocation);
+    this.toggleColumn(OrderViewPageMap.productsCellRefunded);
 
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
@@ -108,15 +121,22 @@ export default class OrderProductRenderer {
   resetAddRow() {
     $(OrderViewPageMap.productAddIdInput).val('');
     $(OrderViewPageMap.productSearchInput).val('');
+    $(OrderViewPageMap.productAddCombinationsBlock).addClass('d-none');
     $(OrderViewPageMap.productAddCombinationsSelect).val('');
+    $(OrderViewPageMap.productAddCombinationsSelect).prop('disabled', false);
     $(OrderViewPageMap.productAddPriceTaxExclInput).val('');
     $(OrderViewPageMap.productAddPriceTaxInclInput).val('');
     $(OrderViewPageMap.productAddQuantityInput).val('');
     $(OrderViewPageMap.productAddAvailableText).html('');
     $(OrderViewPageMap.productAddLocationText).html('');
     $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
-    $(OrderViewPageMap.productAddInvoiceSelect).val(0);
     $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
+  }
+
+  resetAllEditRows() {
+    $(OrderViewPageMap.productEditBtn).each((key, editButton) => {
+      this.resetEditRow($(editButton).data('orderDetailId'));
+    });
   }
 
   resetEditRow(orderProductId) {
@@ -153,8 +173,9 @@ export default class OrderProductRenderer {
     // Remove all edition rows (careful not to remove the template)
     $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).remove();
 
-    // Toggle Column Location
-    this.toggleColumnLocation(OrderViewPageMap.productsCellLocationDisplayed);
+    // Toggle Column Location & Refunded
+    this.toggleColumn(OrderViewPageMap.productsCellLocationDisplayed);
+    this.toggleColumn(OrderViewPageMap.productsCellRefundedDisplayed);
   }
 
   paginateUpdateControls(numPage) {
@@ -198,25 +219,25 @@ export default class OrderProductRenderer {
   }
 
   toggleProductAddNewInvoiceInfo() {
-    if ($(OrderViewPageMap.productAddInvoiceSelect).val() === 0) {
+    if (parseInt($(OrderViewPageMap.productAddInvoiceSelect).val(), 10) === 0) {
       $(OrderViewPageMap.productAddNewInvoiceInfo).removeClass('d-none');
     } else {
       $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
     }
   }
 
-  toggleColumnLocation(target, forceDisplay = null) {
-    let isColumnLocationDisplayed = false;
+  toggleColumn(target, forceDisplay = null) {
+    let isColumnDisplayed = false;
     if (forceDisplay === null) {
       $(target).filter('td').each(function() {
-        if ($(this).html() !== '') {
-          isColumnLocationDisplayed = true;
+        if ($(this).html().trim() !== '') {
+          isColumnDisplayed = true;
           return false;
         }
       });
     } else {
-      isColumnLocationDisplayed = forceDisplay;
+      isColumnDisplayed = forceDisplay;
     }
-    $(target).toggleClass('d-none', !isColumnLocationDisplayed);
+    $(target).toggleClass('d-none', !isColumnDisplayed);
   }
 }

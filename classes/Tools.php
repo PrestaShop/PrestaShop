@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -47,6 +48,7 @@ class ToolsCore
     protected static $_user_browser;
     protected static $request;
     protected static $cldr_cache = [];
+    protected static $colorBrightnessCalculator;
 
     public static $round_mode = null;
 
@@ -2344,6 +2346,15 @@ class ToolsCore
         return (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
     }
 
+    public static function isBright($hex)
+    {
+        if (null === self::$colorBrightnessCalculator) {
+            self::$colorBrightnessCalculator = new ColorBrightnessCalculator();
+        }
+
+        return self::$colorBrightnessCalculator->isBright($hex);
+    }
+
     public static function parserSQL($sql)
     {
         if (strlen($sql) > 0) {
@@ -2859,10 +2870,10 @@ FileETag none
         $tab['Files'] = [];
         if (Configuration::get('PS_REWRITING_SETTINGS')) {
             $sql = 'SELECT DISTINCT ml.url_rewrite, l.iso_code
-					FROM ' . _DB_PREFIX_ . 'meta m
-					INNER JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta
-					INNER JOIN ' . _DB_PREFIX_ . 'lang l ON l.id_lang = ml.id_lang
-					WHERE l.active = 1 AND m.page IN (\'' . implode('\', \'', $disallow_controllers) . '\')';
+                FROM ' . _DB_PREFIX_ . 'meta m
+                INNER JOIN ' . _DB_PREFIX_ . 'meta_lang ml ON ml.id_meta = m.id_meta
+                INNER JOIN ' . _DB_PREFIX_ . 'lang l ON l.id_lang = ml.id_lang
+                WHERE l.active = 1 AND m.page IN (\'' . implode('\', \'', $disallow_controllers) . '\')';
             if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
                 foreach ($results as $row) {
                     $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
@@ -4264,10 +4275,11 @@ exit;
                 $n = 1;
                 $n_categories = (int) count($categories);
                 foreach ($categories as $category) {
-                    $link = Context::getContext()->link->getAdminLink('AdminCategories');
-                    $edit = '<a href="' . Tools::safeOutput($link . '&id_category=' . (int) $category['id_category'] . '&' . (($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')) . '" title="' . ($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify') . '"><i class="icon-' . (($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil') . '"></i></a> ';
+                    $action = (($category['id_category'] == (int) Configuration::get('PS_HOME_CATEGORY') || $home) ? 'index' : 'updatecategory');
+                    $link = Context::getContext()->link->getAdminLink('AdminCategories', true, ['action' => $action, 'id_category' => (int) $category['id_category']]);
+                    $edit = '<a href="' . Tools::safeOutput($link) . '" title="' . ($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify') . '"><i class="icon-' . (($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil') . '"></i></a> ';
                     $full_path .= $edit .
-                                  ($n < $n_categories ? '<a href="' . Tools::safeOutput($url_base . '&id_category=' . (int) $category['id_category'] . '&viewcategory&token=' . Tools::getAdminToken('AdminCategories' . (int) Tab::getIdFromClassName('AdminCategories') . (int) $context->employee->id)) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
+                                  ($n < $n_categories ? '<a href="' . Tools::safeOutput($link) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
                                   (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">' . htmlentities($highlight, ENT_NOQUOTES, 'UTF-8') . '</span>', $category['name']) : $category['name']) .
                                   ($n < $n_categories ? '</a>' : '') .
                                   (($n++ != $n_categories || !empty($path)) ? ' > ' : '');

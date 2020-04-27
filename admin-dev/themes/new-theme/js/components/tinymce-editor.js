@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -82,7 +82,8 @@ class TinyMCEEditor {
         selector: '.rte',
         plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
         browser_spellcheck: true,
-        toolbar1: 'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+        toolbar1:
+          'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
         toolbar2: '',
         external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
         filemanager_title: 'File manager',
@@ -166,19 +167,8 @@ class TinyMCEEditor {
             // Reset content to force refresh of editor
             editor.setContent(editor.getContent());
           }
-
-          EventEmitter.emit('languageSelected', {
-            selectedLocale: textareaLocale,
-            form
-          });
         });
       }
-    });
-
-    EventEmitter.on('languageSelected', data => {
-      const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
-
-      $(textareaLinkSelector).click();
     });
   }
 

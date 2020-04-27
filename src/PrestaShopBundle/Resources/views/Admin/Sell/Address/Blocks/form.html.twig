@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -55,7 +55,6 @@
         {% endif %}
         {% if addressForm.customer_email is defined %}
           {{ ps.form_group_row(addressForm.customer_email, {'attr': {
-            'class': 'js-manufacturer-country-select',
             'data-customer-information-url': path('admin_customer_for_address_information') }}, {
             'label': 'Customer email'|trans({}, 'Admin.Orderscustomers.Feature'),
           }) }}
@@ -108,29 +107,24 @@
       }) }}
 
       {{ ps.form_group_row(addressForm.id_country, {'attr': {
+        'class': 'js-customer-country-select',
         'data-states-url': path('admin_country_states') }}, {
         'label': 'Country'|trans({}, 'Admin.Global'),
       }) }}
 
-      {% if addressForm.id_state.vars.disabled is defined and addressForm.id_state.vars.disabled %}
-        {% set rowAttr = {'style': 'display:none'} %}
-      {% endif %}
-
-      {{ ps.form_group_row(addressForm.id_state, {}, {
-        'label': 'State'|trans({}, 'Admin.Global'),
-        'class': 'js-address-state-select',
-        'row_attr': rowAttr|default({})
-      }) }}
+      <div class="js-address-state-select{% if addressForm.id_state.vars.choices is empty %} d-none{% endif %}">
+        {{ ps.form_group_row(addressForm.id_state, {}, {
+          'label': 'State'|trans({}, 'Admin.Global'),
+        }) }}
+      </div>
 
       {{ ps.form_group_row(addressForm.phone, {}, {
         'label': 'Phone'|trans({}, 'Admin.Global')
       }) }}
 
-      {% if addressForm.phone_mobile is defined %}
-        {{ ps.form_group_row(addressForm.phone_mobile, {}, {
-          'label': 'Mobile phone'|trans({}, 'Admin.Global')
-        }) }}
-      {% endif %}
+      {{ ps.form_group_row(addressForm.phone_mobile, {}, {
+        'label': 'Mobile phone'|trans({}, 'Admin.Global')
+      }) }}
 
       {{ ps.form_group_row(addressForm.other, {}, {
         'label': 'Other'|trans({}, 'Admin.Global'),
@@ -143,7 +137,11 @@
 
   <div class="card-footer">
     <div class="d-inline-flex">
-      <a href="{{ path('admin_addresses_index') }}" class="btn btn-outline-secondary">
+      {% if (displayInIframe is defined and displayInIframe == true) %}
+        <a href="javascript:window.parent.$.fancybox.close();" class="btn btn-outline-secondary">
+      {% else %}
+        <a href="{{ cancelPath|default(path('admin_addresses_index')) }}" class="btn btn-outline-secondary">
+      {% endif %}
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
     </div>

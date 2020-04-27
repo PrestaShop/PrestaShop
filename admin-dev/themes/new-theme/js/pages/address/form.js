@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@ import CountryDniRequiredToggler from '@components/country-dni-required-toggler'
 import CountryPostcodeRequiredToggler from '@components/country-postcode-required-toggler';
 import addressFormMap from './address-form-map';
 
-const $ = window.$;
+const {$} = window;
 
 $(document).ready(() => {
   new AutocompleteWithEmail(
@@ -38,7 +38,7 @@ $(document).ready(() => {
       firstName: addressFormMap.addressFirstnameInput,
       lastName: addressFormMap.addressLastnameInput,
       company: addressFormMap.addressCompanyInput,
-    }
+    },
   );
   new CountryStateSelectionToggler(
     addressFormMap.addressCountrySelect,

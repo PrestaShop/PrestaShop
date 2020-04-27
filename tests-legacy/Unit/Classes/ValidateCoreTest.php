@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -243,7 +243,12 @@ class ValidateCoreTest extends TestCase
             array(true, 'john#doe@prestashop.com'),
             array(false, ''),
             array(false, 'john.doe@prestashop,com'),
-            array(false, 'john.doe@prestashop'),
+            array(true, 'john.doe@prestashop'),
+            array(true, 'john.doe@сайт.рф'),
+            array(true, 'john.doe@xn--80aswg.xn--p1ai'),
+            array(false, 'иван@prestashop.com'), // rfc6531 valid but not swift mailer compatible
+            array(true, 'xn--80adrw@prestashop.com'),
+            array(true, 'xn--80adrw@xn--80aswg.xn--p1ai'),
             array(false, 123456789),
             array(false, false),
         );

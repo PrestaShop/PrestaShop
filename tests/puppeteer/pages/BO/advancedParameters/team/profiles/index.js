@@ -14,18 +14,19 @@ module.exports = class Profiles extends BOBasePage {
     this.profileGridPanel = '#profile_grid_panel';
     this.profileGridTitle = `${this.profileGridPanel} h3.card-header-title`;
     this.profilesListForm = '#profile_grid';
-    this.profilesListTableRow = `${this.profilesListForm} tbody tr:nth-child(%ROW)`;
-    this.profilesListTableColumn = `${this.profilesListTableRow} td.column-%COLUMN`;
-    this.profilesListTableColumnAction = this.profilesListTableColumn.replace('%COLUMN', 'actions');
-    this.profilesListTableToggleDropDown = `${this.profilesListTableColumnAction} a[data-toggle='dropdown']`;
-    this.profilesListTableDeleteLink = `${this.profilesListTableColumnAction} a[data-url]`;
-    this.profilesListTableEditLink = `${this.profilesListTableColumnAction} a[href*='edit']`;
+    this.profilesListTableRow = row => `${this.profilesListForm} tbody tr:nth-child(${row})`;
+    this.profilesListTableColumn = (row, column) => `${this.profilesListTableRow(row)} td.column-${column}`;
+    this.profilesListTableColumnAction = row => this.profilesListTableColumn(row, 'actions');
+    this.profilesListTableToggleDropDown = row => `${this.profilesListTableColumnAction(row)
+    } a[data-toggle='dropdown']`;
+    this.profilesListTableDeleteLink = row => `${this.profilesListTableColumnAction(row)} a[data-url]`;
+    this.profilesListTableEditLink = row => `${this.profilesListTableColumnAction(row)} a[href*='edit']`;
     // Filters
-    this.profileFilterInput = `${this.profilesListForm} #profile_%FILTERBY`;
+    this.profileFilterInput = filterBy => `${this.profilesListForm} #profile_${filterBy}`;
     this.filterSearchButton = `${this.profilesListForm} button[name='profile[actions][search]']`;
     this.filterResetButton = `${this.profilesListForm} button[name='profile[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.profilesListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
   }
@@ -49,7 +50,7 @@ module.exports = class Profiles extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.profilesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+    return this.getTextContent(this.profilesListTableColumn(row, column));
   }
 
   /**
@@ -78,7 +79,7 @@ module.exports = class Profiles extends BOBasePage {
    */
   async goToEditProfilePage(row) {
     // Click on edit
-    await this.clickAndWaitForNavigation(this.profilesListTableEditLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.profilesListTableEditLink(row));
   }
 
   /**
@@ -91,10 +92,10 @@ module.exports = class Profiles extends BOBasePage {
   async filterProfiles(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.profileFilterInput.replace('%FILTERBY', filterBy), value.toString());
+        await this.setValue(this.profileFilterInput(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.profileFilterInput.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(this.profileFilterInput(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
@@ -112,15 +113,12 @@ module.exports = class Profiles extends BOBasePage {
     this.dialogListener();
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.profilesListTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.profilesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true}),
+      this.page.click(this.profilesListTableToggleDropDown(row)),
+      this.waitForVisibleSelector(
+        `${this.profilesListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
     // Click on delete
-    await Promise.all([
-      this.page.click(this.profilesListTableDeleteLink.replace('%ROW', row)),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    await this.clickAndWaitForNavigation(this.profilesListTableDeleteLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -133,18 +131,15 @@ module.exports = class Profiles extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,8 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderPr
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use Product;
 use StockAvailable;
-use Tools;
 use Validate;
 
 /**
@@ -73,8 +74,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         $product_quantity = $command->getQuantity();
 
         // @todo: use https://github.com/PrestaShop/decimal for price computations
-        $product_price_tax_incl = Tools::ps_round($command->getPriceTaxIncluded(), 2);
-        $product_price_tax_excl = Tools::ps_round($command->getPriceTaxExcluded(), 2);
+        $product_price_tax_incl = (float) $command->getPriceTaxIncluded()->round(2);
+        $product_price_tax_excl = (float) $command->getPriceTaxExcluded()->round(2);
         $total_products_tax_incl = $product_price_tax_incl * $product_quantity;
         $total_products_tax_excl = $product_price_tax_excl * $product_quantity;
 
@@ -168,7 +169,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $order->id_shop
         );
 
-        $order = $order->refreshShippingCost();
+        $product = new Product($orderDetail->product_id);
+
+        if (!$product->is_virtual) {
+            $order = $order->refreshShippingCost();
+        }
 
         if (!$res) {
             throw new OrderException('An error occurred while editing the product line.');
@@ -216,13 +221,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             throw new OrderException('You cannot use this invoice for the order');
         }
 
-        // Clean price
-
-        // @todo: make sure clean
-        $product_price_tax_incl = str_replace(',', '.', $command->getPriceTaxIncluded());
-        $product_price_tax_excl = str_replace(',', '.', $command->getPriceTaxExcluded());
-
-        if (!Validate::isPrice($product_price_tax_incl) || !Validate::isPrice($product_price_tax_excl)) {
+        if ($command->getPriceTaxIncluded()->isNegative() || $command->getPriceTaxExcluded()->isNegative()) {
             throw new OrderException('Invalid price');
         }
 
@@ -240,5 +239,14 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 //                }
 //            }
 //        }
+
+        //check if product is available in stock
+        if (!\Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+
+            if ($availableQuantity < $command->getQuantity()) {
+                throw new ProductOutOfStockException('Not enough products in stock');
+            }
+        }
     }
 }

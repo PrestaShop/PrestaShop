@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -138,7 +138,7 @@ class OrderSlipCore extends ObjectModel
         SELECT *
         FROM `' . _DB_PREFIX_ . 'order_slip`
         WHERE `id_customer` = ' . (int) ($customer_id) .
-        ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
+            ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
         ORDER BY `date_add` DESC');
     }
 
@@ -347,8 +347,8 @@ class OrderSlipCore extends ObjectModel
 
             $address = Address::initialize($order->id_address_invoice, false);
             $id_address = (int) $address->id;
-            $id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int) $order_detail->product_id);
-            $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+            $id_tax_rules_group = (int) $order_detail->id_tax_rules_group;
+            $tax_calculator = $order_detail->getTaxCalculator();
 
             $order_slip->{'total_products_tax_' . $inc_or_ex_1} += $price * $quantity;
 

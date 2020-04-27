@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,7 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
+import ConfirmModal from '@components/modal';
 
 const $ = window.$;
 
@@ -48,6 +49,7 @@ export default class OrderProductAdd {
     this.totalPriceText = $(OrderViewPageMap.productAddTotalPriceText);
     this.invoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
     this.freeShippingSelect = $(OrderViewPageMap.productAddFreeShippingSelect);
+    this.productAddMenuBtn = $(OrderViewPageMap.productAddBtn);
     this.available = null;
     this.setupListener();
     this.product = {};
@@ -69,15 +71,17 @@ export default class OrderProductAdd {
       this.locationText.html($(event.currentTarget).find(':selected').data('location'));
       this.available = $(event.currentTarget).find(':selected').data('stock');
       this.quantityInput.trigger('change');
+      this.orderProductRenderer.toggleColumn(OrderViewPageMap.productsCellLocation);
     });
     this.quantityInput.on('change keyup', (event) => {
       if (this.available !== null) {
-        const quantity = parseInt(event.target.value ? event.target.value : 0, 10);
+        const quantity = Number(event.target.value);
         const available = this.available - quantity;
         const availableOutOfStock = this.availableText.data('availableOutOfStock');
         this.availableText.text(available);
         this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
-        this.productAddActionBtn.prop('disabled', !availableOutOfStock && available < 0);
+        const disableAddActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock) ? true : false;
+        this.productAddActionBtn.prop('disabled', disableAddActionBtn);
         this.invoiceSelect.prop('disabled', !availableOutOfStock && available < 0);
 
         const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
@@ -116,7 +120,7 @@ export default class OrderProductAdd {
         this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
       );
     });
-    this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
+    this.productAddActionBtn.on('click', event => this.handleAddProductWithConfirmationModal(event));
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
@@ -131,6 +135,7 @@ export default class OrderProductAdd {
     this.quantityInput.val(1);
     this.quantityInput.trigger('change');
     this.setCombinations(product.combinations);
+    this.orderProductRenderer.toggleColumn(OrderViewPageMap.productsCellLocation);
   }
 
   setCombinations(combinations) {
@@ -147,7 +152,7 @@ export default class OrderProductAdd {
   addProduct(orderId) {
     this.productAddActionBtn.prop('disabled', true);
     this.invoiceSelect.prop('disabled', true);
-    this.combinationsBlock.addClass('d-none');
+    this.combinationsSelect.prop('disabled', true);
 
     const params = {
       product_id: this.productIdInput.val(),
@@ -169,9 +174,32 @@ export default class OrderProductAdd {
         newRow: response,
       });
     }, (response) => {
-      if (response.message) {
-        $.growl.error({message: response.message});
+      this.productAddActionBtn.prop('disabled', false);
+      this.invoiceSelect.prop('disabled', false);
+      this.combinationsSelect.prop('disabled', false);
+
+      if (response.responseJSON && response.responseJSON.message) {
+        $.growl.error({message: response.responseJSON.message});
       }
     });
+  }
+
+  handleAddProductWithConfirmationModal(event) {
+    const invoiceId = parseInt(this.invoiceSelect.val(), 10);
+    const orderId = $(event.currentTarget).data('orderId');
+
+    if (invoiceId === 0) {
+      const modal = new ConfirmModal({
+        id: 'modal-confirm-new-invoice',
+        confirmTitle: this.invoiceSelect.data('modal-title'),
+        confirmMessage: this.invoiceSelect.data('modal-body'),
+        confirmButtonLabel: this.invoiceSelect.data('modal-apply'),
+        closeButtonLabel: this.invoiceSelect.data('modal-cancel'),
+      }, () => this.addProduct(orderId));
+
+      modal.show();
+    } else {
+      this.addProduct(orderId);
+    }
   }
 }

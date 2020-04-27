@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -936,7 +936,16 @@ class DispatcherCore
                     }
                 } else {
                     if ($params[$key]) {
-                        $replace = $route['keywords'][$key]['prepend'] . $params[$key] . $route['keywords'][$key]['append'];
+                        $parameter = $params[$key];
+                        if (is_array($parameter)) {
+                            if (array_key_exists($id_lang, $parameter)) {
+                                $parameter = $parameter[$id_lang];
+                            } else {
+                                // made the choice to return the first element of the array
+                                $parameter = reset($parameter);
+                            }
+                        }
+                        $replace = $route['keywords'][$key]['prepend'] . $parameter . $route['keywords'][$key]['append'];
                     } else {
                         $replace = '';
                     }

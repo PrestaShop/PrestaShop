@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -183,7 +183,7 @@ function updateProduct(event, eventType, updateUrl) {
 
         $('.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices').replaceWith(data.product_prices);
         $('.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization').replaceWith(data.product_customization);
-        $('.quickview .product-variants .page-product:not(.modal-open) .row .product-variants').replaceWith(data.product_variants);
+        $('.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants').replaceWith(data.product_variants);
         $('.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts').replaceWith(data.product_discounts);
         $('.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info').replaceWith(data.product_additional_info);
         $('.quickview #product-details, #product-details').replaceWith(data.product_details);

@@ -20,22 +20,25 @@ module.exports = class Invoice extends BOBasePage {
     // By order status form
     this.generateByStatusForm = '[name="generate_by_status"]';
     this.formGenerateByStatus = '#form_generate_by_status_order_states';
-    this.statusOrderStateInput = `${this.formGenerateByStatus} input#form_generate_by_status_order_states_%ID`;
-    this.statusCheckbox = `${this.statusOrderStateInput}:first-of-type + i`;
+    this.statusOrderStateInput = id => `${this.formGenerateByStatus} input#form_generate_by_status_order_states_${id}`;
+    this.statusCheckbox = id => `${this.statusOrderStateInput(id)}:first-of-type + i`;
     this.generatePdfByStatusButton = `${this.generateByStatusForm} .btn.btn-primary`;
     // Invoice options form
     this.invoiceOptionsForm = '[name="invoice_options"]';
-    this.invoiceOptionsEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_invoices_%ID"]`;
-    this.taxBreakdownEnable = `${this.invoiceOptionsForm} label[for="form_invoice_options_enable_tax_breakdown_%ID"]`;
-    this.invoiceOptionEnableProductImage = `${this.invoiceOptionsForm} 
-    label[for="form_invoice_options_enable_product_images_%ID"]`;
+    this.invoiceOptionsEnable = id => `${this.invoiceOptionsForm
+    } label[for='form_invoice_options_enable_invoices_${id}']`;
+    this.taxBreakdownEnable = id => `${this.invoiceOptionsForm
+    } label[for='form_invoice_options_enable_tax_breakdown_${id}']`;
+    this.invoiceOptionEnableProductImage = id => `${this.invoiceOptionsForm
+    } label[for='form_invoice_options_enable_product_images_${id}']`;
     this.invoiceNumberInput = '#form_invoice_options_invoice_number';
     this.legalFreeTextInput = '#form_invoice_options_legal_free_text_1';
     this.footerTextInput = '#form_invoice_options_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
     this.invoicePrefixInput = '#form_invoice_options_invoice_prefix_1';
-    this.invoiceAddCurrentYear = `${this.invoiceOptionsForm} label[for="form_invoice_options_add_current_year_%ID"]`;
-    this.optionYearPositionRadioButton = '#form_invoice_options_year_position_%ID';
+    this.invoiceAddCurrentYear = id => `${this.invoiceOptionsForm
+    } label[for='form_invoice_options_add_current_year_${id}']`;
+    this.optionYearPositionRadioButton = id => `#form_invoice_options_year_position_${id}`;
   }
 
   /*
@@ -62,7 +65,7 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async chooseStatus(statusID) {
-    await this.page.click(this.statusCheckbox.replace('%ID', statusID));
+    await this.page.click(this.statusCheckbox(statusID));
   }
 
   /** Generate PDF by status
@@ -78,7 +81,7 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableInvoices(enable = true) {
-    await this.page.click(this.invoiceOptionsEnable.replace('%ID', enable ? 1 : 0));
+    await this.page.click(this.invoiceOptionsEnable(enable ? 1 : 0));
   }
 
   /** Save invoice options
@@ -95,7 +98,7 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableProductImage(enable = true) {
-    await this.page.click(this.invoiceOptionEnableProductImage.replace('%ID', enable ? 1 : 0));
+    await this.page.click(this.invoiceOptionEnableProductImage(enable ? 1 : 0));
   }
 
   /**
@@ -104,7 +107,7 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableTaxBreakdown(enable = true) {
-    await this.page.click(this.taxBreakdownEnable.replace('%ID', enable ? 1 : 0));
+    await this.page.click(this.taxBreakdownEnable(enable ? 1 : 0));
   }
 
   /**
@@ -114,7 +117,6 @@ module.exports = class Invoice extends BOBasePage {
    */
   async setInputOptions(data) {
     await this.setValue(this.invoiceNumberInput, data.invoiceNumber);
-    await this.setValue(this.legalFreeTextInput, data.legalFreeText);
     await this.setValue(this.footerTextInput, data.footerText);
   }
 
@@ -124,7 +126,7 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async enableAddCurrentYearToInvoice(enable = true) {
-    await this.page.click(this.invoiceAddCurrentYear.replace('%ID', enable ? 1 : 0));
+    await this.page.click(this.invoiceAddCurrentYear(enable ? 1 : 0));
   }
 
   /**
@@ -133,7 +135,7 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async chooseInvoiceOptionsYearPosition(id) {
-    await this.page.click(this.optionYearPositionRadioButton.replace('%ID', id));
+    await this.page.click(this.optionYearPositionRadioButton(id));
   }
 
   /** Edit invoice Prefix

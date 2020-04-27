@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -77,12 +77,14 @@ export default class AddressesRenderer {
     if (address.delivery) {
       $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
       deliveryAddressOption.selected = 'selected';
+      $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+        addressId: address.addressId,
+        liteDisplaying: 1,
+        submitFormAjax: 1,
+      }));
     }
 
     $(createOrderMap.deliveryAddressSelect).append($('<option>', deliveryAddressOption));
-    $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
-      addressId: address.addressId,
-    }));
   }
 
   /**
@@ -101,12 +103,14 @@ export default class AddressesRenderer {
     if (address.invoice) {
       $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
       invoiceAddressOption.selected = 'selected';
+      $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+        addressId: address.addressId,
+        liteDisplaying: 1,
+        submitFormAjax: 1,
+      }));
     }
 
     $(createOrderMap.invoiceAddressSelect).append($('<option>', invoiceAddressOption));
-    $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
-      addressId: address.addressId,
-    }));
   }
 
   /**

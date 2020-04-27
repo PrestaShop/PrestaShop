@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,10 +48,6 @@ export default class PreviewExtension {
 
     this.$gridContainer.find('tbody tr').on('mouseover mouseleave', event => this._handleIconHovering(event));
     this.$gridContainer.find(this.previewToggleSelector).on('click', event => this._togglePreview(event));
-
-    if (typeof this.previewCustomization === 'function') {
-      this.previewCustomization(this.$gridContainer);
-    }
   }
 
   /**
@@ -126,16 +122,21 @@ export default class PreviewExtension {
   _renderPreviewContent($columnRow, content) {
     const rowColumnCount = $columnRow.find('td').length;
 
-    const previewTemplate = `
+    const $previewTemplate = $(`
         <tr class="preview-row">
           <td colspan="${rowColumnCount}">${content}</td>
         </tr>
-      `;
+      `);
 
     $columnRow.addClass(this.previewOpenClass);
     this._showCollapseIcon($columnRow);
     this._hideExpandIcon($columnRow);
-    $columnRow.after(previewTemplate);
+
+    if (typeof this.previewCustomization === 'function') {
+      this.previewCustomization($previewTemplate);
+    }
+
+    $columnRow.after($previewTemplate);
   }
 
   /**

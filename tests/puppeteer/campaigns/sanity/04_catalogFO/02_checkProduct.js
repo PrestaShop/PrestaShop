@@ -56,12 +56,11 @@ describe('Check the Product page', async () => {
 
   it('should check the product page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductPage', baseContext);
-    const result = await this.pageObjects.productPage.checkProduct(ProductData.firstProductData);
+    const result = await this.pageObjects.productPage.getProductInformation(ProductData.firstProductData);
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity_wanted).to.be.true,
-      expect(result.description).to.be.true,
+      expect(result.name.toLowerCase()).to.equal(ProductData.firstProductData.name.toLocaleLowerCase()),
+      expect(result.price).to.equal(ProductData.firstProductData.price),
+      expect(result.description).to.contains(ProductData.firstProductData.description),
     ]);
   });
 });

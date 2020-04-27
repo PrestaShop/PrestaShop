@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% set rowIsDisplayed =  (productIndex is defined and paginationNum is defined and productIndex > paginationNum) %}
-<tr id="orderProduct_{{ product.orderDetailId }}"{% if rowIsDisplayed %} class="d-none"{% endif %}>
+<tr id="orderProduct_{{ product.orderDetailId }}" class="cellProduct{% if rowIsDisplayed %} d-none d-print-table-row{% endif %}">
   <td class="cellProductImg">
     {% if product.imagePath %}
       <img src="{{ product.imagePath }}" alt="{{ product.name }}" />
@@ -46,7 +46,7 @@
       {% endif %}
     </a>
     {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') and product.customizations is null %}
-      <span class="btn-product-pack-modal" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
+      <span class="btn-product-pack-modal d-print-none" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
         <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
       </span>
     {% endif %}
@@ -64,8 +64,10 @@
     </div>
   </td>
   <td class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
-  <td>
-    {{ product.quantityRefunded }}{% if product.amountRefunded %} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}){% endif %}
+  <td class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
+    {% if product.quantityRefunded > 0 %}
+      {{ product.quantityRefunded }} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }})
+    {% endif %}
   </td>
   <td class="cellProductAvailableQuantity">{{ product.availableQuantity }}</td>
   <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
@@ -87,6 +89,7 @@
         data-tax-rate="{{ product.taxRate }}"
         data-location="{{ product.location }}"
         data-available-quantity="{{ product.availableQuantity }}"
+        data-available-out-of-stock="{{ product.availableOutOfStock }}"
         data-order-invoice-id="{{ product.orderInvoiceId }}">
         <i class="material-icons">edit</i>
       </button>
@@ -103,13 +106,13 @@
       </button>
     </td>
   {% endif %}
-  <td class="text-right">
+  <td class="text-right cancel-product-element">
     <div class="cancel-product-cell cancel-product-element{% if product.refundable == false %} hidden{% endif %}">
-      <div class="row">
-        <div class="col-xl-5 col-lg-12 cancel-product-selector form-group">
+      <div class="cancel-product-cell-elements">
+        <div class="cancel-product-selector form-group">
           {{ form_widget(cancelProductForm['selected_' ~ product.orderDetailId]) }}
         </div>
-        <div class="col-xl-5 col-lg-12 cancel-product-quantity form-group">
+        <div class="cancel-product-quantity form-group">
           {{ form_label(cancelProductForm['quantity_' ~ product.orderDetailId]) }}
           <div class="input-group">
             {% set quantityInputOptions = {
@@ -117,18 +120,19 @@
                 'data-product-price-tax-incl': product.unitPriceTaxInclRaw,
                 'data-product-price-tax-excl': product.unitPriceTaxExclRaw,
                 'data-amount-refundable': product.amountRefundableRaw,
+                'data-quantity-refundable': product.quantityRefundable,
               }
             } %}
             {{ form_widget(cancelProductForm['quantity_' ~ product.orderDetailId], quantityInputOptions) }}
             <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
           </div>
         </div>
-        <div class="col-xl-7 col-lg-12 cancel-product-amount form-group">
+        <div class="cancel-product-amount form-group">
           {{ form_label(cancelProductForm['amount_' ~ product.orderDetailId]) }}
           <div class="input-group">
             {{ form_widget(cancelProductForm['amount_' ~ product.orderDetailId]) }}
             <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
-            <small class="text-left">
+            <small class="max-refund text-left">
               {{ '(Max %amount_refundable% %tax_method%)'|trans({
                 '%amount_refundable%': product.amountRefundable,
                 '%tax_method%': orderForViewing.taxMethod
@@ -158,10 +162,10 @@
         </div>
       {% endif %}
       {% for customization in product.customizations.textCustomizations %}
-        <p><strong>{{ customization.name }}</strong> {{ customization.value }}</p>
+        <p><strong>{{ customization.name }} :</strong> {{ customization.value }}</p>
       {% endfor %}
       {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
-        <div class="btn-product-pack-modal mb-3" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
+        <div class="btn-product-pack-modal mb-3 d-print-none" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
           <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
         </div>
       {% endif %}

@@ -24,6 +24,7 @@
 	overflow-y: auto
 	transition: all .5s ease-out
 
+
 	.material-icons
 		color: white
 		font-size: 1.188rem
@@ -333,10 +334,15 @@
 		padding-right: .8rem
 
 	.nav-bar
-		overflow: visible
+		overflow: visible!important;
 		width: $size-navbar-width-mini
 
+		&-overflow
+      overflow: hidden	
+      height: 100%
 		.main-menu
+			overflow: hidden
+
 			.category-title > .title,
 			.link-levelone span
 				display: none
@@ -349,7 +355,6 @@
 				padding-bottom: 0
 
 			.link-levelone
-				position: relative
 
 				.link
 					line-height: initial
@@ -357,7 +362,7 @@
 				&:first-of-type
 					margin-bottom: 0
 
-				&.-hover
+				&.ul-open
 					> .link
 						transition: all 0s ease 0s
 						width: 14.6875rem
@@ -369,7 +374,6 @@
 					ul.submenu
 						position: absolute !important
 						display: block !important
-						top: 34px !important
 						width: 200px !important
 						left: 50px
 						padding-left: 5px
@@ -389,14 +393,14 @@
 		@media (max-height: 870px)
 			// this two tabs need to be flipped, otherwise
 			// css issue with bottom of the page
-			#subtab-ShopParameters:hover,
-			#subtab-AdminAdvancedParameters:hover
+			#subtab-ShopParameters.ul-open,
+			#subtab-AdminAdvancedParameters.ul-open
 				ul.submenu
 					display: flex !important
 					flex-direction: column-reverse
-					top: 0 !important
 					transform: rotate(180deg)
 					transform-origin: top
+					margin-top: 35px
 
 					li
 						transform: rotate(180deg)

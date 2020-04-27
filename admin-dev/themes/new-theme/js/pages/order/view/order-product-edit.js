@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,13 +39,20 @@ export default class OrderProductEdit {
     this.product = {};
     this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
     this.priceTaxCalculator = new OrderPrices();
+    this.productEditSaveBtn = $(OrderViewPageMap.productEditSaveBtn);
+    this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
   }
 
   setupListener() {
     this.quantityInput.on('change keyup', (event) => {
-      this.quantity = parseInt(event.target.value ? event.target.value : 0, 10);
-      this.availableText.html(this.totalQuantity - this.quantity);
+      const quantity = Number(event.target.value);
+      const available = parseInt($(event.currentTarget).data('availableQuantity'), 10) - (this.quantity - this.quantityInput.data('previousQuantity'));
+      const availableOutOfStock = this.availableText.data('availableOutOfStock');
+      this.availableText.text(available);
+      this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
       this.updateTotal();
+      const disableEditActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock) ? true : false;
+      this.productEditSaveBtn.prop('disabled', disableEditActionBtn);
     });
     this.productEditInvoiceSelect.on('change', () => {
       this.productEditSaveBtn.prop('disabled', false);
@@ -117,7 +124,8 @@ export default class OrderProductEdit {
     this.priceTaxIncludedInput.val(
       window.ps_round(product.price_tax_incl, this.currencyPrecision)
     );
-    this.quantityInput.val(product.quantity);
+    this.quantityInput.val(product.quantity).data('availableQuantity', product.availableQuantity).data('previousQuantity', product.quantity);
+    this.availableText.data('availableOutOfStock', product.availableOutOfStock);
 
     // set this product's orderInvoiceId as selected
     if (product.orderInvoiceId) {
@@ -127,7 +135,6 @@ export default class OrderProductEdit {
 
     // Init editor data
     this.taxRate = product.tax_rate;
-    this.totalQuantity = product.availableQuantity + product.quantity;
     this.initialTotal = this.priceTaxCalculator.calculateTotalPrice(
       product.quantity,
       product.price_tax_incl,
@@ -167,8 +174,8 @@ export default class OrderProductEdit {
         newRow: response
       });
     }, (response) => {
-      if (response.message) {
-        $.growl.error({message: response.message});
+      if (response.responseJSON && response.responseJSON.message) {
+        $.growl.error({message: response.responseJSON.message});
       }
     });
   }

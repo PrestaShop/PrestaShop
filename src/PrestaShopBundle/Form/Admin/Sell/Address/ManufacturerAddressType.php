@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -106,6 +106,7 @@ class ManufacturerAddressType extends AbstractType
     {
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
+        $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
 
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
@@ -225,7 +226,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
-                'withDniAttr' => true,
+                'with_dni_attr' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
@@ -236,7 +237,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => true,
-                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'choices' => $stateChoices,
                 'constraints' => [
                     new AddressStateRequired([
                         'id_country' => $countryId,

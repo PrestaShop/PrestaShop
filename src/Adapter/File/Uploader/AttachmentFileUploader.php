@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,12 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
 use Attachment;
+use ErrorException;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\AttachmentFileUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUnlinkAttachmentException;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
@@ -53,10 +55,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
      */
     private $uploadSizeConfiguration;
 
-    /**
-     * @param ConfigurationInterface $configuration
-     * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
-     */
     public function __construct(
         ConfigurationInterface $configuration,
         UploadSizeConfigurationInterface $uploadSizeConfiguration
@@ -72,51 +70,59 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
      * @throws AttachmentNotFoundException
      * @throws AttachmentUploadFailedException
      */
-    public function upload(string $filePath, string $uniqueFileName, int $fileSize, int $id = null): void
-    {
+    public function upload(
+        string $filePath,
+        string $uniqueFileName,
+        int $fileSize,
+        int $id = null,
+        $throwExceptionOnFailure = true
+    ): void {
         $this->checkFileAllowedForUpload($fileSize);
         $this->uploadFile($filePath, $uniqueFileName, $fileSize);
         if ($id !== null) {
-            $this->deleteOldFile($id);
+            $this->deleteOldFile($id, $throwExceptionOnFailure);
         }
     }
 
     /**
-     * @param int $attachmentId
      * @param bool $throwExceptionOnFailure
      *
      * @throws AttachmentNotFoundException
+     * @throws CannotUnlinkAttachmentException
      */
-    private function deleteOldFile(int $attachmentId, $throwExceptionOnFailure = true): void
+    private function deleteOldFile(int $attachmentId, $throwExceptionOnFailure): void
     {
         try {
             $attachment = new Attachment($attachmentId);
             $fileLink = _PS_DOWNLOAD_DIR_ . $attachment->file;
 
-            if ($throwExceptionOnFailure) {
+            try {
                 unlink($fileLink);
-
-                return;
+            } catch (ErrorException $e) {
+                if ($throwExceptionOnFailure) {
+                    throw new CannotUnlinkAttachmentException($e->getMessage(), 0, null, $fileLink);
+                }
             }
-
-            @unlink($fileLink);
         } catch (PrestaShopException $e) {
             throw new AttachmentNotFoundException(sprintf('Attachment with id "%s" was not found.', $attachmentId));
         }
     }
 
     /**
-     * @param string $filePath
-     * @param string $uniqid
-     * @param int $fileSize
-     *
      * @throws AttachmentConstraintException
      * @throws AttachmentUploadFailedException
      */
     private function uploadFile(string $filePath, string $uniqid, int $fileSize): void
     {
         if ($fileSize > ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-            throw new AttachmentConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024), number_format(($fileSize / 1024), 2, '.', '')), AttachmentConstraintException::INVALID_FILE_SIZE);
+            throw new AttachmentConstraintException(
+                sprintf(
+                    'Max file size allowed is "%s" bytes. Uploaded file size is "%s".',
+                    (string) ($this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
+                    number_format(($fileSize / 1024), 2, '.', '')
+                ),
+                AttachmentConstraintException::INVALID_FILE_SIZE
+            );
         }
 
         try {
@@ -127,8 +133,6 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
     }
 
     /**
-     * @param int $fileSize
-     *
      * @throws AttachmentConstraintException
      */
     private function checkFileAllowedForUpload(int $fileSize): void
@@ -136,7 +140,10 @@ final class AttachmentFileUploader implements AttachmentFileUploaderInterface
         $maxFileSize = $this->uploadSizeConfiguration->getMaxUploadSizeInBytes();
 
         if ($maxFileSize > 0 && $fileSize > $maxFileSize) {
-            throw new AttachmentConstraintException(sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', $maxFileSize, $fileSize), AttachmentConstraintException::INVALID_FILE_SIZE);
+            throw new AttachmentConstraintException(
+                sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', $maxFileSize, $fileSize),
+                AttachmentConstraintException::INVALID_FILE_SIZE
+            );
         }
     }
 }

@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CategoriesPage = require('@pages/BO/catalog/categories');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_categories_filterAndQuickEditCategories';
 
 let browser;
 let page;
@@ -40,6 +44,7 @@ describe('Filter And Quick Edit Categories', async () => {
   loginCommon.loginBO();
 
   it('should go to "Catalog>Categories" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.categoriesLink,
@@ -50,24 +55,64 @@ describe('Filter And Quick Edit Categories', async () => {
   });
 
   it('should reset all filters and get Number of Categories in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
     numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
     await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Filter Categories with all inputs and selects in grid table
   describe('Filter Categories', async () => {
     const tests = [
-      {args: {filterType: 'input', filterBy: 'id_category', filterValue: Categories.art.id}},
-      {args: {filterType: 'input', filterBy: 'name', filterValue: Categories.accessories.name}},
-      {args: {filterType: 'input', filterBy: 'description', filterValue: Categories.accessories.description}},
-      {args: {filterType: 'input', filterBy: 'position', filterValue: Categories.art.position}},
       {
-        args: {filterType: 'select', filterBy: 'active', filterValue: Categories.accessories.displayed},
+        args:
+          {
+            testIdentifier: 'filterId',
+            filterType: 'input',
+            filterBy: 'id_category',
+            filterValue: Categories.art.id,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterName',
+            filterType: 'input',
+            filterBy: 'name',
+            filterValue: Categories.accessories.name,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterDescription',
+            filterType: 'input',
+            filterBy: 'description',
+            filterValue: Categories.accessories.description,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterPosition',
+            filterType: 'input',
+            filterBy: 'position',
+            filterValue: Categories.art.position,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterActive',
+            filterType: 'select',
+            filterBy: 'active',
+            filterValue: Categories.accessories.displayed,
+          },
         expected: 'check',
       },
     ];
 
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         await this.pageObjects.categoriesPage.filterCategories(
           test.args.filterType,
           test.args.filterBy,
@@ -89,6 +134,7 @@ describe('Filter And Quick Edit Categories', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
         await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
       });
@@ -98,6 +144,7 @@ describe('Filter And Quick Edit Categories', async () => {
   describe('Quick Edit Categories', async () => {
     // Steps
     it('should filter by Name \'Art\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
       await this.pageObjects.categoriesPage.filterCategories(
         'input',
         'name',
@@ -112,6 +159,7 @@ describe('Filter And Quick Edit Categories', async () => {
     ];
     tests.forEach((test) => {
       it(`should ${test.args.action} first Category`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.status}Category`, baseContext);
         const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
           1,
           'active',
@@ -119,7 +167,7 @@ describe('Filter And Quick Edit Categories', async () => {
         );
         if (isActionPerformed) {
           const resultMessage = await this.pageObjects.categoriesPage.getTextContent(
-            this.pageObjects.categoriesPage.growlDefaultMessageBlock,
+            this.pageObjects.categoriesPage.growlMessageBlock,
           );
           await expect(resultMessage).to.contains(this.pageObjects.categoriesPage.successfulUpdateStatusMessage);
         }
@@ -129,6 +177,7 @@ describe('Filter And Quick Edit Categories', async () => {
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
       const numberOfCategoriesAfterReset = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
       await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });

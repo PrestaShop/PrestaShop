@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,7 +46,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Defines attachments list grid
  */
-final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
 
@@ -132,7 +132,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                                 ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                 ->setIcon('edit')
                                 ->setOptions([
-                                    'route' => 'admin_attachment_edit',
+                                    'route' => 'admin_attachments_edit',
                                     'route_param_name' => 'attachmentId',
                                     'route_param_field' => 'id_attachment',
                                 ])
@@ -142,7 +142,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                                 ->setName($this->trans('View', [], 'Admin.Actions'))
                                 ->setIcon('zoom_in')
                                 ->setOptions([
-                                    'route' => 'admin_attachment_view',
+                                    'route' => 'admin_attachments_view',
                                     'route_param_name' => 'attachmentId',
                                     'route_param_field' => 'id_attachment',
                                 ])
@@ -152,7 +152,7 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                             ->setName($this->trans('Delete', [], 'Admin.Actions'))
                             ->setIcon('delete')
                             ->setOptions([
-                                'route' => 'admin_attachment_delete',
+                                'route' => 'admin_attachments_delete',
                                 'route_param_name' => 'attachmentId',
                                 'route_param_field' => 'id_attachment',
                                 'confirm_message' => $this->trans(
@@ -220,10 +220,9 @@ final class AttachmentGridDefinitionFactory extends AbstractGridDefinitionFactor
                 (new Filter('actions', SearchAndResetType::class))
                     ->setAssociatedColumn('actions')
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [
-                            'controller' => 'attachment',
-                            'action' => 'index',
+                            'filterId' => self::GRID_ID,
                         ],
                         'redirect_route' => 'admin_attachments_index',
                     ])

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ class OrderStatusColor
      * Used for statuses that are waiting for customer actions.
      * Example statuses: Awaiting bank wire payment, Awaiting check payment, On backorder (not paid).
      */
-    public const AWAITING_PAYMENT = '#34219E';
+    public const AWAITING_PAYMENT = '#34209E';
 
     /**
      * Used for statuses when further merchant action is required.
@@ -47,7 +47,7 @@ class OrderStatusColor
      * Used for statuses when no actions are required anymore.
      * Example statuses: Shipped, Refunded, Delivered.
      */
-    public const COMPLETED = '#2ECC71';
+    public const COMPLETED = '#01b887';
 
     /**
      * Used for error statuses.

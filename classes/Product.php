@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -3195,13 +3195,12 @@ class ProductCore extends ObjectModel
 
         $cart_quantity = 0;
         if ((int) $id_cart) {
-            $cache_id = 'Product::getPriceStatic_' . (int) $id_product . '-' . (int) $id_product_attribute . '-' . (int) $id_cart;
+            $cache_id = 'Product::getPriceStatic_' . (int) $id_product . '-' . (int) $id_cart;
             if (!Cache::isStored($cache_id) || ($cart_quantity = Cache::retrieve($cache_id) != (int) $quantity)) {
                 $sql = 'SELECT SUM(`quantity`)
                 FROM `' . _DB_PREFIX_ . 'cart_product`
                 WHERE `id_product` = ' . (int) $id_product . '
                 AND `id_cart` = ' . (int) $id_cart;
-                $sql .= $id_product_attribute !== null ? ' AND `id_product_attribute` = ' . (int) $id_product_attribute : '';
                 $cart_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
                 Cache::store($cache_id, $cart_quantity);
             } else {

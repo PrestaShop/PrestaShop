@@ -13,14 +13,19 @@ const ViewOrderPage = require('@pages/BO/orders/view');
 const ProductPage = require('@pages/FO/product');
 const FOBasePage = require('@pages/FO/FObasePage');
 const HomePage = require('@pages/FO/home');
+const FOLoginPage = require('@pages/FO/login');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const files = require('@utils/files');
 // Importing data
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_invoices_invoiceOptions_enableDisableProductImage';
 
 let browser;
 let page;
@@ -38,6 +43,7 @@ const init = async function () {
     productPage: new ProductPage(page),
     foBasePage: new FOBasePage(page),
     homePage: new HomePage(page),
+    foLoginPage: new FOLoginPage(page),
     cartPage: new CartPage(page),
     checkoutPage: new CheckoutPage(page),
     orderConfirmationPage: new OrderConfirmationPage(page),
@@ -54,7 +60,7 @@ Create order
 Create invoice
 Check that there is 1 image in the invoice (Logo)
  */
-describe('Test enable/disable product image in invoices', async () => {
+describe('Enable product image in invoices', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -78,6 +84,12 @@ describe('Test enable/disable product image in invoices', async () => {
     describe(`${test.args.action} product image in invoice then check the invoice file created`, async () => {
       describe(`${test.args.action} product image`, async () => {
         it('should go to invoices page', async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `goToInvoicesPageTo${test.args.action}ProductImage`,
+            baseContext,
+          );
           await this.pageObjects.boBasePage.goToSubMenu(
             this.pageObjects.boBasePage.ordersParentLink,
             this.pageObjects.boBasePage.invoicesLink,
@@ -88,6 +100,7 @@ describe('Test enable/disable product image in invoices', async () => {
         });
 
         it(`should ${test.args.action} product image`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ProductImage`, baseContext);
           await this.pageObjects.invoicesPage.enableProductImage(test.args.enable);
           const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
           await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
@@ -95,21 +108,44 @@ describe('Test enable/disable product image in invoices', async () => {
       });
 
       describe('Create new order in FO', async () => {
-        it('should go to FO and create an order', async function () {
+        it('should go to FO page', async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `goToFO${test.args.action}`,
+            baseContext,
+          );
           // Click on view my shop
-          page = await this.pageObjects.boBasePage.viewMyShop();
+          page = await this.pageObjects.invoicesPage.viewMyShop();
           this.pageObjects = await init();
-          await this.pageObjects.foBasePage.changeLanguage('en');
+          await this.pageObjects.homePage.changeLanguage('en');
+          const isHomePage = await this.pageObjects.homePage.isHomePage();
+          await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+        });
+
+        it('should go to login page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToLoginFO${test.args.action}`, baseContext);
+          await this.pageObjects.homePage.goToLoginPage();
+          const pageTitle = await this.pageObjects.foLoginPage.getPageTitle();
+          await expect(pageTitle, 'Fail to open FO login page').to.contains(this.pageObjects.foLoginPage.pageTitle);
+        });
+
+        it('should sign in with default customer', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `sighInFO${test.args.action}`, baseContext);
+          await this.pageObjects.foLoginPage.customerLogin(DefaultAccount);
+          const isCustomerConnected = await this.pageObjects.foLoginPage.isCustomerConnected();
+          await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+        });
+
+        it('should create an order', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `createOrder${test.args.action}`, baseContext);
+          await this.pageObjects.foLoginPage.goToHomePage();
           // Go to the first product page
           await this.pageObjects.homePage.goToProductPage(1);
           // Add the created product to the cart
           await this.pageObjects.productPage.addProductToTheCart();
           // Proceed to checkout the shopping cart
           await this.pageObjects.cartPage.clickOnProceedToCheckout();
-          // Checkout the order
-          // Personal information step - Login
-          await this.pageObjects.checkoutPage.clickOnSignIn();
-          await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
           // Address step - Go to delivery step
           const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
           await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
@@ -118,19 +154,35 @@ describe('Test enable/disable product image in invoices', async () => {
           await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
           // Payment step - Choose payment step
           await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
-          const cardTitle = await this.pageObjects.orderConfirmationPage
-            .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
+          const cardTitle = await this.pageObjects.orderConfirmationPage.getOrderConfirmationCardTitle();
           // Check the confirmation message
           await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
-          // Logout from FO
-          await this.pageObjects.foBasePage.logout();
+        });
+
+        it('should sign out from FO', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `sighOutFO${test.args.action}`, baseContext);
+          await this.pageObjects.orderConfirmationPage.logout();
+          const isCustomerConnected = await this.pageObjects.orderConfirmationPage.isCustomerConnected();
+          await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+        });
+
+        it('should go back to BO', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${test.args.action}`, baseContext);
           page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
           this.pageObjects = await init();
+          const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
+          await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
         });
       });
 
       describe('Generate the invoice and check product image', async () => {
         it('should go to the orders page', async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `goToOrdersPageToCheck${test.args.action}ProductImage`,
+            baseContext,
+          );
           await this.pageObjects.boBasePage.goToSubMenu(
             this.pageObjects.boBasePage.ordersParentLink,
             this.pageObjects.boBasePage.ordersLink,
@@ -140,24 +192,48 @@ describe('Test enable/disable product image in invoices', async () => {
         });
 
         it('should go to the created order page', async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `goToCreatedOrderPageToCheck${test.args.action}ProductImage`,
+            baseContext,
+          );
           await this.pageObjects.ordersPage.goToOrder(1);
           const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
           await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
         });
 
         it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `updateOrderStatusToCheck${test.args.action}ProductImage`,
+            baseContext,
+          );
           const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-          await expect(result).to.be.true;
+          await expect(result).to.equal(Statuses.shipped.status);
         });
 
         it('should download the invoice', async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `downloadInvoiceToCheck${test.args.action}ProductImage`,
+            baseContext,
+          );
           fileName = await this.pageObjects.viewOrderPage.getFileName();
           await this.pageObjects.viewOrderPage.downloadInvoice();
-          const exist = await files.checkFileExistence(`${fileName}.pdf`);
+          const exist = await files.doesFileExist(`${fileName}.pdf`);
           await expect(exist).to.be.true;
         });
 
-        it('should check the product images in the PDF File', async () => {
+        it('should check the product images in the PDF File', async function () {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `checkProductImages${test.args.action}`,
+            baseContext,
+          );
           const imageNumber = await files.getImageNumberInPDF(
             `${fileName}.pdf`,
           );

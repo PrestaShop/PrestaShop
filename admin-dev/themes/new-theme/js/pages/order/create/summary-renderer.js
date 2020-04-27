@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,6 +36,7 @@ export default class SummaryRenderer {
     this.$totalProducts = $(createOrderMap.summaryTotalProducts);
     this.$totalDiscount = $(createOrderMap.summaryTotalDiscount);
     this.$totalShipping = $(createOrderMap.totalShippingField);
+    this.$summaryTotalShipping = $(createOrderMap.summaryTotalShipping);
     this.$totalTaxes = $(createOrderMap.summaryTotalTaxes);
     this.$totalWithoutTax = $(createOrderMap.summaryTotalWithoutTax);
     this.$totalWithTax = $(createOrderMap.summaryTotalWithTax);
@@ -61,9 +62,9 @@ export default class SummaryRenderer {
       return;
     }
     const cartSummary = cartInfo.summary;
-
     this.$totalProducts.text(cartSummary.totalProductsPrice);
     this.$totalDiscount.text(cartSummary.totalDiscount);
+    this.$summaryTotalShipping.text(cartSummary.totalShippingWithoutTaxes);
     this.$totalShipping.text(cartSummary.totalShippingPrice);
     this.$totalTaxes.text(cartSummary.totalTaxes);
     this.$totalWithoutTax.text(cartSummary.totalPriceWithoutTaxes);

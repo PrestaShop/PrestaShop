@@ -25,19 +25,29 @@ table.grid-ordering-column tr {
 table.grid-ordering-column tr.position-row-while-drag {
   box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
-  transform: translate(5px,10px);
+  transform: translate(5px, 10px);
   background: none;
   td {
     background-color: $medium-gray;
   }
-  td:first-child { border-top-left-radius: 3px; }
-  td:first-child { border-bottom-left-radius: 3px; }
-  td:last-child { border-top-right-radius: 3px; }
-  td:last-child { border-bottom-right-radius: 3px; }
+  td:first-child {
+    border-top-left-radius: 3px;
+  }
+  td:first-child {
+    border-bottom-left-radius: 3px;
+  }
+  td:last-child {
+    border-top-right-radius: 3px;
+  }
+  td:last-child {
+    border-bottom-right-radius: 3px;
+  }
 
   .position-drag-handle,
   .position-drag-handle:hover,
-  .btn, .btn:after, .btn .material-icons {
+  .btn,
+  .btn:after,
+  .btn .material-icons {
     color: white;
   }
 }
@@ -92,6 +102,15 @@ table .column-filters td:last-child .grid-reset-button {
           .max-field {
             display: inline-block;
             width: 60px;
+          }
+          .md-checkbox {
+            &:not(:last-child) {
+              display: inline-block;
+            }
+            & ~ .form-control {
+              display: inline-block;
+              width: calc(100% - 29px);
+            }
           }
         }
       }
@@ -157,13 +176,30 @@ table .column-filters td:last-child .grid-reset-button {
           &.choice-type {
             @mixin display-dropdown-arrow() {
               &::after {
-                display: inline-block;
+                visibility: visible;
+                width: 20px;
               }
             }
 
             .dropdown {
+              .dropdown-toggle {
+                margin-right: 20px;
+                transition: 0.2s ease-out;
+
+                &:hover {
+                  margin-right: 0px;
+                }
+              }
+
               &.show {
                 .dropdown-toggle {
+                  margin-right: 20px;
+                  transition: 0.2s ease-out;
+
+                  &:hover {
+                    margin-right: 0px;
+                  }
+
                   @include display-dropdown-arrow();
                 }
               }
@@ -175,7 +211,9 @@ table .column-filters td:last-child .grid-reset-button {
                 }
 
                 &::after {
-                  display: none;
+                  visibility: hidden;
+                  width: 0;
+                  transition: 0.2s ease-out;
                 }
 
                 &:hover {
@@ -207,6 +245,18 @@ table .column-filters td:last-child .grid-reset-button {
               }
             }
           }
+
+          &.order_price-type {
+            .badge {
+              font-size: 100%;
+              font-weight: 600;
+              padding: 5px;
+            }
+          }
+
+          &.date_time-type {
+            word-break: normal;
+          }
         }
       }
     }
@@ -220,4 +270,3 @@ table .column-filters td:last-child .grid-reset-button {
     }
   }
 }
-

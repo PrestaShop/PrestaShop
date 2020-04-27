@@ -11,8 +11,12 @@ const DeliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const OrdersPage = require('@pages/BO/orders');
 const ViewOrderPage = require('@pages/BO/orders/view');
 // Importing data
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
 const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_deliverySlipPrefix';
 
 let browser;
 let page;
@@ -55,17 +59,18 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
 
   describe(`Change the delivery slip prefix to '${deliverySlipData.prefix}'`, async () => {
     it('should go to delivery slip page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.deliverySlipslink,
       );
-
       await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.deliverySlipsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.deliverySlipsPage.pageTitle);
     });
 
     it(`should change the delivery slip prefix to ${deliverySlipData.prefix}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateDeliverySlipsPrefix', baseContext);
       await this.pageObjects.deliverySlipsPage.changePrefix(deliverySlipData.prefix);
       const textMessage = await this.pageObjects.deliverySlipsPage.saveDeliverySlipOptions();
       await expect(textMessage).to.contains(this.pageObjects.deliverySlipsPage.successfulUpdateMessage);
@@ -74,6 +79,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
 
   describe(`Change the order status to '${Statuses.shipped.status}' and check the file Name`, async () => {
     it('should go to the orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
@@ -84,17 +90,20 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
     });
 
     it('should go to the first order page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
       await this.pageObjects.ordersPage.goToOrder(1);
       const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it(`should check that the delivery slip file name contain '${deliverySlipData.prefix}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentNamePrefix', baseContext);
       fileName = await this.pageObjects.viewOrderPage.getFileName(3);
       expect(fileName).to.contains(deliverySlipData.prefix.replace('#', '').trim());
     });
@@ -102,6 +111,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
 
   describe(`Back to the default delivery slip prefix value '${defaultPrefix}'`, async () => {
     it('should go to delivery slips page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPageBackToDefaultValue', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.deliverySlipslink,
@@ -113,6 +123,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
     });
 
     it(`should change the delivery slip prefix to '${defaultPrefix}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'backToPrefixDefaultValue', baseContext);
       await this.pageObjects.deliverySlipsPage.changePrefix(defaultPrefix);
       const textMessage = await this.pageObjects.deliverySlipsPage.saveDeliverySlipOptions();
       await expect(textMessage).to.contains(this.pageObjects.deliverySlipsPage.successfulUpdateMessage);

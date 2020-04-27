@@ -67,7 +67,6 @@ module.exports = class AddBrand extends BOBasePage {
     }
     // Save Created brand
     await this.clickAndWaitForNavigation(this.saveButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -108,7 +107,7 @@ module.exports = class AddBrand extends BOBasePage {
   async changeLanguage(lang) {
     await Promise.all([
       this.page.$eval(this.shortDescriptionLangLink.replace('%LANG', lang), el => el.click()),
-      this.page.waitForSelector(`${this.shortDescriptionLangLink.replace('%LANG', lang)}.active`, {visible: true}),
+      this.waitForVisibleSelector(`${this.shortDescriptionLangLink.replace('%LANG', lang)}.active`),
     ]);
   }
 };

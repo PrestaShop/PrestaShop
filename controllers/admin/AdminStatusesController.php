@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -540,6 +540,10 @@ class AdminStatusesControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitAddorder_return_state')) {
+            if (!$this->access('add')) {
+                return;
+            }
+
             $id_order_return_state = Tools::getValue('id_order_return_state');
 
             // Create Object OrderReturnState
@@ -560,6 +564,10 @@ class AdminStatusesControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitBulkdeleteorder_return_state')) {
+            if (!$this->access('delete')) {
+                return;
+            }
+
             $this->className = 'OrderReturnState';
             $this->table = 'order_return_state';
             $this->boxes = Tools::getValue('order_return_stateBox');
@@ -567,6 +575,10 @@ class AdminStatusesControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('deleteorder_return_state')) {
+            if (!$this->access('delete')) {
+                return;
+            }
+
             $id_order_return_state = Tools::getValue('id_order_return_state');
 
             // Create Object OrderReturnState
@@ -580,6 +592,10 @@ class AdminStatusesControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitAdd' . $this->table)) {
+            if (!$this->access('add')) {
+                return;
+            }
+
             $this->deleted = false; // Disabling saving historisation
             $_POST['invoice'] = (int) Tools::getValue('invoice_on');
             $_POST['logable'] = (int) Tools::getValue('logable_on');
@@ -598,6 +614,10 @@ class AdminStatusesControllerCore extends AdminController
 
             return parent::postProcess();
         } elseif (Tools::isSubmit('delete' . $this->table)) {
+            if (!$this->access('delete')) {
+                return;
+            }
+
             $order_state = new OrderState(Tools::getValue('id_order_state'), $this->context->language->id);
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');
@@ -605,6 +625,10 @@ class AdminStatusesControllerCore extends AdminController
                 return parent::postProcess();
             }
         } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
+            if (!$this->access('delete')) {
+                return;
+            }
+
             foreach (Tools::getValue($this->table . 'Box') as $selection) {
                 $order_state = new OrderState((int) $selection, $this->context->language->id);
                 if (!$order_state->isRemovable()) {

@@ -26,9 +26,13 @@ module.exports = class Contacts extends BOBasePage {
     this.listTableEditLink = `${this.contactsListTableActionsColumn} a[href*='edit']`;
     this.deleteRowLink = `${this.contactsListTableActionsColumn} a[data-method='POST']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.contactsGridPanel} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.contactsGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#contact_grid_bulk_action_delete_all';
+    // Sort Selectors
+    this.tableHead = `${this.contactsGridPanel} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
   }
 
   /*
@@ -89,6 +93,21 @@ module.exports = class Contacts extends BOBasePage {
   }
 
   /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableContacts(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
    * Go to new Contact page
    * @return {Promise<void>}
    */
@@ -115,9 +134,8 @@ module.exports = class Contacts extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.listTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
-        {visible: true},
       ),
     ]);
     // Click on delete
@@ -135,15 +153,33 @@ module.exports = class Contacts extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(this.bulkActionsToggleButton, {visible: true}),
+      this.waitForVisibleSelector(this.bulkActionsToggleButton),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

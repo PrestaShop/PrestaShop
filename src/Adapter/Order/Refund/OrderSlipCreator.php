@@ -38,7 +38,7 @@ use Order;
 use OrderDetail;
 use OrderSlip;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopDatabaseException;
@@ -81,7 +81,7 @@ class OrderSlipCreator
      * @param Order $order
      * @param OrderRefundSummary $orderRefundSummary
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -154,7 +154,7 @@ class OrderSlipCreator
                 }
             }
         } else {
-            throw new InvalidRefundException(InvalidRefundException::INVALID_AMOUNT);
+            throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
         }
     }
 
@@ -236,8 +236,8 @@ class OrderSlipCreator
             // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
             $address = Address::initialize($order->id_address_invoice, false);
             $id_address = (int) $address->id;
-            $id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int) $order_detail->product_id);
-            $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+            $id_tax_rules_group = (int) $order_detail->id_tax_rules_group;
+            $tax_calculator = $order_detail->getTaxCalculator();
 
             $orderSlip->{'total_products_tax_' . $inc_or_ex_1} += $price * $quantity;
 

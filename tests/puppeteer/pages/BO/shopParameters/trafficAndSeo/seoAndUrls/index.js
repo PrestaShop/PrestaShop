@@ -78,7 +78,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
@@ -135,7 +135,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
   async enableDisableFriendlyURL(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchFriendlyUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -146,6 +146,6 @@ module.exports = class SeoAndUrls extends BOBasePage {
   async enableDisableAccentedURL(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchAccentedUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };

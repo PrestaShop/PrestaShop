@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -43,6 +43,8 @@
   import Search from './header/search';
   import LowFilter from './header/filters/low-filter';
   import PSPagination from '@app/widgets/ps-pagination';
+
+  const FIRST_PAGE = 1;
 
   export default {
     name: 'app',
@@ -81,14 +83,19 @@
       },
       onSearch(keywords) {
         this.$store.dispatch('updateKeywords', keywords);
+        this.resetPagination();
         this.fetch();
       },
       applyFilter(filters) {
         this.filters = filters;
+        this.resetPagination();
         this.fetch();
       },
       resetFilters() {
         this.filters = {};
+      },
+      resetPagination() {
+          this.$store.dispatch('updatePageIndex', FIRST_PAGE);
       },
       onLowStockChecked(isChecked) {
         this.filters = Object.assign({}, this.filters, {

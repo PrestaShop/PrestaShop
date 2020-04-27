@@ -1666,6 +1666,8 @@ CREATE TABLE `PREFIX_product` (
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_product`),
+  INDEX reference_idx(`reference`),
+  INDEX supplier_reference_idx(`supplier_reference`),
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`, `id_product`),
   KEY `id_category_default` (`id_category_default`),

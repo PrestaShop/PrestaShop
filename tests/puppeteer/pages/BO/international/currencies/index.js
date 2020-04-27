@@ -159,6 +159,7 @@ module.exports = class Currencies extends LocalizationBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row = 1, valueWanted = true) {
+    await this.waitForVisibleSelector(this.enableColumn.replace('%ROW', row), 2000);
     if (await this.getToggleColumnValue(row) !== valueWanted) {
       await this.clickAndWaitForNavigation(this.enableColumn.replace('%ROW', row));
       return true;
@@ -175,7 +176,7 @@ module.exports = class Currencies extends LocalizationBasePage {
     this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);

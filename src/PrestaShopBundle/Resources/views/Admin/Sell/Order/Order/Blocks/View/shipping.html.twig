@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,13 +18,25 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
 {% if not orderForViewing.virtual %}
-  <table class="table">
+
+    {% if orderForViewing.shipping.giftMessage %}
+      <div class="row col-lg-12">
+        <label>
+          {{ 'Gift message:'|trans({}, 'Admin.Global') }}
+        </label>
+        <div id="gift-message" class="col-lg-9">
+           {{ orderForViewing.shipping.giftMessage }}
+        </div>
+      </div>
+    {% endif %}
+
+    <table class="table">
     <thead>
       <tr>
         <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
@@ -39,7 +51,7 @@
     <tbody>
       {% for carrier in orderForViewing.shipping.carriers %}
         <tr>
-          <td>{{ carrier.date|date('Y-m-d') }}</td>
+          <td>{{ carrier.date|date_format_lite }}</td>
           <td>&nbsp;</td>
           <td>{{ carrier.name }}</td>
           <td>{{ carrier.weight }}</td>
@@ -56,7 +68,7 @@
           <td class="text-right">
             {% if carrier.canEdit %}
               <a href="#"
-                 class="js-update-shipping-btn"
+                 class="js-update-shipping-btn d-print-none"
                  data-toggle="modal"
                  data-target="#updateOrderShippingModal"
                  data-order-carrier-id="{{ carrier.orderCarrierId }}"

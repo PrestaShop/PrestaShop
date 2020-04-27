@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -86,33 +86,6 @@ class SupplierController extends FrameworkBundleAdminController
                 'settingsTipMessage' => $this->getSettingsTipMessage(),
             ]
         );
-    }
-
-    /**
-     * Filters list results.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.supplier');
-        $supplierDefinition = $definitionFactory->getDefinition();
-
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
-        $searchParametersForm = $gridFilterFormFactory->create($supplierDefinition);
-
-        $searchParametersForm->handleRequest($request);
-        $filters = [];
-
-        if ($searchParametersForm->isSubmitted()) {
-            $filters = $searchParametersForm->getData();
-        }
-
-        return $this->redirectToRoute('admin_suppliers_index', ['filters' => $filters]);
     }
 
     /**
@@ -344,10 +317,10 @@ class SupplierController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
 
-            if ($e instanceof SupplierNotFoundException || $e instanceof AddressNotFoundException) {
-                return $this->redirectToRoute('admin_suppliers_index');
-            }
+        if (!isset($supplierForm) || !isset($editableSupplier)) {
+            return $this->redirectToRoute('admin_suppliers_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Suppliers/edit.html.twig', [

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,6 +46,7 @@ export default class CustomerManager {
     this.customerRenderer = new CustomerRenderer();
 
     this._initListeners();
+    this.initAddCustomerIframe();
 
     return {
       search: searchPhrase => this._search(searchPhrase),
@@ -68,6 +69,17 @@ export default class CustomerManager {
   }
 
   /**
+   * @private
+   */
+  initAddCustomerIframe() {
+    $(createOrderMap.customerAddBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+  }
+
+  /**
    * Listens for customer search event
    *
    * @private
@@ -75,7 +87,7 @@ export default class CustomerManager {
   _onCustomerSearch() {
     EventEmitter.on(eventMap.customerSearched, (response) => {
       this.activeSearchRequest = null;
-      this.customerRenderer.clearShownCustomers();
+      this.customerRenderer.hideSearchingCustomers();
 
       if (response.customers.length === 0) {
         EventEmitter.emit(eventMap.customersNotFound);
@@ -109,6 +121,16 @@ export default class CustomerManager {
       const $chooseBtn = $(event.currentTarget);
       this.customerId = $chooseBtn.data('customer-id');
 
+      const createAddressUrl = this.router.generate(
+        'admin_addresses_create',
+        {
+          'liteDisplaying': 1,
+          'submitFormAjax': 1,
+          'id_customer': this.customerId,
+        }
+      );
+      $(createOrderMap.addressAddBtn).attr('href', createAddressUrl);
+
       this.customerRenderer.displaySelectedCustomerBlock($chooseBtn);
     });
   }
@@ -130,6 +152,7 @@ export default class CustomerManager {
   _loadCustomerCarts(currentCartId) {
     const customerId = this.customerId;
 
+    this.customerRenderer.showLoadingCarts();
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
       this.customerRenderer.renderCarts(response.carts, currentCartId);
     }).catch((e) => {
@@ -143,6 +166,7 @@ export default class CustomerManager {
   _loadCustomerOrders() {
     const customerId = this.customerId;
 
+    this.customerRenderer.showLoadingOrders();
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
       this.customerRenderer.renderOrders(response.orders);
     }).catch((e) => {
@@ -175,6 +199,9 @@ export default class CustomerManager {
       this.activeSearchRequest.abort();
     }
 
+    this.customerRenderer.clearShownCustomers();
+    this.customerRenderer.hideNotFoundCustomers();
+    this.customerRenderer.showSearchingCustomers();
     const $searchRequest = $.get(this.router.generate('admin_customers_search'), {
       customer_search: searchPhrase,
     });

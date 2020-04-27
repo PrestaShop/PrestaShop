@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1119,11 +1119,23 @@ class CustomerCore extends ObjectModel
         $this->cleanGroups();
         $this->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
         $this->id_default_group = Configuration::get('PS_CUSTOMER_GROUP');
+        $this->stampResetPasswordToken();
         if ($this->update()) {
             $vars = [
                 '{firstname}' => $this->firstname,
                 '{lastname}' => $this->lastname,
                 '{email}' => $this->email,
+                '{url}' => Context::getContext()->link->getPageLink(
+                    'password',
+                    true,
+                    null,
+                    sprintf(
+                        'token=%s&id_customer=%s&reset_token=%s',
+                        $this->secure_key,
+                        (int) $this->id,
+                        $this->reset_password_token
+                    )
+                ),
             ];
             Mail::Send(
                 (int) $idLang,

@@ -18,12 +18,16 @@ module.exports = class Pages extends BOBasePage {
     this.gridTable = '#%TABLE_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     this.listForm = '#%TABLE_grid';
+    // Sort Selectors
+    this.tableHead = `${this.listForm} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
     this.listTableRow = `${this.listForm} tbody tr:nth-child(%ROW)`;
     this.listTableColumn = `${this.listTableRow} td.column-%COLUMN`;
     this.columnValidIcon = `${this.listTableColumn.replace('%COLUMN', 'active')} i.grid-toggler-icon-valid`;
     this.columnNotValidIcon = `${this.listTableColumn.replace('%COLUMN', 'active')} i.grid-toggler-icon-not-valid`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.listForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.listForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.listForm} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#%TABLE_grid_bulk_action_delete_selection';
     this.bulkActionsEnableButton = '#%TABLE_grid_bulk_action_enable_selection';
@@ -104,16 +108,11 @@ module.exports = class Pages extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(listTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(`${listTableToggleDropDown
-        .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
-      ),
+      this.waitForVisibleSelector(`${listTableToggleDropDown}[aria-expanded='true']`.replace('%ROW', row)),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(deleteRowLink.replace('%ROW', row)),
-      this.dialogListener(),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-    ]);
+    this.dialogListener();
+    await this.clickAndWaitForNavigation(deleteRowLink.replace('%ROW', row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -132,17 +131,17 @@ module.exports = class Pages extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(selectAllRowsLabel),
-      this.page.waitForSelector(`${selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(bulkActionsToggleButton),
-      this.page.waitForSelector(`${bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(bulkActionsDeleteButton),
-      this.page.waitForSelector(`${confirmDeleteModal}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteWithBulkActions(table);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -175,23 +174,21 @@ module.exports = class Pages extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(table, row, valueWanted = true) {
+    await this.waitForVisibleSelector(
+      this.listTableColumn.replace('%TABLE', table).replace('%ROW', row).replace('%COLUMN', 'active'),
+      2000,
+    );
     if (await this.getToggleColumnValue(table, row) !== valueWanted) {
       this.page.click(this.listTableColumn
         .replace('%TABLE', table)
         .replace('%ROW', row)
         .replace('%COLUMN', 'active'),
       );
-      if (valueWanted) {
-        await this.page.waitForSelector(this.columnValidIcon
+      await this.waitForVisibleSelector(
+        (valueWanted ? this.columnValidIcon : this.columnNotValidIcon)
           .replace('%TABLE', table)
           .replace('%ROW', row),
-        );
-      } else {
-        await this.page.waitForSelector(this.columnNotValidIcon
-          .replace('%TABLE', table)
-          .replace('%ROW', row),
-        );
-      }
+      );
       return true;
     }
     return false;
@@ -211,12 +208,12 @@ module.exports = class Pages extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(selectAllRowsLabel),
-      this.page.waitForSelector(`${selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(bulkActionsToggleButton),
-      this.page.waitForSelector(`${bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${bulkActionsToggleButton}`),
     ]);
     // Click on enable/disable and wait for modal
     await this.clickAndWaitForNavigation(enable ? bulkActionsEnableButton : bulkActionsDisableButton);
@@ -228,7 +225,7 @@ module.exports = class Pages extends BOBasePage {
    * @param table, Pages or Categories
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTable(table, row, column) {
     return this.getTextContent(
@@ -240,12 +237,115 @@ module.exports = class Pages extends BOBasePage {
   }
 
   /**
+   * Get text column form table cms page
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<string>}
+   */
+  getTextColumnFromTableCmsPage(row, column) {
+    return this.getTextColumnFromTable('cms_page', row, column);
+  }
+
+  /**
+   * Get text column form table cms page category
+   * @param row, row in table
+   * @param column, which column
+   * @return {Promise<string>}
+   */
+  getTextColumnFromTableCmsPageCategory(row, column) {
+    return this.getTextColumnFromTable('cms_page_category', row, column);
+  }
+
+
+  /**
+   * Get content from all rows
+   * @param table
+   * @param column
+   * @return {Promise<string[]>}
+   */
+  async getAllRowsColumnContent(table, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(table);
+    const allRowsContentTable = [];
+    let rowContent;
+    for (let i = 1; i <= rowsNumber; i++) {
+      if (table === 'cms_page_category') {
+        rowContent = await this.getTextColumnFromTableCmsPageCategory(i, column);
+      } else if (table === 'cms_page') {
+        rowContent = await this.getTextColumnFromTableCmsPage(i, column);
+      }
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
+   * Get content from all rows table cms page category
+   * @param column
+   * @return {Promise<string[]>}
+   */
+  getAllRowsColumnContentTableCmsPageCategory(column) {
+    return this.getAllRowsColumnContent('cms_page_category', column);
+  }
+
+  /**
+   * Get content from all rows table cms page
+   * @param column
+   * @return {Promise<string[]|int[]>}
+   */
+  getAllRowsColumnContentTableCmsPage(column) {
+    return this.getAllRowsColumnContent('cms_page', column);
+  }
+
+  /**
    * get number of elements in grid
    * @param table
    * @return {Promise<integer>}
    */
   async getNumberOfElementInGrid(table) {
     return this.getNumberFromText(this.gridTitle.replace('%TABLE', table));
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param table, table to sort
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(table, sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv}[data-sort-direction='${sortDirection}']`
+      .replace('%COLUMN', sortBy)
+      .replace('%TABLE', table);
+    const sortColumnSpanButton = this.sortColumnSpanButton
+      .replace('%COLUMN', sortBy)
+      .replace('%TABLE', table);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
+  }
+
+  /**
+   * Sort table cms page category
+   * @param sortBy
+   * @param sortDirection
+   * @return {Promise<void>}
+   */
+  async sortTableCmsPageCategory(sortBy, sortDirection = 'asc') {
+    return this.sortTable('cms_page_category', sortBy, sortDirection);
+  }
+
+  /**
+   * Sort table cms page
+   * @param sortBy
+   * @param sortDirection
+   * @return {Promise<void>}
+   */
+  async sortTableCmsPage(sortBy, sortDirection = 'asc') {
+    return this.sortTable('cms_page', sortBy, sortDirection);
   }
 
   // Category methods
@@ -262,9 +362,9 @@ module.exports = class Pages extends BOBasePage {
         .replace('%TABLE', 'cms_page_category')
         .replace('%ROW', row),
       ),
-      this.page.waitForSelector(`${this.listTableToggleDropDown
+      this.waitForVisibleSelector(`${this.listTableToggleDropDown}[aria-expanded='true']`
         .replace('%TABLE', 'cms_page_category')
-        .replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
+        .replace('%ROW', row),
       ),
     ]);
     // Click on edit

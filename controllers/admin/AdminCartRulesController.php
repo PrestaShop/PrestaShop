@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,6 +56,10 @@ class AdminCartRulesControllerCore extends AdminController
 
     public function ajaxProcessLoadCartRules()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $type = $token = $search = '';
         $limit = $count = $id_cart_rule = 0;
         if (Tools::getIsset('limit')) {
@@ -268,6 +272,10 @@ class AdminCartRulesControllerCore extends AdminController
         }
         if (Tools::getValue('submitFormAjax')) {
             $this->redirect_after = false;
+            if ($cart_rule) {
+                $this->context->smarty->assign('refresh_cart', true);
+                $this->display = 'edit';
+            }
         }
 
         return $cart_rule;

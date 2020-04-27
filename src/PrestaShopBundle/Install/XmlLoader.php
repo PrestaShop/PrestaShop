@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -179,8 +179,7 @@ class XmlLoader
         // Browse all XML files from data/xml directory
         $entities = [];
         $dependencies = [];
-        $fd = opendir($this->data_path);
-        while ($file = readdir($fd)) {
+        foreach (scandir($this->data_path) as $file) {
             if (preg_match('#^(.+)\.xml$#', $file, $m)) {
                 $entity = $m[1];
                 $xml = $this->loadEntity($entity);
@@ -199,7 +198,6 @@ class XmlLoader
                 $entities[] = $entity;
             }
         }
-        closedir($fd);
 
         // Sort entities to populate database in good order (E.g. zones before countries)
         do {

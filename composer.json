@@ -22,6 +22,7 @@
         "doctrine/cache": "^1.8",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.7",
+        "egulias/email-validator": "^2.1",
         "ezyang/htmlpurifier": "^4.10",
         "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",
@@ -132,7 +133,7 @@
     ],
     "require-dev": {
         "behat/behat": "^3.5",
-        "friendsofphp/php-cs-fixer": "^2.15.1",
+        "friendsofphp/php-cs-fixer": "^2.16.1",
         "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",

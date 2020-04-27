@@ -26,7 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use InvalidArgumentException;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
@@ -52,20 +55,26 @@ class OrderDetailRefund
     /**
      * @param int $orderDetailId
      * @param int $productQuantity
-     * @param float $refundedAmount
+     * @param string $refundedAmount
      *
      * @return self
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
-    public static function createPartialRefund(int $orderDetailId, int $productQuantity, float $refundedAmount): self
+    public static function createPartialRefund(int $orderDetailId, int $productQuantity, string $refundedAmount): self
     {
-        if (0 >= $refundedAmount) {
-            throw new InvalidRefundException(InvalidRefundException::INVALID_AMOUNT);
+        try {
+            $decimalRefundedAmount = new Number($refundedAmount);
+        } catch (InvalidArgumentException $e) {
+            throw new InvalidAmountException();
         }
 
-        return new self($orderDetailId, $productQuantity, $refundedAmount);
+        if ($decimalRefundedAmount->isLowerOrEqualThan(new Number('0'))) {
+            throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
+        }
+
+        return new self($orderDetailId, $productQuantity, $decimalRefundedAmount);
     }
 
     /**
@@ -84,15 +93,15 @@ class OrderDetailRefund
     /**
      * @param int $orderDetailId
      * @param int $productQuantity
-     * @param float|null $refundedAmount
+     * @param Number|null $refundedAmount
      *
      * @throws OrderException
      */
-    private function __construct(int $orderDetailId, int $productQuantity, ?float $refundedAmount)
+    private function __construct(int $orderDetailId, int $productQuantity, ?Number $refundedAmount)
     {
         $this->assertOrderDetailIdIsGreaterThanZero($orderDetailId);
         if (0 >= $productQuantity) {
-            throw new InvalidRefundException(InvalidRefundException::INVALID_QUANTITY);
+            throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
         }
         $this->orderDetailId = $orderDetailId;
         $this->productQuantity = $productQuantity;
@@ -116,9 +125,9 @@ class OrderDetailRefund
     }
 
     /**
-     * @return float|null
+     * @return Number|null
      */
-    public function getRefundedAmount(): ?float
+    public function getRefundedAmount(): ?Number
     {
         return $this->refundedAmount;
     }

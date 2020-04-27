@@ -1,0 +1,519 @@
+@import "partials/_order-navigation";
+
+#order-view-page {
+  #historyTabContent {
+    .badge {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      padding: 0 5px;
+      font-weight: 600;
+    }
+  }
+
+  .order {
+    &-actions {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  .add-product {
+    &-inputs {
+      margin-top: 24px;
+      min-width: 120px;
+    }
+
+    &-quantity,
+    &-buttons {
+      .form-group {
+        margin-bottom: 0;
+        margin-top: 24px;
+      }
+    }
+  }
+
+  #view_order_payments_block {
+    .table {
+      &-head {
+        &-invoice {
+          min-width: 200px;
+        }
+      }
+    }
+
+    #order_payment_id_currency {
+      flex: inherit;
+      min-width: 75px;
+    }
+  }
+
+  .card,
+  .product-row .tab-content {
+    margin-bottom: 1.875rem;
+  }
+
+  .product-row {
+    .nav-tabs {
+      position: relative;
+      z-index: 5;
+      margin-bottom: -2px;
+      padding-left: 1px;
+    }
+
+    .tab-content {
+      border: 1px solid #dbe6e9;
+      border-radius: 5px;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  // Todo: Looks like we don't have any custom select without JS to add in a form
+  .select-status {
+    position: relative;
+    background: #ffffff;
+    color: #ffffff;
+    border-radius: 4px;
+    border: none;
+    max-width: 280px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    transition: 0.2s ease-out;
+
+    .select-status-colored {
+      background: none;
+      border: none;
+      color: white;
+
+      option {
+        color: initial;
+        background: inherit;
+      }
+    }
+
+    &::after {
+      content: "keyboard_arrow_down";
+      position: absolute;
+      font-family: "Material Icons";
+      cursor: pointer;
+      font-size: 1.25rem;
+      color: #ffffff;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 10px;
+      pointer-events: none;
+    }
+
+    &.is-bright .select-status-colored,
+    &.is-bright::after {
+      color: $bright-status-text;
+    }
+  }
+
+  #orderProductsPanel {
+    .btn-product-pack-modal {
+      margin-top: 5px;
+      display: block;
+    }
+
+    .info-block {
+      .col-sm:not(:last-child) {
+        .text-muted {
+          margin-bottom: 4px !important;
+        }
+      }
+    }
+  }
+
+  .configure {
+    &-link {
+      display: block;
+      margin-top: 5px;
+    }
+  }
+
+  #product-pack-modal-table {
+    .cell-product-quantity {
+      .badge {
+        font-size: 100%;
+        min-width: 26px;
+        border-radius: 1000px !important;
+      }
+    }
+  }
+
+  .customer {
+    .badge-dark {
+      font-size: 100%;
+    }
+  }
+
+  .order {
+    &-actions {
+      > * {
+        margin-bottom: 0.9375rem;
+
+        &:not(:last-child) {
+          margin-right: 0.625rem;
+        }
+
+        a,
+        button,
+        select {
+          transition: 0.2s ease-out;
+
+          &:not(:disabled) {
+            cursor: pointer;
+
+            &:hover {
+              opacity: 0.7;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Todo: Change it in the UIKit for 1.7.8 but this change is for 1.7.7
+  #orderProductsOriginalPosition {
+    .cellProductQuantity {
+      .rounded-circle {
+        border-radius: 100px !important;
+        min-width: 21px;
+      }
+    }
+  }
+
+  @media not print {
+    .card-details {
+      border: none;
+      box-shadow: none;
+      .card-body {
+        padding: 0;
+      }
+    }
+  }
+
+  > .row:not(.d-print-none) {
+    @media print {
+      display: block !important;
+    }
+  }
+
+  @media print {
+    button,
+    select {
+      display: none;
+    }
+
+    a {
+      text-decoration: none;
+      color: #000000;
+    }
+
+    .left-column,
+    .right-column {
+      flex: 0 0 100%;
+      max-width: 100%;
+      width: 100%;
+
+      .card,
+      .tab-pane {
+        page-break-inside: avoid;
+      }
+    }
+
+    .tab-content {
+      padding: 0;
+      background-color: inherit;
+      .tab-pane {
+        opacity: 1;
+      }
+    }
+
+    .print-title {
+      .print-title-id {
+        color: #8a8a8a;
+      }
+    }
+
+    .badge-dark,
+    .badge-secondary {
+      color: black;
+      background-color: #ffffff;
+    }
+
+    .badge-print-light {
+      color: black !important;
+      background-color: #ffffff !important;
+      font-weight: normal;
+    }
+  }
+}
+
+.adminorders {
+  .alert .alert-text {
+    ol {
+      margin-top: 5px;
+      margin-bottom: 0;
+    }
+  }
+  @media print {
+    display: block;
+
+    .header-toolbar {
+      position: initial;
+    }
+
+    #main-div .content-div {
+      // Forced to use an important there to override inline-style added with JS
+      /* stylelint-disable declaration-no-important */
+      padding-top: 0 !important;
+      /* stylelint-enable */
+    }
+
+    .toolbar-icons {
+      display: none;
+    }
+
+    .content-div > .row {
+      display: block;
+    }
+  }
+}
+
+@include media-breakpoint-down(lg) {
+  .partial-refund {
+    .cancel-product-cell {
+      .cancel-product-cell-elements {
+        flex-direction: column;
+        align-items: flex-end;
+
+        .cancel-product-quantity {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+
+  #order-view-page {
+    .table {
+      display: block;
+      overflow-y: scroll;
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .adminorders {
+    .header-toolbar {
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .lead {
+        font-size: 1rem;
+      }
+
+      .toolbar-icons {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  #order-view-page {
+    padding: 0 10px;
+
+    .card-details {
+      &-form {
+        width: 100%;
+      }
+
+      &-actions {
+        width: 100%;
+        display: flex;
+      }
+    }
+
+    .product-row {
+      > div {
+        &:first-child {
+          order: 1;
+        }
+
+        &:last-child {
+          order: 2;
+        }
+      }
+      .nav-tabs {
+        display: flex;
+        overflow-y: scroll;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+
+        .nav-item {
+          min-width: 165px;
+        }
+      }
+    }
+
+    .cancel-product-element {
+      margin-top: 10px;
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    .order-actions {
+      #update_order_status_action_form {
+        .select-status {
+          margin-bottom: 0.9375rem;
+        }
+      }
+
+      .select-status {
+        max-width: inherit;
+        width: 100%;
+
+        .select-status-colored {
+          margin-right: 0 !important;
+          max-width: inherit;
+        }
+      }
+
+      > * {
+        &:not(:last-child) {
+          margin-right: 0;
+        }
+
+        a,
+        button,
+        & {
+          width: 100%;
+          margin-left: 0 !important;
+        }
+      }
+
+      a,
+      button {
+        text-align: left;
+
+        i {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    #orderProductsPanel {
+      .cellProductName {
+        min-width: 130px;
+      }
+
+      .info-block {
+        .row > * {
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
+        }
+      }
+
+      .discount-action {
+        margin-bottom: 10px;
+        width: 100%;
+        max-width: 100%;
+
+        button {
+          width: 100%;
+
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.cancel-product-cell {
+  margin-right: 0;
+  padding-right: 0;
+  max-width: 400px;
+
+  .cancel-product-cell-elements {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    .cancel-product-selector {
+      width: 30px;
+      align-self: center;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 0;
+      padding: 0 5px;
+
+      .form-control-label {
+        flex-shrink: 0;
+        align-self: center;
+        padding: 0;
+        margin-bottom: 0;
+        font-weight: bold;
+      }
+
+      .input-group {
+        min-width: 90px;
+        max-width: 110px;
+
+        .form-control {
+          height: 35px;
+          min-width: 30px;
+          max-width: 76px;
+        }
+        .input-group-append {
+          height: 35px;
+        }
+        .max-refund {
+          flex-basis: 100%;
+          padding-left: 10px;
+        }
+      }
+
+      &.cancel-product-amount {
+        .input-group {
+          margin-top: 12px;
+          min-width: 125px;
+        }
+      }
+    }
+  }
+}
+
+.voucher-refund-type-negative-error {
+  color: $color-error;
+  display: none;
+}
+
+input.refund-quantity {
+  max-width: 160px;
+  margin-left: 10px;
+}
+
+input.refund-amount,
+input#partial_refund_shipping {
+  max-width: 80px;
+  margin-left: 10px;
+}
+
+.cellProductActions .btn,
+.discountList .btn {
+  background-color: transparent;
+  color: $medium-gray;
+}
+
+.cellProductActions .btn:hover,
+.discountList .btn:hover {
+  color: $primary;
+}

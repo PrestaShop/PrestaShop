@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 export default {
+  mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',
   orderPaymentFormAmountInput: '#order_payment_amount',
   orderPaymentInvoiceSelect: '#order_payment_id_invoice',
@@ -33,7 +34,6 @@ export default {
   privateNoteInput: '#private_note_note',
   privateNoteSubmitBtn: '.js-private-note-btn',
   addCartRuleModal: '#addOrderDiscountModal',
-  addCartRuleApplyOnAllInvoicesCheckbox: '#add_order_cart_rule_apply_on_all_invoices',
   addCartRuleInvoiceIdSelect: '#add_order_cart_rule_invoice_id',
   addCartRuleTypeSelect: '#add_order_cart_rule_type',
   addCartRuleValueInput: '#add_order_cart_rule_value',
@@ -41,6 +41,7 @@ export default {
   cartRuleHelpText: '.js-cart-rule-value-help',
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
+  updateOrderStatusActionInputWrapper: '#update_order_status_action_input_wrapper',
   updateOrderStatusActionForm: '#update_order_status_action_form',
   showOrderShippingUpdateModalBtn: '.js-update-shipping-btn',
   updateOrderShippingTrackingNumberInput: '#update_order_shipping_tracking_number',
@@ -52,6 +53,8 @@ export default {
   orderMessagesContainer: '.js-order-messages-container',
   orderMessage: '#order_message_message',
   orderMessageChangeWarning: '.js-message-change-warning',
+  orderDocumentsTabCount: '#orderDocumentsTab .count',
+  orderDocumentsTabBody: '#orderDocumentsTabContent .card-body',
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
@@ -69,10 +72,12 @@ export default {
   productsTablePaginationLink: '.page-item:not(.d-none):not(#orderProductsTablePaginationNext):not(#orderProductsTablePaginationPrev) .page-link',
   productsTablePaginationActive: '#orderProductsTablePagination .page-item.active span',
   productsTablePaginationTemplate: '#orderProductsTablePagination .page-item.d-none',
-  productsTableRow: productId => `#orderProduct_${productId}`,
-  productsTableRowEdited: productId => `#editOrderProduct_${productId}`,
+  productsTableRow: (productId) => `#orderProduct_${productId}`,
+  productsTableRowEdited: (productId) => `#editOrderProduct_${productId}`,
   productsCellLocation: 'tr .cellProductLocation',
+  productsCellRefunded: 'tr .cellProductRefunded',
   productsCellLocationDisplayed: 'tr:not(.d-none) .cellProductLocation',
+  productsCellRefundedDisplayed: 'tr:not(.d-none) .cellProductRefunded',
   productsTableCustomizationRows: '#orderProductsTable .order-product-customization',
   productEditBtn: '.js-order-product-edit-btn',
   productAddBtn: '#addProductBtn',
@@ -109,6 +114,10 @@ export default {
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
   productEditTotalPriceText: '.editProductTotalPrice',
+  // Product Discount List
+  productDiscountList: {
+    list: '.table.discountList',
+  },
   // Product Pack Modal
   productPackModal: {
     modal: '#product-pack-modal',
@@ -127,6 +136,7 @@ export default {
   },
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
+  orderDiscountsTotalContainer: '#order-discounts-total-container',
   orderDiscountsTotal: '#orderDiscountsTotal',
   orderWrappingTotal: '#orderWrappingTotal',
   orderShippingTotal: '#orderShippingTotal',
@@ -141,10 +151,13 @@ export default {
       save: '#cancel_product_save',
       partialRefund: 'button.partial-refund-display',
       standardRefund: 'button.standard-refund-display',
+      returnProduct: 'button.return-product-display',
+      cancelProducts: 'button.cancel-product-display',
     },
     inputs: {
       quantity: '.cancel-product-quantity input',
       amount: '.cancel-product-amount input',
+      selector: '.cancel-product-selector input',
     },
     table: {
       cell: '.cancel-product-cell',
@@ -154,6 +167,7 @@ export default {
     checkboxes: {
       restock: '#cancel_product_restock',
       creditSlip: '#cancel_product_credit_slip',
+      voucher: '#cancel_product_voucher',
     },
     radios: {
       voucherRefundType: {
@@ -164,7 +178,10 @@ export default {
     },
     toggle: {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
-      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-selector',
+      standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
+      returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
+      cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector',
     },
   },
+  printOrderViewPageButton: '.js-print-order-view-page',
 };

@@ -10,6 +10,10 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const FilesPage = require('@pages/BO/catalog/files');
 const AddFilePage = require('@pages/BO/catalog/files/add');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_files_CRUDFile';
 
 let browser;
 let page;
@@ -60,6 +64,7 @@ describe('Create, update and delete file', async () => {
 
   // Go to files page
   it('should go to files page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFilesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.filesLink,
@@ -71,12 +76,14 @@ describe('Create, update and delete file', async () => {
 
   describe('Create file', async () => {
     it('should go to new file page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewFilePage', baseContext);
       await this.pageObjects.filesPage.goToAddNewFilePage();
       const pageTitle = await this.pageObjects.addFilePage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addFilePage.pageTitle);
     });
 
     it('should create file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createFile', baseContext);
       const result = await this.pageObjects.addFilePage.createEditFile(createFileData);
       await expect(result).to.equal(this.pageObjects.filesPage.successfulCreationMessage);
     });
@@ -84,20 +91,23 @@ describe('Create, update and delete file', async () => {
 
   describe('View file and check the existence of the downloaded file', async () => {
     it('should view file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedFile', baseContext);
       await this.pageObjects.filesPage.viewFile(1);
-      const found = await files.checkFileExistence(createFileData.filename);
+      const found = await files.doesFileExist(createFileData.filename);
       await expect(found, `${createFileData.filename} was not downloaded`).to.be.true;
     });
   });
 
   describe('Update File', async () => {
     it('should go to edit first file page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditFilePage', baseContext);
       await this.pageObjects.filesPage.goToEditFilePage(1);
       const pageTitle = await this.pageObjects.addFilePage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addFilePage.pageTitleEdit);
     });
 
     it('should edit file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateFile', baseContext);
       const result = await this.pageObjects.addFilePage.createEditFile(editFileData);
       await expect(result).to.equal(this.pageObjects.filesPage.successfulUpdateMessage);
     });
@@ -105,14 +115,16 @@ describe('Create, update and delete file', async () => {
 
   describe('View file and check the existence of the downloaded file', async () => {
     it('should view file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedFile', baseContext);
       await this.pageObjects.filesPage.viewFile(1);
-      const found = await files.checkFileExistence(editFileData.filename);
+      const found = await files.doesFileExist(editFileData.filename);
       await expect(found, `${editFileData.filename} was not downloaded`).to.be.true;
     });
   });
 
   describe('Delete file', async () => {
     it('should delete file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteFile', baseContext);
       // delete file in first row
       const result = await this.pageObjects.filesPage.deleteFile(1);
       await expect(result).to.be.equal(this.pageObjects.filesPage.successfulDeleteMessage);

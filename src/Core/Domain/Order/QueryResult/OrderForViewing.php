@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
 use DateTimeImmutable;
+use PrestaShop\Decimal\Number;
 
 /**
  * Contains data about order for viewing
@@ -130,6 +131,11 @@ class OrderForViewing
     /**
      * @var bool
      */
+    private $hasBeenPaid;
+
+    /**
+     * @var bool
+     */
     private $hasInvoice;
 
     /**
@@ -178,12 +184,13 @@ class OrderForViewing
      * @param string $taxMethod
      * @param bool $isTaxIncluded
      * @param bool $isValid
+     * @param bool $hasBeenPaid
      * @param bool $hasInvoice
      * @param bool $isDelivered
      * @param bool $isShipped
      * @param bool $invoiceManagementIsEnabled
      * @param DateTimeImmutable $createdAt
-     * @param OrderCustomerForViewing $customer
+     * @param OrderCustomerForViewing|null $customer
      * @param OrderShippingAddressForViewing $shippingAddress
      * @param OrderInvoiceAddressForViewing $invoiceAddress
      * @param OrderProductsForViewing $products
@@ -207,12 +214,13 @@ class OrderForViewing
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
+        bool $hasBeenPaid,
         bool $hasInvoice,
         bool $isDelivered,
         bool $isShipped,
         bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
-        OrderCustomerForViewing $customer,
+        ?OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
         OrderProductsForViewing $products,
@@ -244,6 +252,7 @@ class OrderForViewing
         $this->isShipped = $isShipped;
         $this->prices = $prices;
         $this->isTaxIncluded = $isTaxIncluded;
+        $this->hasBeenPaid = $hasBeenPaid;
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
@@ -308,9 +317,9 @@ class OrderForViewing
     }
 
     /**
-     * @return OrderCustomerForViewing
+     * @return OrderCustomerForViewing|null
      */
-    public function getCustomer(): OrderCustomerForViewing
+    public function getCustomer(): ?OrderCustomerForViewing
     {
         return $this->customer;
     }
@@ -388,6 +397,14 @@ class OrderForViewing
     }
 
     /**
+     * @return bool
+     */
+    public function hasPayments(): bool
+    {
+        return count($this->payments->getPayments()) > 0;
+    }
+
+    /**
      * @return OrderMessagesForViewing
      */
     public function getMessages(): OrderMessagesForViewing
@@ -430,6 +447,14 @@ class OrderForViewing
     /**
      * @return bool
      */
+    public function hasBeenPaid(): bool
+    {
+        return $this->hasBeenPaid;
+    }
+
+    /**
+     * @return bool
+     */
     public function hasInvoice(): bool
     {
         return $this->hasInvoice;
@@ -465,5 +490,20 @@ class OrderForViewing
     public function isInvoiceManagementIsEnabled(): bool
     {
         return $this->invoiceManagementIsEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRefundable(): bool
+    {
+        /** @var OrderProductForViewing $product */
+        foreach ($this->products->getProducts() as $product) {
+            if ($product->getQuantity() > $product->getQuantityRefunded()) {
+                return true;
+            }
+        }
+
+        return $this->prices->getShippingRefundableAmountRaw()->isGreaterThan(new Number('0'));
     }
 }

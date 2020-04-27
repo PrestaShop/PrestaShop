@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,8 +50,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class SupplierGridDefinitionFactory creates definition for supplier grid.
  */
-final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    /**
+     * @var string
+     */
+    public const GRID_ID = 'supplier';
+
     use BulkDeleteActionTrait;
 
     /**
@@ -59,7 +64,7 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'supplier';
+        return self::GRID_ID;
     }
 
     /**
@@ -202,10 +207,9 @@ final class SupplierGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new Filter('actions', SearchAndResetType::class))
                 ->setAssociatedColumn('actions')
                 ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search',
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
-                        'controller' => 'supplier',
-                        'action' => 'index',
+                        'filterId' => self::GRID_ID,
                     ],
                     'redirect_route' => 'admin_suppliers_index',
                 ])

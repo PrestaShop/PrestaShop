@@ -11,10 +11,10 @@ const HomePage = require('@pages/FO/home');
 const CartPage = require('@pages/FO/cart');
 const LoginPage = require('@pages/FO/login');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const {DefaultAccount} = require('@data/demo/customer');
 const CartData = require('@data/FO/cart');
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 let browser;
 let page;
@@ -86,11 +86,11 @@ describe('Order a product and check order confirmation', async () => {
 
   it('should check the cart details', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkCartDetails', baseContext);
-    const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    const result = await this.pageObjects.cartPage.getProductDetail(1);
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity).to.be.true,
+      expect(result.name).to.equal(CartData.customCartData.firstProduct.name),
+      expect(result.price).to.equal(CartData.customCartData.firstProduct.price),
+      expect(result.quantity).to.equal(CartData.customCartData.firstProduct.quantity),
     ]);
   });
 
