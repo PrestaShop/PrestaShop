@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image;
 
-use Db;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 
@@ -54,29 +53,54 @@ class ProductImageProvider
     }
 
     /**
-     * @todo: multistore - single shop, group, all shops. combination image?
      * @param int $productId
      *
-     * @return
+     * @return array
+     * @todo: multistore - single shop, group, all shops. combination image?
      */
     public function getImages(int $productId): array
     {
-        //@todo: I might need to get lang fields in separate sql query
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('i.id_image, i.id_product, i.position, i.cover, il.legend, il.id_lang')
+        $qb->select('i.id_image, i.id_product, i.position, i.cover')
             ->from($this->dbPrefix . 'image', 'i')
-            ->leftJoin(
-                'i',
-                $this->dbPrefix . 'image_lang',
-                'il',
-                'i.id_image = il.id_image'
-            )
             ->where('id_product = :productId')
-            ->groupBy('il.id_lang')
+            ->setParameter('productId', $productId)
+            ->orderBy('position', 'asc')
+        ;
+
+        $images = $qb->execute()->fetchAll(FetchMode::ASSOCIATIVE);
+        $localizedLegends = $this->getLocalizedLegends($productId);
+
+        foreach ($images as &$image) {
+            foreach ($localizedLegends as $legend) {
+                if ($legend['id_image'] === $image['id_image']) {
+                    $image['legend'][$legend['id_lang']] = $legend['legend'];
+                }
+            }
+        }
+
+        return $images;
+    }
+
+    /**
+     * @param int $productId
+     * 
+     * @return array
+     */
+    private function getLocalizedLegends(int $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('il.legend, il.id_lang, il.id_image')
+            ->from($this->dbPrefix . 'image_lang', 'il')
+            ->innerJoin(
+                'il',
+                $this->dbPrefix . 'image',
+                'i',
+                'i.id_product = :productId'
+            )
             ->setParameter('productId', $productId)
         ;
 
         return $qb->execute()->fetchAll(FetchMode::ASSOCIATIVE);
     }
-
 }
