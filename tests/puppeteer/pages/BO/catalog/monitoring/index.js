@@ -134,7 +134,7 @@ module.exports = class Monitoring extends BOBasePage {
    * @param row, row to delete
    * @return {Promise<textContent>}
    */
-  async deleteProductIntable(table, row) {
+  async deleteProductInGrid(table, row) {
     this.dialogListener(true);
     await this.openDropdownMenu(table, row);
     await this.clickAndWaitForNavigation(this.deleteRowLink(table, row));

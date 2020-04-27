@@ -34,7 +34,7 @@ module.exports = class Brands extends BOBasePage {
     this.actionsColumn = (table, row) => `${this.tableRow(table, row)} td.column-actions`;
     this.dropdownToggleButton = (table, row) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = (table, row) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
-    this.deleteRowLink = table => `${this.dropdownToggleMenu(table)} a[data-url*='/delete']`;
+    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a[data-url*='/delete']`;
     // Sort Selectors
     this.tableHead = table => `${this.gridTable(table)} thead`;
     this.sortColumnDiv = (table, column) => `${this.tableHead(table)

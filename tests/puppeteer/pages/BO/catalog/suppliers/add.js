@@ -24,7 +24,7 @@ module.exports = class AddSupplier extends BOBasePage {
     this.logoFileInput = '#supplier_logo';
     this.metaTitleLangButton = '#supplier_meta_title';
     this.metaTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title\']'
-      + `span[data-locale='${lang}']`;
+      + ` span[data-locale='${lang}']`;
     this.metaTitleInput = id => `#supplier_meta_title_${id}`;
     this.metaDescriptionTextarea = id => `#supplier_meta_description_${id}`;
     this.metaKeywordsInput = id => `#supplier_meta_keyword_${id}-tokenfield`;

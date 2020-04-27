@@ -44,7 +44,7 @@ module.exports = class Categories extends BOBasePage {
     // Sort Selectors
     this.tableHead = `${this.categoriesListForm} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
     // Modal Dialog
     this.deleteCategoryModal = '#category_grid_delete_categories_modal.show';
     this.deleteCategoryModalDeleteButton = `${this.deleteCategoryModal} button.js-submit-delete-categories`;
@@ -324,7 +324,7 @@ module.exports = class Categories extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
     while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
-      await this.page.hover(this.sortColumnDiv.replace(sortBy));
+      await this.page.hover(this.sortColumnDiv(sortBy));
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }

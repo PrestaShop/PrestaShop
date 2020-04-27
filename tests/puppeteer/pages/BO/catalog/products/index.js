@@ -90,7 +90,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getProductIDFromList(row) {
-    return this.getNumberFromText(this.productsListTableColumnID.replace('%ROW', row));
+    return this.getNumberFromText(this.productsListTableColumnID(row));
   }
 
   /**
@@ -440,7 +440,7 @@ module.exports = class Product extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
     while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
-      await this.page.hover(this.sortColumnDiv.replace('%COLUMN', sortBy));
+      await this.page.hover(this.sortColumnDiv(sortBy));
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
