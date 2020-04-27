@@ -18,7 +18,8 @@ module.exports = class SqlManager extends BOBasePage {
     this.sqlQueryListTableRow = row => `${this.sqlQueryListForm} tbody tr:nth-child(${row})`;
     this.sqlQueryListTableColumn = (row, column) => `${this.sqlQueryListTableRow(row)} td.column-${column}`;
     this.sqlQueryListTableColumnActions = row => `${this.sqlQueryListTableRow(row)} td.column-actions`;
-    this.sqlQueryListTableToggleDropDown = row => `${this.sqlQueryListTableColumnActions(row)} a[data-toggle='dropdown']`;
+    this.sqlQueryListTableToggleDropDown = row => `${this.sqlQueryListTableColumnActions(row)
+    } a[data-toggle='dropdown']`;
     this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/view']`;
     this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/edit']`;
     this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/delete']`;

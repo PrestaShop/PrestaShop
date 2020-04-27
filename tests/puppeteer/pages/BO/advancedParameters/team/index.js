@@ -19,7 +19,8 @@ module.exports = class Employees extends BOBasePage {
     this.employeesListTableRow = row => `${this.employeesListForm} tbody tr:nth-child(${row})`;
     this.employeesListTableColumn = (row, column) => `${this.employeesListTableRow(row)} td.column-${column}`;
     this.employeesListTableColumnAction = row => this.employeesListTableColumn(row, 'actions');
-    this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)} a[data-toggle='dropdown']`;
+    this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)
+    } a[data-toggle='dropdown']`;
     this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a[data-url]`;
     this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a[href*='edit']`;
     this.employeesListColumnValidIcon = row => `${this.employeesListTableColumn(row, 'active')
