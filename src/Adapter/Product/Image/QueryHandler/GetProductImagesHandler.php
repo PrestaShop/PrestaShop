@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
+use Image;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImageProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
@@ -59,7 +60,18 @@ final class GetProductImagesHandler extends AbstractProductHandler implements Ge
 
         $productImages = [];
         foreach ($images as $image) {
-            //@todo: build product image.
+            $imageId = (int) $image['id_image'];
+
+            $productImages[] = new ProductImage(
+                $imageId,
+                (int) $image['id_product'],
+                //@todo: previously used _THEME_PROD_DIR_ . $image->getImgPath. Do we really want to load the image again to get the path?
+                //   AdminModelAdapter::522 -> ProductDataProvider::152
+                _THEME_PROD_DIR_ . Image::getImgFolderStatic($imageId) . $imageId,
+                $image['legend'],
+                (int) $image['position'],
+                (bool) $image['cover']
+            );
         }
 
         return new ProductImages($productImages);
