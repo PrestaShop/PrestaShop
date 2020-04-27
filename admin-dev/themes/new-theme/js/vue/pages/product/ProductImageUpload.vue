@@ -15,15 +15,12 @@
           @change="onClickUpload"
         >
         <div>
-          <div
+          <img
             v-for="(image, index) in images"
             :key="index"
-          >
-            <img
-              :src="image.url"
-              :alt="image.url"
-            >
-          </div>
+            :src="image.basePath"
+            :alt="image.legend"
+          />
         </div>
       </div>
     </div>
@@ -39,6 +36,9 @@
     name: 'ProductImageUpload',
     props: {
       productId: {
+        Type: Number,
+      },
+      langId: {
         Type: Number,
       },
     },
@@ -57,21 +57,17 @@
       },
       onClickUpload(event) {
         uploadImages(this.productId, event.currentTarget.files).then((resp) => {
-          // @todo success.
-          console.log(resp);
-          // @todo: just to make sure component rerenders on update. Use loadImages when api ready.
-          this.images.push({url: 'test-3'});
         });
       },
       onDragUpload(event) {
         uploadImages(this.productId, event.dataTransfer.files).then((resp) => {
-          // @todo success.
-          console.log(resp);
+          this.loadImages();
         });
       },
       loadImages() {
-        //@todo: handle error cases
+        // @todo: handle error cases
         getImages(this.productId).then((resp) => {
+          debugger;
           this.images = resp.images;
         });
       },
@@ -79,18 +75,14 @@
   };
 
   async function getImages(productId) {
-    return fetch(router.generate('admin_products_v2_images_get_images', {productId})).then((resp) => {
-      console.log(resp);
-    });
+    return fetch(router.generate('admin_products_v2_images_get_images', {productId})).then((resp) => resp.json());
   }
 
   async function uploadImages(productId, fileList) {
     return fetch(router.generate('admin_products_v2_images_upload', {productId}), {
       method: 'POST',
       body: formatBody(fileList),
-    }).then((resp) => {
-      console.log(resp);
-    });
+    }).then((resp) => resp.json());
   }
 
   function formatBody(fileList) {

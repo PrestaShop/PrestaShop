@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -66,8 +68,20 @@ class ImageController extends FrameworkBundleAdminController
         $images = $this->getQueryBus()->handle(new GetProductImages($productId));
         //@todo: check edgecases/errors etc.
 
+        $formattedImages = [];
+        /** @var ProductImages $images */
+        foreach ($images->getProductImages() as $image) {
+            $formattedImages[] = [
+                'imageId' => $image->getId(),
+                'productId' => $image->getProductId(),
+                'position' => $image->getPosition(),
+                'basePath' => $image->getBasePath(),
+                //@todo: do i need lang here or leave it to js?
+                'legend' => $image->getLocalizedLegends()[$this->getContextLangId()]
+            ];
+        }
         return $this->json([
-            'images' => $images,
+            'images' => $formattedImages,
         ]);
     }
 

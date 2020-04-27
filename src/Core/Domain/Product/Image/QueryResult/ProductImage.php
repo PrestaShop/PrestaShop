@@ -33,7 +33,7 @@ class ProductImage
     /**
      * @var int
      */
-    private $imageId;
+    private $id;
 
     /**
      * @var int
@@ -43,7 +43,7 @@ class ProductImage
     /**
      * @var string
      */
-    private $url;
+    private $basePath;
 
     /**
      * @var string[]
@@ -61,24 +61,24 @@ class ProductImage
     private $cover;
 
     /**
-     * @param int $imageId
+     * @param int $id
      * @param int $productId
-     * @param string $url
+     * @param string $basePath
      * @param array $localizedLegends
      * @param int $position
      * @param bool $cover
      */
     public function __construct(
-        int $imageId,
+        int $id,
         int $productId,
-        string $url,
+        string $basePath,
         array $localizedLegends,
         int $position,
         bool $cover
     ) {
-        $this->imageId = $imageId;
+        $this->id = $id;
         $this->productId = $productId;
-        $this->url = $url;
+        $this->basePath = $basePath;
         $this->localizedLegends = $localizedLegends;
         $this->position = $position;
         $this->cover = $cover;
@@ -87,9 +87,9 @@ class ProductImage
     /**
      * @return int
      */
-    public function getImageId(): int
+    public function getId(): int
     {
-        return $this->imageId;
+        return $this->id;
     }
 
     /**
@@ -103,9 +103,9 @@ class ProductImage
     /**
      * @return string
      */
-    public function getUrl(): string
+    public function getBasePath(): string
     {
-        return $this->url;
+        return $this->basePath;
     }
 
     /**

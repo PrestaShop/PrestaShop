@@ -67,7 +67,8 @@ final class GetProductImagesHandler extends AbstractProductHandler implements Ge
                 (int) $image['id_product'],
                 //@todo: previously used _THEME_PROD_DIR_ . $image->getImgPath. Do we really want to load the image again to get the path?
                 //   AdminModelAdapter::522 -> ProductDataProvider::152
-                _THEME_PROD_DIR_ . Image::getImgFolderStatic($imageId) . $imageId,
+                //@todo: image type hardcoded. should be somewhere in const? and .jpg
+                _THEME_PROD_DIR_ . Image::getImgFolderStatic($imageId) . $imageId . '-home_default.jpg',
                 $image['legend'],
                 (int) $image['position'],
                 (bool) $image['cover']
