@@ -19,7 +19,8 @@ module.exports = class DeliverySlips extends BOBasePage {
     this.deliverySlipForm = '#delivery_options_fieldset';
     this.deliveryPrefixInput = '#form_options_prefix_1';
     this.deliveryNumberInput = '#form_options_number';
-    this.deliveryEnableProductImage = `${this.deliverySlipForm} label[for='form_options_enable_product_image_%ID']`;
+    this.deliveryEnableProductImage = id => `${this.deliverySlipForm
+    } label[for='form_options_enable_product_image_${id}']`;
     this.saveDeliverySlipOptionsButton = `${this.deliverySlipForm} .btn.btn-primary`;
   }
 
@@ -65,7 +66,7 @@ module.exports = class DeliverySlips extends BOBasePage {
    * @return {Promise<void>}
    */
   async setEnableProductImage(enable = true) {
-    await this.page.click(this.deliveryEnableProductImage.replace('%ID', enable ? 1 : 0));
+    await this.page.click(this.deliveryEnableProductImage(enable ? 1 : 0));
   }
 
   /** Save delivery slip options
