@@ -15,18 +15,19 @@ module.exports = class WebService extends BOBasePage {
     this.webserviceGridPanel = '#webservice_key_grid_panel';
     this.webserviceGridTitle = `${this.webserviceGridPanel} h3.card-header-title`;
     this.webserviceListForm = '#webservice_key_grid';
-    this.webserviceListTableRow = `${this.webserviceListForm} tbody tr:nth-child(%ROW)`;
-    this.webserviceListTableColumn = `${this.webserviceListTableRow} td.column-%COLUMN`;
-    this.webserviceListTableColumnAction = this.webserviceListTableColumn.replace('%COLUMN', 'actions');
-    this.webserviceListTableToggleDropDown = `${this.webserviceListTableColumnAction} a[data-toggle='dropdown']`;
-    this.webserviceListTableDeleteLink = `${this.webserviceListTableColumnAction} a[data-url]`;
-    this.webserviceListTableEditLink = `${this.webserviceListTableColumnAction} a[href*='edit']`;
-    this.webserviceListColumnValidIcon = `${this.webserviceListTableColumn.replace('%COLUMN', 'active')}
-    i.grid-toggler-icon-valid`;
-    this.webserviceListColumnNotValidIcon = `${this.webserviceListTableColumn.replace('%COLUMN', 'active')}
-    i.grid-toggler-icon-not-valid`;
+    this.webserviceListTableRow = row => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
+    this.webserviceListTableColumn = (row, column) => `${this.webserviceListTableRow(row)} td.column-${column}`;
+    this.webserviceListTableColumnAction = row => this.webserviceListTableColumn(row, 'actions');
+    this.webserviceListTableToggleDropDown = row => `${this.webserviceListTableColumnAction(row)
+    } a[data-toggle='dropdown']`;
+    this.webserviceListTableDeleteLink = row => `${this.webserviceListTableColumnAction(row)} a[data-url]`;
+    this.webserviceListTableEditLink = row => `${this.webserviceListTableColumnAction(row)} a[href*='edit']`;
+    this.webserviceListColumnValidIcon = row => `${this.webserviceListTableColumn(row, 'active')
+    } i.grid-toggler-icon-valid`;
+    this.webserviceListColumnNotValidIcon = row => `${this.webserviceListTableColumn(row, 'active')
+    } i.grid-toggler-icon-not-valid`;
     // Filters
-    this.webserviceFilterInput = `${this.webserviceListForm} #webservice_key_%FILTERBY`;
+    this.webserviceFilterInput = filterBy => `${this.webserviceListForm} #webservice_key_${filterBy}`;
     this.filterSearchButton = `${this.webserviceListForm} button[name='webservice_key[actions][search]']`;
     this.filterResetButton = `${this.webserviceListForm} button[name='webservice_key[actions][reset]']`;
   }
@@ -69,7 +70,7 @@ module.exports = class WebService extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.webserviceListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+    return this.getTextContent(this.webserviceListTableColumn(row, column));
   }
 
   /**
@@ -78,7 +79,7 @@ module.exports = class WebService extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditWebservicePage(row) {
-    await this.clickAndWaitForNavigation(this.webserviceListTableEditLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.webserviceListTableEditLink(row));
   }
 
   /**
@@ -91,10 +92,10 @@ module.exports = class WebService extends BOBasePage {
   async filterWebserviceTable(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.webserviceFilterInput.replace('%FILTERBY', filterBy), value.toString());
+        await this.setValue(this.webserviceFilterInput(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.webserviceFilterInput.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(this.webserviceFilterInput(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
@@ -109,9 +110,7 @@ module.exports = class WebService extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row) {
-    return this.elementVisible(this.webserviceListColumnValidIcon.replace('%ROW', row),
-      100,
-    );
+    return this.elementVisible(this.webserviceListColumnValidIcon(row), 100);
   }
 
   /**
@@ -121,14 +120,11 @@ module.exports = class WebService extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
-    await this.waitForVisibleSelector(
-      this.webserviceListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'),
-      2000,
-    );
+    await this.waitForVisibleSelector(this.webserviceListTableColumn(row, 'active'), 2000);
     if (await this.getToggleColumnValue(row) !== valueWanted) {
-      this.page.click(this.webserviceListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
+      await this.page.click(this.webserviceListTableColumn(row, 'active'));
       await this.waitForVisibleSelector(
-        (valueWanted ? this.webserviceListColumnValidIcon : this.webserviceListColumnNotValidIcon).replace('%ROW', row),
+        (valueWanted ? this.webserviceListColumnValidIcon(row) : this.webserviceListColumnNotValidIcon(row)),
       );
       return true;
     }
@@ -144,13 +140,11 @@ module.exports = class WebService extends BOBasePage {
     this.dialogListener();
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.webserviceListTableToggleDropDown.replace('%ROW', row)),
-      this.waitForVisibleSelector(
-        `${this.webserviceListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
-      ),
+      this.page.click(this.webserviceListTableToggleDropDown(row)),
+      this.waitForVisibleSelector(`${this.webserviceListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
     // Click on delete
-    await this.clickAndWaitForNavigation(this.webserviceListTableDeleteLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.webserviceListTableDeleteLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
