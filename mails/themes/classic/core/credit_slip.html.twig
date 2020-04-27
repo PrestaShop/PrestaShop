@@ -42,7 +42,7 @@
   <td class="linkbelow">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
       <span>
-        {{ 'You can review this credit slip and download your invoice from the <a href="{history_url}">"%my_credit_slips%"</a> section of your account by clicking <a href="{my_account_url}">"%my_account%"</a> on our shop.'|trans({'%my_credit_slips%': 'Credit slips'|trans({}, 'Shop.Theme.Customeraccount', locale), '%my_account%': 'My account'|trans({}, 'Shop.Navigation', locale)}, 'Emails.Body', locale)|raw }}
+        {{ 'Review this credit slip and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%credit_slips_label%</a> section of your customer account.'|trans({'%credit_slips_label%': 'Credit slips'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}
       </span>
     </font>
   </td>
