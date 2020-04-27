@@ -16,18 +16,18 @@ module.exports = class Employees extends BOBasePage {
     this.employeeGridPanel = '#employee_grid_panel';
     this.employeeGridTitle = `${this.employeeGridPanel} h3.card-header-title`;
     this.employeesListForm = '#employee_grid';
-    this.employeesListTableRow = `${this.employeesListForm} tbody tr:nth-child(%ROW)`;
-    this.employeesListTableColumn = `${this.employeesListTableRow} td.column-%COLUMN`;
-    this.employeesListTableColumnAction = this.employeesListTableColumn.replace('%COLUMN', 'actions');
-    this.employeesListTableToggleDropDown = `${this.employeesListTableColumnAction} a[data-toggle='dropdown']`;
-    this.employeesListTableDeleteLink = `${this.employeesListTableColumnAction} a[data-url]`;
-    this.employeesListTableEditLink = `${this.employeesListTableColumnAction} a[href*='edit']`;
-    this.employeesListColumnValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')}
-    i.grid-toggler-icon-valid`;
-    this.employeesListColumnNotValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')}
-    i.grid-toggler-icon-not-valid`;
+    this.employeesListTableRow = row => `${this.employeesListForm} tbody tr:nth-child(${row})`;
+    this.employeesListTableColumn = (row, column) => `${this.employeesListTableRow(row)} td.column-${column}`;
+    this.employeesListTableColumnAction = row => this.employeesListTableColumn(row, 'actions');
+    this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)} a[data-toggle='dropdown']`;
+    this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a[data-url]`;
+    this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a[href*='edit']`;
+    this.employeesListColumnValidIcon = row => `${this.employeesListTableColumn(row, 'active')
+    } i.grid-toggler-icon-valid`;
+    this.employeesListColumnNotValidIcon = row => `${this.employeesListTableColumn(row, 'active')
+    } i.grid-toggler-icon-not-valid`;
     // Filters
-    this.employeeFilterInput = `${this.employeesListForm} #employee_%FILTERBY`;
+    this.employeeFilterInput = filterBy => `${this.employeesListForm} #employee_${filterBy}`;
     this.filterSearchButton = `${this.employeesListForm} button[name='employee[actions][search]']`;
     this.filterResetButton = `${this.employeesListForm} button[name='employee[actions][reset]']`;
     // Bulk Actions
@@ -76,7 +76,7 @@ module.exports = class Employees extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+    return this.getTextContent(this.employeesListTableColumn(row, column));
   }
 
   /**
@@ -85,7 +85,7 @@ module.exports = class Employees extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditEmployeePage(row) {
-    await this.clickAndWaitForNavigation(this.employeesListTableEditLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.employeesListTableEditLink(row));
   }
 
   /**
@@ -98,10 +98,10 @@ module.exports = class Employees extends BOBasePage {
   async filterEmployees(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.employeeFilterInput.replace('%FILTERBY', filterBy), value.toString());
+        await this.setValue(this.employeeFilterInput(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(this.employeeFilterInput.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(this.employeeFilterInput(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
@@ -116,9 +116,7 @@ module.exports = class Employees extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row) {
-    return this.elementVisible(this.employeesListColumnValidIcon.replace('%ROW', row),
-      100,
-    );
+    return this.elementVisible(this.employeesListColumnValidIcon(row), 100);
   }
 
   /**
@@ -128,15 +126,11 @@ module.exports = class Employees extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
-    await this.waitForVisibleSelector(
-      this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'),
-      2000,
-    );
+    await this.waitForVisibleSelector(this.employeesListTableColumn(row, 'active'), 2000);
     if (await this.getToggleColumnValue(row) !== valueWanted) {
-      this.page.click(this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
+      this.page.click(this.employeesListTableColumn(row, 'active'));
       await this.waitForVisibleSelector(
-        (valueWanted ? this.employeesListColumnValidIcon : this.employeesListColumnNotValidIcon)
-          .replace('%ROW', row),
+        (valueWanted ? this.employeesListColumnValidIcon(row) : this.employeesListColumnNotValidIcon(row)),
       );
       return true;
     }
@@ -152,13 +146,13 @@ module.exports = class Employees extends BOBasePage {
     this.dialogListener();
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.employeesListTableToggleDropDown.replace('%ROW', row)),
+      this.page.click(this.employeesListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
-        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
+        `${this.employeesListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
-    await this.clickAndWaitForNavigation(this.employeesListTableDeleteLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.employeesListTableDeleteLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
