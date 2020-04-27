@@ -49,7 +49,7 @@ const init = async function () {
 };
 
 // Create edit voucher from view customer page
-describe('Create/ Edit and view voucher from customer information page', async () => {
+describe('Create/Edit and view voucher from customer information page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
