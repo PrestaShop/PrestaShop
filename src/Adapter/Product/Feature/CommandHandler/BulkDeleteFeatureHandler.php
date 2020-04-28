@@ -28,12 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler;
 
-use Feature;
 use PrestaShop\PrestaShop\Adapter\Product\Feature\AbstractFeatureHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\BulkDeleteFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\FeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\CommandHandler\BulkDeleteFeatureHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\BulkDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\FeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\FeatureId;
 
 /**

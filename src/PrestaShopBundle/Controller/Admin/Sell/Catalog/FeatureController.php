@@ -21,7 +21,6 @@
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * needs please refer to http://www.prestashop.com for more information.
- *
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,11 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\BulkDeleteFeatur
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\CannotDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FeatureGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,7 +51,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FeatureController extends FrameworkBundleAdminController
 {
-
     /**
      * Renders features list
      *
@@ -70,7 +66,7 @@ class FeatureController extends FrameworkBundleAdminController
         $gridFactory = $this->get('prestashop.core.grid.factory.feature');
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
-            new GetShowcaseCardIsClosed((int)$this->getContext()->employee->id, ShowcaseCard::FEATURES_CARD)
+            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::FEATURES_CARD)
         );
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
@@ -135,7 +131,7 @@ class FeatureController extends FrameworkBundleAdminController
     public function editAction($featureId, Request $request): Response
     {
         try {
-            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int)$featureId));
+            $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -248,7 +244,6 @@ class FeatureController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_features_index');
     }
 
-
     /**
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
@@ -340,7 +335,7 @@ class FeatureController extends FrameworkBundleAdminController
         }
 
         foreach ($featureIds as $i => $featureId) {
-            $featureIds[$i] = (int)$featureId;
+            $featureIds[$i] = (int) $featureId;
         }
 
         return $featureIds;

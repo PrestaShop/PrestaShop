@@ -113,10 +113,10 @@ final class FeatureGridDefinitionFactory extends AbstractFilterableGridDefinitio
                     ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        //@todo uncomment when form is migrated
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    //@todo uncomment when form is migrated
 //                        ->add(
 //                            (new LinkRowAction('view'))
 //                                ->setName($this->trans('View', [], 'Admin.Actions'))
@@ -137,22 +137,22 @@ final class FeatureGridDefinitionFactory extends AbstractFilterableGridDefinitio
 //                                    'route_param_field' => 'id_feature',
 //                                ])
 //                        )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'method' => 'POST',
-                                'route' => 'admin_features_delete',
-                                'route_param_name' => 'featureId',
-                                'route_param_field' => 'id_feature',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
+                    ->add((new SubmitRowAction('delete'))
+                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                    ->setIcon('delete')
+                    ->setOptions([
+                        'method' => 'POST',
+                        'route' => 'admin_features_delete',
+                        'route_param_name' => 'featureId',
+                        'route_param_field' => 'id_feature',
+                        'confirm_message' => $this->trans(
+                            'Delete selected item?',
+                            [],
+                            'Admin.Notifications.Warning'
                         ),
-                ])
+                    ])
+                    ),
+            ])
             );
 
         return $columns;
@@ -249,11 +249,11 @@ final class FeatureGridDefinitionFactory extends AbstractFilterableGridDefinitio
     {
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_features_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+            ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+            ->setOptions([
+                'submit_route' => 'admin_features_bulk_delete',
+                'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ])
             );
     }
 }

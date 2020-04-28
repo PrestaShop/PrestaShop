@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception;
 
 use Exception;
 
-
 /**
  * Thrown on failure to delete all selected features without errors
  */
