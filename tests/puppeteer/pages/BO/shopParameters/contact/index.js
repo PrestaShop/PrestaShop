@@ -14,25 +14,25 @@ module.exports = class Contacts extends BOBasePage {
     this.contactsGridPanel = '#contact_grid_panel';
     this.contactsGridTitle = `${this.contactsGridPanel} h3.card-header-title`;
     this.contactsListForm = '#contact_grid';
-    this.contactsListTableRow = `${this.contactsListForm} tbody tr:nth-child(%ROW)`;
-    this.contactsListTableColumn = `${this.contactsListTableRow} td.column-%COLUMN`;
+    this.contactsListTableRow = row => `${this.contactsListForm} tbody tr:nth-child(${row})`;
+    this.contactsListTableColumn = (row, column) => `${this.contactsListTableRow(row)} td.column-${column}`;
     // Filters
-    this.contactFilterInput = `${this.contactsListForm} #contact_%FILTERBY`;
+    this.contactFilterInput = filterBy => `${this.contactsListForm} #contact_${filterBy}`;
     this.filterSearchButton = `${this.contactsListForm} button[name='contact[actions][search]']`;
     this.filterResetButton = `${this.contactsListForm} button[name='contact[actions][reset]']`;
     // Actions buttons in Row
-    this.contactsListTableActionsColumn = this.contactsListTableColumn.replace('%COLUMN', 'actions');
-    this.listTableToggleDropDown = `${this.contactsListTableActionsColumn} a[data-toggle='dropdown']`;
-    this.listTableEditLink = `${this.contactsListTableActionsColumn} a[href*='edit']`;
-    this.deleteRowLink = `${this.contactsListTableActionsColumn} a[data-method='POST']`;
+    this.contactsListTableActionsColumn = row => this.contactsListTableColumn(row, 'actions');
+    this.listTableToggleDropDown = row => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;
+    this.listTableEditLink = row => `${this.contactsListTableActionsColumn(row)} a[href*='edit']`;
+    this.deleteRowLink = row => `${this.contactsListTableActionsColumn(row)} a[data-method='POST']`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.contactsGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#contact_grid_bulk_action_delete_all';
     // Sort Selectors
     this.tableHead = `${this.contactsGridPanel} thead`;
-    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
-    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -73,7 +73,7 @@ module.exports = class Contacts extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterContacts(filterBy, value = '') {
-    await this.setValue(this.contactFilterInput.replace('%FILTERBY', filterBy), value.toString());
+    await this.setValue(this.contactFilterInput(filterBy), value.toString());
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
@@ -85,11 +85,7 @@ module.exports = class Contacts extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTableContacts(row, column) {
-    return this.getTextContent(
-      this.contactsListTableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.contactsListTableColumn(row, column));
   }
 
   /**
@@ -121,7 +117,7 @@ module.exports = class Contacts extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditContactPage(row) {
-    this.clickAndWaitForNavigation(this.listTableEditLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.listTableEditLink(row));
   }
 
   /**
@@ -133,13 +129,13 @@ module.exports = class Contacts extends BOBasePage {
     this.dialogListener();
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.listTableToggleDropDown.replace('%ROW', row)),
+      this.page.click(this.listTableToggleDropDown(row)),
       this.waitForVisibleSelector(
-        `${this.listTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
+        `${this.listTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -173,8 +169,8 @@ module.exports = class Contacts extends BOBasePage {
    * @return {Promise<void>}
    */
   async sortTable(sortBy, sortDirection = 'asc') {
-    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
-    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
     while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
       await this.clickAndWaitForNavigation(sortColumnSpanButton);
