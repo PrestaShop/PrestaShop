@@ -23,22 +23,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% trans_default_domain 'Admin.Advparameters.Feature' %}
+ <span 
+   class="help-box{% if classes is defined %} {{ classes }}{% endif %}"
+   data-toggle="popover"
+   {% if content is defined %}
+     data-content="{{ content }}"
+   {% endif %}
 
-<div class="card">
-  <h3 class="card-header">
-    <i class="material-icons">list</i> {{ 'Available fields'|trans }}
-  </h3>
-  <div class="card-block">
-    <div class="js-available-field-template d-none"></div>
-    {% include '@Common/HelpBox/helpbox.html.twig' with { "classes" : "js-available-field-popover-template d-none" } %}
-    <div
-      class="alert alert-info js-available-fields"
-      role="alert"
-      data-url="{{ path('admin_import_get_available_fields') }}"
-    >
-    </div>
+   {% if placement is defined %}
+     data-placement="{{ placement}}"
+   {% endif %}
 
-    <p>{{ '* Required field'|trans({}, 'Admin.Advparameters.Feature') }}</p>
-  </div>
-</div>
+   {% if title is defined %}
+     data-title="{{ title }}"
+   {% endif %}
+ >
+ </span>
