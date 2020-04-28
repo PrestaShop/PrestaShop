@@ -183,7 +183,6 @@ GitHub contributors:
 - djbuch
 - djfm
 - dks295
-- dlage
 - Dmitry
 - doekia
 - DOEO
@@ -386,7 +385,7 @@ GitHub contributors:
 - ldecoker
 - Léa Mendes Da Silva
 - Leandro F. L
-- Léo
+- Léo Cunéaz
 - Lesley Paone
 - LittleBigDev
 - LOIC ROSSET ltd
@@ -684,7 +683,7 @@ GitHub contributors:
 - Sylvestre Nicky
 - Symeon
 - Tadas Davidsonas
-- Tanguy
+- Tanguy Salmon
 - Tanguy JACQUET
 - tchauviere
 - TechhDan
