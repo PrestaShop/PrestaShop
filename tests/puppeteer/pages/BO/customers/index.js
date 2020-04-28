@@ -20,7 +20,7 @@ module.exports = class Customers extends BOBasePage {
     this.customersListTableActionsColumn = row => this.customersListTableColumn(row, 'actions');
     this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)} a[data-original-title='Edit']`;
     this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)} a[data-toggle='dropdown']`;
-    this.customersListTableViewLink = row => `${this.customersListTableColumn(row)} a[href*='/view']`;
+    this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a[href*='/view']`;
     this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)} a[data-customer-delete-url]`;
     this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)} i.grid-toggler-icon-valid`;
     this.customersListColumnNotValidIcon = (row, column) => `${this.customersListTableColumn(row, column)} i.grid-toggler-icon-not-valid`;
