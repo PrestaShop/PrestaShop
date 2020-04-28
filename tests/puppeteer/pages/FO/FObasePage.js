@@ -14,23 +14,20 @@ module.exports = class Home extends CommonPage {
     this.userInfoLink = '#_desktop_user_info';
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
     this.contactLink = '#contact-link';
-    this.categoryMenu = '#category-%ID > a';
+    this.categoryMenu = id => `#category-${id} a`;
     this.languageSelectorDiv = '#_desktop_language_selector';
     this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
-    this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
-    this.currencySelectorDiv = '#_desktop_currency_selector';
-    this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
+    this.languageSelectorMenuItemLink = language => `${this.languageSelectorDiv} ul li a[data-iso-code='${language}']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
-
     // footer
     this.siteMapLink = '#link-static-page-sitemap-2';
     // footer links
     this.footerLinksDiv = '#footer div.links';
-    this.wrapperDiv = `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(%POSITION)`;
-    this.wrapperTitle = `${this.wrapperDiv} p`;
-    this.wrapperSubmenu = `${this.wrapperDiv} ul[id*='footer_sub_menu']`;
-    this.wrapperSubmenuItemLink = `${this.wrapperSubmenu} li a`;
+    this.wrapperDiv = position => `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(${position})`;
+    this.wrapperTitle = position => `${this.wrapperDiv(position)} p`;
+    this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
+    this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
   }
 
   /**
@@ -46,7 +43,7 @@ module.exports = class Home extends CommonPage {
    * @param categoryID, category id from the BO
    */
   async goToCategory(categoryID) {
-    await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', categoryID));
+    await this.waitForSelectorAndClick(this.categoryMenu(categoryID));
   }
 
   /**
@@ -55,8 +52,8 @@ module.exports = class Home extends CommonPage {
    * @param subCategoryID, subcategory id from the BO
    */
   async goToSubCategory(categoryID, subCategoryID) {
-    await this.page.hover(this.categoryMenu.replace('%ID', categoryID));
-    await this.waitForSelectorAndClick(this.categoryMenu.replace('%ID', subCategoryID));
+    await this.page.hover(this.categoryMenu(categoryID));
+    await this.waitForSelectorAndClick(this.categoryMenu(subCategoryID));
   }
 
   /**
@@ -91,9 +88,9 @@ module.exports = class Home extends CommonPage {
   async changeLanguage(lang = 'en') {
     await Promise.all([
       this.page.click(this.languageSelectorExpandIcon),
-      this.waitForVisibleSelector(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
+      this.waitForVisibleSelector(this.languageSelectorMenuItemLink(lang)),
     ]);
-    await this.clickAndWaitForNavigation(this.languageSelectorMenuItemLink.replace('%LANG', lang));
+    await this.clickAndWaitForNavigation(this.languageSelectorMenuItemLink(lang));
   }
 
   /**
@@ -108,11 +105,11 @@ module.exports = class Home extends CommonPage {
   /**
    * Return true if language exist in FO
    * @param lang
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async languageExists(lang = 'en') {
     await this.page.click(this.languageSelectorExpandIcon);
-    return this.elementVisible(this.languageSelectorMenuItemLink.replace('%LANG', lang), 1000);
+    return this.elementVisible(this.languageSelectorMenuItemLink(lang), 1000);
   }
 
   /**
@@ -134,7 +131,7 @@ module.exports = class Home extends CommonPage {
    */
   async getFooterLinksTextContent(position) {
     return this.page.$$eval(
-      this.wrapperSubmenuItemLink.replace('%POSITION', position),
+      this.wrapperSubmenuItemLink(position),
       all => all.map(el => el.textContent.trim()),
     );
   }
@@ -145,7 +142,7 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<textContent>}
    */
   async getFooterLinksBlockTitle(position) {
-    return this.getTextContent(this.wrapperTitle.replace('%POSITION', position));
+    return this.getTextContent(this.wrapperTitle(position));
   }
 
   /**

@@ -8,10 +8,10 @@ module.exports = class Cart extends FOBasePage {
     this.pageTitle = 'Cart';
 
     // Selectors for cart page
-    this.productItem = '#main li:nth-of-type(%NUMBER)';
-    this.productName = `${this.productItem} div.product-line-info > a`;
-    this.productPrice = `${this.productItem} div.current-price > span`;
-    this.productQuantity = `${this.productItem} div.input-group input.js-cart-line-product-quantity`;
+    this.productItem = number => `#main li:nth-of-type(${number})`;
+    this.productName = number => `${this.productItem(number)} div.product-line-info > a`;
+    this.productPrice = number => `${this.productItem(number)} div.current-price > span`;
+    this.productQuantity = number => `${this.productItem(number)} div.input-group input.js-cart-line-product-quantity`;
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
     this.cartTotalTTC = '.cart-summary-totals span.value';
@@ -25,9 +25,9 @@ module.exports = class Cart extends FOBasePage {
    */
   async getProductDetail(row) {
     return {
-      name: await this.getTextContent(this.productName.replace('%NUMBER', row)),
-      price: await this.getTextContent(this.productPrice.replace('%NUMBER', row)),
-      quantity: parseFloat(await this.getAttributeContent(this.productQuantity.replace('%NUMBER', row), 'value')),
+      name: await this.getTextContent(this.productName(row)),
+      price: await this.getTextContent(this.productPrice(row)),
+      quantity: parseFloat(await this.getAttributeContent(this.productQuantity(row), 'value')),
     };
   }
 
@@ -45,9 +45,9 @@ module.exports = class Cart extends FOBasePage {
    * @param quantity
    */
   async editProductQuantity(productID, quantity) {
-    await this.setValue(this.productQuantity.replace('%NUMBER', productID), quantity.toString());
+    await this.setValue(this.productQuantity(productID), quantity.toString());
     // click on price to see that its changed
-    await this.page.click(this.productPrice.replace('%NUMBER', productID));
+    await this.page.click(this.productPrice(productID));
   }
 
   /**
