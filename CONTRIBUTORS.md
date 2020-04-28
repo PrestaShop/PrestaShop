@@ -364,7 +364,7 @@ GitHub contributors:
 - Julien Fenaille
 - Julien Gissinger
 - Julien Martin
-- Julius Zukauskas
+- Julius Žukauskas
 - julvernois
 - Justinas Urbanavicius
 - Kamil Szymański
@@ -382,7 +382,7 @@ GitHub contributors:
 - Krystian Podemski
 - Ladel
 - Lathanao
-- laurynas Sedys
+- Laurynas Sedys
 - ldecoker
 - Léa Mendes Da Silva
 - Leandro F. L
