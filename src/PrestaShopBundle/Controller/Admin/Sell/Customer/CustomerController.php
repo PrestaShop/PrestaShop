@@ -266,6 +266,8 @@ class CustomerController extends AbstractAdminController
             'note' => $customerInformation->getGeneralInformation()->getPrivateNote(),
         ]);
 
+        $this->manageLegacyFlashes($request->query->get('conf'));
+
         return $this->render('@PrestaShop/Admin/Sell/Customer/view.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -839,5 +841,29 @@ class CustomerController extends AbstractAdminController
                 ]
             ),
         ];
+    }
+
+    /**
+     * Manage legacy flashes, this code must be removed
+     * when legacy edit will be migrated.
+     *
+     * @param int $messageId The message id from legacy context
+     */
+    private function manageLegacyFlashes($messageId)
+    {
+        if (empty($messageId)) {
+            return;
+        }
+
+        $messages = [
+            4 => $this->trans('Update successful.', 'Admin.Notifications.Success'),
+        ];
+
+        if (isset($messages[$messageId])) {
+            $this->addFlash(
+                'success',
+                $messages[$messageId]
+            );
+        }
     }
 }
