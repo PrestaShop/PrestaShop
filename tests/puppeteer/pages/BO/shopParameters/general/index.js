@@ -10,9 +10,9 @@ module.exports = class shopParamsGeneral extends BOBasePage {
     // Selectors
     this.maintenanceNavItemLink = '#subtab-AdminMaintenance';
     this.configurationForm = '#configuration_form';
-    this.displaySuppliersLabel = 'label[for=\'form_general_display_suppliers_%TOGGLE\']';
-    this.displayBrandsLabel = 'label[for=\'form_general_display_manufacturers_%TOGGLE\']';
-    this.enableMultiStoreLabel = 'label[for=\'form_general_multishop_feature_active_%TOGGLE\']';
+    this.displaySuppliersLabel = toggle => `label[for='form_general_display_suppliers_${toggle}']`;
+    this.displayBrandsLabel = toggle => `label[for='form_general_display_manufacturers_${toggle}']`;
+    this.enableMultiStoreLabel = toggle => `label[for='form_general_multishop_feature_active_${toggle}']`;
     this.saveFormButton = `${this.configurationForm} .card-footer button`;
   }
 
@@ -34,7 +34,7 @@ module.exports = class shopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplaySuppliers(toEnable = true) {
-    await this.waitForSelectorAndClick(this.displaySuppliersLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.waitForSelectorAndClick(this.displaySuppliersLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
@@ -45,7 +45,7 @@ module.exports = class shopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplayBrands(toEnable = true) {
-    await this.waitForSelectorAndClick(this.displayBrandsLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.waitForSelectorAndClick(this.displayBrandsLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
@@ -56,7 +56,7 @@ module.exports = class shopParamsGeneral extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setMultiStoreStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.enableMultiStoreLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.waitForSelectorAndClick(this.enableMultiStoreLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
