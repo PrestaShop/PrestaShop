@@ -438,11 +438,21 @@ class CustomerCore extends ObjectModel
      * @param bool $ignoreGuest
      *
      * @return bool|Customer|CustomerCore Customer instance
+     *
+     * @throws \InvalidArgumentException if given input is not valid
      */
     public function getByEmail($email, $plaintextPassword = null, $ignoreGuest = true)
     {
-        if (!Validate::isEmail($email) || ($plaintextPassword && !Validate::isPasswd($plaintextPassword))) {
-            die(Tools::displayError());
+        if (!Validate::isEmail($email)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cannot get customer by email as %s is not a valid email',
+                $email
+            ));
+        }
+        if (($plaintextPassword && !Validate::isPlaintextPassword($plaintextPassword))) {
+            throw new \InvalidArgumentException(
+                'Cannot get customer by email as given password is not a valid password'
+            );
         }
 
         $shopGroup = Shop::getGroupFromShop(Shop::getContextShopID(), false);
