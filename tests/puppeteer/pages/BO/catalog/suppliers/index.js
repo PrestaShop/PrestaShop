@@ -25,25 +25,25 @@ module.exports = class Suppliers extends BOBasePage {
     this.confirmDeleteModal = '#supplier_grid_confirm_modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
-    this.filterColumn = `${this.gridTable} #supplier_%FILTERBY`;
+    this.filterColumn = filterBy => `${this.gridTable} #supplier_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='supplier[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='supplier[actions][reset]']`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
-    this.actionsColumn = `${this.tableRow} td.column-actions`;
-    this.viewRowLink = `${this.actionsColumn} a[data-original-title='View']`;
-    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
-    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.editRowLink = `${this.dropdownToggleMenu} a[href*='/edit']`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
+    this.viewRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View']`;
+    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.editRowLink = row => `${this.dropdownToggleMenu(row)} a[href*='/edit']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     // enable column
-    this.enableColumn = this.tableColumn.replace('%COLUMN', 'active');
-    this.enableColumnValidIcon = `${this.enableColumn} i.grid-toggler-icon-valid`;
-    this.enableColumnNotValidIcon = `${this.enableColumn} i.grid-toggler-icon-not-valid`;
+    this.enableColumn = row => this.tableColumn(row, 'active');
+    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    this.enableColumnNotValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-not-valid`;
   }
 
   /*
@@ -74,7 +74,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<void>}
    */
   async viewSupplier(row = 1) {
-    await this.clickAndWaitForNavigation(this.viewRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.viewRowLink(row));
   }
 
   /**
@@ -84,12 +84,10 @@ module.exports = class Suppliers extends BOBasePage {
    */
   async goToEditSupplierPage(row = 1) {
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.waitForVisibleSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
-      ),
+      this.page.click(this.dropdownToggleButton(row)),
+      this.waitForVisibleSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.editRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.editRowLink(row));
   }
 
   /**
@@ -100,12 +98,10 @@ module.exports = class Suppliers extends BOBasePage {
   async deleteSupplier(row = 1) {
     this.dialogListener(true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.waitForVisibleSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
-      ),
+      this.page.click(this.dropdownToggleButton(row)),
+      this.waitForVisibleSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -115,10 +111,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<string>}
    */
   async getToggleColumnValue(row = 1) {
-    return this.elementVisible(
-      this.enableColumnValidIcon.replace('%ROW', row),
-      100,
-    );
+    return this.elementVisible(this.enableColumnValidIcon(row), 100);
   }
 
   /**
@@ -128,9 +121,9 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row = 1, valueWanted = true) {
-    await this.waitForVisibleSelector(this.enableColumn.replace('%ROW', row), 2000);
+    await this.waitForVisibleSelector(this.enableColumn(row), 2000);
     if (await this.getToggleColumnValue(row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(this.enableColumn.replace('%ROW', row));
+      await this.clickAndWaitForNavigation(this.enableColumn(row));
       return true;
     }
     return false;
@@ -143,11 +136,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTableSupplier(row, column) {
-    return this.getTextContent(
-      this.tableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.tableColumn(row, column));
   }
 
   /* Reset Methods */
@@ -189,10 +178,10 @@ module.exports = class Suppliers extends BOBasePage {
   async filterTable(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.filterColumn(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(this.filterColumn.replace('%FILTERBY', filterBy), value);
+        await this.selectByVisibleText(this.filterColumn(filterBy), value);
         break;
       default:
       // Do nothing
