@@ -19,6 +19,8 @@ module.exports = class Home extends CommonPage {
     this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
+    this.currencySelectorDiv = '#_desktop_currency_selector';
+    this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
 
     // footer
@@ -176,5 +178,13 @@ module.exports = class Home extends CommonPage {
    */
   async goToFo() {
     await this.goTo(global.FO.URL);
+  }
+
+  /**
+   * Get default currency
+   * @returns {Promise<string>}
+   */
+  getDefaultCurrency() {
+    return this.getTextContent(this.defaultCurrencySpan);
   }
 };
