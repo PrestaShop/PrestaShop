@@ -24,13 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler;
 
 use Feature;
 use PrestaShop\PrestaShop\Adapter\Product\Feature\AbstractFeatureHandler;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\BulkDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\FeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\CommandHandler\BulkDeleteFeatureHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\CannotDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\FeatureId;
 
 /**
  * Handles BulkDeleteFeatureCommand using legacy object model
@@ -42,18 +46,23 @@ final class BulkDeleteFeatureHandler extends AbstractFeatureHandler implements B
      */
     public function handle(BulkDeleteFeatureCommand $command): void
     {
-        /** @var Feature $featureId */
-        foreach ($command->getFeatureIds() as $featureId) {
-            $feature = $this->getFeatureById($featureId);
+        $errors = [];
 
-            if (false === $this->deleteFeature($feature)) {
-                throw new CannotDeleteFeatureException(sprintf(
-                    'Cannot delete feature with id %s',
-                    $feature->id
-                ),
-                    CannotDeleteFeatureException::FAILED_BULK_DELETE
-                );
+        /** @var FeatureId $featureId */
+        foreach ($command->getFeatureIds() as $featureId) {
+            try {
+                $feature = $this->getFeatureById($featureId);
+
+                if (false === $this->deleteFeature($feature)) {
+                    $errors[] = $featureId->getValue();
+                }
+            } catch (FeatureException $e) {
+                $errors[] = $featureId->getValue();
             }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkDeleteFeatureException($errors, 'Failed to delete all of selected features');
         }
     }
 }

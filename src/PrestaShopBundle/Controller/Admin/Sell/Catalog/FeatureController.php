@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\DeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\BulkDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\CannotDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
@@ -113,7 +114,7 @@ class FeatureController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_features_create');
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
@@ -136,7 +137,7 @@ class FeatureController extends FrameworkBundleAdminController
         try {
             $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int)$featureId));
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             // @todo change route to features index when it's migrated
             return $this->redirectToRoute('admin_features_create');
@@ -166,7 +167,7 @@ class FeatureController extends FrameworkBundleAdminController
                 ]);
             }
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->renderEditForm([
@@ -239,7 +240,7 @@ class FeatureController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_features_index');
@@ -263,11 +264,12 @@ class FeatureController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_features_index');
     }
+
 
     /**
      * @AdminSecurity(
@@ -306,7 +308,7 @@ class FeatureController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(): array
+    private function getErrorMessages(Exception $e): array
     {
         return [
             FeatureNotFoundException::class => $this->trans(
@@ -323,6 +325,14 @@ class FeatureController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            BulkDeleteFeatureException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteFeatureException ? implode(', ', $e->getFeatureIds()) : ''
+            ),
             FeatureConstraintException::class => [
                 FeatureConstraintException::EMPTY_NAME => $this->trans(
                     'The field %field_name% is required at least in your default language.',
