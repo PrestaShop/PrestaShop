@@ -18,12 +18,17 @@ module.exports = class Customers extends BOBasePage {
     this.customersListTableRow = row => `${this.customersListForm} tbody tr:nth-child(${row})`;
     this.customersListTableColumn = (row, column) => `${this.customersListTableRow(row)} td.column-${column}`;
     this.customersListTableActionsColumn = row => this.customersListTableColumn(row, 'actions');
-    this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)} a[data-original-title='Edit']`;
-    this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)} a[data-toggle='dropdown']`;
+    this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)
+    } a[data-original-title='Edit']`;
+    this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)
+    } a[data-toggle='dropdown']`;
     this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a[href*='/view']`;
-    this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)} a[data-customer-delete-url]`;
-    this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)} i.grid-toggler-icon-valid`;
-    this.customersListColumnNotValidIcon = (row, column) => `${this.customersListTableColumn(row, column)} i.grid-toggler-icon-not-valid`;
+    this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)
+    } a[data-customer-delete-url]`;
+    this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)
+    } i.grid-toggler-icon-valid`;
+    this.customersListColumnNotValidIcon = (row, column) => `${this.customersListTableColumn(row, column)
+    } i.grid-toggler-icon-not-valid`;
     // Filters
     this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
     this.filterSearchButton = `${this.customersListForm} button[name='customer[actions][search]']`;
@@ -141,7 +146,7 @@ module.exports = class Customers extends BOBasePage {
    */
   async updateToggleColumnValue(row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      await this.clickAndWaitForNavigation(this.customersListTableColumn(row,column));
+      await this.clickAndWaitForNavigation(this.customersListTableColumn(row, column));
       return true;
     }
     return false;
