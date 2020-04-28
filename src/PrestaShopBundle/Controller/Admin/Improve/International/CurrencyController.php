@@ -518,7 +518,7 @@ class CurrencyController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
-        } catch (LanguageException $e) {
+        } catch (CurrencyException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
@@ -634,8 +634,8 @@ class CurrencyController extends FrameworkBundleAdminController
             return [];
         }
 
-        foreach ($currenciesIds as $i => $languageId) {
-            $currenciesIds[$i] = (int) $languageId;
+        foreach ($currenciesIds as $i => $currencyId) {
+            $currenciesIds[$i] = (int) $currencyId;
         }
 
         return $currenciesIds;

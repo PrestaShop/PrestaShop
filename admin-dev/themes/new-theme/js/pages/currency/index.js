@@ -24,7 +24,6 @@
  */
 
 import Grid from '@components/grid/grid';
-import ChoiceTree from '@components/form/choice-tree';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
