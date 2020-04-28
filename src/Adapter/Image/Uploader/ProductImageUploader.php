@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageE
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImagePathFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
@@ -57,23 +58,23 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
     private $contextShopId;
 
     /**
-     * @var bool
+     * @var ImagePathFactoryInterface
      */
-    private $isLegacyImageMode;
+    private $productImagePathFactory;
 
     /**
      * @param array $contextShopIdsList
      * @param int $contextShopId
-     * @param bool $isLegacyImageMode
+     * @param ImagePathFactoryInterface $productImagePathFactory
      */
     public function __construct(
         array $contextShopIdsList,
         int $contextShopId,
-        bool $isLegacyImageMode
+        ImagePathFactoryInterface $productImagePathFactory
     ) {
         $this->contextShopIdsList = $contextShopIdsList;
         $this->contextShopId = $contextShopId;
-        $this->isLegacyImageMode = $isLegacyImageMode;
+        $this->productImagePathFactory = $productImagePathFactory;
     }
 
     /**
@@ -91,10 +92,10 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
         $image = $this->loadImageEntity($imageId);
 
         $this->checkMemory($temporaryImageName);
-        $this->createDestinationDirectory($image);
-        $this->copyToDestination($temporaryImageName, $image);
+        $this->productImagePathFactory->createDestinationDirectory($imageId);
+        $this->copyToDestination($temporaryImageName, $imageId);
         $this->generateDifferentSizeImages(
-            $this->getDestinationPath($image, false),
+            $this->productImagePathFactory->getBasePath($imageId, false),
             'products',
             $image->image_format
         );
@@ -118,13 +119,13 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
 
     /**
      * @param string $tmpImageName
-     * @param Image $image
+     * @param ImageId $imageId
      *
      * @throws ImageOptimizationException
      */
-    private function copyToDestination(string $tmpImageName, Image $image)
+    private function copyToDestination(string $tmpImageName, ImageId $imageId)
     {
-        if (!ImageManager::resize($tmpImageName, $this->getDestinationPath($image, true))) {
+        if (!ImageManager::resize($tmpImageName, $this->productImagePathFactory->getBasePath($imageId, true))) {
             throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
         }
     }
@@ -207,44 +208,5 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
         }
 
         return $image;
-    }
-
-    /**
-     * @param Image $image
-     *
-     * @throws ImageUploadException
-     */
-    private function createDestinationDirectory(Image $image): void
-    {
-        if ($this->isLegacyImageMode || $image->createImgFolder()) {
-            return;
-        }
-
-        throw new ImageUploadException(sprintf(
-            'Error occurred when trying to create directory for product #%s image',
-            $image->id_product
-        ));
-    }
-
-    /**
-     * @param Image $image
-     * @param bool $withExtension
-     *
-     * @return string
-     */
-    private function getDestinationPath(Image $image, bool $withExtension): string
-    {
-        if ($this->isLegacyImageMode) {
-            $path = $image->id_product . '-' . $image->id;
-        } else {
-            $path = $image->getImgPath();
-        }
-
-        //@todo: it seems that jpg is hardcoded. AdminProductsController:2836
-        if ($withExtension) {
-            $path .= sprintf('.%s', $image->image_format);
-        }
-
-        return _PS_PROD_IMG_DIR_ . $path;
     }
 }

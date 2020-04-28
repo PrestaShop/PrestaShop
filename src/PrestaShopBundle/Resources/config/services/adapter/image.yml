@@ -19,9 +19,14 @@ services:
     prestashop.adapter.image.uploader.supplier_image_uploader:
       class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\SupplierImageUploader'
 
+    prestashop.adapter.product.image.product_image_path_factory:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
+
     prestashop.adapter.image.uploader.product_image_uploader:
         class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\ProductImageUploader'
         arguments:
             - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
+            - '@prestashop.adapter.product.image.product_image_path_factory'
