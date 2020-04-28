@@ -26,14 +26,14 @@ admin_features_index:
     _legacy_controller: AdminFeatures
 #    _legacy_link: AdminFeatures
 
-admin_features_filter:
+admin_features_search:
   path: /
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Common:searchGrid
-    _legacy_controller: AdminFeatures
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.feature
     redirectRoute: admin_features_index
+    _legacy_controller: AdminFeatures
 #    _legacy_link: AdminFeatures:submitFilterfeature
 
 admin_features_delete:

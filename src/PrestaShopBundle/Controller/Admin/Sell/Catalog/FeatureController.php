@@ -203,28 +203,6 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * Prepares filtering response
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function filterAction(Request $request): RedirectResponse
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.feature'),
-            $request,
-            FeatureGridDefinitionFactory::GRID_ID,
-            'admin_features_index'
-        );
-    }
-
-    /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_features_index")
      *
      * @param int $featureId

@@ -46,9 +46,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class FeatureGridDefinitionFactory defines features grid structure.
  */
-final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class FeatureGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    const GRID_ID = 'feature';
+    public const GRID_ID = 'feature';
 
     /**
      * {@inheritdoc}
@@ -206,15 +206,14 @@ final class FeatureGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
+                    ->setAssociatedColumn('actions')
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [
-                            'controller' => 'feature',
-                            'action' => 'index',
+                            'filterId' => self::GRID_ID,
                         ],
                         'redirect_route' => 'admin_features_index',
                     ])
-                    ->setAssociatedColumn('actions')
             );
 
         return $filters;
