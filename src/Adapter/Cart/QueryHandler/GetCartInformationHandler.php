@@ -36,6 +36,7 @@ use Customer;
 use Language;
 use Link;
 use Message;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
@@ -53,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
 use Product;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles GetCartInformation query using legacy object models
@@ -80,6 +82,11 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private $contextStateManager;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
@@ -89,12 +96,14 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         LocaleInterface $locale,
         int $contextLangId,
         Link $contextLink,
-        ContextStateManager $contextStateManager
+        ContextStateManager $contextStateManager,
+        TranslatorInterface $translator
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
         $this->contextStateManager = $contextStateManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -126,7 +135,7 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency),
             (int) $currency->id,
             (int) $language->id,
-            $this->extractCartRulesFromLegacySummary($legacySummary, $currency),
+            $this->extractCartRulesFromLegacySummary($cart, $legacySummary, $currency),
             $addresses,
             $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
             $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary) : null
@@ -169,23 +178,43 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     }
 
     /**
+     * @param Cart $cart
      * @param array $legacySummary
      * @param Currency $currency
      *
      * @return CartInformation\CartRule[]
-     *
-     * @throws LocalizationException
      */
-    private function extractCartRulesFromLegacySummary(array $legacySummary, Currency $currency): array
+    private function extractCartRulesFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $cartRules = [];
 
         foreach ($legacySummary['discounts'] as $discount) {
-            $cartRules[] = new CartInformation\CartRule(
+            $cartRuleId = (int) $discount['id_cart_rule'];
+            $cartRules[$cartRuleId] = new CartInformation\CartRule(
                 (int) $discount['id_cart_rule'],
                 $discount['name'],
                 $discount['description'],
-                \Tools::ps_round($discount['value_real'], $currency->precision)
+                (new Number((string) $discount['value_tax_exc']))->round($currency->precision)
+            );
+        }
+
+        foreach ($cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $giftRule) {
+            $giftRuleId = (int) $giftRule['id_cart_rule'];
+            $finalValue = new Number((string) $giftRule['value_tax_exc']);
+
+            if (isset($cartRules[$giftRuleId])) {
+                // it is possible that one cart rule can have a gift product, but also have other conditions,
+                //so we need to sum their reduction values
+                /** @var CartInformation\CartRule $cartRule */
+                $cartRule = $cartRules[$giftRuleId];
+                $finalValue = $finalValue->plus(new Number($cartRule->getValue()));
+            }
+
+            $cartRules[$giftRuleId] = new CartInformation\CartRule(
+                (int) $giftRule['id_cart_rule'],
+                $giftRule['name'],
+                $giftRule['description'],
+                $finalValue->round($currency->precision)
             );
         }
 
@@ -202,22 +231,67 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
     private function extractProductsFromLegacySummary(Cart $cart, array $legacySummary, Currency $currency): array
     {
         $products = [];
-        foreach ($legacySummary['products'] as $product) {
-            $products[] = new CartProduct(
-                (int) $product['id_product'],
-                isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0,
-                $product['name'],
-                isset($product['attributes_small']) ? $product['attributes_small'] : '',
-                $product['reference'],
-                \Tools::ps_round($product['price'], $currency->precision),
-                (int) $product['quantity'],
-                \Tools::ps_round($product['total'], $currency->precision),
-                $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
-                $this->getProductCustomizedData($cart, $product)
-            );
+        $mergedGifts = $this->mergeGiftProducts($legacySummary['gift_products']);
+
+        foreach ($legacySummary['products'] as &$product) {
+            $productKey = $this->generateUniqueProductKey($product);
+
+            //decrease product quantity for each identical product which is marked as gift
+            if (isset($mergedGifts[$productKey])) {
+                $identicalGiftedProduct = $mergedGifts[$productKey];
+                $product['quantity'] -= $identicalGiftedProduct['quantity'];
+            }
+
+            $products[] = $this->buildCartProduct($cart, $currency, $product);
+        }
+
+        foreach ($mergedGifts as $product) {
+            $products[] = $this->buildCartProduct($cart, $currency, $product);
         }
 
         return $products;
+    }
+
+    /**
+     * @param array $giftProducts
+     *
+     * @return array
+     */
+    private function mergeGiftProducts(array $giftProducts): array
+    {
+        $mergedGifts = [];
+
+        foreach ($giftProducts as $giftProduct) {
+            $productKey = $this->generateUniqueProductKey($giftProduct);
+
+            if (!isset($mergedGifts[$productKey])) {
+                // set first gift and make sure its quantity is 1.
+                $mergedGifts[$productKey] = $giftProduct;
+                $mergedGifts[$productKey]['quantity'] = 1;
+            } else {
+                //increase existing gift quantity by 1
+                ++$mergedGifts[$productKey]['quantity'];
+            }
+        }
+
+        return $mergedGifts;
+    }
+
+    /**
+     * Forms a unique product key using combination and customization ids.
+     *
+     * @param array $product
+     *
+     * @return string
+     */
+    private function generateUniqueProductKey(array $product): string
+    {
+        return sprintf(
+            '%s_%s_%s',
+            (int) $product['id_product'],
+            (int) $product['id_product_attribute'],
+            (int) $product['id_customization']
+        );
     }
 
     /**
@@ -238,29 +312,14 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
 
         /** @var Carrier $carrier */
         $carrier = $legacySummary['carrier'];
+        $isFreeShipping = !empty($cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING));
 
         return new CartShipping(
-            (string) $legacySummary['total_shipping'],
-            $this->getFreeShippingValue($cart),
+            $isFreeShipping ? '0' : (string) $legacySummary['total_shipping'],
+            $isFreeShipping,
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
             (int) $carrier->id ?: null
         );
-    }
-
-    private function getFreeShippingValue(Cart $cart): bool
-    {
-        $cartRules = $cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
-        $freeShipping = false;
-
-        foreach ($cartRules as $cartRule) {
-            if ($cartRule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX . (int) $cart->id)) {
-                $freeShipping = true;
-
-                break;
-            }
-        }
-
-        return $freeShipping;
     }
 
     /**
@@ -409,5 +468,33 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
         }
 
         return $customizationFieldsData;
+    }
+
+    /**
+     * @param Cart $cart
+     * @param Currency $currency
+     * @param array $product
+     * @param bool $isGift
+     *
+     * @return CartProduct
+     */
+    private function buildCartProduct(
+        Cart $cart,
+        Currency $currency,
+        array $product
+    ): CartProduct {
+        return new CartProduct(
+            (int) $product['id_product'],
+            isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : 0,
+            $product['name'],
+            isset($product['attributes_small']) ? $product['attributes_small'] : '',
+            $product['reference'],
+            \Tools::ps_round($product['price'], $currency->precision),
+            $product['quantity'],
+            \Tools::ps_round($product['total'], $currency->precision),
+            $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
+            $this->getProductCustomizedData($cart, $product),
+            !empty($product['is_gift'])
+        );
     }
 }
