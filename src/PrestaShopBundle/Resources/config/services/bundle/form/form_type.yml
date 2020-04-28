@@ -1135,6 +1135,7 @@ services:
         arguments:
             - '@prestashop.core.form.choice_provider.order_state_by_id'
             - '@prestashop.adapter.form.choice_provider.installed_payment_modules'
+            - '@prestashop.adapter.legacy.configuration'
         tags:
             - { name: form.type }
 

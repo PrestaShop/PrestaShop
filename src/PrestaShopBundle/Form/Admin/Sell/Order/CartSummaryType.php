@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -39,6 +40,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 class CartSummaryType extends AbstractType
 {
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @var FormChoiceProviderInterface
      */
     private $orderStatesChoiceProvider;
@@ -49,15 +55,36 @@ class CartSummaryType extends AbstractType
     private $paymentModulesChoiceProvider;
 
     /**
+     * @var int
+     */
+    private $defaultOrderState;
+
+    /**
+     * @var array
+     */
+    private $paymentOrderStates = [];
+
+    /**
      * @param FormChoiceProviderInterface $orderStatesChoiceProvider
      * @param FormChoiceProviderInterface $paymentModulesChoiceProvider
+     * @param Configuration $configuration
      */
     public function __construct(
         FormChoiceProviderInterface $orderStatesChoiceProvider,
-        FormChoiceProviderInterface $paymentModulesChoiceProvider
+        FormChoiceProviderInterface $paymentModulesChoiceProvider,
+        Configuration $configuration
     ) {
+        $this->configuration = $configuration;
         $this->orderStatesChoiceProvider = $orderStatesChoiceProvider;
         $this->paymentModulesChoiceProvider = $paymentModulesChoiceProvider;
+        $this->defaultOrderState = (int) $this->configuration->get('PS_OS_PAYMENT');
+        $this->paymentOrderStates = [
+            'ps_checkpayment' => (int) $this->configuration->get('PS_OS_CHEQUE'),
+            'ps_wirepayment' => (int) $this->configuration->get('PS_OS_BANKWIRE'),
+            'ps_cashondelivery' => $this->configuration->get('PS_OS_COD_VALIDATION')
+                ? (int) $this->configuration->get('PS_OS_COD_VALIDATION')
+                : (int) $this->configuration->get('PS_OS_PREPARATION'),
+        ];
     }
 
     /**
@@ -74,6 +101,7 @@ class CartSummaryType extends AbstractType
             ])
             ->add('payment_module', ChoiceType::class, [
                 'choices' => $this->getPaymentModuleChoices(),
+                'choice_attr' => [$this, 'getChoiceAttr'],
                 'required' => false,
                 'placeholder' => false,
             ])
@@ -98,5 +126,18 @@ class CartSummaryType extends AbstractType
         }
 
         return $choices;
+    }
+
+    /**
+     * @param string $value
+     * @param string $key
+     *
+     * @return array
+     */
+    public function getChoiceAttr($value, $key)
+    {
+        return [
+            'data-order-state' => $this->paymentOrderStates[$key] ?? $this->defaultOrderState,
+        ];
     }
 }
