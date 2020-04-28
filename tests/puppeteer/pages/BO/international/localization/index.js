@@ -22,6 +22,8 @@ module.exports = class Localization extends LocalizationBasePage {
     // Configuration form selectors
     this.defaultLanguageSelector = '#form_configuration_default_language';
     this.languageFromBrowserLabel = toggle => `label[for='form_configuration_detect_language_from_browser_${toggle}']`;
+    this.languageFromBrowserLabel = 'label[for=\'form_configuration_detect_language_from_browser_%TOGGLE\']';
+    this.defaultCurrencySelect = '#form_configuration_default_currency';
     this.saveConfigurationFormButton = '#main-div form[name=\'form\'] .card-footer button';
   }
 
@@ -63,6 +65,18 @@ module.exports = class Localization extends LocalizationBasePage {
   async setDefaultLanguage(language, languageFromBrowser = true) {
     await this.selectByVisibleText(this.defaultLanguageSelector, language);
     await this.waitForSelectorAndClick(this.languageFromBrowserLabel(languageFromBrowser ? 1 : 0));
+    await this.waitForSelectorAndClick(this.saveConfigurationFormButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Set default currency
+   * @param currency
+   * @returns {Promise<string>}
+   */
+  async setDefaultCurrency(currency) {
+    this.dialogListener();
+    await this.selectByVisibleText(this.defaultCurrencySelect, currency);
     await this.waitForSelectorAndClick(this.saveConfigurationFormButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
