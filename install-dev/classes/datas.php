@@ -146,11 +146,6 @@ class Datas
             'default' => 0,
             'help' => 'show PrestaShop license',
         ),
-        'newsletter' => array(
-            'name' => 'newsletter',
-            'default' => 1,
-            'help' => 'get news from PrestaShop',
-        ),
         'theme' => array(
             'name' => 'theme',
             'default' => '',
