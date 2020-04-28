@@ -62,64 +62,30 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
         if (!ImageManager::checkImageMemoryLimit($temporaryImageName)) {
             throw new MemoryLimitException('Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.');
         }
+
         // Copy new image
         if (!ImageManager::resize($temporaryImageName, _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')) {
             throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
-        $this->generateDifferentSizeImages($manufacturerId);
+        $this->generateDifferentSizeImages(_PS_MANU_IMG_DIR_ . $manufacturerId, 'manufacturers');
+        $this->deleteOldImage($manufacturerId);
     }
 
     /**
-     * @param int $manufacturerId
+     * Deletes old image
      *
-     * @return bool
+     * @param int $manufacturerId
      */
-    private function generateDifferentSizeImages($manufacturerId)
+    private function deleteOldImage($manufacturerId)
     {
-        $resized = true;
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
+        $manufacturer = new \Manufacturer($manufacturerId);
+        $manufacturer->deleteImage();
 
-        try {
-            /* Generate images with different size */
-            if (isset($_FILES) &&
-                count($_FILES) &&
-                file_exists(_PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')
-            ) {
-                $imageTypes = ImageType::getImagesTypes('manufacturers');
+        $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';
 
-                foreach ($imageTypes as $imageType) {
-                    $resized &= ImageManager::resize(
-                        _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
-                        _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '.jpg',
-                        (int) $imageType['width'],
-                        (int) $imageType['height']
-                    );
-
-                    if ($generateHighDpiImages) {
-                        $resized &= ImageManager::resize(
-                            _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg',
-                            _PS_MANU_IMG_DIR_ . $manufacturerId . '-' . stripslashes($imageType['name']) . '2x.jpg',
-                            (int) $imageType['width'] * 2,
-                            (int) $imageType['height'] * 2
-                        );
-                    }
-                }
-
-                $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';
-
-                if ($resized && file_exists($currentLogo)) {
-                    unlink($currentLogo);
-                }
-            }
-        } catch (PrestaShopException $e) {
-            throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
+        if (file_exists($currentLogo)) {
+            unlink($currentLogo);
         }
-
-        if (!$resized) {
-            throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
-        }
-
-        return $resized;
     }
 }
