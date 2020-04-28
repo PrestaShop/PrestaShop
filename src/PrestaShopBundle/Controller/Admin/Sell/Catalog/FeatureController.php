@@ -26,6 +26,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
@@ -51,6 +53,33 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FeatureController extends FrameworkBundleAdminController
 {
+
+    /**
+     * Renders features list
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param FeatureFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, FeatureFilters $filters): Response
+    {
+        $gridFactory = $this->get('prestashop.core.grid.factory.feature');
+
+        $showcaseCardIsClosed = $this->getQueryBus()->handle(
+            new GetShowcaseCardIsClosed((int)$this->getContext()->employee->id, ShowcaseCard::FEATURES_CARD)
+        );
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'featuresGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
+            'showcaseCardName' => ShowcaseCard::FEATURES_CARD,
+            'isShowcaseCardClosed' => $showcaseCardIsClosed,
+        ]);
+    }
+
     /**
      * Create feature action.
      *
@@ -60,7 +89,7 @@ class FeatureController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         if (!$this->isFeatureEnabled()) {
             return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
@@ -93,32 +122,6 @@ class FeatureController extends FrameworkBundleAdminController
     }
 
     /**
-     * Renders features list
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     * @param FeatureFilters $filters
-     *
-     * @return Response
-     */
-    public function indexAction(Request $request, FeatureFilters $filters): Response
-    {
-        $gridFactory = $this->get('prestashop.core.grid.factory.feature');
-
-        $showcaseCardIsClosed = $this->getQueryBus()->handle(
-            new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::FEATURES_CARD)
-        );
-
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/index.html.twig', [
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'featuresGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
-            'showcaseCardName' => ShowcaseCard::FEATURES_CARD,
-            'isShowcaseCardClosed' => $showcaseCardIsClosed,
-        ]);
-    }
-
-    /**
      * Edit feature action.
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
@@ -128,7 +131,7 @@ class FeatureController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction($featureId, Request $request)
+    public function editAction($featureId, Request $request): Response
     {
         try {
             $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int)$featureId));
@@ -179,9 +182,11 @@ class FeatureController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    private function renderEditForm(array $parameters = [])
+    private function renderEditForm(array $parameters = []): Response
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/edit.html.twig', $parameters + [
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Features/edit.html.twig',
+            $parameters + [
                 'contextLangId' => $this->configuration->get('PS_LANG_DEFAULT'),
             ]);
     }
@@ -191,7 +196,7 @@ class FeatureController extends FrameworkBundleAdminController
      *
      * @return bool
      */
-    private function isFeatureEnabled()
+    private function isFeatureEnabled(): bool
     {
         return $this->get('prestashop.adapter.feature.feature')->isActive();
     }
@@ -281,11 +286,13 @@ class FeatureController extends FrameworkBundleAdminController
         ];
         $positionDefinition = $this->get('prestashop.core.grid.feature.position_definition');
         $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
+
         try {
             $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
             $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
             $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
@@ -299,7 +306,7 @@ class FeatureController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages()
+    private function getErrorMessages(): array
     {
         return [
             FeatureNotFoundException::class => $this->trans(
@@ -345,7 +352,7 @@ class FeatureController extends FrameworkBundleAdminController
         }
 
         foreach ($featureIds as $i => $featureId) {
-            $featureIds[$i] = (int) $featureId;
+            $featureIds[$i] = (int)$featureId;
         }
 
         return $featureIds;
