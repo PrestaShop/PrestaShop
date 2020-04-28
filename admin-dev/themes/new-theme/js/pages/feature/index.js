@@ -34,10 +34,10 @@ import FiltersSubmitButtonEnablerExtension
   from '../../components/grid/extension/filters-submit-button-enabler-extension';
 import PositionExtension from '../../components/grid/extension/position-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import ShowcaseCard from "../../components/showcase-card/showcase-card";
-import ShowcaseCardCloseExtension from "../../components/showcase-card/extension/showcase-card-close-extension";
+import ShowcaseCard from '../../components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const grid = new Grid('feature');
