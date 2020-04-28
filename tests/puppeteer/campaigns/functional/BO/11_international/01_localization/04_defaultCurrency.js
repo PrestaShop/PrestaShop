@@ -135,7 +135,7 @@ describe('Update default currency', async () => {
         this.pageObjects = await init();
       });
 
-      if (index === 1) {
+      if (index === (tests.length - 1)) {
         describe('Delete currency added by importing localization pack', async () => {
           it('should go to currencies page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
