@@ -60,7 +60,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
      *
      * @throws ImageUploadException
      */
-    public function upload($categoryId, UploadedFile $uploadedImage, ?ImageId $imageId = null)
+    public function upload($categoryId, UploadedFile $uploadedImage, ?int $imageId = null)
     {
         //Get total of image already present in directory
         $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);

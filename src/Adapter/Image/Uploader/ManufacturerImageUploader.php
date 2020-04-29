@@ -45,7 +45,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader implements I
     /**
      * {@inheritdoc}
      */
-    public function upload($manufacturerId, UploadedFile $image, ?ImageId $imageId = null)
+    public function upload($manufacturerId, UploadedFile $image, ?int $imageId = null)
     {
         $this->checkImageIsAllowedForUpload($image);
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');

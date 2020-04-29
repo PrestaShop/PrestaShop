@@ -47,7 +47,7 @@ final class CategoryThumbnailImageUploader extends AbstractImageUploader impleme
      * @throws ImageUploadException
      * @throws ImageOptimizationException
      */
-    public function upload($id, UploadedFile $uploadedImage, ?ImageId $imageId = null)
+    public function upload($id, UploadedFile $uploadedImage, ?int $imageId = null)
     {
         $imagesTypes = ImageType::getImagesTypes('categories');
         $formattedName = ImageType::getFormattedName('small');
