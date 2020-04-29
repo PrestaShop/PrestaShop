@@ -495,6 +495,13 @@ class CartPresenter implements PresenterInterface
     {
         $shippingDisplayValue = '';
 
+        // if one of the applied cart rules have free shipping, then the shipping display value is 'Free'
+        foreach ($cart->getCartRules() as $rule) {
+            if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
+                return $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+            }
+        }
+
         if ($shippingCost != 0) {
             $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
         } else {
