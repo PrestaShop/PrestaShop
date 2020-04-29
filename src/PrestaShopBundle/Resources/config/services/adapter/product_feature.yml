@@ -3,13 +3,13 @@ services:
     public: true
 
   prestashop.adapter.product.feature.command_handler.delete_feature_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler\DeleteFeatureHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\DeleteFeatureHandler'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand'
 
   prestashop.adapter.product.feature.command_handler.bulk_delete_feature_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler\BulkDeleteFeatureHandler'
+    class: 'PrestaShop\PrestaShop\Adapter\Feature\CommandHandler\BulkDeleteFeatureHandler'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand'

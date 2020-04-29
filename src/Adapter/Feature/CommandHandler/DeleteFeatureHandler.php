@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Feature\AbstractFeatureHandler;
+use PrestaShop\PrestaShop\Adapter\Feature\AbstractFeatureHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\DeleteFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;

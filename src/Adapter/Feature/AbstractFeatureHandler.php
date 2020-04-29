@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Feature;
+namespace PrestaShop\PrestaShop\Adapter\Feature;
 
 use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;

@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Feature\AbstractFeatureHandler;
+use PrestaShop\PrestaShop\Adapter\Feature\AbstractFeatureHandler;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\BulkDeleteFeatureHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkDeleteFeatureException;
