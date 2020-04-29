@@ -18,8 +18,8 @@ module.exports = class Addresses extends BOBasePage {
     this.addressesListTableRow = row => `${this.addressesListForm} tbody tr:nth-child(${row})`;
     this.addressesListTableColumn = (row, column) => `${this.addressesListTableRow(row)} td.column-${column}`;
     this.addressesListTableColumnAction = row => this.addressesListTableColumn(row, 'actions');
-    this.addressesListTableToggleDropDown = row => `${this.addressesListTableColumnAction(row)
-    } a[data-toggle='dropdown']`;
+    this.addressesListTableToggleDropDown = row => `${this.addressesListTableColumnAction(row)}`
+      + ' a[data-toggle=\'dropdown\']';
     this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a[data-url]`;
     this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a[href*='edit']`;
     // Filters
