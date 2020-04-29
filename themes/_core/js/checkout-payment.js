@@ -27,16 +27,14 @@ import $ from 'jquery'
 class Payment {
   constructor() {
     this.confirmationSelector = '#payment-confirmation';
-    this.paymentSelector = '#payment-section';
     this.conditionsSelector = '#conditions-to-approve';
     this.conditionAlertSelector = '.js-alert-payment-conditions';
     this.additionalInformatonSelector = '.js-additional-information';
     this.optionsForm = '.js-payment-option-form';
+    this.termsCheckboxSelector = '#conditions-to-approve input[name="conditions_to_approve[terms-and-conditions]"]';
   }
 
   init() {
-    $(this.paymentSelector + ' input[type="checkbox"][disabled]').attr('disabled', false);
-
     let $body = $('body');
 
     $body.on('change', this.conditionsSelector + ' input[type="checkbox"]', $.proxy(this.toggleOrderButton, this));
@@ -52,6 +50,12 @@ class Payment {
 
   getSelectedOption() {
     return $('input[name="payment-option"]:checked').attr('id');
+  }
+
+  haveTermsBeenAccepted() {
+    let termsCheckbox = $(this.termsCheckboxSelector);
+
+    return termsCheckbox.prop('checked');
   }
 
   hideConfirmation() {
@@ -93,7 +97,7 @@ class Payment {
       }
     } else {
       this.showConfirmation();
-      $(this.confirmationSelector + ' button').attr('disabled', !show);
+      $(this.confirmationSelector + ' button').toggleClass('disabled', !show);
 
       if (show) {
         $(this.conditionAlertSelector).hide();
@@ -109,12 +113,26 @@ class Payment {
     return `.js-payment-${moduleName}`;
   }
 
+  showNativeFormErrors () {
+    let termsCheckbox = $(this.termsCheckboxSelector)
+    termsCheckbox.get(0).reportValidity();
+
+    let paymentOptionsGroup = $('input[name=payment-option]')
+    paymentOptionsGroup.get(0).reportValidity();
+  }
+
   confirm() {
-    var option = this.getSelectedOption();
-    if (option) {
-      $(this.confirmationSelector + ' button').prop('disabled', true);
-      $('#pay-with-' + option + '-form form').submit();
+    let option = this.getSelectedOption();
+    let termsAccepted = this.haveTermsBeenAccepted();
+
+    if (option === undefined || termsAccepted === false) {
+      this.showNativeFormErrors();
+
+      return;
     }
+
+    $(this.confirmationSelector + ' button').addClass('disabled');
+    $('#pay-with-' + option + '-form form').submit();
   }
 }
 
