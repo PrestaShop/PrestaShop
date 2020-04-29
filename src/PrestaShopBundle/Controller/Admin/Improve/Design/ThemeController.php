@@ -382,7 +382,13 @@ class ThemeController extends AbstractAdminController
     {
         $this->getCommandBus()->handle(new ResetThemeLayoutsCommand(new ThemeName($themeName)));
 
-        $this->addFlash('success', $this->trans('Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.', 'Admin.Design.Notification'));
+        $this->addFlash('success', $this->trans(
+            'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'%regenerate_label%\' button.',
+            'Admin.Design.Notification',
+            [
+                '%regenerate_label%' => $this->trans('Regenerate thumbnails', 'Admin.Design.Feature'),
+            ]
+        ));
 
         return $this->redirectToRoute('admin_themes_index');
     }

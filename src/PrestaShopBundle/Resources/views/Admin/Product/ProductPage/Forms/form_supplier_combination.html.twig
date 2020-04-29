@@ -28,7 +28,7 @@
     <div class="col-md-12">
       <div class="alert alert-info" role="alert">
         <p class="alert-text">
-          {{ 'You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.'|trans({}, 'Admin.Catalog.Help')|raw }}
+          {{ 'You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.'|trans({'%save_label%': 'Save'|trans({}, 'Admin.Actions')}, 'Admin.Catalog.Help')|raw }}
         </p>
       </div>
     </div>

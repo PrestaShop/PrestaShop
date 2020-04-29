@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="form-group row">
-          {{ ps.label_with_help(('Display the "add to cart" button when a product has attributes'|trans), ('Display or hide the "add to cart" button on category pages for products that have attributes forcing customers to see product details.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          {{ ps.label_with_help(('Display the "%add_to_cart_label%" button when a product has attributes'|trans({'%add_to_cart_label%': 'Add to cart'|trans({}, 'Shop.Theme.Actions')}, 'Admin.Shopparameters.Help')), ('Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.'|trans({'%add_to_cart_label%': 'Add to cart'|trans({}, 'Shop.Theme.Actions')}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(pageForm.allow_add_variant_to_cart_from_listing) }}
             {{ form_widget(pageForm.allow_add_variant_to_cart_from_listing) }}

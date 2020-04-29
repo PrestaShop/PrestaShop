@@ -41,7 +41,7 @@
       }) }}
 
       <div class="form-group row">
-        {{ ps.label_with_help(('Displayed'|trans({}, 'Admin.Global')), ('Click on "Displayed" to index the category on your shop.'|trans({}, 'Admin.Catalog.Help'))) }}
+        {{ ps.label_with_help(('Displayed'|trans({}, 'Admin.Global')), ('Click on "%displayed_label%" to index the category on your shop.'|trans({'%displayed_label%': 'Displayed'|trans({}, 'Admin.Global')}, 'Admin.Catalog.Help'))) }}
         <div class="col-sm">
           {{ form_widget(categoryForm.active) }}
           <small class="form-text">

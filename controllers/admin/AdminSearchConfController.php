@@ -93,7 +93,7 @@ class AdminSearchConfControllerCore extends AdminController
 					</p>
 					<p>
 						' . $this->trans('Building the product index may take a few minutes.', [], 'Admin.Shopparameters.Feature') . '
-						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".', [], 'Admin.Shopparameters.Feature') . '
+						' . $this->trans('If your server stops before the process ends, you can resume the indexing by clicking "%add_missing_products_label%".', ['%add_missing_products_label%' => $this->trans('Add missing products to the index', [], 'Admin.Shopparameters.Feature')], 'Admin.Shopparameters.Feature') . '
 					</p>
 					<a href="' . Context::getContext()->link->getAdminLink('AdminSearch', false) . '&action=searchCron&ajax=1&token=' . $this->getTokenForCron() . '&amp;redirect=1' . (Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop=' . (int) Context::getContext()->shop->id : '') . '" class="btn-link">
 						<i class="icon-external-link-sign"></i>

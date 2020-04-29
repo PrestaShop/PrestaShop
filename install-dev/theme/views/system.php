@@ -32,7 +32,7 @@
 <?php if ($this->tests['required']['success']): ?>
 	<h3 class="okBlock"><?php echo $this->translator->trans('PrestaShop compatibility with your system environment has been verified!', array(), 'Install'); ?></h3>
 <?php else: ?>
-	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "Refresh" to test the compatibility of your new system.', array(), 'Install'); ?></h3>
+	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "%refresh_label%" to test the compatibility of your new system.', array('%refresh_label%' => $this->trans('Refresh information', array(), 'Install')), 'Install'); ?></h3>
 <?php endif; ?>
 <!-- Display tests results -->
 <?php foreach ($this->tests_render as $type => $categories): ?>
@@ -48,6 +48,6 @@
 	</ul>
 <?php endforeach; ?>
 
-<p><input class="button" value="<?php echo $this->translator->trans('Refresh', array(), 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
+<p><input class="button" value="<?php echo $this->translator->trans('Refresh information', array(), 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
 
 <?php $this->displayTemplate('footer') ?>
