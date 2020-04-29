@@ -38,18 +38,11 @@ class AddProductImageCommand
     private $productId;
 
     /**
-     * @var string[]
-     */
-    private $localizedLegends;
-
-    /**
      * @param int $productId
-     * @param array $localizedLegends
      */
-    public function __construct(int $productId, array $localizedLegends)
+    public function __construct(int $productId)
     {
         $this->productId = new ProductId($productId);
-        $this->localizedLegends = $localizedLegends;
     }
 
     /**
@@ -58,13 +51,5 @@ class AddProductImageCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedLegends(): array
-    {
-        return $this->localizedLegends;
     }
 }

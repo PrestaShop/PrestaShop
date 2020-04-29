@@ -51,9 +51,6 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
         $image = new Image();
         $image->id_product = $productIdValue;
         $image->position = Image::getHighestPosition($productIdValue) + 1;
-        $image->legend = $command->getLocalizedLegends();
-
-        $command->getLocalizedLegends();
 
         if (!Image::getCover($image->id_product)) {
             $image->cover = 1;
