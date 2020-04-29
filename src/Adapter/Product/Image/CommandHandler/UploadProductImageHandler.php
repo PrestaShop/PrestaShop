@@ -26,10 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
-class ImageConstraintException extends ImageException
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\UploadProductImageHandlerInterface;
+
+final class UploadProductImageHandler implements UploadProductImageHandlerInterface
 {
-    const INVALID_ID = 1;
-    const INVALID_FILE_SIZE = 2;
+    public function handle(UploadProductImageCommand $command): void
+    {
+        //@todo implement image saving and upload using image uploader service.
+    }
 }

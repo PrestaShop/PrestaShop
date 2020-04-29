@@ -24,12 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
 
-class ImageConstraintException extends ImageException
+interface UploadProductImageHandlerInterface
 {
-    const INVALID_ID = 1;
-    const INVALID_FILE_SIZE = 2;
+    /**
+     * @param UploadProductImageCommand $command
+     */
+    public function handle(UploadProductImageCommand $command): void;
 }

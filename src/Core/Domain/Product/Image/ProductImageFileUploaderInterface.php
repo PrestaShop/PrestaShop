@@ -24,12 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
-
-class ImageConstraintException extends ImageException
+interface ProductImageFileUploaderInterface
 {
-    const INVALID_ID = 1;
-    const INVALID_FILE_SIZE = 2;
+    /**
+     * @param string $filePath
+     * @param string $destinationPath
+     * @param int $fileSize
+     */
+    public function upload(string $filePath, string $destinationPath, int $fileSize): void;
 }

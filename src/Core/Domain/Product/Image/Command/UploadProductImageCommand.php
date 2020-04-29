@@ -26,10 +26,45 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
-class ImageConstraintException extends ImageException
+class UploadProductImageCommand
 {
-    const INVALID_ID = 1;
-    const INVALID_FILE_SIZE = 2;
+    /**
+     * @var string
+     */
+    private $pathToFile;
+
+    /**
+     * @var int
+     */
+    private $fileSize;
+
+    /**
+     * @param string $pathToFile
+     * @param int $fileSize
+     */
+    public function __construct(
+        string $pathToFile,
+        int $fileSize
+    ) {
+        $this->pathToFile = $pathToFile;
+        $this->fileSize = $fileSize;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathToFile(): string
+    {
+        return $this->pathToFile;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFileSize(): int
+    {
+        return $this->fileSize;
+    }
 }
