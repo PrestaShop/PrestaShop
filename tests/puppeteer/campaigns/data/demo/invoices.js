@@ -9,7 +9,7 @@ module.exports = {
   },
   OrderStatuses: {
     canceled: {id: 4, name: 'Canceled'},
-    paymentAccepted: {id: 9, name: 'Payment accepted'},
-    shipped: {id: 14, name: 'Shipped'},
+    paymentAccepted: {id: 7, name: 'Payment accepted'},
+    shipped: {id: 12, name: 'Shipped'},
   },
 };
