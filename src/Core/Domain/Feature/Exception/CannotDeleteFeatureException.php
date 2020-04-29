@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 
 /**
  * Thrown when deletion of feature fails

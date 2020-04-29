@@ -33,10 +33,10 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\BulkDeleteFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\DeleteFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\BulkDeleteFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\CannotDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\BulkDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Search\Filters\FeatureFilters;
@@ -313,6 +313,11 @@ class FeatureController extends FrameworkBundleAdminController
                     ['%field_name%' => $this->trans('Name', 'Admin.Global')]
                 ),
                 FeatureConstraintException::INVALID_NAME => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]
+                ),
+                FeatureConstraintException::INVALID_ID => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Name', 'Admin.Global'))]

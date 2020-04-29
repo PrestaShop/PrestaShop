@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\Feature;
 
 use Feature;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\FeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\FeatureNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 use PrestaShopException;
 
 /**

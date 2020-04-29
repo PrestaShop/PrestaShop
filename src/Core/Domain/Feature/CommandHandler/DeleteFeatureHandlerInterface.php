@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,43 +19,22 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler;
 
-use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
 
 /**
- * Thrown on failure to delete all selected features without errors
+ * Defines contract for DeleteFeatureHandler
  */
-class BulkDeleteFeatureException extends FeatureException
+interface DeleteFeatureHandlerInterface
 {
     /**
-     * @var int[]
+     * @param DeleteFeatureCommand $command
      */
-    private $featureIds;
-
-    /**
-     * @param int[] $featureIds
-     * @param string $message
-     * @param int $code
-     * @param Exception $previous
-     */
-    public function __construct(array $featureIds, $message = '', $code = 0, Exception $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-
-        $this->featureIds = $featureIds;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getFeatureIds(): array
-    {
-        return $this->featureIds;
-    }
+    public function handle(DeleteFeatureCommand $command): void;
 }

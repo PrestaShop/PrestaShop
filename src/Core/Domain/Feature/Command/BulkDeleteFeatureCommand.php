@@ -24,11 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
- * Is thrown when feature cannot be found
+ * Deletes multiple features
  */
-class FeatureNotFoundException extends FeatureException
+class BulkDeleteFeatureCommand
 {
+    /**
+     * @var FeatureId[]
+     */
+    private $featureIds;
+
+    /**
+     * @param int[] $featureIds
+     *
+     * @throws FeatureConstraintException
+     */
+    public function __construct(array $featureIds)
+    {
+        foreach ($featureIds as $id) {
+            $this->featureIds[] = new FeatureId($id);
+        }
+    }
+
+    /**
+     * @return FeatureId[]
+     */
+    public function getFeatureIds(): array
+    {
+        return $this->featureIds;
+    }
 }

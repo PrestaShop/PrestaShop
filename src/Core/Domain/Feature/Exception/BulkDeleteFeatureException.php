@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,43 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use Exception;
 
 /**
- * Base exception for feature subdomain
+ * Thrown on failure to delete all selected features without errors
  */
-class FeatureException extends DomainException
+class BulkDeleteFeatureException extends FeatureException
 {
+    /**
+     * @var int[]
+     */
+    private $featureIds;
+
+    /**
+     * @param int[] $featureIds
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
+     */
+    public function __construct(array $featureIds, $message = '', $code = 0, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->featureIds = $featureIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getFeatureIds(): array
+    {
+        return $this->featureIds;
+    }
 }

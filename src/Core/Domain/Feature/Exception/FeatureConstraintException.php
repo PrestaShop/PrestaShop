@@ -40,4 +40,9 @@ class FeatureConstraintException extends FeatureException
      * Used when feature name is invalid.
      */
     const INVALID_NAME = 2;
+
+    /**
+     * When invalid id is given
+     */
+    const INVALID_ID = 3;
 }

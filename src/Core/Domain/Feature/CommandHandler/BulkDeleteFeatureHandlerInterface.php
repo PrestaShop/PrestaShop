@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\DeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\BulkDeleteFeatureCommand;
 
 /**
- * Defines contract for DeleteFeatureHandler
+ * Defines contract for BulkDeleteFeatureHandler
  */
-interface DeleteFeatureHandlerInterface
+interface BulkDeleteFeatureHandlerInterface
 {
     /**
-     * @param DeleteFeatureCommand $command
+     * @param BulkDeleteFeatureCommand $command
      */
-    public function handle(DeleteFeatureCommand $command): void;
+    public function handle(BulkDeleteFeatureCommand $command): void;
 }

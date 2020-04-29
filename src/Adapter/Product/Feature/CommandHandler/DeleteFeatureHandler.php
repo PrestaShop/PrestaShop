@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\Feature\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Feature\AbstractFeatureHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command\DeleteFeatureCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\CommandHandler\DeleteFeatureHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\CannotDeleteFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Command\DeleteFeatureCommand;
+use PrestaShop\PrestaShop\Core\Domain\Feature\CommandHandler\DeleteFeatureHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotDeleteFeatureException;
 
 /**
  * Handles DeleteFeatureCommand using legacy object model

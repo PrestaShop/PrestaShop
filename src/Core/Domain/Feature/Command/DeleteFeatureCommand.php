@@ -24,38 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Feature\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Feature\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\Exception\FeatureConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Feature\ValueObject\FeatureId;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
 /**
- * Deletes multiple features
+ * Deletes feature
  */
-class BulkDeleteFeatureCommand
+class DeleteFeatureCommand
 {
     /**
-     * @var FeatureId[]
+     * @var FeatureId
      */
-    private $featureIds;
+    private $featureId;
 
     /**
-     * @param int[] $featureIds
+     * @param int $featureId
      *
      * @throws FeatureConstraintException
      */
-    public function __construct(array $featureIds)
+    public function __construct(int $featureId)
     {
-        foreach ($featureIds as $id) {
-            $this->featureIds[] = new FeatureId($id);
-        }
+        $this->featureId = new FeatureId($featureId);
     }
 
     /**
-     * @return FeatureId[]
+     * @return FeatureId
      */
-    public function getFeatureIds(): array
+    public function getFeatureId()
     {
-        return $this->featureIds;
+        return $this->featureId;
     }
 }
