@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\BulkAddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -39,18 +39,62 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ImageController extends FrameworkBundleAdminController
 {
+    /**
+     * @todo: security annotations
+     *
+     * @param int $productId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function uploadAction(int $productId, Request $request): JsonResponse
     {
-        //@todo: handle multiple files
-        $imageFile = $request->files->all()[0];
-        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
-            $productId,
-            //@todo: what goes here?
-            []
-        ));
+        $uploadedFiles = $request->files->all();
+
+        if (empty($uploadedFiles)) {
+            return $this->json([
+                //@todo: trans?
+                'message' => 'No files provided for upload'
+            ]);
+        }
+
+        $imageFile = reset($uploadedFiles);
+        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand($productId));
 
         $this->getProductImageUploader()->upload($productId, $imageFile, $imageId);
-        //@todo: it should be multiple images so do it all in a loop?
+
+        return $this->json([
+            //@todo: test
+            'message' => 'test response'
+        ]);
+    }
+
+    /**
+     * @todo: security annotations
+     *
+     * @param int $productId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function bulkUpload(int $productId, Request $request): JsonResponse
+    {
+        $uploadedFiles = $request->files->all();
+
+        if (empty($uploadedFiles)) {
+            return $this->json([
+                //@todo: trans?
+                'message' => 'No files provided for upload'
+            ]);
+        }
+
+        $imageIds = $this->getCommandBus()->handle(new BulkAddProductImageCommand($productId, count($uploadedFiles)));
+
+        foreach ($imageIds as $imageId) {
+            //@todo: how should I map image file with image Id, do i care which img gets which id or just loop through?
+            //@todo: And how do i roll back if some images fails to upload?
+            $this->getProductImageUploader()->upload($productId, $imageFile, $imageId);
+        }
 
         return $this->json([
             //@todo: test

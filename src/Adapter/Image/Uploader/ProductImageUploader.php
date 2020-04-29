@@ -80,12 +80,12 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
     /**
      * {@inheritDoc}
      */
-    public function upload($productId, UploadedFile $uploadedImage, ?ImageId $imageId = null)
+    public function upload($productId, UploadedFile $uploadedImage, ?int $imageId = null)
     {
         if (!$imageId) {
             throw new ImageUploadException('Image id is required to create path for product image');
         }
-
+        $imageId = new ImageId($imageId);
         $this->checkImageIsAllowedForUpload($uploadedImage);
 
         $temporaryImageName = $this->moveToTemporaryDir($uploadedImage);

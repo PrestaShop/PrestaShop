@@ -24,22 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Image\Uploader;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\BulkAddProductImageCommand;
 
-/**
- * Interface ImageUploaderInterface is contract for entity (e.g. Category, Product & etc.) image uploader.
- */
-interface ImageUploaderInterface
+interface BulkAddProductImageHandlerInterface
 {
     /**
-     * Upload entity image.
+     * @param BulkAddProductImageCommand $command
      *
-     * @param int $entityId
-     * @param UploadedFile $uploadedImage
-     * @param int|null $imageId provide ImageId if image is identifiable in data storage
+     * @return int[]
      */
-    public function upload($entityId, UploadedFile $uploadedImage, ?int $imageId = null);
+    public function handle(BulkAddProductImageCommand $command): array;
 }
