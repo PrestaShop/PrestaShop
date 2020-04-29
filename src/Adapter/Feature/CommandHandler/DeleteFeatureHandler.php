@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Feature\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Feature\AbstractFeatureHandler;
@@ -44,7 +46,8 @@ final class DeleteFeatureHandler extends AbstractFeatureHandler implements Delet
         $feature = $this->getFeatureById($command->getFeatureId());
 
         if (false === $this->deleteFeature($feature)) {
-            throw new CannotDeleteFeatureException(sprintf(
+            throw new CannotDeleteFeatureException(
+                sprintf(
                     'Cannot delete feature with id %s',
                     $feature->id
                 ),
