@@ -30,9 +30,9 @@ namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageFileUploaderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
 
-final class ProductImageFileUploader implements ProductImageFileUploaderInterface
+final class ProductImageUploader implements ProductImageUploaderInterface
 {
     /**
      * @var UploadSizeConfigurationInterface

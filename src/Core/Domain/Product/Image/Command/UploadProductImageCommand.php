@@ -28,8 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+
 class UploadProductImageCommand
 {
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
     /**
      * @var string
      */
@@ -41,15 +48,34 @@ class UploadProductImageCommand
     private $fileSize;
 
     /**
+     * @var string
+     */
+    private $fileExtension;
+
+    /**
+     * @param int $productId
      * @param string $pathToFile
      * @param int $fileSize
+     * @param string $fileExtension
      */
     public function __construct(
+        int $productId,
         string $pathToFile,
-        int $fileSize
+        int $fileSize,
+        string $fileExtension
     ) {
+        $this->productId = new ProductId($productId);
         $this->pathToFile = $pathToFile;
         $this->fileSize = $fileSize;
+        $this->fileExtension = $fileExtension;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
     }
 
     /**
@@ -66,5 +92,13 @@ class UploadProductImageCommand
     public function getFileSize(): int
     {
         return $this->fileSize;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileExtension(): string
+    {
+        return $this->fileExtension;
     }
 }

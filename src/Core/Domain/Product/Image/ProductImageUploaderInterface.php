@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image;
 
-interface ProductImageFileUploaderInterface
+interface ProductImageUploaderInterface
 {
     /**
      * @param string $filePath

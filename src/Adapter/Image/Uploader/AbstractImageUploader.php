@@ -122,8 +122,6 @@ abstract class AbstractImageUploader
     }
 
     /**
-     * Generates different size images using entity id
-     *
      * @param string $path
      * @param string $belongsTo
      * @param string $extension
