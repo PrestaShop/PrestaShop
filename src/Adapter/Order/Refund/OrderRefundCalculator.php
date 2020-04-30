@@ -114,14 +114,9 @@ class OrderRefundCalculator
             if ($shippingCostAmount->isGreaterThan($shippingMaxRefund)) {
                 $shippingCostAmount = $shippingMaxRefund;
             }
-            if (!$isTaxIncluded) {
-                $taxCalculator = $this->getCarrierTaxCalculatorFromOrder($order);
-                $taxesAmount = $taxCalculator->addTaxes((float) (string) $shippingCostAmount);
-                $taxes = new Number((string) $taxesAmount);
-                $refundedAmount = $refundedAmount->plus($taxes);
-            } else {
-                $refundedAmount = $refundedAmount->plus($shippingCostAmount);
-            }
+            // Previously taxes were computed but then some values are mixed with and without taxes
+            // They all should be in the same state since OrderRefundSummary contains $isTaxIncluded
+            $refundedAmount = $refundedAmount->plus($shippingCostAmount);
         }
 
         // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
