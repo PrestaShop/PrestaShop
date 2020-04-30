@@ -32,7 +32,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable display brands', async () => {
+describe('Enable display brands', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -84,17 +84,30 @@ describe('Enable/Disable display brands', async () => {
       await expect(text).to.contains(test.args.action);
     });
 
-    it('should verify the existence of the brands page link in FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkBrandsPage_${test.args.action}`, baseContext);
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToFO_${test.args.action}`, baseContext);
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
+      await this.pageObjects.homePage.changeLanguage('en');
+      const isHomePage = await this.pageObjects.homePage.isHomePage();
+      await expect(isHomePage).to.be.true;
+    });
+
+    it('should verify the existence of the brands page link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkBrandsPage_${test.args.action}`, baseContext);
       await this.pageObjects.homePage.goToSiteMapPage();
       const pageTitle = await this.pageObjects.siteMapPage.getPageTitle();
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
       const exist = await this.pageObjects.siteMapPage.isBrandsLinkVisible();
       await expect(exist).to.be.equal(test.args.exist);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
       page = await this.pageObjects.siteMapPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
     });
   });
 });

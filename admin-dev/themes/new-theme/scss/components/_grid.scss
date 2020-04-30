@@ -173,12 +173,29 @@ table .column-filters td:last-child .grid-reset-button {
             @mixin display-dropdown-arrow() {
               &::after {
                 visibility: visible;
+                width: 20px;
               }
             }
 
             .dropdown {
+              .dropdown-toggle {
+                margin-right: 20px;
+                transition: 0.2s ease-out;
+
+                &:hover {
+                  margin-right: 0px;
+                }
+              }
+
               &.show {
                 .dropdown-toggle {
+                  margin-right: 20px;
+                  transition: 0.2s ease-out;
+
+                  &:hover {
+                    margin-right: 0px;
+                  }
+
                   @include display-dropdown-arrow();
                 }
               }
@@ -191,6 +208,8 @@ table .column-filters td:last-child .grid-reset-button {
 
                 &::after {
                   visibility: hidden;
+                  width: 0;
+                  transition: 0.2s ease-out;
                 }
 
                 &:hover {

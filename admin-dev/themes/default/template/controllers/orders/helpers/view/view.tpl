@@ -1171,18 +1171,18 @@
               <p class="radio">
                 <label id="lab_refund_total_1" for="refund_total_1">
                   <input type="radio" value="0" name="refund_total_voucher_off" id="refund_total_1" checked="checked" />
-                  {l s='Include amount of initial voucher: ' d='Admin.Orderscustomers.Feature'}
+                  {l s='Include amount of initial voucher:' d='Admin.Orderscustomers.Feature'}
                 </label>
               </p>
               <p class="radio">
                 <label id="lab_refund_total_2" for="refund_total_2">
                   <input type="radio" value="1" name="refund_total_voucher_off" id="refund_total_2"/>
-                  {l s='Exclude amount of initial voucher: ' d='Admin.Orderscustomers.Feature'}
+                  {l s='Exclude amount of initial voucher:' d='Admin.Orderscustomers.Feature'}
                 </label>
               </p>
               <div class="nowrap radio-inline">
                 <label id="lab_refund_total_3" class="pull-left" for="refund_total_3">
-                  {l s='Amount of your choice: ' d='Admin.Orderscustomers.Feature'}
+                  {l s='Amount of your choice:' d='Admin.Orderscustomers.Feature'}
                   <input type="radio" value="2" name="refund_total_voucher_off" id="refund_total_3"/>
                 </label>
                 <div class="input-group col-lg-1 pull-left">
@@ -1215,22 +1215,22 @@
               </label>
             </p>
             {if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}
-            <p>{l s='This order has been partially paid by voucher. Choose the amount you want to refund: ' d='Admin.Orderscustomers.Feature'}</p>
+            <p>{l s='This order has been partially paid by voucher. Choose the amount you want to refund:' d='Admin.Orderscustomers.Feature'}</p>
             <p class="radio">
               <label id="lab_refund_1" for="refund_1">
                 <input type="radio" value="0" name="refund_voucher_off" id="refund_1" checked="checked" />
-                {l s='Product(s) price: ' d='Admin.Orderscustomers.Feature'}
+                {l s='Product(s) price:' d='Admin.Orderscustomers.Feature'}
               </label>
             </p>
             <p class="radio">
               <label id="lab_refund_2" for="refund_2">
                 <input type="radio" value="1" name="refund_voucher_off" id="refund_2"/>
-                {l s='Product(s) price, excluding amount of initial voucher: ' d='Admin.Orderscustomers.Feature'}
+                {l s='Product(s) price, excluding amount of initial voucher:' d='Admin.Orderscustomers.Feature'}
               </label>
             </p>
             <div class="nowrap radio-inline">
                 <label id="lab_refund_3" class="pull-left" for="refund_3">
-                  {l s='Amount of your choice: ' d='Admin.Orderscustomers.Feature'}
+                  {l s='Amount of your choice:' d='Admin.Orderscustomers.Feature'}
                   <input type="radio" value="2" name="refund_voucher_off" id="refund_3"/>
                 </label>
                 <div class="input-group col-lg-1 pull-left">

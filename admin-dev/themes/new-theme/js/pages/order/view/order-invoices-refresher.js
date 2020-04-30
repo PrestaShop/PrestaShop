@@ -44,17 +44,23 @@ export default class OrderInvoicesRefresher {
         const $addProductInvoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
         const $existingInvoicesGroup = $addProductInvoiceSelect.find('optgroup:first');
         const $productEditInvoiceSelect = $(OrderViewPageMap.productEditInvoiceSelect);
+        const $addDiscountInvoiceSelect = $(OrderViewPageMap.addCartRuleInvoiceIdSelect);
         $existingInvoicesGroup.empty();
         $paymentInvoiceSelect.empty();
         $productEditInvoiceSelect.empty();
+        $addDiscountInvoiceSelect.empty();
 
         Object.keys(response.invoices).forEach((invoiceName) => {
           const invoiceId = response.invoices[invoiceName];
+          const invoiceNameWithoutPrice = invoiceName.split(' - ')[0];
 
-          $existingInvoicesGroup.append(`<option value="${invoiceId}">${invoiceName}</option>`);
-          $paymentInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
-          $productEditInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
+          $existingInvoicesGroup.append(`<option value="${invoiceId}">${invoiceNameWithoutPrice}</option>`);
+          $paymentInvoiceSelect.append(`<option value="${invoiceId}">${invoiceNameWithoutPrice}</option>`);
+          $productEditInvoiceSelect.append(`<option value="${invoiceId}">${invoiceNameWithoutPrice}</option>`);
+          $addDiscountInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
         });
+
+        document.querySelector(OrderViewPageMap.productAddInvoiceSelect).selectedIndex = 0;
       });
   }
 }

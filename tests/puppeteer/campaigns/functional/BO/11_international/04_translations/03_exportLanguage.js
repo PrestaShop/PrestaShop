@@ -28,7 +28,7 @@ const init = async function () {
   };
 };
 
-describe('Sort taxes', async () => {
+describe('Export languages in translations page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -76,8 +76,8 @@ describe('Sort taxes', async () => {
         baseContext,
       );
       await this.pageObjects.translationsPage.exportLanguage(test.args.language.name, test.args.theme);
-      const fileExist = await files.checkFileExistence(test.args.filename);
-      await expect(fileExist, `File ${test.args.filename} was not downloaded`).to.be.true;
+      const doesFileExist = await files.doesFileExist(test.args.filename);
+      await expect(doesFileExist, `File ${test.args.filename} was not downloaded`).to.be.true;
       await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${test.args.filename}`);
     });
   });

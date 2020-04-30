@@ -573,7 +573,7 @@ class OrderController extends CommonController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('A return product was successfully created.', 'Admin.Orderscustomers.Notification'));
+                    $this->addFlash('success', $this->trans('The product was successfully returned.', 'Admin.Orderscustomers.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
@@ -601,7 +601,7 @@ class OrderController extends CommonController
             if ($product->getAvailableQuantity() <= 0) {
                 $this->addFlash(
                     'warning',
-                    $this->trans('This product is out of stock: ', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
+                    $this->trans('This product is out of stock:', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
                 );
             }
         }
@@ -682,11 +682,29 @@ class OrderController extends CommonController
         $choices = $choiceProvider->getChoices([
             'id_order' => $orderId,
             'id_lang' => $this->getContextLangId(),
-            'display_total' => false,
+            'display_total' => true,
         ]);
 
         return $this->json([
             'invoices' => $choices,
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     */
+    public function getDocumentsAction(int $orderId)
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        return $this->json([
+            'total' => count($orderForViewing->getDocuments()->getDocuments()),
+            'html' => $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig', [
+                'orderForViewing' => $orderForViewing,
+            ])->getContent(),
         ]);
     }
 
@@ -873,8 +891,6 @@ class OrderController extends CommonController
             if ($addOrderCartRuleForm->isValid()) {
                 $data = $addOrderCartRuleForm->getData();
 
-                $invoiceId = $data['apply_on_all_invoices'] ? null : (int) $data['invoice_id'];
-
                 try {
                     $this->getCommandBus()->handle(
                         new AddCartRuleToOrderCommand(
@@ -882,7 +898,7 @@ class OrderController extends CommonController
                             $data['name'],
                             $data['type'],
                             $data['value'] ?? null,
-                            $invoiceId
+                            empty($data['invoice_id']) ? null : (int) $data['invoice_id']
                         )
                     );
 
@@ -1384,7 +1400,7 @@ class OrderController extends CommonController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Selected products were successfully cancelled.', 'Admin.Catalog.Notification'));
+                    $this->addFlash('success', $this->trans('Selected products were successfully canceled.', 'Admin.Catalog.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }

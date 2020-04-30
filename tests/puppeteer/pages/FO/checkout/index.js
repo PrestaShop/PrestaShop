@@ -8,8 +8,6 @@ module.exports = class Checkout extends FOBasePage {
     // Selectors
     this.checkoutPageBody = 'body#checkout';
     this.personalInformationStepSection = '#checkout-personal-information-step';
-    this.deleveryStepSection = '#checkout-delivery-step';
-    this.deleveryStepContinueButton = `${this.deleveryStepSection} button[name='confirmDeliveryOption']`;
     this.paymentStepSection = '#checkout-payment-step';
     this.paymentOptionInput = `${this.paymentStepSection} input[name='payment-option'][data-module-name='%NAME']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
@@ -35,6 +33,11 @@ module.exports = class Checkout extends FOBasePage {
     this.addressStepCountrySelect = `${this.addressStepSection} select[name='id_country']`;
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
+    // Shipping method step
+    this.deliveryStepSection = '#checkout-delivery-step';
+    this.deliveryOptionLabel = `${this.deliveryStepSection} label[for='delivery_option_%ID']`;
+    this.deliveryMessage = '#delivery_message';
+    this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
     this.giftCheckbox = '#input_gift';
     this.recycableGiftCheckbox = '#input_recyclable';
@@ -73,12 +76,24 @@ module.exports = class Checkout extends FOBasePage {
   }
 
   /**
+   * Choose shipping method and add a comment
+   * @param shippingMethod
+   * @param comment
+   * @returns {Promise<boolean>}
+   */
+  async chooseShippingMethodAndAddComment(shippingMethod, comment) {
+    await this.waitForSelectorAndClick(this.deliveryOptionLabel.replace('%ID', shippingMethod));
+    await this.setValue(this.deliveryMessage, comment);
+    return this.goToPaymentStep();
+  }
+
+  /**
    * Go to Payment Step and check that delivery step is complete
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async goToPaymentStep() {
-    await this.clickAndWaitForNavigation(this.deleveryStepContinueButton);
-    return this.isStepCompleted(this.deleveryStepSection);
+    await this.clickAndWaitForNavigation(this.deliveryStepContinueButton);
+    return this.isStepCompleted(this.deliveryStepSection);
   }
 
   /**
@@ -184,7 +199,7 @@ module.exports = class Checkout extends FOBasePage {
     await this.setValue(this.addressStepAddress1Input, address.address);
     await this.setValue(this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(this.addressStepCityInput, address.city);
-    await this.selectByVisibleText(this.addressStepCountrySelect, address.country);
+    await this.page.type(this.addressStepPhoneInput, address.phone, {delay: 50});
     await this.setValue(this.addressStepPhoneInput, address.phone);
     await this.page.click(this.addressStepContinueButton);
     return this.isStepCompleted(this.addressStepSection);

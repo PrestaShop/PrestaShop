@@ -31,14 +31,14 @@
     {{ form_row(editProductRowForm.price_tax_included) }}
   </td>
   <td class="cellProductQuantity pr-5">
-    {{ form_row(editProductRowForm.quantity) }}
+    {{ form_row(editProductRowForm.quantity, {'type':'number'}) }}
   </td>
   <td class="editProductLocation cellProductLocation"></td>
   <td class="editProductRefunded cellProductRefunded"></td>
   <td class="editProductAvailable"></td>
   <td class="editProductTotalPrice"></td>
   {% if orderForViewing.hasInvoice() %}
-    <td class="editProductInvoice">
+    <td class="cellProductInvoice">
       {{ form_row(editProductRowForm.invoice) }}
     </td>
   {% endif %}

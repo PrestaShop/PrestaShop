@@ -296,7 +296,7 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       <trans-unit id="cc2ac103a9c1411fd67952983e25978a">
         <source>Create a new product: CTRL+P</source>
         <target>Create a new product: CTRL+P</target>
-        <note>Line: 370</note>
+        <note>Line: 374</note>
       </trans-unit>
     </body>
   </file>
