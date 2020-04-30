@@ -46,9 +46,7 @@ export default class ProductRenderer {
       return;
     }
 
-    for (const key in products) {
-      const product = products[key];
-
+    Object.values(products).forEach((product) => {
       const $template = this.cloneProductTemplate(product);
 
       let customizationId = 0;
@@ -123,11 +121,6 @@ export default class ProductRenderer {
     this.toggleSearchingNotice(true);
   }
 
-  renderSearching() {
-    this.reset();
-    this.toggleSearchingNotice(true);
-  }
-
   /**
    * Renders cart products search results block
    *
@@ -184,10 +177,9 @@ export default class ProductRenderer {
    * @private
    */
   cloneProductTemplate(product) {
-    return product.gift === true ?
-      $($(createOrderMap.productsTableGiftRowTemplate).html()).clone() :
-      $($(createOrderMap.productsTableRowTemplate).html()).clone()
-    ;
+    return product.gift === true
+      ? $($(createOrderMap.productsTableGiftRowTemplate).html()).clone()
+      : $($(createOrderMap.productsTableRowTemplate).html()).clone();
   }
 
   /**

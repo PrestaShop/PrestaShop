@@ -52,7 +52,7 @@ export default class OrderProductEdit {
       this.availableText.text(available);
       this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
       this.updateTotal();
-      const disableEditActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock) ? true : false;
+      const disableEditActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock);
       this.productEditSaveBtn.prop('disabled', disableEditActionBtn);
     });
     this.productEditInvoiceSelect.on('change', () => {

@@ -33,7 +33,7 @@ import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import Router from '@components/router';
 import OrderInvoicesRefresher from './order-invoices-refresher';
 import OrderProductCancel from './order-product-cancel';
-import OrderDocumentsRefresher from "./order-documents-refresher";
+import OrderDocumentsRefresher from './order-documents-refresher';
 
 const {$} = window;
 
@@ -150,10 +150,7 @@ export default class OrderViewPage {
   listenForProductDelete() {
     $(OrderViewPageMap.productDeleteBtn)
       .off('click')
-      .on('click', (event) => {
-        this.orderProductManager.handleDeleteProductEvent(event);
-      }
-    );
+      .on('click', (event) => this.orderProductManager.handleDeleteProductEvent(event));
   }
 
   resetToolTips() {

@@ -25,6 +25,7 @@
 
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderShippingManager from '@pages/order/order-shipping-manager';
+import InvoiceNoteManager from '@pages/order/invoice-note-manager';
 import OrderViewPage from '@pages/order/view/order-view-page';
 import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
 import OrderProductAdd from '@pages/order/view/order-product-add';
@@ -59,6 +60,7 @@ $(() => {
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
 
+  new InvoiceNoteManager();
   const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
   orderViewPageMessageHandler.listenForPredefinedMessageSelection();
   orderViewPageMessageHandler.listenForFullMessagesOpen();
@@ -122,6 +124,7 @@ $(() => {
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
+    const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
     const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');

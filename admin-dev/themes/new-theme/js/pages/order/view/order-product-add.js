@@ -80,7 +80,7 @@ export default class OrderProductAdd {
         const availableOutOfStock = this.availableText.data('availableOutOfStock');
         this.availableText.text(available);
         this.availableText.toggleClass('text-danger font-weight-bold', available < 0);
-        const disableAddActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock) ? true : false;
+        const disableAddActionBtn = quantity <= 0 || (available <= 0 && !availableOutOfStock);
         this.productAddActionBtn.prop('disabled', disableAddActionBtn);
         this.invoiceSelect.prop('disabled', !availableOutOfStock && available < 0);
 

@@ -302,13 +302,13 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ->setAssociatedColumn('id_order')
             )
             ->add((new Filter('reference', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('reference')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('reference')
             )
             ->add((new Filter('new', YesAndNoChoiceType::class))
             ->setTypeOptions([
@@ -317,31 +317,31 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ->setAssociatedColumn('new')
             )
             ->add((new Filter('customer', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search customer', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('customer')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search customer', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('customer')
             )
             ->add((new Filter('total_paid_tax_incl', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search total', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('total_paid_tax_incl')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search total', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('total_paid_tax_incl')
             )
             ->add((new Filter('payment', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search payment', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('payment')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search payment', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('payment')
             )
             ->add((new Filter('osname', ChoiceType::class))
             ->setTypeOptions([

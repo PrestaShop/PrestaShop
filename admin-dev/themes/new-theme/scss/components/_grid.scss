@@ -172,18 +172,29 @@ table .column-filters td:last-child .grid-reset-button {
           &.choice-type {
             @mixin display-dropdown-arrow() {
               &::after {
-                visibility: visible;
                 width: 20px;
+                visibility: visible;
               }
             }
 
             .dropdown {
               .dropdown-toggle {
+                padding: 0 5px;
                 margin-right: 20px;
                 transition: 0.2s ease-out;
 
                 &:hover {
-                  margin-right: 0px;
+                  margin-right: 0;
+                  @include display-dropdown-arrow();
+                }
+                &.coloured {
+                  border: 0;
+                }
+
+                &::after {
+                  width: 0;
+                  visibility: hidden;
+                  transition: 0.2s ease-out;
                 }
               }
 
@@ -193,26 +204,9 @@ table .column-filters td:last-child .grid-reset-button {
                   transition: 0.2s ease-out;
 
                   &:hover {
-                    margin-right: 0px;
+                    margin-right: 0;
                   }
 
-                  @include display-dropdown-arrow();
-                }
-              }
-
-              .dropdown-toggle {
-                padding: 0 5px;
-                &.coloured {
-                  border: 0;
-                }
-
-                &::after {
-                  visibility: hidden;
-                  width: 0;
-                  transition: 0.2s ease-out;
-                }
-
-                &:hover {
                   @include display-dropdown-arrow();
                 }
               }

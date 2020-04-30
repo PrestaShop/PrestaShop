@@ -49,8 +49,8 @@
     .nav-tabs {
       position: relative;
       z-index: 5;
-      margin-bottom: -2px;
       padding-left: 1px;
+      margin-bottom: -2px;
     }
 
     .tab-content {
@@ -341,9 +341,9 @@
       }
       .nav-tabs {
         display: flex;
-        overflow-y: scroll;
         flex-wrap: nowrap;
         align-items: flex-end;
+        overflow-y: scroll;
 
         .nav-item {
           min-width: 165px;
@@ -367,8 +367,8 @@
       }
 
       .select-status {
-        max-width: inherit;
         width: 100%;
+        max-width: inherit;
 
         .select-status-colored {
           max-width: inherit;
@@ -415,9 +415,9 @@
       }
 
       .discount-action {
-        margin-bottom: 10px;
         width: 100%;
         max-width: 100%;
+        margin-bottom: 10px;
 
         button {
           width: 100%;
