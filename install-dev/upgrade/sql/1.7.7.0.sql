@@ -564,54 +564,40 @@ ALTER TABLE `PREFIX_order_slip` CHANGE `shipping_cost_amount` `shipping_cost_amo
 ALTER TABLE `PREFIX_order_payment` CHANGE `amount` `amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
 /* attribute_impact price */
-ALTER TABLE `PREFIX_attribute_impact` ADD `price_tmp` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `price`;
-UPDATE `PREFIX_attribute_impact` SET `price_tmp` = `price`;
-ALTER TABLE `PREFIX_attribute_impact` DROP `price`;
-ALTER TABLE `PREFIX_attribute_impact` RENAME COLUMN `price_tmp` TO `price`;
+UPDATE `PREFIX_attribute_impact` SET `price` = RIGHT(`price`, 17) WHERE LENGTH(`price`) > 17;
+ALTER TABLE `PREFIX_attribute_impact` CHANGE `price` `price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
 /* cart_rule minimum_amount & reduction_amount */
-ALTER TABLE `PREFIX_cart_rule` ADD `minimum_amount_tmp` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `minimum_amount`;
-ALTER TABLE `PREFIX_cart_rule` ADD `reduction_amount_tmp` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `reduction_amount`;
-UPDATE `PREFIX_cart_rule` SET `minimum_amount_tmp` = `minimum_amount`, `reduction_amount_tmp` = `reduction_amount`;
-ALTER TABLE `PREFIX_cart_rule` DROP `minimum_amount`, DROP `reduction_amount`;
-ALTER TABLE `PREFIX_cart_rule` RENAME COLUMN `minimum_amount_tmp` TO `minimum_amount`;
-ALTER TABLE `PREFIX_cart_rule` RENAME COLUMN `reduction_amount_tmp` TO `reduction_amount`;
+UPDATE `PREFIX_cart_rule` SET `minimum_amount` = RIGHT(`minimum_amount`, 17) WHERE LENGTH(`minimum_amount`) > 17;
+UPDATE `PREFIX_cart_rule` SET `reduction_amount` = RIGHT(`reduction_amount`, 17) WHERE LENGTH(`reduction_amount`) > 17;
+ALTER TABLE `PREFIX_cart_rule` CHANGE `minimum_amount` `minimum_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_cart_rule` CHANGE `reduction_amount` `reduction_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
 /* group reduction */
-ALTER TABLE `PREFIX_group` ADD `reduction_tmp` DECIMAL(5, 2) NOT NULL DEFAULT '0.00' AFTER `reduction`;
-UPDATE `PREFIX_group` SET `reduction_tmp` = `reduction`;
-ALTER TABLE `PREFIX_group` DROP `reduction`;
-ALTER TABLE `PREFIX_group` RENAME COLUMN `reduction_tmp` TO `reduction`;
+UPDATE `PREFIX_group` SET `reduction` = RIGHT(`reduction`, 6) WHERE LENGTH(`reduction`) > 6;
+ALTER TABLE `PREFIX_group` CHANGE `reduction` `reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00' AFTER `reduction`;
 
 /* order_detail reduction_percent, group_reduction & ecotax */
-ALTER TABLE `PREFIX_order_detail` ADD `reduction_percent_tmp` DECIMAL(5, 2) NOT NULL DEFAULT '0.00' AFTER `reduction_percent`;
-ALTER TABLE `PREFIX_order_detail` ADD `group_reduction_tmp` DECIMAL(5, 2) NOT NULL DEFAULT '0.00' AFTER `group_reduction`;
-ALTER TABLE `PREFIX_order_detail` ADD `ecotax_tmp` DECIMAL(17, 6) NOT NULL DEFAULT '0.000000' AFTER `ecotax`;
-UPDATE `PREFIX_order_detail` SET `reduction_percent_tmp` = `reduction_percent`, `group_reduction_tmp` = `group_reduction`, `ecotax_tmp` = `ecotax`;
-ALTER TABLE `PREFIX_order_detail` DROP `reduction_percent`, DROP `group_reduction`, DROP `ecotax`;
-ALTER TABLE `PREFIX_order_detail` RENAME COLUMN `reduction_percent_tmp` TO `reduction_percent`;
-ALTER TABLE `PREFIX_order_detail` RENAME COLUMN `group_reduction_tmp` TO `group_reduction`;
-ALTER TABLE `PREFIX_order_detail` RENAME COLUMN `ecotax_tmp` TO `ecotax`;
+UPDATE `PREFIX_order_detail` SET `reduction_percent` = RIGHT(`reduction_percent`, 6) WHERE LENGTH(`reduction_percent`) > 6;
+UPDATE `PREFIX_order_detail` SET `group_reduction` = RIGHT(`group_reduction`, 6) WHERE LENGTH(`group_reduction`) > 6;
+UPDATE `PREFIX_order_detail` SET `ecotax` = RIGHT(`ecotax`, 18) WHERE LENGTH(`ecotax`) > 18;
+ALTER TABLE `PREFIX_order_detail` CHANGE `reduction_percent` `reduction_percent` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
+ALTER TABLE `PREFIX_order_detail` CHANGE `group_reduction` `group_reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
+ALTER TABLE `PREFIX_order_detail` CHANGE `ecotax` `ecotax` DECIMAL(17, 6) NOT NULL DEFAULT '0.000000';
 
 /* product additional_shipping_cost */
-ALTER TABLE `PREFIX_product` ADD `additional_shipping_cost_tmp` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `additional_shipping_cost`;
-UPDATE `PREFIX_product` SET `additional_shipping_cost_tmp` = `additional_shipping_cost`;
-ALTER TABLE `PREFIX_product` DROP `additional_shipping_cost`;
-ALTER TABLE `PREFIX_product` RENAME COLUMN `additional_shipping_cost_tmp` TO `additional_shipping_cost`;
+UPDATE `PREFIX_product` SET `additional_shipping_cost` = RIGHT(`additional_shipping_cost`, 17) WHERE LENGTH(`additional_shipping_cost`) > 17;
+ALTER TABLE `PREFIX_product` CHANGE `additional_shipping_cost` `additional_shipping_cost` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
 /* product_shop additional_shipping_cost */
-ALTER TABLE `PREFIX_product_shop` ADD `additional_shipping_cost_tmp` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `additional_shipping_cost`;
-UPDATE `PREFIX_product_shop` SET `additional_shipping_cost_tmp` = `additional_shipping_cost`;
-ALTER TABLE `PREFIX_product_shop` DROP `additional_shipping_cost`;
-ALTER TABLE `PREFIX_product_shop` RENAME COLUMN `additional_shipping_cost_tmp` TO `additional_shipping_cost`;
+UPDATE `PREFIX_product_shop` SET `additional_shipping_cost` = RIGHT(`additional_shipping_cost`, 17) WHERE LENGTH(`additional_shipping_cost`) > 17;
+ALTER TABLE `PREFIX_product_shop` CHANGE `additional_shipping_cost` `additional_shipping_cost` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
 /* order_cart_rule value & value_tax_excl */
-ALTER TABLE `PREFIX_order_cart_rule` ADD `value_tmp` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `value`;
-ALTER TABLE `PREFIX_order_cart_rule` ADD `value_tax_excl_tmp` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `value_tax_excl`;
-UPDATE `PREFIX_order_cart_rule` SET `value_tmp` = `value`, `value_tax_excl_tmp` = `value_tax_excl`;
-ALTER TABLE `PREFIX_order_cart_rule` DROP `value`, DROP `value_tax_excl`;
-ALTER TABLE `PREFIX_order_cart_rule` RENAME COLUMN `value_tmp` TO `value`;
-ALTER TABLE `PREFIX_order_cart_rule` RENAME COLUMN `value_tax_excl_tmp` TO `value_tax_excl`;
+UPDATE `PREFIX_order_cart_rule` SET `value` = RIGHT(`value`, 17) WHERE LENGTH(`value`) > 17;
+UPDATE `PREFIX_order_cart_rule` SET `value_tax_excl` = RIGHT(`value_tax_excl`, 17) WHERE LENGTH(`value_tax_excl`) > 17;
+ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value` `value` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value_tax_excl` `value_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
 UPDATE
     `PREFIX_order_detail` `od`
