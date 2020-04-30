@@ -22,7 +22,6 @@ module.exports = class Localization extends LocalizationBasePage {
     // Configuration form selectors
     this.defaultLanguageSelector = '#form_configuration_default_language';
     this.languageFromBrowserLabel = toggle => `label[for='form_configuration_detect_language_from_browser_${toggle}']`;
-    this.languageFromBrowserLabel = 'label[for=\'form_configuration_detect_language_from_browser_%TOGGLE\']';
     this.defaultCurrencySelect = '#form_configuration_default_currency';
     this.saveConfigurationFormButton = '#main-div form[name=\'form\'] .card-footer button';
   }
