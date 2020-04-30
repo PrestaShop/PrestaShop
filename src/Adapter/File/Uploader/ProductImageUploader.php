@@ -97,7 +97,7 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
         int $fileSize,
         string $format
     ): void {
-        $this->checkFileAllowedForUpload($fileSize);
+        $this->checkSize($fileSize);
         $tmpImageName = $this->moveToTemporaryDir($filePath);
         $image = $this->loadImageEntity($imageId);
 
@@ -112,7 +112,7 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
         );
 
         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
-        $this->updateCover($image);
+        //@Todo: wait for multishop specs
         $image->associateTo($this->contextShopIdsList);
 
         try {
@@ -177,28 +177,6 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
     }
 
     /**
-     * @param Image $image
-     * @todo: check if this is really necessary
-     */
-    private function updateCover(Image $image): void
-    {
-        try {
-            if (!$image->update()) {
-                throw new ImageUpdateException(sprintf(
-                    'Error occurred when updating image #%s cover',
-                    $image->id
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new ImageException(sprintf('Error occurred when updating image #%s cover', $image->id),
-                0,
-                $e
-            );
-        }
-
-    }
-
-    /**
      * @param ImageId $imageId
      *
      * @return Image
@@ -221,9 +199,11 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
     }
 
     /**
+     * @param int $fileSize
+     *
      * @throws ImageConstraintException
      */
-    private function checkFileAllowedForUpload(int $fileSize): void
+    private function checkSize(int $fileSize): void
     {
         $maxFileSize = $this->uploadSizeConfiguration->getMaxUploadSizeInBytes();
 

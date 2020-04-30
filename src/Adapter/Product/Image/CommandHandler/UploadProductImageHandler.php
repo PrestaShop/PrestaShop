@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\UploadProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShopException;
@@ -62,7 +63,8 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
         $productIdValue = $command->getProductId()->getValue();
         $this->assertProductExists($productIdValue);
         $format = $this->getFormat($command->getMimeType());
-        $imageId = $this->addToDatabase($productIdValue, $format);
+        $image = $this->addToDatabase($productIdValue, $format);
+        $imageId = new ImageId((int) $image->id);
 
         $this->productImageUploader->upload(
             $imageId,
@@ -71,10 +73,12 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
             $format
         );
 
+        $this->updateCover($image);
+
         return $imageId;
     }
 
-    private function addToDatabase(int $productIdValue, string $format): ImageId
+    private function addToDatabase(int $productIdValue, string $format): Image
     {
         $image = new Image();
         $image->id_product = $productIdValue;
@@ -101,7 +105,7 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
             throw new ImageException('Error occurred when trying to add new image', 0, $e);
         }
 
-        return new ImageId((int) $image->id);
+        return $image;
     }
 
     /**
@@ -142,5 +146,27 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
             ),
             ImageConstraintException::INVALID_FILE_TYPE
         );
+    }
+
+    /**
+     * @param Image $image
+     * @todo: check if this is really necessary
+     */
+    private function updateCover(Image $image): void
+    {
+        try {
+            if (!$image->update()) {
+                throw new ImageUpdateException(sprintf(
+                    'Error occurred when updating image #%s cover',
+                    $image->id
+                ));
+            }
+        } catch (PrestaShopException $e) {
+            throw new ImageException(sprintf('Error occurred when updating image #%s cover', $image->id),
+                0,
+                $e
+            );
+        }
+
     }
 }
