@@ -655,9 +655,7 @@ class OrderCore extends ObjectModel
 
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
-
-            $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int) $row['id_customization']);
-
+            $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, $this->id_shop, (int) $row['id_customization']);
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
