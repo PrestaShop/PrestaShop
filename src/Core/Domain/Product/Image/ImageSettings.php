@@ -26,11 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image;
 
-class ImageConstraintException extends ImageException
+final class ImageSettings
 {
-    const INVALID_ID = 1;
-    const INVALID_FILE_SIZE = 2;
-    const INVALID_FILE_FORMAT = 3;
+    const FORMAT_JPG = 'jpg';
+    const FORMAT_PNG = 'png';
+    const FORMAT_GIF = 'gif';
+
+    /**
+     * Shouldn't be initialized
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getAllowedFormats(): array
+    {
+        return [
+            self::FORMAT_JPG,
+            self::FORMAT_PNG,
+            self::FORMAT_GIF
+        ];
+    }
 }

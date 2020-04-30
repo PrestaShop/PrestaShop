@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\UploadProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImageSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShopException;
@@ -62,15 +63,17 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
     {
         $productIdValue = $command->getProductId()->getValue();
         $this->assertProductExists($productIdValue);
-        $format = $this->getFormat($command->getMimeType());
-        $image = $this->addToDatabase($productIdValue, $format);
+        $this->assertFormatIsValid($command->getMimeType());
+
+        $image = $this->addToDatabase($productIdValue);
         $imageId = new ImageId((int) $image->id);
 
         $this->productImageUploader->upload(
             $imageId,
             $command->getPathToFile(),
             $command->getFileSize(),
-            $format
+            //@todo: image is always saved as 'jpg' no matter its real format.
+            $image->image_format
         );
 
         $this->updateCover($image);
@@ -78,12 +81,11 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
         return $imageId;
     }
 
-    private function addToDatabase(int $productIdValue, string $format): Image
+    private function addToDatabase(int $productIdValue): Image
     {
         $image = new Image();
         $image->id_product = $productIdValue;
         $image->position = Image::getHighestPosition($productIdValue) + 1;
-        $image->image_format = $format;
 
         if (!Image::getCover($image->id_product)) {
             $image->cover = 1;
@@ -123,28 +125,26 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
     /**
      * @param string $mimeType
      *
-     * @return string
-     *
      * @throws ImageConstraintException
      */
-    private function getFormat(string $mimeType): string
+    private function assertFormatIsValid(string $mimeType): void
     {
         $mimeTypes = new MimeTypes();
-        $acceptedExtensions = ['gif', 'png', 'jpg'];
         $fileExtensions = $mimeTypes->getExtensions($mimeType);
+        $allowedFormats = ImageSettings::getAllowedFormats();
 
-        foreach ($acceptedExtensions as $acceptedExtension) {
-            if (in_array($acceptedExtension, $fileExtensions, true)) {
-                return $acceptedExtension;
+        foreach ($allowedFormats as $allowedFormat) {
+            if (in_array($allowedFormat, $fileExtensions, true)) {
+                return;
             }
         }
 
         throw new ImageConstraintException(
             sprintf(
-                'Invalid file mime type "%s".',
-                $mimeType
+                'Invalid image format. Allowed formats: %s',
+                implode(',', $allowedFormats)
             ),
-            ImageConstraintException::INVALID_FILE_TYPE
+            ImageConstraintException::INVALID_FILE_FORMAT
         );
     }
 
