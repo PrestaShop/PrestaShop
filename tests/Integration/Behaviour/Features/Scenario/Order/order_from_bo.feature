@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-from-bo
 @reset-database-before-feature
+@order-from-bo
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
   As a BO user
@@ -34,18 +35,15 @@ Feature: Order from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
 
-  @order-from-bo
   Scenario: Update order status
     When I update order "bo_order1" status to "Awaiting Cash On Delivery validation"
     Then order "bo_order1" has status "Awaiting Cash On Delivery validation"
 
-  @order-from-bo
   Scenario: Update order shipping details
     When I update order "bo_order1" Tracking number to "TEST1234" and Carrier to "2 - My carrier (Delivery next day!)"
     Then order "bo_order1" has Tracking number "TEST1234"
     And order "bo_order1" has Carrier "2 - My carrier (Delivery next day!)"
 
-  @order-from-bo
   Scenario: pay order with negative amount and see it is not valid
     When order "bo_order1" has 0 payments
     And I pay order "bo_order1" with the invalid following details:
@@ -57,7 +55,6 @@ Feature: Order from Back Office (BO)
     Then I should get error that payment amount is negative
     And order "bo_order1" has 0 payments
 
-  @order-from-bo
   Scenario: pay for order
     When I pay order "bo_order1" with the following details:
       | date           | 2019-11-26 13:56:23 |
@@ -71,18 +68,15 @@ Feature: Order from Back Office (BO)
       | transaction_id | test123             |
       | amount         | $6.00               |
 
-  @order-from-bo
   Scenario: Change order state to Delivered to be able to add valid invoice to new Payment
     When order "bo_order1" has 0 payments
     And I update order "bo_order1" status to "Delivered"
     Then order "bo_order1" payments should have invoice
 
-  @order-from-bo
   Scenario: Duplicate order cart
     When I duplicate order "bo_order1" cart "dummy_cart" with reference "duplicated_dummy_cart"
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
 
-  @order-from-bo
   Scenario: Add product to an existing Order without invoice with free shipping and new invoice
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -100,7 +94,6 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should contain 3 products "Mug Today is a good day"
     Then order "bo_order1" should have 0 invoices
 
-  @order-from-bo
   Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice And remove this product
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -108,15 +101,15 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 0 cart rule
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
-      | total_products_wt        | 25.230000 |
+      | total_products_wt        | 25.230 |
       | total_discounts_tax_excl | 0.0    |
       | total_discounts_tax_incl | 0.0    |
       | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.230000 |
-      | total_paid               | 32.230000 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
     And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 500.0 with priority 1, quantity of 100 and quantity per user 100
@@ -133,32 +126,31 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
     Then order "bo_order1" should have following details:
       | total_products           | 38.800 |
-      | total_products_wt        | 40.230000 |
+      | total_products_wt        | 40.230 |
       | total_discounts_tax_excl | 15.000 |
       | total_discounts_tax_incl | 15.000 |
       | total_paid_tax_excl      | 30.8   |
-      | total_paid_tax_incl      | 32.230000 |
-      | total_paid               | 32.230000 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
     When I remove product "Test Product Cart Rule On Select Product" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 0 cart rule
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
-      | total_products_wt        | 25.230000 |
+      | total_products_wt        | 25.230 |
       | total_discounts_tax_excl | 0.0    |
       | total_discounts_tax_incl | 0.0    |
       | total_paid_tax_excl      | 30.800 |
-      | total_paid_tax_incl      | 32.230000 |
-      | total_paid               | 32.230000 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
 
-  @order-from-bo
   Scenario: Add product to an existing Order with invoice with free shipping to new invoice
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoices
@@ -171,7 +163,6 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     Then order "bo_order1" should have 2 invoices
 
-  @order-from-bo
   Scenario: Add product to an existing Order with invoice with free shipping to last invoice
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoices
@@ -184,7 +175,6 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     Then order "bo_order1" should have 1 invoices
 
-  @order-from-bo
   Scenario: Add product with negative quantity is forbidden
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -201,7 +191,6 @@ Feature: Order from Back Office (BO)
     Then I should get error that product quantity is invalid
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
-  @order-from-bo
   Scenario: Add product with zero quantity is forbidden
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -218,7 +207,6 @@ Feature: Order from Back Office (BO)
     Then I should get error that product quantity is invalid
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
-  @order-from-bo
   Scenario: Add product with quantity higher than stock is forbidden
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -229,7 +217,6 @@ Feature: Order from Back Office (BO)
     Then I should get error that product is out of stock
     Then order "bo_order1" should contain 0 products "Mug Today is a good day"
 
-  @order-from-bo
   Scenario: Update product in order
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 3                       |
@@ -243,7 +230,6 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 36 |
       | total_price_tax_excl        | 36 |
 
-  @order-from-bo
   Scenario: Update product in order with zero quantity is forbidden
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 0                       |
@@ -258,7 +244,6 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 25.230000 |
       | total_price_tax_excl        | 23.8   |
 
-  @order-from-bo
   Scenario: Update product in order with negative quantity is forbidden
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | -1                      |
@@ -273,12 +258,10 @@ Feature: Order from Back Office (BO)
       | total_price_tax_incl        | 25.230000 |
       | total_price_tax_excl        | 23.8   |
 
-  @order-from-bo
   Scenario: Generating invoice for Order
     When I generate invoice for "bo_order1" order
     Then order "bo_order1" should have invoice
 
-  @order-from-bo
   Scenario: Add order from Back Office with free shipping
     And I set Free shipping to the cart "dummy_cart"
     And I add order "bo_order2" with the following details:
@@ -290,7 +273,6 @@ Feature: Order from Back Office (BO)
     And order "bo_order2" should have free shipping
     And order "bo_order2" should have "dummy_payment" payment method
 
-  @order-from-bo
   Scenario: Update multiple orders statuses using Bulk actions
     And I add order "bo_order2" with the following details:
       | cart                | dummy_cart          |
@@ -301,7 +283,6 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" has status "Delivered"
     And order "bo_order2" has status "Delivered"
 
-  @order-from-bo
   Scenario: Change order shipping address
     Given I create customer "testFirstName" with following details:
       | firstName        | testFirstName                      |
