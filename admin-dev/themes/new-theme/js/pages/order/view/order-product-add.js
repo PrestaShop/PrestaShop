@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductAdd {
   constructor() {
@@ -60,14 +60,16 @@ export default class OrderProductAdd {
     this.combinationsSelect.on('change', (event) => {
       this.priceTaxExcludedInput.val(window.ps_round(
         $(event.currentTarget).find(':selected').data('priceTaxExcluded'),
-        this.currencyPrecision
+        this.currencyPrecision,
       ));
       this.priceTaxIncludedInput.val(window.ps_round(
         $(event.currentTarget).find(':selected').data('priceTaxIncluded'),
-        this.currencyPrecision
+        this.currencyPrecision,
       ));
+      this.locationText.html($(event.currentTarget).find(':selected').data('location'));
       this.available = $(event.currentTarget).find(':selected').data('stock');
       this.quantityInput.trigger('change');
+      this.orderProductRenderer.toggleColumn(OrderViewPageMap.productsCellLocation);
     });
     this.quantityInput.on('change keyup', (event) => {
       if (this.available !== null) {
@@ -81,7 +83,7 @@ export default class OrderProductAdd {
 
         const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
         this.totalPriceText.html(
-          this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
+          this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
         );
       }
     });
@@ -94,12 +96,12 @@ export default class OrderProductAdd {
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         taxIncluded,
         this.taxRateInput.val(),
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
       this.priceTaxExcludedInput.val(taxExcluded);
       this.totalPriceText.html(
-        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
+        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
       );
     });
     this.priceTaxExcludedInput.on('change keyup', (event) => {
@@ -107,15 +109,15 @@ export default class OrderProductAdd {
       const taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
         this.taxRateInput.val(),
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       const quantity = parseInt(this.quantityInput.val(), 10);
       this.priceTaxIncludedInput.val(taxIncluded);
       this.totalPriceText.html(
-        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision)
+        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
       );
     });
-    this.productAddActionBtn.on('click', event => this.addProduct($(event.currentTarget).data('orderId')));
+    this.productAddActionBtn.on('click', (event) => this.addProduct($(event.currentTarget).data('orderId')));
     this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
   }
 
@@ -130,20 +132,27 @@ export default class OrderProductAdd {
     this.quantityInput.val(1);
     this.quantityInput.trigger('change');
     this.setCombinations(product.combinations);
+    this.orderProductRenderer.toggleColumn(OrderViewPageMap.productsCellLocation);
   }
 
   setCombinations(combinations) {
     this.combinationsSelect.empty();
     Object.values(combinations).forEach((val) => {
-      this.combinationsSelect.append(`<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}">${val.attribute}</option>`);
+      this.combinationsSelect.append(
+        /* eslint-disable-next-line max-len */
+        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`,
+      );
     });
     this.combinationsBlock.toggleClass('d-none', Object.keys(combinations).length === 0);
+    if (Object.keys(combinations).length > 0) {
+      this.combinationsSelect.trigger('change');
+    }
   }
 
   addProduct(orderId) {
     this.productAddActionBtn.prop('disabled', true);
     this.invoiceSelect.prop('disabled', true);
-    this.combinationsBlock.addClass('d-none');
+    this.combinationsSelect.prop('disabled', true);
 
     const params = {
       product_id: this.productIdInput.val(),
@@ -165,8 +174,12 @@ export default class OrderProductAdd {
         newRow: response,
       });
     }, (response) => {
-      if (response.message) {
-        $.growl.error({message: response.message});
+      this.productAddActionBtn.prop('disabled', false);
+      this.invoiceSelect.prop('disabled', false);
+      this.combinationsSelect.prop('disabled', false);
+
+      if (response.responseJSON && response.responseJSON.message) {
+        $.growl.error({message: response.responseJSON.message});
       }
     });
   }

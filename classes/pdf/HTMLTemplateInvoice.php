@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,17 +29,29 @@
  */
 class HTMLTemplateInvoiceCore extends HTMLTemplate
 {
+    /**
+     * @var Order
+     */
     public $order;
+
+    /**
+     * @var OrderInvoice
+     */
     public $order_invoice;
+
+    /**
+     * @var bool
+     */
     public $available_in_your_account = false;
 
     /**
      * @param OrderInvoice $order_invoice
-     * @param $smarty
+     * @param Smarty $smarty
+     * @param bool $bulk_mode
      *
      * @throws PrestaShopException
      */
-    public function __construct(OrderInvoice $order_invoice, $smarty, $bulk_mode = false)
+    public function __construct(OrderInvoice $order_invoice, Smarty $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
         $this->order = new Order((int) $this->order_invoice->id_order);
@@ -59,7 +71,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $this->date = Tools::displayDate($order_invoice->date_add);
 
         $id_lang = Context::getContext()->language->id;
-        $this->title = $order_invoice->getInvoiceNumberFormatted($id_lang);
+        $id_shop = Context::getContext()->shop->id;
+        $this->title = $order_invoice->getInvoiceNumberFormatted($id_lang, $id_shop);
 
         $this->shop = new Shop((int) $this->order->id_shop);
     }
@@ -80,11 +93,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Compute layout elements size.
      *
-     * @param $params Array Layout elements
+     * @param array $params Layout elements
      *
      * @return array Layout elements columns size
      */
-    protected function computeLayout($params)
+    protected function computeLayout(array $params)
     {
         $layout = [
             'reference' => [
@@ -371,7 +384,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * Returns the tax tab content.
      *
-     * @return string Tax tab html content
+     * @return string|array Tax tab html content (Returns an array if debug params used in request)
      */
     public function getTaxTabContent()
     {
@@ -474,6 +487,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
      * Returns the invoice template associated to the country iso_code.
      *
      * @param string $iso_country
+     *
+     * @return string
      */
     protected function getTemplateByCountry($iso_country)
     {

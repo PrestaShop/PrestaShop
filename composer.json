@@ -22,6 +22,7 @@
         "doctrine/cache": "^1.8",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.7",
+        "egulias/email-validator": "^2.1",
         "ezyang/htmlpurifier": "^4.10",
         "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",
@@ -115,7 +116,7 @@
         "symfony/polyfill-mbstring": "^1.12",
         "symfony/polyfill-php73": "^1.10",
         "symfony/swiftmailer-bundle": "^3.1",
-        "symfony/symfony": ">=3.4.26",
+        "symfony/symfony": ">=3.4.37",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
         "twig/twig": "^1.38"

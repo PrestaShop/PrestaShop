@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -234,7 +234,7 @@ class CurrencyCore extends ObjectModel
      * CurrencyCore constructor.
      *
      * @param int|null $id
-     * @param false|null $idLang if null or false, default language will be used
+     * @param int|false|null $idLang if null or false, default language will be used
      * @param int|null $idShop
      */
     public function __construct($id = null, $idLang = null, $idShop = null)
@@ -289,6 +289,11 @@ class CurrencyCore extends ObjectModel
         }
     }
 
+    /**
+     * @param string|null $ws_params_attribute_name
+     *
+     * @return array
+     */
     public function getWebserviceParameters($ws_params_attribute_name = null)
     {
         $parameters = parent::getWebserviceParameters($ws_params_attribute_name);
@@ -486,6 +491,9 @@ class CurrencyCore extends ObjectModel
         return Tools::ucfirst($this->name[$id_lang]);
     }
 
+    /**
+     * @return string
+     */
     public function getSymbol()
     {
         if (is_string($this->symbol)) {
@@ -644,6 +652,11 @@ class CurrencyCore extends ObjectModel
         return $currencies;
     }
 
+    /**
+     * @param int|null $shopId
+     *
+     * @return array
+     */
     public function getInstalledCurrencies($shopId = null)
     {
         $shopId = $shopId ?: Context::getContext()->shop->id;
@@ -683,6 +696,8 @@ class CurrencyCore extends ObjectModel
      *
      * @param $currencies mixed object|array
      * @param $isObject bool
+     *
+     * @return mixed object|array
      */
     protected static function addCldrDatasToCurrency($currencies, $isObject = false)
     {
@@ -705,6 +720,12 @@ class CurrencyCore extends ObjectModel
         return $currencies;
     }
 
+    /**
+     * @param int $idModule
+     * @param int|null $idShop
+     *
+     * @return array
+     */
     public static function getPaymentCurrenciesSpecial($idModule, $idShop = null)
     {
         if (null === $idShop) {
@@ -723,7 +744,7 @@ class CurrencyCore extends ObjectModel
      * Get payment Currencies.
      *
      * @param int $idModule Module ID
-     * @param null $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -749,7 +770,7 @@ class CurrencyCore extends ObjectModel
      * Check payment Currencies.
      *
      * @param int $idModule Module ID
-     * @param null $idShop Shop ID
+     * @param int|null $idShop Shop ID
      *
      * @return array|PDOStatement|resource|null
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -196,7 +196,7 @@ class ConfigurationCore extends ObjectModel
      * @param string $key Key wanted
      * @param int $idLang Language ID
      *
-     * @return string Value
+     * @return string|false Value
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
@@ -440,10 +440,9 @@ class ConfigurationCore extends ObjectModel
         }
 
         if ($html) {
-            foreach ($values as &$value) {
-                $value = Tools::purifyHTML($value);
-            }
-            unset($value);
+            $values = array_map(function ($v) {
+                return Tools::purifyHTML($v);
+            }, $values);
         }
 
         $result = true;
@@ -539,7 +538,7 @@ class ConfigurationCore extends ObjectModel
 
         Configuration::set($key, $values, $idShopGroup, $idShop);
 
-        return $result;
+        return (bool) $result;
     }
 
     /**

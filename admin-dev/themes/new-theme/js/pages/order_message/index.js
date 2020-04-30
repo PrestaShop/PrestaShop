@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,13 +29,13 @@ import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sq
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
+import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const orderMessageGrid = new Grid('order_message');
@@ -45,7 +45,7 @@ $(() => {
   orderMessageGrid.addExtension(new FiltersResetExtension());
   orderMessageGrid.addExtension(new SortingExtension());
   orderMessageGrid.addExtension(new LinkRowActionExtension());
-  orderMessageGrid.addExtension(new SubmitBulkExtension());
+  orderMessageGrid.addExtension(new SubmitBulkActionExtension());
   orderMessageGrid.addExtension(new BulkActionCheckboxExtension());
   orderMessageGrid.addExtension(new SubmitRowActionExtension());
   orderMessageGrid.addExtension(new FiltersSubmitButtonEnablerExtension());

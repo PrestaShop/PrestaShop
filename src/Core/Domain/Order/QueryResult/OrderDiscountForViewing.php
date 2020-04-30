@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+
+use PrestaShop\Decimal\Number;
 
 class OrderDiscountForViewing
 {
@@ -44,14 +46,14 @@ class OrderDiscountForViewing
     private $amountFormatted;
 
     /**
-     * @var float
+     * @var Number
      */
     private $amountRaw;
 
     public function __construct(
         int $orderCartRuleId,
         string $name,
-        float $amountRaw,
+        Number $amountRaw,
         string $amountFormatted
     ) {
         $this->orderCartRuleId = $orderCartRuleId;
@@ -85,9 +87,9 @@ class OrderDiscountForViewing
     }
 
     /**
-     * @return float
+     * @return Number
      */
-    public function getAmountRaw(): float
+    public function getAmountRaw(): Number
     {
         return $this->amountRaw;
     }

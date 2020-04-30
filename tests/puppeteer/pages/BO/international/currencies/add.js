@@ -12,7 +12,6 @@ module.exports = class AddCurrency extends BOBasePage {
     this.selectResultOption = 'li.select2-results__option:nth-child(%ID)';
     this.alternativeCurrencyCheckBox = '#currency_unofficial + i';
     this.currencyNameInput = '#currency_names_%ID';
-    this.symbolInput = '#currency_symbols_%ID';
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
     this.decimalsInput = '#currency_precision';
@@ -36,7 +35,7 @@ module.exports = class AddCurrency extends BOBasePage {
   async addOfficialCurrency(currencyData) {
     // Select currency
     await this.page.select(this.currencySelect, currencyData.isoCode);
-    await this.page.waitForSelector(`${this.currencyLoadingModal}.show`, {visible: true});
+    await this.waitForVisibleSelector(`${this.currencyLoadingModal}.show`);
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist
     let displayed = false;
@@ -61,7 +60,6 @@ module.exports = class AddCurrency extends BOBasePage {
   async createUnOfficialCurrency(currencyData) {
     await this.changeCheckboxValue(this.alternativeCurrencyCheckBox, true);
     await this.setValue(this.currencyNameInput.replace('%ID', 1), currencyData.name);
-    await this.setValue(this.symbolInput.replace('%ID', 1), currencyData.symbol);
     await this.setValue(this.isoCodeInput, currencyData.isoCode);
     await this.setValue(this.exchangeRateInput, currencyData.exchangeRate.toString());
     await this.page.click(this.statusSwitch.replace('%ID', currencyData.enabled ? 1 : 0));

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -577,7 +577,7 @@ class StockAvailableCore extends ObjectModel
             if ($id_stock_available) {
                 $stock_available = new StockAvailable($id_stock_available);
 
-                $deltaQuantity = -1 * ((int) $stock_available->quantity - (int) $quantity);
+                $deltaQuantity = (int) $quantity - (int) $stock_available->quantity;
 
                 $stock_available->quantity = (int) $quantity;
                 $stock_available->update();

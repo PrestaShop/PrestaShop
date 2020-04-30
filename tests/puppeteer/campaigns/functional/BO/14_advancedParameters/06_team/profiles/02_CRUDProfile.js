@@ -14,6 +14,10 @@ const AddProfilePage = require('@pages/BO/advancedParameters/team/profiles/add')
 const ProductsPage = require('@pages/BO/catalog/products/index');
 const OrdersPage = require('@pages/BO/orders/index');
 const FOBasePage = require('@pages/FO/FObasePage');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_advancedParams_team_profiles_CRUDProfile';
 
 let browser;
 let page;
@@ -35,11 +39,9 @@ const init = async function () {
     foBasePage: new FOBasePage(page),
   };
 };
-/*
-Test disabled because of issue described here https://github.com/PrestaShop/PrestaShop/issues/16899
- */
+
 // Create, Read, Update and Delete profile in BO
-describe.skip('Create, Read, Update and Delete profile in BO', async () => {
+describe('Create, Read, Update and Delete profile in BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -56,6 +58,7 @@ describe.skip('Create, Read, Update and Delete profile in BO', async () => {
   loginCommon.loginBO();
 
   it('should go to "Advanced parameters>Team" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.teamLink,
@@ -66,12 +69,14 @@ describe.skip('Create, Read, Update and Delete profile in BO', async () => {
   });
 
   it('should go to "Profiles" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
     await this.pageObjects.employeesPage.goToProfilesPage();
     const pageTitle = await this.pageObjects.profilesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.profilesPage.pageTitle);
   });
 
   it('should reset all filters and get number of profiles', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfProfiles = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
     await expect(numberOfProfiles).to.be.above(0);
   });
@@ -79,12 +84,14 @@ describe.skip('Create, Read, Update and Delete profile in BO', async () => {
   // 1 : Create profile
   describe('Create profile in BO', async () => {
     it('should go to add new profile page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProfilePage', baseContext);
       await this.pageObjects.profilesPage.goToAddNewProfilePage();
       const pageTitle = await this.pageObjects.addProfilePage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addProfilePage.pageTitleCreate);
     });
 
     it('should create profile and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProfile', baseContext);
       const textResult = await this.pageObjects.addProfilePage.createEditProfile(profileData);
       await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
       const numberOfProfilesAfterCreation = await this.pageObjects.profilesPage.getNumberOfElementInGrid();
@@ -95,6 +102,7 @@ describe.skip('Create, Read, Update and Delete profile in BO', async () => {
   // 2 : Update profile
   describe('Update profile', async () => {
     it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
       await this.pageObjects.profilesPage.filterProfiles(
         'input',
         'name',
@@ -105,12 +113,14 @@ describe.skip('Create, Read, Update and Delete profile in BO', async () => {
     });
 
     it('should go to edit profile page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditProfile', baseContext);
       await this.pageObjects.profilesPage.goToEditProfilePage('1');
       const pageTitle = await this.pageObjects.addProfilePage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addProfilePage.pageTitleEdit);
     });
 
     it('should update the profile', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateProfile', baseContext);
       const textResult = await this.pageObjects.addProfilePage.createEditProfile(editProfileData);
       await expect(textResult).to.equal(this.pageObjects.addProfilePage.successfulUpdateMessage);
     });
@@ -119,6 +129,7 @@ describe.skip('Create, Read, Update and Delete profile in BO', async () => {
   // 3 : Delete profile
   describe('Delete profile', async () => {
     it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
       await this.pageObjects.profilesPage.filterProfiles(
         'input',
         'name',
@@ -129,11 +140,13 @@ describe.skip('Create, Read, Update and Delete profile in BO', async () => {
     });
 
     it('should delete profile', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProfile', baseContext);
       const textResult = await this.pageObjects.profilesPage.deleteProfile('1');
       await expect(this.pageObjects.profilesPage.successfulDeleteMessage).to.contains(textResult);
     });
 
     it('should reset filter and check the number of profiles', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
       const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
       await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles);
     });

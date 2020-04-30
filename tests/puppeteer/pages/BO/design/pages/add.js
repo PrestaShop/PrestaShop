@@ -42,7 +42,6 @@ module.exports = class AddPage extends BOBasePage {
     if (pageData.displayed) await this.page.click(this.displayed.replace('%ID', '1'));
     else await this.page.click(this.displayed.replace('%ID', '0'));
     await this.clickAndWaitForNavigation(this.savePageButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -96,7 +96,7 @@ class TranslationRouteFinder
      */
     public function findRoute(ParameterBag $query)
     {
-        $routeProperties = $query->get('form')['modify_translations'];
+        $routeProperties = $query->get('form');
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $route = 'admin_international_translation_overview';
 
@@ -154,7 +154,7 @@ class TranslationRouteFinder
      */
     public function findRouteParameters(ParameterBag $query)
     {
-        $routeProperties = $query->get('form')['modify_translations'];
+        $routeProperties = $query->get('form');
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $language = $propertyAccessor->getValue($routeProperties, '[language]');
 

@@ -42,7 +42,7 @@
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
-        <note>Line: 317</note>
+        <note>Line: 315</note>
       </trans-unit>
     </body>
   </file>
@@ -90,52 +90,52 @@
       <trans-unit id="103d86044b78fa59e02ff8480a3a2f46">
         <source>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</source>
         <target>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</target>
-        <note>Line: 541</note>
+        <note>Line: 542</note>
       </trans-unit>
       <trans-unit id="2934958a3f658892ee502aaf8258a6f7">
         <source>Original image is missing or empty (%filename%) for product ID %id%</source>
         <target>Original image is missing or empty (%filename%) for product ID %id%</target>
-        <note>Line: 554</note>
+        <note>Line: 555</note>
       </trans-unit>
       <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
         <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
         <target>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</target>
-        <note>Line: 676</note>
+        <note>Line: 677</note>
       </trans-unit>
       <trans-unit id="d4f225ec09e4b0eba6558753f4bd8edd">
         <source>Only part of the images have been regenerated. The server timed out before finishing.</source>
         <target>Only part of the images have been regenerated. The server timed out before finishing.</target>
-        <note>Line: 679</note>
+        <note>Line: 680</note>
       </trans-unit>
       <trans-unit id="f2febdafe25d3517afc3c6dd3d815562">
         <source>Server timed out. The watermark may not have been applied to all images.</source>
         <target>Server timed out. The watermark may not have been applied to all images.</target>
-        <note>Line: 683</note>
+        <note>Line: 684</note>
       </trans-unit>
       <trans-unit id="606495559093a136ed6f2c9daee2645f">
         <source>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</source>
         <target>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</target>
-        <note>Line: 688</note>
+        <note>Line: 689</note>
       </trans-unit>
       <trans-unit id="4004c7590c68a8cbbe499736c56bc33c">
         <source>Error: Your server configuration is not compatible with the new image system. No images were moved.</source>
         <target>Error: Your server configuration is not compatible with the new image system. No images were moved.</target>
-        <note>Line: 716</note>
+        <note>Line: 717</note>
       </trans-unit>
       <trans-unit id="4c9f49243d6dc02028801d9767abe3c1">
         <source>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</source>
         <target>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</target>
-        <note>Line: 722</note>
+        <note>Line: 723</note>
       </trans-unit>
       <trans-unit id="95871efade00fbd0243355ce7937c40a">
         <source>Error: Some -- or all -- images cannot be moved.</source>
         <target>Error: Some -- or all -- images cannot be moved.</target>
-        <note>Line: 724</note>
+        <note>Line: 725</note>
       </trans-unit>
       <trans-unit id="cb2f901ceed5c3365d056794a1b5047f">
         <source>After modification, do not forget to regenerate thumbnails</source>
         <target>After modification, do not forget to regenerate thumbnails</target>
-        <note>Line: 743</note>
+        <note>Line: 744</note>
       </trans-unit>
     </body>
   </file>
@@ -181,7 +181,7 @@
       <trans-unit id="f003149576f4755d74550952febe14bb">
         <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
         <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
-        <note>Line: 175</note>
+        <note>Line: 173</note>
       </trans-unit>
     </body>
   </file>
@@ -199,7 +199,7 @@
       <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
         <source>The page Category cannot be moved here.</source>
         <target>The page Category cannot be moved here.</target>
-        <note>Line: 1135</note>
+        <note>Line: 1123</note>
       </trans-unit>
     </body>
   </file>

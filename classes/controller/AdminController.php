@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -405,6 +405,9 @@ class AdminControllerCore extends Controller
 
     /** @var string */
     protected $tabSlug;
+
+    /** @var int Auth cookie lifetime */
+    const AUTH_COOKIE_LIFETIME = 3600;
 
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
@@ -1006,7 +1009,7 @@ class AdminControllerCore extends Controller
     {
         if (Validate::isLoadedObject($object = $this->loadObject())) {
             if (($object->deleteImage())) {
-                $redirect = self::$currentIndex . '&update' . $this->table . '&' . $this->identifier . '=' . Tools::getValue($this->identifier) . '&conf=7&token=' . $this->token;
+                $redirect = self::$currentIndex . '&update' . $this->table . '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) . '&conf=7&token=' . $this->token;
                 if (!$this->ajax) {
                     $this->redirect_after = $redirect;
                 } else {
@@ -1951,7 +1954,7 @@ class AdminControllerCore extends Controller
 
         $tabs = $this->getTabs();
         $currentTabLevel = 0;
-        foreach ($tabs as &$tab) {
+        foreach ($tabs as $tab) {
             $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
         }
 
@@ -2838,7 +2841,7 @@ class AdminControllerCore extends Controller
             $this->context->employee->logout();
         }
         if (isset(Context::getContext()->cookie->last_activity)) {
-            if ($this->context->cookie->last_activity + 900 < time()) {
+            if ($this->context->cookie->last_activity + self::AUTH_COOKIE_LIFETIME < time()) {
                 $this->context->employee->logout();
             } else {
                 $this->context->cookie->last_activity = time();
@@ -4121,7 +4124,7 @@ class AdminControllerCore extends Controller
                 $result = true;
                 foreach ($this->boxes as $id) {
                     /** @var $to_delete ObjectModel */
-                    $to_delete = new $this->className($id);
+                    $to_delete = new $this->className((int) $id);
                     $delete_ok = true;
                     if ($this->deleted) {
                         $to_delete->deleted = 1;
@@ -4145,7 +4148,7 @@ class AdminControllerCore extends Controller
                             (int) $this->context->employee->id
                         );
                     } else {
-                        $this->errors[] = $this->trans('Can\'t delete #%id%', ['%id%' => $id], 'Admin.Notifications.Error');
+                        $this->errors[] = $this->trans('Can\'t delete #%id%', ['%id%' => (int) $id], 'Admin.Notifications.Error');
                     }
                 }
                 if ($result) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -298,6 +298,7 @@ class EmployeeController extends FrameworkBundleAdminController
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
             'showAddonsConnectButton' => false,
+            'enableSidebar' => true,
         ];
 
         return $this->render(
@@ -310,6 +311,7 @@ class EmployeeController extends FrameworkBundleAdminController
      * Show Employee edit page.
      *
      * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_employees_index")
      *
      * @param int $employeeId
      * @param Request $request

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,18 +55,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function canonicalRedirection($canonical_url = '')
     {
         if (Validate::isLoadedObject($this->product)) {
-            if (!$this->product->hasCombinations() ||
-                !$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
+            $idProductAttribute = Tools::getValue('id_product_attribute', null);
+            if (!$this->product->hasCombinations() || !$this->isValidCombination($idProductAttribute, $this->product->id)) {
                 //Invalid combination we redirect to the canonical url (without attribute id)
                 unset($_GET['id_product_attribute']);
-            } else {
-                //Only redirect to canonical (parent product without combination) when the requested combination is not valid
-                //In this case we are in a valid combination url and we must display it without redirection for SEO purpose
-                return;
+                $idProductAttribute = null;
             }
 
-            //Note: we NEED these 6 arguments to have $ipa=null or else a parameter will be added
-            //id_product_attribute=0 and force the redirection
+            // If the attribute id is present in the url we use it to perform the redirection, this will fix any domain
+            // or rewriting error and redirect to the appropriate url
+            // If the attribute is not present or invalid, we set it to null so that the request is redirected to the
+            // real canonical url (without any attribute)
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -74,7 +73,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 null,
                 null,
                 null,
-                null
+                $idProductAttribute
             ));
         }
     }
@@ -178,6 +177,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->errors[] = $this->trans('You do not have access to this product.', [], 'Shop.Notifications.Error');
                 $this->setTemplate('errors/forbidden');
             } else {
+                if (!$isAssociatedToProduct && $isPreview) {
+                    header('HTTP/1.1 403 Forbidden');
+                    header('Status: 403 Forbidden');
+                    $this->errors[] = $this->trans('You do not have access to this product.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/forbidden');
+                }
+
                 if ($isAssociatedToProduct && $isPreview) {
                     $this->adminNotifications['inactive_product'] = [
                         'type' => 'warning',
@@ -513,8 +519,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
             }
         }
+        unset($quantity_discount);
 
-        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute);
+        $product_price = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $id_product_attribute, 6, null, false, false);
 
         $this->quantity_discounts = $this->formatQuantityDiscounts($quantity_discounts, $product_price, (float) $tax, $this->product->ecotax);
 
@@ -705,7 +712,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             // wash attributes list (if some attributes are unavailables and if allowed to wash it)
             if (!Product::isAvailableWhenOutOfStock($this->product->out_of_stock) && Configuration::get('PS_DISP_UNAVAILABLE_ATTR') == 0) {
                 foreach ($groups as &$group) {
-                    foreach ($group['attributes_quantity'] as $key => &$quantity) {
+                    foreach ($group['attributes_quantity'] as $key => $quantity) {
                         if ($quantity <= 0) {
                             unset($group['attributes'][$key]);
                         }
@@ -726,6 +733,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $attribute_list = rtrim($attribute_list, ',');
                 $this->combinations[$id_product_attribute]['list'] = $attribute_list;
             }
+            unset($group);
 
             $this->context->smarty->assign([
                 'groups' => $groups,

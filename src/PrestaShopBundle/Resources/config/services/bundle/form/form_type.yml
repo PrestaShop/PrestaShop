@@ -7,8 +7,17 @@ services:
 
     form.type.date_picker:
         class: PrestaShopBundle\Form\Admin\Type\DatePickerType
+        arguments:
+          - '@prestashop.bundle.form.data_transformer.arabic_to_latin_digit'
         tags:
           - { name: form.type }
+
+    form.type.email:
+        class: PrestaShopBundle\Form\Admin\Type\EmailType
+        arguments:
+          - '@prestashop.bundle.form.data_transformer.idn_converter'
+        tags:
+            - { name: form.type }
 
     form.type.product.simple_category:
         class: PrestaShopBundle\Form\Admin\Category\SimpleCategory
@@ -987,13 +996,15 @@ services:
     form.type.order.update_order_status:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType'
       arguments:
-        - '@prestashop.core.form.choice_provider.order_state_by_id'
+        - '@=service("prestashop.core.form.choice_provider.order_state_by_id").getChoices()'
+        - '@=service("prestashop.core.form.choice_provider.order_state_by_id").getChoicesAttributes()'
       tags:
         - { name: form.type }
 
     form.type.order.order_payment:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType'
       arguments:
+        - '@translator'
         - '@prestashop.adapter.form.choice_provider.currency_symbol_by_id'
         - '@prestashop.adapter.form.choice_provider.order_invoice_by_id'
         - '@prestashop.adapter.form.choice_provider.installed_payment_modules'

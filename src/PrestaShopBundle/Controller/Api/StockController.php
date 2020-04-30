@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -64,6 +64,10 @@ class StockController extends ApiController
      */
     public function listProductsAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::READ], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {
@@ -150,6 +154,10 @@ class StockController extends ApiController
      */
     public function listProductsExportAction(Request $request)
     {
+        if (!$this->isGranted([PageVoter::READ], $request->get('_legacy_controller'))) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
         } catch (InvalidPaginationParamsException $exception) {

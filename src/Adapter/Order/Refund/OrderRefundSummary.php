@@ -68,6 +68,21 @@ class OrderRefundSummary
      */
     private $isTaxIncluded;
 
+    /**
+     * @var int
+     */
+    private $precision;
+
+    /**
+     * @param array $orderDetails
+     * @param array $productRefunds
+     * @param float $refundedAmount
+     * @param float $refundedShipping
+     * @param float $voucherAmount
+     * @param bool $voucherChosen
+     * @param bool $isTaxIncluded
+     * @param int $precision
+     */
     public function __construct(
         array $orderDetails,
         array $productRefunds,
@@ -75,7 +90,8 @@ class OrderRefundSummary
         float $refundedShipping,
         float $voucherAmount,
         bool $voucherChosen,
-        bool $isTaxIncluded
+        bool $isTaxIncluded,
+        int $precision
     ) {
         $this->orderDetails = $orderDetails;
         $this->productRefunds = $productRefunds;
@@ -84,6 +100,7 @@ class OrderRefundSummary
         $this->voucherAmount = $voucherAmount;
         $this->voucherChosen = $voucherChosen;
         $this->isTaxIncluded = $isTaxIncluded;
+        $this->precision = $precision;
     }
 
     /**
@@ -140,6 +157,14 @@ class OrderRefundSummary
     public function isTaxIncluded(): bool
     {
         return $this->isTaxIncluded;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrecision(): int
+    {
+        return $this->precision;
     }
 
     /**

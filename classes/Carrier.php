@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -638,10 +638,10 @@ class CarrierCore extends ObjectModel
 			ORDER BY cl.name ASC');
 
         $countries = [];
-        foreach ($result as &$country) {
+        foreach ($result as $country) {
             $countries[$country['id_country']] = $country;
         }
-        foreach ($states as &$state) {
+        foreach ($states as $state) {
             if (isset($countries[$state['id_country']])) { /* Does not keep the state if its country has been disabled and not selected */
                 if ($state['active'] == 1) {
                     $countries[$state['id_country']]['states'][] = $state;

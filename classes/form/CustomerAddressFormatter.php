@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -66,12 +66,6 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         $required = array_flip(AddressFormat::getFieldsRequired());
 
         $format = [
-            'id_address' => (new FormField())
-                ->setName('id_address')
-                ->setType('hidden'),
-            'id_customer' => (new FormField())
-                ->setName('id_customer')
-                ->setType('hidden'),
             'back' => (new FormField())
                 ->setName('back')
                 ->setType('hidden'),
@@ -125,7 +119,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     }
                 } elseif ($entity === 'State') {
                     if ($this->country->contains_states) {
-                        $states = State::getStatesByIdCountry($this->country->id, true);
+                        $states = State::getStatesByIdCountry($this->country->id, true, 'name', 'asc');
                         foreach ($states as $state) {
                             $formField->addAvailableValue(
                                 $state['id_state'],

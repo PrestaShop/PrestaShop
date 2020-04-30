@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,15 +27,15 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
+use PrestaShopBundle\Exception\InvalidLanguageException;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Validator\Constraints\Locale;
 
 class TranslationController extends ApiController
 {
@@ -51,6 +51,8 @@ class TranslationController extends ApiController
 
     /**
      * Show translations for 1 domain & 1 locale given & 1 theme given (optional).
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -71,13 +73,10 @@ class TranslationController extends ApiController
             $module = $request->query->get('module');
             $search = $request->query->get('search');
 
-            $icuLocale = Converter::toPrestaShopLocale($locale);
-            $validationErrors = $this->container->get('validator')->validate($icuLocale, [
-                new Locale(),
-            ]);
-
-            // If the locale is invalid, no need to call the translation provider.
-            if ($locale !== 'default' && count($validationErrors) > 0) {
+            try {
+                $this->translationService->findLanguageByLocale($locale);
+            } catch (InvalidLanguageException $e) {
+                // If the locale is invalid, no need to call the translation provider.
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
 
@@ -117,6 +116,8 @@ class TranslationController extends ApiController
 
     /**
      * Show tree for translation page with some params.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -171,6 +172,8 @@ class TranslationController extends ApiController
     /**
      * Route to edit translation.
      *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -215,6 +218,8 @@ class TranslationController extends ApiController
 
     /**
      * Route to reset translation.
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

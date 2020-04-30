@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -143,6 +143,21 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     }
 
     /**
+     * @param mixed $key
+     * @param \Closure $closure
+     */
+    public function appendClosure($key, \Closure $closure)
+    {
+        $this->arrayAccessList->offsetSet(
+            $key,
+            [
+                'type' => 'closure',
+                'value' => $closure,
+            ]
+        );
+    }
+
+    /**
      * The number of keys defined into the lazyArray.
      *
      * @return int
@@ -234,21 +249,44 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     public function offsetGet($index)
     {
         if (isset($this->arrayAccessList[$index])) {
-            // if the index is associated with a method, execute the method an cache the result
-            if ($this->arrayAccessList[$index]['type'] === 'method') {
-                if (!isset($this->methodCacheResults[$index])) {
-                    $methodName = $this->arrayAccessList[$index]['value'];
-                    $this->methodCacheResults[$index] = $this->{$methodName}();
-                }
-                $result = $this->methodCacheResults[$index];
-            } else { // if the index is associated with a value, just return the value
-                $result = $this->arrayAccessList[$index]['value'];
+            $type = $this->arrayAccessList[$index]['type'];
+            switch ($type) {
+                case 'method':
+                    $isResultAvailableInCache = (isset($this->methodCacheResults[$index]));
+
+                    if (!$isResultAvailableInCache) {
+                        $methodName = $this->arrayAccessList[$index]['value'];
+                        $this->methodCacheResults[$index] = $this->{$methodName}();
+                    }
+                    $result = $this->methodCacheResults[$index];
+
+                    break;
+
+                case 'closure':
+                    $isResultAvailableInCache = (isset($this->methodCacheResults[$index]));
+
+                    if (!$isResultAvailableInCache) {
+                        $methodName = $this->arrayAccessList[$index]['value'];
+                        $this->methodCacheResults[$index] = $methodName();
+                    }
+                    $result = $this->methodCacheResults[$index];
+
+                    break;
+
+                default:
+                    $result = $this->arrayAccessList[$index]['value'];
+                    break;
             }
 
             return $result;
         }
 
         return [];
+    }
+
+    public function clearMethodCacheResults()
+    {
+        $this->methodCacheResults = [];
     }
 
     /**

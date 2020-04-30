@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -1213,7 +1213,7 @@ class ProductCore extends ObjectModel
         $return = Db::getInstance()->delete('category_product', 'id_product = ' . (int) $this->id . ' AND id_category = ' . (int) $id_category);
         if ($clean_positions === true) {
             foreach ($result as $row) {
-                self::cleanPositions((int) $row['id_category'], (int) $row['position']);
+                static::cleanPositions((int) $row['id_category'], (int) $row['position']);
             }
         }
 
@@ -1244,7 +1244,7 @@ class ProductCore extends ObjectModel
         $return = Db::getInstance()->delete('category_product', 'id_product = ' . (int) $this->id);
         if ($clean_positions === true && is_array($result)) {
             foreach ($result as $row) {
-                $return &= self::cleanPositions((int) $row['id_category'], (int) $row['position']);
+                $return &= static::cleanPositions((int) $row['id_category'], (int) $row['position']);
             }
         }
 
@@ -1646,7 +1646,7 @@ class ProductCore extends ObjectModel
         Tools::displayAsDeprecated();
         $return = [];
         $default_value = 1;
-        foreach ($attributes as &$attribute) {
+        foreach ($attributes as $attribute) {
             $obj = new Combination();
             foreach ($attribute as $key => $value) {
                 $obj->$key = $value;
@@ -6930,6 +6930,10 @@ class ProductCore extends ObjectModel
     */
     public function modifierWsLinkRewrite()
     {
+        if (empty($this->link_rewrite)) {
+            $this->link_rewrite = [];
+        }
+
         foreach ($this->name as $id_lang => $name) {
             if (empty($this->link_rewrite[$id_lang])) {
                 $this->link_rewrite[$id_lang] = Tools::link_rewrite($name);

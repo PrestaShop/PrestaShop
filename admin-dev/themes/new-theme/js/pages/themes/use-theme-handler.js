@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,19 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This handler displays use theme modal and handles the submit form logic.
  */
 export default class UseThemeHandler {
   constructor() {
-    $(document).on('click', '.js-display-use-theme-modal', e => this._displayUseThemeModal(e));
+    $(document).on('click', '.js-display-use-theme-modal', (e) => this.displayUseThemeModal(e));
   }
 
   /**
@@ -39,12 +39,12 @@ export default class UseThemeHandler {
    * @param e
    * @private
    */
-  _displayUseThemeModal(e) {
+  displayUseThemeModal(e) {
     const $modal = $('#use_theme_modal');
 
     $modal.modal('show');
 
-    this._submitForm($modal, e);
+    this.submitForm($modal, e);
   }
 
   /**
@@ -55,7 +55,7 @@ export default class UseThemeHandler {
    *
    * @private
    */
-  _submitForm($modal, originalButtonEvent) {
+  submitForm($modal, originalButtonEvent) {
     const $formButton = $(originalButtonEvent.currentTarget);
 
     $modal.on('click', '.js-submit-use-theme', () => {

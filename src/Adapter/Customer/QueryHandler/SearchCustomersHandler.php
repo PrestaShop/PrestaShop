@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -58,15 +58,25 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
             }
 
             foreach ($customersResult as $customerArray) {
-                if ($customerArray['active']) {
-                    $customerArray['fullname_and_email'] = sprintf(
-                        '%s %s - %s',
-                        $customerArray['firstname'],
-                        $customerArray['lastname'],
-                        $customerArray['email']
-                    );
-                    $customers[$customerArray['id_customer']] = $customerArray;
+                if (!$customerArray['active']) {
+                    continue;
                 }
+
+                $customerArray['fullname_and_email'] = sprintf(
+                    '%s %s - %s',
+                    $customerArray['firstname'],
+                    $customerArray['lastname'],
+                    $customerArray['email']
+                );
+
+                unset(
+                    $customerArray['passwd'],
+                    $customerArray['secure_key'],
+                    $customerArray['last_passwd_gen'],
+                    $customerArray['reset_password_token'],
+                    $customerArray['reset_password_validity']
+                );
+                $customers[$customerArray['id_customer']] = $customerArray;
             }
         }
 

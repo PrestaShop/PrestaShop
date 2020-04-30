@@ -1,13 +1,14 @@
 .btn {
   &.btn-action {
-    color: #576C72;
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    color: #576c72;
+    background-color: #fff;
+    @include border-radius(4px);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
 
-    &:disabled {
-      color: white;
-      background-color: #dddddd;
+    &:disabled,
+    &.disabled {
+      color: #fff;
+      background-color: #ddd;
       box-shadow: none;
     }
   }

@@ -13,14 +13,18 @@ const HomePage = require('@pages/FO/home');
 const ProductPage = require('@pages/FO/product');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 const CreditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 // Importing data
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_creditSlips_createFilterCreditSlips';
 
 let browser;
 let page;
@@ -79,6 +83,7 @@ describe('Create, filter and check credit slips file', async () => {
 
   describe('Create 2 credit slips for the same order', async () => {
     it('should go to FO and create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
       // Click on view my shop
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -114,6 +119,7 @@ describe('Create, filter and check credit slips file', async () => {
     });
 
     it('should go to the orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
@@ -123,22 +129,25 @@ describe('Create, filter and check credit slips file', async () => {
     });
 
     it('should go to the created order page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
       await this.pageObjects.ordersPage.goToOrder(1);
       const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     const tests = [
       {args: {productID: 1, quantity: 1, documentRow: 4}},
       {args: {productID: 1, quantity: 2, documentRow: 5}},
     ];
-    tests.forEach((test) => {
+    tests.forEach((test, index) => {
       it('should add a partial refund', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
         await this.pageObjects.viewOrderPage.clickOnPartialRefund();
         const textMessage = await this.pageObjects.viewOrderPage.addPartialRefundProduct(
           test.args.productID,
@@ -148,14 +157,16 @@ describe('Create, filter and check credit slips file', async () => {
       });
 
       it('should check the existence of the Credit slip document', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkCreditSlipDocument${index + 1}`, baseContext);
         const documentName = await this.pageObjects.viewOrderPage.getDocumentName(test.args.documentRow);
-        await expect(documentName).to.be.equal('Credit Slip');
+        await expect(documentName).to.be.equal('Credit slip');
       });
     });
   });
 
   describe('Filter Credit slips', async () => {
     it('should go to Credit slips page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.creditSlipsLink,
@@ -166,16 +177,34 @@ describe('Create, filter and check credit slips file', async () => {
     });
 
     it('should reset all filters and get number of credit slips', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
       numberOfCreditSlips = await this.pageObjects.creditSlipsPage.resetAndGetNumberOfLines();
       await expect(numberOfCreditSlips).to.be.above(0);
     });
 
     const tests = [
-      {args: {filterBy: 'id_credit_slip', filterValue: 1, columnName: 'id_order_slip'}},
-      {args: {filterBy: 'id_order', filterValue: 4, columnName: 'id_order'}},
+      {
+        args:
+          {
+            testIdentifier: 'filterIdCreditSlip',
+            filterBy: 'id_credit_slip',
+            filterValue: 1,
+            columnName: 'id_order_slip',
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterIdOrder',
+            filterBy: 'id_order',
+            filterValue: 4,
+            columnName: 'id_order',
+          },
+      },
     ];
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         await this.pageObjects.creditSlipsPage.filterCreditSlips(
           test.args.filterBy,
           test.args.filterValue,
@@ -192,12 +221,14 @@ describe('Create, filter and check credit slips file', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfCreditSlipsAfterReset = await this.pageObjects.creditSlipsPage.resetAndGetNumberOfLines();
         await expect(numberOfCreditSlipsAfterReset).to.be.equal(numberOfCreditSlips);
       });
     });
 
     it('should filter by Date issued \'From\' and \'To\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterDateIssued', baseContext);
       await this.pageObjects.creditSlipsPage.filterCreditSlipsByDate(dateToday, dateToday);
       const numberOfCreditSlipsAfterFilter = await this.pageObjects.creditSlipsPage.getNumberOfElementInGrid();
       await expect(numberOfCreditSlipsAfterFilter).to.be.at.most(numberOfCreditSlips);
@@ -211,6 +242,7 @@ describe('Create, filter and check credit slips file', async () => {
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterDateIssuedReset', baseContext);
       const numberOfCreditSlipsAfterReset = await this.pageObjects.creditSlipsPage.resetAndGetNumberOfLines();
       await expect(numberOfCreditSlipsAfterReset).to.be.equal(numberOfCreditSlips);
     });
@@ -223,6 +255,12 @@ describe('Create, filter and check credit slips file', async () => {
   creditSlips.forEach((creditSlip) => {
     describe(`Download the ${creditSlip.args.number} Credit slips and check it`, async () => {
       it(`should filter by the credit slip id '${creditSlip.args.id}'`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `filterToDownload${creditSlip.args.number}`,
+          baseContext,
+        );
         await this.pageObjects.creditSlipsPage.filterCreditSlips(
           'id_credit_slip',
           creditSlip.args.id,
@@ -235,6 +273,7 @@ describe('Create, filter and check credit slips file', async () => {
       });
 
       it(`should download the ${creditSlip.args.number} credit slip and check the file existence`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `download${creditSlip.args.number}`, baseContext);
         await this.pageObjects.creditSlipsPage.downloadCreditSlip();
         const exist = await files.checkFileExistence(creditSlip.args.fileName);
         await expect(exist).to.be.true;

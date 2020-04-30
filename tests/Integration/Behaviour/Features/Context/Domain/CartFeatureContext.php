@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -41,10 +41,12 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\CreateEmptyCustomerCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SetFreeShippingToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartAddressesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -56,14 +58,21 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function addCurrencyToContext($currencyIsoCode)
     {
-        $currency = new Currency();
-        $currency->name = $currencyIsoCode;
-        $currency->precision = 2;
-        $currency->iso_code = $currencyIsoCode;
-        $currency->active = 1;
-        $currency->conversion_rate = 1;
+        $currencyId = (int) Currency::getIdByIsoCode($currencyIsoCode);
+
+        if ($currencyId) {
+            $currency = new Currency($currencyId);
+        } else {
+            $currency = new Currency();
+            $currency->name = $currencyIsoCode;
+            $currency->precision = 2;
+            $currency->iso_code = $currencyIsoCode;
+            $currency->active = 1;
+            $currency->conversion_rate = 1;
+        }
 
         Context::getContext()->currency = $currency;
+        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
     }
 
     /**
@@ -90,6 +99,29 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update the cart :cartReference currency to :currencyReference
+     *
+     * @param string $cartReference
+     * @param string $currencyReference
+     */
+    public function updateCartCurrency(string $cartReference, string $currencyReference)
+    {
+        /** @var Currency $currency */
+        $currency = SharedStorage::getStorage()->get($currencyReference);
+
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+
+        $this->getCommandBus()->handle(
+            new UpdateCartCurrencyCommand(
+                $cartId,
+                (int) $currency->id
+            )
+        );
+
+        Cart::resetStaticCache();
+    }
+
+    /**
      * @When I add :quantity products :productName to the cart :cartReference
      *
      * @param int $quantity
@@ -98,22 +130,23 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function addProductsToCarts(int $quantity, string $productName, string $cartReference)
     {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
-        if (!$productId) {
-            throw new RuntimeException(sprintf('Product with name "%s" does not exist', $productName));
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
         }
+
+        /** @var FoundProduct $product */
+        $product = reset($products);
 
         $this->getCommandBus()->handle(
             new UpdateProductQuantityInCartCommand(
                 SharedStorage::getStorage()->get($cartReference),
-                $productId,
+                $product->getProductId(),
                 (int) $quantity
             )
         );
-        SharedStorage::getStorage()->set($productName, $productId);
+        SharedStorage::getStorage()->set($productName, $product->getProductId());
 
         // Clear cart static cache or it will have no products in next calls
         Cart::resetStaticCache();
