@@ -37,15 +37,15 @@ class Payment {
   init() {
     let $body = $('body');
 
-    $body.on('change', this.conditionsSelector + ' input[type="checkbox"]', $.proxy(this.toggleOrderButton, this));
+    $body.on('change', `${this.conditionsSelector} input[type="checkbox"]`, $.proxy(this.toggleOrderButton, this));
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
-    $body.on('click', this.confirmationSelector + ' button', $.proxy(this.confirm, this));
+    $body.on('click', `${this.confirmationSelector} button`, $.proxy(this.confirm, this));
 
     this.collapseOptions();
   }
 
   collapseOptions() {
-    $(this.additionalInformatonSelector + ', ' + this.optionsForm).hide();
+    $(`${this.additionalInformatonSelector}, ${this.optionsForm}`).hide();
   }
 
   getSelectedOption() {
@@ -66,7 +66,7 @@ class Payment {
 
   toggleOrderButton() {
     var show = true;
-    $(this.conditionsSelector + ' input[type="checkbox"]').each((_, checkbox) => {
+    $(`${this.conditionsSelector} input[type="checkbox"]`).each((_, checkbox) => {
       if (!checkbox.checked) {
         show = false;
       }
@@ -79,11 +79,11 @@ class Payment {
       show = false;
     }
 
-    $('#' + selectedOption + '-additional-information').show();
-    $('#pay-with-' + selectedOption + '-form').show();
+    $(`#${selectedOption}-additional-information`).show();
+    $(`#pay-with-${selectedOption}-form`).show();
 
     $('.js-payment-binary').hide();
-    if ($('#' + selectedOption).hasClass('binary')) {
+    if ($(`#${selectedOption}`).hasClass('binary')) {
       var paymentOption = this.getPaymentOptionSelector(selectedOption);
       this.hideConfirmation();
       $(paymentOption).show();
@@ -95,7 +95,7 @@ class Payment {
       }
     } else {
       this.showConfirmation();
-      $(this.confirmationSelector + ' button').toggleClass('disabled', !show);
+      $(`${this.confirmationSelector} button`).toggleClass('disabled', !show);
 
       if (show) {
         $(this.conditionAlertSelector).hide();
@@ -126,8 +126,8 @@ class Payment {
       return;
     }
 
-    $(this.confirmationSelector + ' button').addClass('disabled');
-    $('#pay-with-' + option + '-form form').submit();
+    $(`${this.confirmationSelector} button`).addClass('disabled');
+    $(`#pay-with-${option}-form form`).submit();
   }
 }
 
