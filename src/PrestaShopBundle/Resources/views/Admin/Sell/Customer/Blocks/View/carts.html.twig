@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="customer-carts-card card">
   <h3 class="card-header">
     <i class="material-icons">shopping_cart</i>
     {{ 'Carts'|trans({}, 'Admin.Global') }}
@@ -45,12 +45,12 @@
         {% for cart in customerInformation.cartsInformation %}
           {% set cartViewUrl = getAdminLink('AdminCarts', true, {'id_cart': cart.cartId, 'viewcart': 1}) %}
 
-          <tr>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>
-            <td class="js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartTotal }}</td>
-            <td class="text-right">
+          <tr class="customer-cart">
+            <td class="customer-cart-id js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartId }}</td>
+            <td class="customer-cart-date js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartCreationDate }}</td>
+            <td class="customer-cart-carrier js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.carrierName }}</td>
+            <td class="customer-cart-total js-linkable-item cursor-pointer" data-linkable-href="{{ cartViewUrl }}">{{ cart.cartTotal }}</td>
+            <td class="customer-cart-actions text-right">
               <div class="btn-group-action">
                 <div class="btn-group">
                   <a href="{{ cartViewUrl }}"

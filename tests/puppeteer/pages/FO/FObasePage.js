@@ -8,12 +8,15 @@ module.exports = class Home extends CommonPage {
     // Selectors for home page
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
+    this.desktopLogoLink = `${this.desktopLogo} a`;
     this.cartProductsCount = '#_desktop_cart span.cart-products-count';
+    this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
     this.contactLink = '#contact-link';
     this.categoryMenu = '#category-%ID > a';
     this.languageSelectorDiv = '#_desktop_language_selector';
+    this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorMenuItemLink = `${this.languageSelectorDiv} ul li a[data-iso-code='%LANG']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
@@ -32,7 +35,8 @@ module.exports = class Home extends CommonPage {
    * go to the home page
    */
   async goToHomePage() {
-    await this.waitForSelectorAndClick(this.desktopLogo);
+    await this.waitForVisibleSelector(this.desktopLogo);
+    await this.clickAndWaitForNavigation(this.desktopLogoLink);
   }
 
   /**
@@ -58,10 +62,7 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<void>}
    */
   async goToLoginPage() {
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.userInfoLink),
-    ]);
+    await this.clickAndWaitForNavigation(this.userInfoLink);
   }
 
   /**
@@ -77,10 +78,7 @@ module.exports = class Home extends CommonPage {
    * @return {Promise<void>}
    */
   async logout() {
-    await Promise.all([
-      this.page.click(this.logoutLink),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-    ]);
+    await this.clickAndWaitForNavigation(this.logoutLink);
   }
 
   /**
@@ -91,13 +89,19 @@ module.exports = class Home extends CommonPage {
   async changeLanguage(lang = 'en') {
     await Promise.all([
       this.page.click(this.languageSelectorExpandIcon),
-      this.page.waitForSelector(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
+      this.waitForVisibleSelector(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.click(this.languageSelectorMenuItemLink.replace('%LANG', lang)),
-    ]);
+    await this.clickAndWaitForNavigation(this.languageSelectorMenuItemLink.replace('%LANG', lang));
   }
+
+  /**
+   * Get shop language
+   * @returns {Promise<string>}
+   */
+  getShopLanguage() {
+    return this.getTextContent(this.defaultLanguageSpan);
+  }
+
 
   /**
    * Return true if language exist in FO
@@ -140,5 +144,37 @@ module.exports = class Home extends CommonPage {
    */
   async getFooterLinksBlockTitle(position) {
     return this.getTextContent(this.wrapperTitle.replace('%POSITION', position));
+  }
+
+  /**
+   * Get cart notifications number
+   * @returns {Promise<integer>}
+   */
+  async getCartNotificationsNumber() {
+    return this.getNumberFromText(this.cartProductsCount);
+  }
+
+  /**
+   * Go to siteMap page
+   * @returns {Promise<void>}
+   */
+  async goToSiteMapPage() {
+    await this.clickAndWaitForNavigation(this.siteMapLink);
+  }
+
+  /**
+   * Go to cart page
+   * @returns {Promise<void>}
+   */
+  async goToCartPage() {
+    await this.clickAndWaitForNavigation(this.cartLink);
+  }
+
+  /**
+   * Go to Fo page
+   * @return {Promise<void>}
+   */
+  async goToFo() {
+    await this.goTo(global.FO.URL);
   }
 };

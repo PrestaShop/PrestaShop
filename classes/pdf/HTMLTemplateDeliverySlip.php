@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,15 +29,22 @@
  */
 class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 {
+    /**
+     * @var Order
+     */
     public $order;
+
+    /** @var OrderInvoice Order invoice */
+    public $order_invoice;
 
     /**
      * @param OrderInvoice $order_invoice
-     * @param $smarty
+     * @param Smarty $smarty
+     * @param bool $bulk_mode
      *
      * @throws PrestaShopException
      */
-    public function __construct(OrderInvoice $order_invoice, $smarty, $bulk_mode = false)
+    public function __construct(OrderInvoice $order_invoice, Smarty $smarty, $bulk_mode = false)
     {
         $this->order_invoice = $order_invoice;
         $this->order = new Order($this->order_invoice->id_order);

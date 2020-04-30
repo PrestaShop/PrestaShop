@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,4 +31,22 @@ namespace PrestaShopBundle\Routing\Linter\Exception;
  */
 class NamingConventionException extends LinterException
 {
+    /**
+     * @var string
+     */
+    protected $expectedRouteName;
+
+    public function __construct($message = '', $code = 0, \RuntimeException $previous = null, $expectedRouteName = null)
+    {
+        $this->expectedRouteName = $expectedRouteName;
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedRouteName(): string
+    {
+        return $this->expectedRouteName;
+    }
 }

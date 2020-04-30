@@ -13,6 +13,10 @@ const AddCurrencyPage = require('@pages/BO/international/currencies/add');
 const FOBasePage = require('@pages/FO/FObasePage');
 // Import Data
 const {Currencies} = require('@data/demo/currencies');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_international_localization_currencies_CreateUnofficialCurrency';
 
 let browser;
 let page;
@@ -36,9 +40,8 @@ Create unofficial currency
 Check data created in table
 Check Creation of currency in FO
 Delete currency
-Test disabled due to the issue described here : https://github.com/PrestaShop/PrestaShop/issues/17040
  */
-describe.skip('Create unofficial currency and check it in FO', async () => {
+describe('Create unofficial currency and check it in FO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -52,6 +55,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
   loginCommon.loginBO();
 
   it('should go to localization page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
       this.pageObjects.boBasePage.localizationLink,
@@ -61,25 +65,29 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.localizationPage.pageTitle);
   });
 
-  it('should go to currency page', async function () {
+  it('should go to currencies page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
     await this.pageObjects.localizationPage.goToSubTabCurrencies();
     const pageTitle = await this.pageObjects.currenciesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.currenciesPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfCurrencies = await this.pageObjects.currenciesPage.resetAndGetNumberOfLines();
     await expect(numberOfCurrencies).to.be.above(0);
   });
 
   describe('Create unofficial currency', async () => {
     it('should go to create new currency page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCurrencyPage', baseContext);
       await this.pageObjects.currenciesPage.goToAddNewCurrencyPage();
       const pageTitle = await this.pageObjects.addCurrencyPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addCurrencyPage.pageTitle);
     });
 
     it('should create unofficial currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createUnofficialCurrency', baseContext);
       const textResult = await this.pageObjects.addCurrencyPage.createUnOfficialCurrency(Currencies.toman);
       await expect(textResult).to.contains(this.pageObjects.currenciesPage.successfulCreationMessage);
       const numberOfCurrenciesAfterCreation = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
@@ -89,6 +97,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
     it(
       `should filter by iso code of currency '${Currencies.toman.isoCode}' and check values created in table`,
       async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCurrencyValues', baseContext);
         await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.toman.isoCode);
         const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
         await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
@@ -104,6 +113,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
     );
 
     it('should go to FO and check the new currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCurrencyInFO', baseContext);
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
       await this.pageObjects.foBasePage.changeCurrency(`${Currencies.toman.isoCode} ${Currencies.toman.symbol}`);
@@ -112,6 +122,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
     });
 
     it('should reset filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterCreation', baseContext);
       const numberOfCurrenciesAfterReset = await this.pageObjects.currenciesPage.resetAndGetNumberOfLines();
       await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 1);
     });
@@ -119,6 +130,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
 
   describe('Disable and check currency in FO', async () => {
     it(`should filter by iso code of currency '${Currencies.toman.isoCode}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDisableCurrency', baseContext);
       await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.toman.isoCode);
       const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
       await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
@@ -127,6 +139,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
     });
 
     it('should disable currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableCurrency', baseContext);
       const isActionPerformed = await this.pageObjects.currenciesPage.updateEnabledValue(1, false);
       if (isActionPerformed) {
         const resultMessage = await this.pageObjects.currenciesPage.getTextContent(
@@ -139,6 +152,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
     });
 
     it('should go to FO and check the new currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDisabledCurrency', baseContext);
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
       let textError = '';
@@ -155,6 +169,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
     });
 
     it('should reset filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDisable', baseContext);
       const numberOfCurrenciesAfterReset = await this.pageObjects.currenciesPage.resetAndGetNumberOfLines();
       await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies + 1);
     });
@@ -162,6 +177,7 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
 
   describe('Delete currency created ', async () => {
     it(`should filter by iso code of currency '${Currencies.toman.isoCode}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
       await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.toman.isoCode);
       const numberOfCurrenciesAfterFilter = await this.pageObjects.currenciesPage.getNumberOfElementInGrid();
       await expect(numberOfCurrenciesAfterFilter).to.be.equal(numberOfCurrencies);
@@ -170,11 +186,13 @@ describe.skip('Create unofficial currency and check it in FO', async () => {
     });
 
     it('should delete currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
       const result = await this.pageObjects.currenciesPage.deleteCurrency(1);
       await expect(result).to.be.equal(this.pageObjects.currenciesPage.successfulDeleteMessage);
     });
 
     it('should reset filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
       const numberOfCurrenciesAfterReset = await this.pageObjects.currenciesPage.resetAndGetNumberOfLines();
       await expect(numberOfCurrenciesAfterReset).to.be.equal(numberOfCurrencies);
     });

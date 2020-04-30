@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 export default class EntityFieldsValidator {
   /**
@@ -34,7 +34,7 @@ export default class EntityFieldsValidator {
   static validate() {
     $('.js-validation-error').addClass('d-none');
 
-    return this._checkDuplicateSelectedValues() && this._checkRequiredFields();
+    return this.checkDuplicateSelectedValues() && this.checkRequiredFields();
   }
 
   /**
@@ -43,12 +43,12 @@ export default class EntityFieldsValidator {
    * @returns {boolean}
    * @private
    */
-  static _checkDuplicateSelectedValues() {
+  static checkDuplicateSelectedValues() {
     const uniqueFields = [];
     let valid = true;
 
     $('.js-entity-field select').each(function () {
-      let value = $(this).val();
+      const value = $(this).val();
 
       if (value === 'no') {
         return;
@@ -72,17 +72,19 @@ export default class EntityFieldsValidator {
    * @returns {boolean}
    * @private
    */
-  static _checkRequiredFields() {
-    let requiredImportFields = $('.js-import-data-table').data('required-fields');
+  static checkRequiredFields() {
+    const requiredImportFields = $('.js-import-data-table').data('required-fields');
 
-    for (let key in requiredImportFields) {
-      if (0 === $(`option[value="${requiredImportFields[key]}"]:selected`).length) {
+    /* eslint-disable-next-line */
+    for (const key in requiredImportFields) {
+      if ($(`option[value="${requiredImportFields[key]}"]:selected`).length === 0) {
         $('.js-missing-column-warning').removeClass('d-none');
         $('.js-missing-column').text($(`option[value="${requiredImportFields[key]}"]:first`).text());
 
         return false;
       }
     }
+
     return true;
   }
 }

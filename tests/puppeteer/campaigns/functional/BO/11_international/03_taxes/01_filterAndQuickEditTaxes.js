@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const TaxesPage = require('@pages/BO/international/taxes');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_international_localization_taxes_filterAndQuickEditTaxes';
 
 let browser;
 let page;
@@ -39,6 +43,7 @@ describe('Filter And Quick Edit taxes', async () => {
   loginCommon.loginBO();
 
   it('should go to Taxes page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
       this.pageObjects.boBasePage.taxesLink,
@@ -48,20 +53,44 @@ describe('Filter And Quick Edit taxes', async () => {
   });
 
   it('should reset all filters and get Number of Taxes in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
     await expect(numberOfTaxes).to.be.above(0);
   });
   // 1 : Filter Taxes
   describe('Filter Taxes', async () => {
     const tests = [
-      {args: {filterType: 'input', filterBy: 'id_tax', filterValue: DefaultFrTax.id}},
-      {args: {filterType: 'input', filterBy: 'name', filterValue: DefaultFrTax.name}},
-      {args: {filterType: 'input', filterBy: 'rate', filterValue: DefaultFrTax.rate}},
-      {args: {filterType: 'select', filterBy: 'active', filterValue: DefaultFrTax.enabled}, expected: 'check'},
+      {
+        args: {
+          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_tax', filterValue: DefaultFrTax.id.toString(),
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: DefaultFrTax.name,
+        },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterRate',
+            filterType: 'input',
+            filterBy: 'rate',
+            filterValue: DefaultFrTax.rate.toString(),
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterActive', filterType: 'select', filterBy: 'active', filterValue: DefaultFrTax.enabled,
+          },
+        expected: 'check',
+      },
     ];
 
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         await this.pageObjects.taxesPage.filterTaxes(test.args.filterType, test.args.filterBy, test.args.filterValue);
         const numberOfTaxesAfterFilter = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
         await expect(numberOfTaxesAfterFilter).to.be.at.most(numberOfTaxes);
@@ -76,6 +105,7 @@ describe('Filter And Quick Edit taxes', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
         await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
       });
@@ -84,6 +114,7 @@ describe('Filter And Quick Edit taxes', async () => {
   // 2 : Edit taxes in list
   describe('Quick Edit Taxes', async () => {
     it('should filter by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
       await this.pageObjects.taxesPage.filterTaxes('input', 'name', DefaultFrTax.name);
       const numberOfTaxesAfterFilter = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
       await expect(numberOfTaxesAfterFilter).to.be.at.most(numberOfTaxes);
@@ -97,6 +128,7 @@ describe('Filter And Quick Edit taxes', async () => {
     ];
     tests.forEach((test) => {
       it(`should ${test.args.action} first tax`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Tax`, baseContext);
         const isActionPerformed = await this.pageObjects.taxesPage.updateEnabledValue(
           1,
           test.args.enabledValue,
@@ -113,6 +145,7 @@ describe('Filter And Quick Edit taxes', async () => {
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
       const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
     });

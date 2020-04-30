@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -629,6 +629,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
     public function displayAjaxGetKpi()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         $tooltip = null;
         switch (Tools::getValue('kpi')) {
@@ -1039,6 +1043,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
      */
     public function displayAjaxGraphDraw()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $module = Tools::getValue('module');
         $render = Tools::getValue('render');
         $type = Tools::getValue('type');
@@ -1071,6 +1079,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
      */
     public function displayAjaxGraphGrid()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $module = Tools::getValue('module');
         $render = Tools::getValue('render');
         $type = Tools::getValue('type');

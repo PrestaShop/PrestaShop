@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,22 +18,35 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="mb-3">
   {{ form_start(updateOrderStatusActionBarForm, {
     'action': path('admin_orders_update_status', {'orderId': orderForViewing.id}),
     'attr': {
-      'class': 'form-inline d-inline-block',
       'id': 'update_order_status_action_form'
     }
   }) }}
 
   <div class="input-group">
-    {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {'attr': {'class': 'mr-1'}, 'id': 'update_order_status_action_input'}) }}
+    {% set backgroundColor = '#ffffff' %}
+    {% set isBright = true %}
+    {% for choice in updateOrderStatusActionBarForm.new_order_status_id.vars.choices %}
+      {% if choice.value == updateOrderStatusActionBarForm.new_order_status_id.vars.data %}
+        {% set backgroundColor = choice.attr['data-background-color'] %}
+        {% set isBright = choice.attr['data-is-bright'] %}
+      {% endif %}
+    {% endfor %}
+    <div class="select-status{% if isBright %} is-bright{% endif %}" id="update_order_status_action_input_wrapper" style="background-color:{{ backgroundColor }};">
+        {{ form_widget(updateOrderStatusActionBarForm.new_order_status_id, {
+          'attr': {
+            'class': 'select-status-colored',
+          },
+          'id': 'update_order_status_action_input',
+        }) }}
+    </div>
 
     <button class="btn btn-action ml-2"
             id="update_order_status_action_btn"
@@ -50,7 +63,7 @@
   {{ form_end(updateOrderStatusActionBarForm) }}
 
   {% if orderForViewing.documents.canGenerateInvoice %}
-    <form class="form-inline d-inline-block form-horizontal ml-2">
+    <form class="order-actions-invoice">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
            class="btn btn-action">
@@ -61,8 +74,17 @@
     </form>
   {% endif %}
 
+  <form class="order-actions-print">
+    <div class="input-group">
+      <button type="button" class="btn btn-action js-print-order-view-page">
+        <i class="material-icons" aria-hidden="true">print</i>
+        {{ 'Print order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+  </form>
+
   {% if orderForViewing.documents.canGenerateDeliverySlip %}
-    <form class="form-inline d-inline-block form-horizontal ml-2">
+    <form class="order-actions-delivery">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
            class="btn btn-action">
@@ -72,9 +94,32 @@
       </div>
     </form>
   {% endif %}
+
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
-  {% if orderForViewing.hasInvoice() %}
-    <div class="form-inline d-inline-block form-horizontal ml-2">
-    </div>
+
+  {% if merchandiseReturnEnabled %}
+    {% if orderForViewing.isDelivered() %}
+      <button class="btn btn-action return-product-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+        <i class="material-icons">swap_horiz</i>
+        {{ 'Return products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    {% elseif orderForViewing.hasBeenPaid() or orderForViewing.hasPayments() %}
+      <button class="btn btn-action standard-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+        <i class="material-icons">swap_horiz</i>
+        {{ 'Standard refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    {% else %}
+      <button class="btn btn-action cancel-product-display" type="button">
+        {{ 'Cancel products'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    {% endif %}
   {% endif %}
-</div>
+
+  {% if orderForViewing.hasBeenPaid() or orderForViewing.hasPayments() %}
+      <button class="btn btn-action partial-refund-display" type="button"{% if not orderForViewing.isRefundable() %} disabled{% endif %}>
+        <i class="material-icons">swap_horiz</i>
+        {{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+  {% endif %}
+
+  {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_navigation.html.twig' %}

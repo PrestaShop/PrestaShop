@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,11 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 
 /**
- * Base class for both add commands this class is abstract because it must not be used
- * as is since no handler is expecting it. Instead use AddOfficialCurrencyCommand or
- * AddUnofficialCurrencyCommand.
+ * Class AddCurrencyCommand used to add an official currency
  */
-abstract class AddCurrencyCommand
+class AddCurrencyCommand
 {
     /**
      * @var AlphaIsoCode

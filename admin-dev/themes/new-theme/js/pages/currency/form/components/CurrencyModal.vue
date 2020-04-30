@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,35 +18,36 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <modal
     confirmation
-    :modalTitle="modalTitle"
+    :modal-title="modalTitle"
     @close="$emit('close')"
     @confirm="$emit('applyCustomization', customData)"
     v-if="language !== null"
   >
     <template slot="body">
-      <currency-format-form :language="language" @input="customData = $event"></currency-format-form>
+      <currency-format-form
+        :language="language"
+        @input="customData = $event"
+      />
     </template>
   </modal>
 </template>
 
 <script>
-  import CurrencyFormatForm from './CurrencyFormatForm';
   import Modal from '@vue/components/Modal';
+  import CurrencyFormatForm from './CurrencyFormatForm';
 
   export default {
-    name: 'currency-modal',
-    data: () => {
-      return {
-        customData: null
-      }
-    },
+    name: 'CurrencyModal',
+    data: () => ({
+      customData: null,
+    }),
     components: {
       CurrencyFormatForm,
       Modal,
@@ -55,13 +56,13 @@
       language: {
         type: Object,
         required: false,
-        default: null
-      }
+        default: null,
+      },
     },
     computed: {
       modalTitle() {
-        return this.$t('modal.title') + (null !== this.language ? ` + ${this.language.name}`  : '');
-      }
+        return this.$t('modal.title') + (this.language !== null ? ` + ${this.language.name}` : '');
+      },
     },
   };
 </script>

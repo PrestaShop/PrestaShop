@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,23 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
 <div id="search_filters_suppliers">
   <section class="facet">
-    <h1 class="h6 text-uppercase facet-label">
-      {if $display_link_supplier}<a href="{$page_link}" title="{l s='Suppliers' d='Shop.Theme.Catalog'}">{/if}
+    {if $display_link_supplier}
+      <a href="{$page_link}" class="h6 text-uppercase facet-label" title="{l s='Suppliers' d='Shop.Theme.Catalog'}">
         {l s='Suppliers' d='Shop.Theme.Catalog'}
-      {if $display_link_supplier}</a>{/if}
-    </h1>
+      </a>
+    {else}
+      <p class="h6 text-uppercase facet-label">
+        {l s='Suppliers' d='Shop.Theme.Catalog'}
+      </p>
+    {/if}
+
     <div>
       {if $suppliers}
         {include file="module:ps_supplierlist/views/templates/_partials/$supplier_display_type.tpl" suppliers=$suppliers}

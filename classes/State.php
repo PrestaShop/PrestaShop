@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -203,21 +203,33 @@ class StateCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      * @param bool $active true if the state must be active
+     * @param string $orderBy order by field
+     * @param string $sort sort key (ASC or DESC)
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
-    public static function getStatesByIdCountry($idCountry, $active = false)
+    public static function getStatesByIdCountry($idCountry, $active = false, $orderBy = null, $sort = 'ASC')
     {
         if (empty($idCountry)) {
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->executeS(
-            '
-			SELECT *
-			FROM `' . _DB_PREFIX_ . 'state` s
-			WHERE s.`id_country` = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : '')
-        );
+        $available_sort = ['DESC', 'ASC', 'asc', 'desc'];
+
+        $sql = new DbQuery();
+        $sql->select('*');
+        $sql->from('state', 's');
+        $sql->where('s.id_country = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : ''));
+
+        if (array_key_exists($orderBy, static::$definition['fields'])) {
+            $sort = trim($sort);
+            if (in_array($sort, $available_sort)) {
+                $orderBy = $orderBy . ' ' . $sort;
+            }
+            $sql->orderBy($orderBy);
+        }
+
+        return Db::getInstance()->executeS($sql);
     }
 
     /**

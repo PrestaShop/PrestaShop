@@ -20,22 +20,25 @@ module.exports = class Employees extends BOBasePage {
     this.employeesListTableColumn = `${this.employeesListTableRow} td.column-%COLUMN`;
     this.employeesListTableColumnAction = this.employeesListTableColumn.replace('%COLUMN', 'actions');
     this.employeesListTableToggleDropDown = `${this.employeesListTableColumnAction} a[data-toggle='dropdown']`;
-    this.employeesListTableDeleteLink = `${this.employeesListTableColumnAction} a[data-url]`;
+    this.employeesListTableDeleteLink = `${this.employeesListTableColumnAction} a[data-confirm-button-label='Delete']`;
     this.employeesListTableEditLink = `${this.employeesListTableColumnAction} a[href*='edit']`;
-    this.employeesListColumnValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')} 
+    this.employeesListColumnValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')}
     i.grid-toggler-icon-valid`;
-    this.employeesListColumnNotValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')} 
+    this.employeesListColumnNotValidIcon = `${this.employeesListTableColumn.replace('%COLUMN', 'active')}
     i.grid-toggler-icon-not-valid`;
     // Filters
     this.employeeFilterInput = `${this.employeesListForm} #employee_%FILTERBY`;
     this.filterSearchButton = `${this.employeesListForm} button[name='employee[actions][search]']`;
     this.filterResetButton = `${this.employeesListForm} button[name='employee[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.employeesListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.employeesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.employeesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.employeesListForm} #employee_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.employeesListForm} #employee_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.employeesListForm} #employee_grid_bulk_action_delete_selection`;
+    // Delete modal
+    this.confirmDeleteModal = '#employee-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /*
@@ -130,13 +133,10 @@ module.exports = class Employees extends BOBasePage {
   async updateToggleColumnValue(row, valueWanted = true) {
     if (await this.getToggleColumnValue(row) !== valueWanted) {
       this.page.click(this.employeesListTableColumn.replace('%ROW', row).replace('%COLUMN', 'active'));
-      if (valueWanted) {
-        await this.page.waitForSelector(this.employeesListColumnValidIcon.replace('%ROW', row));
-      } else {
-        await this.page.waitForSelector(
-          this.employeesListColumnNotValidIcon.replace('%ROW', row),
-        );
-      }
+      await this.waitForVisibleSelector(
+        (valueWanted ? this.employeesListColumnValidIcon : this.employeesListColumnNotValidIcon)
+          .replace('%ROW', row),
+      );
       return true;
     }
     return false;
@@ -148,20 +148,28 @@ module.exports = class Employees extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteEmployee(row) {
-    this.dialogListener();
     // Click on dropDown
     await Promise.all([
       this.page.click(this.employeesListTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
+      this.waitForVisibleSelector(
+        `${this.employeesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
       ),
     ]);
-    // Click on delete
+    // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.employeesListTableDeleteLink.replace('%ROW', row)),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
+    await this.confirmDeleteEmployees();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteEmployees() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**
@@ -173,12 +181,12 @@ module.exports = class Employees extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
@@ -194,18 +202,15 @@ module.exports = class Employees extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,14 +31,15 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
-use PrestaShop\PrestaShop\Core\Domain\Notification\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -360,27 +361,29 @@ class CommonController extends FrameworkBundleAdminController
     ) {
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
-        /** @var GridDefinitionInterface $definition */
-        $definition = $definitionFactory->getDefinition();
 
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
+        if (!($definitionFactory instanceof FilterableGridDefinitionFactoryInterface)) {
+            /** @var ControllerResponseBuilder $responseBuilder */
+            $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
 
-        $filtersForm = $gridFilterFormFactory->create($definition);
-        $filtersForm->handleRequest($request);
-
-        $redirectParams = [];
-        if ($filtersForm->isSubmitted()) {
-            $redirectParams = [
-                'filters' => $filtersForm->getData(),
-            ];
+            return $controllerResponseBuilder->buildSearchResponse(
+                $definitionFactory,
+                $request,
+                $redirectRoute,
+                $redirectQueryParamsToKeep
+            );
         }
 
-        foreach ($redirectQueryParamsToKeep as $paramName) {
-            if ($request->query->has($paramName)) {
-                $redirectParams[$paramName] = $request->query->get($paramName);
-            }
-        }
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        return $this->redirectToRoute($redirectRoute, $redirectParams);
+        return $responseBuilder->buildSearchResponse(
+            $definitionFactory,
+            $request,
+            $definitionFactory->getFilterId(),
+            $redirectRoute,
+            $redirectQueryParamsToKeep
+        );
     }
 }

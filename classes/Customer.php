@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -103,7 +103,7 @@ class CustomerCore extends ObjectModel
     /** @var int Max payment day */
     public $max_payment_days = 0;
 
-    /** @var int Password */
+    /** @var string Password */
     public $passwd;
 
     /** @var string Datetime Password */
@@ -150,6 +150,10 @@ class CustomerCore extends ObjectModel
     public $reset_password_validity;
 
     protected $webserviceParameters = [
+        'objectMethods' => [
+            'add' => 'addWs',
+            'update' => 'updateWs',
+        ],
         'fields' => [
             'id_default_group' => ['xlink_resource' => 'groups'],
             'id_lang' => ['xlink_resource' => 'languages'],
@@ -266,6 +270,36 @@ class CustomerCore extends ObjectModel
     }
 
     /**
+     * Adds current Customer as a new Object to the database.
+     *
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the Customer has been successfully added
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function addWs($autodate = true, $null_values = false)
+    {
+        if (Customer::customerExists($this->email)) {
+            WebserviceRequest::getInstance()->setError(
+                500,
+                $this->trans(
+                    'The email is already used, please choose another one',
+                     [],
+                    'Admin.Notifications.Error'
+                ),
+                140
+            );
+
+            return false;
+        }
+
+        return $this->add($autodate, $null_values);
+    }
+
+    /**
      * Updates the current Customer in the database.
      *
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
@@ -303,6 +337,37 @@ class CustomerCore extends ObjectModel
 
             return false;
         }
+    }
+
+    /**
+     * Updates the current Customer in the database.
+     *
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     *
+     * @return bool Indicates whether the Customer has been successfully updated
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function updateWs($nullValues = false)
+    {
+        if (Customer::customerExists($this->email)
+            && Customer::customerExists($this->email, true) !== (int) $this->id
+        ) {
+            WebserviceRequest::getInstance()->setError(
+                500,
+                $this->trans(
+                    'The email is already used, please choose another one',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
+                141
+            );
+
+            return false;
+        }
+
+        return $this->update($nullValues = false);
     }
 
     /**
@@ -373,11 +438,21 @@ class CustomerCore extends ObjectModel
      * @param bool $ignoreGuest
      *
      * @return bool|Customer|CustomerCore Customer instance
+     *
+     * @throws \InvalidArgumentException if given input is not valid
      */
     public function getByEmail($email, $plaintextPassword = null, $ignoreGuest = true)
     {
-        if (!Validate::isEmail($email) || ($plaintextPassword && !Validate::isPasswd($plaintextPassword))) {
-            die(Tools::displayError());
+        if (!Validate::isEmail($email)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Cannot get customer by email as %s is not a valid email',
+                $email
+            ));
+        }
+        if (($plaintextPassword && !Validate::isPlaintextPassword($plaintextPassword))) {
+            throw new \InvalidArgumentException(
+                'Cannot get customer by email as given password is not a valid password'
+            );
         }
 
         $shopGroup = Shop::getGroupFromShop(Shop::getContextShopID(), false);
@@ -845,10 +920,10 @@ class CustomerCore extends ObjectModel
         AND o.valid = 1');
 
         $result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT c.`date_add` AS last_visit
-		FROM `' . _DB_PREFIX_ . 'connections` c
-      	LEFT JOIN `' . _DB_PREFIX_ . 'guest` g USING (id_guest)
-		WHERE g.`id_customer` = ' . (int) $this->id . ' ORDER BY c.`date_add` DESC ');
+        SELECT c.`date_add` AS last_visit
+        FROM `' . _DB_PREFIX_ . 'connections` c
+        LEFT JOIN `' . _DB_PREFIX_ . 'guest` g USING (id_guest)
+        WHERE g.`id_customer` = ' . (int) $this->id . ' ORDER BY c.`date_add` DESC ');
 
         $result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
         SELECT (YEAR(CURRENT_DATE)-YEAR(c.`birthday`)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(c.`birthday`, 5)) AS age
@@ -894,14 +969,14 @@ class CustomerCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             '
-    		SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
-    		FROM `' . _DB_PREFIX_ . 'guest` g
-    		LEFT JOIN `' . _DB_PREFIX_ . 'connections` c ON c.id_guest = g.id_guest
-    		LEFT JOIN `' . _DB_PREFIX_ . 'connections_page` cp ON c.id_connections = cp.id_connections
-    		WHERE g.`id_customer` = ' . (int) $this->id . '
-    		GROUP BY c.`id_connections`
-    		ORDER BY c.date_add DESC
-    		LIMIT 10'
+            SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
+            FROM `' . _DB_PREFIX_ . 'guest` g
+            LEFT JOIN `' . _DB_PREFIX_ . 'connections` c ON c.id_guest = g.id_guest
+            LEFT JOIN `' . _DB_PREFIX_ . 'connections_page` cp ON c.id_connections = cp.id_connections
+            WHERE g.`id_customer` = ' . (int) $this->id . '
+            GROUP BY c.`id_connections`
+            ORDER BY c.date_add DESC
+            LIMIT 10'
         );
     }
 
@@ -1119,11 +1194,23 @@ class CustomerCore extends ObjectModel
         $this->cleanGroups();
         $this->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
         $this->id_default_group = Configuration::get('PS_CUSTOMER_GROUP');
+        $this->stampResetPasswordToken();
         if ($this->update()) {
             $vars = [
                 '{firstname}' => $this->firstname,
                 '{lastname}' => $this->lastname,
                 '{email}' => $this->email,
+                '{url}' => Context::getContext()->link->getPageLink(
+                    'password',
+                    true,
+                    null,
+                    sprintf(
+                        'token=%s&id_customer=%s&reset_token=%s',
+                        $this->secure_key,
+                        (int) $this->id,
+                        $this->reset_password_token
+                    )
+                ),
             ];
             Mail::Send(
                 (int) $idLang,

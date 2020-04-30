@@ -1,12 +1,12 @@
 .block-contact {
   color: $gray;
-  .block-contact-title{
-    color:$gray-darker;
+  .block-contact-title {
+    color: $gray-darker;
   }
 }
 .linklist {
   .blockcms-title a {
-    color:$gray-darker;
+    color: $gray-darker;
   }
 }
 .account-list a {
@@ -64,8 +64,8 @@
 }
 .facebook {
   background-image: url(../img/facebook.svg);
-  &::before{
-    content:"";
+  &::before {
+    content: "";
     background-image: url(../img/facebook-blue.svg);
   }
   &.icon-gray {
@@ -77,8 +77,8 @@
 }
 .twitter {
   background-image: url(../img/twitter.svg);
-  &::before{
-    content:"";
+  &::before {
+    content: "";
     background-image: url(../img/twitter-blue.svg);
   }
   &.icon-gray {
@@ -88,6 +88,12 @@
     }
   }
 }
+
+.linkedin {
+  background-image: url(../img/linkedin.svg);
+  background-position: center center;
+}
+
 .rss {
   background-image: url(../img/rss.svg);
 }
@@ -96,8 +102,8 @@
 }
 .googleplus {
   background-image: url(../img/gplus.svg);
-  &::before{
-    content:"";
+  &::before {
+    content: "";
     background-image: url(../img/gplus-blue.svg);
   }
   &.icon-gray {
@@ -107,15 +113,15 @@
     }
   }
 }
-#block_myaccount_infos{
-  .myaccount-title a{
-    color:$gray-darker;
+#block_myaccount_infos {
+  .myaccount-title a {
+    color: $gray-darker;
   }
 }
 .pinterest {
   background-image: url(../img/pinterest.svg);
-  &::before{
-    content:"";
+  &::before {
+    content: "";
     background-image: url(../img/pinterest-blue.svg);
   }
   &.icon-gray {
@@ -153,7 +159,6 @@
     display: inherit;
   }
 }
-
 
 @include media-breakpoint-down(sm) {
   .block_newsletter {

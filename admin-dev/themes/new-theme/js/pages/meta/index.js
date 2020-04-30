@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,10 +38,10 @@ import ShowcaseCardCloseExtension from '@components/showcase-card/extension/show
 import TaggableField from '@components/taggable-field';
 import TranslatableInput from '@components/translatable-input';
 import FiltersSubmitButtonEnablerExtension
-from '@components/grid/extension/filters-submit-button-enabler-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
 import MetaPageNameOptionHandler from '@pages/meta/meta-page-name-option-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const meta = new Grid('meta');

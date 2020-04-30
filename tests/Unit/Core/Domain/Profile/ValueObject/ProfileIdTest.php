@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,15 +32,28 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 
 class ProfileIdTest extends TestCase
 {
-    public function testItCreatesProfileWithValidValues()
+    /**
+     * @dataProvider createsProfileWithValidValuesData
+     */
+    public function testItCreatesProfileWithValidValues($idValue)
     {
-        $profileId = new ProfileId(1);
+        $profileId = new ProfileId($idValue);
 
-        $this->assertEquals(1, $profileId->getValue());
+        $this->assertEquals((int) $idValue, $profileId->getValue());
+    }
+
+    public function createsProfileWithValidValuesData()
+    {
+        return [
+            [1],
+            [42],
+            ['1'],
+            ['51'],
+        ];
     }
 
     /**
-     * @dataProvider testItExceptionThrownWithInvalidValuesData
+     * @dataProvider exceptionThrownWithInvalidValuesData
      */
     public function testItExceptionThrownWithInvalidValues($profileId)
     {
@@ -48,7 +61,7 @@ class ProfileIdTest extends TestCase
         new ProfileId($profileId);
     }
 
-    public function testItExceptionThrownWithInvalidValuesData()
+    public function exceptionThrownWithInvalidValuesData()
     {
         return [
             ['-1'],

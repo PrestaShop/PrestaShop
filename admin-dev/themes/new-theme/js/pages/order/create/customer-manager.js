@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@ import {EventEmitter} from '@components/event-emitter';
 import eventMap from '@pages/order/create/event-map';
 import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Responsible for customers managing. (search, select, get customer info etc.)
@@ -45,13 +45,14 @@ export default class CustomerManager {
     this.$customerSearchResultBlock = $(createOrderMap.customerSearchResultsBlock);
     this.customerRenderer = new CustomerRenderer();
 
-    this._initListeners();
+    this.initListeners();
+    this.initAddCustomerIframe();
 
     return {
-      search: searchPhrase => this._search(searchPhrase),
-      selectCustomer: event => this._selectCustomer(event),
-      loadCustomerCarts: currentCartId => this._loadCustomerCarts(currentCartId),
-      loadCustomerOrders: () => this._loadCustomerOrders(),
+      search: (searchPhrase) => this.search(searchPhrase),
+      selectCustomer: (event) => this.selectCustomer(event),
+      loadCustomerCarts: (currentCartId) => this.loadCustomerCarts(currentCartId),
+      loadCustomerOrders: () => this.loadCustomerOrders(),
     };
   }
 
@@ -60,10 +61,22 @@ export default class CustomerManager {
    *
    * @private
    */
-  _initListeners() {
-    this.$container.on('click', createOrderMap.changeCustomerBtn, () => this._changeCustomer());
-    this._onCustomerSearch();
-    this._onCustomerSelect();
+  initListeners() {
+    this.$container.on('click', createOrderMap.changeCustomerBtn, () => this.changeCustomer());
+    this.onCustomerSearch();
+    this.onCustomerSelect();
+    this.onCustomersNotFound();
+  }
+
+  /**
+   * @private
+   */
+  initAddCustomerIframe() {
+    $(createOrderMap.customerAddBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
   }
 
   /**
@@ -71,10 +84,30 @@ export default class CustomerManager {
    *
    * @private
    */
-  _onCustomerSearch() {
+  onCustomerSearch() {
     EventEmitter.on(eventMap.customerSearched, (response) => {
       this.activeSearchRequest = null;
+      this.customerRenderer.hideSearchingCustomers();
+
+      if (response.customers.length === 0) {
+        EventEmitter.emit(eventMap.customersNotFound);
+
+        return;
+      }
+
       this.customerRenderer.renderSearchResults(response.customers);
+    });
+  }
+
+  /**
+   * Listens for event of when no customers were found by search
+   *
+   * @private
+   */
+  onCustomersNotFound() {
+    EventEmitter.on(eventMap.customersNotFound, () => {
+      this.customerRenderer.showNotFoundCustomers();
+      this.customerRenderer.hideCheckoutHistoryBlock();
     });
   }
 
@@ -83,10 +116,20 @@ export default class CustomerManager {
    *
    * @private
    */
-  _onCustomerSelect() {
+  onCustomerSelect() {
     EventEmitter.on(eventMap.customerSelected, (event) => {
       const $chooseBtn = $(event.currentTarget);
       this.customerId = $chooseBtn.data('customer-id');
+
+      const createAddressUrl = this.router.generate(
+        'admin_addresses_create',
+        {
+          liteDisplaying: 1,
+          submitFormAjax: 1,
+          id_customer: this.customerId,
+        },
+      );
+      $(createOrderMap.addressAddBtn).attr('href', createAddressUrl);
 
       this.customerRenderer.displaySelectedCustomerBlock($chooseBtn);
     });
@@ -97,7 +140,7 @@ export default class CustomerManager {
    *
    * @private
    */
-  _changeCustomer() {
+  changeCustomer() {
     this.customerRenderer.showCustomerSearch();
   }
 
@@ -106,26 +149,28 @@ export default class CustomerManager {
    *
    * @param currentCartId
    */
-  _loadCustomerCarts(currentCartId) {
-    const customerId = this.customerId;
+  loadCustomerCarts(currentCartId) {
+    const {customerId} = this;
 
+    this.customerRenderer.showLoadingCarts();
     $.get(this.router.generate('admin_customers_carts', {customerId})).then((response) => {
       this.customerRenderer.renderCarts(response.carts, currentCartId);
     }).catch((e) => {
-      showErrorMessage(e.responseJSON.message);
+      window.showErrorMessage(e.responseJSON.message);
     });
   }
 
   /**
    * Loads customer orders list
    */
-  _loadCustomerOrders() {
-    const customerId = this.customerId;
+  loadCustomerOrders() {
+    const {customerId} = this;
 
+    this.customerRenderer.showLoadingOrders();
     $.get(this.router.generate('admin_customers_orders', {customerId})).then((response) => {
       this.customerRenderer.renderOrders(response.orders);
     }).catch((e) => {
-      showErrorMessage(e.responseJSON.message);
+      window.showErrorMessage(e.responseJSON.message);
     });
   }
 
@@ -134,7 +179,7 @@ export default class CustomerManager {
    *
    * @return {Number}
    */
-  _selectCustomer(chooseCustomerEvent) {
+  selectCustomer(chooseCustomerEvent) {
     EventEmitter.emit(eventMap.customerSelected, chooseCustomerEvent);
 
     return this.customerId;
@@ -142,10 +187,10 @@ export default class CustomerManager {
 
   /**
    * Searches for customers
-   * @todo: fix showing not found customers and rerender after change customer
+   *
    * @private
    */
-  _search(searchPhrase) {
+  search(searchPhrase) {
     if (searchPhrase.length === 0) {
       return;
     }
@@ -154,6 +199,9 @@ export default class CustomerManager {
       this.activeSearchRequest.abort();
     }
 
+    this.customerRenderer.clearShownCustomers();
+    this.customerRenderer.hideNotFoundCustomers();
+    this.customerRenderer.showSearchingCustomers();
     const $searchRequest = $.get(this.router.generate('admin_customers_search'), {
       customer_search: searchPhrase,
     });
@@ -166,7 +214,7 @@ export default class CustomerManager {
         return;
       }
 
-      showErrorMessage(response.responseJSON.message);
+      window.showErrorMessage(response.responseJSON.message);
     });
   }
 }

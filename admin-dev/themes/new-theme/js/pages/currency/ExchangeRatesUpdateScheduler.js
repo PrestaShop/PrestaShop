@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class triggers events required for turning on or off exchange rates scheduler an displaying the right text
@@ -31,13 +31,13 @@ const $ = window.$;
  */
 export default class ExchangeRatesUpdateScheduler {
   constructor() {
-   this._initEvents();
+    this.initEvents();
 
-   return {};
+    return {};
   }
 
-  _initEvents() {
-    $(document).on('change', '.js-live-exchange-rate', (event) => this._initLiveExchangeRate(event));
+  initEvents() {
+    $(document).on('change', '.js-live-exchange-rate', (event) => this.initLiveExchangeRate(event));
   }
 
   /**
@@ -45,7 +45,7 @@ export default class ExchangeRatesUpdateScheduler {
    *
    * @private
    */
-  _initLiveExchangeRate(event) {
+  initLiveExchangeRate(event) {
     const $liveExchangeRatesSwitch = $(event.currentTarget);
     const $form = $liveExchangeRatesSwitch.closest('form');
     const formItems = $form.serialize();
@@ -57,26 +57,26 @@ export default class ExchangeRatesUpdateScheduler {
     })
       .then((response) => {
         if (!response.status) {
-          showErrorMessage(response.message);
-          this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
+          window.showErrorMessage(response.message);
+          this.changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
 
           return;
         }
 
-        showSuccessMessage(response.message);
-        this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
-      }
-    ).fail((response) => {
-      if (typeof response.responseJSON !== 'undefined') {
-        showErrorMessage(response.responseJSON.message);
-        this._changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
-      }
-    });
+        window.showSuccessMessage(response.message);
+        this.changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
+      },
+      ).fail((response) => {
+        if (typeof response.responseJSON !== 'undefined') {
+          window.showErrorMessage(response.responseJSON.message);
+          this.changeTextByCurrentSwitchValue($liveExchangeRatesSwitch.val());
+        }
+      });
   }
 
-  _changeTextByCurrentSwitchValue(switchValue) {
-    const valueParsed = parseInt(switchValue);
-    $('.js-exchange-rate-text-when-disabled').toggleClass('d-none', 0 !== valueParsed);
-    $('.js-exchange-rate-text-when-enabled').toggleClass('d-none', 1 !== valueParsed);
+  changeTextByCurrentSwitchValue(switchValue) {
+    const valueParsed = parseInt(switchValue, 10);
+    $('.js-exchange-rate-text-when-disabled').toggleClass('d-none', valueParsed !== 0);
+    $('.js-exchange-rate-text-when-enabled').toggleClass('d-none', valueParsed !== 1);
   }
 }

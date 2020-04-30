@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -160,6 +160,11 @@ class Datas
             'default' => 0,
             'help' => 'enable SSL for PrestaShop',
         ),
+        'rewrite_engine' => array(
+            'name' => 'rewrite',
+            'default' => 1,
+            'help' => 'enable rewrite engine for PrestaShop',
+        ),
     );
 
     protected $datas = array();
@@ -226,7 +231,7 @@ class Datas
                 } else {
                     $this->$key = $row['default'];
                 }
-            } elseif (isset($row['validate']) && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
+            } elseif (isset($row['validate']) && class_exists('Validate') && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
                 $errors[] = 'Field '.$key.' is not valid';
             } else {
                 $this->$key = $args_ok[$name];

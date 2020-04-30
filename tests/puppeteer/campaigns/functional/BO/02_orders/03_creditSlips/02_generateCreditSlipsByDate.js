@@ -13,25 +13,27 @@ const HomePage = require('@pages/FO/home');
 const ProductPage = require('@pages/FO/product');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
 const CreditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 // Importing data
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orders');
+const {Statuses} = require('@data/demo/orderStatuses');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipByDate';
 
 let browser;
 let page;
 const today = new Date();
 // Create a future date that there is no credit slips (yyy-mm-dd)
-const day = (`0${today.getDate()}`).slice(-2); // Current day
-const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const year = today.getFullYear() + 1; // Next year
-const futureDate = `${year}-${month}-${day}`;
+today.setFullYear(today.getFullYear() + 1);
+const futureDate = today.toISOString().slice(0, 10);
 const creditSlipsFileName = 'order-slips.pdf';
-const creditSlipDocumentName = 'Credit Slip';
+const creditSlipDocumentName = 'Credit slip';
 
 // Init objects needed
 const init = async function () {
@@ -75,6 +77,7 @@ describe('Generate Credit slip file by date', async () => {
 
   describe('Create Credit slip ', async () => {
     it('should go to FO and create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
       // Click on view my shop
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -110,6 +113,7 @@ describe('Generate Credit slip file by date', async () => {
     });
 
     it('should go to the orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
@@ -119,23 +123,27 @@ describe('Generate Credit slip file by date', async () => {
     });
 
     it('should go to the created order page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
       await this.pageObjects.ordersPage.goToOrder(1);
       const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
-      await expect(result).to.be.true;
+      await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should add a partial refund', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addPartialRefund', baseContext);
       await this.pageObjects.viewOrderPage.clickOnPartialRefund();
       const textMessage = await this.pageObjects.viewOrderPage.addPartialRefundProduct(1, 1);
       await expect(textMessage).to.contains(this.pageObjects.viewOrderPage.partialRefundValidationMessage);
     });
 
     it('should check the existence of the Credit slip document', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentName', baseContext);
       const documentName = await this.pageObjects.viewOrderPage.getDocumentName(4);
       await expect(documentName).to.be.equal(creditSlipDocumentName);
     });
@@ -143,6 +151,7 @@ describe('Generate Credit slip file by date', async () => {
 
   describe('Generate Credit slip file by date', async () => {
     it('should go to Credit slips page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.creditSlipsLink,
@@ -153,12 +162,14 @@ describe('Generate Credit slip file by date', async () => {
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generatePdfAndCheckFileExistence', baseContext);
       await this.pageObjects.creditSlipsPage.generatePDFByDate();
       const exist = await files.checkFileExistence(creditSlipsFileName);
       await expect(exist).to.be.true;
     });
 
     it('should check the error message when there is no credit slip in the entered date', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentCreditSlip', baseContext);
       await this.pageObjects.creditSlipsPage.generatePDFByDate(futureDate, futureDate);
       const textMessage = await this.pageObjects.creditSlipsPage.getTextContent(
         this.pageObjects.creditSlipsPage.alertTextBlock,

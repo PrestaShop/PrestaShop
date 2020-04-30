@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -307,13 +307,13 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse([
-                'isoCode' => $referenceCurrency->getIsoCode(),
-                'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
-                'precision' => $referenceCurrency->getPrecision(),
-                'names' => $referenceCurrency->getNames(),
-                'symbols' => $referenceCurrency->getSymbols(),
-                'patterns' => $referenceCurrency->getPatterns(),
-                'exchangeRate' => $exchangeRateValue,
+            'isoCode' => $referenceCurrency->getIsoCode(),
+            'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
+            'precision' => $referenceCurrency->getPrecision(),
+            'names' => $referenceCurrency->getNames(),
+            'symbols' => $referenceCurrency->getSymbols(),
+            'patterns' => $referenceCurrency->getPatterns(),
+            'exchangeRate' => $exchangeRateValue,
         ]);
     }
 
@@ -385,9 +385,9 @@ class CurrencyController extends FrameworkBundleAdminController
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
-                    'status' => false,
-                    'message' => $this->getDemoModeErrorMessage(),
-                ],
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -396,12 +396,12 @@ class CurrencyController extends FrameworkBundleAdminController
 
         if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
             return $this->json([
-                    'status' => false,
-                    'message' => $this->trans(
-                        'You need permission to edit this.',
-                        'Admin.Notifications.Error'
-                    ),
-                ],
+                'status' => false,
+                'message' => $this->trans(
+                    'You need permission to edit this.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
                 Response::HTTP_UNAUTHORIZED
             );
         }

@@ -5,8 +5,7 @@
       <trans-unit id="ef2b66b0b65479e08ff0cce29e19d006">
         <source>Customers who bought this product also bought:</source>
         <target>Customers who bought this product also bought:</target>
-        <note>Context:
-File: modules/ps_crossselling/views/templates/hook/ps_crossselling.tpl:27</note>
+        <note>Line: 27</note>
       </trans-unit>
     </body>
   </file>

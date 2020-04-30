@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableCustomerAddress;
 
 /**
@@ -85,7 +84,6 @@ final class AddressFormDataProvider implements FormDataProviderInterface
             'phone' => $editableAddress->getHomePhone(),
             'phone_mobile' => $editableAddress->getMobilePhone(),
             'other' => $editableAddress->getOther(),
-            'required_fields' => $editableAddress->getRequiredFields(),
         ];
 
         return $data;
@@ -98,7 +96,6 @@ final class AddressFormDataProvider implements FormDataProviderInterface
     {
         return [
             'id_country' => $this->defaultCountryId,
-            'required_fields' => $this->queryBus->handle(new GetRequiredFieldsForAddress()),
         ];
     }
 }

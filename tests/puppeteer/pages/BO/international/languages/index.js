@@ -6,6 +6,7 @@ module.exports = class Languages extends LocalizationBasePage {
     super(page);
 
     this.pageTitle = 'Languages •';
+    this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Header selectors
     this.addNewLanguageLink = '#page-header-desc-configuration-add';
@@ -28,6 +29,18 @@ module.exports = class Languages extends LocalizationBasePage {
     this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
     this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    // Bulk Actions
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsEnableButton = '#language_grid_bulk_action_enable_selection';
+    this.bulkActionsDisableButton = '#language_grid_bulk_action_disable_selection';
+    this.bulkActionsDeleteButton = '#language_grid_bulk_action_delete_selection';
+    this.confirmDeleteModal = '#language-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = `${this.tableHead} div.ps-sortable-column[data-sort-col-name='%COLUMN']`;
+    this.sortColumnSpanButton = `${this.sortColumnDiv} span.ps-sort`;
   }
 
   /* Header methods */
@@ -106,6 +119,21 @@ module.exports = class Languages extends LocalizationBasePage {
   }
 
   /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTable(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
    * Go to edit language page
    * @param row, which row of the list
    * @return {Promise<void>}
@@ -120,14 +148,91 @@ module.exports = class Languages extends LocalizationBasePage {
    * @return {Promise<textContent>}
    */
   async deleteLanguage(row = 1) {
-    this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteLanguages(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /* Bulk Actions Methods */
+  /**
+   * Enable / disable Suppliers by Bulk Actions
+   * @param toEnable
+   * @return {Promise<textContent>}
+   */
+  async bulkEditEnabledColumn(toEnable = true) {
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+    // Click on delete and wait for modal
+    await this.clickAndWaitForNavigation(toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Delete with bulk actions
+   * @return {Promise<textContent>}
+   */
+  async deleteWithBulkActions() {
+    this.dialogListener(true);
+    // Click on Select All
+    await Promise.all([
+      this.page.click(this.selectAllRowsLabel),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+    ]);
+    // Click on Button Bulk actions
+    await Promise.all([
+      this.page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteLanguages(this.bulkActionsDeleteButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteLanguages() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv.replace('%COLUMN', sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton.replace('%COLUMN', sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

@@ -32,7 +32,11 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
     // Set up URL form
     this.switchFriendlyUrlLabel = 'label[for=\'meta_settings_form_set_up_urls_friendly_url_%TOGGLE\']';
+    this.switchAccentedUrlLabel = 'label[for=\'meta_settings_form_set_up_urls_accented_url_%TOGGLE\']';
     this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
+    // Delete modal
+    this.confirmDeleteModal = '#meta-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* header methods */
@@ -74,15 +78,27 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteSeoUrlPage(row = 1) {
-    this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteSeoUrlPage();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteSeoUrlPage() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /* Reset methods */
@@ -134,6 +150,17 @@ module.exports = class SeoAndUrls extends BOBasePage {
   async enableDisableFriendlyURL(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchFriendlyUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Enable/disable accented url
+   * @param toEnable, true to enable and false to disable
+   * @return {Promise<string>}
+   */
+  async enableDisableAccentedURL(toEnable = true) {
+    await this.waitForSelectorAndClick(this.switchAccentedUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };

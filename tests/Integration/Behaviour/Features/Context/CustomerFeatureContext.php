@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -128,18 +128,18 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then customer :reference has voucher of :voucherAmount
+     * @Then customer :reference last voucher is :voucherAmount
      */
     public function checkCustomerHasVoucher(string $reference, float $voucherAmount)
     {
         /** @var Customer $customer */
         $customer = SharedStorage::getStorage()->get($reference);
-        $cartRules = CartRule::getCustomerCartRules((int) Configuration::get('PS_LANG_DEFAULT'), $customer->id, true);
+        $cartRules = CartRule::getCustomerCartRules((int) Configuration::get('PS_LANG_DEFAULT'), $customer->id, true, false);
         if (empty($cartRules)) {
             throw new RuntimeException('Cannot find any cart rules for customer');
         }
 
-        $voucher = $cartRules[0];
+        $voucher = $cartRules[count($cartRules) - 1];
         if ($voucherAmount !== (float) $voucher['reduction_amount']) {
             throw new RuntimeException(sprintf('Invalid voucher amount, expected %s but got %s instead', $voucherAmount, $voucher['reduction_amount']));
         }

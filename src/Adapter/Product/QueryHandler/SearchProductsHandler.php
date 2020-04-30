@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,7 +54,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     private $contextLocale;
 
-    /*
+    /**
      * @var ContextStateManager
      */
     private $contextStateManager;
@@ -114,7 +114,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         if ($products) {
             foreach ($products as $product) {
                 $foundProduct = $this->createFoundProductFromLegacy(new Product($product['id_product']), $query);
-                $foundProducts[$foundProduct->getProductId()] = $foundProduct;
+                $foundProducts[] = $foundProduct;
             }
         }
 
@@ -131,7 +131,6 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     private function createFoundProductFromLegacy(Product $product, SearchProducts $query): FoundProduct
     {
-        //@todo: sort products alphabetically
         $priceTaxExcluded = Product::getPriceStatic($product->id, false);
         $priceTaxIncluded = Product::getPriceStatic($product->id, true);
 
@@ -214,7 +213,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $combination['quantity'],
                     $this->contextLocale->formatPrice($priceTaxExcluded, $currencyIsoCode),
                     $priceTaxExcluded,
-                    $priceTaxIncluded
+                    $priceTaxIncluded,
+                    $combination['location']
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;

@@ -31,10 +31,10 @@ module.exports = class Files extends BOBasePage {
     this.viewRowLink = `${this.dropdownToggleMenu} a[href*='/view']`;
     this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#attachment_grid_bulk_action_delete_selection';
-    this.confirmDeleteModal = '#attachment_grid_confirm_modal';
+    this.confirmDeleteModal = '#attachment-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
@@ -65,7 +65,7 @@ module.exports = class Files extends BOBasePage {
   async viewFile(row = 1) {
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
@@ -81,12 +81,16 @@ module.exports = class Files extends BOBasePage {
     this.dialogListener(true);
     await Promise.all([
       this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
+      this.waitForVisibleSelector(
         `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteFiles();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -153,19 +157,19 @@ module.exports = class Files extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(this.bulkActionsToggleButton, {visible: true}),
+      this.waitForVisibleSelector(this.bulkActionsToggleButton),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteFiles(this.bulkActionsDeleteButton);
+    await this.confirmDeleteFiles();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

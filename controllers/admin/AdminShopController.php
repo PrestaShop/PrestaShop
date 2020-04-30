@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -137,19 +137,19 @@ class AdminShopControllerCore extends AdminController
         $this->addJqueryPlugin('cooki-plugin');
         $data = Shop::getTree();
 
-        foreach ($data as &$group) {
-            foreach ($group['shops'] as &$shop) {
+        foreach ($data as $group_key => $group) {
+            foreach ($group['shops'] as $shop_key => $shop) {
                 $current_shop = new Shop($shop['id_shop']);
                 $urls = $current_shop->getUrls();
 
-                foreach ($urls as &$url) {
+                foreach ($urls as $url) {
                     $title = $url['domain'] . $url['physical_uri'] . $url['virtual_uri'];
                     if (strlen($title) > 23) {
                         $title = substr($title, 0, 23) . '...';
                     }
 
                     $url['name'] = $title;
-                    $shop['urls'][$url['id_shop_url']] = $url;
+                    $data[$group_key][$shop_key]['urls'][$url['id_shop_url']] = $url;
                 }
             }
         }
@@ -344,7 +344,7 @@ class AdminShopControllerCore extends AdminController
         $shop_delete_list = [];
 
         // don't allow to remove shop which have dependencies (customers / orders / ... )
-        foreach ($this->_list as &$shop) {
+        foreach ($this->_list as $shop) {
             if (Shop::hasDependency($shop['id_shop'])) {
                 $shop_delete_list[] = $shop['id_shop'];
             }
@@ -515,8 +515,8 @@ class AdminShopControllerCore extends AdminController
         );*/
 
         $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                        ->buildRepository()
-                        ->getList();
+            ->buildRepository()
+            ->getList();
 
         $this->fields_form['input'][] = [
             'type' => 'theme',
@@ -603,8 +603,8 @@ class AdminShopControllerCore extends AdminController
 
         if (!$obj->theme_name) {
             $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                            ->buildRepository()
-                            ->getList();
+                ->buildRepository()
+                ->getList();
             $theme = array_pop($themes);
             $theme_name = $theme->getName();
         } else {

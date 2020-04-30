@@ -25,9 +25,12 @@ module.exports = class Profiles extends BOBasePage {
     this.filterSearchButton = `${this.profilesListForm} button[name='profile[actions][search]']`;
     this.filterResetButton = `${this.profilesListForm} button[name='profile[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.profilesListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
+    // Delete modal
+    this.confirmDeleteModal = '#profile-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /*
@@ -113,15 +116,25 @@ module.exports = class Profiles extends BOBasePage {
     // Click on dropDown
     await Promise.all([
       this.page.click(this.profilesListTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.profilesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(
+        `${this.profilesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`),
     ]);
-    // Click on delete
+    // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.profilesListTableDeleteLink.replace('%ROW', row)),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
+    await this.confirmDeleteProfiles();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+
+  /**
+   * Confirm delete with in modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteProfiles() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 
   /**
@@ -133,18 +146,15 @@ module.exports = class Profiles extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
     ]);
     // Click on delete and wait for modal
-    await Promise.all([
-      this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph),
-    ]);
+    await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

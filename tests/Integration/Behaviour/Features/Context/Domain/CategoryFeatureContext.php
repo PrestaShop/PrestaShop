@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -209,12 +209,12 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update category :categoryReference position with following details:
+     * @When I update category :categoryReference with generated position and following details:
      *
      * @param string $categoryReference
      * @param TableNode $table
      */
-    public function updateCategoryPositionWithFollowingDetails(string $categoryReference, TableNode $table)
+    public function updateCategoryWithGeneratedPositionAndFollowingDetails(string $categoryReference, TableNode $table)
     {
         /** @var array $testCaseData */
         $testCaseData = $table->getRowsHash();
@@ -223,18 +223,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
         $categoryTreeChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+            'prestashop.adapter.form.choice_provider.category_tree_choice_provider'
+        );
         $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
         $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
 
         $wayId = array_flip(self::CATEGORY_POSITION_WAYS_MAP)[$testCaseData['Way']];
-        $positionsArray = explode(',', $testCaseData['Positions']);
 
         $this->getCommandBus()->handle(new UpdateCategoryPositionCommand(
             $categoryId,
             $parentCategoryId,
             $wayId,
-            $positionsArray,
+            ['tr_' . $parentCategoryId . '_' . $categoryId], // generated position
             $testCaseData['Found first']
         ));
     }

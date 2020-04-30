@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -131,15 +131,26 @@ class HelperListCore extends Helper
     /** @var EntityLinkBuilderFactory */
     private $linkBuilderFactory;
 
-    public function __construct()
+    /**
+     * You can use $controllerMapping to add entity/controller mapping in order to have migrated links
+     * in a legacy list (this requires to have correctly set the _legacy_link in the routing of course)
+     *
+     * exemple: $helper = new HelperList(['cart' => 'AdminCarts']);
+     *
+     * @param array $controllerMapping
+     */
+    public function __construct(array $controllerMapping = [])
     {
         $this->base_folder = 'helpers/list/';
         $this->base_tpl = 'list.tpl';
 
-        $adminLinkBuilder = new AdminLinkBuilder(Context::getContext()->link, [
+        $controllerMapping = array_merge([
             'customer' => 'AdminCustomers',
             'product' => 'AdminProducts',
-        ]);
+            'order' => 'AdminOrders',
+            'cart' => 'AdminCarts',
+        ], $controllerMapping);
+        $adminLinkBuilder = new AdminLinkBuilder(Context::getContext()->link, $controllerMapping);
         $this->linkBuilderFactory = new EntityLinkBuilderFactory([
             $adminLinkBuilder,
             new LegacyHelperLinkBuilder(),
@@ -221,7 +232,7 @@ class HelperListCore extends Helper
         if (isset($this->fields_list['position'])) {
             if ($this->position_identifier) {
                 if (isset($this->position_group_identifier)) {
-                    $position_group_identifier = Tools::getIsset($this->position_group_identifier) ? Tools::getValue($this->position_group_identifier) : $this->position_group_identifier;
+                    $position_group_identifier = Tools::getIsset($this->position_group_identifier) ? (int) Tools::getValue($this->position_group_identifier) : $this->position_group_identifier;
                 } else {
                     $position_group_identifier = (int) Tools::getValue('id_' . ($this->is_cms ? 'cms_' : '') . 'category', ($this->is_cms ? '1' : Category::getRootCategory()->id));
                 }

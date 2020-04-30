@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,36 +19,54 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 class CheckoutSessionCore
 {
+    /** @var Context */
     protected $context;
+    /** @var DeliveryOptionsFinder */
     protected $deliveryOptionsFinder;
 
+    /**
+     * @param Context $context
+     * @param DeliveryOptionsFinder $deliveryOptionsFinder
+     */
     public function __construct(Context $context, DeliveryOptionsFinder $deliveryOptionsFinder)
     {
         $this->context = $context;
         $this->deliveryOptionsFinder = $deliveryOptionsFinder;
     }
 
+    /**
+     * @return bool
+     */
     public function customerHasLoggedIn()
     {
         return $this->context->customer->isLogged();
     }
 
+    /**
+     * @return Customer
+     */
     public function getCustomer()
     {
         return $this->context->customer;
     }
 
+    /**
+     * @return Cart
+     */
     public function getCart()
     {
         return $this->context->cart;
     }
 
+    /**
+     * @return int
+     */
     public function getCustomerAddressesCount()
     {
         return count($this->getCustomer()->getSimpleAddresses(

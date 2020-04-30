@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -46,6 +46,9 @@ class LinkCore
 
     /**
      * Constructor (initialization only).
+     *
+     * @param string|null $protocolLink
+     * @param string|null $protocolContent
      */
     public function __construct($protocolLink = null, $protocolContent = null)
     {
@@ -74,7 +77,7 @@ class LinkCore
     /**
      * Create a link to delete a product.
      *
-     * @param mixed $product ID of the product OR a Product object
+     * @param Product|array|int $product ID of the product OR a Product object
      * @param int $idPicture ID of the picture to delete
      *
      * @return string
@@ -89,9 +92,9 @@ class LinkCore
     /**
      * Return a product object from various product format.
      *
-     * @param $product
-     * @param $idLang
-     * @param $idShop
+     * @param Product|array|int $product
+     * @param int $idLang
+     * @param int $idShop
      *
      * @return Product
      *
@@ -115,13 +118,17 @@ class LinkCore
     /**
      * Create a link to a product.
      *
-     * @param mixed $product Product object (can be an ID product, but deprecated)
-     * @param string $alias
-     * @param string $category
-     * @param string $ean13
-     * @param int $idLang
-     * @param int $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
-     * @param int $ipa ID product attribute
+     * @param Product|array|int $product Product object (can be an ID product, but deprecated)
+     * @param string|null $alias
+     * @param string|null $category
+     * @param string|null $ean13
+     * @param int|null $idLang
+     * @param int|null $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
+     * @param int|null $ipa ID product attribute
+     * @param bool $force_routes
+     * @param bool $relativeProtocol
+     * @param bool $addAnchor
+     * @param array $extraParams
      *
      * @return string
      */
@@ -308,7 +315,7 @@ class LinkCore
      * @param int $idProduct
      * @param int $idProductAttribute
      * @param int|null $idCustomization
-     * @param null $op
+     * @param string|null $op
      *
      * @return string
      */
@@ -370,12 +377,10 @@ class LinkCore
     /**
      * Return a category object from various category format.
      *
-     * @param $product
-     * @param $idLang
+     * @param Category|array|int $category
+     * @param int $idLang
      *
      * @return Category
-     *
-     * @throws PrestaShopException
      */
     public function getCategoryObject($category, $idLang)
     {
@@ -395,10 +400,12 @@ class LinkCore
     /**
      * Create a link to a category.
      *
-     * @param mixed $category Category object (can be an ID category, but deprecated)
-     * @param string $alias
-     * @param int $idLang
-     * @param string $selectedFilters Url parameter to autocheck filters of the module blocklayered
+     * @param Category|array|int $category Category object (can be an ID category, but deprecated)
+     * @param string|null $alias
+     * @param int|null $idLang
+     * @param string|null $selectedFilters Url parameter to autocheck filters of the module blocklayered
+     * @param int|null $idShop
+     * @param bool $relativeProtocol
      *
      * @return string
      */
@@ -456,15 +463,13 @@ class LinkCore
     /**
      * Create a link to a CMS category.
      *
-     * @param CMSCategory $cmsCategory
-     * @param string $alias
-     * @param int $idLang
-     * @param null $idShop
+     * @param CMSCategory|int $cmsCategory CMSCategory object (can be an ID category, but deprecated)
+     * @param string|null $alias
+     * @param int|null $idLang
+     * @param int|null $idShop
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @internal param mixed $category CMSCategory object (can be an ID category, but deprecated)
      */
     public function getCMSCategoryLink(
         $cmsCategory,
@@ -510,9 +515,11 @@ class LinkCore
      * Create a link to a CMS page.
      *
      * @param CMS|int $cms CMS object
-     * @param string $alias
-     * @param bool $ssl
-     * @param int $idLang
+     * @param string|null $alias
+     * @param bool|null $ssl
+     * @param int|null $idLang
+     * @param int|null $idShop
+     * @param bool $relativeProtocol
      *
      * @return string
      */
@@ -559,9 +566,11 @@ class LinkCore
     /**
      * Create a link to a supplier.
      *
-     * @param mixed $supplier Supplier object (can be an ID supplier, but deprecated)
-     * @param string $alias
-     * @param int $idLang
+     * @param Supplier|int $supplier Supplier object (can be an ID supplier, but deprecated)
+     * @param string|null $alias
+     * @param int|null $idLang
+     * @param int|null $idShop
+     * @param bool $relativeProtocol
      *
      * @return string
      */
@@ -609,10 +618,10 @@ class LinkCore
     /**
      * Create a link to a manufacturer.
      *
-     * @param mixed $manufacturer Manufacturer object (can be an ID supplier, but deprecated)
-     * @param string $alias
-     * @param int $idLang
-     * @param null $idShop
+     * @param Manufacturer|int $manufacturer Manufacturer object (can be an ID supplier, but deprecated)
+     * @param string|null $alias
+     * @param int|null $idLang
+     * @param int|null $idShop
      * @param bool $relativeProtocol
      *
      * @return string
@@ -657,8 +666,8 @@ class LinkCore
      * @param string $controller
      * @param array $params
      * @param bool|null $ssl
-     * @param int $idLang
-     * @param null $idShop
+     * @param int|null $idLang
+     * @param int|null $idShop
      * @param bool $relativeProtocol
      *
      * @return string
@@ -695,8 +704,8 @@ class LinkCore
      *
      * @param string $controller
      * @param bool $withToken include or not the token in the url
-     * @param array(string) $sfRouteParams Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
-     * @param array $params Optional
+     * @param array $sfRouteParams (Since 1.7.0.0) Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
+     * @param array $params (Since 1.7.0.3) Optional
      *
      * @return string url
      *
@@ -855,7 +864,7 @@ class LinkCore
      * Used when you explicitly want to create a LEGACY admin link, this should be deprecated
      * in 1.8.0.
      *
-     * @param $controller
+     * @param string $controller
      * @param bool $withToken
      * @param array $params
      *
@@ -955,7 +964,7 @@ class LinkCore
      *
      * @param string $name rewrite link of the image
      * @param string $ids id part of the image filename - can be "id_product-id_image" (legacy support, recommended) or "id_image" (new)
-     * @param string $type
+     * @param string|null $type
      *
      * @return string
      */
@@ -1009,8 +1018,8 @@ class LinkCore
     /**
      * Returns a link to a supplier image for display.
      *
-     * @param $idSupplier
-     * @param null $type image type (small_default, medium_default, large_default, etc.)
+     * @param int $idSupplier
+     * @param string|null $type image type (small_default, medium_default, large_default, etc.)
      *
      * @return string
      */
@@ -1034,8 +1043,8 @@ class LinkCore
     /**
      * Returns a link to a manufacturer image for display.
      *
-     * @param $idManufacturer
-     * @param null $type image type (small_default, medium_default, large_default, etc.)
+     * @param int $idManufacturer
+     * @param string|null $type image type (small_default, medium_default, large_default, etc.)
      *
      * @return string
      */
@@ -1059,8 +1068,9 @@ class LinkCore
     /**
      * Returns a link to a store image for display.
      *
-     * @param $idStore
-     * @param null $type image type (small_default, medium_default, large_default, etc.)
+     * @param string $name
+     * @param int $idStore
+     * @param string|null $type image type (small_default, medium_default, large_default, etc.)
      *
      * @return string
      */
@@ -1081,6 +1091,11 @@ class LinkCore
         return $this->protocol_content . Tools::getMediaServer($uriPath) . $uriPath;
     }
 
+    /**
+     * @param string $filepath
+     *
+     * @return string
+     */
     public function getMediaLink($filepath)
     {
         return $this->protocol_content . Tools::getMediaServer($filepath) . $filepath;
@@ -1090,10 +1105,12 @@ class LinkCore
      * Create a simple link.
      *
      * @param string $controller
-     * @param bool $ssl
-     * @param int $idLang
-     * @param string|array $request
+     * @param bool|null $ssl
+     * @param int|null $idLang
+     * @param string|array|null $request
      * @param bool $requestUrlEncode Use URL encode
+     * @param int|null $idShop
+     * @param bool $relativeProtocol
      *
      * @return string Page link
      */
@@ -1139,9 +1156,9 @@ class LinkCore
     }
 
     /**
-     * @param $name
-     * @param $idCategory
-     * @param null $type
+     * @param string $name
+     * @param int $idCategory
+     * @param string|null $type
      *
      * @return string
      */
@@ -1160,7 +1177,7 @@ class LinkCore
      * Create link after language change, for the change language block.
      *
      * @param int $idLang Language ID
-     * @param Context $context the context if needed
+     * @param Context|null $context the context if needed
      *
      * @return string link
      *
@@ -1318,9 +1335,9 @@ class LinkCore
     }
 
     /**
-     * @param null $idLang
+     * @param int|null $idLang
      * @param Context|null $context
-     * @param null $idShop
+     * @param int|null $idShop
      *
      * @return string
      */
@@ -1409,7 +1426,7 @@ class LinkCore
     /**
      * Check if url match with current url.
      *
-     * @param $url
+     * @param string $url
      *
      * @return bool
      */
