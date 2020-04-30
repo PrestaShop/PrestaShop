@@ -53,9 +53,7 @@ class Payment {
   }
 
   haveTermsBeenAccepted() {
-    let termsCheckbox = $(this.termsCheckboxSelector);
-
-    return termsCheckbox.prop('checked');
+    return $(this.termsCheckboxSelector).prop('checked');
   }
 
   hideConfirmation() {
@@ -114,11 +112,8 @@ class Payment {
   }
 
   showNativeFormErrors () {
-    let termsCheckbox = $(this.termsCheckboxSelector)
-    termsCheckbox.get(0).reportValidity();
-
-    let paymentOptionsGroup = $('input[name=payment-option]')
-    paymentOptionsGroup.get(0).reportValidity();
+    $(this.termsCheckboxSelector).get(0).reportValidity();
+    $('input[name=payment-option]').get(0).reportValidity();
   }
 
   confirm() {
