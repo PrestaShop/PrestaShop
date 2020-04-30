@@ -32,4 +32,5 @@ class ImageConstraintException extends ImageException
 {
     const INVALID_ID = 1;
     const INVALID_FILE_SIZE = 2;
+    const INVALID_FILE_TYPE = 3;
 }

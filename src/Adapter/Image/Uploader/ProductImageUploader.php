@@ -114,7 +114,6 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
             //@todo in controller when catching this exception use a warning instead of error as in AttachmentController ?
             throw new CannotUnlinkImageException($e->getMessage());
         }
-
     }
 
     /**

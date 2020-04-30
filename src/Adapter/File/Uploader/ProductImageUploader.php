@@ -28,11 +28,27 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
+use ErrorException;
+use Hook;
+use Image;
+use ImageManager;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImagePathFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use PrestaShopException;
+use Symfony\Component\Mime\MimeTypes;
 
-final class ProductImageUploader implements ProductImageUploaderInterface
+final class ProductImageUploader extends AbstractImageUploader implements ProductImageUploaderInterface
 {
     /**
      * @var UploadSizeConfigurationInterface
@@ -40,25 +56,168 @@ final class ProductImageUploader implements ProductImageUploaderInterface
     private $uploadSizeConfiguration;
 
     /**
+     * @var ImagePathFactoryInterface
+     */
+    private $productImagePathFactory;
+
+    /**
+     * @var array
+     */
+    private $contextShopIdsList;
+
+    /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
      * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
+     * @param ImagePathFactoryInterface $productImagePathFactory
+     * @param array $contextShopIdsList
+     * @param int $contextShopId
      */
     public function __construct(
-        UploadSizeConfigurationInterface $uploadSizeConfiguration
+        UploadSizeConfigurationInterface $uploadSizeConfiguration,
+        ImagePathFactoryInterface $productImagePathFactory,
+        array $contextShopIdsList,
+        int $contextShopId
     ) {
         $this->uploadSizeConfiguration = $uploadSizeConfiguration;
+        $this->productImagePathFactory = $productImagePathFactory;
+        $this->contextShopIdsList = $contextShopIdsList;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
      * {@inheritdoc}
      */
     public function upload(
-        //@todo: some arguments might not be needed for product
+        ImageId $imageId,
         string $filePath,
-        string $destinationPath,
-        int $fileSize
+        int $fileSize,
+        string $format
     ): void {
         $this->checkFileAllowedForUpload($fileSize);
-//@todo: upload file and delete old one
+        $tmpImageName = $this->moveToTemporaryDir($filePath);
+        $image = $this->loadImageEntity($imageId);
+
+        $this->checkMemory($tmpImageName);
+        $this->productImagePathFactory->createDestinationDirectory($imageId);
+        $this->copyToDestination($tmpImageName, $imageId);
+
+        $this->generateDifferentSizeImages(
+            $this->productImagePathFactory->getBasePath($imageId, false),
+            'products',
+            $format
+        );
+
+        Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
+        $this->updateCover($image);
+        $image->associateTo($this->contextShopIdsList);
+
+        try {
+            //@todo: this line was originally executed before the hook 'actionWatermark'. does it matter? AdminProductsController::2881
+            unlink($tmpImageName);
+
+            unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $image->id. '.jpg');
+            unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $image->id_product . '_' . $this->contextShopId . '.jpg');
+        } catch (ErrorException $e) {
+            //@todo in controller when catching this exception use a warning instead of error as in AttachmentController ?
+            throw new CannotUnlinkImageException($e->getMessage());
+        }
+    }
+
+    /**
+     * @param string $filePath
+     *
+     * @return string temporary image name
+     *
+     * @throws ImageUploadException
+     */
+    private function moveToTemporaryDir(string $filePath): string
+    {
+        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+
+        if (!$temporaryImageName) {
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+
+        if (!move_uploaded_file($filePath, $temporaryImageName)) {
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+
+        return $temporaryImageName;
+    }
+
+    /**
+     * @param string $tmpImageName
+     * @param ImageId $imageId
+     *
+     * @throws ImageOptimizationException
+     */
+    private function copyToDestination(string $tmpImageName, ImageId $imageId)
+    {
+        if (!ImageManager::resize($tmpImageName, $this->productImagePathFactory->getBasePath($imageId, true))) {
+            throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+    }
+
+    /**
+     * Evaluate the memory required to resize the image: if it's too much, you can't resize it.
+     *
+     * @param string $tmpImageName
+     *
+     * @throws MemoryLimitException
+     */
+    private function checkMemory(string $tmpImageName): void
+    {
+        if (!ImageManager::checkImageMemoryLimit($tmpImageName)) {
+            throw new MemoryLimitException('Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.');
+        }
+    }
+
+    /**
+     * @param Image $image
+     * @todo: check if this is really necessary
+     */
+    private function updateCover(Image $image): void
+    {
+        try {
+            if (!$image->update()) {
+                throw new ImageUpdateException(sprintf(
+                    'Error occurred when updating image #%s cover',
+                    $image->id
+                ));
+            }
+        } catch (PrestaShopException $e) {
+            throw new ImageException(sprintf('Error occurred when updating image #%s cover', $image->id),
+                0,
+                $e
+            );
+        }
+
+    }
+
+    /**
+     * @param ImageId $imageId
+     *
+     * @return Image
+     *
+     * @throws ImageNotFoundException
+     */
+    private function loadImageEntity(ImageId $imageId): Image
+    {
+        $imageIdValue = $imageId->getValue();
+        $image = new Image($imageIdValue);
+
+        if ((int) $image->id !== $imageIdValue) {
+            throw new ImageNotFoundException(sprintf(
+                'Image entity with id #%s does not exist',
+                $imageIdValue
+            ));
+        }
+
+        return $image;
     }
 
     /**

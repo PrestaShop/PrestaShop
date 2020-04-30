@@ -26,12 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+
 interface ProductImageUploaderInterface
 {
     /**
+     * @param ImageId $imageId
      * @param string $filePath
-     * @param string $destinationPath
      * @param int $fileSize
+     * @param string $format
      */
-    public function upload(string $filePath, string $destinationPath, int $fileSize): void;
+    public function upload(
+        ImageId $imageId,
+        string $filePath,
+        int $fileSize,
+        string $format
+    ): void;
 }

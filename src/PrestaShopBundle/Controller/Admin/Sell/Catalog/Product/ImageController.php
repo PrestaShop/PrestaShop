@@ -28,12 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\BulkAddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -58,49 +57,53 @@ class ImageController extends FrameworkBundleAdminController
             ]);
         }
 
+        /** @var UploadedFile $imageFile */
         $imageFile = reset($uploadedFiles);
-        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand($productId));
-
-        $this->getProductImageUploader()->upload($productId, $imageFile, $imageId);
-
-        return $this->json([
-            //@todo: test
-            'message' => 'test response'
-        ]);
-    }
-
-    /**
-     * @todo: security annotations
-     *
-     * @param int $productId
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function bulkUpload(int $productId, Request $request): JsonResponse
-    {
-        $uploadedFiles = $request->files->all();
-
-        if (empty($uploadedFiles)) {
-            return $this->json([
-                //@todo: trans?
-                'message' => 'No files provided for upload'
-            ]);
-        }
-
-        $imageIds = $this->getCommandBus()->handle(new BulkAddProductImageCommand($productId, count($uploadedFiles)));
-
-        foreach ($imageIds as $imageId) {
-            //@todo: how should I map image file with image Id, do i care which img gets which id or just loop through?
-            //@todo: And how do i roll back if some images fails to upload?
-            $this->getProductImageUploader()->upload($productId, $imageFile, $imageId);
-        }
+        $this->getCommandBus()->handle(new UploadProductImageCommand(
+            $productId,
+            $imageFile->getPathname(),
+            $imageFile->getSize(),
+            //@todo: maybe better using mime type and some lib to guess the extension?
+            $imageFile->getMimeType()
+        ));
 
         return $this->json([
             //@todo: test
             'message' => 'test response'
         ]);
     }
+
+//    /**
+//     * @todo: security annotations
+//     *
+//     * @param int $productId
+//     * @param Request $request
+//     *
+//     * @return JsonResponse
+//     */
+//    public function bulkUpload(int $productId, Request $request): JsonResponse
+//    {
+//        $uploadedFiles = $request->files->all();
+//
+//        if (empty($uploadedFiles)) {
+//            return $this->json([
+//                //@todo: trans?
+//                'message' => 'No files provided for upload'
+//            ]);
+//        }
+//
+//        $imageIds = $this->getCommandBus()->handle(new BulkAddProductImageCommand($productId, count($uploadedFiles)));
+//
+//        foreach ($imageIds as $imageId) {
+//            //@todo: how should I map image file with image Id, do i care which img gets which id or just loop through?
+//            //@todo: And how do i roll back if some images fails to upload?
+//        }
+//
+//        return $this->json([
+//            //@todo: test
+//            'message' => 'test response'
+//        ]);
+//    }
 
     /**
      * @param int $productId
@@ -127,13 +130,5 @@ class ImageController extends FrameworkBundleAdminController
         return $this->json([
             'images' => $formattedImages,
         ]);
-    }
-
-    /**
-     * @return ImageUploaderInterface
-     */
-    private function getProductImageUploader(): ImageUploaderInterface
-    {
-        return $this->get('prestashop.adapter.image.uploader.product_image_uploader');
     }
 }

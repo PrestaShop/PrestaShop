@@ -27,11 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 interface UploadProductImageHandlerInterface
 {
     /**
      * @param UploadProductImageCommand $command
      */
-    public function handle(UploadProductImageCommand $command): void;
+    public function handle(UploadProductImageCommand $command): ImageId;
 }

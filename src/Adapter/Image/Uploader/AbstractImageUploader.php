@@ -175,7 +175,8 @@ abstract class AbstractImageUploader
             $path . '.' . $extension,
             $path . '-' . stripslashes($imageType['name']) . '.' . $extension,
             (int) $width,
-            (int) $height
+            (int) $height,
+            $extension
         );
     }
 }

@@ -35,53 +35,51 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\UploadProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImagePathFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShopException;
+use Product;
+use Symfony\Component\Mime\MimeTypes;
 
 final class UploadProductImageHandler extends AbstractImageUploader implements UploadProductImageHandlerInterface
 {
-    /**
-     * @var ImagePathFactoryInterface
-     */
-    private $productImagePathFactory;
-
     /**
      * @var ProductImageUploaderInterface
      */
     private $productImageUploader;
 
     /**
-     * @param ImagePathFactoryInterface $productImagePathFactory
      * @param ProductImageUploaderInterface $productImageUploader
      */
     public function __construct(
-        ImagePathFactoryInterface $productImagePathFactory,
         ProductImageUploaderInterface $productImageUploader
     ) {
-        $this->productImagePathFactory = $productImagePathFactory;
         $this->productImageUploader = $productImageUploader;
     }
 
-    public function handle(UploadProductImageCommand $command): void
+    public function handle(UploadProductImageCommand $command): ImageId
     {
         $productIdValue = $command->getProductId()->getValue();
         $this->assertProductExists($productIdValue);
+        $format = $this->getFormat($command->getMimeType());
+        $imageId = $this->addToDatabase($productIdValue, $format);
 
-        $imageId = $this->addToDatabase($productIdValue);
+        $this->productImageUploader->upload(
+            $imageId,
+            $command->getPathToFile(),
+            $command->getFileSize(),
+            $format
+        );
 
-        //@todo: these should be in uploader i guess.
-        $this->productImagePathFactory->createDestinationDirectory($imageId);
-        $this->productImagePathFactory->getBasePath();
-        $this->productImageUploader->upload();
+        return $imageId;
     }
 
-    private function addToDatabase(int $productIdValue): ImageId
+    private function addToDatabase(int $productIdValue, string $format): ImageId
     {
         $image = new Image();
         $image->id_product = $productIdValue;
         $image->position = Image::getHighestPosition($productIdValue) + 1;
+        $image->image_format = $format;
 
         if (!Image::getCover($image->id_product)) {
             $image->cover = 1;
@@ -116,5 +114,33 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
         if (!Product::existsInDatabase($productId, 'product')) {
             throw new ProductNotFoundException(sprintf('Product #%s was not found', $productId));
         }
+    }
+
+    /**
+     * @param string $mimeType
+     *
+     * @return string
+     *
+     * @throws ImageConstraintException
+     */
+    private function getFormat(string $mimeType): string
+    {
+        $mimeTypes = new MimeTypes();
+        $acceptedExtensions = ['gif', 'png', 'jpg'];
+        $fileExtensions = $mimeTypes->getExtensions($mimeType);
+
+        foreach ($acceptedExtensions as $acceptedExtension) {
+            if (in_array($acceptedExtension, $fileExtensions, true)) {
+                return $acceptedExtension;
+            }
+        }
+
+        throw new ImageConstraintException(
+            sprintf(
+                'Invalid file mime type "%s".',
+                $mimeType
+            ),
+            ImageConstraintException::INVALID_FILE_TYPE
+        );
     }
 }
