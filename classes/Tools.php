@@ -4372,10 +4372,9 @@ exit;
                 foreach ($categories as $category) {
                     $action = (($category['id_category'] == (int) Configuration::get('PS_HOME_CATEGORY') || $home) ? 'index' : 'updatecategory');
                     $link_params = ['action' => $action, 'id_category' => (int) $category['id_category']];
-                    $edit_link  = Context::getContext()->link->getAdminLink('AdminCategories', true, $link_params);
+                    $edit_link = Context::getContext()->link->getAdminLink('AdminCategories', true, $link_params);
                     $link_params['action'] = 'index';
                     $index_link = Context::getContext()->link->getAdminLink('AdminCategories', true, $link_params);
-                    $link = Context::getContext()->link->getAdminLink('AdminCategories', true, ['action' => $action, 'id_category' => (int) $category['id_category']]);
                     $edit = '<a href="' . Tools::safeOutput($edit_link) . '" title="' . ($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify') . '"><i class="icon-' . (($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil') . '"></i></a> ';
                     $full_path .= $edit .
                                   ($n < $n_categories ? '<a href="' . Tools::safeOutput($index_link) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
