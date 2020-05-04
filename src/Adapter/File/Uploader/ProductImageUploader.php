@@ -36,17 +36,13 @@ use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImagePathFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
-use PrestaShopException;
-use Symfony\Component\Mime\MimeTypes;
 
 final class ProductImageUploader extends AbstractImageUploader implements ProductImageUploaderInterface
 {
@@ -96,8 +92,6 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
         string $filePath,
         string $format
     ): void {
-//        $this->checkSize($fileSize);
-//        $tmpImageName = $this->moveToTemporaryDir($filePath);
         $image = $this->loadImageEntity($imageId);
 
         $this->checkMemory($filePath);
@@ -115,9 +109,6 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
         $image->associateTo($this->contextShopIdsList);
 
         try {
-            //@todo: this line was originally executed before the hook 'actionWatermark'. does it matter? AdminProductsController::2881
-//            unlink($tmpImageName);
-
             unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $image->id. '.jpg');
             unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $image->id_product . '_' . $this->contextShopId . '.jpg');
         } catch (ErrorException $e) {
