@@ -71,7 +71,6 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
         $this->productImageUploader->upload(
             $imageId,
             $command->getPathToFile(),
-            $command->getFileSize(),
             //@todo: image is always saved as 'jpg' no matter its real format.
             $image->image_format
         );

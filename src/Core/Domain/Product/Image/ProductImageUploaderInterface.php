@@ -33,13 +33,11 @@ interface ProductImageUploaderInterface
     /**
      * @param ImageId $imageId
      * @param string $filePath
-     * @param int $fileSize
      * @param string $format
      */
     public function upload(
         ImageId $imageId,
         string $filePath,
-        int $fileSize,
         string $format
     ): void;
 }

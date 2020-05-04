@@ -43,11 +43,6 @@ class UploadProductImageCommand
     private $pathToFile;
 
     /**
-     * @var int
-     */
-    private $fileSize;
-
-    /**
      * @var string
      */
     private $mimeType;
@@ -55,18 +50,15 @@ class UploadProductImageCommand
     /**
      * @param int $productId
      * @param string $pathToFile
-     * @param int $fileSize
      * @param string $mimeType
      */
     public function __construct(
         int $productId,
         string $pathToFile,
-        int $fileSize,
         string $mimeType
     ) {
         $this->productId = new ProductId($productId);
         $this->pathToFile = $pathToFile;
-        $this->fileSize = $fileSize;
         $this->mimeType = $mimeType;
     }
 
@@ -84,14 +76,6 @@ class UploadProductImageCommand
     public function getPathToFile(): string
     {
         return $this->pathToFile;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFileSize(): int
-    {
-        return $this->fileSize;
     }
 
     /**

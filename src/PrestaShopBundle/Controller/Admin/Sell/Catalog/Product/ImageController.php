@@ -28,9 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use ErrorException;
+use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -59,18 +63,60 @@ class ImageController extends FrameworkBundleAdminController
 
         /** @var UploadedFile $imageFile */
         $imageFile = reset($uploadedFiles);
+        $mimeType = $imageFile->getMimeType();
+        $pathToTempImage = $this->moveImageToTemporaryDir($imageFile);
+
         $this->getCommandBus()->handle(new UploadProductImageCommand(
             $productId,
-            $imageFile->getPathname(),
-            $imageFile->getSize(),
-            //@todo: maybe better using mime type and some lib to guess the extension?
-            $imageFile->getMimeType()
+            $pathToTempImage,
+            $mimeType
         ));
+
+        try {
+            unlink($pathToTempImage);
+        } catch (ErrorException $e) {
+            //@todo: failed to remove temp image. show warning ?
+        }
 
         return $this->json([
             //@todo: test
             'message' => 'test response'
         ]);
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @return string
+     *
+     * @throws ImageConstraintException
+     * @throws ImageUploadException
+     */
+    private function moveImageToTemporaryDir(UploadedFile $uploadedFile): string
+    {
+        /** @var UploadSizeConfigurationInterface $uploadSizeConfig */
+        $uploadSizeConfig = $this->get('prestashop.core.configuration.upload_size_configuration');
+        $maxUploadSize = $uploadSizeConfig->getMaxUploadSizeInBytes();
+        $fileSize = $uploadedFile->getSize();
+
+        if ($maxUploadSize > 0 && $fileSize > $maxUploadSize) {
+            throw new ImageConstraintException(
+                sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', $maxUploadSize, $fileSize),
+                ImageConstraintException::INVALID_FILE_SIZE
+            );
+        }
+
+        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+
+        if (!$temporaryImageName) {
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+
+        if (!move_uploaded_file($uploadedFile->getPathname(), $temporaryImageName)) {
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+
+        return $temporaryImageName;
     }
 
 //    /**

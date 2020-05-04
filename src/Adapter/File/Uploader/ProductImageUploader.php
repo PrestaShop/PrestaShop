@@ -94,16 +94,15 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
     public function upload(
         ImageId $imageId,
         string $filePath,
-        int $fileSize,
         string $format
     ): void {
-        $this->checkSize($fileSize);
-        $tmpImageName = $this->moveToTemporaryDir($filePath);
+//        $this->checkSize($fileSize);
+//        $tmpImageName = $this->moveToTemporaryDir($filePath);
         $image = $this->loadImageEntity($imageId);
 
-        $this->checkMemory($tmpImageName);
+        $this->checkMemory($filePath);
         $this->productImagePathFactory->createDestinationDirectory($imageId);
-        $this->copyToDestination($tmpImageName, $imageId);
+        $this->copyToDestination($filePath, $imageId);
 
         $this->generateDifferentSizeImages(
             $this->productImagePathFactory->getBasePath($imageId, false),
@@ -117,7 +116,7 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
 
         try {
             //@todo: this line was originally executed before the hook 'actionWatermark'. does it matter? AdminProductsController::2881
-            unlink($tmpImageName);
+//            unlink($tmpImageName);
 
             unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $image->id. '.jpg');
             unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $image->id_product . '_' . $this->contextShopId . '.jpg');
