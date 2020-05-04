@@ -102,11 +102,13 @@ class EntityTranslator implements EntityTranslatorInterface
 
         $tableNameSql = bqSQL($this->tableName);
 
-        $shopFieldExists = $this->shopFieldExists($tableNameSql);
+        $shopWhere = ($this->shopFieldExists($tableNameSql))
+            ? sprintf(' AND `id_shop` = %d', $this->shopId)
+            : '';
 
         // get table data
         $sql = "SELECT * FROM `$tableNameSql` WHERE `id_lang` = $languageId"
-            . ($shopFieldExists ? sprintf(' AND `id_shop` = %d', $this->shopId) : '');
+            . $shopWhere;
 
         $tableData = $this->db->executeS($sql, true, false);
 
@@ -119,7 +121,7 @@ class EntityTranslator implements EntityTranslatorInterface
 
         foreach ($tableData as $data) {
             $updateWhere = [];
-            $updateField = [];
+            $updateFields = [];
 
             // Construct update where
             foreach ($keys as $key) {
@@ -135,18 +137,19 @@ class EntityTranslator implements EntityTranslatorInterface
                 $translatedField = $this->doTranslate($data, $fieldName);
 
                 if (!empty($translatedField) && $translatedField != $data[$fieldName]) {
-                    $updateField[] = '`' . bqSQL($fieldName) . '` = "' . pSQL($translatedField) . '"';
+                    $updateFields[] = '`' . bqSQL($fieldName) . '` = "' . pSQL($translatedField) . '"';
                 }
             }
 
             // Update table
-            if (!empty($updateWhere) && !empty($updateField)) {
+            if (!empty($updateWhere) && !empty($updateFields)) {
                 $updateWhere = implode(' AND ', $updateWhere);
-                $updateField = implode(', ', $updateField);
+                $updateFields = implode(', ', $updateFields);
 
-                $sql = "UPDATE `$tableNameSql` SET $updateField
+                $sql = "UPDATE `$tableNameSql`
+                    SET $updateFields
                     WHERE $updateWhere AND `id_lang` = $languageId"
-                    . ($shopFieldExists ? sprintf(' AND `id_shop` = %d', $this->shopId) : '')
+                    . $shopWhere
                     . ' LIMIT 1';
 
                 $this->db->execute($sql);
