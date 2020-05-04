@@ -51,6 +51,10 @@ module.exports = class Pages extends BOBasePage {
     this.backToListButton = '#cms_page_category_grid_panel div.card-footer a';
     this.categoriesListTableViewLink = row => `${this.listTableColumn('cms_page_category', row, 'actions')}`
       + ' a[data-original-title=\'View\']';
+    this.categoriesPaginationLimitSelect = '#paginator_select_page_limit';
+    this.categoriesPaginationLabel = `${this.listForm('cms_page_category')} .col-form-label`;
+    this.categoriesPaginationNextLink = '#pagination_next_url';
+    this.categoriesPaginationPreviousLink = `${this.listForm('cms_page_category')} [aria-label='Previous']`;
   }
 
   /*
@@ -380,5 +384,33 @@ module.exports = class Pages extends BOBasePage {
    */
   async goToEditPage(row) {
     await this.clickAndWaitForNavigation(this.listTableEditLink('cms_page', row));
+  }
+
+  /**
+   * Select category pagination limit
+   * @param number
+   * @returns {Promise<string >}
+   */
+  async selectCategoryPaginationLimit(number) {
+    await this.selectByVisibleText(this.categoriesPaginationLimitSelect, number);
+    return this.getTextContent(this.categoriesPaginationLabel);
+  }
+
+  /**
+   * Category pagination next
+   * @returns {Promise<string>}
+   */
+  async paginationCategoryNext() {
+    await this.clickAndWaitForNavigation(this.categoriesPaginationNextLink);
+    return this.getTextContent(this.categoriesPaginationLabel);
+  }
+
+  /**
+   * Category pagination previous
+   * @returns {Promise<string>}
+   */
+  async paginationCategoryPrevious() {
+    await this.clickAndWaitForNavigation(this.categoriesPaginationPreviousLink);
+    return this.getTextContent(this.categoriesPaginationLabel);
   }
 };
