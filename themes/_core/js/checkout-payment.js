@@ -112,13 +112,14 @@ class Payment {
   }
 
   showNativeFormErrors () {
-    $(this.termsCheckboxSelector).get(0).reportValidity();
-    $('input[name=payment-option]').get(0).reportValidity();
+    $(`input[name=payment-option], ${this.termsCheckboxSelector}`).each(function() {
+      this.reportValidity();
+    });
   }
 
   confirm() {
-    let option = this.getSelectedOption();
-    let termsAccepted = this.haveTermsBeenAccepted();
+    const option = this.getSelectedOption();
+    const termsAccepted = this.haveTermsBeenAccepted();
 
     if (option === undefined || termsAccepted === false) {
       this.showNativeFormErrors();
