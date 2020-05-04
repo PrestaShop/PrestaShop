@@ -61,8 +61,7 @@ describe('Category pagination', async () => {
     numberOfCategories = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
     if (numberOfCategories !== 0) await expect(numberOfCategories).to.be.above(0);
   });
-
-  // 1 : Create 11 category
+  // 1 : Create 11 categories
   for (let i = 0; i < 11; i++) {
     describe(`Create category n°${i + 1} in BO`, async () => {
       it('should go to add new page category', async function () {
