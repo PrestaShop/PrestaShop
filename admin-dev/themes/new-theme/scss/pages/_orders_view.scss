@@ -55,7 +55,7 @@
 
     .tab-content {
       border: 1px solid #dbe6e9;
-      border-radius: 5px;
+      @include border-radius(5px);
       box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
     }
   }
