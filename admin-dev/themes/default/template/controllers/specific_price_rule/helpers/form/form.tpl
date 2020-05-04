@@ -139,7 +139,7 @@
 		</div>
 	</div>
 {if !$is_multishop}
-	<input type="hidden" name="id_shop" value="1" />
+	<input type="hidden" name="id_shop" value="{$shop->id}" />
 {/if}
 </div>
 {/block}
