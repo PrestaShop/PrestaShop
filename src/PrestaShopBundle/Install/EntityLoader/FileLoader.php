@@ -80,14 +80,7 @@ class FileLoader
                 return null;
             }
 
-            $path = $this->dataPath . $entity . '.xml';
-            if ($iso) {
-                $path = $this->langPath . $this->getFallBackToDefaultEntityLanguage($iso, $entity) . '/data/' . $entity . '.xml';
-            }
-
-            if (!file_exists($path)) {
-                throw new PrestashopInstallerException('XML data file ' . $entity . '.xml not found');
-            }
+            $path = $this->getFilePath($entity, $iso);
 
             $this->cache[$entity][$iso] = @simplexml_load_file($path, 'SimplexmlElement');
             if (!$this->cache[$entity][$iso]) {
@@ -114,30 +107,58 @@ class FileLoader
     }
 
     /**
-     * @param string $iso
+     * Looks up the file in a list of lookup paths and returns the first one found.
      *
-     * @return string Returns the provided language code if a data folder for it exists, or the fallback language code instead
+     * @param string $entity Entity name
+     * @param string|null $iso [default=null] 2-letter language code
+     *
+     * @return string Path to the file
+     *
+     * @throws PrestashopInstallerException If the file is not found in paths
      */
-    private function getFallbackToDefaultLanguage(string $iso)
+    private function getFilePath(string $entity, ?string $iso = null): string
     {
-        return file_exists($this->langPath . $iso . '/data/') ? $iso : self::FALLBACK_LANGUAGE_CODE;
+        $paths = $this->getLookupPaths($entity, $iso);
+
+        foreach ($paths as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
+        }
+
+        // file not found
+        throw new PrestashopInstallerException('XML data file ' . $entity . '.xml not found');
     }
 
     /**
-     * Returns the provided language code if an entity file for it exists, or the fallback language code instead
+     * Returns the lookup paths for the provided entity / iso.
      *
-     * @param string $iso
-     * @param string $entity
+     * @param string $entity Entity name
+     * @param string|null $iso [default=null] 2-letter language code
      *
-     * @return string
+     * @return string[] List of lookup paths
      */
-    private function getFallBackToDefaultEntityLanguage($iso, $entity)
+    private function getLookupPaths(string $entity, ?string $iso = null): array
     {
-        if ($this->getFallbackToDefaultLanguage($iso) === self::FALLBACK_LANGUAGE_CODE) {
-            return self::FALLBACK_LANGUAGE_CODE;
+        $fileName = "$entity.xml";
+
+        // default path
+        if (empty($iso)) {
+            return [
+                $this->dataPath . $fileName
+            ];
         }
 
-        return file_exists($this->langPath . $this->getFallbackToDefaultLanguage($iso) . '/data/' . $entity . '.xml') ? $iso :
-            self::FALLBACK_LANGUAGE_CODE;
+        // preferred path
+        $paths = [
+            $this->langPath . $iso . '/data/' . $fileName,
+        ];
+
+        // add fallback language only if not the same language
+        if ($iso !== static::FALLBACK_LANGUAGE_CODE) {
+            $paths[] = $this->langPath . self::FALLBACK_LANGUAGE_CODE . '/data/' . $fileName;
+        }
+
+        return $paths;
     }
 }
