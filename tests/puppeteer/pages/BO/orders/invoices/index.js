@@ -20,8 +20,7 @@ module.exports = class Invoice extends BOBasePage {
     // By order status form
     this.generateByStatusForm = '[name="generate_by_status"]';
     this.formGenerateByStatus = '#form_generate_by_status_order_states';
-    this.statusOrderStateInput = id => `${this.formGenerateByStatus} input#form_generate_by_status_order_states_${id}`;
-    this.statusCheckbox = id => `${this.statusOrderStateInput(id)}:first-of-type + i`;
+    this.statusOrderStateSpan = `${this.formGenerateByStatus} span:not(.badge)`;
     this.generatePdfByStatusButton = `${this.generateByStatusForm} .btn.btn-primary`;
     // Invoice options form
     this.invoiceOptionsForm = '[name="invoice_options"]';
@@ -61,11 +60,18 @@ module.exports = class Invoice extends BOBasePage {
 
   /**
    * Click on the Status
-   * @param statusID
+   * @param statusName
    * @return {Promise<void>}
    */
-  async chooseStatus(statusID) {
-    await this.page.click(this.statusCheckbox(statusID));
+  async chooseStatus(statusName) {
+    const statusElements = await this.page.$$(this.statusOrderStateSpan);
+    for (let i = 0; i < statusElements.length; i++) {
+      if (await this.page.evaluate(element => element.textContent, statusElements[i]) === statusName) {
+        await statusElements[i].click();
+        break;
+      }
+    }
+    //
   }
 
   /** Generate PDF by status
