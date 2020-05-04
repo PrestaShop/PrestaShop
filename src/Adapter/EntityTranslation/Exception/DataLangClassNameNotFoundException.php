@@ -25,7 +25,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\EntityTranslation;
+namespace PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception;
 
 class DataLangClassNameNotFoundException extends \RuntimeException
 {
