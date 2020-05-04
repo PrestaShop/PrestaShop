@@ -28,20 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
-use ErrorException;
 use Hook;
 use Image;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImagePathFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 
 final class ProductImageUploader extends AbstractImageUploader implements ProductImageUploaderInterface
@@ -108,35 +105,10 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
         //@Todo: wait for multishop specs
         $image->associateTo($this->contextShopIdsList);
 
-        try {
-            unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $image->id. '.jpg');
-            unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $image->id_product . '_' . $this->contextShopId . '.jpg');
-        } catch (ErrorException $e) {
-            //@todo in controller when catching this exception use a warning instead of error as in AttachmentController ?
-            throw new CannotUnlinkImageException($e->getMessage());
-        }
-    }
-
-    /**
-     * @param string $filePath
-     *
-     * @return string temporary image name
-     *
-     * @throws ImageUploadException
-     */
-    private function moveToTemporaryDir(string $filePath): string
-    {
-        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-
-        if (!$temporaryImageName) {
-            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
-        }
-
-        if (!move_uploaded_file($filePath, $temporaryImageName)) {
-            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
-        }
-
-        return $temporaryImageName;
+        //@todo: should add service for these paths
+        //@todo: should i supress warnings? These are generated images they'r sometimes missing
+        @unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $image->id. '.jpg');
+        @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $image->id_product . '_' . $this->contextShopId . '.jpg');
     }
 
     /**
