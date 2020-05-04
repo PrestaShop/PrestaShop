@@ -11,5 +11,5 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionModuleUninstallAfter', 'Module uninstall after', 'This hook is called at the end of module uninstall process', '1')
 ;
 
-ALTER TABLE `PREFIX_tab` ADD `wording` VARCHAR(196) DEFAULT NULL AFTER `icon`;
-ALTER TABLE `PREFIX_tab` ADD `wording_domain` VARCHAR(196) DEFAULT NULL AFTER `wording`;
+ALTER TABLE `PREFIX_tab` ADD `wording` VARCHAR(255) DEFAULT NULL AFTER `icon`;
+ALTER TABLE `PREFIX_tab` ADD `wording_domain` VARCHAR(255) DEFAULT NULL AFTER `wording`;

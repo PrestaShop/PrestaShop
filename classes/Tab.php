@@ -83,8 +83,8 @@ class TabCore extends ObjectModel
             'enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'hide_host_mode' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'icon' => ['type' => self::TYPE_STRING, 'size' => 64],
-            'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 194],
-            'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 194],
+            'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
+            'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64],
         ],
