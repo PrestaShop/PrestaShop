@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\EntityTranslation;
 
 use DataLangCore;
 use Doctrine\Common\Inflector\Inflector;
+use PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception\DataLangClassNameNotFoundException;
 use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
