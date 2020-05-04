@@ -62,6 +62,7 @@ describe('Category pagination', async () => {
     if (numberOfCategories !== 0) await expect(numberOfCategories).to.be.above(0);
   });
   // 1 : Create 11 categories
+  /* eslint-disable no-loop-func */
   for (let i = 0; i < 11; i++) {
     describe(`Create category n°${i + 1} in BO`, async () => {
       it('should go to add new page category', async function () {
@@ -93,6 +94,7 @@ describe('Category pagination', async () => {
       });
     });
   }
+  /* eslint-enable no-loop-func */
   // 2 : Test pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 10 per page', async function () {

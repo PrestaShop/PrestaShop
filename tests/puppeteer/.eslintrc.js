@@ -21,7 +21,6 @@ module.exports = {
     'no-await-in-loop': 'off',
     'class-methods-use-this': ['error', {'exceptMethods': ['replaceAll', 'sortArray', 'uppercaseFirstCharacter']}],
     'max-len': [2, {code: 120}],
-    'no-underscore-dangle': 'off',
-    'no-loop-func': 'off',
+    'no-underscore-dangle': 'off'
   },
 };
