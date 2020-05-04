@@ -74,17 +74,23 @@ describe('Test minimum purchase total required in order to validate the order', 
       await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
     });
 
-    it('should go to FO and verify the minimum purchase total value', async function () {
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
+      // Click on view my shop
+      page = await this.pageObjects.orderSettingsPage.viewMyShop();
+      this.pageObjects = await init();
+      await this.pageObjects.homePage.changeLanguage('en');
+      const isHomePage = await this.pageObjects.homePage.isHomePage();
+      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
+
+    it('should verify the minimum purchase total value', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
         `checkMinimumPurchaseTotal_${index}`,
         baseContext,
       );
-      // Click on view my shop
-      page = await this.pageObjects.boBasePage.viewMyShop();
-      this.pageObjects = await init();
-      await this.pageObjects.foBasePage.changeLanguage('en');
       // Go to the first product page
       await this.pageObjects.homePage.goToProductPage(1);
       // Add the created product to the cart
@@ -99,8 +105,14 @@ describe('Test minimum purchase total required in order to validate the order', 
         const alertText = await this.pageObjects.cartPage.getAlertWarning();
         await expect(alertText).to.contains(alertMessage);
       }
-      page = await this.pageObjects.foBasePage.closePage(browser, 1);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
+      page = await this.pageObjects.cartPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
     });
   });
 });

@@ -45,11 +45,11 @@
     <table class="table">
       <thead>
         <tr>
-          <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Payment method'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-          <th>{{ 'Transaction ID'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-          <th>{{ 'Amount'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Invoice'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-date">{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-payment">{{ 'Payment method'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          <th class="table-head-transaction">{{ 'Transaction ID'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+          <th class="table-head-amount">{{ 'Amount'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-invoice">{{ 'Invoice'|trans({}, 'Admin.Global') }}</th>
           <th></th>
         </tr>
       </thead>
@@ -70,7 +70,7 @@
         <tr class="d-none">
           <td colspan="6">
             <p class="mb-0">
-              <strong>{{ 'Card number'|trans({}, 'Admin.Global') }}</strong>
+              <strong>{{ 'Card number'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
               {% if payment.cardNumber %}
                 {{ payment.cardNumber }}
               {% else %}

@@ -72,7 +72,7 @@ describe('Enable terms of service', async () => {
       await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
     });
 
-    it('should go to FO and check terms of service checkbox', async function () {
+    it('should check terms of service checkbox', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -104,8 +104,14 @@ describe('Enable terms of service', async () => {
       // Check terms of service checkbox existence
       const isVisible = await this.pageObjects.checkoutPage.isConditionToApproveCheckboxVisible();
       await expect(isVisible).to.be.equal(test.args.enable);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
       page = await this.pageObjects.checkoutPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
     });
   });
 });

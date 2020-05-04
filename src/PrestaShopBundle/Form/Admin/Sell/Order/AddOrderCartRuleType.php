@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -113,10 +112,6 @@ class AddOrderCartRuleType extends AbstractType
                 'choices' => $invoices,
                 'required' => false,
                 'placeholder' => false,
-            ])
-            ->add('apply_on_all_invoices', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans('Apply on all invoices', [], 'Admin.Orderscustomers.Feature'),
             ])
         ;
     }

@@ -127,8 +127,8 @@ class CancelProductType extends TranslatorAwareType
                     'multiple' => false,
                     'expanded' => true,
                     'choices' => [
-                        $this->trans('Product(s) price: ', 'Admin.Orderscustomers.Feature') => VoucherRefundType::PRODUCT_PRICES_REFUND,
-                        $this->trans('Product(s) price, excluding amount of initial voucher: ', 'Admin.Orderscustomers.Feature') => VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
+                        $this->trans('Product(s) price:', 'Admin.Orderscustomers.Feature') => VoucherRefundType::PRODUCT_PRICES_REFUND,
+                        $this->trans('Product(s) price, excluding amount of initial voucher:', 'Admin.Orderscustomers.Feature') => VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
                     ],
                     'choice_attr' => function ($choice, $key) {
                         return [

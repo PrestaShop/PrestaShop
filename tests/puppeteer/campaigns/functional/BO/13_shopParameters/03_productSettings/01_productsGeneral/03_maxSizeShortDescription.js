@@ -94,7 +94,7 @@ describe('Update max size of short description', async () => {
         await expect(errorMessage).to.equal(this.pageObjects.addProductPage.errorMessage);
         errorMessage = await this.pageObjects.addProductPage.getErrorMessageWhenSummaryIsTooLong();
         await expect(errorMessage).to.equal(
-          this.pageObjects.addProductPage.errorMessageWhenSummaryTooLong.replace('%NUMBER', maxSummarySizeValue),
+          this.pageObjects.addProductPage.errorMessageWhenSummaryTooLong(maxSummarySizeValue),
         );
       });
     } else {

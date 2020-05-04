@@ -298,27 +298,17 @@
       <trans-unit id="259b411f284388d228a30c1e2ed0c61d">
         <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
         <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
-        <note>Line: 364</note>
+        <note>Line: 429</note>
       </trans-unit>
       <trans-unit id="01d2aac5d20787a1e873f2bdc79b514a">
         <source>Search this word instead.</source>
         <target>Search this word instead.</target>
         <note>Line: 437</note>
       </trans-unit>
-      <trans-unit id="a7c14cc18f4351bf0a0353f3c3e76e62">
-        <source>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</source>
-        <target>We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.</target>
-        <note>Line: 128</note>
-      </trans-unit>
       <trans-unit id="b080303b551112c7b9dcdf6a21051f42">
         <source>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</source>
         <target>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</target>
         <note>Line: 196</note>
-      </trans-unit>
-      <trans-unit id="0ffb46c2ee0fa51508f5882d06dd1769">
-        <source>Disabling this option will require exact spelling for the search to match result.</source>
-        <target>Disabling this option will require exact spelling for the search to match result.</target>
-        <note>Line: 201</note>
       </trans-unit>
       <trans-unit id="2324c421f8c5376051c024f15232cd80">
         <source>Enable approximate string matching.</source>
@@ -330,14 +320,19 @@
         <target>Note that this option is resource-consuming: the more you search, the longer it takes.</target>
         <note>Line: 220</note>
       </trans-unit>
-      <trans-unit id="971f70b93d876c6ab77fe4148b05a571">
-        <source>Only words this maximum size or smaller will be used during the search.</source>
-        <target>Only words this maximum size or smaller will be used during the search.</target>
+      <trans-unit id="39e61e5c1261f090e3c56f494a315f07">
+        <source>Disabling this option will require exact spelling for the search to match results.</source>
+        <target>Disabling this option will require exact spelling for the search to match results.</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="6392d16e9ae94967fe13716b69e1d0b2">
+        <source>Only words fewer or equal to this maximum length will be searched.</source>
+        <target>Only words fewer or equal to this maximum length will be searched.</target>
         <note>Line: 235</note>
       </trans-unit>
-      <trans-unit id="43395f8b43a1575cc446a23cffcdf396">
-        <source>This parameter will only be used if fuzzy search is activated, the lower the value, the more tolerant your research will be.</source>
-        <target>This parameter will only be used if fuzzy search is activated, the lower the value, the more tolerant your research will be.</target>
+      <trans-unit id="2b610a936a358875e6f5a01564a3a0e6">
+        <source>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</source>
+        <target>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</target>
         <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="88851f53412ccb796508fd5f48e7a44f">
@@ -476,14 +471,14 @@
         <target>Choose the page which contains your store's terms and conditions of use.</target>
         <note>Line: 126</note>
       </trans-unit>
-      <trans-unit id="cec0fa0b700a5827d510b4968d932e0a">
-        <source>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders .</source>
-        <target>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders .</target>
+      <trans-unit id="df2a562b17ec12920cee57e20b02ab67">
+        <source>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</source>
+        <target>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</target>
         <note>Line: 108</note>
       </trans-unit>
-      <trans-unit id="bee59a8648e890677989ad9aa3a34b1c">
-        <source>Allows you to delay shipping at your customers' request .</source>
-        <target>Allows you to delay shipping at your customers' request .</target>
+      <trans-unit id="4acdb94f4cbc425ad20d457ffa1d81c1">
+        <source>It allows you to delay shipping if your customers request it.</source>
+        <target>It allows you to delay shipping if your customers request it.</target>
         <note>Line: 116</note>
       </trans-unit>
     </body>
@@ -682,11 +677,6 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="df2a562b17ec12920cee57e20b02ab67">
-        <source>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</source>
-        <target>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</target>
-        <note>Line: 74</note>
-      </trans-unit>
       <trans-unit id="86d8ec764d429d4ebe6e39de9ff8c4a4">
         <source>Allows you to delay shipping at your customers' request.</source>
         <target>Allows you to delay shipping at your customers' request.</target>

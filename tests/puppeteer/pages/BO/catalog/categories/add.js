@@ -10,7 +10,7 @@ module.exports = class AddCategory extends BOBasePage {
 
     // Selectors
     this.nameInput = '#category_name_1';
-    this.displayed = 'label[for=\'category_active_%ID\']';
+    this.displayed = id => `label[for='category_active_${id}']`;
     this.descriptionIframe = '#category_description_1_ifr';
     this.categoryCoverImage = '#category_cover_image';
     this.metaTitleInput = '#category_meta_title_1';
@@ -30,8 +30,7 @@ module.exports = class AddCategory extends BOBasePage {
    */
   async createEditCategory(categoryData) {
     await this.setValue(this.nameInput, categoryData.name);
-    if (categoryData.displayed) await this.page.click(this.displayed.replace('%ID', '1'));
-    else await this.page.click(this.displayed.replace('%ID', '0'));
+    await this.page.click(this.displayed(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(this.descriptionIframe, categoryData.description);
     await this.generateAndUploadImage(this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(this.metaTitleInput, categoryData.metaTitle);

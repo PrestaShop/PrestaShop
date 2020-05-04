@@ -74,17 +74,23 @@ describe('Enable final summary', async () => {
       await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
     });
 
-    it('should go to FO and check the final summary after checkout', async function () {
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
+      // Click on view my shop
+      page = await this.pageObjects.orderSettingsPage.viewMyShop();
+      this.pageObjects = await init();
+      await this.pageObjects.homePage.changeLanguage('en');
+      const isHomePage = await this.pageObjects.homePage.isHomePage();
+      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
+
+    it('should check the final summary after checkout', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
         `checkFinalSummary${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
-      // Click on view my shop
-      page = await this.pageObjects.boBasePage.viewMyShop();
-      this.pageObjects = await init();
-      await this.pageObjects.foBasePage.changeLanguage('en');
       // Go to the first product page
       await this.pageObjects.homePage.goToProductPage(1);
       // Add the product to the cart
@@ -106,8 +112,14 @@ describe('Enable final summary', async () => {
       // Check the final summary existence in payment step
       const isVisible = await this.pageObjects.orderConfirmationPage.isFinalSummaryVisible();
       await expect(isVisible).to.be.equal(test.args.exist);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
       page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
     });
   });
 });
