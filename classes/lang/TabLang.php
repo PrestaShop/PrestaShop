@@ -47,6 +47,11 @@ class TabLangCore extends DataLangCore
             $message = $value;
         }
 
-        return $this->translator->trans($message, [], (!empty($domain)) ? $domain : $this->domain, $this->locale);
+        return $this->translator->trans(
+            $message,
+            [],
+            (!empty($domain)) ? $domain : $this->domain,
+            $this->locale
+        );
     }
 }
