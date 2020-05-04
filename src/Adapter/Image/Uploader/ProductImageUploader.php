@@ -166,7 +166,7 @@ final class ProductImageUploader extends AbstractImageUploader implements ImageU
     }
 
     /**
-     * @param Image $image\
+     * @param Image $image
      * @todo: check if this is really necessary
      */
     private function updateCover(Image $image): void

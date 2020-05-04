@@ -56,7 +56,7 @@ class ProductImageProvider
      * @param int $productId
      *
      * @return array
-     * @todo: multistore - single shop, group, all shops. combination image?
+     * @todo: handle multistore - single shop, group, all shops. combination image?
      */
     public function getImages(int $productId): array
     {
@@ -84,7 +84,7 @@ class ProductImageProvider
 
     /**
      * @param int $productId
-     * 
+     *
      * @return array
      */
     private function getLocalizedLegends(int $productId): array

@@ -95,7 +95,7 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
         $image->id_product = $productIdValue;
         $image->position = Image::getHighestPosition($productIdValue) + 1;
 
-        if (!Image::getCover($image->id_product)) {
+        if (!Image::getCover($productIdValue)) {
             $image->cover = 1;
         } else {
             $image->cover = 0;
