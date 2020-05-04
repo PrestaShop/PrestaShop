@@ -15,20 +15,20 @@ module.exports = class OrderMessages extends BOBasePage {
     this.gridTable = '#order_message_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
-    this.filterColumn = `${this.gridTable} #order_message_%FILTERBY`;
+    this.filterColumn = filterBy => `${this.gridTable} #order_message_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='order_message[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='order_message[actions][reset]']`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
-    this.actionsColumn = `${this.tableRow} td.column-actions`;
-    this.editRowLink = `${this.actionsColumn} a[data-original-title='Edit']`;
-    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
-    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a[data-original-title='Edit']`;
+    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
@@ -84,7 +84,7 @@ module.exports = class OrderMessages extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(filterBy, value) {
-    await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
+    await this.setValue(this.filterColumn(filterBy), value);
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
@@ -95,7 +95,7 @@ module.exports = class OrderMessages extends BOBasePage {
    * @return {Promise<void>}
    */
   async gotoEditOrderMessage(row = 1) {
-    await this.clickAndWaitForNavigation(this.editRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.editRowLink(row));
   }
 
   /**
@@ -106,12 +106,12 @@ module.exports = class OrderMessages extends BOBasePage {
   async deleteOrderMessage(row = 1) {
     this.dialogListener(true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
+      this.page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
+        `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -122,11 +122,7 @@ module.exports = class OrderMessages extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTable(row, column) {
-    return this.getTextContent(
-      this.tableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.tableColumn(row, column));
   }
 
   /* Bulk Actions Methods */
