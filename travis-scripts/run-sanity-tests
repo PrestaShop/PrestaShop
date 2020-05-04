@@ -3,7 +3,8 @@
 PROJECT_PATH=$(cd "$( dirname "$0" )/../" && pwd)
 
 /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1600x1200x16
-npm i -g npm@6.14.4
+nvm install 12.14.1
+nvm use 12.14.1
 cd $PROJECT_PATH/tests/puppeteer && npm install
 
 echo "* Running puppeteer sanity tests ...";
