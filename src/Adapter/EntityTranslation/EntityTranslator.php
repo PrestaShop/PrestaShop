@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\EntityTranslation;
 use DataLangCore;
 use Db;
 use Doctrine\Common\Inflector\Inflector;
+use InvalidArgumentException;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -184,23 +185,32 @@ class EntityTranslator implements EntityTranslatorInterface
     /**
      * Retrieves the original wording via reverse dictionary search (aka "untranslation")
      *
-     * @param array $data
-     * @param string $fieldName
+     * @param array $data Database record
+     * @param string $fieldName Name of the field from $data to translate
      *
-     * @return string
+     * @return string "Untranslated" value
      */
     protected function getSourceString(array $data, string $fieldName): string
     {
+        if (!array_key_exists($fieldName, $data)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Unable to reverse translate entity field "%s" because it\'s not defined in the provided database record',
+                    $fieldName
+                )
+            );
+        }
+
         return $this->translator->getSourceString($data[$fieldName], $this->dataLang->getDomain());
     }
 
     /**
      * Finds out the original wording and translates it
      *
-     * @param $data
-     * @param $fieldName
+     * @param array $data Database record
+     * @param string $fieldName Name of the field from $data to translate
      *
-     * @return string
+     * @return string Translated value
      */
     protected function doTranslate(array $data, string $fieldName): string
     {
