@@ -1,5 +1,5 @@
 {
-  "name": "puppeteer",
+  "name": "puppeteer-tests",
   "version": "1.0.0",
   "description": "Tests based on puppeteer",
   "directories": {
