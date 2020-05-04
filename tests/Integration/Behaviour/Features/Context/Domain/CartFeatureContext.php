@@ -246,7 +246,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $customer = SharedStorage::getStorage()->get($customerReference);
 
         $getAddressByCountryIsoCode = static function ($isoCode) use ($customer, $stateName) {
-            $customerAddresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
+            $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
 
             foreach ($customerAddresses as $address) {
                 $country = new Country($address['id_country']);

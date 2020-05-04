@@ -809,6 +809,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * Sales-taxes US-FL 6%
+     *
      * @Given tax :taxName is applied to order :ordeReference
      */
     public function assertTaxIsAppliedToOrder(string $taxName, string $orderReference)

@@ -81,7 +81,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function rebootKernelPrepareFeature()
     {
         $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
-        $warmupDir = substr($realCacheDir, 0, -1).('_' === substr($realCacheDir, -1) ? '-' : '_');
+        $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
         self::$kernel->reboot($warmupDir);
     }
 
