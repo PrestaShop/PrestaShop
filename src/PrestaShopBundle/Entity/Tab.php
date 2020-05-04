@@ -111,14 +111,14 @@ class Tab
     /**
      * @var string
      *
-     * @ORM\Column(name="wording", type="string", length=194, nullable=true)
+     * @ORM\Column(name="wording", type="string", length=255, nullable=true)
      */
     private $wording;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="wording_domain", type="string", length=194, nullable=true)
+     * @ORM\Column(name="wording_domain", type="string", length=255, nullable=true)
      */
     private $wordingDomain;
 
