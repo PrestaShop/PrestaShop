@@ -93,7 +93,7 @@ class EntityTranslator implements EntityTranslatorInterface
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function translate(int $languageId, int $shopId)
+    public function translate(int $languageId, int $shopId): void
     {
         $lang = new Language($languageId);
         if (empty($lang->id)) {
@@ -110,44 +110,46 @@ class EntityTranslator implements EntityTranslatorInterface
 
         $tableData = $this->db->executeS($sql, true, false);
 
-        if (!empty($tableData)) {
-            $keys = $this->dataLang->getKeys();
-            $fieldsToUpdate = $this->dataLang->getFieldsToUpdate();
+        if (empty($tableData)) {
+            return;
+        }
 
-            foreach ($tableData as $data) {
-                $updateWhere = [];
-                $updateField = [];
+        $keys = $this->dataLang->getKeys();
+        $fieldsToUpdate = $this->dataLang->getFieldsToUpdate();
 
-                // Construct update where
-                foreach ($keys as $key) {
-                    $updateWhere[] = '`' . bqSQL($key) . '` = "' . pSQL($data[$key]) . '"';
+        foreach ($tableData as $data) {
+            $updateWhere = [];
+            $updateField = [];
+
+            // Construct update where
+            foreach ($keys as $key) {
+                $updateWhere[] = '`' . bqSQL($key) . '` = "' . pSQL($data[$key]) . '"';
+            }
+
+            // Construct update field
+            foreach ($fieldsToUpdate as $fieldName) {
+                if ('url_rewrite' === $fieldName && Language::$locale_crowdin_lang === $lang->locale) {
+                    continue;
                 }
 
-                // Construct update field
-                foreach ($fieldsToUpdate as $fieldName) {
-                    if ('url_rewrite' === $fieldName && Language::$locale_crowdin_lang === $lang->locale) {
-                        continue;
-                    }
+                $translatedField = $this->doTranslate($data, $fieldName);
 
-                    $translatedField = $this->doTranslate($data, $fieldName);
-
-                    if (!empty($translatedField) && $translatedField != $data[$fieldName]) {
-                        $updateField[] = '`' . bqSQL($fieldName) . '` = "' . pSQL($translatedField) . '"';
-                    }
+                if (!empty($translatedField) && $translatedField != $data[$fieldName]) {
+                    $updateField[] = '`' . bqSQL($fieldName) . '` = "' . pSQL($translatedField) . '"';
                 }
+            }
 
-                // Update table
-                if (!empty($updateWhere) && !empty($updateField)) {
-                    $updateWhere = implode(' AND ', $updateWhere);
-                    $updateField = implode(', ', $updateField);
+            // Update table
+            if (!empty($updateWhere) && !empty($updateField)) {
+                $updateWhere = implode(' AND ', $updateWhere);
+                $updateField = implode(', ', $updateField);
 
-                    $sql = "UPDATE `$tableNameSql` SET $updateField
-                        WHERE $updateWhere AND `id_lang` = $languageId"
-                        . ($shopFieldExists ? sprintf(' AND `id_shop` = %d', $this->shopId) : '')
-                        . ' LIMIT 1';
+                $sql = "UPDATE `$tableNameSql` SET $updateField
+                    WHERE $updateWhere AND `id_lang` = $languageId"
+                    . ($shopFieldExists ? sprintf(' AND `id_shop` = %d', $this->shopId) : '')
+                    . ' LIMIT 1';
 
-                    $this->db->execute($sql);
-                }
+                $this->db->execute($sql);
             }
         }
     }
