@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags add-discounts-to-order
 @reset-database-before-feature
+@reboot-kernel-before-feature
 Feature: Add discounts to order from Back Office (BO)
   As a BO user
   I need to be able to add discounts to existing orders from the BO
