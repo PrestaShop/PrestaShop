@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
-/** @todo: should it extend DomainException or ProductException? */
 class ImageException extends ProductException
 {
 }

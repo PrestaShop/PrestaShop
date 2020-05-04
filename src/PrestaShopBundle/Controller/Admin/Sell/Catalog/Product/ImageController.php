@@ -32,10 +32,12 @@ use ErrorException;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +45,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ImageController extends FrameworkBundleAdminController
 {
     /**
-     * @todo: security annotations
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
      *
      * @param int $productId
      * @param Request $request
@@ -56,25 +58,30 @@ class ImageController extends FrameworkBundleAdminController
 
         if (empty($uploadedFiles)) {
             return $this->json([
-                //@todo: trans?
-                'message' => 'No files provided for upload'
+                'message' => $this->trans('No file was uploaded.', 'Admin.Advparameters.Notification')
             ]);
         }
 
-        foreach ($uploadedFiles as $imageFile) {
-            $mimeType = $imageFile->getMimeType();
-            $pathToTempImage = $this->moveImageToTemporaryDir($imageFile);
-
-            $this->getCommandBus()->handle(new UploadProductImageCommand(
-                $productId,
-                $pathToTempImage,
-                $mimeType
-            ));
-
+        /** @var UploadedFile $uploadedFile */
+        foreach ($uploadedFiles as $uploadedFile) {
+            $mimeType = $uploadedFile->getMimeType();
             try {
-                unlink($pathToTempImage);
+                $this->checkUploadedFileSize($uploadedFile);
+                $tmpImageFile = $uploadedFile->move(_PS_TMP_IMG_DIR_, uniqid());
+
+                $this->getCommandBus()->handle(new UploadProductImageCommand(
+                    $productId,
+                    $tmpImageFile->getPathname(),
+                    $mimeType
+                ));
+
+                unlink($tmpImageFile->getPathname());
             } catch (ErrorException $e) {
-                //@todo: failed to remove temp image. show warning ?
+                //@todo: failed to unlink temp img. Warn?
+            } catch (FileException $e) {
+                //@todo: failed to move file for some reason. Error to check permissions or smth?
+            } catch (ImageException $e) {
+                //@todo: constraint? file size or type wrong.
             }
         }
 
@@ -85,6 +92,8 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param int $productId
      *
      * @return JsonResponse
@@ -114,12 +123,9 @@ class ImageController extends FrameworkBundleAdminController
     /**
      * @param UploadedFile $uploadedFile
      *
-     * @return string
-     *
      * @throws ImageConstraintException
-     * @throws ImageUploadException
      */
-    private function moveImageToTemporaryDir(UploadedFile $uploadedFile): string
+    private function checkUploadedFileSize(UploadedFile $uploadedFile): void
     {
         /** @var UploadSizeConfigurationInterface $uploadSizeConfig */
         $uploadSizeConfig = $this->get('prestashop.core.configuration.upload_size_configuration');
@@ -132,17 +138,5 @@ class ImageController extends FrameworkBundleAdminController
                 ImageConstraintException::INVALID_FILE_SIZE
             );
         }
-
-        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-
-        if (!$temporaryImageName) {
-            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
-        }
-
-        if (!move_uploaded_file($uploadedFile->getPathname(), $temporaryImageName)) {
-            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
-        }
-
-        return $temporaryImageName;
     }
 }

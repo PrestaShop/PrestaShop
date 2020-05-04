@@ -4,6 +4,7 @@ admin_products_v2_images_upload:
   methods: POST
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:upload
+    _legacy_controller: AdminProducts
   requirements:
     productId: \d+
   options:
@@ -14,6 +15,7 @@ admin_products_v2_images_get_images:
   methods: GET
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:getImages
+    _legacy_controller: AdminProducts
   requirements:
     productId: \d+
   options:
