@@ -33,7 +33,6 @@ use Image;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImagePathFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
@@ -158,22 +157,5 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
         }
 
         return $image;
-    }
-
-    /**
-     * @param int $fileSize
-     *
-     * @throws ImageConstraintException
-     */
-    private function checkSize(int $fileSize): void
-    {
-        $maxFileSize = $this->uploadSizeConfiguration->getMaxUploadSizeInBytes();
-
-        if ($maxFileSize > 0 && $fileSize > $maxFileSize) {
-            throw new ImageConstraintException(
-                sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', $maxFileSize, $fileSize),
-                ImageConstraintException::INVALID_FILE_SIZE
-            );
-        }
     }
 }
