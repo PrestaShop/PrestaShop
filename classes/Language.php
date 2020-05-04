@@ -1404,10 +1404,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function updateMultilangTable($iso_code)
     {
-        $langId = Language::getIdByIso($iso_code);
+        $langId = static::getIdByIso($iso_code);
 
         if (!empty($langId)) {
-            $lang = new Language($langId);
+            $lang = new static($langId);
 
             $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
             if (!empty($rows)) {
@@ -1437,9 +1437,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 ->getClassNameFromTable($tableName);
 
             if (_DB_PREFIX_ . 'country_lang' === $tableName) {
-                self::updateMultilangFromCldr($language);
+                static::updateMultilangFromCldr($language);
             } else {
-                self::updateMultilangFromClass($tableName, $className, $language);
+                static::updateMultilangFromClass($tableName, $className, $language);
             }
         }
 
@@ -1484,7 +1484,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $table
      * @param string $className
-     * @param Language $lang
+     * @param static $lang
      *
      * @throws PrestaShopDatabaseException
      */
@@ -1514,13 +1514,13 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * untranslate then re-translate duplicated rows in tables with pattern xxx_lang.
      *
      * @param DataLangCore $classObject
-     * @param Language $lang
+     * @param static $lang
      * @param Shop $shop
      *
      * @throws \PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private static function updateMultilangFromClassForShop(DataLangCore $classObject, Language $lang, Shop $shop)
+    private static function updateMultilangFromClassForShop(DataLangCore $classObject, self $lang, Shop $shop)
     {
         $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
         $shopDefaultLanguage = new Language($shopDefaultLangId);
