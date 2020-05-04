@@ -145,7 +145,7 @@ class FileLoader
         // default path
         if (empty($iso)) {
             return [
-                $this->dataPath . $fileName
+                $this->dataPath . $fileName,
             ];
         }
 
