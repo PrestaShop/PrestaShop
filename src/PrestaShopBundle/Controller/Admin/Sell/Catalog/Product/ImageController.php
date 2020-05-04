@@ -61,21 +61,21 @@ class ImageController extends FrameworkBundleAdminController
             ]);
         }
 
-        /** @var UploadedFile $imageFile */
-        $imageFile = reset($uploadedFiles);
-        $mimeType = $imageFile->getMimeType();
-        $pathToTempImage = $this->moveImageToTemporaryDir($imageFile);
+        foreach ($uploadedFiles as $imageFile) {
+            $mimeType = $imageFile->getMimeType();
+            $pathToTempImage = $this->moveImageToTemporaryDir($imageFile);
 
-        $this->getCommandBus()->handle(new UploadProductImageCommand(
-            $productId,
-            $pathToTempImage,
-            $mimeType
-        ));
+            $this->getCommandBus()->handle(new UploadProductImageCommand(
+                $productId,
+                $pathToTempImage,
+                $mimeType
+            ));
 
-        try {
-            unlink($pathToTempImage);
-        } catch (ErrorException $e) {
-            //@todo: failed to remove temp image. show warning ?
+            try {
+                unlink($pathToTempImage);
+            } catch (ErrorException $e) {
+                //@todo: failed to remove temp image. show warning ?
+            }
         }
 
         return $this->json([
@@ -83,38 +83,6 @@ class ImageController extends FrameworkBundleAdminController
             'message' => 'test response'
         ]);
     }
-
-//    /**
-//     * @todo: security annotations
-//     *
-//     * @param int $productId
-//     * @param Request $request
-//     *
-//     * @return JsonResponse
-//     */
-//    public function bulkUpload(int $productId, Request $request): JsonResponse
-//    {
-//        $uploadedFiles = $request->files->all();
-//
-//        if (empty($uploadedFiles)) {
-//            return $this->json([
-//                //@todo: trans?
-//                'message' => 'No files provided for upload'
-//            ]);
-//        }
-//
-//        $imageIds = $this->getCommandBus()->handle(new BulkAddProductImageCommand($productId, count($uploadedFiles)));
-//
-//        foreach ($imageIds as $imageId) {
-//            //@todo: how should I map image file with image Id, do i care which img gets which id or just loop through?
-//            //@todo: And how do i roll back if some images fails to upload?
-//        }
-//
-//        return $this->json([
-//            //@todo: test
-//            'message' => 'test response'
-//        ]);
-//    }
 
     /**
      * @param int $productId
