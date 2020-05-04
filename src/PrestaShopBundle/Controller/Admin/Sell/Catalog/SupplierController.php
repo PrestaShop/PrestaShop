@@ -449,11 +449,11 @@ class SupplierController extends FrameworkBundleAdminController
 
         return [
             SupplierNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             AddressNotFoundException::class => $this->trans(
-                'The address for this supplier have been deleted',
+                'The address for this supplier has been deleted.',
                 'Admin.Notifications.Error'
             ),
             CannotToggleSupplierStatusException::class => $this->trans(
