@@ -84,41 +84,6 @@ class ImageController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @param UploadedFile $uploadedFile
-     *
-     * @return string
-     *
-     * @throws ImageConstraintException
-     * @throws ImageUploadException
-     */
-    private function moveImageToTemporaryDir(UploadedFile $uploadedFile): string
-    {
-        /** @var UploadSizeConfigurationInterface $uploadSizeConfig */
-        $uploadSizeConfig = $this->get('prestashop.core.configuration.upload_size_configuration');
-        $maxUploadSize = $uploadSizeConfig->getMaxUploadSizeInBytes();
-        $fileSize = $uploadedFile->getSize();
-
-        if ($maxUploadSize > 0 && $fileSize > $maxUploadSize) {
-            throw new ImageConstraintException(
-                sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', $maxUploadSize, $fileSize),
-                ImageConstraintException::INVALID_FILE_SIZE
-            );
-        }
-
-        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-
-        if (!$temporaryImageName) {
-            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
-        }
-
-        if (!move_uploaded_file($uploadedFile->getPathname(), $temporaryImageName)) {
-            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
-        }
-
-        return $temporaryImageName;
-    }
-
 //    /**
 //     * @todo: security annotations
 //     *
@@ -176,5 +141,40 @@ class ImageController extends FrameworkBundleAdminController
         return $this->json([
             'images' => $formattedImages,
         ]);
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     *
+     * @return string
+     *
+     * @throws ImageConstraintException
+     * @throws ImageUploadException
+     */
+    private function moveImageToTemporaryDir(UploadedFile $uploadedFile): string
+    {
+        /** @var UploadSizeConfigurationInterface $uploadSizeConfig */
+        $uploadSizeConfig = $this->get('prestashop.core.configuration.upload_size_configuration');
+        $maxUploadSize = $uploadSizeConfig->getMaxUploadSizeInBytes();
+        $fileSize = $uploadedFile->getSize();
+
+        if ($maxUploadSize > 0 && $fileSize > $maxUploadSize) {
+            throw new ImageConstraintException(
+                sprintf('Max file size allowed is "%s" bytes. Uploaded file size is "%s".', $maxUploadSize, $fileSize),
+                ImageConstraintException::INVALID_FILE_SIZE
+            );
+        }
+
+        $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+
+        if (!$temporaryImageName) {
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+
+        if (!move_uploaded_file($uploadedFile->getPathname(), $temporaryImageName)) {
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
+        }
+
+        return $temporaryImageName;
     }
 }

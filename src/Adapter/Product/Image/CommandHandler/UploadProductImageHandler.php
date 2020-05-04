@@ -80,6 +80,15 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
         return $imageId;
     }
 
+    /**
+     * @param int $productIdValue
+     *
+     * @return Image
+     *
+     * @throws ImageConstraintException
+     * @throws ImageException
+     * @throws PrestaShopException
+     */
     private function addToDatabase(int $productIdValue): Image
     {
         $image = new Image();
