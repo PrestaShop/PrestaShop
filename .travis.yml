@@ -72,7 +72,7 @@ before_install:
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
-  - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then bash travis-scripts/setup-node-js.sh; fi;
+  - bash travis-scripts/setup-node-js.sh;
 
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
