@@ -104,6 +104,7 @@ class VirtualProductController extends FrameworkBundleAdminController
             ->getRepository('PrestaShopBundle:ProductDownload')
             ->findOneBy([
                 'idProduct' => $idProduct,
+                'active' => 1
             ]);
 
         $response = new BinaryFileResponse(
