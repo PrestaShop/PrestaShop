@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\File\Uploader;
 
+use ErrorException;
 use Hook;
 use Image;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImagePathFactoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ProductImageUploaderInterface;
@@ -103,11 +105,37 @@ final class ProductImageUploader extends AbstractImageUploader implements Produc
         Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $image->id_product]);
         //@Todo: wait for multishop specs
         $image->associateTo($this->contextShopIdsList);
+        $this->deleteOldGeneratedImages($image);
+    }
 
-        //@todo: should add service for these paths
-        //@todo: should i supress warnings? These are generated images they'r sometimes missing
-        @unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $image->id. '.jpg');
-        @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $image->id_product . '_' . $this->contextShopId . '.jpg');
+    /**
+     * @param Image $image
+     *
+     * @throws CannotUnlinkImageException
+     */
+    private function deleteOldGeneratedImages(Image $image): void
+    {
+        $oldGeneratedImages = [
+            _PS_TMP_IMG_DIR_ . 'product_' . (int) $image->id. '.jpg',
+            _PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $image->id_product . '_' . $this->contextShopId . '.jpg',
+        ];
+
+        foreach ($oldGeneratedImages as $oldImage) {
+            if (file_exists($oldImage)) {
+                try {
+                    unlink($oldImage);
+                } catch (ErrorException $e) {
+                    throw new CannotUnlinkImageException(
+                        sprintf(
+                            'Failed to remove old generated image "%s"',
+                            $oldImage
+                        ),
+                        0,
+                        $e
+                    );
+                }
+            }
+        }
     }
 
     /**
