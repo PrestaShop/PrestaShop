@@ -605,7 +605,7 @@ class CartPresenter implements PresenterInterface
             } else {
                 // In all other cases, the value displayed should be the total of applied reductions for the current voucher
                 $totalCartVoucherReduction = $shippingReduction + $amountReduction + $percentageReduction;
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
+                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
