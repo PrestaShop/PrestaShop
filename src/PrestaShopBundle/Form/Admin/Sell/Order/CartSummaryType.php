@@ -57,7 +57,7 @@ class CartSummaryType extends AbstractType
     /**
      * @var int
      */
-    private $defaultOrderState;
+    private $defaultPaymentOrderState;
 
     /**
      * @var array
@@ -77,7 +77,7 @@ class CartSummaryType extends AbstractType
         $this->configuration = $configuration;
         $this->orderStatesChoiceProvider = $orderStatesChoiceProvider;
         $this->paymentModulesChoiceProvider = $paymentModulesChoiceProvider;
-        $this->defaultOrderState = (int) $this->configuration->get('PS_OS_PAYMENT');
+        $this->defaultPaymentOrderState = (int) $this->configuration->get('PS_OS_PAYMENT');
         $this->paymentOrderStates = [
             'ps_checkpayment' => (int) $this->configuration->get('PS_OS_CHEQUE'),
             'ps_wirepayment' => (int) $this->configuration->get('PS_OS_BANKWIRE'),
@@ -137,7 +137,7 @@ class CartSummaryType extends AbstractType
     public function getChoiceAttr($value, $key)
     {
         return [
-            'data-order-state' => $this->paymentOrderStates[$key] ?? $this->defaultOrderState,
+            'data-order-state' => $this->paymentOrderStates[$key] ?? $this->defaultPaymentOrderState,
         ];
     }
 }
