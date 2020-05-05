@@ -43,7 +43,7 @@ class TabTranslator extends EntityTranslator
      * Translate using wordings
      * {@inheritdoc}
      */
-    public function translate(int $languageId, int $shopId)
+    public function translate(int $languageId, int $shopId): void
     {
         $this->sourceIndex = $this->buildIndex();
         parent::translate($languageId, $shopId);
