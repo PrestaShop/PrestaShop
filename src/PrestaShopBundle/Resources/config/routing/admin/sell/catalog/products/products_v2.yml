@@ -20,3 +20,14 @@ admin_products_v2_images_get_images:
     productId: \d+
   options:
     expose: true
+
+admin_products_v2_images_delete:
+  path: /{productId}/images
+  methods: DELETE
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:delete
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+  options:
+    expose: true

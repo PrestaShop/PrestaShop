@@ -101,7 +101,7 @@ final class DeleteProductImageHandler extends AbstractImageHandler implements De
      */
     private function useFirstPositionImageAsCover(int $productId): void
     {
-        $fallbackCoverImageId = Image::getFirstByPosition($productId, $this->contextShopId);
+        $fallbackCoverImageId = Image::findFirstByPosition($productId, $this->contextShopId);
         $fallbackCoverImage = $this->getImage(new ImageId($fallbackCoverImageId));
 
         $fallbackCoverImage->cover = true;

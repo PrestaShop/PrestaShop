@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use ErrorException;
 use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
@@ -73,7 +74,6 @@ class ImageController extends FrameworkBundleAdminController
             try {
                 $this->checkUploadedFileSize($uploadedFile);
             } catch (ImageConstraintException $e) {
-                //@todo: decide convention for ajax error responses
                 return $this->json(
                     ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                     Response::HTTP_BAD_REQUEST
@@ -99,7 +99,6 @@ class ImageController extends FrameworkBundleAdminController
             } catch (ErrorException $e) {
                 return $this->json(
                     [
-                        //@todo: should be just a warning, because upload have already succeeded
                         'message' => $this->trans(
                             'Failed to delete file "%filePath%"',
                             'Admin.Notifications.Error',
@@ -112,8 +111,7 @@ class ImageController extends FrameworkBundleAdminController
         }
 
         return $this->json([
-            //@todo: test
-            'message' => 'success test response'
+            'message' => $this->trans('Successful upload.', 'Admin.Notifications.Success'),
         ]);
     }
 
@@ -127,7 +125,6 @@ class ImageController extends FrameworkBundleAdminController
     public function getImagesAction(int $productId): JsonResponse
     {
         $images = $this->getQueryBus()->handle(new GetProductImages($productId));
-        //@todo: check edgecases/errors etc.
 
         $formattedImages = [];
         /** @var ProductImages $images */
@@ -141,8 +138,34 @@ class ImageController extends FrameworkBundleAdminController
                 'legend' => $image->getLocalizedLegends()[$this->getContextLangId()]
             ];
         }
+
         return $this->json([
-            'images' => $formattedImages,
+            'data' => [
+                'images' => $formattedImages,
+            ],
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $imageId
+     *
+     * @return JsonResponse
+     */
+    public function deleteAction(int $imageId): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductImageCommand($imageId));
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([
+            'message' => $this->trans('Successful deletion.', 'Admin.Notifications.Success'),
         ]);
     }
 

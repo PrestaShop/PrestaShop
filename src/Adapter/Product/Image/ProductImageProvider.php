@@ -69,6 +69,11 @@ class ProductImageProvider
         ;
 
         $images = $qb->execute()->fetchAll(FetchMode::ASSOCIATIVE);
+
+        if (!$images) {
+            return [];
+        }
+
         $localizedLegends = $this->getLocalizedLegends($productId);
 
         foreach ($images as &$image) {

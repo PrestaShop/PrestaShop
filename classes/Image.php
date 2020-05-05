@@ -888,7 +888,7 @@ class ImageCore extends ObjectModel
      *
      * @return int|null
      */
-    public static function getFirstByPosition(int $productId, int $shopId): ?int
+    public static function findFirstByPosition(int $productId, int $shopId): ?int
     {
         $result = Db::getInstance()->getValue('
             SELECT id_image
