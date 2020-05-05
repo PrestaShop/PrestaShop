@@ -32,8 +32,6 @@ namespace PrestaShop\PrestaShop\Adapter\EntityTranslation;
  */
 class TabTranslator extends EntityTranslator
 {
-    const TABLE_NAME = _DB_PREFIX_ . 'tab';
-
     /**
      * @var array[] Sets of wording, wording_domain
      */
@@ -68,7 +66,7 @@ class TabTranslator extends EntityTranslator
      */
     private function buildIndex(): array
     {
-        $tableName = self::TABLE_NAME;
+        $tableName = $this->dbPrefix . 'tab';
 
         $sql = "SELECT id_tab, wording, wording_domain FROM $tableName";
         $results = $this->db->executeS($sql);
