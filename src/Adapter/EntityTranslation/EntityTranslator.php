@@ -68,18 +68,26 @@ class EntityTranslator implements EntityTranslatorInterface
     protected $shopId;
 
     /**
+     * @var string
+     */
+    protected $dbPrefix;
+
+    /**
      * @param Db $db
+     * @param string $dbPrefix
      * @param TranslatorInterface $translator
      * @param DataLangCore $dataLang
      */
     public function __construct(
         Db $db,
+        string $dbPrefix,
         TranslatorInterface $translator,
         DataLangCore $dataLang
     ) {
         //$this->translatorLanguageLoader = new TranslatorLanguageLoader(true);
         $this->dataLang = $dataLang;
         $this->db = $db;
+        $this->dbPrefix = $dbPrefix;
         $this->translator = $translator;
         $this->tableName = $this->buildTableNameFromDataLang($dataLang);
     }
@@ -229,8 +237,8 @@ class EntityTranslator implements EntityTranslatorInterface
     private function buildTableNameFromDataLang(DataLangCore $dataLang): string
     {
         $tableName = Inflector::tableize(get_class($dataLang));
-        if (substr($tableName, 0, strlen(_DB_PREFIX_)) !== _DB_PREFIX_) {
-            $tableName = _DB_PREFIX_ . $tableName;
+        if (substr($tableName, 0, strlen($this->dbPrefix)) !== $this->dbPrefix) {
+            $tableName = $this->dbPrefix . $tableName;
         }
 
         return $tableName;

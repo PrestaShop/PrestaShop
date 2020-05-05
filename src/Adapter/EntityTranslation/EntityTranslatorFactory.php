@@ -54,12 +54,18 @@ class EntityTranslatorFactory
     private $dataLangFactory;
 
     /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
     {
         $this->db = Db::getInstance();
-        $this->dataLangFactory = new DataLangFactory(_DB_PREFIX_, $translator);
+        $this->dbPrefix = _DB_PREFIX_;
+        $this->dataLangFactory = new DataLangFactory($this->dbPrefix, $translator);
         $this->translator = $translator;
     }
 
@@ -93,6 +99,7 @@ class EntityTranslatorFactory
 
         return new $selfTranslator(
             $this->db,
+            $this->dbPrefix,
             $this->translator,
             $dataLang
         );
