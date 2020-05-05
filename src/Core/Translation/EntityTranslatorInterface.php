@@ -37,5 +37,5 @@ interface EntityTranslatorInterface
      * @param int $languageId
      * @param int $shopId
      */
-    public function translate(int $languageId, int $shopId);
+    public function translate(int $languageId, int $shopId): void;
 }
