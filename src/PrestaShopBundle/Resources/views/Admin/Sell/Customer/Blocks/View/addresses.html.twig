@@ -27,6 +27,7 @@
   <h3 class="card-header">
     <i class="material-icons">location_on</i>
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
+    <span class="badge badge-primary rounded">{{ customerInformation.addressesInformation|length }}</span>
 
     <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1}) }}"
        class="tooltip-link float-right"
@@ -44,6 +45,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Company'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
             <th>{{ 'Address'|trans({}, 'Admin.Global') }}</th>
@@ -57,6 +59,7 @@
             {% set addressEditUrl = getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'updateaddress': 1, 'back': app.request.uri}) %}
 
             <tr class="customer-address">
+              <td class="customer-address-id js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.addressId }}</td>
               <td class="customer-address-company js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
               <td class="customer-address-name js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
               <td class="customer-address-address js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullAddress }}</td>
