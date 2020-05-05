@@ -80,6 +80,12 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\EditProductImageCommand
 
+    prestashop.adapter.product.image.command_handler.delete_product_image_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\DeleteProductImageHandler
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand
+
     prestashop.adapter.product.image.query_handler.get_product_images_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImagesHandler
         arguments:
