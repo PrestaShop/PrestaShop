@@ -9,7 +9,8 @@ module.exports = class Checkout extends FOBasePage {
     this.checkoutPageBody = 'body#checkout';
     this.personalInformationStepSection = '#checkout-personal-information-step';
     this.paymentStepSection = '#checkout-payment-step';
-    this.paymentOptionInput = `${this.paymentStepSection} input[name='payment-option'][data-module-name='%NAME']`;
+    this.paymentOptionInput = name => `${this.paymentStepSection} input[name='payment-option']`
+      + `[data-module-name='${name}']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
@@ -35,7 +36,7 @@ module.exports = class Checkout extends FOBasePage {
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
     // Shipping method step
     this.deliveryStepSection = '#checkout-delivery-step';
-    this.deliveryOptionLabel = `${this.deliveryStepSection} label[for='delivery_option_%ID']`;
+    this.deliveryOptionLabel = id => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     // Gift selectors
@@ -82,7 +83,7 @@ module.exports = class Checkout extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async chooseShippingMethodAndAddComment(shippingMethod, comment) {
-    await this.waitForSelectorAndClick(this.deliveryOptionLabel.replace('%ID', shippingMethod));
+    await this.waitForSelectorAndClick(this.deliveryOptionLabel(shippingMethod));
     await this.setValue(this.deliveryMessage, comment);
     return this.goToPaymentStep();
   }
@@ -102,7 +103,7 @@ module.exports = class Checkout extends FOBasePage {
    * @return {Promise<void>}
    */
   async choosePaymentAndOrder(paymentModuleName) {
-    await this.page.click(this.paymentOptionInput.replace('%NAME', paymentModuleName));
+    await this.page.click(this.paymentOptionInput(paymentModuleName));
     await Promise.all([
       this.waitForVisibleSelector(this.paymentConfirmationButton),
       this.page.click(this.conditionToApproveLabel),
@@ -116,7 +117,7 @@ module.exports = class Checkout extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isPaymentMethodExist(paymentModuleName) {
-    return this.elementVisible(this.paymentOptionInput.replace('%NAME', paymentModuleName), 2000);
+    return this.elementVisible(this.paymentOptionInput(paymentModuleName), 2000);
   }
 
   /**

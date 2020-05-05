@@ -10,7 +10,7 @@ module.exports = class Product extends FOBasePage {
     this.productPrice = '#main span[itemprop="price"]';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
-    this.colorInput = '#group_2 li input[title=%COLOR]';
+    this.colorInput = color => `#group_2 li input[title=${color}]`;
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
@@ -19,8 +19,8 @@ module.exports = class Product extends FOBasePage {
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
-    this.productSizeOption = '#group_1 option[title=\'%SIZE\']';
-    this.productColorInput = '#group_2 input[title=\'%COLOR\']';
+    this.productSizeOption = size => `#group_1 option[title=${size}]`;
+    this.productColorInput = color => `#group_2 input[title=${color}]`;
     this.metaLink = '#main > meta';
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
@@ -54,8 +54,8 @@ module.exports = class Product extends FOBasePage {
     await this.page.waitFor(1000);
     if (attributeToChoose.color) {
       await Promise.all([
-        this.waitForVisibleSelector(this.colorInput.replace('%COLOR', attributeToChoose.color)),
-        this.page.click(this.colorInput.replace('%COLOR', attributeToChoose.color)),
+        this.waitForVisibleSelector(this.colorInput(attributeToChoose.color)),
+        this.page.click(this.colorInput(attributeToChoose.color)),
       ]);
     }
     if (quantity !== 1) {
@@ -112,7 +112,7 @@ module.exports = class Product extends FOBasePage {
    */
   async isUnavailableProductSizeDisplayed(size) {
     await this.page.waitFor(2000);
-    const exist = await this.page.$(this.productSizeOption.replace('%SIZE', size)) !== null;
+    const exist = await this.page.$(this.productSizeOption(size)) !== null;
     return exist;
   }
 
@@ -122,7 +122,7 @@ module.exports = class Product extends FOBasePage {
    * @returns {boolean}
    */
   isUnavailableProductColorDisplayed(color) {
-    return this.elementVisible(this.productColorInput.replace('%COLOR', color), 1000);
+    return this.elementVisible(this.productColorInput(color), 1000);
   }
 
   /**
