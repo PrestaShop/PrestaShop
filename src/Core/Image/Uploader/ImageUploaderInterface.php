@@ -39,7 +39,6 @@ interface ImageUploaderInterface
      *
      * @param int $entityId
      * @param UploadedFile $uploadedImage
-     * @param int|null $imageId provide ImageId if image is identifiable in data storage
      */
-    public function upload($entityId, UploadedFile $uploadedImage, ?int $imageId = null);
+    public function upload($entityId, UploadedFile $uploadedImage);
 }

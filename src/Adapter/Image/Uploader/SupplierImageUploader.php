@@ -39,7 +39,7 @@ final class SupplierImageUploader extends AbstractImageUploader implements Image
     /**
      * {@inheritdoc}
      */
-    public function upload($supplierId, UploadedFile $image, ?int $imageId = null)
+    public function upload($supplierId, UploadedFile $image)
     {
         $this->checkImageIsAllowedForUpload($image);
         $tempImageName = $this->createTemporaryImage($image);

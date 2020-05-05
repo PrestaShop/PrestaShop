@@ -52,7 +52,7 @@ final class CategoryCoverImageUploader extends AbstractImageUploader implements 
      * @throws ImageUploadException
      * @throws UploadedImageConstraintException
      */
-    public function upload($id, UploadedFile $uploadedImage, ?int $imageId = null)
+    public function upload($id, UploadedFile $uploadedImage)
     {
         $this->checkImageIsAllowedForUpload($uploadedImage);
         $this->deleteOldImage($id);
