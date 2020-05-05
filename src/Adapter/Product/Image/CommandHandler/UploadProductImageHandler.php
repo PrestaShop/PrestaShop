@@ -101,7 +101,7 @@ final class UploadProductImageHandler extends AbstractImageUploader implements U
             $image->cover = 0;
         }
 
-        if (!$image->validateFieldsLang(false, false)) {
+        if (!$image->validateFieldsLang(false, false) || !$image->validateFields(false, false)) {
             throw new ImageConstraintException(sprintf(
                 'Image contains invalid fields'
             ));

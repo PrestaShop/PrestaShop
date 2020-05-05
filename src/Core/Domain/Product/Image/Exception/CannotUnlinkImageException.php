@@ -28,10 +28,32 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
 
+use Throwable;
+
 /**
  * Should only be used to wrap image file unlink errorException in domain exception
  */
 class CannotUnlinkImageException extends ImageException
 {
-    //@todo: codes for different unlink actions? Like old img when adding new one, or unlinking images on image deletion etc.?
+    /**
+     * @var string
+     */
+    private $filePath = '';
+
+    /**
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     * @param string $filePath
+     */
+    public function __construct($message = '', $code = 0, Throwable $previous = null, string $filePath = '')
+    {
+        parent::__construct($message, $code, $previous);
+        $this->filePath = $filePath;
+    }
+
+    public function getFilePath(): string
+    {
+        return $this->filePath;
+    }
 }

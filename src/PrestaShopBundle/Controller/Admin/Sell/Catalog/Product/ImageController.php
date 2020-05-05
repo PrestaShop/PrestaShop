@@ -29,10 +29,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use ErrorException;
+use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImageSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -41,6 +43,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ImageController extends FrameworkBundleAdminController
 {
@@ -57,37 +60,60 @@ class ImageController extends FrameworkBundleAdminController
         $uploadedFiles = $request->files->all();
 
         if (empty($uploadedFiles)) {
-            return $this->json([
-                'message' => $this->trans('No file was uploaded.', 'Admin.Advparameters.Notification')
-            ]);
+            return $this->json(
+                ['message' => $this->trans('No file was uploaded.', 'Admin.Advparameters.Notification')],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         /** @var UploadedFile $uploadedFile */
         foreach ($uploadedFiles as $uploadedFile) {
             $mimeType = $uploadedFile->getMimeType();
+
             try {
                 $this->checkUploadedFileSize($uploadedFile);
-                $tmpImageFile = $uploadedFile->move(_PS_TMP_IMG_DIR_, uniqid());
+            } catch (ImageConstraintException $e) {
+                //@todo: decide convention for ajax error responses
+                return $this->json(
+                    ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
 
+            try {
+                $tmpImageFile = $uploadedFile->move(_PS_TMP_IMG_DIR_, uniqid());
                 $this->getCommandBus()->handle(new UploadProductImageCommand(
                     $productId,
                     $tmpImageFile->getPathname(),
                     $mimeType
                 ));
+            } catch (FileException|Exception $e) {
+                return $this->json(
+                    ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
 
+            try {
                 unlink($tmpImageFile->getPathname());
             } catch (ErrorException $e) {
-                //@todo: failed to unlink temp img. Warn?
-            } catch (FileException $e) {
-                //@todo: failed to move file for some reason. Error to check permissions or smth?
-            } catch (ImageException $e) {
-                //@todo: constraint? file size or type wrong.
+                return $this->json(
+                    [
+                        //@todo: should be just a warning, because upload have already succeeded
+                        'message' => $this->trans(
+                            'Failed to delete file "%filePath%"',
+                            'Admin.Notifications.Error',
+                            ['%filePath%' => $tmpImageFile->getPathname()]
+                        )
+                    ],
+                    Response::HTTP_PARTIAL_CONTENT
+                );
             }
         }
 
         return $this->json([
             //@todo: test
-            'message' => 'test response'
+            'message' => 'success test response'
         ]);
     }
 
@@ -127,9 +153,7 @@ class ImageController extends FrameworkBundleAdminController
      */
     private function checkUploadedFileSize(UploadedFile $uploadedFile): void
     {
-        /** @var UploadSizeConfigurationInterface $uploadSizeConfig */
-        $uploadSizeConfig = $this->get('prestashop.core.configuration.upload_size_configuration');
-        $maxUploadSize = $uploadSizeConfig->getMaxUploadSizeInBytes();
+        $maxUploadSize = $this->getUploadSizeConfig()->getMaxUploadSizeInBytes();
         $fileSize = $uploadedFile->getSize();
 
         if ($maxUploadSize > 0 && $fileSize > $maxUploadSize) {
@@ -138,5 +162,46 @@ class ImageController extends FrameworkBundleAdminController
                 ImageConstraintException::INVALID_FILE_SIZE
             );
         }
+    }
+
+    /**
+     * @return UploadSizeConfigurationInterface
+     */
+    private function getUploadSizeConfig(): UploadSizeConfigurationInterface
+    {
+        return $this->get('prestashop.core.configuration.upload_size_configuration');
+    }
+
+    /**
+     * @param Exception $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(Exception $e): array
+    {
+        $errorMessagesMap = [
+            ImageConstraintException::class => [
+                ImageConstraintException::INVALID_FILE_FORMAT => $this->trans(
+                    'Image format not recognized, allowed format(s) is(are): .%s',
+                    'Admin.Notifications.Error',
+                    [implode(',', ImageSettings::getAllowedFormats())]
+                ),
+                ImageConstraintException::INVALID_FILE_SIZE => $this->trans(
+                    'Max file size allowed is "%s" bytes.',
+                    'Admin.Notifications.Error',
+                    [$this->getUploadSizeConfig()->getMaxUploadSizeInBytes()]
+                ),
+            ]
+        ];
+
+        if ($e instanceof CannotUnlinkImageException) {
+            $errorMessagesMap[CannotUnlinkImageException::class] = $this->trans(
+                'Failed to delete file "%filePath%"',
+                'Admin.Notifications.Error',
+                ['%filePath%' => $e->getFilePath()]
+            );
+        }
+
+        return $errorMessagesMap;
     }
 }

@@ -145,7 +145,8 @@ final class DeleteProductImageHandler extends AbstractImageHandler implements De
                     throw new CannotUnlinkImageException(
                         sprintf('Failed to unlink image "%s" from system', $imageFile),
                         0,
-                        $e
+                        $e,
+                        $imageFile
                     );
                 }
             }
