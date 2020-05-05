@@ -53,8 +53,13 @@ module.exports = class Pages extends BOBasePage {
       + ' a[data-original-title=\'View\']';
     this.categoriesPaginationLimitSelect = '#paginator_select_page_limit';
     this.categoriesPaginationLabel = `${this.listForm('cms_page_category')} .col-form-label`;
-    this.categoriesPaginationNextLink = '#pagination_next_url';
+    this.categoriesPaginationNextLink = `${this.listForm('cms_page_category')} #pagination_next_url`;
     this.categoriesPaginationPreviousLink = `${this.listForm('cms_page_category')} [aria-label='Previous']`;
+    // Pages selectors
+    this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
+    this.pagesPaginationLabel = `${this.listForm('cms_page')} .col-form-label`;
+    this.pagesPaginationNextLink = `${this.listForm('cms_page')} #pagination_next_url`;
+    this.pagesPaginationPreviousLink = `${this.listForm('cms_page')} [aria-label='Previous']`;
   }
 
   /*
@@ -412,5 +417,33 @@ module.exports = class Pages extends BOBasePage {
   async paginationCategoryPrevious() {
     await this.clickAndWaitForNavigation(this.categoriesPaginationPreviousLink);
     return this.getTextContent(this.categoriesPaginationLabel);
+  }
+
+  /**
+   * Select pages pagination limit
+   * @param number
+   * @returns {Promise<string >}
+   */
+  async selectPagesPaginationLimit(number) {
+    await this.selectByVisibleText(this.pagesPaginationLimitSelect, number);
+    return this.getTextContent(this.pagesPaginationLabel);
+  }
+
+  /**
+   * Pages pagination next
+   * @returns {Promise<string>}
+   */
+  async paginationPagesNext() {
+    await this.clickAndWaitForNavigation(this.pagesPaginationNextLink);
+    return this.getTextContent(this.pagesPaginationLabel);
+  }
+
+  /**
+   * Pages pagination previous
+   * @returns {Promise<string>}
+   */
+  async paginationPagesPrevious() {
+    await this.clickAndWaitForNavigation(this.pagesPaginationPreviousLink);
+    return this.getTextContent(this.pagesPaginationLabel);
   }
 };
