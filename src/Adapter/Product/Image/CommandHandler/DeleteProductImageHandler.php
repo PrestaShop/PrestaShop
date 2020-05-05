@@ -28,16 +28,127 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
+use ErrorException;
+use Image;
+use PrestaShop\PrestaShop\Adapter\Product\Image\AbstractImageHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\DeleteProductImageHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShopException;
 
-final class DeleteProductImageHandler implements DeleteProductImageHandlerInterface
+final class DeleteProductImageHandler extends AbstractImageHandler implements DeleteProductImageHandlerInterface
 {
+    /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
+     * @param int $contextShopId
+     */
+    public function __construct(int $contextShopId)
+    {
+        $this->contextShopId = $contextShopId;
+    }
+
     /**
      * {@inheritDoc}
      */
     public function handle(DeleteProductImageCommand $command): void
     {
-        //@todo:
+        $image = $this->getImage($command->getImageId());
+        $this->deleteImageFromDb($image);
+
+        if ($image->cover) {
+            $this->useFirstPositionImageAsCover((int) $image->id_product);
+        }
+
+        $this->unlinkImageFiles($image);
+    }
+
+    /**
+     * @param Image $image
+     *
+     * @throws CannotDeleteImageException
+     * @throws ImageException
+     */
+    private function deleteImageFromDb(Image $image): void
+    {
+        try {
+            if (!$image->delete()) {
+                throw new CannotDeleteImageException(sprintf('Failed deleting image #%s', $image->id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new ImageException(
+                sprintf('Error occurred when trying to delete image #%s', $image->id),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @throws ImageException
+     * @throws ImageUpdateException
+     * @throws ImageNotFoundException
+     */
+    private function useFirstPositionImageAsCover(int $productId): void
+    {
+        $fallbackCoverImageId = Image::getFirstByPosition($productId, $this->contextShopId);
+        $fallbackCoverImage = $this->getImage(new ImageId($fallbackCoverImageId));
+
+        $fallbackCoverImage->cover = true;
+
+        try {
+            if (!$fallbackCoverImage->update()) {
+                throw new ImageUpdateException(
+                    sprintf('Failed to apply cover to first by position image with id "%s"', $fallbackCoverImageId)
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new ImageException(
+                sprintf(
+                    'Error occurred when trying to update image #%s cover',
+                    $fallbackCoverImageId
+                ),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param Image $image
+     *
+     * @throws CannotUnlinkImageException
+     */
+    private function unlinkImageFiles(Image $image): void
+    {
+        //@todo: shouldn't it also delete images by types? AdminproductsController::ajaxProcessDeleteProductImage
+        $imageFilePaths = [
+            _PS_TMP_IMG_DIR_ . 'product_' . $image->id_product . '.jpg',
+            _PS_TMP_IMG_DIR_ . 'product_mini_' . $image->id_product . '_' . $this->contextShopId . '.jpg',
+        ];
+
+        foreach ($imageFilePaths as $imageFile) {
+            if (file_exists($imageFile)) {
+                try {
+                    unlink($imageFile);
+                } catch (ErrorException $e) {
+                    throw new CannotUnlinkImageException(
+                        sprintf('Failed to unlink image "%s" from system', $imageFile),
+                        0,
+                        $e
+                    );
+                }
+            }
+        }
     }
 }

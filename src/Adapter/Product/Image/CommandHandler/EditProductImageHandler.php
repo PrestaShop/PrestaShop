@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
 use ErrorException;
 use Image;
+use PrestaShop\PrestaShop\Adapter\Product\Image\AbstractImageHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\EditProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\EditProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
@@ -39,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageUpdateExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShopException;
 
-final class EditProductImageHandler implements EditProductImageHandlerInterface
+final class EditProductImageHandler extends AbstractImageHandler implements EditProductImageHandlerInterface
 {
     /**
      * {@inheritDoc}
@@ -95,38 +96,5 @@ final class EditProductImageHandler implements EditProductImageHandlerInterface
         }
 
         $image->cover = true;
-    }
-
-    /**
-     * @param ImageId $imageId
-     *
-     * @return Image
-     *
-     * @throws ImageException
-     * @throws ImageNotFoundException
-     */
-    private function getImage(ImageId $imageId): Image
-    {
-        try {
-            $image = new Image($imageId);
-
-            if ((int) $image->id !== $imageId) {
-                throw new ImageNotFoundException(sprintf(
-                    'Image with id "%s" was not found.',
-                    $imageId
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new ImageException(
-                sprintf(
-                    'Error occurred when trying to load image entity #%s',
-                    $imageId
-                ),
-                0,
-                $e
-            );
-        }
-
-        return $image;
     }
 }

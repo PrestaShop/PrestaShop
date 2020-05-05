@@ -879,4 +879,33 @@ class ImageCore extends ObjectModel
 
         return _PS_PROD_IMG_DIR_ . $path;
     }
+
+    /**
+     * Provides id of first image by position
+     *
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return int|null
+     */
+    public static function getFirstByPosition(int $productId, int $shopId): ?int
+    {
+        $result = Db::getInstance()->getValue('
+            SELECT id_image
+            FROM ' . _DB_PREFIX_ . 'image i
+            AND i.position = (
+                SELECT MIN(position)
+                FROM ' . _DB_PREFIX_ . 'image i
+                INNER JOIN ' . _DB_PREFIX_ . 'image_shop ishop ON i.id_image = ishop.id_image
+                WHERE i.id_product = ' . $productId . '
+                AND ishop.id_shop = ' . $shopId . '
+            )
+        ');
+
+        if (!$result) {
+            return null;
+        }
+
+        return (int) $result;
+    }
 }

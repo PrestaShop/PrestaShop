@@ -28,10 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
 
-/**
- * Should only be used to wrap image file unlink errorException in domain exception
- */
-class CannotUnlinkImageException extends ImageException
+class CannotDeleteImageException extends ImageException
 {
-    //@todo: codes for different unlink actions? Like old img when adding new one, or unlinking images on image deletion etc.?
 }
