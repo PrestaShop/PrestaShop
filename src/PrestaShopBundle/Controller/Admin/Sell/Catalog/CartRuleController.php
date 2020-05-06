@@ -59,7 +59,11 @@ class CartRuleController extends FrameworkBundleAdminController
         $cartRuleGridFactory = $this->get('prestashop.core.grid.grid_factory.cart_rule');
         $cartRuleGrid = $cartRuleGridFactory->getGrid($cartRuleFilters);
 
-        return new Response('');
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/CartRule/index.html.twig', [
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'cartRuleGrid' => $this->presentGrid($cartRuleGrid),
+        ]);
     }
 
     /**
