@@ -71,7 +71,8 @@ class ContainerParametersExtension implements ContainerBuilderExtensionInterface
 
         //Most of these parameters are just necessary fro doctrine services definitions
         $container->setParameter('kernel.bundles', []);
-        $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app/');
+        $container->setParameter('kernel.root_dir', _PS_ROOT_DIR_ . '/app');
+        $container->setParameter('kernel.project_dir', _PS_ROOT_DIR_);
         $container->setParameter('kernel.name', 'app');
         $container->setParameter('kernel.debug', $this->environment->isDebug());
         $container->setParameter('kernel.environment', $this->environment->getName());
