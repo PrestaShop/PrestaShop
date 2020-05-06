@@ -160,7 +160,7 @@ module.exports = class Pages extends BOBasePage {
    * @param table
    * @return {Promise<void>}
    */
-  async confirmDeleteWithBulkActions(table) {
+  async confirmDeleteFromTable(table) {
     await this.clickAndWaitForNavigation(this.confirmDeleteButton(table));
   }
 
