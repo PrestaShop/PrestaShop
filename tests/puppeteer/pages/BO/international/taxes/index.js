@@ -189,7 +189,12 @@ module.exports = class Taxes extends BOBasePage {
     ]);
 
     // Click on delete
-    await this.clickAndWaitForNavigation(this.taxesGridDeleteLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.taxesGridDeleteLink(row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteTaxes();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 

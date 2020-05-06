@@ -138,7 +138,11 @@ module.exports = class Contacts extends BOBasePage {
     ]);
     // Click on delete
 
-    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
+    await Promise.all([
+      this.page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteContact();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
