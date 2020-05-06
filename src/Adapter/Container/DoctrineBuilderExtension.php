@@ -27,8 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Container;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
-use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
+use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -40,15 +41,15 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
 {
-    /** @var string */
-    private $cacheDir;
+    /** @var EnvironmentInterface */
+    private $environment;
 
     /**
-     * @param string $cacheDir
+     * @param EnvironmentInterface $environment
      */
-    public function __construct($cacheDir)
+    public function __construct(EnvironmentInterface $environment)
     {
-        $this->cacheDir = $cacheDir;
+        $this->environment = $environment;
     }
 
     /**
@@ -56,9 +57,14 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
      */
     public function build(ContainerBuilder $container)
     {
-        $yamlParser = new YamlParser($this->cacheDir);
+        $configDirectories = [_PS_ROOT_DIR_ . '/app/config'];
+        $fileLocator = new FileLocator($configDirectories);
 
-        $config = $yamlParser->parse(_PS_ROOT_DIR_ . '/app/config/config.yml');
+        $configLoader = new ConfigYamlLoader($fileLocator);
+        $configPath = sprintf('config_front_%s.yml', $this->environment->getName());
+        $configLoader->load($configPath);
+        $config = $configLoader->getConfig();
+
         $container->registerExtension(new DoctrineExtension());
         $container->loadFromExtension('doctrine', $config['doctrine']);
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
