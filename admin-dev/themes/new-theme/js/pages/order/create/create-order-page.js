@@ -188,7 +188,7 @@ export default class CreateOrderPage {
   }
 
   initSummaryOrderStatus() {
-    $(createOrderMap.summaryPaymentModule).trigger('change');
+    this.summaryManager.setOrderState($(`${createOrderMap.summaryPaymentModule} option:selected`).data('order-state'))
   }
 
   /**

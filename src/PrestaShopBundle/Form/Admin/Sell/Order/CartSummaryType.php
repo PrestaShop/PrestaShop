@@ -40,11 +40,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 class CartSummaryType extends AbstractType
 {
     /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
      * @var FormChoiceProviderInterface
      */
     private $orderStatesChoiceProvider;
@@ -67,24 +62,16 @@ class CartSummaryType extends AbstractType
     /**
      * @param FormChoiceProviderInterface $orderStatesChoiceProvider
      * @param FormChoiceProviderInterface $paymentModulesChoiceProvider
-     * @param Configuration $configuration
      */
     public function __construct(
         FormChoiceProviderInterface $orderStatesChoiceProvider,
         FormChoiceProviderInterface $paymentModulesChoiceProvider,
         Configuration $configuration
     ) {
-        $this->configuration = $configuration;
         $this->orderStatesChoiceProvider = $orderStatesChoiceProvider;
         $this->paymentModulesChoiceProvider = $paymentModulesChoiceProvider;
-        $this->defaultPaymentOrderState = (int) $this->configuration->get('PS_OS_PAYMENT');
-        $this->paymentOrderStates = [
-            'ps_checkpayment' => (int) $this->configuration->get('PS_OS_CHEQUE'),
-            'ps_wirepayment' => (int) $this->configuration->get('PS_OS_BANKWIRE'),
-            'ps_cashondelivery' => $this->configuration->get('PS_OS_COD_VALIDATION')
-                ? (int) $this->configuration->get('PS_OS_COD_VALIDATION')
-                : (int) $this->configuration->get('PS_OS_PREPARATION'),
-        ];
+        $this->defaultPaymentOrderState = (int) $configuration->get('PS_OS_PAYMENT');
+        $this->paymentOrderStates = $this->paymentModulesChoiceProvider->getChoicesAttributes();
     }
 
     /**
