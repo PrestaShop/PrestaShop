@@ -46,6 +46,7 @@ final class InstalledPaymentModulesChoiceProvider implements FormChoiceProviderI
 
     /**
      * InstalledPaymentModulesChoiceProvider constructor.
+     *
      * @param OrderStateDataProviderInterface $orderStateDataProvider
      * @param int $contextLangId
      */
@@ -77,7 +78,7 @@ final class InstalledPaymentModulesChoiceProvider implements FormChoiceProviderI
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getChoicesAttributes()
     {
@@ -88,9 +89,11 @@ final class InstalledPaymentModulesChoiceProvider implements FormChoiceProviderI
                 if (empty($carry) && $item['module_name'] == $moduleName) {
                     return $item['id_order_state'];
                 }
+
                 return $carry;
             });
         }
+
         return $attr;
     }
 }
