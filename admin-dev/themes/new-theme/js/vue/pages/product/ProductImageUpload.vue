@@ -20,7 +20,7 @@
             :key="index"
             :src="image.basePath"
             :alt="image.legend"
-          />
+          >
         </div>
       </div>
     </div>
@@ -57,6 +57,7 @@
       },
       onClickUpload(event) {
         uploadImages(this.productId, event.currentTarget.files).then((resp) => {
+          debugger;
         });
       },
       onDragUpload(event) {
@@ -67,22 +68,28 @@
       loadImages() {
         // @todo: handle error cases
         getImages(this.productId).then((resp) => {
-          debugger;
-          this.images = resp.data.images;
+          this.images = resp.body.data.images;
         });
       },
     },
   };
 
   async function getImages(productId) {
-    return fetch(router.generate('admin_products_v2_images', {productId})).then((resp) => resp.json());
+    return fetch(router.generate('admin_products_v2_images', {productId}))
+      .then((r) => r.json().then((data) => ({
+        status: r.status,
+        body: data,
+      })));
   }
 
   async function uploadImages(productId, fileList) {
     return fetch(router.generate('admin_products_v2_images_upload', {productId}), {
       method: 'POST',
       body: formatBody(fileList),
-    }).then((resp) => resp.json());
+    }).then((r) => r.json().then((data) => ({
+      status: r.status,
+      body: data,
+    })));
   }
 
   function formatBody(fileList) {
