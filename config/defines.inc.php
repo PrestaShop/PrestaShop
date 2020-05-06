@@ -90,7 +90,8 @@ if ((defined('_PS_IN_TEST_') && _PS_IN_TEST_)
 }
 
 if (!defined('_PS_CACHE_DIR_')) {
-    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/var/cache/' . _PS_ENV_ . DIRECTORY_SEPARATOR);
+    $cache_dir_host_suffix = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] . DIRECTORY_SEPARATOR : '');
+    define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/var/cache/' . _PS_ENV_ . DIRECTORY_SEPARATOR . $cache_dir_host_suffix);
 }
 
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');
