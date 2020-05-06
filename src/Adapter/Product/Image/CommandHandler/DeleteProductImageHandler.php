@@ -62,13 +62,13 @@ final class DeleteProductImageHandler extends AbstractImageHandler implements De
     public function handle(DeleteProductImageCommand $command): void
     {
         $image = $this->getImage($command->getImageId());
-        $this->deleteImageFromDb($image);
+        $this->deleteImage($image);
 
         if ($image->cover) {
             $this->useFirstPositionImageAsCover((int) $image->id_product);
         }
 
-        $this->unlinkImageFiles($image);
+        $this->unlinkGeneratedImages($image);
     }
 
     /**
@@ -77,7 +77,7 @@ final class DeleteProductImageHandler extends AbstractImageHandler implements De
      * @throws CannotDeleteImageException
      * @throws ImageException
      */
-    private function deleteImageFromDb(Image $image): void
+    private function deleteImage(Image $image): void
     {
         try {
             if (!$image->delete()) {
@@ -129,9 +129,8 @@ final class DeleteProductImageHandler extends AbstractImageHandler implements De
      *
      * @throws CannotUnlinkImageException
      */
-    private function unlinkImageFiles(Image $image): void
+    private function unlinkGeneratedImages(Image $image): void
     {
-        //@todo: shouldn't it also delete images by types? AdminproductsController::ajaxProcessDeleteProductImage
         $imageFilePaths = [
             _PS_TMP_IMG_DIR_ . 'product_' . $image->id_product . '.jpg',
             _PS_TMP_IMG_DIR_ . 'product_mini_' . $image->id_product . '_' . $this->contextShopId . '.jpg',
@@ -143,7 +142,7 @@ final class DeleteProductImageHandler extends AbstractImageHandler implements De
                     unlink($imageFile);
                 } catch (ErrorException $e) {
                     throw new CannotUnlinkImageException(
-                        sprintf('Failed to unlink image "%s" from system', $imageFile),
+                        sprintf('Failed to unlink image "%s".', $imageFile),
                         0,
                         $e,
                         $imageFile
