@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
+use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,8 +51,14 @@ class CartRuleController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(Request $request): Response
+    public function indexAction(
+        Request $request,
+        CartRuleFilters $cartRuleFilters
+    ): Response
     {
+        $cartRuleGridFactory = $this->get('prestashop.core.grid.grid_factory.cart_rule');
+        $cartRuleGrid = $cartRuleGridFactory->getGrid($cartRuleFilters);
+
         return new Response('');
     }
 

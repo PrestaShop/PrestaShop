@@ -223,6 +223,14 @@ services:
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
 
+    prestashop.core.grid.grid_factory.cart_rule:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        arguments:
+          - '@prestashop.core.grid.definition.factory.cart_rule'
+          - '@prestashop.core.grid.data.factory.cart_rule_decorator'
+          - '@prestashop.core.grid.filter.form_factory'
+          - '@prestashop.core.hook.dispatcher'
+
     prestashop.core.grid.grid_factory.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:

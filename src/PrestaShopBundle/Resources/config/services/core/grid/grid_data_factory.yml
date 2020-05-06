@@ -258,6 +258,21 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
 
+    prestashop.core.grid.data.factory.cart_rule:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+          - '@prestashop.core.grid.query_builder.cart_rule'
+          - '@prestashop.core.hook.dispatcher'
+          - '@prestashop.core.grid.query.doctrine_query_parser'
+          - 'catalog_price_rule'
+
+    prestashop.core.grid.data.factory.cart_rule_decorator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CartRuleGridDataFactory'
+        arguments:
+          - '@prestashop.core.grid.data.factory.cart_rule'
+          - '@translator'
+
+
     prestashop.core.grid.data.factory.catalog_price_rule:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
