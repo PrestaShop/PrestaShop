@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
@@ -39,6 +41,20 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CartRuleController extends FrameworkBundleAdminController
 {
+    /**
+     * Displays cart rule listing page.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request): Response
+    {
+        return new Response('');
+    }
+
     /**
      * Searches for cart rules by provided search phrase
      *
