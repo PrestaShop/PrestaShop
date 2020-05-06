@@ -9,7 +9,7 @@ module.exports = class AddProduct extends BOBasePage {
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
     this.errorMessage = 'Unable to update settings.';
-    this.errorMessageWhenSummaryTooLong = number => '`This value is too long.'
+    this.errorMessageWhenSummaryTooLong = number => 'This value is too long.'
       + ` It should have ${number} characters or less.`;
     // Selectors
     this.productNameInput = '#form_step1_name_1';
