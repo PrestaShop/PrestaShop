@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Container;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
+use PrestaShopBundle\DependencyInjection\Compiler\CoreDoctrineCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -61,6 +62,7 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
         $config = $yamlParser->parse(_PS_ROOT_DIR_ . '/app/config/config.yml');
         $container->registerExtension(new DoctrineExtension());
         $container->loadFromExtension('doctrine', $config['doctrine']);
+        $container->addCompilerPass(new CoreDoctrineCompilerPass());
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
     }
 }
