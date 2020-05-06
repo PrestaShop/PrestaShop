@@ -2,7 +2,8 @@
   <div>
     <div>
       <div
-        style="width: 800px; height: 300px; border: 1px solid black"
+        class="col"
+        style="border: 1px solid black;"
         @dragover.prevent
         @drop.prevent="onDragUpload"
         @click="triggerFileInput"
@@ -16,12 +17,40 @@
         >
         <div>
           <img
+            style="width:128px; height:128px;"
             v-for="(image, index) in images"
             :key="index"
             :src="image.basePath"
-            :alt="image.legend"
+            alt=""
+            @click="showImageSettings(image)"
           >
         </div>
+      </div>
+
+      <div
+        style="border: 1px solid black"
+        v-if="selectedImage.imageId"
+        class="col"
+      >
+        <label>
+          Cover image
+          <input
+            type="checkbox"
+            name="cover"
+            v-model="selectedImage.cover"
+          >
+        </label>
+        <label>
+          Caption
+          <input type="text">
+        </label>
+
+        <button>
+          Save
+        </button>
+        <button type="button">
+          Delete
+        </button>
       </div>
     </div>
   </div>
@@ -45,19 +74,33 @@
     data() {
       return {
         images: [],
+        selectedImage: {
+          imageId: null,
+          cover: null,
+          localizedLegends: null,
+        },
       };
     },
     mounted() {
       this.loadImages();
     },
     methods: {
+      showImageSettings(image) {
+        window.event.stopPropagation();
+
+        this.selectedImage = {
+          imageId: image.imageId,
+          cover: image.cover,
+          localizedLegends: image.localizedLegends,
+        };
+      },
       triggerFileInput() {
         const fileInput = document.getElementById('onclick-img-upload');
         fileInput.click();
       },
       onClickUpload(event) {
         uploadImages(this.productId, event.currentTarget.files).then((resp) => {
-          debugger;
+          this.loadImages();
         });
       },
       onDragUpload(event) {
@@ -75,21 +118,20 @@
   };
 
   async function getImages(productId) {
-    return fetch(router.generate('admin_products_v2_images', {productId}))
-      .then((r) => r.json().then((data) => ({
-        status: r.status,
-        body: data,
-      })));
+    const response = await fetch(router.generate('admin_products_v2_images', {productId}));
+    const json = await response.json();
+
+    return {status: response.status, body: json};
   }
 
   async function uploadImages(productId, fileList) {
-    return fetch(router.generate('admin_products_v2_images_upload', {productId}), {
+    const response = await fetch(router.generate('admin_products_v2_images_upload', {productId}), {
       method: 'POST',
       body: formatBody(fileList),
-    }).then((r) => r.json().then((data) => ({
-      status: r.status,
-      body: data,
-    })));
+    });
+    const json = await response.json();
+
+    return {status: response.status, body: json};
   }
 
   function formatBody(fileList) {
