@@ -70,6 +70,7 @@ if (!defined('__PS_BASE_URI__')) {
             )
         );
     } else {
+        require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes/datas.php';
         define('__PS_BASE_URI__', '/' . trim(Datas::getInstance()->base_uri, '/') . '/');
     }
 }
