@@ -56,7 +56,7 @@ describe('Create, update and delete supplier', async () => {
 
   // Go to brands page
   it('should go to brands page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goTosuppliersPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
