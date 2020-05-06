@@ -168,8 +168,7 @@ class GridExtension extends AbstractExtension
     {
         if (empty($grid['columns'])
             || empty($grid['sorting']['order_by'])
-            || empty($grid['sorting']['order_way'])
-            || 'asc' != strtolower($grid['sorting']['order_way'])) {
+            || empty($grid['sorting']['order_way'])) {
             return false;
         }
 

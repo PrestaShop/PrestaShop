@@ -90,6 +90,8 @@ export default class PositionExtension {
 
     let trData;
 
+    // retrieve dragAndDropOffset offset to have all needed data
+    // for positions mapping evolution over time
     for (let i = 0; i < rowsData.length; i++) {
       trData = this.grid.getContainer()
         .find('#' + rowsData[i]);
@@ -194,7 +196,7 @@ export default class PositionExtension {
     const positionsAfterDragAndDrop = {};
     const mapping = [];
 
-    let rowData;
+    let rowDataMarker;
     let rowDataParsedData;
     let i;
     let rowID;
@@ -202,9 +204,12 @@ export default class PositionExtension {
     let rowOldOffset;
     let rowNewOffset;
 
+    // first, compute for each position,
+    // where they were before the drag-and-drop
+    // and where they are after the drag-and-drop
     for (i = 0; i < rowsNb; i += 1) {
-      rowData = rowsData[i].rowMarker;
-      rowDataParsedData = regex.exec(rowData);
+      rowDataMarker = rowsData[i].rowMarker;
+      rowDataParsedData = regex.exec(rowDataMarker);
 
       rowID = rowDataParsedData[1];
       rowOldPosition = parseInt(rowDataParsedData[2], 10);
@@ -217,9 +222,12 @@ export default class PositionExtension {
 
     let previousRowPositionWithThisOffset;
 
+    // for each row in table, we look at before the drag-and-drop
+    // and find what other rows was there, this is the new position
+    // of current row
     for (i = 0; i < rowsNb; i += 1) {
-      rowData = rowsData[i].rowMarker;
-      rowDataParsedData = regex.exec(rowData);
+      rowDataMarker = rowsData[i].rowMarker;
+      rowDataParsedData = regex.exec(rowDataMarker);
       rowID = rowDataParsedData[1];
       rowOldPosition = parseInt(rowDataParsedData[2], 10);
 
