@@ -120,8 +120,11 @@ module.exports = class Pages extends BOBasePage {
       this.waitForVisibleSelector(`${this.listTableToggleDropDown(table, row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
-    this.dialogListener();
-    await this.clickAndWaitForNavigation(this.deleteRowLink(table, row));
+    await Promise.all([
+      this.page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal(table)}.show`),
+    ]);
+    await this.confirmDeleteFromTable(table);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
