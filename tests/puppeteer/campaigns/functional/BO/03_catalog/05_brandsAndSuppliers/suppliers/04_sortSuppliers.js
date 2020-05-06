@@ -21,6 +21,7 @@ let browser;
 let page;
 const firstSupplierData = new SupplierFaker();
 const secondSupplierData = new SupplierFaker();
+const thirdSupplierData = new SupplierFaker({enabled: false});
 let numberOfSuppliers = 0;
 
 // Init objects needed
@@ -48,6 +49,7 @@ describe('Create, update and delete supplier', async () => {
     await Promise.all([
       files.deleteFile(firstSupplierData.logo),
       files.deleteFile(secondSupplierData.logo),
+      files.deleteFile(thirdSupplierData.logo),
     ]);
   });
 
@@ -73,11 +75,12 @@ describe('Create, update and delete supplier', async () => {
     const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
   });
-  // 1: Create two suppliers
-  describe('Create 2 suppliers', async () => {
+  // 1: Create 3 suppliers
+  describe('Create 3 suppliers', async () => {
     const tests = [
       {args: {supplierToCreate: firstSupplierData}},
       {args: {supplierToCreate: secondSupplierData}},
+      {args: {supplierToCreate: thirdSupplierData}},
     ];
 
     tests.forEach((test, index) => {
@@ -143,11 +146,12 @@ describe('Create, update and delete supplier', async () => {
       );
     });
   });
-  // 3 : Delete the 2 created suppliers
-  describe('Delete the 2 created suppliers', async () => {
+  // 3 : Delete the 3 created suppliers
+  describe('Delete the 3 created suppliers', async () => {
     const tests = [
       {args: {supplierData: firstSupplierData}},
       {args: {supplierData: secondSupplierData}},
+      {args: {supplierData: thirdSupplierData}},
     ];
     tests.forEach((test, index) => {
       it('should filter supplier by name', async function () {

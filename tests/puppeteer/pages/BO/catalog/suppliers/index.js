@@ -267,7 +267,10 @@ module.exports = class Suppliers extends BOBasePage {
     const rowsNumber = await this.getNumberOfElementInGrid();
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextContent(this.tableColumn(i, column));
+      let rowContent = await this.getTextContent(this.tableColumn(i, column));
+      if (column === 'active') {
+        rowContent = await this.getToggleColumnValue(i).toString();
+      }
       await allRowsContentTable.push(rowContent);
     }
     return allRowsContentTable;
