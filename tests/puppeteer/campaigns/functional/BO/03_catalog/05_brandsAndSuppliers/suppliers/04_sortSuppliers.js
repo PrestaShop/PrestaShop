@@ -157,7 +157,7 @@ describe('Create, update and delete supplier', async () => {
           'name',
           test.args.supplierData.name,
         );
-        // Check number od suppliers
+        // Check number of suppliers
         const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
         await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
         // check text column of first row after filter
