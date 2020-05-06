@@ -80,7 +80,12 @@ module.exports = class SeoAndUrls extends BOBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteSeoUrlPage();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
