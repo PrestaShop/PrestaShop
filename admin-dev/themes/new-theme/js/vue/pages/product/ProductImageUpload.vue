@@ -68,14 +68,14 @@
         // @todo: handle error cases
         getImages(this.productId).then((resp) => {
           debugger;
-          this.images = resp.images;
+          this.images = resp.data.images;
         });
       },
     },
   };
 
   async function getImages(productId) {
-    return fetch(router.generate('admin_products_v2_images_get_images', {productId})).then((resp) => resp.json());
+    return fetch(router.generate('admin_products_v2_images', {productId})).then((resp) => resp.json());
   }
 
   async function uploadImages(productId, fileList) {

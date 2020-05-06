@@ -1,20 +1,20 @@
 #@todo: think of better approach for product routes
-admin_products_v2_images_upload:
+admin_products_v2_images:
   path: /{productId}/images
-  methods: POST
+  methods: GET
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:upload
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:getImages
     _legacy_controller: AdminProducts
   requirements:
     productId: \d+
   options:
     expose: true
 
-admin_products_v2_images_get_images:
+admin_products_v2_images_upload:
   path: /{productId}/images
-  methods: GET
+  methods: POST
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:getImages
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:upload
     _legacy_controller: AdminProducts
   requirements:
     productId: \d+
