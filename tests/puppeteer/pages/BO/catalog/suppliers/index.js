@@ -101,7 +101,7 @@ module.exports = class Suppliers extends BOBasePage {
       this.waitForVisibleSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.page.click(this.deleteRowLink(row)),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSuppliers();

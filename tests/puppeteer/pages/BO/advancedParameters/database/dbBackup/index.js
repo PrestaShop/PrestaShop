@@ -107,7 +107,7 @@ module.exports = class DbBackup extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.page.click(this.deleteRowLink(row)),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteDbBackups();

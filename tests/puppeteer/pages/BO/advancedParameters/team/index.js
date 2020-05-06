@@ -22,7 +22,7 @@ module.exports = class Employees extends BOBasePage {
     this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
     this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a`
-      + `[data-confirm-button-label='Delete']`;
+      + '[data-confirm-button-label=\'Delete\']';
     this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a[href*='edit']`;
     this.employeesListColumnValidIcon = row => `${this.employeesListTableColumn(row, 'active')
     } i.grid-toggler-icon-valid`;
@@ -157,7 +157,7 @@ module.exports = class Employees extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.employeesListTableDeleteLink.replace('%ROW', row)),
+      this.page.click(this.employeesListTableDeleteLink(row)),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteEmployees();
