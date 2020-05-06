@@ -60,7 +60,7 @@ describe('Upgrade Prestashop to last Stable', async () => {
     await this.pageObjects.moduleCatalogPage.searchModule('autoupgrade', '1-Click Upgrade');
     const installResultMessage = await this.pageObjects.moduleCatalogPage.installModule('1-Click Upgrade');
     await expect(installResultMessage)
-      .to.equal(this.pageObjects.moduleCatalogPage.installMessageSuccessful.replace('%MODULETAG', 'autoupgrade'));
+      .to.equal(this.pageObjects.moduleCatalogPage.installMessageSuccessful('autoupgrade'));
   });
 
   it('should disable Shop', async function () {

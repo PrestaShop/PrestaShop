@@ -8,8 +8,8 @@ module.exports = class SiteMap extends FOBasePage {
     this.pageTitle = 'Sitemap';
 
     // Selectors
-    this.categoryNameSelect = '#category-page-%ID';
-    this.categoryPageNameSelect = '#cms-category-%ID';
+    this.categoryNameSelect = id => `#category-page-${id}`;
+    this.categoryPageNameSelect = id => `#cms-category-${id}`;
     this.suppliersPageLink = '#supplier-page';
     this.brandsPageLink = '#manufacturer-page';
   }
@@ -23,16 +23,16 @@ module.exports = class SiteMap extends FOBasePage {
    * @return {Promise<void>}
    */
   async getCategoryName(categoryID) {
-    return this.getTextContent(this.categoryNameSelect.replace('%ID', categoryID));
+    return this.getTextContent(this.categoryNameSelect(categoryID));
   }
 
   /**
    * check if category is visible
    * @param categoryID
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async isVisibleCategory(categoryID) {
-    return this.elementVisible(this.categoryNameSelect.replace('%ID', categoryID));
+    return this.elementVisible(this.categoryNameSelect(categoryID));
   }
 
   /**
@@ -41,7 +41,7 @@ module.exports = class SiteMap extends FOBasePage {
    * @return {Promise<void>}
    */
   async getPageCategoryName(pageCategoryID) {
-    return this.getTextContent(this.categoryPageNameSelect.replace('%ID', pageCategoryID));
+    return this.getTextContent(this.categoryPageNameSelect(pageCategoryID));
   }
 
   /**

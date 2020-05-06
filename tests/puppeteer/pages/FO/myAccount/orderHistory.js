@@ -8,7 +8,7 @@ module.exports = class OrderHistory extends FOBasePage {
     this.pageTitle = 'Order history';
 
     // Selectors
-    this.reorderLink = '#content td.order-actions a[href*=\'Reorder=&id_order=%ID\']';
+    this.reorderLink = id => `#content td.order-actions a[href*='Reorder=&id_order=${id}']`;
   }
 
   /*
@@ -21,6 +21,6 @@ module.exports = class OrderHistory extends FOBasePage {
    * @returns {boolean}
    */
   isReorderLinkVisible(idOrder = 1) {
-    return this.elementVisible(this.reorderLink.replace('%ID', idOrder), 1000);
+    return this.elementVisible(this.reorderLink(idOrder), 1000);
   }
 };
