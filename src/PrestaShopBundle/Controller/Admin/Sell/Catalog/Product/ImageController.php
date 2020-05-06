@@ -32,6 +32,7 @@ use ErrorException;
 use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\EditProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UploadProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintException;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImageSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Product\v2\ProductImageType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -134,8 +136,8 @@ class ImageController extends FrameworkBundleAdminController
                 'productId' => $image->getProductId(),
                 'position' => $image->getPosition(),
                 'basePath' => $image->getBasePath(),
-                //@todo: do i need lang here or leave it to js?
-                'legend' => $image->getLocalizedLegends()[$this->getContextLangId()]
+                'localizedLegends' => $image->getLocalizedLegends(),
+                'cover' => $image->isCover(),
             ];
         }
 
@@ -167,6 +169,29 @@ class ImageController extends FrameworkBundleAdminController
         return $this->json([
             'message' => $this->trans('Successful deletion.', 'Admin.Notifications.Success'),
         ]);
+    }
+
+    public function editAction(int $productId, int $imageId, Request $request): JsonResponse
+    {
+        $imageForm = $this->createForm(ProductImageType::class);
+        //@todo: check localized values. And add form handler service
+        $imageForm->handleRequest($request);
+        $editImageCommand = new EditProductImageCommand($imageId);
+
+        //@todo: where do i put all of this (it suppose to be in some form handler)
+        if ($request->request->has('cover')) {
+            $editImageCommand->setCover($request->request->getBoolean('cover'));
+        }
+
+        if ($request->request->has('localizedLegends')) {
+            $localizedLegends = $request->request->get('localizedLegends');
+            if (is_array($localizedLegends)) {
+                //@todo: how do i validate this array?
+                $editImageCommand->setLocalizedLegends($localizedLegends);
+            }
+        }
+
+        $this->getCommandBus()->handle($editImageCommand);
     }
 
     /**

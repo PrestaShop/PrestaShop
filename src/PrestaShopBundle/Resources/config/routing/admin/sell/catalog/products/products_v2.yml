@@ -22,10 +22,21 @@ admin_products_v2_images_upload:
     expose: true
 
 admin_products_v2_images_delete:
-  path: /{productId}/images
-  methods: DELETE
+  path: /{productId}/images/{imageId}/delete
+  methods: POST
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:delete
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_images_edit:
+  path: /{productId}/images/{imageId}/edit
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:edit
     _legacy_controller: AdminProducts
   requirements:
     productId: \d+

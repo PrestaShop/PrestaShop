@@ -52,6 +52,7 @@ use PrestaShopBundle\Form\Admin\Product\ProductPrice;
 use PrestaShopBundle\Form\Admin\Product\ProductQuantity;
 use PrestaShopBundle\Form\Admin\Product\ProductSeo;
 use PrestaShopBundle\Form\Admin\Product\ProductShipping;
+use PrestaShopBundle\Form\Admin\Product\v2\ProductImageType;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;

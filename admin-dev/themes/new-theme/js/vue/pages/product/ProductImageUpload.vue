@@ -42,10 +42,16 @@
         </label>
         <label>
           Caption
-          <input type="text">
+          <input
+            type="text"
+            v-model="selectedImage.localizedLegends"
+          >
         </label>
 
-        <button>
+        <button
+          type="submit"
+          @click.prevent="saveImageSettings(selectedImage)"
+        >
           Save
         </button>
         <button type="button">
@@ -94,6 +100,9 @@
           localizedLegends: image.localizedLegends,
         };
       },
+      saveImageSettings(selectedImage) {
+        editImage(this.productId, selectedImage);
+      },
       triggerFileInput() {
         const fileInput = document.getElementById('onclick-img-upload');
         fileInput.click();
@@ -119,6 +128,25 @@
 
   async function getImages(productId) {
     const response = await fetch(router.generate('admin_products_v2_images', {productId}));
+    const json = await response.json();
+
+    return {status: response.status, body: json};
+  }
+
+  async function editImage(productId, selectedImage) {
+    const formData = new FormData();
+    formData.append('product_image', JSON.stringify({
+      cover: selectedImage.cover,
+      legend: selectedImage.legend,
+    }));
+
+    const response = await fetch(router.generate('admin_products_v2_images_edit', {
+      productId,
+      imageId: selectedImage.imageId,
+    }), {
+      method: 'POST',
+      body: formData,
+    });
     const json = await response.json();
 
     return {status: response.status, body: json};
