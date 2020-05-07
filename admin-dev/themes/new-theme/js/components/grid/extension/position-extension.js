@@ -71,8 +71,7 @@ export default class PositionExtension {
     const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
-    const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
-    const positions = this.getRowsPositions(paginationOffset);
+    const positions = this.getRowsPositions();
     const params = {positions};
 
     this.updatePosition(updateUrl, params, method);
@@ -83,7 +82,7 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  getRowsPositions(paginationOffset) {
+  getRowsPositions() {
     const tableData = JSON.parse($.tableDnD.jsonize());
     const rowsData = tableData[`${this.grid.getId()}_grid_table`];
     const completeRowsData = [];
@@ -92,14 +91,14 @@ export default class PositionExtension {
 
     // retrieve dragAndDropOffset offset to have all needed data
     // for positions mapping evolution over time
-    for (let i = 0; i < rowsData.length; i++) {
+    for (let i = 0; i < rowsData.length; i += 1) {
       trData = this.grid.getContainer()
-        .find('#' + rowsData[i]);
+        .find(`#${rowsData[i]}`);
 
       completeRowsData.push({
         rowMarker: rowsData[i],
-        offset: trData.data('dragAndDropOffset')
-      })
+        offset: trData.data('dragAndDropOffset'),
+      });
     }
 
     return this.computeMappingBetweenOldAndNewPositions(completeRowsData);
@@ -111,7 +110,6 @@ export default class PositionExtension {
    * @private
    */
   addIdsToGridTableRows() {
-
     let counter = 0;
 
     this.grid.getContainer()
@@ -125,7 +123,7 @@ export default class PositionExtension {
         $positionWrapper.closest('td').addClass('js-drag-handle');
         $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
 
-        counter++;
+        counter += 1;
       });
   }
 
@@ -223,7 +221,7 @@ export default class PositionExtension {
     let previousRowPositionWithThisOffset;
 
     // for each row in table, we look at before the drag-and-drop
-    // and find what other rows was there, this is the new position
+    // and find what other row was there, this is the new position
     // of current row
     for (i = 0; i < rowsNb; i += 1) {
       rowDataMarker = rowsData[i].rowMarker;
