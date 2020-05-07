@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -126,7 +129,29 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'route' => 'admin_cart_rule_toggle_status',
                 'route_param_name' => 'cartRuleId',
             ])
+            )
+            ->add((new ActionColumn('actions'))
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'method' => 'POST',
+                                'route' => 'admin_cart_rules_delete',
+                                'route_param_name' => 'cartRuleId',
+                                'route_param_field' => 'id_cart_rule',
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                            ])
+                        ),
+                ])
             );
+
     }
 
     /**

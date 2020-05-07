@@ -24,17 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
+declare(strict_types=1);
 
-class CannotDeleteCartRuleException extends CartRuleException
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
+
+/**
+ * Defines contract for delete cart rule handler
+ */
+interface DeleteCartRuleHandlerInterface
 {
     /**
-     * When fails to delete single cart rule
+     * @param DeleteCartRuleCommand $command
      */
-    public const FAILED_DELETE = 10;
-
-    /**
-     * When fails to delete cart rule in bulk action
-     */
-    public const FAILED_BULK_DELETE = 20;
+    public function handle(DeleteCartRuleCommand $command): void;
 }

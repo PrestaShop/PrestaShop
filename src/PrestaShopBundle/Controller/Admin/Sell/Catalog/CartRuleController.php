@@ -29,11 +29,13 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -52,6 +54,7 @@ class CartRuleController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
+     * @param CartRuleFilters $cartRuleFilters
      * @return Response
      */
     public function indexAction(
@@ -124,6 +127,31 @@ class CartRuleController extends FrameworkBundleAdminController
             $filterId,
             'admin_cart_rules_index'
         );
+    }
+
+    /**
+     * Deletes cart rule
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
+     *
+     * @param $cartRuleId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($cartRuleId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCartRuleCommand((int) $cartRuleId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_cart_rules_index');
     }
 
     /**

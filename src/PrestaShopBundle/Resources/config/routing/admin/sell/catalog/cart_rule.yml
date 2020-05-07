@@ -34,3 +34,15 @@ admin_cart_rule_toggle_status:
       id_cart_rule: cartRuleId
   requirements:
     cartRuleId: \d+
+
+admin_cart_rules_delete:
+  path: /{cartRuleId}/delete
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CartRule:delete'
+    _legacy_controller: AdminSpecificPriceRule
+    #    _legacy_link: AdminSpecificPriceRule:deletespecific_price_rule
+    _legacy_parameters:
+      id_cart_rule: cartRuleId
+  requirements:
+    cartRuleId: \d+
