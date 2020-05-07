@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,24 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+declare(strict_types=1);
 
-{% block content %}
-  {% block cart_rule_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartRuleGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryHandler;
 
-{% block javascripts %}
-  {{ parent() }}
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/cart_rule.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Defines contract for GetCartRuleForEditingHandler
+ */
+interface GetCartRuleForEditingHandlerInterface
+{
+    /**
+     * @param GetCartRuleForEditing $query
+     *
+     * @return EditableCartRule
+     */
+    public function handle(GetCartRuleForEditing $query):EditableCartRule;
+}

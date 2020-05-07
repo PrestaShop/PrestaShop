@@ -29,7 +29,7 @@ admin_cart_rule_toggle_status:
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:toggleStatus'
     _legacy_controller: AdminCartRules
-   # _legacy_link: AdminManufacturers:statuscartrule
+   # _legacy_link: AdminManufacturers:statuscart_rule
     _legacy_parameters:
       id_cart_rule: cartRuleId
   requirements:

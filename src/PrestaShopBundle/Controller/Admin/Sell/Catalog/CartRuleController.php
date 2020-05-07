@@ -31,7 +31,11 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -185,15 +189,29 @@ class CartRuleController extends FrameworkBundleAdminController
     /**
      * Toggles cart rule status
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index                              ")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
-     * @param int $manufacturerId
+     * @param int $cartRuleId
      *
      * @return RedirectResponse
      */
-    public function toggleStatusAction($cartRuleId)
+    public function toggleStatusAction(int $cartRuleId): RedirectResponse
     {
+        try {
+            /** @var EditableCartRule $editableCartRule */
+            $editableCartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing((int) $cartRuleId));
+            $this->getCommandBus()->handle(
+                new ToggleCartRuleStatusCommand((int) $cartRuleId, !$editableCartRule->isEnabled())
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CartRuleException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
         return $this->redirectToRoute('admin_cart_rules_index');
     }
 

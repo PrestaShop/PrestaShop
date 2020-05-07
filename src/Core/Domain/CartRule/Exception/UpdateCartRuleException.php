@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,24 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+declare(strict_types=1);
 
-{% block content %}
-  {% block cart_rule_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartRuleGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
 
-{% block javascripts %}
-  {{ parent() }}
+/**
+ * Is thrown when cannot update cart rule
+ */
+class UpdateCartRuleException extends CartRuleException
+{
+    /**
+     * When fails to update single cart rule status
+     */
+    const FAILED_UPDATE_STATUS = 10;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/cart_rule.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * When fails to update cart rule status in bulk action
+     */
+    const FAILED_BULK_UPDATE_STATUS = 20;
+}

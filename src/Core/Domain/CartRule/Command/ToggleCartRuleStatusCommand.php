@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,53 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+declare(strict_types=1);
 
-{% block content %}
-  {% block cart_rule_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartRuleGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Command;
 
-{% block javascripts %}
-  {{ parent() }}
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/cart_rule.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Toggles cart rule status
+ */
+class ToggleCartRuleStatusCommand
+{
+    /**
+     * @var int
+     */
+    private $cartRuleId;
+
+    /**
+     * @var bool
+     */
+    private $expectedStatus;
+
+    /**
+     * @param int $cartRuleId
+     * @param bool $expectedStatus
+     *
+     */
+    public function __construct(int $cartRuleId, bool $expectedStatus)
+    {
+        $this->expectedStatus = $expectedStatus;
+        $this->cartRuleId = new CartRuleId($cartRuleId);
+    }
+
+    /**
+     * @return CartRuleId
+     */
+    public function getCartRuleId(): CartRuleId
+    {
+        return $this->cartRuleId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExpectedStatus()
+    {
+        return $this->expectedStatus;
+    }
+}

@@ -81,4 +81,25 @@ abstract class AbstractCartRuleHandler
             throw new CartRuleException(sprintf('An error occurred when deleting CartRule object with id "%s".', $cartRule->id));
         }
     }
+
+    /**
+     * Toggles legacy cart rule status
+     *
+     * @param CartRule $cartRule
+     * @param bool $newStatus
+     *
+     * @return bool
+     *
+     * @throws CartRuleException
+     */
+    protected function toggleCartRuleStatus(CartRule $cartRule, $newStatus)
+    {
+        $cartRule->active = $newStatus;
+
+        try {
+            return $cartRule->save();
+        } catch (PrestaShopException $e) {
+            throw new CartRuleException(sprintf('An error occurred when updating cart rule status with id "%s"', $cartRule->id));
+        }
+    }
 }
