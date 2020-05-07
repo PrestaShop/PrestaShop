@@ -45,12 +45,40 @@
         </div>
       </div>
     </div>
+    <div
+      style="border: 1px solid black"
+      v-if="selectedImage.imageId"
+      class="col"
+    >
+      <label>
+        Cover image
+        <input
+          type="checkbox"
+          name="cover"
+          v-model="selectedImage.cover"
+        >
+      </label>
+
+      <button
+        type="submit"
+        @click.prevent="saveImageSettings(selectedImage)"
+      >
+        Save
+      </button>
+      <button type="button">
+        Delete
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
-  const productImageTranslatableLegendInput = {
-    name: 'ProductImageTranslatableLegendInput',
+  import Router from '@components/router.js';
+
+  const router = new Router();
+
+  const productImageSettings = {
+    name: 'ProductImageSettings',
     props: {
       selectedImage: {
         Type: Object,
@@ -91,8 +119,29 @@
           }
         }
       },
+      saveImageSettings(selectedImage) {
+        editImage(selectedImage);
+      },
     },
   };
 
-  export default productImageTranslatableLegendInput;
+  async function editImage(selectedImage) {
+    const formData = new FormData();
+    formData.append('product_image', JSON.stringify({
+      cover: selectedImage.cover,
+      legend: selectedImage.localizedLegends,
+    }));
+
+    const response = await fetch(router.generate('admin_products_v2_images_edit', {
+      imageId: selectedImage.imageId,
+    }), {
+      method: 'POST',
+      body: formData,
+    });
+    const json = await response.json();
+
+    return {status: response.status, body: json};
+  }
+
+  export default productImageSettings;
 </script>

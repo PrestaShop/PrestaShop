@@ -27,35 +27,11 @@
         </div>
       </div>
       <div v-if="selectedImage.imageId">
-        <product-image-translatable-legend-input
+        <product-image-settings
           :selected-image="selectedImage"
           :context-lang-id="contextLangId"
           :locales="locales"
         />
-        <div
-          style="border: 1px solid black"
-          v-if="selectedImage.imageId"
-          class="col"
-        >
-          <label>
-            Cover image
-            <input
-              type="checkbox"
-              name="cover"
-              v-model="selectedImage.cover"
-            >
-          </label>
-
-          <button
-            type="submit"
-            @click.prevent="saveImageSettings(selectedImage)"
-          >
-            Save
-          </button>
-          <button type="button">
-            Delete
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -63,13 +39,13 @@
 
 <script>
   import Router from '@components/router.js';
-  import ProductImageTranslatableLegendInput from './ProductImageTranslatableLegendInput';
+  import ProductImageSettings from './ProductImageSettings';
 
   const router = new Router();
 
   const productImageUpload = {
     name: 'ProductImageUpload',
-    components: {ProductImageTranslatableLegendInput},
+    components: {ProductImageSettings},
     props: {
       productId: {
         Type: Number,
@@ -103,9 +79,6 @@
           localizedLegends: image.localizedLegends,
         };
       },
-      saveImageSettings(selectedImage) {
-        editImage(this.productId, selectedImage);
-      },
       triggerFileInput() {
         const fileInput = document.getElementById('onclick-img-upload');
         fileInput.click();
@@ -131,24 +104,6 @@
 
   async function getImages(productId) {
     const response = await fetch(router.generate('admin_products_v2_images', {productId}));
-    const json = await response.json();
-
-    return {status: response.status, body: json};
-  }
-
-  async function editImage(productId, selectedImage) {
-    const formData = new FormData();
-    formData.append('product_image', JSON.stringify({
-      cover: selectedImage.cover,
-      legend: selectedImage.localizedLegends,
-    }));
-
-    const response = await fetch(router.generate('admin_products_v2_images_edit', {
-      imageId: selectedImage.imageId,
-    }), {
-      method: 'POST',
-      body: formData,
-    });
     const json = await response.json();
 
     return {status: response.status, body: json};
