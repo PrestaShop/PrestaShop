@@ -27,7 +27,6 @@ import {EventEmitter} from '../../../components/event-emitter';
 import eventMap from './event-map';
 import SummaryRenderer from './summary-renderer';
 import Router from '../../../components/router';
-import createOrderMap from './create-order-map';
 
 const $ = window.$;
 
@@ -42,7 +41,6 @@ export default class SummaryManager {
 
     return {
       sendProcessOrderEmail: cartId => this._sendProcessOrderEmail(cartId),
-      setOrderState: idOrderState => this.setOrderState(idOrderState),
     };
   }
 
@@ -91,12 +89,5 @@ export default class SummaryManager {
     }).then(response => EventEmitter.emit(eventMap.processOrderEmailSent, response)).catch((e) => {
       EventEmitter.emit(eventMap.processOrderEmailFailed, e);
     });
-  }
-
-  /**
-   * @param {Number} idOrderState
-   */
-  setOrderState(idOrderState) {
-    $(createOrderMap.summaryOrderState).val(idOrderState);
   }
 }

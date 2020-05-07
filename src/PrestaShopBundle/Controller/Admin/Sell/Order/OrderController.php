@@ -1524,6 +1524,10 @@ class OrderController extends CommonController
                     'Invalid action: this order has not been paid.',
                     'Admin.Notifications.Error'
                 ),
+                InvalidOrderStateException::NOT_FOUND => $this->trans(
+                    'Invalid order state id.',
+                    'Admin.Notifications.Error'
+                ),
             ],
             InvalidProductQuantityException::class => $this->trans(
                 'Positive product quantity is required.',

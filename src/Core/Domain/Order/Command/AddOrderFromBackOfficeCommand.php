@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
@@ -139,7 +140,10 @@ class AddOrderFromBackOfficeCommand
     private function assertOrderStateIsPositiveInt($orderStateId)
     {
         if (!is_int($orderStateId) || 0 >= $orderStateId) {
-            throw new OrderException('Invalid order state id');
+            throw new InvalidOrderStateException(
+                InvalidOrderStateException::NOT_FOUND,
+                'Invalid order state id'
+            );
         }
     }
 }
