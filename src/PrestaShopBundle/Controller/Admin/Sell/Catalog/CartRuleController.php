@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory;
@@ -109,7 +110,7 @@ class CartRuleController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function searchGridAction(Request $request)
+    public function searchGridAction(Request $request): RedirectResponse
     {
         $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cart_rule';
         $filterId = CartRuleGridDefinitionFactory::GRID_ID;
@@ -155,7 +156,34 @@ class CartRuleController extends FrameworkBundleAdminController
     }
 
     /**
-     * Toggles manufacturer status
+     * Deletes cartRules on bulk action
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCartRuleCommand($cartRuleIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_cart_rules_index');
+    }
+
+    /**
+     * Toggles cart rule status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index                              ")
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
@@ -167,5 +195,27 @@ class CartRuleController extends FrameworkBundleAdminController
     public function toggleStatusAction($cartRuleId)
     {
         return $this->redirectToRoute('admin_cart_rules_index');
+    }
+
+    /**
+     * Provides cart rule ids from request of bulk action
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkCartRulesFromRequest(Request $request): array
+    {
+        $cartRuleIds = $request->request->get('cart_rule_bulk');
+
+        if (!is_array($cartRuleIds)) {
+            return [];
+        }
+
+        foreach ($cartRuleIds as &$cartRuleId) {
+            $cartRuleId = (int) $cartRuleId;
+        }
+
+        return $cartRuleIds;
     }
 }
