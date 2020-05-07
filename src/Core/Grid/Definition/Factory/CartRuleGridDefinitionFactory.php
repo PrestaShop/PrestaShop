@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -230,5 +232,20 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setAssociatedColumn('actions')
             )
             ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add((new SubmitBulkAction('delete_selection'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_cart_rules_bulk_delete',
+                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                ])
+            );
     }
 }
