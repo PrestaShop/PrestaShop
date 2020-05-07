@@ -260,7 +260,7 @@ module.exports = class Taxes extends BOBasePage {
     if (taxOptionData.enabled) {
       await this.page.click(this.enabledTaxSwitchLabel(1));
       if (taxOptionData.displayInShoppingCart) {
-w        await this.page.click(this.displayTaxInCartSwitchLabel(1));
+        await this.page.click(this.displayTaxInCartSwitchLabel(1));
       } else {
         await this.page.click(this.displayTaxInCartSwitchLabel(0));
       }
