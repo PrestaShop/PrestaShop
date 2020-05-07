@@ -31,8 +31,15 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
+use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Class responsible for providing columns, filters, actions for cart price rule list.
@@ -110,6 +117,93 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'format' => 'Y-m-d H:i',
                 'field' => 'date_to',
             ])
+            )
+            ->add((new ToggleColumn('active'))
+            ->setName($this->trans('Enabled', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'active',
+                'primary_field' => 'id_cart_rule',
+                'route' => 'admin_cart_rule_toggle_status',
+                'route_param_name' => 'cartRuleId',
+            ])
             );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFilters()
+    {
+        return (new FilterCollection())
+            ->add((new Filter('id_cart_rule', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('ID', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('id_cart_rule')
+            )
+            ->add((new Filter('name', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Name', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('name')
+            )
+            ->add((new Filter('priority', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Priority', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('priority')
+            )
+            ->add((new Filter('code', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Code', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('code')
+            )
+            ->add((new Filter('quantity', TextType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Quantity', [], 'Admin.Catalog.Feature'),
+                    ],
+                ])
+                ->setAssociatedColumn('quantity')
+            )
+            ->add((new Filter('date_to', DateRangeType::class))
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Expiration date', [], 'Admin.Catalog.Feature'),
+                    ],
+                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
+                ])
+                ->setAssociatedColumn('date_to')
+            )
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('active')
+            )
+            ->add((new Filter('actions', SearchAndResetType::class))
+                ->setAssociatedColumn('actions')
+                ->setTypeOptions([
+                    'reset_route' => 'admin_common_reset_search_by_filter_id',
+                    'reset_route_params' => [
+                        'filterId' => self::GRID_ID,
+                    ],
+                    'redirect_route' => 'admin_cart_rules_index',
+                ])
+                ->setAssociatedColumn('actions')
+            )
+            ;
     }
 }
