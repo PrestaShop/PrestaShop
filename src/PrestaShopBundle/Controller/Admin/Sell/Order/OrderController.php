@@ -78,6 +78,7 @@ use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
@@ -1499,6 +1500,10 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification'
                 ),
             ],
+            InvalidModuleException::class => $this->trans(
+                'Payment module name is invalid',
+                'Admin.Catalog.Notification'
+            ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock.',
                 'Admin.Catalog.Notification'
@@ -1522,6 +1527,10 @@ class OrderController extends FrameworkBundleAdminController
                 ),
                 InvalidOrderStateException::NOT_PAID => $this->trans(
                     'Invalid action: this order has not been paid.',
+                    'Admin.Notifications.Error'
+                ),
+                InvalidOrderStateException::INVALID_ID => $this->trans(
+                    'Invalid order state id.',
                     'Admin.Notifications.Error'
                 ),
             ],

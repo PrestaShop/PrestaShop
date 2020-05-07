@@ -116,8 +116,6 @@ export default {
   placeOrderCartIdField: '.js-place-order-cart-id',
   processOrderLinkTag: '#js-process-order-link',
   orderMessageField: '#js-order-message-wrap textarea',
-  summaryPaymentModule: '#cart_summary_payment_module',
-  summaryOrderState: '#cart_summary_order_state',
   sendProcessOrderEmailBtn: '#js-send-process-order-email-btn',
   summarySuccessAlertBlock: '#js-summary-success-block',
   summaryErrorAlertBlock: '#js-summary-error-block',

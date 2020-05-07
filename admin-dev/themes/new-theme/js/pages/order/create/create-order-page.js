@@ -152,7 +152,6 @@ export default class CreateOrderPage {
     this._onCustomerSelected();
     this.initAddressButtonsIframe();
     this.initCartRuleButtonsIframe();
-    this.initSummaryOrderStatus();
   }
 
   /**
@@ -187,10 +186,6 @@ export default class CreateOrderPage {
     });
   }
 
-  initSummaryOrderStatus() {
-    this.summaryManager.setOrderState($(`${createOrderMap.summaryPaymentModule} option:selected`).data('order-state'))
-  }
-
   /**
    * Delegates actions to events associated with cart update (e.g. change cart address)
    *
@@ -223,10 +218,6 @@ export default class CreateOrderPage {
 
     this.$container.on('change', createOrderMap.cartLanguageSelect, (e) =>
       this.cartEditor.changeCartLanguage(this.cartId, e.currentTarget.value)
-    );
-
-    this.$container.on('change', createOrderMap.summaryPaymentModule, () =>
-      this.summaryManager.setOrderState($(`${createOrderMap.summaryPaymentModule} option:selected`).data('order-state'))
     );
 
     this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () =>
