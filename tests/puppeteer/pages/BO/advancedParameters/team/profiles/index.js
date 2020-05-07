@@ -113,7 +113,6 @@ module.exports = class Profiles extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteProfile(row) {
-    this.dialogListener();
     // Click on dropDown
     await Promise.all([
       this.page.click(this.profilesListTableToggleDropDown(row)),
@@ -122,7 +121,7 @@ module.exports = class Profiles extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.profilesListTableDeleteLink.replace('%ROW', row)),
+      this.page.click(this.profilesListTableDeleteLink(row)),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteProfiles();

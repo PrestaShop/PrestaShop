@@ -147,7 +147,7 @@ module.exports = class WebService extends BOBasePage {
     ]);
     // Click on delete
     await Promise.all([
-      this.page.click(this.webserviceListTableDeleteLink.replace('%ROW', row)),
+      this.page.click(this.webserviceListTableDeleteLink(row)),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteWebService();

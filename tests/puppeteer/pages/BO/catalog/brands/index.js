@@ -47,8 +47,8 @@ module.exports = class Brands extends BOBasePage {
     this.gridActionExportLink = table => `${this.gridActionDropDownMenu(table)} a[href*='/export']`;
 
     // Delete modal
-    this.confirmDeleteModal = '#%TABLE-grid-confirm-modal';
-    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+    this.confirmDeleteModal = table => `#${table}-grid-confirm-modal`;
+    this.confirmDeleteButton = table => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
 
     // Brands list Selectors
     this.brandsTableColumnLogoImg = row => `${this.tableColumn('manufacturer', row, 'logo')} img`;
@@ -244,8 +244,8 @@ module.exports = class Brands extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.deleteRowLink.replace('%TABLE', table).replace('%ROW', row)),
-      this.waitForVisibleSelector(`${this.confirmDeleteModal.replace('%TABLE', table)}.show`),
+      this.page.click(this.deleteRowLink(table, row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDelete(table);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -257,7 +257,7 @@ module.exports = class Brands extends BOBasePage {
    * @return {Promise<void>}
    */
   async confirmDelete(table) {
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton.replace('%TABLE', table));
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton(table));
   }
 
   /**

@@ -158,7 +158,7 @@ module.exports = class Monitoring extends BOBasePage {
    */
   async editCategoryInGrid(row) {
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
+      this.page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
