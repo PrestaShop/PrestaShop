@@ -95,16 +95,9 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             cr.priority,
             cr.code,
             cr.quantity,
-            cr.date_to'
+            cr.date_to,
+            cr.active'
         );
-
-        $qb->leftJoin(
-            'cr',
-            $this->dbPrefix . 'cart_rule_lang',
-            'crl',
-                'cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = :contextLangId'
-        );
-
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb)
@@ -139,6 +132,13 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             ->from($this->dbPrefix . 'cart_rule', 'cr')
         ;
 
+        $qb->leftJoin(
+            'cr',
+            $this->dbPrefix . 'cart_rule_lang',
+            'crl',
+            'cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = :contextLangId'
+        );
+
         $this->applyFilters($qb, $filters);
         $qb->setParameter('contextLangId', $this->contextIdLang);
 
@@ -153,14 +153,15 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $allowedFiltersAliasMap = [
             'id_cart_rule' => 'cr.id_cart_rule',
-            'name' => 'cr.name',
+            'name' => 'crl.name',
             'priority' => 'cr.priority',
             'code' => 'cr.code',
             'quantity' => 'cr.quantity',
-            'to' => 'cr.date_to'
+            'date_to' => 'cr.date_to',
+            'active' => 'cr.active'
         ];
 
-        $exactMatchFilters = ['id_cart_rule', 'quantity', 'priority'];
+        $exactMatchFilters = ['id_cart_rule', 'quantity', 'priority', 'active'];
 
         foreach ($filters as $filterName => $value) {
             if (!array_key_exists($filterName, $allowedFiltersAliasMap)) {
@@ -175,6 +176,10 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('date_to' === $filterName) {
+                if (isset($value['from'])) {
+                    $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' >= :' . $filterName . '_from');
+                    $qb->setParameter($filterName . '_from', $value['from']);
+                }
                 if (isset($value['to'])) {
                     $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' <= :' . $filterName . '_to');
                     $qb->setParameter($filterName . '_to', $value['to']);

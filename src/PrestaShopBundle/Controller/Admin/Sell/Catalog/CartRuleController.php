@@ -30,10 +30,13 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CartRuleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -94,5 +97,47 @@ class CartRuleController extends FrameworkBundleAdminController
         return $this->json([
             'cart_rules' => $cartRules,
         ]);
+    }
+
+    /**
+     * Provides filters functionality
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(Request $request)
+    {
+        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cart_rule';
+        $filterId = CartRuleGridDefinitionFactory::GRID_ID;
+        if ($request->request->has(CartRuleGridDefinitionFactory::GRID_ID)) {
+            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cart_rule';
+            $filterId = CartRuleGridDefinitionFactory::GRID_ID;
+        }
+
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get($gridDefinitionFactory),
+            $request,
+            $filterId,
+            'admin_cart_rules_index'
+        );
+    }
+
+    /**
+     * Toggles manufacturer status
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index                              ")
+     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
+     *
+     * @param int $manufacturerId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction($cartRuleId)
+    {
+        return $this->redirectToRoute('admin_cart_rules_index');
     }
 }

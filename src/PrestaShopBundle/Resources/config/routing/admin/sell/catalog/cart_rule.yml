@@ -15,3 +15,22 @@ admin_cart_rules_search:
         _legacy_controller: AdminCartRules
     options:
       expose: true
+
+admin_cart_rules_search_grid:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:searchGrid'
+    _legacy_controller: AdminCartRules
+
+admin_cart_rule_toggle_status:
+  path: /{cartRuleId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:toggleStatus'
+    _legacy_controller: AdminCartRules
+   # _legacy_link: AdminManufacturers:statuscartrule
+    _legacy_parameters:
+      id_cart_rule: cartRuleId
+  requirements:
+    cartRuleId: \d+
