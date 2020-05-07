@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Product\v2;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ProductImageType extends AbstractType
@@ -39,7 +39,7 @@ class ProductImageType extends AbstractType
     {
         $builder
             ->add('cover', CheckboxType::class)
-            ->add('legend', TextType::class)
+            ->add('name', TranslatableType::class)
         ;
     }
 }

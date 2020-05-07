@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ImageConstraintExc
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ImageSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImages;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Product\v2\ProductImageType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -171,27 +172,36 @@ class ImageController extends FrameworkBundleAdminController
         ]);
     }
 
-    public function editAction(int $productId, int $imageId, Request $request): JsonResponse
+    public function editAction(int $imageId, Request $request): JsonResponse
     {
+        /** @var FormHandlerInterface $imageFormHandler */
+        $imageFormHandler = $this->get('prestashop.core.form.identifiable_object.product_image_form_handler');
         $imageForm = $this->createForm(ProductImageType::class);
-        //@todo: check localized values. And add form handler service
         $imageForm->handleRequest($request);
-        $editImageCommand = new EditProductImageCommand($imageId);
 
-        //@todo: where do i put all of this (it suppose to be in some form handler)
-        if ($request->request->has('cover')) {
-            $editImageCommand->setCover($request->request->getBoolean('cover'));
+        //@todo: check localized values. And add form handler service
+        try {
+            $result = $imageFormHandler->handleFor($imageId, $imageForm);
+        } catch (Exception $e) {
+            //@todo: unexpected errors
+            return $this->json(
+                ['message' => 'Something went wrong'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-        if ($request->request->has('localizedLegends')) {
-            $localizedLegends = $request->request->get('localizedLegends');
-            if (is_array($localizedLegends)) {
-                //@todo: how do i validate this array?
-                $editImageCommand->setLocalizedLegends($localizedLegends);
-            }
+        if ($result->isSubmitted() && $result->isValid()) {
+            return $this->json(
+                ['message' => $this->trans('Update successful', 'Admin.Notifications.Success')],
+                Response::HTTP_OK
+            );
         }
 
-        $this->getCommandBus()->handle($editImageCommand);
+        return $this->json(
+            //@todo: form validation errors
+            ['message' => 'Update failed'],
+            Response::HTTP_BAD_REQUEST
+        );
     }
 
     /**

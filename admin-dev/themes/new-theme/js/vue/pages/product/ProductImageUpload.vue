@@ -141,7 +141,6 @@
     }));
 
     const response = await fetch(router.generate('admin_products_v2_images_edit', {
-      productId,
       imageId: selectedImage.imageId,
     }), {
       method: 'POST',

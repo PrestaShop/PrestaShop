@@ -33,7 +33,7 @@ admin_products_v2_images_delete:
     expose: true
 
 admin_products_v2_images_edit:
-  path: /{productId}/images/{imageId}/edit
+  path: /images/{imageId}/edit
   methods: POST
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:edit
