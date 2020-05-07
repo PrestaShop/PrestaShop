@@ -28,34 +28,11 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use Module;
 use PaymentModule;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 use Validate;
 
-final class InstalledPaymentModulesChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
+final class InstalledPaymentModulesChoiceProvider implements FormChoiceProviderInterface
 {
-    /**
-     * @var int
-     */
-    protected $contextLangId;
-    /**
-     * @var OrderStateDataProviderInterface
-     */
-    protected $orderStateDataProvider;
-
-    /**
-     * InstalledPaymentModulesChoiceProvider constructor.
-     *
-     * @param OrderStateDataProviderInterface $orderStateDataProvider
-     * @param int $contextLangId
-     */
-    public function __construct(OrderStateDataProviderInterface $orderStateDataProvider, int $contextLangId)
-    {
-        $this->contextLangId = $contextLangId;
-        $this->orderStateDataProvider = $orderStateDataProvider;
-    }
-
     private static $paymentModules;
 
     /**
@@ -75,25 +52,5 @@ final class InstalledPaymentModulesChoiceProvider implements FormChoiceProviderI
         }
 
         return self::$paymentModules;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChoicesAttributes()
-    {
-        $attr = [];
-        $orderStates = $this->orderStateDataProvider->getOrderStates($this->contextLangId);
-        foreach (array_keys($this->getChoices()) as $moduleName) {
-            $attr[$moduleName] = array_reduce($orderStates, function ($carry, $item) use ($moduleName) {
-                if (empty($carry) && $item['module_name'] == $moduleName) {
-                    return $item['id_order_state'];
-                }
-
-                return $carry;
-            });
-        }
-
-        return $attr;
     }
 }

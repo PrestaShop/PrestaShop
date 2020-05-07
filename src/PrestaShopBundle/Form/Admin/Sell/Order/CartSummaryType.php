@@ -26,13 +26,13 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Form type for cart summary block of order create page
@@ -50,28 +50,23 @@ class CartSummaryType extends AbstractType
     private $paymentModulesChoiceProvider;
 
     /**
-     * @var int
+     * @var TranslatorInterface
      */
-    private $defaultPaymentOrderState;
-
-    /**
-     * @var array
-     */
-    private $paymentOrderStates = [];
+    private $translator;
 
     /**
      * @param FormChoiceProviderInterface $orderStatesChoiceProvider
      * @param FormChoiceProviderInterface $paymentModulesChoiceProvider
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         FormChoiceProviderInterface $orderStatesChoiceProvider,
         FormChoiceProviderInterface $paymentModulesChoiceProvider,
-        Configuration $configuration
+        TranslatorInterface $translator
     ) {
         $this->orderStatesChoiceProvider = $orderStatesChoiceProvider;
         $this->paymentModulesChoiceProvider = $paymentModulesChoiceProvider;
-        $this->defaultPaymentOrderState = (int) $configuration->get('PS_OS_PAYMENT');
-        $this->paymentOrderStates = $this->paymentModulesChoiceProvider->getChoicesAttributes();
+        $this->translator = $translator;
     }
 
     /**
@@ -88,14 +83,21 @@ class CartSummaryType extends AbstractType
             ])
             ->add('payment_module', ChoiceType::class, [
                 'choices' => $this->getPaymentModuleChoices(),
-                'choice_attr' => [$this, 'getChoiceAttr'],
-                'required' => false,
-                'placeholder' => false,
+                'required' => true,
+                'placeholder' => $this->translator->trans(
+                    'Choose a payment type',
+                    [],
+                    'Admin.Catalog.Feature'
+                ),
             ])
             ->add('order_state', ChoiceType::class, [
                 'choices' => $this->orderStatesChoiceProvider->getChoices(),
-                'required' => false,
-                'placeholder' => false,
+                'required' => true,
+                'placeholder' => $this->translator->trans(
+                    'Choose an order status',
+                    [],
+                    'Admin.Orderscustomers.Feature'
+                ),
             ]);
     }
 
@@ -113,18 +115,5 @@ class CartSummaryType extends AbstractType
         }
 
         return $choices;
-    }
-
-    /**
-     * @param string $value
-     * @param string $key
-     *
-     * @return array
-     */
-    public function getChoiceAttr($value, $key)
-    {
-        return [
-            'data-order-state' => $this->paymentOrderStates[$key] ?? $this->defaultPaymentOrderState,
-        ];
     }
 }
