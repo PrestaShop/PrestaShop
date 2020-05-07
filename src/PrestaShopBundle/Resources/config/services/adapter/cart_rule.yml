@@ -13,3 +13,15 @@ services:
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\CartRule\Query\SearchCartRules }
+
+  prestashop.adapter.cart_rule.command_handler.delete_cart_rule_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler\DeleteCartRuleHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand'
+
+#  prestashop.adapter.cart_rule.command_handler.bulk_delete_cart_rule_handler:
+#    class: 'PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler\BulkDeleteCartRuleHandler'
+#    tags:
+#      - name: 'tactician.handler'
+#        command: 'PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand'

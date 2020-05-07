@@ -1,12 +1,11 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
+ * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,24 +16,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
+ * needs please refer to https://www.prestashop.com for more information.
  *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
 
-class CannotDeleteCartRuleException extends CartRuleException
-{
-    /**
-     * When fails to delete single cart rule
-     */
-    public const FAILED_DELETE = 10;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
-    /**
-     * When fails to delete cart rule in bulk action
-     */
-    public const FAILED_BULK_DELETE = 20;
+/**
+ * Thrown in cart rules context
+ */
+class CartRuleNotFoundException extends DomainException
+{
 }
