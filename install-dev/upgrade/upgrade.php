@@ -49,6 +49,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../../config/defines.inc.php';
 require_once __DIR__ . '/../../config/autoload.php';
 Upgrade::migrateSettingsFile();
+require_once __DIR__ . '/../classes/datas.php';
 require_once dirname(__FILE__).'/../init.php';
 require_once _PS_CONFIG_DIR_.'bootstrap.php';
 
