@@ -7,7 +7,11 @@
 
   <div id="productPageVue">
     {#@todo: hardcoded values #}
-    <product-image-upload product-id="1" image-form-template-id="image-form-template"></product-image-upload>
+    <product-image-upload
+      product-id="1"
+      context-lang-id="{{ contextLangId }}"
+      locales="{{ enabledLocales|json_encode() }}"
+    ></product-image-upload>
   </div>
 
 {% endblock %}

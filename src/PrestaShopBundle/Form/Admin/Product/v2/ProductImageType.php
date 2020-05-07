@@ -39,7 +39,7 @@ class ProductImageType extends AbstractType
     {
         $builder
             ->add('cover', CheckboxType::class)
-            ->add('name', TranslatableType::class)
+            ->add('legend', TranslatableType::class)
         ;
     }
 }

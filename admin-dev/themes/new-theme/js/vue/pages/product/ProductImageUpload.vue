@@ -26,37 +26,36 @@
           >
         </div>
       </div>
-
-      <div
-        style="border: 1px solid black"
-        v-if="selectedImage.imageId"
-        class="col"
-      >
-        <label>
-          Cover image
-          <input
-            type="checkbox"
-            name="cover"
-            v-model="selectedImage.cover"
-          >
-        </label>
-        <label>
-          Caption
-          <input
-            type="text"
-            v-model="selectedImage.localizedLegends"
-          >
-        </label>
-
-        <button
-          type="submit"
-          @click.prevent="saveImageSettings(selectedImage)"
+      <div v-if="selectedImage.imageId">
+        <product-image-translatable-legend-input
+          :selected-image="selectedImage"
+          :context-lang-id="contextLangId"
+          :locales="locales"
+        />
+        <div
+          style="border: 1px solid black"
+          v-if="selectedImage.imageId"
+          class="col"
         >
-          Save
-        </button>
-        <button type="button">
-          Delete
-        </button>
+          <label>
+            Cover image
+            <input
+              type="checkbox"
+              name="cover"
+              v-model="selectedImage.cover"
+            >
+          </label>
+
+          <button
+            type="submit"
+            @click.prevent="saveImageSettings(selectedImage)"
+          >
+            Save
+          </button>
+          <button type="button">
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -64,17 +63,22 @@
 
 <script>
   import Router from '@components/router.js';
+  import ProductImageTranslatableLegendInput from './ProductImageTranslatableLegendInput';
 
   const router = new Router();
 
   const productImageUpload = {
     name: 'ProductImageUpload',
+    components: {ProductImageTranslatableLegendInput},
     props: {
       productId: {
         Type: Number,
       },
-      langId: {
+      contextLangId: {
         Type: Number,
+      },
+      locales: {
+        Type: Array,
       },
     },
     data() {
@@ -93,7 +97,6 @@
     methods: {
       showImageSettings(image) {
         window.event.stopPropagation();
-
         this.selectedImage = {
           imageId: image.imageId,
           cover: image.cover,
@@ -137,7 +140,7 @@
     const formData = new FormData();
     formData.append('product_image', JSON.stringify({
       cover: selectedImage.cover,
-      legend: selectedImage.legend,
+      legend: selectedImage.localizedLegends,
     }));
 
     const response = await fetch(router.generate('admin_products_v2_images_edit', {

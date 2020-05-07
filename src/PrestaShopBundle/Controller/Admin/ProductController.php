@@ -30,7 +30,9 @@ use Category;
 use Configuration;
 use Currency;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
@@ -125,9 +127,26 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
-        //@todo: remove rendering test vue template
-        return $this->render('@PrestaShop/Admin/Product/index.html.twig');
+        //@todo: just for testing from here
 
+            /** @var LegacyContext $context */
+            $context = $this->get('prestashop.adapter.legacy.context');
+            $locales = $context->getAvailableLanguages();
+
+            $enabledLocales = [];
+
+            foreach ($locales as $locale) {
+                if ($locale['active']) {
+                    $enabledLocales[] = $locale;
+                }
+            }
+
+            //@todo: remove rendering test vue template
+            return $this->render('@PrestaShop/Admin/Product/index.html.twig', [
+                'contextLangId' => $this->getContextLangId(),
+                'enabledLocales' => $enabledLocales,
+            ]);
+        //@todo: just for testing till here.
 
         if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
