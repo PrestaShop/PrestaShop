@@ -25,6 +25,7 @@
 
 import Grid from '@components/grid/grid';
 import SortingExtension from '@components/grid/extension/sorting-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
@@ -43,6 +44,7 @@ $(() => {
   cartRuleGrid.addExtension(new ReloadListActionExtension());
   cartRuleGrid.addExtension(new SortingExtension());
   cartRuleGrid.addExtension(new FiltersResetExtension());
+  cartRuleGrid.addExtension(new ColumnTogglingExtension());
   cartRuleGrid.addExtension(new SubmitRowActionExtension());
   cartRuleGrid.addExtension(new SubmitBulkExtension());
   cartRuleGrid.addExtension(new BulkActionCheckboxExtension());

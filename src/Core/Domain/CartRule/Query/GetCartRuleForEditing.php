@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,40 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+declare(strict_types=1);
 
-{% block content %}
-  {% block cart_rule_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartRuleGrid} %}
-      </div>
-    </div>
-  {% endblock %}
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Query;
 
-{% block javascripts %}
-  {{ parent() }}
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/cart_rule.bundle.js') }}"></script>
-{% endblock %}
+/**
+ * Gets cart rule for editing in Back Office
+ */
+class GetCartRuleForEditing
+{
+    /**
+     * @var CartRuleId
+     */
+    private $cartRuleId;
+
+    /**
+     * @param int $cartRuleId
+     *
+     * @throws CartRuleConstraintException
+     */
+    public function __construct($cartRuleId)
+    {
+        $this->cartRuleId = new CartRuleId($cartRuleId);
+    }
+
+    /**
+     * @return CartRuleId $cartRuleId
+     */
+    public function getCartRuleId(): CartRuleId
+    {
+        return $this->cartRuleId;
+    }
+}
