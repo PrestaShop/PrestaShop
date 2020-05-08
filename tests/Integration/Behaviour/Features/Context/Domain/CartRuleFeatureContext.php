@@ -572,7 +572,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
-        /** @var  $cartRule EditableCartRule */
+        /** @var $cartRule EditableCartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
         if (!$cartRule->isEnabled() === true) {
             throw new RuntimeException(sprintf('Cart rule %s is not disabled', $cartRuleReference));
@@ -590,7 +590,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
-        /** @var  $cartRule EditableCartRule */
+        /** @var $cartRule EditableCartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
         if (!$cartRule->isEnabled() === false) {
             throw new RuntimeException(sprintf('Cart rule %s is not enabled', $cartRuleReference));
