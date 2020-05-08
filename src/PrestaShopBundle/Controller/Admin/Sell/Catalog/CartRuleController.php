@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\DeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
@@ -58,15 +59,14 @@ class CartRuleController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
-     *
      * @param CartRuleFilters $cartRuleFilters
+     *
      * @return Response
      */
     public function indexAction(
         Request $request,
         CartRuleFilters $cartRuleFilters
-    ): Response
-    {
+    ): Response {
         $cartRuleGridFactory = $this->get('prestashop.core.grid.grid_factory.cart_rule');
         $cartRuleGrid = $cartRuleGridFactory->getGrid($cartRuleFilters);
 
@@ -235,5 +235,57 @@ class CartRuleController extends FrameworkBundleAdminController
         }
 
         return $cartRuleIds;
+    }
+
+    /**
+     * Enables cart rules on bulk action
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
+     *
+     * @return RedirectResponse
+     */
+    public function bulkEnableAction(Request $request)
+    {
+        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleCartRuleStatusCommand($cartRuleIds, true));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CartRuleException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_cart_rules_index');
+    }
+
+    /**
+     * Disables cart rules on bulk action
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
+     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDisableAction(Request $request)
+    {
+        $cartRuleIds = $this->getBulkCartRulesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleCartRuleStatusCommand($cartRuleIds, false));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CartRuleException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_cart_rules_index');
     }
 }

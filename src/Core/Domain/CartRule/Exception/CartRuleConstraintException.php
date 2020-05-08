@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\CartRule\Exception;
 
 /**
@@ -96,4 +98,9 @@ class CartRuleConstraintException extends CartRuleException
      * Used when cart rule id constraints are violated
      */
     const INVALID_ID = 13;
+
+    /**
+     * When cart rule status is not valid
+     */
+    const INVALID_STATUS = 20;
 }

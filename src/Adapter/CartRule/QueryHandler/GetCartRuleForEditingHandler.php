@@ -31,20 +31,13 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\QueryHandler;
 use DateTime;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
-use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryHandler\GetCartRuleForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
 
 /**
@@ -56,6 +49,7 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
      * @param GetCartRuleForEditing $query
      *
      * @return EditableCartRule
+     *
      * @throws \PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException
      * @throws \PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleNotFoundException
      * @throws \PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException
@@ -74,9 +68,9 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
         $customerId = new CustomerId((int) $cartRule->id_customer);
         $minimumAmountCurrencyId = $cartRule->minimum_amount_currency ? new CurrencyId((int) $cartRule->minimum_amount_currency) : null;
         $reductionCurrencyId = $cartRule->reduction_currency ? new CurrencyId((int) $cartRule->reduction_currency) : null;
-        $reductionProductId = $cartRule->reduction_product ? new ProductId((int) $cartRule->reduction_product): null;
-        $giftProductProductId = $cartRule->reduction_product ? new ProductId((int) $cartRule->gift_product): null;
-        $giftProductProductAttributeId = $cartRule->gift_product_attribute? new CombinationId((int) $cartRule->gift_product_attribute): null;
+        $reductionProductId = $cartRule->reduction_product ? new ProductId((int) $cartRule->reduction_product) : null;
+        $giftProductProductId = $cartRule->reduction_product ? new ProductId((int) $cartRule->gift_product) : null;
+        $giftProductProductAttributeId = $cartRule->gift_product_attribute ? new CombinationId((int) $cartRule->gift_product_attribute) : null;
 
         return new EditableCartRule(
             $cartRuleId,

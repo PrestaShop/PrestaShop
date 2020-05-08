@@ -48,7 +48,6 @@ class ToggleCartRuleStatusCommand
     /**
      * @param int $cartRuleId
      * @param bool $expectedStatus
-     *
      */
     public function __construct(int $cartRuleId, bool $expectedStatus)
     {

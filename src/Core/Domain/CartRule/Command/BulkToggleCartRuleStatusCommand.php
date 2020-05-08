@@ -32,10 +32,15 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 /**
- * Deletes cart rules in bulk acton
+ * Toggles cart rule status in bulk action
  */
-class BulkDeleteCartRuleCommand
+class BulkToggleCartRuleStatusCommand
 {
+    /**
+     * @var bool
+     */
+    private $expectedStatus;
+
     /**
      * @var CartRuleId[]
      */
@@ -43,18 +48,29 @@ class BulkDeleteCartRuleCommand
 
     /**
      * @param int[] $cartRuleIds
+     * @param bool $expectedStatus
      *
      * @throws CartRuleConstraintException
      */
-    public function __construct(array $cartRuleIds)
+    public function __construct(array $cartRuleIds, $expectedStatus)
     {
+        $this->assertIsBool($expectedStatus);
+        $this->expectedStatus = $expectedStatus;
         $this->setCartRuleIds($cartRuleIds);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExpectedStatus()
+    {
+        return $this->expectedStatus;
     }
 
     /**
      * @return CartRuleId[]
      */
-    public function getCartRuleIds(): array
+    public function getCartRuleIds()
     {
         return $this->cartRuleIds;
     }
@@ -64,10 +80,24 @@ class BulkDeleteCartRuleCommand
      *
      * @throws CartRuleConstraintException
      */
-    private function setCartRuleIds(array $cartRuleIds): void
+    private function setCartRuleIds(array $cartRuleIds)
     {
         foreach ($cartRuleIds as $cartRuleId) {
             $this->cartRuleIds[] = new CartRuleId($cartRuleId);
+        }
+    }
+
+    /**
+     * Validates that value is of type boolean
+     *
+     * @param $value
+     *
+     * @throws CartRuleConstraintException
+     */
+    private function assertIsBool($value)
+    {
+        if (!is_bool($value)) {
+            throw new CartRuleConstraintException(sprintf('Status must be of type bool, but given %s', var_export($value, true)), CartRuleConstraintException::INVALID_STATUS);
         }
     }
 }
