@@ -158,7 +158,7 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
             'code' => 'cr.code',
             'quantity' => 'cr.quantity',
             'date_to' => 'cr.date_to',
-            'active' => 'cr.active'
+            'active' => 'cr.active',
         ];
 
         $exactMatchFilters = ['id_cart_rule', 'quantity', 'priority', 'active'];

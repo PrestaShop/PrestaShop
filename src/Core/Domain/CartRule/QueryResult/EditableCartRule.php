@@ -30,18 +30,17 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
 use DateTime;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 /**
  * Provides data for editing CatalogPriceRule
  */
 class EditableCartRule
 {
-
     /**
      * @var CartRuleId
      */

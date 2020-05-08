@@ -29,24 +29,26 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\ToggleCartRuleStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\ToggleCartRuleStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\BulkToggleCartRuleStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\UpdateCartRuleException;
 
 /**
- * Handles command which toggles cart rule status
+ * Handles command which toggles cart rule status in bulk action
  */
-final class ToggleCartRuleStatusHandler extends AbstractCartRuleHandler implements ToggleCartRuleStatusHandlerInterface
+final class BulkToggleCartRuleStatusHandler extends AbstractCartRuleHandler implements BulkToggleCartRuleStatusHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(ToggleCartRuleStatusCommand $command)
+    public function handle(BulkToggleCartRuleStatusCommand $command)
     {
-        $cartRule = $this->getCartRule($command->getCartRuleId());
+        foreach ($command->getCartRuleIds() as $cartRuleId) {
+            $cartRule = $this->getCartRule($cartRuleId);
 
-        if (!$this->toggleCartRuleStatus($cartRule, $command->getExpectedStatus())) {
-            throw new UpdateCartRuleException(sprintf('Unable to toggle cart rule status with id "%s"', $cartRule->id), UpdateCartRuleException::FAILED_UPDATE_STATUS);
+            if (!$this->toggleCartRuleStatus($cartRule, $command->getExpectedStatus())) {
+                throw new UpdateCartRuleException(sprintf('Unable to toggle cart rule status with id "%s"', $cartRule->id), UpdateCartRuleException::FAILED_BULK_UPDATE_STATUS);
+            }
         }
     }
 }

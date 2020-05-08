@@ -26,20 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Query\GetCartRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRule;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkToggleCartRuleStatusCommand;
 
 /**
- * Defines contract for GetCartRuleForEditingHandler
+ * Defines contract for BulkToggleCartRuleStatusHandler
  */
-interface GetCartRuleForEditingHandlerInterface
+interface BulkToggleCartRuleStatusHandlerInterface
 {
     /**
-     * @param GetCartRuleForEditing $query
-     *
-     * @return EditableCartRule
+     * @param BulkToggleCartRuleStatusCommand $command
      */
-    public function handle(GetCartRuleForEditing $query): EditableCartRule;
+    public function handle(BulkToggleCartRuleStatusCommand $command);
 }
