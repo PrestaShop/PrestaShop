@@ -44,7 +44,7 @@ describe('Sort Profiles', async () => {
   // Login into BO
   loginCommon.loginBO();
 
-  it('should go to "Advanced parameters>Team" page', async function () {
+  it('should go to \'Advanced parameters>Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
@@ -55,7 +55,7 @@ describe('Sort Profiles', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
   });
 
-  it('should go to "Profiles" page', async function () {
+  it('should go to \'Profiles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
     await this.pageObjects.employeesPage.goToProfilesPage();
     const pageTitle = await this.pageObjects.profilesPage.getPageTitle();
