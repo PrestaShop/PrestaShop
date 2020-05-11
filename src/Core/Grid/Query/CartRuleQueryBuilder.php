@@ -85,7 +85,7 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
@@ -109,7 +109,7 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * {@inheritdoc}
      */
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('COUNT(DISTINCT cr.`id_cart_rule`)')
@@ -125,7 +125,7 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(array $filters)
+    private function getQueryBuilder(array $filters): QueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
@@ -149,7 +149,7 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param QueryBuilder $qb
      * @param array $filters
      */
-    private function applyFilters(QueryBuilder $qb, array $filters)
+    private function applyFilters(QueryBuilder $qb, array $filters): void
     {
         $allowedFiltersAliasMap = [
             'id_cart_rule' => 'cr.id_cart_rule',

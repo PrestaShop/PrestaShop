@@ -62,7 +62,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getId()
+    protected function getId(): string
     {
         return self::GRID_ID;
     }
@@ -70,7 +70,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getName()
+    protected function getName(): string
     {
         return $this->trans('Cart rules', [], 'Admin.Catalog.Feature');
     }
@@ -78,7 +78,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getColumns()
+    protected function getColumns(): ColumnCollection
     {
         return (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
@@ -158,7 +158,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getFilters()
+    protected function getFilters(): FilterCollection
     {
         return (new FilterCollection())
             ->add((new Filter('id_cart_rule', TextType::class))
@@ -236,7 +236,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * {@inheritdoc}
      */
-    protected function getBulkActions()
+    protected function getBulkActions(): BulkActionCollection
     {
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('enable_selection'))

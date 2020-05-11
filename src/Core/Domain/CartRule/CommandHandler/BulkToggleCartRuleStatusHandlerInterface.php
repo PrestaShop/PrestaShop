@@ -38,5 +38,5 @@ interface BulkToggleCartRuleStatusHandlerInterface
     /**
      * @param BulkToggleCartRuleStatusCommand $command
      */
-    public function handle(BulkToggleCartRuleStatusCommand $command);
+    public function handle(BulkToggleCartRuleStatusCommand $command): void;
 }

@@ -92,7 +92,7 @@ abstract class AbstractCartRuleHandler
      *
      * @throws CartRuleException
      */
-    protected function toggleCartRuleStatus(CartRule $cartRule, $newStatus)
+    protected function toggleCartRuleStatus(CartRule $cartRule, bool $newStatus): ?bool
     {
         $cartRule->active = $newStatus;
 
