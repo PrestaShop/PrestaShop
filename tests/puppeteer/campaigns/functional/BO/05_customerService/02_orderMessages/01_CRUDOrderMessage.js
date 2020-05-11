@@ -80,7 +80,7 @@ describe('Create, update and delete order message', async () => {
 
     it('should create order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrderMessage', baseContext);
-      const result = await this.pageObjects.addOrderMessagePage.AddEditOrderMessage(createOrderMessageData);
+      const result = await this.pageObjects.addOrderMessagePage.addEditOrderMessage(createOrderMessageData);
       await expect(result).to.equal(this.pageObjects.orderMessagesPage.successfulCreationMessage);
     });
 
@@ -110,7 +110,7 @@ describe('Create, update and delete order message', async () => {
 
     it('should edit order message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderMessage', baseContext);
-      const result = await this.pageObjects.addOrderMessagePage.AddEditOrderMessage(editOrderMessageData);
+      const result = await this.pageObjects.addOrderMessagePage.addEditOrderMessage(editOrderMessageData);
       await expect(result).to.equal(this.pageObjects.orderMessagesPage.successfulUpdateMessage);
     });
 
