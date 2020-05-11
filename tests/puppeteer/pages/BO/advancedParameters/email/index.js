@@ -23,7 +23,9 @@ module.exports = class Email extends BOBasePage {
     this.tableRows = `${this.tableBody} tr`;
     this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
-    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a[href*='delete']`;
+    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a[data-url*='delete']`;
+    this.confirmDeleteModal = '#email_logs-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
@@ -130,8 +132,12 @@ module.exports = class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteEmailLog(row) {
-    this.dialogListener(true);
-    await this.waitForSelectorAndClick(this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.waitForSelectorAndClick(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
