@@ -66,7 +66,7 @@ class ToggleCartRuleStatusCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus()
+    public function getExpectedStatus(): bool
     {
         return $this->expectedStatus;
     }

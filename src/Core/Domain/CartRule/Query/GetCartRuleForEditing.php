@@ -46,7 +46,7 @@ class GetCartRuleForEditing
      *
      * @throws CartRuleConstraintException
      */
-    public function __construct($cartRuleId)
+    public function __construct(int $cartRuleId)
     {
         $this->cartRuleId = new CartRuleId($cartRuleId);
     }

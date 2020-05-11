@@ -41,7 +41,7 @@ final class BulkToggleCartRuleStatusHandler extends AbstractCartRuleHandler impl
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkToggleCartRuleStatusCommand $command)
+    public function handle(BulkToggleCartRuleStatusCommand $command): void
     {
         foreach ($command->getCartRuleIds() as $cartRuleId) {
             $cartRule = $this->getCartRule($cartRuleId);

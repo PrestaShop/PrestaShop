@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Money;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Transform\CurrencyTransform;
 use Tests\Integration\Behaviour\Features\Transform\SharedStorageTransform;
 use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
@@ -471,7 +472,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      */
-    public function deleteCartRule(string $cartRuleReference)
+    public function deleteCartRule(string $cartRuleReference): void
     {
         $cartRule = SharedStorage::getStorage()->get($cartRuleReference);
         $command = new DeleteCartRuleCommand((int) $cartRule->id);
@@ -509,7 +510,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      */
-    public function bulkEnableCartRules(string $cartRuleReferences)
+    public function bulkEnableCartRules(string $cartRuleReferences): void
     {
         $cartRuleIds = [];
         $cartRuleReferenceArray = explode(',', $cartRuleReferences);
@@ -529,7 +530,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      */
-    public function bulkDisableCartRules(string $cartRuleReferences)
+    public function bulkDisableCartRules(string $cartRuleReferences): void
     {
         $cartRuleIds = [];
         $cartRuleReferenceArray = explode(',', $cartRuleReferences);
@@ -549,7 +550,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      */
-    public function bulkDeleteCartRules(string $cartRuleReferences)
+    public function bulkDeleteCartRules(string $cartRuleReferences): void
     {
         $cartRuleIds = [];
         $cartRuleReferenceArray = explode(',', $cartRuleReferences);
@@ -567,8 +568,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @param string $cartRuleReference
      *
      * @throws CartRuleConstraintException
+     * @throws RuntimeException
      */
-    public function assertCartRuleEnabled(string $cartRuleReference)
+    public function assertCartRuleEnabled(string $cartRuleReference): void
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
@@ -586,7 +588,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      */
-    public function assertCartRuleDisabled(string $cartRuleReference)
+    public function assertCartRuleDisabled(string $cartRuleReference): void
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
@@ -599,6 +601,11 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then Cart rule with reference :cartRuleReference does not exist
+     *
+     * @param $cartRuleReference
+     *
+     * @throws CartRuleConstraintException
+     * @throws NoExceptionAlthoughExpectedException
      */
     public function assertCartRuleDeleted($cartRuleReference): void
     {
@@ -614,6 +621,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Transform /^(active from|active until|quantity per user|partial use|status|highlight in cart)$/
+     *
+     * @param string $property
+     * @return string
      */
     public function getMappedProperty(string $property): string
     {
@@ -631,6 +641,9 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Transform /^applies to ([^"]+)$/
+     *
+     * @param string $type
+     * @return mixed|string
      */
     public function getMappedDiscountApplicationType(string $type)
     {
@@ -650,7 +663,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @param CartRule $cartRule
      * @param string $discountApplicationType
      */
-    private function assertDiscountApplicationTypeIsValid(CartRule $cartRule, string $discountApplicationType)
+    private function assertDiscountApplicationTypeIsValid(CartRule $cartRule, string $discountApplicationType): void
     {
         $reductionType = (int) $cartRule->reduction_product;
 
@@ -730,7 +743,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         int $customerId = null,
         string $discountApplicationType = null,
         int $discountProductId = null
-    ) {
+    ): CartRuleId
+    {
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
         $command = new AddCartRuleCommand(
@@ -789,6 +803,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      *
      * @throws CartRuleConstraintException
      * @throws DomainConstraintException
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException
      */
     private function createCartRuleAction(
         bool $isFreeShipping,

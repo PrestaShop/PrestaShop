@@ -41,7 +41,7 @@ final class ToggleCartRuleStatusHandler extends AbstractCartRuleHandler implemen
     /**
      * {@inheritdoc}
      */
-    public function handle(ToggleCartRuleStatusCommand $command)
+    public function handle(ToggleCartRuleStatusCommand $command): void
     {
         $cartRule = $this->getCartRule($command->getCartRuleId());
 

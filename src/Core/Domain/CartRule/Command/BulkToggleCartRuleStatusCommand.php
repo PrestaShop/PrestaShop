@@ -52,9 +52,8 @@ class BulkToggleCartRuleStatusCommand
      *
      * @throws CartRuleConstraintException
      */
-    public function __construct(array $cartRuleIds, $expectedStatus)
+    public function __construct(array $cartRuleIds, bool $expectedStatus)
     {
-        $this->assertIsBool($expectedStatus);
         $this->expectedStatus = $expectedStatus;
         $this->setCartRuleIds($cartRuleIds);
     }
@@ -62,7 +61,7 @@ class BulkToggleCartRuleStatusCommand
     /**
      * @return bool
      */
-    public function getExpectedStatus()
+    public function getExpectedStatus(): bool
     {
         return $this->expectedStatus;
     }
@@ -70,7 +69,7 @@ class BulkToggleCartRuleStatusCommand
     /**
      * @return CartRuleId[]
      */
-    public function getCartRuleIds()
+    public function getCartRuleIds(): array
     {
         return $this->cartRuleIds;
     }
@@ -80,7 +79,7 @@ class BulkToggleCartRuleStatusCommand
      *
      * @throws CartRuleConstraintException
      */
-    private function setCartRuleIds(array $cartRuleIds)
+    private function setCartRuleIds(array $cartRuleIds): void
     {
         foreach ($cartRuleIds as $cartRuleId) {
             $this->cartRuleIds[] = new CartRuleId($cartRuleId);

@@ -42,7 +42,7 @@ final class CartRuleFilters extends Filters
     /**
      * {@inheritdoc}
      */
-    public static function getDefaults()
+    public static function getDefaults(): array
     {
         return [
             'limit' => 50,
