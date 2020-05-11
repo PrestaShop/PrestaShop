@@ -623,6 +623,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @Transform /^(active from|active until|quantity per user|partial use|status|highlight in cart)$/
      *
      * @param string $property
+     *
      * @return string
      */
     public function getMappedProperty(string $property): string
@@ -643,6 +644,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @Transform /^applies to ([^"]+)$/
      *
      * @param string $type
+     *
      * @return mixed|string
      */
     public function getMappedDiscountApplicationType(string $type)
@@ -743,8 +745,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         int $customerId = null,
         string $discountApplicationType = null,
         int $discountProductId = null
-    ): CartRuleId
-    {
+    ): CartRuleId {
         $defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
 
         $command = new AddCartRuleCommand(
