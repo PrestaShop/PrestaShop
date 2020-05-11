@@ -113,6 +113,7 @@ class CartRuleController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function searchGridAction(Request $request): RedirectResponse
@@ -245,6 +246,7 @@ class CartRuleController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function bulkEnableAction(Request $request): RedirectResponse
@@ -272,6 +274,7 @@ class CartRuleController extends FrameworkBundleAdminController
      * @DemoRestricted(redirectRoute="admin_cart_rules_index")
      *
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function bulkDisableAction(Request $request): RedirectResponse
