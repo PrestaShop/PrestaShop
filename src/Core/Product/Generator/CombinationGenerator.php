@@ -35,17 +35,24 @@ class CombinationGenerator implements CombinationGeneratorInterface
      */
     public function bulkGenerate(array $valuesByGroup): array
     {
-        $combinations = [];
+        $combinations = [new GeneratedCombination([])];
+
         foreach ($valuesByGroup as $group => $values) {
 
             $newCombinations = [];
             foreach ($combinations as $combination) {
                 foreach ($values as $value) {
-                    $newCombinations[] = new GeneratedCombination(array_merge($combination, [$group => $value]));
+                    $newCombinations[] = new GeneratedCombination(
+                        array_merge($combination->getAttributeIdValues(), [$group => $value])
+                    );
                 }
             }
 
             $combinations = $newCombinations;
+        }
+
+        if (1 === count($combinations) && empty($combinations[0])) {
+            return [];
         }
 
         return $combinations;
