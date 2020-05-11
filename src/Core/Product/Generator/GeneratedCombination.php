@@ -36,7 +36,7 @@ class GeneratedCombination
     private $attributeIdValues;
 
     /**
-     * @param array $attributeIdValues
+     * @param int[] $attributeIdValues
      */
     public function __construct(array $attributeIdValues)
     {

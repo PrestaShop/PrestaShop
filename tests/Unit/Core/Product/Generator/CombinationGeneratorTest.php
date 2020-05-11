@@ -63,14 +63,23 @@ class CombinationGeneratorTest extends TestCase
     {
         yield [
             [
-                1 => [2, 3],
+                1 => [2, 3, 4],
                 2 => [5, 6],
+                3 => [7, 8],
             ],
             [
-                new GeneratedCombination([2, 5]),
-                new GeneratedCombination([2, 6]),
-                new GeneratedCombination([3, 5]),
-                new GeneratedCombination([3, 6]),
+                new GeneratedCombination([2, 5, 7]),
+                new GeneratedCombination([2, 5, 8]),
+                new GeneratedCombination([2, 6, 7]),
+                new GeneratedCombination([2, 6, 8]),
+                new GeneratedCombination([3, 5, 7]),
+                new GeneratedCombination([3, 5, 8]),
+                new GeneratedCombination([3, 6, 7]),
+                new GeneratedCombination([3, 6, 8]),
+                new GeneratedCombination([4, 5, 7]),
+                new GeneratedCombination([4, 5, 8]),
+                new GeneratedCombination([4, 6, 7]),
+                new GeneratedCombination([4, 6, 8]),
             ],
         ];
     }
