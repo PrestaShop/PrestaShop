@@ -106,3 +106,6 @@ services:
     prestashop.core.product.csv_exporter:
         class: PrestaShop\PrestaShop\Core\Product\ProductCsvExporter
         arguments: ['@translator', '@prestashop.core.admin.data_provider.product_interface']
+
+    prestashop.core.product.generator.combination_generator:
+      class: PrestaShop\PrestaShop\Core\Product\Generator\CombinationGenerator
