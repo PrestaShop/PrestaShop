@@ -162,7 +162,6 @@ module.exports = class Languages extends LocalizationBasePage {
   /**
    * Get language status
    * @param row
-   * @param column
    * @return {Promise<string>}
    */
   isEnabled(row) {
@@ -175,7 +174,7 @@ module.exports = class Languages extends LocalizationBasePage {
    * @param valueWanted
    * @return {Promise<bool>}, true if click has been performed
    */
-  async quiEditLanguage(row, valueWanted = true) {
+  async quickEditLanguage(row, valueWanted = true) {
     await this.waitForVisibleSelector(this.tableColumn(row, 'active'), 2000);
     if (await this.isEnabled(row) !== valueWanted) {
       await this.clickAndWaitForNavigation(this.tableColumn(row, 'active'));

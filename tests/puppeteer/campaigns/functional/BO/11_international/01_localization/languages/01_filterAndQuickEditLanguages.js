@@ -186,7 +186,7 @@ describe('Filter and quick edit languages', async () => {
 
     it('should disable \'en\' language and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMainLanguage', baseContext);
-      await this.pageObjects.languagesPage.quiEditLanguage(1, false);
+      await this.pageObjects.languagesPage.quickEditLanguage(1, false);
       const textError = await this.pageObjects.languagesPage.getAlertDangerMessage();
       await expect(textError).to.equal(this.pageObjects.languagesPage.unSuccessfulUpdateDefaultLanguageStatusMessage);
     });
@@ -215,7 +215,7 @@ describe('Filter and quick edit languages', async () => {
     tests.forEach((test) => {
       it(`should ${test.args.action} first language`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Language`, baseContext);
-        const isActionPerformed = await this.pageObjects.languagesPage.quiEditLanguage(1, test.args.enabledValue);
+        const isActionPerformed = await this.pageObjects.languagesPage.quickEditLanguage(1, test.args.enabledValue);
         if (isActionPerformed) {
           const resultMessage = await this.pageObjects.languagesPage.getTextContent(
             this.pageObjects.languagesPage.alertSuccessBlockParagraph,
