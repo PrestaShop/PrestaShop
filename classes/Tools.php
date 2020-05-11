@@ -849,8 +849,6 @@ class ToolsCore
     /**
      * Return price converted.
      *
-     * @deprecated since 1.7.4 use convertPriceToCurrency()
-     *
      * @param float $price Product price
      * @param object|array $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
@@ -865,10 +863,17 @@ class ToolsCore
         if (!$context) {
             $context = Context::getContext();
         }
+
         if ($currency === null) {
             $currency = $context->currency;
         } elseif (is_numeric($currency)) {
             $currency = Currency::getCurrencyInstance($currency);
+        }
+
+        if (gettype($price) === 'string' && is_numeric($price)) {
+            $price = (float)$price;
+        } else if (!is_numeric($price)) {
+            throw new PrestaShopException('Invalid price');
         }
 
         $c_id = (is_array($currency) ? $currency['id_currency'] : $currency->id);
