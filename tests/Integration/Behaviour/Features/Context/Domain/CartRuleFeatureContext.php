@@ -607,7 +607,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @throws CartRuleConstraintException
      * @throws NoExceptionAlthoughExpectedException
      */
-    public function assertCartRuleDeleted($cartRuleReference): void
+    public function assertCartRuleDeleted(string $cartRuleReference): void
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
