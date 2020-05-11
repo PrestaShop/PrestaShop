@@ -872,7 +872,7 @@ class ToolsCore
 
         if (gettype($price) === 'string' && is_numeric($price)) {
             $price = (float) $price;
-        } else if (!is_numeric($price)) {
+        } elseif (!is_numeric($price)) {
             throw new PrestaShopException('Invalid price');
         }
 
