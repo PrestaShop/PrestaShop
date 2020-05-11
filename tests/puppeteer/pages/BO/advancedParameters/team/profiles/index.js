@@ -29,6 +29,11 @@ module.exports = class Profiles extends BOBasePage {
     this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
+    // Pages selectors
+    this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
+    this.pagesPaginationLabel = `${this.profilesListForm} .col-form-label`;
+    this.pagesPaginationNextLink = `${this.profilesListForm} #pagination_next_url`;
+    this.pagesPaginationPreviousLink = `${this.profilesListForm} [aria-label='Previous']`;
   }
 
   /*
@@ -141,5 +146,33 @@ module.exports = class Profiles extends BOBasePage {
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Select profiles pagination limit
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(number) {
+    await this.selectByVisibleText(this.pagesPaginationLimitSelect, number);
+    return this.getTextContent(this.pagesPaginationLabel);
+  }
+
+  /**
+   * profiles pagination next
+   * @returns {Promise<string>}
+   */
+  async paginationNext() {
+    await this.clickAndWaitForNavigation(this.pagesPaginationNextLink);
+    return this.getTextContent(this.pagesPaginationLabel);
+  }
+
+  /**
+   * profiles pagination previous
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious() {
+    await this.clickAndWaitForNavigation(this.pagesPaginationPreviousLink);
+    return this.getTextContent(this.pagesPaginationLabel);
   }
 };
