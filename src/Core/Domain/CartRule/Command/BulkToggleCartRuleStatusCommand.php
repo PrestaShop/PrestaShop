@@ -85,18 +85,4 @@ class BulkToggleCartRuleStatusCommand
             $this->cartRuleIds[] = new CartRuleId($cartRuleId);
         }
     }
-
-    /**
-     * Validates that value is of type boolean
-     *
-     * @param $value
-     *
-     * @throws CartRuleConstraintException
-     */
-    private function assertIsBool($value)
-    {
-        if (!is_bool($value)) {
-            throw new CartRuleConstraintException(sprintf('Status must be of type bool, but given %s', var_export($value, true)), CartRuleConstraintException::INVALID_STATUS);
-        }
-    }
 }
