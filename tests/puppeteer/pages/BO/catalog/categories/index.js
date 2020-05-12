@@ -362,6 +362,10 @@ module.exports = class Categories extends BOBasePage {
       + `${category.status ? 1 : 0}`;
   }
 
+  /**
+   * Go to edit category page
+   * @returns {Promise<void>}
+   */
   async goToEditHomeCategoryPage() {
     await this.waitForSelectorAndClick(this.editHomeCategoryButton);
   }
