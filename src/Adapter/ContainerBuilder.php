@@ -28,10 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
+use Exception;
 use LegacyCompilerPass;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerBuilderExtensionInterface;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerParametersExtension;
 use PrestaShop\PrestaShop\Adapter\Container\DoctrineBuilderExtension;
+use PrestaShop\PrestaShop\Adapter\Container\LegacyContainer;
+use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerBuilder;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use Symfony\Component\Config\ConfigCache;
@@ -84,7 +87,7 @@ class ContainerBuilder
      *
      * @return SfContainerBuilder
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getContainer($containerName, $isDebug)
     {
@@ -109,7 +112,7 @@ class ContainerBuilder
      *
      * @return ContainerInterface|SfContainerBuilder
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function buildContainer($containerName)
     {
@@ -148,11 +151,11 @@ class ContainerBuilder
     /**
      * @return SfContainerBuilder
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function compileContainer()
     {
-        $container = new SfContainerBuilder();
+        $container = new LegacyContainerBuilder();
         //If the container builder is modified the container logically should be rebuilt
         $container->addResource(new FileResource(__FILE__));
 
@@ -175,7 +178,10 @@ class ContainerBuilder
         //Dump the container file
         $dumper = new PhpDumper($container);
         $this->containerConfigCache->write(
-            $dumper->dump(['class' => $this->containerClassName]),
+            $dumper->dump([
+                'class' => $this->containerClassName,
+                'base_class' => LegacyContainer::class,
+            ]),
             $container->getResources()
         );
 
@@ -197,7 +203,7 @@ class ContainerBuilder
     /**
      * @param SfContainerBuilder $container
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function loadServicesFromConfig(SfContainerBuilder $container)
     {
@@ -216,11 +222,10 @@ class ContainerBuilder
      * Needs to be done as earlier as possible in application lifecycle. Unfortunately this can't
      * be done in a compiler pass because they are only executed on compilation and this needs to
      * be done at each container instanciation.
-
      *
      * @param ContainerInterface $container
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function loadModulesAutoloader(ContainerInterface $container)
     {
