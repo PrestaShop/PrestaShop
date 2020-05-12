@@ -31,23 +31,30 @@ namespace PrestaShop\PrestaShop\Core\Product\Generator;
 class GeneratedCombination
 {
     /**
-     * @var int[]
+     * @var int[] A list of attribute ids which combines into a single combination.
+     *
+     * e.g.
+     * [
+     *  (int) {white color id},
+     *  (int) {cloth material id},
+     *  (int) {XL size id}
+     * ]
      */
-    private $attributeIdValues;
+    private $attributeIds;
 
     /**
-     * @param int[] $attributeIdValues
+     * @param int[] $attributeIds
      */
-    public function __construct(array $attributeIdValues)
+    public function __construct(array $attributeIds)
     {
-        $this->attributeIdValues = $attributeIdValues;
+        $this->attributeIds = $attributeIds;
     }
 
     /**
      * @return int[]
      */
-    public function getAttributeIdValues(): array
+    public function getAttributeIds(): array
     {
-        return $this->attributeIdValues;
+        return $this->attributeIds;
     }
 }

@@ -26,37 +26,44 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Product\Generator;
+namespace PrestaShop\PrestaShop\Adapter\Product;
 
-class CombinationGenerator implements CombinationGeneratorInterface
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use Product;
+
+abstract class AbstractProductHandler
 {
     /**
-     * {@inheritdoc}
+     * @param ProductId $productId
      *
-     * @todo: This is very resource houngry. Is it possible to optimize (yield maybe)?
+     * @return Product
+     *
+     * @throws ProductException
+     * @throws ProductNotFoundException
      */
-    public function bulkGenerate(array $valuesByGroup): array
+    protected function getProduct(ProductId $productId): Product
     {
-        $combinations = [new GeneratedCombination([])];
+        $productIdValue = $productId->getValue();
 
-        foreach ($valuesByGroup as $group => $values) {
-            $newCombinations = [];
-            foreach ($combinations as $combination) {
-                foreach ($values as $value) {
-                    $newCombination = $combination->getAttributeIds();
-                    $newCombination[$group] = $value;
+        try {
+            $product = new Product($productIdValue);
 
-                    $newCombinations[] = new GeneratedCombination($newCombination);
-                }
+            if ((int) $product->id !== $productIdValue) {
+                throw new ProductNotFoundException(sprintf(
+                    'Product #%s was not found',
+                    $productIdValue
+                ));
             }
-
-            $combinations = $newCombinations;
+        } catch (\PrestaShopException $e) {
+            throw new ProductException(
+                sprintf('Error occurred when trying to get product #%s', $productId),
+                0,
+                $e
+            );
         }
 
-        if (1 === count($combinations) && empty($combinations[0])) {
-            return [];
-        }
-
-        return $combinations;
+        return $product;
     }
 }

@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateCombinationsCommand;
-use PrestaShop\PrestaShop\Core\Product\Generator\GeneratedCombination;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\AddCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 interface AddCombinationsHandlerInterface
 {
     /**
-     * @param GenerateCombinationsCommand $command
+     * @param AddCombinationsCommand $command
      *
-     * @return GeneratedCombination[]
+     * @return CombinationId[]
      */
-    public function handle(GenerateCombinationsCommand $command): array;
+    public function handle(AddCombinationsCommand $command): array;
 }

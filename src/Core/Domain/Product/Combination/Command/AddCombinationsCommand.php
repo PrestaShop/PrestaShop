@@ -28,28 +28,45 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
-class GenerateCombinationsCommand
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+
+class AddCombinationsCommand
 {
     /**
-     * @var array
+     * @var array[]
      */
-    private $attributeValueIdsByAttributeGroupId;
+    private $attributesByGroup;
 
     /**
-     * @param array $attributeValueIdsByAttributeGroupId
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @param int $productId
+     * @param array[] $attributesByGroup
      */
     public function __construct(
-        //@todo: should i assert that attribute values are unique in whole array (which would cost some performance)
-        array $attributeValueIdsByAttributeGroupId
+        int $productId,
+        array $attributesByGroup
     ) {
-        $this->attributeValueIdsByAttributeGroupId = $attributeValueIdsByAttributeGroupId;
+        $this->productId = new ProductId($productId);
+        $this->attributesByGroup = $attributesByGroup;
     }
 
     /**
      * @return array
      */
-    public function getAttributeValueIdsByAttributeGroupId(): array
+    public function getAttributesByGroup(): array
     {
-        return $this->attributeValueIdsByAttributeGroupId;
+        return $this->attributesByGroup;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
     }
 }
