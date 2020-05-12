@@ -7,6 +7,7 @@ module.exports = class Languages extends LocalizationBasePage {
 
     this.pageTitle = 'Languages •';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
+    this.unSuccessfulUpdateDefaultLanguageStatusMessage = 'You cannot change the status of the default language.';
 
     // Header selectors
     this.addNewLanguageLink = '#page-header-desc-configuration-add';
@@ -29,6 +30,8 @@ module.exports = class Languages extends LocalizationBasePage {
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.enabledColumnValidIcon = row => `${this.tableColumn(row, 'active')} i.grid-toggler-icon-valid`;
+    this.enabledColumnNotValidIcon = row => `${this.tableColumn(row, 'active')} i.grid-toggler-icon-valid`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
@@ -153,6 +156,31 @@ module.exports = class Languages extends LocalizationBasePage {
     ]);
     await this.clickAndWaitForNavigation(this.deleteRowLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+
+  /**
+   * Get language status
+   * @param row
+   * @return {Promise<string>}
+   */
+  isEnabled(row) {
+    return this.elementVisible(this.enabledColumnValidIcon(row), 100);
+  }
+
+  /**
+   * Enable/Disable language
+   * @param row
+   * @param valueWanted
+   * @return {Promise<bool>}, true if click has been performed
+   */
+  async quickEditLanguage(row, valueWanted = true) {
+    await this.waitForVisibleSelector(this.tableColumn(row, 'active'), 2000);
+    if (await this.isEnabled(row) !== valueWanted) {
+      await this.clickAndWaitForNavigation(this.tableColumn(row, 'active'));
+      return true;
+    }
+    return false;
   }
 
   /* Bulk Actions Methods */

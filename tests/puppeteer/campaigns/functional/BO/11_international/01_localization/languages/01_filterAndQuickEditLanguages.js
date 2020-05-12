@@ -31,7 +31,12 @@ const init = async function () {
   };
 };
 
-describe('Filter Languages', async () => {
+/*
+Filter languages by id, name, iso code, date_format and enabled columns
+Disable main language 'en' and check error
+Disable then enable other language
+ */
+describe('Filter and quick edit languages', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -69,7 +74,6 @@ describe('Filter Languages', async () => {
     await expect(numberOfLanguages).to.be.above(0);
   });
 
-  // 1 : Filter languages with all inputs and selects in grid table
   describe('Filter languages', async () => {
     const tests = [
       {
@@ -167,6 +171,66 @@ describe('Filter Languages', async () => {
         const numberOfLanguagesAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
         await expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
       });
+    });
+  });
+
+  describe('Disable default language', async () => {
+    it('should filter by iso_code \'en\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDisableDefaultLanguage', baseContext);
+      await this.pageObjects.languagesPage.filterTable('input', 'iso_code', Languages.english.isoCode);
+      const numberOfLanguagesAfterFilter = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
+      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      const textColumn = await this.pageObjects.languagesPage.getTextColumnFromTable(1, 'iso_code');
+      await expect(textColumn).to.contains(Languages.english.isoCode);
+    });
+
+    it('should disable \'en\' language and check error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableMainLanguage', baseContext);
+      await this.pageObjects.languagesPage.quickEditLanguage(1, false);
+      const textError = await this.pageObjects.languagesPage.getAlertDangerMessage();
+      await expect(textError).to.equal(this.pageObjects.languagesPage.unSuccessfulUpdateDefaultLanguageStatusMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableDefaultLanguageReset', baseContext);
+      const numberOfLanguagesAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
+      await expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
+    });
+  });
+
+  describe('Quick edit language', async () => {
+    it('should filter by iso_code \'fr\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
+      await this.pageObjects.languagesPage.filterTable('input', 'iso_code', Languages.french.isoCode);
+      const numberOfLanguagesAfterFilter = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
+      await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
+      const textColumn = await this.pageObjects.languagesPage.getTextColumnFromTable(1, 'iso_code');
+      await expect(textColumn).to.contains(Languages.french.isoCode);
+    });
+
+    const tests = [
+      {args: {action: 'disable', enabledValue: false}},
+      {args: {action: 'enable', enabledValue: true}},
+    ];
+    tests.forEach((test) => {
+      it(`should ${test.args.action} first language`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Language`, baseContext);
+        const isActionPerformed = await this.pageObjects.languagesPage.quickEditLanguage(1, test.args.enabledValue);
+        if (isActionPerformed) {
+          const resultMessage = await this.pageObjects.languagesPage.getTextContent(
+            this.pageObjects.languagesPage.alertSuccessBlockParagraph,
+          );
+          await expect(resultMessage).to.contains(this.pageObjects.languagesPage.successfulUpdateStatusMessage);
+        }
+        const languageStatus = await this.pageObjects.languagesPage.isEnabled(1);
+        await expect(languageStatus).to.be.equal(test.args.enabledValue);
+      });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset', baseContext);
+      const numberOfLanguagesAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
+      await expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
     });
   });
 });
