@@ -43,9 +43,10 @@ class CombinationGenerator implements CombinationGeneratorInterface
             $newCombinations = [];
             foreach ($combinations as $combination) {
                 foreach ($values as $value) {
-                    $newCombinations[] = new GeneratedCombination(
-                        array_merge($combination->getAttributeIdValues(), [$group => $value])
-                    );
+                    $newCombination = $combination->getAttributeIdValues();
+                    $newCombination[$group] = $value;
+
+                    $newCombinations[] = new GeneratedCombination($newCombination);
                 }
             }
 
