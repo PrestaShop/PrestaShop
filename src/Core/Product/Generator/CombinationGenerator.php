@@ -32,6 +32,7 @@ class CombinationGenerator implements CombinationGeneratorInterface
 {
     /**
      * {@inheritDoc}
+     * @todo: This is very resource houngry. Is it possible to optimize (yield maybe)?
      */
     public function bulkGenerate(array $valuesByGroup): array
     {
