@@ -99,8 +99,8 @@ describe('Filter and sort files', async () => {
     });
   });
   // 2 : Filter files table
-  describe('Filter file in BO', async () => {
-    const tests = [
+  describe('Filter files in BO', async () => {
+    const filterTests = [
       {
         args: {
           testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_attachment', filterValue: '2',
@@ -122,7 +122,7 @@ describe('Filter and sort files', async () => {
         },
       },
     ];
-    tests.forEach((test) => {
+    filterTests.forEach((test) => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
         await this.pageObjects.filesPage.filterTable(test.args.filterBy, test.args.filterValue);
@@ -143,7 +143,7 @@ describe('Filter and sort files', async () => {
   });
   // 3 : Sort files table
   describe('Sort files', async () => {
-    const brandsTests = [
+    const sortTests = [
       {
         args: {
           testIdentifier: 'sortByIdDesc', sortBy: 'id_attachment', sortDirection: 'desc', isFloat: true,
@@ -171,7 +171,7 @@ describe('Filter and sort files', async () => {
         },
       },
     ];
-    brandsTests.forEach((test) => {
+    sortTests.forEach((test) => {
       it(
         `should sort files by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`,
         async function () {
@@ -194,7 +194,7 @@ describe('Filter and sort files', async () => {
     });
   });
   // 4 : Delete the created files
-  describe('Delete created files with bulk actions', async () => {
+  describe('Delete created files with Bulk Actions', async () => {
     it('should delete files with Bulk Actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
       const deleteTextResult = await this.pageObjects.filesPage.deleteFilesBulkActions();
