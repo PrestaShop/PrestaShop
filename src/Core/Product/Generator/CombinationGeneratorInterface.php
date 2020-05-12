@@ -30,7 +30,8 @@ interface CombinationGeneratorInterface
 {
     /**
      * @param array $valuesByGroup
-     * `
+     *                             `
+     *
      * @return GeneratedCombination[]
      */
     public function bulkGenerate(array $valuesByGroup): array;

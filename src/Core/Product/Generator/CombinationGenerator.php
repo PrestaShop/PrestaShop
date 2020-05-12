@@ -31,7 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Product\Generator;
 class CombinationGenerator implements CombinationGeneratorInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     *
      * @todo: This is very resource houngry. Is it possible to optimize (yield maybe)?
      */
     public function bulkGenerate(array $valuesByGroup): array
@@ -39,7 +40,6 @@ class CombinationGenerator implements CombinationGeneratorInterface
         $combinations = [new GeneratedCombination([])];
 
         foreach ($valuesByGroup as $group => $values) {
-
             $newCombinations = [];
             foreach ($combinations as $combination) {
                 foreach ($values as $value) {

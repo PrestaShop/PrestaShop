@@ -53,7 +53,7 @@ class CombinationGeneratorTest extends TestCase
      */
     public function testGenerateBulkCombinationsFromValidData(array $valuesByGroup, array $expectedCombinations)
     {
-        $this->assertEquals($expectedCombinations,$this->combinationGenerator->bulkGenerate($valuesByGroup));
+        $this->assertEquals($expectedCombinations, $this->combinationGenerator->bulkGenerate($valuesByGroup));
     }
 
     /**
