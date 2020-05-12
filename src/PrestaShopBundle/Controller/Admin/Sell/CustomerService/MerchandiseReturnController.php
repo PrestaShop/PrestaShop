@@ -26,6 +26,10 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -43,7 +47,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['read'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_merchandise_return_index"
+     *     redirectRoute="admin_merchandise_returns_index"
      * )
      *
      * @param Request $request
@@ -77,10 +81,75 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
+     * Edit existing merchandise return
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_merchandise_returns_index"
+     * )
+     *
+     * @param int $merchandiseReturnId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction(int $merchandiseReturnId, Request $request): Response
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.merchandise_return_form_builder');
+       // $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_message_form_handler');
+
+        try {
+            /** @var EditableMerchandiseReturn $editableMerchandiseReturn */
+            $editableMerchandiseReturn = $this->getQueryBus()->handle(new GetMerchandiseReturnForEditing($merchandiseReturnId));
+
+            $form = $formBuilder->getFormFor($merchandiseReturnId);
+//            $form->handleRequest($request);
+//
+//            $result = $formHandler->handleFor($merchandiseReturnId, $form);
+//
+//            if ($result->getIdentifiableObjectId()) {
+//                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+//
+//                return $this->redirectToRoute('admin_merchandise_returns_index');
+//            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        if (!isset($form)) {
+            return $this->redirectToRoute('admin_merchandise_returns_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/edit.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Actions')),
+            'merchandiseReturnForm' => $form->createView(),
+        ]);
+    }
+
+    /**
      * @return FormHandlerInterface
      */
     private function getOptionsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.merchandise_return_options.form_handler');
+    }
+
+    /**
+     * Provides error messages for exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages()
+    {
+        return [
+            MerchandiseReturnConstraintException::class => [
+                MerchandiseReturnConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                )
+            ],
+        ];
     }
 }
