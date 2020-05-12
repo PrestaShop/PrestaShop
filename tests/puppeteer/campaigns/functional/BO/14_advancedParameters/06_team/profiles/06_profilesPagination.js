@@ -69,30 +69,29 @@ describe('Profiles pagination', async () => {
     await expect(numberOfProfiles).to.be.above(0);
   });
   // 1 : Create 11 pages
-  /* eslint-disable no-loop-func */
-  for (let i = 0; i < 11; i++) {
-    describe(`Create profile n°${i + 1} in BO`, async () => {
+  const tests = new Array(10).fill(0, 0, 10);
+  tests.forEach((test, index) => {
+    describe(`Create profile n°${index + 1} in BO`, async () => {
       it('should go to add new profile page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToNewProfilePage${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewProfilePage${index}`, baseContext);
         await this.pageObjects.profilesPage.goToAddNewProfilePage();
         const pageTitle = await this.pageObjects.addProfilePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addProfilePage.pageTitleCreate);
       });
 
       it('should create profile', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `CreateProfile${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `CreateProfile${index}`, baseContext);
         const textResult = await this.pageObjects.addProfilePage.createEditProfile(profileData);
         await expect(textResult).to.equal(this.pageObjects.profilesPage.successfulCreationMessage);
       });
 
       it('should check the pages number', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkPagesNumber${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkPagesNumber${index}`, baseContext);
         const numberOfProfilesAfterDelete = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
-        await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles + 1 + i);
+        await expect(numberOfProfilesAfterDelete).to.be.equal(numberOfProfiles + 1 + index);
       });
     });
-  }
-  /* eslint-enable no-loop-func */
+  });
   // 2 : Test pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 10 per page', async function () {
