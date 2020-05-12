@@ -13,7 +13,7 @@ const AddOrderMessagePage = require('@pages/BO/customerService/orderMessages/add
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerService_order_messages_pagination';
+const baseContext = 'functional_BO_customerService_orderMessages_pagination';
 
 let browser;
 let page;
@@ -66,30 +66,29 @@ describe('Order messages pagination', async () => {
     if (numberOfOrderMessages !== 0) await expect(numberOfOrderMessages).to.be.above(0);
   });
 
-  /* eslint-disable no-loop-func */
-  for (let i = 0; i < 11; i++) {
-    describe(`Create order message n°${i + 1} in BO`, async () => {
+  const tests = new Array(10).fill(0, 0, 10);
+  tests.forEach((test, index) => {
+    describe(`Create order message n°${index + 1} in BO`, async () => {
       it('should go to add new order message page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index}`, baseContext);
         await this.pageObjects.orderMessagesPage.goToAddNewOrderMessagePage();
         const pageTitle = await this.pageObjects.addOrderMessagePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addOrderMessagePage.pageTitle);
       });
 
       it('should create order message', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${index}`, baseContext);
         const textResult = await this.pageObjects.addOrderMessagePage.addEditOrderMessage(createOrderMessageData);
         await expect(textResult).to.equal(this.pageObjects.orderMessagesPage.successfulCreationMessage);
       });
 
       it('should check the order messages number', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkOrderMessageNumber${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkOrderMessageNumber${index}`, baseContext);
         const numberOfOrderMessagesAfterCreation = await this.pageObjects.orderMessagesPage.getNumberOfElementInGrid();
-        await expect(numberOfOrderMessagesAfterCreation).to.be.equal(numberOfOrderMessages + 1 + i);
+        await expect(numberOfOrderMessagesAfterCreation).to.be.equal(numberOfOrderMessages + 1 + index);
       });
     });
-  }
-  /* eslint-enable no-loop-func */
+  });
 
   describe('Pagination next and previous', async () => {
     it('should change the item number to 10 per page', async function () {

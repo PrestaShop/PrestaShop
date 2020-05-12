@@ -61,40 +61,41 @@ describe('Category pagination', async () => {
     numberOfCategories = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page_category');
     if (numberOfCategories !== 0) await expect(numberOfCategories).to.be.above(0);
   });
+
   // 1 : Create 11 categories
-  /* eslint-disable no-loop-func */
-  for (let i = 0; i < 11; i++) {
-    describe(`Create category n°${i + 1} in BO`, async () => {
+  const tests = new Array(10).fill(0, 0, 10);
+  tests.forEach((test, index) => {
+    describe(`Create category n°${index + 1} in BO`, async () => {
       it('should go to add new page category', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToNewPageCategoryPage${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewPageCategoryPage${index}`, baseContext);
         await this.pageObjects.pagesPage.goToAddNewPageCategory();
         const pageTitle = await this.pageObjects.addPageCategoryPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addPageCategoryPage.pageTitleCreate);
       });
 
       it('should create category', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `CreatePageCategory${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `CreatePageCategory${index}`, baseContext);
         const textResult = await this.pageObjects.addPageCategoryPage.createEditPageCategory(createCategoryData);
         await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
       });
 
       it('should go back to categories', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goBackToCategories${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goBackToCategories${index}`, baseContext);
         await this.pageObjects.pagesPage.backToList();
         const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
       });
 
       it('should check the categories number', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkCategoriesNumber${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkCategoriesNumber${index}`, baseContext);
         const numberOfCategoriesAfterCreation = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
           'cms_page_category',
         );
-        await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + i);
+        await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
       });
     });
-  }
-  /* eslint-enable no-loop-func */
+  });
+
   // 2 : Test pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 10 per page', async function () {
