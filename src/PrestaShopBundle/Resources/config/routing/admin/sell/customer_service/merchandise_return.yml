@@ -23,3 +23,15 @@ admin_merchandise_returns_filter:
     redirectRoute: admin_merchandise_returns_index
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn:submitFilterorder_return
+
+admin_merchandise_returns_edit:
+  path: /{merchandiseReturnId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:edit
+    _legacy_controller: AdminReturn
+#    _legacy_link: AdminReturn:updateorder_return
+#    _legacy_parameters:
+#      id_order_return: merchandiseReturnId
+  requirements:
+    merchandiseReturnId: \d+
