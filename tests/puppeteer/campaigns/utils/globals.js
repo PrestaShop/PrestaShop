@@ -26,8 +26,7 @@ global.BROWSER_CONFIG = {
   timeout: 0,
   slowMo: parseInt(process.env.SLOWMO, 10) || 5,
   args: ['--start-maximized', '--no-sandbox', '--lang=en-GB'],
-  defaultViewport: {
-    width: 1680,
-    height: 900,
-  },
 };
+global.BROWSER = {
+  TYPE: process.env.BROWSER || 'chromium'
+}

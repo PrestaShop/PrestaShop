@@ -248,7 +248,7 @@ module.exports = class CommonPage {
   async clickAndWaitForNavigation(selector) {
     await Promise.all([
       this.page.click(selector),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.waitForNavigation({waitUntil: 'domcontentloaded'}),
     ]);
   }
 

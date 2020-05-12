@@ -1,6 +1,6 @@
 require('./globals');
 
-const puppeteer = require('puppeteer');
+const {chromium} = require('playwright');
 
 module.exports = {
   /**
@@ -10,7 +10,14 @@ module.exports = {
    */
   async createBrowser(attempt = 1) {
     try {
-      return await puppeteer.launch(global.BROWSER_CONFIG);
+      const browser = await chromium.launch(global.BROWSER_CONFIG);
+      return await browser.newContext({
+        acceptDownloads:true,
+        viewport: {
+          width: 1920,
+          height: 1080
+        }
+      });
     } catch (e) {
       if (attempt <= 3) {
         await (new Promise(resolve => setTimeout(resolve, 5000)));
@@ -19,16 +26,16 @@ module.exports = {
       throw new Error(e);
     }
   },
-  async newTab(browser) {
-    return browser.newPage();
+  async newTab(context) {
+    return context.newPage();
   },
   async closeBrowser(browser) {
     return browser.close();
   },
   async setDownloadBehavior(page) {
-    await page._client.send('Page.setDownloadBehavior', {
+    /*await page._client.send('Page.setDownloadBehavior', {
       behavior: 'allow',
       downloadPath: global.BO.DOWNLOAD_PATH,
-    });
+    });*/
   },
 };
