@@ -63,7 +63,7 @@ describe('Pages pagination', async () => {
   });
 
   // 1 : Create 11 pages
-  const tests = new Array(10).fill(0, 0, 10);
+  const tests = new Array(11).fill(0, 0, 11);
   tests.forEach((test, index) => {
     describe(`Create page n°${index + 1} in BO`, async () => {
       it('should go to add new page page', async function () {
@@ -74,7 +74,7 @@ describe('Pages pagination', async () => {
       });
 
       it('should create page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `CreatePage${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `createPage${index}`, baseContext);
         const textResult = await this.pageObjects.addPagePage.createEditPage(createPageData);
         await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
       });

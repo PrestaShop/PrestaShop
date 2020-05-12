@@ -63,7 +63,7 @@ describe('Category pagination', async () => {
   });
 
   // 1 : Create 11 categories
-  const tests = new Array(10).fill(0, 0, 10);
+  const tests = new Array(11).fill(0, 0, 11);
   tests.forEach((test, index) => {
     describe(`Create category n°${index + 1} in BO`, async () => {
       it('should go to add new page category', async function () {
