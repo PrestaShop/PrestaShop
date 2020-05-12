@@ -59,16 +59,12 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
      */
     public function handle(AddCombinationsCommand $command): array
     {
-
         $product = $this->getProduct($command->getProductId());
         $attributesByGroup = $command->getAttributesByGroup();
 
         SpecificPriceRule::disableAnyApplication();
 
-        //add combination if not already exists
-//        $combinations = array_values(AdminAttributeGeneratorController::createCombinations(array_values($options)));
         $generatedCombinations = $this->combinationGenerator->bulkGenerate($attributesByGroup);
-
         $combinationIds = $this->addToDatabase($generatedCombinations, $product);
 
         Product::updateDefaultAttribute($product->id);
