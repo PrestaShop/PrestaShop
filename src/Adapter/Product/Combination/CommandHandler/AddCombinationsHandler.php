@@ -57,7 +57,7 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(AddCombinationsCommand $command): array
     {
@@ -109,7 +109,6 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
             $dbInstance->execute('START TRANSACTION');
 
             try {
-
                 if (!$newCombination->add()) {
                     throw new CombinationException('Failed to add one of combinations to database');
                 }
@@ -135,7 +134,6 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
     /**
      * @param GeneratedCombination $generatedCombination
      * @param Combination $combination
-     *
      * @param Db $dbInstance
      */
     private function saveCombinationAttributesAssociation(
@@ -143,7 +141,6 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
         Combination $combination,
         Db $dbInstance
     ) {
-
         $attributeList = [];
         foreach ($generatedCombination->getAttributeIds() as $attributeId) {
             $attributeList[] = [
