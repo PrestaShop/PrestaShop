@@ -61,31 +61,32 @@ describe('Pages pagination', async () => {
     numberOfPages = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
     if (numberOfPages !== 0) await expect(numberOfPages).to.be.above(0);
   });
+
   // 1 : Create 11 pages
-  /* eslint-disable no-loop-func */
-  for (let i = 0; i < 11; i++) {
-    describe(`Create page n°${i + 1} in BO`, async () => {
+  const tests = new Array(11).fill(0, 0, 11);
+  tests.forEach((test, index) => {
+    describe(`Create page n°${index + 1} in BO`, async () => {
       it('should go to add new page page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToNewPagePage${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewPagePage${index}`, baseContext);
         await this.pageObjects.pagesPage.goToAddNewPage();
         const pageTitle = await this.pageObjects.addPagePage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addPagePage.pageTitleCreate);
       });
 
       it('should create page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `CreatePage${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `createPage${index}`, baseContext);
         const textResult = await this.pageObjects.addPagePage.createEditPage(createPageData);
         await expect(textResult).to.equal(this.pageObjects.pagesPage.successfulCreationMessage);
       });
 
       it('should check the pages number', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkPagesNumber${i}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkPagesNumber${index}`, baseContext);
         const numberOfPagesAfterCreation = await this.pageObjects.pagesPage.getNumberOfElementInGrid('cms_page');
-        await expect(numberOfPagesAfterCreation).to.be.equal(numberOfPages + 1 + i);
+        await expect(numberOfPagesAfterCreation).to.be.equal(numberOfPages + 1 + index);
       });
     });
-  }
-  /* eslint-enable no-loop-func */
+  });
+
   // 2 : Test pagination
   describe('Pagination next and previous', async () => {
     it('should change the item number to 10 per page', async function () {

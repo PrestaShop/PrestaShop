@@ -35,7 +35,7 @@ module.exports = class Pages extends BOBasePage {
     this.bulkActionsDeleteButton = table => `#${table}_grid_bulk_action_delete_selection`;
     this.bulkActionsEnableButton = table => `#${table}_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = table => `#${table}_grid_bulk_action_disable_selection`;
-    this.confirmDeleteModal = table => `#${table}_grid_confirm_modal`;
+    this.confirmDeleteModal = table => `#${table}-grid-confirm-modal`;
     this.confirmDeleteButton = table => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
     // Filters
     this.filterColumn = (table, filterBy) => `${this.gridTable(table)} #${table}_${filterBy}`;
@@ -44,7 +44,8 @@ module.exports = class Pages extends BOBasePage {
     // Actions buttons in Row
     this.listTableToggleDropDown = (table, row) => `${this.listTableColumn(table, row, 'actions')}`
       + ' a[data-toggle=\'dropdown\']';
-    this.listTableEditLink = (table, row) => `${this.listTableColumn(table, row, 'actions')} a[htests/puppeteer/pages/BO/international/currencies/index.jsef*='edit']`;
+    this.listTableEditLink = (table, row) => `${this.listTableColumn(table, row, 'actions')}`
+      + ' a[href*=\'edit\']';
     this.deleteRowLink = (table, row) => `${this.listTableColumn(table, row, 'actions')} a[data-method='DELETE']`;
 
     // Categories selectors
@@ -111,9 +112,6 @@ module.exports = class Pages extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteRowInTable(table, row) {
-    const listTableToggleDropDown = await this.replaceAll(this.listTableToggleDropDown, '%TABLE', table);
-    const deleteRowLink = await this.replaceAll(this.deleteRowLink, '%TABLE', table);
-    const confirmDeleteModal = await this.replaceAll(this.confirmDeleteModal, '%TABLE', table);
     // Click on dropDown
     await Promise.all([
       this.page.click(this.listTableToggleDropDown(table, row)),
@@ -121,7 +119,7 @@ module.exports = class Pages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.deleteRowLink(row)),
+      this.page.click(this.deleteRowLink(table, row)),
       this.waitForVisibleSelector(`${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDeleteFromTable(table);

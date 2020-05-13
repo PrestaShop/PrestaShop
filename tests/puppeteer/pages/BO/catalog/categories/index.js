@@ -9,6 +9,7 @@ module.exports = class Categories extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors
+    this.editHomeCategoryButton = '#main-div .breadcrumb a[href*=\'edit\']';
     // Header links
     this.addNewCategoryLink = '#page-header-desc-configuration-add[title=\'Add new category\']';
     // List of categories
@@ -359,5 +360,13 @@ module.exports = class Categories extends BOBasePage {
       + `"${category.description}";`
       + `${category.position - 1};`
       + `${category.status ? 1 : 0}`;
+  }
+
+  /**
+   * Go to edit category page
+   * @returns {Promise<void>}
+   */
+  async goToEditHomeCategoryPage() {
+    await this.waitForSelectorAndClick(this.editHomeCategoryButton);
   }
 };
