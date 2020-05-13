@@ -33,9 +33,11 @@ use Db;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\AddCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\AddCombinationsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
 use PrestaShop\PrestaShop\Core\Product\Generator\GeneratedCombination;
+use PrestaShopException;
 use Product;
 use SpecificPriceRule;
 
@@ -103,21 +105,24 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
             $newCombination->default_on = 0;
             $product->setAvailableDate();
 
-            //wrap in try catch for ps exception
-            //@todo: sql transaction with following loop to make sure each combination has correct associations saved.
-            $newCombination->add();
+            $dbInstance = Db::getInstance();
+            $dbInstance->execute('START TRANSACTION');
 
-            $attributeList = [];
-            //@todo: following loop creates values for sql insert. Does it belong here?
-            foreach ($generatedCombination->getAttributeIds() as $attributeId) {
-                $attributeList[] = [
-                    'id_product_attribute' => (int) $newCombination->id,
-                    'id_attribute' => (int) $attributeId,
-                ];
+            try {
+
+                if (!$newCombination->add()) {
+                    throw new CombinationException('Failed to add one of combinations to database');
+                }
+            } catch (PrestaShopException $e) {
+                throw new CombinationException(
+                    'An error occurred when adding combination to database',
+                    0,
+                    $e
+                );
             }
-            //@todo: move this out somewhere more related to db? where?
-            //handles combination->attribute association table records saving
-            Db::getInstance()->insert('product_attribute_combination', $attributeList);
+
+            $this->saveCombinationAttributesAssociation($generatedCombination, $newCombination, $dbInstance);
+            $dbInstance->execute('COMMIT');
 
             $addedCombinationsIds[] = $newCombination->id;
         }
@@ -125,5 +130,38 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
         //@todo: it used to call more methods like setAttributesImpacts(). Check that.
 
         return $addedCombinationsIds;
+    }
+
+    /**
+     * @param GeneratedCombination $generatedCombination
+     * @param Combination $combination
+     *
+     * @param Db $dbInstance
+     */
+    private function saveCombinationAttributesAssociation(
+        GeneratedCombination $generatedCombination,
+        Combination $combination,
+        Db $dbInstance
+    ) {
+
+        $attributeList = [];
+        foreach ($generatedCombination->getAttributeIds() as $attributeId) {
+            $attributeList[] = [
+                'id_product_attribute' => (int) $combination->id,
+                'id_attribute' => (int) $attributeId,
+            ];
+        }
+
+        try {
+            if (!$dbInstance->insert('product_attribute_combination', $attributeList)) {
+                $dbInstance->execute('REVERT');
+
+                throw new CombinationException('Failed to save combination attributes association.');
+            }
+        } catch (PrestaShopException $e) {
+            $dbInstance->execute('REVERT');
+
+            throw new CombinationException('Error occurred when saving combination attributes association.');
+        }
     }
 }
