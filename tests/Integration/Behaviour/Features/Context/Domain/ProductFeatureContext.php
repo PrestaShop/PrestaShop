@@ -29,7 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\AddCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
@@ -68,7 +68,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->getCommandBus()->handle(new AddCombinationsCommand($productId, $this->getAttributesByGroupsFromInputTable($table)));
+        $this->getCommandBus()->handle(new GenerateCombinationsCommand($productId, $this->getAttributesByGroupsFromInputTable($table)));
         //@todo; try catch for errors.
     }
 

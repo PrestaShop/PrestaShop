@@ -31,8 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 use Combination;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\AddCombinationsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\AddCombinationsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\GenerateCombinationsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Product\Generator\CombinationGeneratorInterface;
@@ -41,7 +41,7 @@ use PrestaShopException;
 use Product;
 use SpecificPriceRule;
 
-final class AddCombinationsHandler extends AbstractProductHandler implements AddCombinationsHandlerInterface
+final class GenerateCombinationsHandler extends AbstractProductHandler implements GenerateCombinationsHandlerInterface
 {
     /**
      * @var CombinationGeneratorInterface
@@ -59,7 +59,7 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
     /**
      * {@inheritdoc}
      */
-    public function handle(AddCombinationsCommand $command): array
+    public function handle(GenerateCombinationsCommand $command): array
     {
         $product = $this->getProduct($command->getProductId());
         $attributesByGroup = $command->getAttributesByGroup();

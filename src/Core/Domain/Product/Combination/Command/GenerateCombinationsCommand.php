@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class AddCombinationsCommand
+class GenerateCombinationsCommand
 {
     /**
      * @var array[]
