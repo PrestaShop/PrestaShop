@@ -1184,4 +1184,35 @@ class DispatcherCore
 
         return $controllers;
     }
+
+    /**
+     * Get names of all available FO controllers.
+     *
+     * @var mixed
+     *
+     * @return array
+     */
+    public static function getControllersNames($dirs)
+    {
+        if (!is_array($dirs)) {
+            $dirs = [$dirs];
+        }
+
+        $controllers = Dispatcher::getControllers($dirs);
+
+        $controllersNames = [];
+        foreach ($controllers as $controller) {
+            $reflectionClass = new \ReflectionClass($controller);
+
+            $reflectionClassProperties = $reflectionClass->getDefaultProperties();
+
+            if (empty($reflectionClassProperties['php_self'])) {
+                continue;
+            }
+
+            $controllersNames[] = $reflectionClassProperties['php_self'];
+        }
+
+        return $controllersNames;
+    }
 }

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Module;
 
 use Db;
+use Dispatcher;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use Shop;
@@ -158,28 +159,15 @@ class HookRepository
 
                 if (!empty($extra_data['only_pages'])) {
                     $extra_data['except_pages'] = [];
-                    $pages = [];
 
-                    $controllers = \Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
+                    $controllersNames = Dispatcher::getControllersNames(_PS_FRONT_CONTROLLER_DIR_);
 
-                    foreach ($controllers as $controller) {
-                        $reflectionClass = new \ReflectionClass($controller);
-
-                        $reflectionClassProperties = $reflectionClass->getDefaultProperties();
-
-                        if (empty($reflectionClassProperties['php_self'])) {
+                    foreach ($controllersNames as $controllerName) {
+                        if (in_array($controllerName, $extra_data['only_pages'])) {
                             continue;
                         }
 
-                        $pages[] = $reflectionClassProperties['php_self'];
-                    }
-
-                    foreach ($pages as $key => $page) {
-                        if (in_array($page, $extra_data['only_pages'])) {
-                            continue;
-                        }
-
-                        $extra_data['except_pages'][] = $page;
+                        $extra_data['except_pages'][] = $controllerName;
                     }
                 }
 
