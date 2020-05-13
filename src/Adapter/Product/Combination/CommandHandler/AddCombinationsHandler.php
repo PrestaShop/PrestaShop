@@ -110,6 +110,7 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
 
             try {
                 if (!$newCombination->add()) {
+                    $dbInstance->execute('ROLLBACK');
                     throw new CombinationException('Failed to add one of combinations to database');
                 }
             } catch (PrestaShopException $e) {
@@ -151,12 +152,12 @@ final class AddCombinationsHandler extends AbstractProductHandler implements Add
 
         try {
             if (!$dbInstance->insert('product_attribute_combination', $attributeList)) {
-                $dbInstance->execute('REVERT');
+                $dbInstance->execute('ROLLBACK');
 
                 throw new CombinationException('Failed to save combination attributes association.');
             }
         } catch (PrestaShopException $e) {
-            $dbInstance->execute('REVERT');
+            $dbInstance->execute('ROLLBACK');
 
             throw new CombinationException('Error occurred when saving combination attributes association.');
         }
