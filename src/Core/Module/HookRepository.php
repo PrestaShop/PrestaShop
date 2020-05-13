@@ -156,6 +156,33 @@ class HookRepository
 
                 $this->db->insert('hook_module', $row);
 
+                if (!empty($extra_data['only_pages'])) {
+                    $extra_data['except_pages'] = [];
+                    $pages = [];
+
+                    $controllers = \Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
+
+                    foreach ($controllers as $controller) {
+                        $reflectionClass = new \ReflectionClass($controller);
+
+                        $reflectionClassProperties = $reflectionClass->getDefaultProperties();
+
+                        if (empty($reflectionClassProperties['php_self'])) {
+                            continue;
+                        }
+
+                        $pages[] = $reflectionClassProperties['php_self'];
+                    }
+
+                    foreach ($pages as $key => $page) {
+                        if (in_array($page, $extra_data['only_pages'])) {
+                            continue;
+                        }
+
+                        $extra_data['except_pages'][] = $page;
+                    }
+                }
+
                 if (!empty($extra_data['except_pages'])) {
                     $this->setModuleHookExceptions(
                         $id_module,
