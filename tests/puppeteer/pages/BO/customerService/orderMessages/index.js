@@ -34,7 +34,7 @@ module.exports = class OrderMessages extends BOBasePage {
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#order_message_grid_bulk_action_delete_selection';
     // Delete modal
-    this.confirmDeleteModal = '#order_message_grid_confirm_modal';
+    this.confirmDeleteModal = '#order_message-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
