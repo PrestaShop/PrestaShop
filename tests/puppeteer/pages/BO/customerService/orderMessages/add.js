@@ -42,7 +42,7 @@ module.exports = class AddOrderMessage extends BOBasePage {
    * @param orderMessageData
    * @return {Promise<textContent>}
    */
-  async AddEditOrderMessage(orderMessageData) {
+  async addEditOrderMessage(orderMessageData) {
     // Change lang to 'en' than set inputs value
     await this.changeFormLang('en');
     await this.setValue(this.nameInput(1), orderMessageData.name);

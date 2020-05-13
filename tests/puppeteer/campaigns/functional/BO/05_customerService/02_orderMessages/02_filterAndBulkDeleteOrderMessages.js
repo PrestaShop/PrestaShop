@@ -83,7 +83,7 @@ describe('Create order messages, check filter results and delete them with bulk 
 
       it('should create order message', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderMessage${index + 1}`, baseContext);
-        const result = await this.pageObjects.addOrderMessagePage.AddEditOrderMessage(test.args.orderMessageToCreate);
+        const result = await this.pageObjects.addOrderMessagePage.addEditOrderMessage(test.args.orderMessageToCreate);
         await expect(result).to.equal(this.pageObjects.orderMessagesPage.successfulCreationMessage);
         const numberOfOrderMessagesAfterCreation = await this.pageObjects.orderMessagesPage.getNumberOfElementInGrid();
         await expect(numberOfOrderMessagesAfterCreation).to.be.equal(numberOfOrderMessages + index + 1);
