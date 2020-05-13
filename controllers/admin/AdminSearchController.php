@@ -70,7 +70,7 @@ class AdminSearchControllerCore extends AdminController
             $product = new Product($id_product);
             if (Validate::isLoadedObject($product) && Tools::getIsset('statusproduct')) {
                 if ($product->toggleStatus()) {
-                    $this->confirmations[] = $this->trans('The status has been updated successfully', [], 'Admin.Notifications.Success');
+                    $this->confirmations[] = $this->trans('The status has been updated successfully.', [], 'Admin.Notifications.Success');
                 } else {
                     $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
                 }
