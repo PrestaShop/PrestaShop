@@ -7,6 +7,7 @@ module.exports = class PsEmailSubscription extends BOBasePage {
 
     // Header selectors
     this.pageHeadSubtitle = 'h4.page-subtitle';
+
     // Newsletter registrations table selectors
     this.newsletterTable = '#table-merged';
     this.newsletterTableBody = `${this.newsletterTable} tbody`;
@@ -45,9 +46,12 @@ module.exports = class PsEmailSubscription extends BOBasePage {
   async getListOfNewsletterRegistrationEmails() {
     const emails = [];
     const numberOfEmails = await this.getNumberOfNewsletterRegistration();
+
+    // Get email from each row
     for (let row = 1; row <= numberOfEmails; row++) {
       await emails.push(await this.getTextContent(this.newsletterTableEmailColumn(row)));
     }
+
     return emails;
   }
 };

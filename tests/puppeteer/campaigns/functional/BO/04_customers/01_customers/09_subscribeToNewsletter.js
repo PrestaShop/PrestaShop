@@ -50,10 +50,12 @@ describe('Check customer subscription to newsletter from BO', async () => {
 
   it('should go to customers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerPage', baseContext);
+
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.customersParentLink,
       this.pageObjects.boBasePage.customersLink,
     );
+
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.customersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
@@ -67,11 +69,13 @@ describe('Check customer subscription to newsletter from BO', async () => {
 
   it(`should filter by email ${DefaultAccount.email}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByEmail', baseContext);
+
     await this.pageObjects.customersPage.filterCustomers(
       'input',
       'email',
       DefaultAccount.email,
     );
+
     const numberOfCustomersAfterFilter = await this.pageObjects.customersPage.getNumberOfElementInGrid();
     await expect(numberOfCustomersAfterFilter).to.equal(1);
   });
@@ -96,13 +100,16 @@ describe('Check customer subscription to newsletter from BO', async () => {
         `goToModuleManageTo${test.args.action}`,
         baseContext,
       );
+
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.modulesParentLink,
         this.pageObjects.boBasePage.moduleManagerLink,
       );
+
       const pageTitle = await this.pageObjects.moduleManagerPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.moduleManagerPage.pageTitle);
     });
+
     it(`should go to '${psEmailSubscription.name}' module`, async function () {
       await testContext.addContextItem(
         this,
@@ -110,6 +117,8 @@ describe('Check customer subscription to newsletter from BO', async () => {
         `goToEmailSubscriptionModulePageAfter${test.args.action}`,
         baseContext,
       );
+
+      // Search and go to configure module page
       await this.pageObjects.moduleManagerPage.searchModule(psEmailSubscription.tag, psEmailSubscription.name);
       await this.pageObjects.moduleManagerPage.goToConfigurationPage(psEmailSubscription.name);
       const pageTitle = await this.pageObjects.psEmailSubscriptionPage.getPageTitle();
@@ -123,7 +132,10 @@ describe('Check customer subscription to newsletter from BO', async () => {
         `checkCustomerRegistrationAfter${test.args.action}`,
         baseContext,
       );
+
+      // Get list of emails registered to newsletter
       const listOfEmails = await this.pageObjects.psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails();
+
       if (test.args.value) {
         await expect(listOfEmails).to.include(DefaultAccount.email);
       } else {
@@ -138,10 +150,12 @@ describe('Check customer subscription to newsletter from BO', async () => {
         `gotoCustomersPageAfterCheck${test.args.action}`,
         baseContext,
       );
+
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.customersParentLink,
         this.pageObjects.boBasePage.customersLink,
       );
+
       const pageTitle = await this.pageObjects.customersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
     });
