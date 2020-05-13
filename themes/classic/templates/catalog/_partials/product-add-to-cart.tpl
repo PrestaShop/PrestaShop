@@ -33,9 +33,16 @@
             type="number"
             name="qty"
             id="quantity_wanted"
+            {if $product.quantity_wanted}
             value="{$product.quantity_wanted}"
-            class="input-group"
             min="{$product.minimal_quantity}"
+            {else}
+            value="1"
+            min="1"
+            {/if}
+            
+            class="input-group"
+            
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
           >
         </div>
