@@ -32,7 +32,7 @@ module.exports = class PsEmailSubscription extends BOBasePage {
    * @return {Promise<int>}
    */
   async getNumberOfNewsletterRegistration() {
-    if(await this.elementVisible(this.newsletterTableEmptyColumn, 1000)) {
+    if (await this.elementVisible(this.newsletterTableEmptyColumn, 1000)) {
       return 0;
     }
     return (await this.page.$$(this.newsletterTableRows)).length;
@@ -45,9 +45,9 @@ module.exports = class PsEmailSubscription extends BOBasePage {
   async getListOfNewsletterRegistrationEmails() {
     const emails = [];
     const numberOfEmails = await this.getNumberOfNewsletterRegistration();
-    for(let row = 1; row <= numberOfEmails; row++){
-      await emails.push(await this.getTextContent(this.newsletterTableEmailColumn(row)))
+    for (let row = 1; row <= numberOfEmails; row++) {
+      await emails.push(await this.getTextContent(this.newsletterTableEmailColumn(row)));
     }
     return emails;
   }
-}
+};

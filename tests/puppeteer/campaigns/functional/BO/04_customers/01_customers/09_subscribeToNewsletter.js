@@ -6,16 +6,16 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 // Import login test
 const loginCommon = require('@commonTests/loginBO');
-//Import data
+// Import data
 const {DefaultAccount} = require('@data/demo/customer');
-const {psEmailSubscription} = require('@data/demo/modules')
+const {psEmailSubscription} = require('@data/demo/modules');
 // Import pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CustomersPage = require('@pages/BO/customers');
-const ModuleManagerPage = require('@pages/BO/modules/moduleManager')
-const PsEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription')
+const ModuleManagerPage = require('@pages/BO/modules/moduleManager');
+const PsEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription');
 
 
 const baseContext = 'BO_customers_customers_subscribeToNewsletter';
@@ -23,7 +23,7 @@ let numberOfCustomers = 0;
 let browser;
 let page;
 
-const init = async function() {
+const init = async function () {
   return {
     boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
@@ -31,10 +31,10 @@ const init = async function() {
     customersPage: new CustomersPage(page),
     moduleManagerPage: new ModuleManagerPage(page),
     psEmailSubscriptionPage: new PsEmailSubscriptionPage(page),
-  }
+  };
 };
 
-describe('Check customer subscription to newsletter from BO', async function() {
+describe('Check customer subscription to newsletter from BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -84,7 +84,7 @@ describe('Check customer subscription to newsletter from BO', async function() {
   tests.forEach((test) => {
     it(`should ${test.args.action} newsletters`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}NewsLetters`, baseContext);
-      await this.pageObjects.customersPage.updateToggleColumnValue(1,'newsletter',test.args.value);
+      await this.pageObjects.customersPage.updateToggleColumnValue(1, 'newsletter', test.args.value);
       const newsletterStatus = await this.pageObjects.customersPage.getToggleColumnValue(1, 'newsletter');
       await expect(newsletterStatus).to.be.equal(test.args.value);
     });
@@ -94,7 +94,7 @@ describe('Check customer subscription to newsletter from BO', async function() {
         this,
         'testIdentifier',
         `goToModuleManageTo${test.args.action}`,
-        baseContext
+        baseContext,
       );
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.modulesParentLink,
@@ -108,7 +108,7 @@ describe('Check customer subscription to newsletter from BO', async function() {
         this,
         'testIdentifier',
         `goToEmailSubscriptionModulePageAfter${test.args.action}`,
-        baseContext
+        baseContext,
       );
       await this.pageObjects.moduleManagerPage.searchModule(psEmailSubscription.tag, psEmailSubscription.name);
       await this.pageObjects.moduleManagerPage.goToConfigurationPage(psEmailSubscription.name);
@@ -121,10 +121,10 @@ describe('Check customer subscription to newsletter from BO', async function() {
         this,
         'testIdentifier',
         `checkCustomerRegistrationAfter${test.args.action}`,
-        baseContext
+        baseContext,
       );
       const listOfEmails = await this.pageObjects.psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails();
-      if(test.args.value) {
+      if (test.args.value) {
         await expect(listOfEmails).to.include(DefaultAccount.email);
       } else {
         await expect(listOfEmails).to.not.include(DefaultAccount.email);
@@ -136,7 +136,7 @@ describe('Check customer subscription to newsletter from BO', async function() {
         this,
         'testIdentifier',
         `gotoCustomersPageAfterCheck${test.args.action}`,
-        baseContext
+        baseContext,
       );
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.customersParentLink,
@@ -148,7 +148,7 @@ describe('Check customer subscription to newsletter from BO', async function() {
   });
 
   it('should reset all filters', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', `resetAfterAll`, baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'resetAfterAll', baseContext);
     const numberOfCustomersAfterReset = await this.pageObjects.customersPage.resetAndGetNumberOfLines();
     await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
   });
