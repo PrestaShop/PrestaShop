@@ -112,7 +112,7 @@ class ProfileCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param int $idTab Tab ID
      *
-     * @return bool
+     * @return array|bool
      */
     public static function getProfileAccess($idProfile, $idTab)
     {
