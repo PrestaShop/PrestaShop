@@ -26,13 +26,16 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\AddCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ProductFeatureContext extends AbstractDomainFeatureContext
 {
@@ -53,6 +56,96 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         // Important to clean this cache or Product::getIdTaxRulesGroupByIdProduct still returns the initial value
         Cache::clean('product_id_tax_rules_group_*');
+    }
+
+    /**
+     * @When I generate attribute combinations for product :productName with following values in default language:
+     *
+     * @param string $productName
+     * @param TableNode $table
+     */
+    public function generateCombinations(string $productName, TableNode $table)
+    {
+        $productId = $this->getProductIdByName($productName);
+
+        $this->getCommandBus()->handle(new AddCombinationsCommand($productId, $this->getAttributesByGroupsFromInputTable($table)));
+        //@todo; try catch for errors.
+    }
+
+    //@todo; check if correct combinations were generated and added to db;
+
+    /**
+     * @param TableNode $table
+     *
+     * @return array
+     */
+    private function getAttributesByGroupsFromInputTable(TableNode $table): array
+    {
+        $attributeNamesByGroupName = $table->getRowsHash();
+        $attributesByGroups = [];
+
+        foreach ($attributeNamesByGroupName as $groupName => $attributeNames) {
+            $attributeNames = PrimitiveUtils::castStringArrayIntoArray($attributeNames);
+            $groupAttributes = [];
+
+            foreach ($attributeNames as $attributeName) {
+                $groupAttributes[] = $this->getAttributeIdByName($attributeName);
+            }
+
+            $attributesByGroups[$this->getAttributeGroupIdByName($groupName)] = $groupAttributes;
+        }
+
+        return $attributesByGroups;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return int
+     * @todo: any better way to maintain behat principles of feature readability? cant find a way to search for attribute
+     */
+    private function getAttributeIdByName(string $name): int
+    {
+        $attributeNameByIdMap = [
+            'S' => 1,
+            'M' => 2,
+            'L' => 3,
+            'Red' => 10,
+            '40x60' => 19,
+        ];
+
+        if (array_key_exists($name, $attributeNameByIdMap)) {
+            return $attributeNameByIdMap[$name];
+        }
+
+        throw new RuntimeException(sprintf(
+            'Attribute id by name %s was not found in values map. Map it manually from fixtures value',
+            $name
+        ));
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     * @todo: any better way to maintain behat principles of feature readability? cant find a way to search for attribute
+     */
+    private function getAttributeGroupIdByName(string $name): string
+    {
+        $attributeGroupIdNameMap = [
+            'Size' => 1,
+            'Color' => 2,
+            'Dimension' => 3,
+        ];
+
+        if (array_key_exists($name, $attributeGroupIdNameMap)) {
+            return $attributeGroupIdNameMap[$name];
+        }
+
+        throw new RuntimeException(sprintf(
+            'Attribute group id by name %s was not found in values map. Map it manually from fixtures value',
+            $name
+        ));
     }
 
     /**

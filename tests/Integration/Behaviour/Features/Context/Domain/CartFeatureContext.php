@@ -63,28 +63,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     use StringToBooleanTransform;
 
     /**
-     * @Given the current currency is :currencyIsoCode
-     */
-    public function addCurrencyToContext($currencyIsoCode)
-    {
-        $currencyId = (int) Currency::getIdByIsoCode($currencyIsoCode);
-
-        if ($currencyId) {
-            $currency = new Currency($currencyId);
-        } else {
-            $currency = new Currency();
-            $currency->name = $currencyIsoCode;
-            $currency->precision = 2;
-            $currency->iso_code = $currencyIsoCode;
-            $currency->active = 1;
-            $currency->conversion_rate = 1;
-        }
-
-        Context::getContext()->currency = $currency;
-        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
-    }
-
-    /**
      * @When I create an empty cart :cartReference for customer :customerReference
      *
      * @param string $cartReference

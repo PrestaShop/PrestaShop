@@ -30,6 +30,8 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Testwork\Tester\Result\TestResult;
+use Context as PrestaShopContext;
+use Currency;
 use Exception;
 use Language;
 use ObjectModel;
@@ -165,5 +167,29 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function multipleShopContextIsLoaded()
     {
         Shop::setContext(Shop::CONTEXT_ALL);
+    }
+
+    /**
+     * @Given the current currency is :currencyIsoCode
+     *
+     * @param string $currencyIsoCode
+     */
+    public function addCurrencyToContext(string $currencyIsoCode)
+    {
+        $currencyId = (int) Currency::getIdByIsoCode($currencyIsoCode);
+
+        if ($currencyId) {
+            $currency = new Currency($currencyId);
+        } else {
+            $currency = new Currency();
+            $currency->name = $currencyIsoCode;
+            $currency->precision = 2;
+            $currency->iso_code = $currencyIsoCode;
+            $currency->active = 1;
+            $currency->conversion_rate = 1;
+        }
+
+        PrestaShopContext::getContext()->currency = $currency;
+        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
     }
 }
