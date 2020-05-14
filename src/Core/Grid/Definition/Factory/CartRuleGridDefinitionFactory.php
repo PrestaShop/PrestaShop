@@ -111,7 +111,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             )
             ->add((new DataColumn('quantity'))
-            ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
+            ->setName($this->trans('Quantity', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'quantity',
             ])
@@ -124,7 +124,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             )
             ->add((new ToggleColumn('active'))
-            ->setName($this->trans('Enabled', [], 'Admin.Global'))
+            ->setName($this->trans('Status', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'active',
                 'primary_field' => 'id_cart_rule',
@@ -201,7 +201,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->trans('Quantity', [], 'Admin.Catalog.Feature'),
+                    'placeholder' => $this->trans('Quantity', [], 'Admin.Global'),
                 ],
             ])
             ->setAssociatedColumn('quantity')
@@ -229,8 +229,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'redirect_route' => 'admin_cart_rules_index',
             ])
             ->setAssociatedColumn('actions')
-            )
-            ;
+            );
     }
 
     /**
