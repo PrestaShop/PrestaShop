@@ -7,7 +7,6 @@ const {Statuses} = require('@data/demo/orderStatuses');
 const {Invoices} = require('@data/demo/invoices');
 const files = require('@utils/files');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const InvoicesPage = require('@pages/BO/orders/invoices/index');
@@ -24,7 +23,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     invoicesPage: new InvoicesPage(page),
@@ -59,11 +57,11 @@ describe('Generate PDF file by status', async () => {
     tests.forEach((orderToEdit, index) => {
       it('should go to the orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index + 1}`, baseContext);
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.ordersLink,
+        await this.pageObjects.dashboardPage.goToSubMenu(
+          this.pageObjects.dashboardPage.ordersParentLink,
+          this.pageObjects.dashboardPage.ordersLink,
         );
-        await this.pageObjects.boBasePage.closeSfToolBar();
+        await this.pageObjects.ordersPage.closeSfToolBar();
         const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
       });
@@ -86,11 +84,10 @@ describe('Generate PDF file by status', async () => {
   describe('Generate invoice by status', async () => {
     it('should go to invoices page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage', baseContext);
-      await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.ordersParentLink,
-        this.pageObjects.boBasePage.invoicesLink,
+      await this.pageObjects.viewOrderPage.goToSubMenu(
+        this.pageObjects.viewOrderPage.ordersParentLink,
+        this.pageObjects.viewOrderPage.invoicesLink,
       );
-      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
     });

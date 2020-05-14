@@ -40,10 +40,12 @@ describe('Helper card in order page', async () => {
 
   it('should go to orders page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
     await this.pageObjects.dashboardPage.goToSubMenu(
       this.pageObjects.dashboardPage.ordersParentLink,
       this.pageObjects.dashboardPage.ordersLink,
     );
+
     await this.pageObjects.ordersPage.closeSfToolBar();
     const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
@@ -51,14 +53,17 @@ describe('Helper card in order page', async () => {
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
+
     const isHelpSidebarVisible = await this.pageObjects.ordersPage.openHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
+
     const documentURL = await this.pageObjects.ordersPage.getHelpDocumentURL();
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
+
     const isHelpSidebarClosed = await this.pageObjects.ordersPage.closeHelpSideBar();
     await expect(isHelpSidebarClosed).to.be.true;
   });
