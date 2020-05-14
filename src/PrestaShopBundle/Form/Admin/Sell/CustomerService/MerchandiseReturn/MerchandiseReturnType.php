@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -38,12 +39,26 @@ use Symfony\Component\Form\FormBuilderInterface;
 class MerchandiseReturnType extends AbstractType
 {
     /**
+     * @var array
+     */
+    private $stateChoices;
+
+    public function __construct(array $stateChoices)
+    {
+        $this->stateChoices = $stateChoices;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('question', TextType::class, [])
+            ->add('state', ChoiceType::class, [
+                'required' => true,
+                'placeholder' => null,
+                'choices' => $this->stateChoices,
+            ])
         ;
     }
 }
