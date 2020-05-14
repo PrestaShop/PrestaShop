@@ -81,7 +81,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
 
       await this.pageObjects.addProductPage.goToSubMenu(
         this.pageObjects.addProductPage.catalogParentLink,
-        this.pageObjects.addProductPage.productsLink
+        this.pageObjects.addProductPage.productsLink,
       );
 
       const pageTitle = await this.pageObjects.productsPage.getPageTitle();
