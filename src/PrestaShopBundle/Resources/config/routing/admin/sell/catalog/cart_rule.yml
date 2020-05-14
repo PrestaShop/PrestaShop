@@ -1,4 +1,4 @@
-#@todo: add legacy links after page is fully migrated. (including condition groups)
+#@todo: add legacy links after page is fully migrated
 admin_cart_rules_index:
   path: /
   methods: GET
