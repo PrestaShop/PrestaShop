@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 
@@ -42,13 +43,27 @@ class GetMerchandiseReturnForEditing
     private $merchandiseReturnId;
 
     /**
+     * @var LanguageId
+     */
+    private $languageId;
+
+    /**
      * @param int $merchandiseReturnId
      *
      * @throws MerchandiseReturnConstraintException
      */
-    public function __construct(int $merchandiseReturnId)
+    public function __construct(int $merchandiseReturnId, int $languageId)
     {
         $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
+        $this->languageId = new LanguageId($languageId);
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
     }
 
     /**

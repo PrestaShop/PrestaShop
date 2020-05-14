@@ -56,14 +56,8 @@ final class MerchandiseReturnFormDataProvider implements FormDataProviderInterfa
      */
     public function getData($merchandiseReturnId)
     {
-        /** @var EditableMerchandiseReturn $editableMerchandiseReturn */
-        $editableMerchandiseReturn = $this->queryBus->handle(new GetMerchandiseReturnForEditing((int) $merchandiseReturnId));
 
-        $data = [
-            'question' => $editableMerchandiseReturn->getQuestion(),
-        ];
-
-        return $data;
+        return [];
     }
 
     /**
