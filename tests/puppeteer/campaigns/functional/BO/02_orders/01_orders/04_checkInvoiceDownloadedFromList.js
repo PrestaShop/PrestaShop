@@ -6,7 +6,6 @@ const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 const {Statuses} = require('@data/demo/orderStatuses');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const OrdersPage = require('@pages/BO/orders/index');
@@ -32,7 +31,6 @@ let invoiceFilename;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     ordersPage: new OrdersPage(page),
@@ -124,9 +122,9 @@ describe('Check invoice downloaded from list', async () => {
 
     it('should go to the orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
-      await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.ordersParentLink,
-        this.pageObjects.boBasePage.ordersLink,
+      await this.pageObjects.dashboardPage.goToSubMenu(
+        this.pageObjects.dashboardPage.ordersParentLink,
+        this.pageObjects.dashboardPage.ordersLink,
       );
       const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
