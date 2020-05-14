@@ -12,7 +12,7 @@ const ProfilesPage = require('@pages/BO/advancedParameters/team/profiles/index')
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParams_team_profiles_sortProfiles';
+const baseContext = 'functional_BO_advancedParameters_team_profiles_sortProfiles';
 
 let browser;
 let page;
@@ -37,6 +37,7 @@ describe('Sort Profiles', async () => {
     page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
@@ -44,12 +45,13 @@ describe('Sort Profiles', async () => {
   // Login into BO
   loginCommon.loginBO();
 
-  it('should go to \'Advanced parameters>Team\' page', async function () {
+  it('should go to \'Advanced parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.teamLink,
     );
+
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.employeesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
@@ -70,9 +72,9 @@ describe('Sort Profiles', async () => {
 
   const tests = [
     {args: {testIdentifier: 'sortByIDDesc', sortBy: 'id_profile', sortDirection: 'desc'}},
-    {args: {testIdentifier: 'sortByIDAsc', sortBy: 'id_profile', sortDirection: 'asc'}},
     {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
     {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByIDAsc', sortBy: 'id_profile', sortDirection: 'asc'}},
   ];
 
   tests.forEach((test) => {
@@ -85,6 +87,7 @@ describe('Sort Profiles', async () => {
         nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
         sortedTable = await sortedTable.map(text => parseFloat(text));
       }
+
       const expectedResult = await this.pageObjects.profilesPage.sortArray(nonSortedTable, test.args.isFloat);
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);
