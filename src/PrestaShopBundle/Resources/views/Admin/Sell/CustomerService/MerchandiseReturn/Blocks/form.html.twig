@@ -38,7 +38,6 @@
         {{ 'View details on the customer page'|trans({}, 'Admin.Actions') }}
       </a>
 
-
       <p>Order: Order # {{ editableMerchandiseReturn.orderId }} froms {{ editableMerchandiseReturn.orderDate.format('d/m/y') }}</p>
       <a href="{{ path('admin_orders_view', {'orderId': editableMerchandiseReturn.orderId.value }) }}" class="btn btn-outline-secondary">
         {{ 'View details on the order page'|trans({}, 'Admin.Actions') }}
@@ -51,6 +50,7 @@
         'label': 'Order State'|trans({}, 'Admin.Global')
       }) }}
 
+          {% include '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/products.html.twig' %}
       {% block merchandise_return_form_rest %}
         {{ form_rest(merchandiseReturnForm) }}
       {% endblock %}
