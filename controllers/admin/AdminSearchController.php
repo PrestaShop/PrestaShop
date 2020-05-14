@@ -67,8 +67,11 @@ class AdminSearchControllerCore extends AdminController
         $action = Tools::getValue('action');
         if ($action == 'redirectToProduct') {
             $id_product = (int) Tools::getValue('id_product');
-            $product = new Product($id_product);
-            if (Validate::isLoadedObject($product) && Tools::getIsset('statusproduct')) {
+            if (Tools::getIsset('statusproduct')) {
+                $product = new Product($id_product);
+            }
+
+            if (isset($product) && Validate::isLoadedObject($product)) {
                 if ($product->toggleStatus()) {
                     $this->confirmations[] = $this->trans('The status has been updated successfully.', [], 'Admin.Notifications.Success');
                 } else {
