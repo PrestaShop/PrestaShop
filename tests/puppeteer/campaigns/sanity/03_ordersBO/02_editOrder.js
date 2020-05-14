@@ -10,7 +10,6 @@ const baseContext = 'sanity_ordersBO_editOrder';
 // importing pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BOBasePage = require('@pages/BO/BObasePage');
 const OrderPage = require('@pages/BO/orders/view');
 const OrdersPage = require('@pages/BO/orders');
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -22,7 +21,6 @@ const init = async function () {
   return {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
-    boBasePage: new BOBasePage(page),
     orderPage: new OrderPage(page),
     ordersPage: new OrdersPage(page),
   };
@@ -48,11 +46,13 @@ describe('Edit Order BO', async () => {
 
   it('should go to the Orders page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.ordersParentLink,
-      this.pageObjects.boBasePage.ordersLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.ordersParentLink,
+      this.pageObjects.dashboardPage.ordersLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.ordersPage.closeSfToolBar();
     const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
   });

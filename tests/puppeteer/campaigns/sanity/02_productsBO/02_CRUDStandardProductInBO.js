@@ -10,7 +10,6 @@ const baseContext = 'sanity_productsBO_CRUDStandardProductInBO';
 // importing pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BOBasePage = require('@pages/BO/BObasePage');
 const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const FOProductPage = require('@pages/FO/product');
@@ -27,7 +26,6 @@ const init = async function () {
   return {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
-    boBasePage: new BOBasePage(page),
     productsPage: new ProductsPage(page),
     addProductPage: new AddProductPage(page),
     foProductPage: new FOProductPage(page),
@@ -55,11 +53,13 @@ describe('Create, read, update and delete Standard product in BO', async () => {
 
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.productsLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.productsLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.productsPage.closeSfToolBar();
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
@@ -116,10 +116,12 @@ describe('Create, read, update and delete Standard product in BO', async () => {
 
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToCheckPrices', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.productsLink,
+
+    await this.pageObjects.addProductPage.goToSubMenu(
+      this.pageObjects.addProductPage.catalogParentLink,
+      this.pageObjects.addProductPage.productsLink,
     );
+
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });

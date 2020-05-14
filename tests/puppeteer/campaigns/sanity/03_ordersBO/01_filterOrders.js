@@ -10,7 +10,6 @@ const baseContext = 'sanity_ordersBO_filterOrders';
 // importing pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BOBasePage = require('@pages/BO/BObasePage');
 const OrdersPage = require('@pages/BO/orders');
 const {Orders} = require('@data/demo/orders');
 
@@ -22,7 +21,6 @@ const init = async function () {
   return {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
-    boBasePage: new BOBasePage(page),
     ordersPage: new OrdersPage(page),
   };
 };
@@ -47,10 +45,12 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
 
   it('should go to the Orders page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.ordersParentLink,
-      this.pageObjects.boBasePage.ordersLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.ordersParentLink,
+      this.pageObjects.dashboardPage.ordersLink,
     );
+
     const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
   });
