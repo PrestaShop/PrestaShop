@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 abstract class ModuleCore implements ModuleInterface
@@ -3449,17 +3450,17 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param string $serviceName
      *
-     * @return object|false if a container is not available, it returns false
+     * @return object|false If a container is not available it returns false
+     *
+     * @throws ServiceCircularReferenceException When a circular reference is detected
+     * @throws ServiceNotFoundException When the service is not defined
+     * @throws \Exception
      */
     public function get($serviceName)
     {
         $container = $this->getContainer();
         if (null !== $container) {
-            try {
-                return $container->get($serviceName);
-            } catch (ServiceNotFoundException $e) {
-                return false;
-            }
+            return $container->get($serviceName);
         }
 
         return false;
