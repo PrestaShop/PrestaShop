@@ -137,8 +137,8 @@
     }
 
     .module-logo-thumb-list {
-      height: 64px;
       max-width: 64px;
+      height: 64px;
       margin: 0 auto;
       @media (max-width: 33.9em) {
         height: auto;
@@ -304,12 +304,12 @@
         display: none;
       }
       &::before {
-        content: "\E313";
         position: relative;
         right: 20px;
         font-family: "Material Icons", Arial, Helvetica, sans-serif;
         font-size: 1.5rem;
         color: $gray-medium;
+        content: "\E313";
         content: "\E313";
       }
     }
@@ -399,6 +399,7 @@
     @include border-radius(0);
   }
 }
+
 /**
  * Module Categories Grid
  */
@@ -797,8 +798,8 @@ form#importDropzone {
     color: #aeaeae;
     border-color: #aeaeae;
     &:hover {
+      color: #fff;
       background-color: #aeaeae;
-      color: white;
     }
   }
 }
