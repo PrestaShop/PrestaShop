@@ -122,7 +122,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DateTimeColumn('date_to'))
             ->setName($this->trans('Expiration date', [], 'Admin.Catalog.Feature'))
             ->setOptions([
-                'format' => 'Y-m-d H:i',
+                'format' => 'Y/m/d H:i:s',
                 'field' => 'date_to',
             ])
             )
