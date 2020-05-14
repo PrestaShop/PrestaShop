@@ -20,7 +20,7 @@ const baseContext = 'functional_BO_advancedParams_database_exportSqlQuery';
 
 let browser;
 let page;
-let numberOfSQLQuery = 0;
+let numberOfSQLQueries = 0;
 const sqlQueryData = new SQLQueryFaker({tableName: 'ps_alias'});
 let fileName;
 const fileContent = `${Tables.ps_alias.columns[1]};${Tables.ps_alias.columns[2]};${Tables.ps_alias.columns[3]}`;
@@ -45,6 +45,7 @@ describe('Export SQL query', async () => {
     await helper.setDownloadBehavior(page);
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
     await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
@@ -60,6 +61,7 @@ describe('Export SQL query', async () => {
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.databaseLink,
     );
+
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.sqlManagerPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.sqlManagerPage.pageTitle);
@@ -67,9 +69,9 @@ describe('Export SQL query', async () => {
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstResetFilter', baseContext);
-    numberOfSQLQuery = await this.pageObjects.sqlManagerPage.resetAndGetNumberOfLines();
-    if (numberOfSQLQuery !== 0) {
-      await expect(numberOfSQLQuery).to.be.above(0);
+    numberOfSQLQueries = await this.pageObjects.sqlManagerPage.resetAndGetNumberOfLines();
+    if (numberOfSQLQueries !== 0) {
+      await expect(numberOfSQLQueries).to.be.above(0);
     }
   });
 
@@ -114,6 +116,7 @@ describe('Export SQL query', async () => {
         this.pageObjects.boBasePage.advancedParametersLink,
         this.pageObjects.boBasePage.databaseLink,
       );
+
       const pageTitle = await this.pageObjects.sqlManagerPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.sqlManagerPage.pageTitle);
     });
@@ -130,8 +133,8 @@ describe('Export SQL query', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSQLQuery', baseContext);
       const textResult = await this.pageObjects.sqlManagerPage.deleteSQLQuery(1);
       await expect(textResult).to.equal(this.pageObjects.sqlManagerPage.successfulDeleteMessage);
-      const numberOfSQLQueryAfterDelete = await this.pageObjects.sqlManagerPage.resetAndGetNumberOfLines();
-      await expect(numberOfSQLQueryAfterDelete).to.be.equal(numberOfSQLQuery);
+      const numberOfSQLQueriesAfterDelete = await this.pageObjects.sqlManagerPage.resetAndGetNumberOfLines();
+      await expect(numberOfSQLQueriesAfterDelete).to.be.equal(numberOfSQLQueries);
     });
   });
 });
