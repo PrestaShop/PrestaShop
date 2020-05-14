@@ -119,7 +119,7 @@ describe('Generate PDF file by date', async () => {
     it('should check the error message when there is no invoice in the entered date', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentInvoice', baseContext);
 
-      // Generate PDG
+      // Generate PDF
       await this.pageObjects.invoicesPage.generatePDFByDate(futureDate, futureDate);
 
       const textMessage = await this.pageObjects.invoicesPage.getTextContent(
