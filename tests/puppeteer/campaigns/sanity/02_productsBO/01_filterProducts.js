@@ -10,7 +10,6 @@ const baseContext = 'sanity_productsBO_filterProducts';
 // importing pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BOBasePage = require('@pages/BO/BObasePage');
 const ProductsPage = require('@pages/BO/catalog/products');
 const {Products} = require('@data/demo/products');
 const {Categories} = require('@data/demo/categories');
@@ -25,7 +24,6 @@ const init = async function () {
   return {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
-    boBasePage: new BOBasePage(page),
     productsPage: new ProductsPage(page),
   };
 };
@@ -46,10 +44,12 @@ describe('Filter in Products Page', async () => {
 
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.productsLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.productsLink,
     );
+
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
