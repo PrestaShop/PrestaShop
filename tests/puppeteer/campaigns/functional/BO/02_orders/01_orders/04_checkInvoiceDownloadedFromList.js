@@ -65,7 +65,6 @@ describe('Check invoice downloaded from list', async () => {
 
   describe('Create order in FO', async () => {
     it('should go to FO page', async function () {
-
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       await this.pageObjects.homePage.goToFo();

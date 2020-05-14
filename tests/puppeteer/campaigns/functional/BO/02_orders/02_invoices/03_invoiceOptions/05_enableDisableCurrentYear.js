@@ -49,7 +49,6 @@ Disable Add current year to invoice number
 Check that the current year does not exist in the invoice file name
  */
 describe('Edit invoice prefix and check the generated invoice file name', async () => {
-
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -66,9 +65,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
   loginCommon.loginBO();
 
   describe('Enable add current year to invoice number then check the invoice file name', async () => {
-
     describe('Enable add current year to invoice number', async () => {
-
       it('should go to invoices page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToEnableCurrentYear', baseContext);
 
@@ -93,7 +90,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
     });
 
     describe('Choose the position of the year date at the end', async () => {
-
       it('should choose \'After the sequential number\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeCurrentYearPositionToEnd', baseContext);
 
@@ -106,9 +102,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
     });
 
     describe('Check the invoice file Name', async () => {
-
       it('should go to the orders page', async function () {
-
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -126,7 +120,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it('should go to the first order page', async function () {
-
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -148,7 +141,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it('should check that the invoice file name contain current year at the end', async function () {
-
         await testContext.addContextItem(this, 'testIdentifier', 'checkEnabledCurrentYearAtTheEndOfFile', baseContext);
 
         fileName = await this.pageObjects.viewOrderPage.getFileName();
@@ -157,9 +149,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
     });
 
     describe('Choose the position of the year at the beginning', async () => {
-
       it('should go to invoices page', async function () {
-
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -184,13 +174,10 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
       });
-
     });
 
     describe('Check the invoice file Name', async () => {
-
       it('should go to the orders page', async function () {
-
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -208,7 +195,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it('should go to the first order page', async function () {
-
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -222,7 +208,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
-
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -235,7 +220,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it('should check that the invoice file name contain current year at the beginning', async function () {
-
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -250,9 +234,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
   });
 
   describe('Disable add current year to invoice number then check the invoice file name', async () => {
-
     describe('Disable add current year to invoice number', async () => {
-
       it('should go to invoices page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToDisableCurrentYear', baseContext);
 
@@ -272,13 +254,10 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
       });
-
     });
 
     describe('Check the invoice file Name', async () => {
-
       it('should go to the orders page', async function () {
-
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageDisabledCurrentYear', baseContext);
         await this.pageObjects.invoicesPage.goToSubMenu(
           this.pageObjects.invoicesPage.ordersParentLink,

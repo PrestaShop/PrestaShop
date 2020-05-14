@@ -61,7 +61,6 @@ Change the Order status to Shipped
 Check the invoice file name
  */
 describe('Edit \'Invoice number, Footer text\' and check the generated invoice file', async () => {
-
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -82,7 +81,6 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
   loginCommon.loginBO();
 
   describe('Edit the Invoice number and Footer text', async () => {
-
     it('should go to invoices page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToEditOptions', baseContext);
 
@@ -104,11 +102,9 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
       const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
       await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
     });
-
   });
 
   describe('Create new order in FO', async () => {
-
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
@@ -188,11 +184,9 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
       const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
     });
-
   });
 
   describe('Create an invoice and check the edited data', async () => {
-
     it('should go to the orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageUpdatedOptions', baseContext);
 
@@ -248,7 +242,5 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
       const exist = await files.isTextInPDF(`${fileName}.pdf`, invoiceData.footerText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
     });
-
   });
-
 });

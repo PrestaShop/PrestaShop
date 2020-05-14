@@ -204,7 +204,6 @@ describe('Check delivery slip downloaded from list', async () => {
         totalPaidExist,
         `Total paid '${orderInformation.totalPaid}' does not exist in delivery slip`,
       ).to.be.true;
-
     });
   });
 });

@@ -54,14 +54,12 @@ describe('Generate PDF file by date', async () => {
   loginCommon.loginBO();
 
   describe('Create invoice', async () => {
-
     const tests = [
       {args: {orderRow: 1, status: Statuses.shipped.status}},
       {args: {orderRow: 2, status: Statuses.paymentAccepted.status}},
     ];
 
     tests.forEach((orderToEdit, index) => {
-
       it('should go to the orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index + 1}`, baseContext);
 

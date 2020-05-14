@@ -47,7 +47,6 @@ const init = async function () {
 };
 
 describe('Enable invoices', async () => {
-
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

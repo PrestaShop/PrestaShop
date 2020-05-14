@@ -154,14 +154,12 @@ describe('Bulk update orders status', async () => {
     });
 
     ['first', 'second'].forEach((arg, index) => {
-
       it(`should check ${arg} order status`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderStatus${index + 1}`, baseContext);
 
         const orderStatus = await this.pageObjects.ordersPage.getTextColumn('osname', index + 1);
         await expect(orderStatus, 'Order status is not correct').to.equal(Statuses.paymentAccepted.status);
       });
-
     });
   });
 });

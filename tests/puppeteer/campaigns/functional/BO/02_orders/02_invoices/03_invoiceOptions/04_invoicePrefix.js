@@ -42,7 +42,6 @@ Back to the default invoice prefix value
 Check the invoice file name
  */
 describe('Edit invoice prefix and check the generated invoice file name', async () => {
-
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -59,9 +58,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
   loginCommon.loginBO();
 
   describe(`Change the invoice prefix to '${invoiceData.prefix}'then check the invoice file name`, async () => {
-
     describe(`Change the invoice prefix to '${invoiceData.prefix}'`, async () => {
-
       it('should go to invoices page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToUpdatePrefix', baseContext);
 
@@ -86,7 +83,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
     });
 
     describe(`Change the order status to '${Statuses.shipped.status}' and check the invoice file Name`, async () => {
-
       it('should go to the orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForUpdatedPrefix', baseContext);
 
@@ -123,15 +119,11 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         fileName = await this.pageObjects.viewOrderPage.getFileName();
         expect(fileName).to.contains(invoiceData.prefix.replace('#', '').trim());
       });
-
     });
-
   });
 
   describe('Back to the default invoice prefix value then check the invoice file name', async () => {
-
     describe(`Back to the default invoice prefix value '${defaultPrefix}'`, async () => {
-
       it('should go to invoices page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageForDefaultPrefix', baseContext);
 
@@ -154,7 +146,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
     });
 
     describe('Check the default prefix in the invoice file Name', async () => {
-
       it('should go to the orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageForDefaultPrefix', baseContext);
 
@@ -182,9 +173,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
         fileName = await this.pageObjects.viewOrderPage.getFileName();
         expect(fileName).to.contains(defaultPrefix.replace('#', '').trim());
       });
-
     });
-
   });
-
 });

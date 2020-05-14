@@ -72,7 +72,6 @@ Disable tax breakdown
 Generate the invoice and check that there is no tax breakdown
  */
 describe('Enable tax breakdown', async () => {
-
   // before and after functions
   before(async function () {
     // Create new tab
@@ -87,8 +86,7 @@ describe('Enable tax breakdown', async () => {
     taxRuleGroupToCreate = await (new TaxRuleGroup());
 
     firstTaxRuleToCreate = await (
-      new TaxRule
-      (
+      new TaxRule(
         {
           country: 'France',
           behaviour: 'Combine',
@@ -98,8 +96,7 @@ describe('Enable tax breakdown', async () => {
     );
 
     secondTaxRuleToCreate = await (
-      new TaxRule
-      (
+      new TaxRule(
         {
           country: 'France',
           behaviour: 'Combine',
@@ -108,14 +105,12 @@ describe('Enable tax breakdown', async () => {
       )
     );
 
-    const productToCreate =
-      {
-        type: 'Standard product',
-        taxRule: taxRuleGroupToCreate.name,
-      };
+    const productToCreate = {
+      type: 'Standard product',
+      taxRule: taxRuleGroupToCreate.name,
+    };
 
     productData = await (new ProductFaker(productToCreate));
-
   });
   after(async () => {
     /* Delete the generated invoice */
@@ -127,9 +122,7 @@ describe('Enable tax breakdown', async () => {
   loginCommon.loginBO();
 
   describe('Enable tax breakdown then check it in the invoice created', async () => {
-
     describe('Enable tax breakdown', async () => {
-
       it('should go to invoices page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToEnableTaxBreakDown', baseContext);
 
@@ -151,11 +144,9 @@ describe('Enable tax breakdown', async () => {
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
       });
-
     });
 
     describe('Create tax rule', async () => {
-
       it('should go to "Taxes" page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
@@ -215,7 +206,6 @@ describe('Enable tax breakdown', async () => {
         const textResult = await this.pageObjects.addTaxRulesPage.createEditTaxRules(secondTaxRuleToCreate);
         await expect(textResult).to.contains(this.pageObjects.addTaxRulesPage.successfulUpdateMessage);
       });
-
     });
 
     describe('Create new product with the new tax rule', async () => {
@@ -242,7 +232,6 @@ describe('Enable tax breakdown', async () => {
     });
 
     describe('Create new order in FO with the created product', async () => {
-
       it('should go to FO and create an order', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
 
@@ -292,11 +281,9 @@ describe('Enable tax breakdown', async () => {
         const pageTitle = await this.pageObjects.addProductPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addProductPage.pageTitle);
       });
-
     });
 
     describe('Generate the invoice and check the tax breakdown', async () => {
-
       it('should go to orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageTaxBreakdown', baseContext);
 
@@ -353,15 +340,11 @@ describe('Enable tax breakdown', async () => {
         // Delete the invoice file
         await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
       });
-
     });
-
   });
 
   describe('Disable tax breakdown then check the invoice file', async () => {
-
     describe('Disable tax breakdown', async () => {
-
       it('should go to invoices page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToDisableTaxBreakdown', baseContext);
 
@@ -381,11 +364,9 @@ describe('Enable tax breakdown', async () => {
         const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
         await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
       });
-
     });
 
     describe('Generate the invoice and check that there is no tax breakdown', async () => {
-
       it('should go to the orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageNoTaxBreakdown', baseContext);
 
@@ -433,9 +414,6 @@ describe('Enable tax breakdown', async () => {
         exist = await files.isTextInPDF(`${secondInvoiceFileName}.pdf`, '30.000 %');
         await expect(exist).to.be.true;
       });
-
     });
-
   });
-
 });

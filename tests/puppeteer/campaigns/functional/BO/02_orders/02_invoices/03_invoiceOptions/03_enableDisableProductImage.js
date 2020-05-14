@@ -59,7 +59,6 @@ Create invoice
 Check that there is 1 image in the invoice (Logo)
  */
 describe('Enable product image in invoices', async () => {
-
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -81,13 +80,9 @@ describe('Enable product image in invoices', async () => {
   ];
 
   tests.forEach((test) => {
-
     describe(`${test.args.action} product image in invoice then check the invoice file created`, async () => {
-
       describe(`${test.args.action} product image`, async () => {
-
         it('should go to invoices page', async function () {
-
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -113,13 +108,10 @@ describe('Enable product image in invoices', async () => {
           const textMessage = await this.pageObjects.invoicesPage.saveInvoiceOptions();
           await expect(textMessage).to.contains(this.pageObjects.invoicesPage.successfulUpdateMessage);
         });
-
       });
 
       describe('Create new order in FO', async () => {
-
         it('should go to FO page', async function () {
-
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -203,13 +195,10 @@ describe('Enable product image in invoices', async () => {
           const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
           await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
         });
-
       });
 
       describe('Generate the invoice and check product image', async () => {
-
         it('should go to the orders page', async function () {
-
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -227,7 +216,6 @@ describe('Enable product image in invoices', async () => {
         });
 
         it('should go to the created order page', async function () {
-
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -241,7 +229,6 @@ describe('Enable product image in invoices', async () => {
         });
 
         it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
-
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -254,7 +241,6 @@ describe('Enable product image in invoices', async () => {
         });
 
         it('should download the invoice', async function () {
-
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -273,7 +259,6 @@ describe('Enable product image in invoices', async () => {
         });
 
         it('should check the product images in the PDF File', async function () {
-
           await testContext.addContextItem(
             this,
             'testIdentifier',
@@ -288,11 +273,7 @@ describe('Enable product image in invoices', async () => {
 
           await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}.pdf`);
         });
-
       });
-
     });
-
   });
-
 });
