@@ -129,12 +129,20 @@ describe('Order messages pagination', async () => {
 
   describe('Sort order messages table', async () => {
     const sortTests = [
-      {args: {testIdentifier: 'sortByIDDesc', sortBy: 'id_order_message', sortDirection: 'desc', isFloat: true}},
+      {
+        args: {
+          testIdentifier: 'sortByIDDesc', sortBy: 'id_order_message', sortDirection: 'desc', isFloat: true,
+        },
+      },
       {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByMessageDesc', sortBy: 'message', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByMessageAsc', sortBy: 'message', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByIDAsc', sortBy: 'id_order_message', sortDirection: 'asc', isFloat: true}},
+      {
+        args: {
+          testIdentifier: 'sortByIDAsc', sortBy: 'id_order_message', sortDirection: 'asc', isFloat: true,
+        },
+      },
     ];
 
     sortTests.forEach((test) => {
