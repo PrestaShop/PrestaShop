@@ -1,0 +1,22 @@
+<table class="table" id="merchandiseReturnProductsTable">
+  <thead>
+  <tr>
+    <th>
+      <p>{{ 'Product'|trans({}, 'Admin.Global') }}</p>
+    </th>
+    <th>
+      <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
+    </th>
+    <th class="text-right product_actions d-print-none">
+      <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for product in merchandiseReturnProductsForViewing.products %}
+    {% include '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/product.html.twig' with {
+      'product': product,
+    } %}
+  {% endfor %}
+  </tbody>
+</table>

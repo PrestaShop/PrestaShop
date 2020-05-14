@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
@@ -108,6 +109,12 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 )
             );
 
+            $productsForViewing = $this->getQueryBus()->handle(
+                new GetMerchandiseReturnProductsForViewing(
+                    $merchandiseReturnId
+                )
+            );
+
             $form = $formBuilder->getFormFor($merchandiseReturnId);
 //            $form->handleRequest($request);
 //
@@ -131,7 +138,8 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Actions')),
             'merchandiseReturnForm' => $form->createView(),
-            'editableMerchandiseReturn' => $editableMerchandiseReturn
+            'editableMerchandiseReturn' => $editableMerchandiseReturn,
+            'merchandiseReturnProductsForViewing' => $productsForViewing
         ]);
     }
 

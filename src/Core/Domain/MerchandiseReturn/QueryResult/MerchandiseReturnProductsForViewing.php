@@ -26,51 +26,40 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\MerchandiseReturnProductForViewing;
 
-/**
- * Gets merchandise return for editing in Back Office
- */
-class GetMerchandiseReturnForEditing
+class MerchandiseReturnProductsForViewing
 {
     /**
-     * @var MerchandiseReturnId
+     * @var MerchandiseReturnProductForViewing[]
      */
-    private $merchandiseReturnId;
+    private $products = [];
 
     /**
-     * @var LanguageId
+     * @param MerchandiseReturnProductForViewing[] $products
      */
-    private $languageId;
-
-    /**
-     * @param int $merchandiseReturnId
-     *
-     * @throws MerchandiseReturnConstraintException
-     */
-    public function __construct(int $merchandiseReturnId, int $languageId)
+    public function __construct(array $products)
     {
-        $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
-        $this->languageId = new LanguageId($languageId);
+        foreach ($products as $product) {
+            $this->addProductForViewing($product);
+        }
     }
 
     /**
-     * @return MerchandiseReturnId
+     * @param MerchandiseReturnProductForViewing $productForViewing
      */
-    public function getMerchandiseReturnId(): MerchandiseReturnId
+    private function addProductForViewing(MerchandiseReturnProductForViewing $productForViewing): void
     {
-        return $this->merchandiseReturnId;
+        $this->products[] = $productForViewing;
     }
 
     /**
-     * @return LanguageId
+     * @return MerchandiseReturnProductForViewing[]
      */
-    public function getLanguageId(): LanguageId
+    public function getProducts(): array
     {
-        return $this->languageId;
+        return $this->products;
     }
 }
