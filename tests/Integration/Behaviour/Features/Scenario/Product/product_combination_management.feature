@@ -9,7 +9,14 @@ Feature: Product combination management
 
   @product_combination
   Scenario: Generate product combinations
-    When I generate attribute combinations for product "Hummingbird printed t-shirt" with following values in default language:
-      | Size         | [S,M,L]   |
-      | Color        | [Red]     |
-      | Dimension    | [40x60]   |
+    When I generate attribute combinations for product "Hummingbird printed t-shirt" with following attributes in default language:
+      | Size         | [S,M,L]      |
+      | Color        | [Red, White] |
+      | Dimension    | [40x60]      |
+    Then product "Hummingbird printed t-shirt" should contain following combinations:
+      | [S,Red,40x60]   |
+      | [M,Red,40x60]   |
+      | [L,Red,40x60]   |
+      | [S,White,40x60] |
+      | [M,White,40x60] |
+      | [L,White,40x60] |

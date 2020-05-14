@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
@@ -59,7 +60,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I generate attribute combinations for product :productName with following values in default language:
+     * @When I generate attribute combinations for product :productName with following attributes in default language:
      *
      * @param string $productName
      * @param TableNode $table
@@ -67,13 +68,47 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function generateCombinations(string $productName, TableNode $table)
     {
         $productId = $this->getProductIdByName($productName);
-
         $this->getCommandBus()->handle(new GenerateCombinationsCommand($productId, $this->getAttributesByGroupsFromInputTable($table)));
-        //@todo; try catch for errors.
+    }
+
+    /**
+     * @Then product :productName should contain following combinations:
+     *
+     * @param string $productName
+     * @param TableNode $table
+     */
+    public function assertGeneratedCombinations(string $productName, TableNode $table)
+    {
+        $product = new Product($this->getProductIdByName($productName));
+
+        $combinations = $table->getColumn(0);
+        foreach ($combinations as $combination) {
+            $attributeNames = PrimitiveUtils::castStringArrayIntoArray($combination);
+            $combinationAttributeIds = array_map(
+                function ($attributeName) {
+                    return $this->getAttributeIdByName($attributeName);
+                },
+                $attributeNames
+            );
+
+            $existingCombinationId = $product->productAttributeExists(
+                $combinationAttributeIds,
+                false,
+                null,
+                true,
+                true
+            );
+
+            if (!$existingCombinationId) {
+                throw new RuntimeException(sprintf(
+                    'Combination [%s] does not exist.',
+                    $combination
+                ));
+            }
+        }
     }
 
     //@todo; check if correct combinations were generated and added to db;
-
     /**
      * @param TableNode $table
      *
@@ -106,11 +141,13 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     private function getAttributeIdByName(string $name): int
     {
+        //attribute id values from database. Depends from fixtures.
         $attributeNameByIdMap = [
             'S' => 1,
             'M' => 2,
             'L' => 3,
             'Red' => 10,
+            'White' => 8,
             '40x60' => 19,
         ];
 
@@ -132,6 +169,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     private function getAttributeGroupIdByName(string $name): string
     {
+        //attribute group id values from database. Depends on fixtures.
         $attributeGroupIdNameMap = [
             'Size' => 1,
             'Color' => 2,
