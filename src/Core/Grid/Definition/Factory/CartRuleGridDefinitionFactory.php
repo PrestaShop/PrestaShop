@@ -56,10 +56,17 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     const GRID_ID = 'cart_rule';
 
+    /**
+     * @var string
+     */
+    private $contextDateFormat;
+
     public function __construct(
-        HookDispatcherInterface $hookDispatcher
+        HookDispatcherInterface $hookDispatcher,
+        string $contextDateFormat
     ) {
         parent::__construct($hookDispatcher);
+        $this->contextDateFormat = $contextDateFormat;
     }
 
     /**
@@ -122,7 +129,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new DateTimeColumn('date_to'))
             ->setName($this->trans('Expiration date', [], 'Admin.Catalog.Feature'))
             ->setOptions([
-                'format' => 'Y/m/d H:i:s',
+                'format' => $this->contextDateFormat,
                 'field' => 'date_to',
             ])
             )
