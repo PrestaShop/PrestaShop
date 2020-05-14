@@ -4,7 +4,6 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const ProductsPage = require('@pages/BO/catalog/products');
@@ -27,7 +26,6 @@ const thirdProduct = new ProductFaker({type: 'Standard product', price: 0});
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     productsPage: new ProductsPage(page),
@@ -71,12 +69,12 @@ describe('Sort list of products without price', async () => {
           baseContext,
         );
 
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.catalogParentLink,
-          this.pageObjects.boBasePage.productsLink,
+        await this.pageObjects.dashboardPage.goToSubMenu(
+          this.pageObjects.dashboardPage.catalogParentLink,
+          this.pageObjects.dashboardPage.productsLink,
         );
 
-        await this.pageObjects.boBasePage.closeSfToolBar();
+        await this.pageObjects.dashboardPage.closeSfToolBar();
         const pageTitle = await this.pageObjects.productsPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
       });
@@ -110,8 +108,8 @@ describe('Sort list of products without price', async () => {
       );
 
       await this.pageObjects.addProductPage.goToSubMenu(
-        this.pageObjects.boBasePage.catalogParentLink,
-        this.pageObjects.boBasePage.monitoringLink,
+        this.pageObjects.dashboardPage.catalogParentLink,
+        this.pageObjects.dashboardPage.monitoringLink,
       );
 
       const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();

@@ -5,7 +5,6 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CategoriesPage = require('@pages/BO/catalog/categories');
@@ -28,7 +27,6 @@ const thirdCreateCategoryData = new CategoryFaker();
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     categoriesPage: new CategoriesPage(page),
@@ -62,12 +60,12 @@ describe('Sort list of empty categories', async () => {
 
   it('should go to \'catalog > categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.categoriesLink,
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.categoriesLink,
     );
 
-    await this.pageObjects.boBasePage.closeSfToolBar();
+    await this.pageObjects.dashboardPage.closeSfToolBar();
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
@@ -94,7 +92,7 @@ describe('Sort list of empty categories', async () => {
         await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
       });
 
-      it('should create category and check the categories number', async function () {
+      it('should create category and check the  number of categories', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index}`, baseContext);
         const textResult = await this.pageObjects.addCategoryPage.createEditCategory(test.args.categoryToCreate);
         await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
@@ -109,8 +107,8 @@ describe('Sort list of empty categories', async () => {
     it('should go to \'catalog > monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
       await this.pageObjects.categoriesPage.goToSubMenu(
-        this.pageObjects.boBasePage.catalogParentLink,
-        this.pageObjects.boBasePage.monitoringLink,
+        this.pageObjects.dashboardPage.catalogParentLink,
+        this.pageObjects.dashboardPage.monitoringLink,
       );
 
       const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
@@ -205,11 +203,11 @@ describe('Sort list of empty categories', async () => {
         await expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfCategories + 3 - index - 1);
       });
 
-      it('should go to catalog > monitoring page', async function () {
+      it('should go to \'catalog > monitoring\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
         await this.pageObjects.categoriesPage.goToSubMenu(
-          this.pageObjects.boBasePage.catalogParentLink,
-          this.pageObjects.boBasePage.monitoringLink,
+          this.pageObjects.dashboardPage.catalogParentLink,
+          this.pageObjects.dashboardPage.monitoringLink,
         );
 
         const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
