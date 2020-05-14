@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -45,12 +44,16 @@ use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class responsible for providing columns, filters, actions for cart price rule list.
  */
 final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     const GRID_ID = 'cart_rule';
 
     public function __construct(
@@ -136,20 +139,13 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new SubmitRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'method' => 'POST',
-                        'route' => 'admin_cart_rules_delete',
-                        'route_param_name' => 'cartRuleId',
-                        'route_param_field' => 'id_cart_rule',
-                        'confirm_message' => $this->trans(
-                            'Delete selected item?',
-                            [],
-                            'Admin.Notifications.Warning'
-                        ),
-                    ])
+                    ->add(
+                        $this->buildDeleteAction(
+                            'admin_cart_rules_delete',
+                            'cartRuleId',
+                            'id_cart_rule',
+                            Request::METHOD_DELETE
+                        )
                     ),
             ])
             );
@@ -249,13 +245,8 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setOptions([
                 'submit_route' => 'admin_cart_rules_bulk_disable_status',
             ])
-              )
-            ->add((new SubmitBulkAction('delete_selection'))
-            ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-            ->setOptions([
-                'submit_route' => 'admin_cart_rules_bulk_delete',
-                'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-            ])
+            )->add(
+                $this->buildBulkDeleteAction('admin_cart_rules_bulk_delete')
             );
     }
 }
