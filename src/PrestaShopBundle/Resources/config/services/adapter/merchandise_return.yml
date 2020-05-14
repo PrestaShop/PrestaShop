@@ -9,3 +9,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing'
+
+  prestashop.adapter.merchandise_return.query_handler.get_merchandise_return_products_for_viewing:
+    class: 'PrestaShop\PrestaShop\Adapter\MerchandiseReturn\QueryHandler\GetMerchandiseReturnProductsForViewingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing'
