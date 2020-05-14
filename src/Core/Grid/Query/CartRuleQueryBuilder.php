@@ -87,9 +87,8 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-
-        $qb->select(
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
+            ->select(
             'cr.id_cart_rule,
             crl.name,
             cr.priority,

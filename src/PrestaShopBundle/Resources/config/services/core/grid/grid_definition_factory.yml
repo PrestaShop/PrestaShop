@@ -201,10 +201,6 @@ services:
     prestashop.core.grid.definition.factory.cart_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-          - '@request_stack'
-          - '@prestashop.adapter.shop.context'
-          - '@=service("prestashop.adapter.multistore_feature").isUsed()'
         public: true
 
     prestashop.core.grid.definition.factory.catalog_price_rule:
