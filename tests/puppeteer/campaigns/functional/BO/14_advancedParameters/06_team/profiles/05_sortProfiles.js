@@ -4,7 +4,6 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const EmployeesPage = require('@pages/BO/advancedParameters/team/index');
@@ -21,7 +20,6 @@ let numberOfProfiles = 0;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     employeesPage: new EmployeesPage(page),
@@ -47,12 +45,12 @@ describe('Sort Profiles', async () => {
 
   it('should go to \'Advanced parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.advancedParametersLink,
-      this.pageObjects.boBasePage.teamLink,
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.advancedParametersLink,
+      this.pageObjects.dashboardPage.teamLink,
     );
 
-    await this.pageObjects.boBasePage.closeSfToolBar();
+    await this.pageObjects.dashboardPage.closeSfToolBar();
     const pageTitle = await this.pageObjects.employeesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
   });
