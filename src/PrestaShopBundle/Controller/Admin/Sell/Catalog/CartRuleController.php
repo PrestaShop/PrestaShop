@@ -232,11 +232,7 @@ class CartRuleController extends FrameworkBundleAdminController
             return [];
         }
 
-        foreach ($cartRuleIds as &$cartRuleId) {
-            $cartRuleId = (int) $cartRuleId;
-        }
-
-        return $cartRuleIds;
+        return array_map('intval', $cartRuleIds);
     }
 
     /**
