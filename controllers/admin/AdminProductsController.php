@@ -890,7 +890,7 @@ class AdminProductsControllerCore extends AdminController
                     }
                 }
                 // additional indexation fixes issue where Search::getFeatures is run before new values are saved
-	            Search::indexation(false, $id_product);
+                Search::indexation(false, $id_product);
             }
         } else {
             $this->errors[] = $this->trans('A product must be created before adding features.', array(), 'Admin.Catalog.Notification');
