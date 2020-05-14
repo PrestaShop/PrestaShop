@@ -889,6 +889,7 @@ class AdminProductsControllerCore extends AdminController
                         }
                     }
                 }
+                // additional indexation fixes issue where Search::getFeatures is run before new values are saved
 	            Search::indexation(false, $id_product);
             }
         } else {
