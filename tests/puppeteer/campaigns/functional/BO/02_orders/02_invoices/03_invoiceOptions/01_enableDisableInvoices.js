@@ -5,7 +5,6 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const {Statuses} = require('@data/demo/orderStatuses');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const InvoicesPage = require('@pages/BO/orders/invoices/index');
@@ -32,7 +31,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     invoicesPage: new InvoicesPage(page),
@@ -49,6 +47,7 @@ const init = async function () {
 };
 
 describe('Enable invoices', async () => {
+
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
