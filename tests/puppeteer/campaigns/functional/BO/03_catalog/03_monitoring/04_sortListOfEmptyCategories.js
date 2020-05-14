@@ -1,5 +1,5 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
@@ -15,13 +15,13 @@ const CategoryFaker = require('@data/faker/category');
 // Test context imports
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_monitoring_sortListOfEmptyCategory';
+const baseContext = 'functional_BO_catalog_monitoring_sortListOfEmptyCategories';
 
 let browser;
 let page;
 let numberOfCategories = 0;
 let numberOfEmptyCategories = 0;
-const firstCreateCategoryData = new CategoryFaker();
+const firstCreateCategoryData = new CategoryFaker({displayed: false});
 const secondCreateCategoryData = new CategoryFaker();
 const thirdCreateCategoryData = new CategoryFaker();
 
@@ -48,6 +48,7 @@ describe('Sort list of empty categories', async () => {
     page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
     /* Delete the generated image */
@@ -55,15 +56,17 @@ describe('Sort list of empty categories', async () => {
     await files.deleteFile(`${secondCreateCategoryData.name}.jpg`);
     await files.deleteFile(`${thirdCreateCategoryData.name}.jpg`);
   });
+
   // Login into BO and go to categories page
   loginCommon.loginBO();
 
-  it('should go to catalog > categories page', async function () {
+  it('should go to \'catalog > categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.categoriesLink,
     );
+
     await this.pageObjects.boBasePage.closeSfToolBar();
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
@@ -82,6 +85,7 @@ describe('Sort list of empty categories', async () => {
       {args: {categoryToCreate: secondCreateCategoryData}},
       {args: {categoryToCreate: thirdCreateCategoryData}},
     ];
+
     tests.forEach((test, index) => {
       it('should go to add new category page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategoryPage${index}`, baseContext);
@@ -100,14 +104,15 @@ describe('Sort list of empty categories', async () => {
     });
   });
 
-  // 2 : Sort empty category list
+  // 2 : Sort empty categories list
   describe('Sort list of empty categories', async () => {
-    it('should go to catalog > monitoring page', async function () {
+    it('should go to \'catalog > monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
       await this.pageObjects.categoriesPage.goToSubMenu(
         this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.monitoringLink,
       );
+
       const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
       numberOfEmptyCategories = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines('empty_category');
@@ -132,6 +137,7 @@ describe('Sort list of empty categories', async () => {
         },
       },
     ];
+
     sortTests.forEach((test) => {
       it(
         `should sort empty categories by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`,
@@ -141,11 +147,13 @@ describe('Sort list of empty categories', async () => {
             'empty_category',
             test.args.sortBy,
           );
+
           await this.pageObjects.monitoringPage.sortTable('empty_category', test.args.sortBy, test.args.sortDirection);
           let sortedTable = await this.pageObjects.monitoringPage.getAllRowsColumnContent(
             'empty_category',
             test.args.sortBy,
           );
+
           if (test.args.isFloat) {
             nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
             sortedTable = await sortedTable.map(text => parseFloat(text));
@@ -168,6 +176,7 @@ describe('Sort list of empty categories', async () => {
       {args: {categoryToCreate: secondCreateCategoryData}},
       {args: {categoryToCreate: thirdCreateCategoryData}},
     ];
+
     tests.forEach((test, index) => {
       it('should filter categories grid', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
@@ -177,6 +186,7 @@ describe('Sort list of empty categories', async () => {
           'name',
           test.args.categoryToCreate.name,
         );
+
         const textColumn = await this.pageObjects.monitoringPage.getTextColumnFromTable('empty_category', 1, 'name');
         await expect(textColumn).to.contains(test.args.categoryToCreate.name);
       });
@@ -201,6 +211,7 @@ describe('Sort list of empty categories', async () => {
           this.pageObjects.boBasePage.catalogParentLink,
           this.pageObjects.boBasePage.monitoringLink,
         );
+
         const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
       });

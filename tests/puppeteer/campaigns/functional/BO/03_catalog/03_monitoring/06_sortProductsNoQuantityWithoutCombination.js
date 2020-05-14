@@ -1,5 +1,5 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
@@ -37,7 +37,7 @@ const init = async function () {
 };
 
 /*
-Create 3 new products
+Create 3 new products without combinations and without available quantities
 Sort list of products without combinations and without available quantities in monitoring page
  */
 describe('Sort list of products without combinations and without available quantities', async () => {
@@ -47,11 +47,13 @@ describe('Sort list of products without combinations and without available quant
     page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
   // Login into BO
   loginCommon.loginBO();
+
   // 1 : Create 3 products with combinations but without available quantities
   describe('Create 3 products without combinations and without available quantities', async () => {
     const tests = [
@@ -59,6 +61,7 @@ describe('Sort list of products without combinations and without available quant
       {args: {productToCreate: secondProduct}},
       {args: {productToCreate: thirdProduct}},
     ];
+
     tests.forEach((test, index) => {
       it('should go to \'catalog > products\' page', async function () {
         await testContext.addContextItem(
@@ -67,10 +70,12 @@ describe('Sort list of products without combinations and without available quant
           `goToProductsPage${index}`,
           baseContext,
         );
+
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.catalogParentLink,
           this.pageObjects.boBasePage.productsLink,
         );
+
         await this.pageObjects.boBasePage.closeSfToolBar();
         const pageTitle = await this.pageObjects.productsPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
@@ -95,22 +100,25 @@ describe('Sort list of products without combinations and without available quant
 
   // 2 : Sort products without combinations and without available quantities
   describe('sort List of products without combinations and without available quantities', async () => {
-    it('should go to catalog > monitoring page', async function () {
+    it('should go to \'catalog > monitoring\' page', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
         'goToMonitoringPage',
         baseContext,
       );
+
       await this.pageObjects.addProductPage.goToSubMenu(
         this.pageObjects.boBasePage.catalogParentLink,
         this.pageObjects.boBasePage.monitoringLink,
       );
+
       const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
       numberOfProductsIngrid = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines(
         'no_qty_product_without_combination',
       );
+
       await expect(numberOfProductsIngrid).to.be.at.least(1);
     });
 
@@ -122,8 +130,8 @@ describe('Sort list of products without combinations and without available quant
       },
       {args: {testIdentifier: 'sortByReferenceDesc', sortBy: 'reference', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByReferenceAsc', sortBy: 'reference', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByDescriptionDesc', sortBy: 'name', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByDescriptionAsc', sortBy: 'name', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'}},
       {
@@ -132,6 +140,7 @@ describe('Sort list of products without combinations and without available quant
         },
       },
     ];
+
     sortTests.forEach((testSort) => {
       it(
         `should sort by '${testSort.args.sortBy}' '${testSort.args.sortDirection}' and check result`,
@@ -141,19 +150,23 @@ describe('Sort list of products without combinations and without available quant
             'no_qty_product_without_combination',
             testSort.args.sortBy,
           );
+
           await this.pageObjects.monitoringPage.sortTable(
             'no_qty_product_without_combination',
             testSort.args.sortBy,
             testSort.args.sortDirection,
           );
+
           let sortedTable = await this.pageObjects.monitoringPage.getAllRowsColumnContent(
             'no_qty_product_without_combination',
             testSort.args.sortBy,
           );
+
           if (testSort.args.isFloat) {
             nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
             sortedTable = await sortedTable.map(text => parseFloat(text));
           }
+
           const expectedResult = await this.pageObjects.monitoringPage.sortArray(nonSortedTable, testSort.args.isFloat);
           if (testSort.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
@@ -166,7 +179,7 @@ describe('Sort list of products without combinations and without available quant
   });
 
   // 3 : Delete the 3 created products without combinations and without available quantities
-  describe('Delete product from monitoring page', async () => {
+  describe('Delete created products', async () => {
     it('should filter products grid', async function () {
       await testContext.addContextItem(
         this,
@@ -174,12 +187,14 @@ describe('Sort list of products without combinations and without available quant
         'filterToDelete',
         baseContext,
       );
+
       await this.pageObjects.monitoringPage.filterTable(
         'no_qty_product_without_combination',
         'input',
         'name',
         firstProduct.name,
       );
+
       const textColumn = await this.pageObjects.monitoringPage.getTextColumnFromTable(
         'no_qty_product_without_combination',
         1,
@@ -196,10 +211,12 @@ describe('Sort list of products without combinations and without available quant
         'deleteProduct',
         baseContext,
       );
+
       const textResult = await this.pageObjects.monitoringPage.deleteProductInGrid(
         'no_qty_product_without_combination',
         1,
       );
+
       await expect(textResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
       const pageTitle = await this.pageObjects.productsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
@@ -209,9 +226,10 @@ describe('Sort list of products without combinations and without available quant
       {args: {productToCreate: secondProduct}},
       {args: {productToCreate: thirdProduct}},
     ];
+
     tests.forEach((test, index) => {
-      it('should delete the created product', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
+      it('should delete the created product from products page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `bulkDelete${index}`, baseContext);
         const deleteTextResult = await this.pageObjects.productsPage.deleteProduct(test.args.productToCreate);
         await expect(deleteTextResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
       });
@@ -220,9 +238,10 @@ describe('Sort list of products without combinations and without available quant
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'resetInProductsPage',
+          `resetInProductsPage${index}`,
           baseContext,
         );
+
         const numberOfProductsAfterDelete = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
         await expect(numberOfProductsAfterDelete).to.be.equal(numberOfProducts - index - 1);
       });

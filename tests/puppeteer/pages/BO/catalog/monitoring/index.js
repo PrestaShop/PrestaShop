@@ -40,7 +40,8 @@ module.exports = class Monitoring extends BOBasePage {
     this.submitDeleteModeButton = `${this.deleteModeModal} button.js-submit-delete-categories`;
     // Sort Selectors
     this.tableHead = table => `${this.gridTable(table)} thead`;
-    this.sortColumnDiv = (table, column) => `${this.tableHead(table)} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnDiv = (table, column) => `${this.tableHead(table)
+    } div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
   }
 
