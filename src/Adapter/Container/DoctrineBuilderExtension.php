@@ -61,7 +61,7 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
         $fileLocator = new FileLocator($configDirectories);
 
         $configLoader = new ConfigYamlLoader($fileLocator);
-        $configPath = sprintf('config_front_%s.yml', $this->environment->getName());
+        $configPath = sprintf('config_legacy_%s.yml', $this->environment->getName());
         $configLoader->load($configPath);
         $config = $configLoader->getConfig();
 

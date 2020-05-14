@@ -83,6 +83,16 @@ class ContainerBuilderTest extends TestCase
         $this->assertNotNull($classMetadata);
     }
 
+    public function testDoctrineCoreMapping()
+    {
+        $container = ContainerBuilder::getContainer('front', true);
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+        /** @var ClassMetadata $classMetadata */
+        $classMetadata = $entityManager->getClassMetadata('\PrestaShopBundle\Entity\Lang');
+        $this->assertNotNull($classMetadata);
+    }
+
     public function testFrontModuleServices()
     {
         $container = ContainerBuilder::getContainer('front', true);
