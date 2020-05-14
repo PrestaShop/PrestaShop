@@ -202,6 +202,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CartRuleGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
+        arguments:
+          - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
 
     prestashop.core.grid.definition.factory.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory'
