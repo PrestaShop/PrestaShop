@@ -28,13 +28,13 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
+use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use PrestaShopBundle\Exception\InvalidModuleException;
 
 /**
  * Admin controller for the International pages.
@@ -135,7 +135,7 @@ class TranslationsController extends FrameworkBundleAdminController
             $route = $routeFinder->findRoute($request->query);
             $routeParameters = $routeFinder->findRouteParameters($request->query);
         } catch (InvalidModuleException $e) {
-            $this->addFlash('error', $this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification', array($e->getMessage())));
+            $this->addFlash('error', $this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification', [$e->getMessage()]));
 
             return $this->redirectToRoute('admin_international_translations_show_settings');
         }
