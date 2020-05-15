@@ -27,6 +27,4 @@ global.BROWSER_CONFIG = {
   slowMo: parseInt(process.env.SLOWMO, 10) || 5,
   args: ['--start-maximized', '--no-sandbox', '--lang=en-GB'],
 };
-global.BROWSER = {
-  TYPE: process.env.BROWSER || 'chromium'
-}
+global.BROWSER = process.env.BROWSER || 'chromium';
