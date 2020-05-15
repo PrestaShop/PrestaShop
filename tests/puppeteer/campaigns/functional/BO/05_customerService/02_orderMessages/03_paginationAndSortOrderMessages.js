@@ -34,7 +34,7 @@ Paginate between pages
 Sort order messages table
 Delete order messages with bulk actions
  */
-describe('Order messages pagination', async () => {
+describe('Order messages pagination and sort', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
