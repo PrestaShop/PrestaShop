@@ -82,7 +82,6 @@ describe('Import a localization pack including a language and a currency', async
   });
 
   describe('Import localization pack and check existence of language and currency in FO', async () => {
-
     it('should import localization pack', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importLocalizationPack', baseContext);
 
@@ -110,7 +109,6 @@ describe('Import a localization pack including a language and a currency', async
   });
 
   describe('Delete language added by importing localization pack', async () => {
-
     it('should go to languages page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 

@@ -80,7 +80,6 @@ describe('Update default currency', async () => {
       const textResult = await this.pageObjects.localizationPage.importLocalizationPack('Chile', contentToImport);
       await expect(textResult).to.equal(this.pageObjects.localizationPage.importLocalizationPackSuccessfulMessage);
     });
-
   });
 
   const tests = [
@@ -99,7 +98,6 @@ describe('Update default currency', async () => {
   ];
 
   tests.forEach((test, index) => {
-
     describe(`Choose default currency '${test.args.defaultCurrency}' and check it in FO`, async () => {
       before(async function () {
         browser = await helper.createBrowser();
@@ -115,7 +113,6 @@ describe('Update default currency', async () => {
       loginCommon.loginBO();
 
       it('should go to localization page', async function () {
-
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -157,9 +154,7 @@ describe('Update default currency', async () => {
       });
 
       if (index === (tests.length - 1)) {
-
         describe('Delete currency added by importing localization pack', async () => {
-
           it('should go to currencies page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
@@ -189,13 +184,8 @@ describe('Update default currency', async () => {
             const numberOfCurrenciesAfterReset = await this.pageObjects.currenciesPage.resetAndGetNumberOfLines();
             await expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
           });
-
         });
-
       }
-
     });
-
   });
-
 });

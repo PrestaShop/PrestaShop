@@ -48,7 +48,6 @@ Verify that language do not exist in FO
 Delete language
  */
 describe('CRUD language', async () => {
-
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

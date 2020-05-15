@@ -84,7 +84,6 @@ describe('Filter and quick edit languages', async () => {
   });
 
   describe('Filter languages', async () => {
-
     const tests = [
       {
         args:
@@ -153,7 +152,6 @@ describe('Filter and quick edit languages', async () => {
     ];
 
     tests.forEach((test) => {
-
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -169,7 +167,6 @@ describe('Filter and quick edit languages', async () => {
         await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
         for (let i = 1; i <= numberOfLanguagesAfterFilter; i++) {
-
           const textColumn = await this.pageObjects.languagesPage.getTextColumnFromTable(
             i,
             test.args.filterBy,
@@ -180,7 +177,6 @@ describe('Filter and quick edit languages', async () => {
           } else {
             await expect(textColumn).to.contains(test.args.filterValue);
           }
-
         }
       });
 
@@ -193,7 +189,6 @@ describe('Filter and quick edit languages', async () => {
   });
 
   describe('Disable default language', async () => {
-
     it('should filter by iso_code \'en\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDisableDefaultLanguage', baseContext);
 
@@ -244,14 +239,12 @@ describe('Filter and quick edit languages', async () => {
     ];
 
     tests.forEach((test) => {
-
       it(`should ${test.args.action} first language`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Language`, baseContext);
 
         const isActionPerformed = await this.pageObjects.languagesPage.quickEditLanguage(1, test.args.enabledValue);
 
         if (isActionPerformed) {
-
           const resultMessage = await this.pageObjects.languagesPage.getTextContent(
             this.pageObjects.languagesPage.alertSuccessBlockParagraph,
           );

@@ -32,7 +32,6 @@ const init = async function () {
   };
 };
 describe('Update default language', async () => {
-
   const tests = [
     {args: {language: Languages.french.name, defaultBrowserLanguage: false, languageToCheck: 'Français'}},
     {args: {language: Languages.english.name, defaultBrowserLanguage: false, languageToCheck: 'English'}},
@@ -41,10 +40,8 @@ describe('Update default language', async () => {
   ];
 
   tests.forEach((test, index) => {
-
     describe(`Set default language to '${test.args.language}' and default language from browser to`
       + ` '${test.args.defaultBrowserLanguage}'`, async () => {
-
       before(async function () {
         browser = await helper.createBrowser();
         page = await helper.newTab(browser);
@@ -74,7 +71,7 @@ describe('Update default language', async () => {
 
         const textResult = await this.pageObjects.localizationPage.setDefaultLanguage(
           test.args.language,
-          test.args.defaultBrowserLanguage
+          test.args.defaultBrowserLanguage,
         );
 
         await expect(textResult).to.equal('Update successful');
@@ -83,9 +80,7 @@ describe('Update default language', async () => {
 
     // Do not check the FO language when index = 2
     if (index !== 2) {
-
       describe(`Check if the FO language is '${test.args.languageToCheck}'`, async () => {
-
         before(async function () {
           browser = await helper.createBrowser();
           page = await helper.newTab(browser);
@@ -111,11 +106,7 @@ describe('Update default language', async () => {
           const defaultLanguage = await this.pageObjects.homePage.getShopLanguage();
           expect(defaultLanguage).to.equal(test.args.languageToCheck);
         });
-
       });
-
     }
-
   });
-
 });

@@ -98,7 +98,6 @@ describe('Sort Languages', async () => {
   ];
 
   tests.forEach((test) => {
-
     it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -122,9 +121,6 @@ describe('Sort Languages', async () => {
       } else {
         await expect(sortedTable).to.deep.equal(expectedResult.reverse());
       }
-
     });
-
   });
-
 });

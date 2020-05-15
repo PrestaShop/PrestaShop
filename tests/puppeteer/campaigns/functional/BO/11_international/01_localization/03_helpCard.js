@@ -72,5 +72,4 @@ describe('Localization help card', async () => {
     const isHelpSidebarVisible = await this.pageObjects.localisationPage.closeHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
   });
-
 });

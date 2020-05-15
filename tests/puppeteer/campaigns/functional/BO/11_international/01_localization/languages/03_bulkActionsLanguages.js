@@ -95,9 +95,7 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
   });
 
   describe('Create 2 Languages', async () => {
-
     [firstLanguageData, secondLanguageData].forEach((languageToCreate, index) => {
-
       it('should go to add new language page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguage${index + 1}`, baseContext);
 
@@ -119,7 +117,6 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
   });
 
   describe('Enable, disable and delete with bulk actions', async () => {
-
     const tests = [
       {args: {action: 'disable', toEnable: false}, expected: 'clear'},
       {args: {action: 'enable', toEnable: true}, expected: 'check'},
@@ -136,7 +133,6 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
     });
 
     tests.forEach((test) => {
-
       it(`should ${test.args.action} with bulk actions`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 
@@ -154,7 +150,6 @@ describe('Disable, enable and delete with bulk actions languages', async () => {
           const textColumn = await this.pageObjects.languagesPage.getTextColumnFromTable(i, 'active');
           await expect(textColumn).to.contains(test.expected);
         }
-
       });
     });
 
