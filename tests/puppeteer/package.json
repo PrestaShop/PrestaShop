@@ -17,7 +17,8 @@
     "@pages": "pages",
     "@commonTests": "campaigns/commonTests",
     "@data": "campaigns/data",
-    "@utils": "campaigns/utils"
+    "@utils": "campaigns/utils",
+    "@tools": "campaigns/tools"
   },
   "repository": {
     "type": "git",
@@ -41,11 +42,10 @@
     "js-image-generator": "^1.0.2",
     "mocha": "^6.1.4",
     "mochawesome": "^2.3.0",
-    "puppeteer": "^3.0.2",
     "faker": "^4.1.0",
     "module-alias": "^2.2.2",
-    "pdfjs-dist": "^2.2.228",
-    "playwright": "^1.0.1"
+    "pdfjs-dist": "^2.3.200",
+    "playwright": "^1.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",
