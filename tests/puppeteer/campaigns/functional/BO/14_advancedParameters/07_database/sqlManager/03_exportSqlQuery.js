@@ -4,7 +4,6 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const SqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
@@ -28,7 +27,6 @@ const fileContent = `${Tables.ps_alias.columns[1]};${Tables.ps_alias.columns[2]}
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     sqlManagerPage: new SqlManagerPage(page),
@@ -57,12 +55,12 @@ describe('Export SQL query', async () => {
   // Go to database page
   it('should go to \'Advanced Parameters > Database\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDatabasePageToCreateNewSQLQuery', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.advancedParametersLink,
-      this.pageObjects.boBasePage.databaseLink,
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.advancedParametersLink,
+      this.pageObjects.dashboardPage.databaseLink,
     );
 
-    await this.pageObjects.boBasePage.closeSfToolBar();
+    await this.pageObjects.dashboardPage.closeSfToolBar();
     const pageTitle = await this.pageObjects.sqlManagerPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.sqlManagerPage.pageTitle);
   });
@@ -110,16 +108,16 @@ describe('Export SQL query', async () => {
   });
 
   describe('Delete SQL query', async () => {
-    it('should go to \'SQL Manager\' page', async function () {
+    /*it('should go to \'SQL Manager\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDatabasePageToDeleteSQLQuery', baseContext);
-      await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.advancedParametersLink,
-        this.pageObjects.boBasePage.databaseLink,
+      await this.pageObjects.dashboardPage.goToSubMenu(
+        this.pageObjects.dashboardPage.advancedParametersLink,
+        this.pageObjects.dashboardPage.databaseLink,
       );
 
       const pageTitle = await this.pageObjects.sqlManagerPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.sqlManagerPage.pageTitle);
-    });
+    });*/
 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteSQLQuery', baseContext);
