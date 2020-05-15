@@ -1,14 +1,17 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
+
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
+
+// Import pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const LocalisationPage = require('@pages/BO/international/localization');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_helpCard';
@@ -32,6 +35,7 @@ describe('Localization help card', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
   after(async () => {
@@ -42,25 +46,31 @@ describe('Localization help card', async () => {
 
   it('should go to localisation page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalisationPage', baseContext);
+
     await this.pageObjects.dashboardPage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
       this.pageObjects.boBasePage.localizationLink,
     );
+
     const pageTitle = await this.pageObjects.localisationPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.localisationPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
+
     const isHelpSidebarVisible = await this.pageObjects.localisationPage.openHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
+
     const documentURL = await this.pageObjects.localisationPage.getHelpDocumentURL();
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
+
     const isHelpSidebarVisible = await this.pageObjects.localisationPage.closeHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
   });
+
 });
