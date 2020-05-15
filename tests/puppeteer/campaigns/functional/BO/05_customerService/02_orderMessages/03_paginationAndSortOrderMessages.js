@@ -17,7 +17,6 @@ const baseContext = 'functional_BO_customerService_orderMessages_paginationAndSo
 let browser;
 let page;
 let numberOfOrderMessages = 0;
-const createOrderMessageData = new OrderMessageFaker();
 
 // Init objects needed
 const init = async function () {
@@ -67,11 +66,13 @@ describe('Order messages pagination', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
     numberOfOrderMessages = await this.pageObjects.orderMessagesPage.resetAndGetNumberOfLines();
-    if (numberOfOrderMessages !== 0) await expect(numberOfOrderMessages).to.be.above(0);
+    await expect(numberOfOrderMessages).to.be.above(0);
   });
 
   const tests = new Array(10).fill(0, 0, 10);
   tests.forEach((test, index) => {
+    const createOrderMessageData = new OrderMessageFaker({name: `toSortAndPaginate${index}`});
+
     describe(`Create order message n°${index + 1} in BO`, async () => {
       it('should go to add new order message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index}`, baseContext);
@@ -171,9 +172,9 @@ describe('Order messages pagination', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await this.pageObjects.orderMessagesPage.filterTable('name', createOrderMessageData.name);
+      await this.pageObjects.orderMessagesPage.filterTable('name', 'toSortAndPaginate');
       const textResult = await this.pageObjects.orderMessagesPage.getTextColumnFromTable(1, 'name');
-      await expect(textResult).to.contains(createOrderMessageData.name);
+      await expect(textResult).to.contains('toSortAndPaginate');
     });
 
     it('should delete order messages with Bulk Actions and check Result', async function () {
