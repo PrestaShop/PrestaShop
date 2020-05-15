@@ -1,6 +1,6 @@
 require('./globals');
 
-const {chromium} = require('playwright');
+const playwright = require('playwright');
 
 module.exports = {
   /**
@@ -10,7 +10,7 @@ module.exports = {
    */
   async createBrowser(attempt = 1) {
     try {
-      const browser = await chromium.launch(global.BROWSER_CONFIG);
+      const browser = await playwright[global.BROWSER].launch(global.BROWSER_CONFIG);
       return await browser.newContext({
         acceptDownloads:true,
         viewport: {
