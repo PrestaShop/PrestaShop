@@ -20,6 +20,9 @@ module.exports = class Monitoring extends BOBasePage {
     this.tableRow = (table, row) => `${this.tableBody(table)} tr:nth-child(${row})`;
     this.tableEmptyRow = table => `${this.tableBody(table)} tr.empty_row`;
     this.tableColumn = (table, row, column) => `${this.tableRow(table, row)} td.column-${column}`;
+    // enable column
+    this.enableColumn = (table, row) => this.tableColumn(table, row, 'active');
+    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
     // Actions buttons in Row
     this.actionsColumn = (table, row) => `${this.tableRow(table, row)} td.column-actions`;
     this.editRowLink = (table, row) => `${this.actionsColumn(table, row)} a[data-original-title='Edit']`;
@@ -35,6 +38,11 @@ module.exports = class Monitoring extends BOBasePage {
     this.deleteModeInput = position => `#delete_categories_delete_mode_${position}`;
     this.deleteModeModalDiv = '#delete_categories_delete_mode';
     this.submitDeleteModeButton = `${this.deleteModeModal} button.js-submit-delete-categories`;
+    // Sort Selectors
+    this.tableHead = table => `${this.gridTable(table)} thead`;
+    this.sortColumnDiv = (table, column) => `${this.tableHead(table)
+    } div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
   }
 
   /* Reset Methods */
@@ -184,5 +192,50 @@ module.exports = class Monitoring extends BOBasePage {
     await this.page.click(this.deleteModeInput(deletionModePosition));
     await this.clickAndWaitForNavigation(this.submitDeleteModeButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Get toggle column value for a row
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getToggleColumnValue(table, row = 1) {
+    return this.elementVisible(this.enableColumnValidIcon(table, row), 100);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(table, column) {
+    const rowsNumber = await this.getNumberOfElementInGrid(table);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      let rowContent = await this.getTextContent(this.tableColumn(table, i, column));
+      if (column === 'active') {
+        rowContent = await this.getToggleColumnValue(table, i).toString();
+      }
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(table, sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv(table, sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(table, sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };
