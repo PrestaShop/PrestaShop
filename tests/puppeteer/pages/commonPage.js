@@ -35,7 +35,7 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async waitForVisibleSelector(selector, timeout = 10000) {
-    await this.page.waitForSelector(selector, {visible: true, timeout});
+    await this.page.waitForSelector(selector, {state: 'visible', timeout});
   }
 
   /**
@@ -109,7 +109,7 @@ module.exports = class CommonPage {
    */
   async elementNotVisible(selector, timeout = 10) {
     try {
-      await this.page.waitForSelector(selector, {hidden: true, timeout});
+      await this.page.waitForSelector(selector, {state: 'hidden', timeout:timeout});
       return true;
     } catch (error) {
       return false;
@@ -129,7 +129,7 @@ module.exports = class CommonPage {
       currentPage.click(selector),
     ]);
     if (waitForNavigation) await newPage.waitForNavigation({waitUntil: 'networkidle0'});
-    await newPage.waitForSelector('body', {visible: true});
+    await newPage.waitForSelector('body', {state: 'visible'});
     return newPage;
   }
 
@@ -247,8 +247,8 @@ module.exports = class CommonPage {
    */
   async clickAndWaitForNavigation(selector) {
     await Promise.all([
+      this.page.waitForNavigation(),
       this.page.click(selector),
-      this.page.waitForNavigation({waitUntil: 'domcontentloaded'}),
     ]);
   }
 
