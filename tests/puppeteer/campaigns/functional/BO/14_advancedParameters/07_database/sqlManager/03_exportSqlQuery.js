@@ -55,18 +55,21 @@ describe('Export SQL query', async () => {
   // Go to database page
   it('should go to \'Advanced Parameters > Database\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDatabasePageToCreateNewSQLQuery', baseContext);
+
     await this.pageObjects.dashboardPage.goToSubMenu(
       this.pageObjects.dashboardPage.advancedParametersLink,
       this.pageObjects.dashboardPage.databaseLink,
     );
 
     await this.pageObjects.dashboardPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.sqlManagerPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.sqlManagerPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'firstResetFilter', baseContext);
+
     numberOfSQLQueries = await this.pageObjects.sqlManagerPage.resetAndGetNumberOfLines();
     if (numberOfSQLQueries !== 0) {
       await expect(numberOfSQLQueries).to.be.above(0);
@@ -76,6 +79,7 @@ describe('Export SQL query', async () => {
   describe('Create new SQL query', async () => {
     it('should go to \'New SQL query\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewSQLQueryPage', baseContext);
+
       await this.pageObjects.sqlManagerPage.goToNewSQLQueryPage();
       const pageTitle = await this.pageObjects.addSqlQueryPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addSqlQueryPage.pageTitle);
@@ -83,6 +87,7 @@ describe('Export SQL query', async () => {
 
     it('should create new SQL query', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewSQLQuery', baseContext);
+
       const textResult = await this.pageObjects.addSqlQueryPage.createEditSQLQuery(sqlQueryData);
       await expect(textResult).to.equal(this.pageObjects.addSqlQueryPage.successfulCreationMessage);
     });
@@ -91,6 +96,7 @@ describe('Export SQL query', async () => {
   describe('Export SQL query', async () => {
     it('should export sql query to a csv file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'exportSqlQuery', baseContext);
+
       await this.pageObjects.sqlManagerPage.exportSqlResultDataToCsv();
       const doesFileExist = await files.doesFileExist('request_', 5000, true, 'csv');
       await expect(doesFileExist, 'Export of data has failed').to.be.true;
@@ -98,8 +104,10 @@ describe('Export SQL query', async () => {
 
     it('should check existence of query result data in csv file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSqlQueryInCsvFile', baseContext);
+
       const numberOfQuery = await this.pageObjects.sqlManagerPage.getNumberOfElementInGrid();
       fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'request_', '.csv');
+
       for (let row = 1; row <= numberOfQuery; row++) {
         const textExist = await files.isTextInFile(fileName, fileContent, true, true);
         await expect(textExist, `${fileContent} was not found in the file`).to.be.true;
@@ -108,19 +116,9 @@ describe('Export SQL query', async () => {
   });
 
   describe('Delete SQL query', async () => {
-    /*it('should go to \'SQL Manager\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDatabasePageToDeleteSQLQuery', baseContext);
-      await this.pageObjects.dashboardPage.goToSubMenu(
-        this.pageObjects.dashboardPage.advancedParametersLink,
-        this.pageObjects.dashboardPage.databaseLink,
-      );
-
-      const pageTitle = await this.pageObjects.sqlManagerPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.sqlManagerPage.pageTitle);
-    });*/
-
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteSQLQuery', baseContext);
+
       await this.pageObjects.sqlManagerPage.resetFilter();
       await this.pageObjects.sqlManagerPage.filterSQLQuery('name', sqlQueryData.name);
       const sqlQueryName = await this.pageObjects.sqlManagerPage.getTextColumnFromTable(1, 'name');
@@ -129,6 +127,7 @@ describe('Export SQL query', async () => {
 
     it('should delete SQL query', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSQLQuery', baseContext);
+
       const textResult = await this.pageObjects.sqlManagerPage.deleteSQLQuery(1);
       await expect(textResult).to.equal(this.pageObjects.sqlManagerPage.successfulDeleteMessage);
       const numberOfSQLQueriesAfterDelete = await this.pageObjects.sqlManagerPage.resetAndGetNumberOfLines();
