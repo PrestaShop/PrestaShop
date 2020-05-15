@@ -3458,7 +3458,11 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function get($serviceName)
     {
-        $container = $this->getContainer();
+        try {
+            $container = $this->getContainer();
+        } catch (ContainerNotFoundException $e) {
+            $container = null;
+        }
         if (null !== $container) {
             return $container->get($serviceName);
         }
@@ -3478,11 +3482,7 @@ abstract class ModuleCore implements ModuleInterface
     {
         if (null === $this->container) {
             $finder = new ContainerFinder($this->context);
-            try {
-                $this->container = $finder->getContainer();
-            } catch (ContainerNotFoundException $e) {
-                return null;
-            }
+            $this->container = $finder->getContainer();
         }
 
         return $this->container;

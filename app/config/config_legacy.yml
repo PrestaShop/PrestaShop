@@ -1,3 +1,5 @@
+# This config file is destined for legacy containers built by PrestaShop core
+# For now it is mainly used for Doctrine configuration, but in the future it could contain other extensions config
 imports:
     - { resource: doctrine.yml }
 

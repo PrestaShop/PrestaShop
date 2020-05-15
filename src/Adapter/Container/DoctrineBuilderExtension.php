@@ -57,7 +57,7 @@ class DoctrineBuilderExtension implements ContainerBuilderExtensionInterface
      */
     public function build(ContainerBuilder $container)
     {
-        $configDirectories = [$container->getParameter('kernel.project_dir') . '/app/config'];
+        $configDirectories = [$container->getParameter('kernel.root_dir') . '/config'];
         $fileLocator = new FileLocator($configDirectories);
 
         $configLoader = new ConfigYamlLoader($fileLocator);
