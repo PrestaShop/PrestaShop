@@ -287,9 +287,9 @@ describe('Enable tax breakdown', async () => {
       it('should go to orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageTaxBreakdown', baseContext);
 
-        await this.pageObjects.addProductPage.goToSubMenu(
-          this.pageObjects.addProductPage.ordersParentLink,
-          this.pageObjects.addProductPage.ordersLink,
+        await this.pageObjects.dashboardPage.goToSubMenu(
+          this.pageObjects.dashboardPage.ordersParentLink,
+          this.pageObjects.dashboardPage.ordersLink,
         );
 
         const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
