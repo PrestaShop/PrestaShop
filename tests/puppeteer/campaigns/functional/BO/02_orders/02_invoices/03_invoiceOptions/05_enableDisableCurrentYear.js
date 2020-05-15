@@ -1,6 +1,8 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+const chai = require('chai');
+chai.use(require('chai-string'));
 
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
