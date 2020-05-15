@@ -6,7 +6,6 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const LocalisationPage = require('@pages/BO/international/localization');
@@ -22,7 +21,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     localisationPage: new LocalisationPage(page),
@@ -48,8 +46,8 @@ describe('Localization help card', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalisationPage', baseContext);
 
     await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.boBasePage.internationalParentLink,
-      this.pageObjects.boBasePage.localizationLink,
+      this.pageObjects.dashboardPage.internationalParentLink,
+      this.pageObjects.dashboardPage.localizationLink,
     );
 
     const pageTitle = await this.pageObjects.localisationPage.getPageTitle();
