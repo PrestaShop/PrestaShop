@@ -153,15 +153,24 @@
                          {if $product.description} aria-selected="true"{/if}>{l s='Description' d='Shop.Theme.Catalog'}</a>
                     </li>
                   {/if}
-                  <li class="nav-item">
-                    <a
-                      class="nav-link{if !$product.description} active{/if}"
-                      data-toggle="tab"
-                      href="#product-details"
-                      role="tab"
-                      aria-controls="product-details"
-                      {if !$product.description} aria-selected="true"{/if}>{l s='Product Details' d='Shop.Theme.Catalog'}</a>
-                  </li>
+                  {if isset($product_manufacturer->id)
+                      || (isset($product.reference_to_display) && $product.reference_to_display neq '')
+                      || $product.show_quantities
+                      || $product.availability_date
+                      || $product.grouped_features
+                      || !empty($product.specific_references
+                      || $product.condition)
+                       }
+                    <li class="nav-item">
+                      <a
+                        class="nav-link{if !$product.description} active{/if}"
+                        data-toggle="tab"
+                        href="#product-details"
+                        role="tab"
+                        aria-controls="product-details"
+                        {if !$product.description} aria-selected="true"{/if}>{l s='Product Details' d='Shop.Theme.Catalog'}</a>
+                    </li>
+                  {/if}
                   {if $product.attachments}
                     <li class="nav-item">
                       <a
