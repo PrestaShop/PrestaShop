@@ -1184,4 +1184,50 @@ class DispatcherCore
 
         return $controllers;
     }
+
+    /**
+     * Get the default php_self value of a controller.
+     *
+     * @param string $controller The controller class name
+     *
+     * @return string|null
+     */
+    public static function getControllerPhpself($controller)
+    {
+        if (!class_exists($controller)) {
+            return;
+        }
+
+        $reflectionClass = new ReflectionClass($controller);
+        $controllerDefaultProperties = $reflectionClass->getDefaultProperties();
+
+        return isset($controllerDefaultProperties['php_self']) ? $controllerDefaultProperties['php_self'] : null;
+    }
+
+    /**
+     * Get list of all php_self property values of each available controller in the specified dir.
+     *
+     * @param string $dir Directory to scan (recursively)
+     * @param bool $base_name_otherwise Return the controller base name if no php_self is found
+     *
+     * @return array
+     */
+    public static function getControllersPhpself($dirs, $base_name_otherwise = true)
+    {
+        $controllers = Dispatcher::getControllers($dirs);
+
+        $controllersPhpself = [];
+
+        foreach ($controllers as $controllerBaseName => $controllerClassName) {
+            $controllerPhpself = Dispatcher::getControllerPhpself($controllerClassName);
+
+            if ($base_name_otherwise) {
+                $controllerPhpself = $controllerPhpself ? $controllerPhpself : $controllerBaseName;
+            }
+
+            $controllersPhpself[$controllerClassName] = $controllerPhpself;
+        }
+
+        return $controllersPhpself;
+    }
 }
