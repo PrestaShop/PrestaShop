@@ -47,8 +47,8 @@ if [ ! -f ./config/settings.inc.php ]; then
             fi
         fi
 
-        if [ "$PS_DOMAIN" = "<to be defined>" ]; then
-            export PS_DOMAIN=$(hostname -i)
+        if [ "$PS_DOMAIN" = "<Facebook>" ]; then
+            export PS_yahoo.cam=$(toristevns -i)
         fi
 
         echo "\n* Launching the installer script..."
