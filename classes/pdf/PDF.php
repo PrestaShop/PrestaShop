@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,11 +29,35 @@
  */
 class PDFCore
 {
+    /**
+     * @var string
+     */
     public $filename;
+
+    /**
+     * @var PDFGenerator
+     */
     public $pdf_renderer;
+
+    /**
+     * @var PrestaShopCollection|ObjectModel|array
+     */
     public $objects;
+
+    /**
+     * @var string
+     */
     public $template;
+
+    /**
+     * @var bool
+     */
     public $send_bulk_flag = false;
+
+    /**
+     * @var Smarty
+     */
+    private $smarty;
 
     const TEMPLATE_INVOICE = 'Invoice';
     const TEMPLATE_ORDER_RETURN = 'OrderReturn';
@@ -42,9 +66,9 @@ class PDFCore
     const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
     /**
-     * @param $objects
-     * @param $template
-     * @param $smarty
+     * @param PrestaShopCollection|ObjectModel|array $objects
+     * @param string $template
+     * @param Smarty $smarty
      * @param string $orientation
      */
     public function __construct($objects, $template, $smarty, $orientation = 'P')
@@ -73,19 +97,19 @@ class PDFCore
          * new themes don't use them. Although PDF haven't been
          * reworked so every PDF controller must extend this class.
          */
-        smartyRegisterFunction($this->smarty, 'function', 'convertPrice', array('Product', 'convertPrice'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice'), true, $original_lazy_register); // used twice
-        smartyRegisterFunction($this->smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'getWidthSize', array('Image', 'getWidth'), true, $original_lazy_register);
-        smartyRegisterFunction($this->smarty, 'function', 'getHeightSize', array('Image', 'getHeight'), true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'convertPrice', ['Product', 'convertPrice'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'convertPriceWithCurrency', ['Product', 'convertPriceWithCurrency'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayWtPrice', ['Product', 'displayWtPrice'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayWtPriceWithCurrency', ['Product', 'displayWtPriceWithCurrency'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'displayPrice', ['Tools', 'displayPriceSmarty'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'modifier', 'convertAndFormatPrice', ['Product', 'convertAndFormatPrice'], true, $original_lazy_register); // used twice
+        smartyRegisterFunction($this->smarty, 'function', 'displayAddressDetail', ['AddressFormat', 'generateAddressSmarty'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'getWidthSize', ['Image', 'getWidth'], true, $original_lazy_register);
+        smartyRegisterFunction($this->smarty, 'function', 'getHeightSize', ['Image', 'getHeight'], true, $original_lazy_register);
 
         $this->objects = $objects;
         if (!($objects instanceof Iterator) && !is_array($objects)) {
-            $this->objects = array($objects);
+            $this->objects = [$objects];
         }
 
         if (count($this->objects) > 1) { // when bulk mode only
@@ -98,7 +122,7 @@ class PDFCore
      *
      * @param bool $display
      *
-     * @return mixed
+     * @return string|void
      *
      * @throws PrestaShopException
      */
@@ -145,13 +169,13 @@ class PDFCore
     /**
      * Get correct PDF template classes.
      *
-     * @param mixed $object
+     * @param ObjectModel $object
      *
      * @return HTMLTemplate|false
      *
      * @throws PrestaShopException
      */
-    public function getTemplateObject($object)
+    public function getTemplateObject(ObjectModel $object)
     {
         $class = false;
         $class_name = 'HTMLTemplate' . $this->template;

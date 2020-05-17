@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Class FilterFormFactory is responsible for creating grid filter form.

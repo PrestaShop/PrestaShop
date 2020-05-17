@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -73,7 +73,7 @@ final class ProductFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('manufacturer', $this->trans('Brand', 'Admin.Global')),
             new EntityField('ean13', $this->trans('EAN13', 'Admin.Advparameters.Feature')),
             new EntityField('upc', $this->trans('UPC', 'Admin.Advparameters.Feature')),
-            new EntityField('mpn', $this->trans('MPN', 'Admin.Advparameters.Feature')),
+            new EntityField('mpn', $this->trans('MPN', 'Admin.Catalog.Feature')),
             new EntityField('ecotax', $this->trans('Ecotax', 'Admin.Catalog.Feature')),
             new EntityField('width', $this->trans('Width', 'Admin.Global')),
             new EntityField('height', $this->trans('Height', 'Admin.Global')),

@@ -1,13 +1,13 @@
 .ps-spinner {
-  color: #ffffff;
-  background-color: #ffffff;
   width: 40px;
   height: 40px;
-  border-radius: 40px;
+  margin: 50px auto;
   font-size: 0;
-  outline: none;
+  color: #fff;
+  background-color: #fff;
   border: 3px solid $gray-light;
   border-left-color: $primary;
+  @include border-radius(40px);
+  outline: none;
   animation: rotating 2s linear infinite;
-  margin: 50px auto;
 }

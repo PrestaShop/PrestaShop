@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,14 +38,14 @@ class DateRangeCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'date_range',
         'primary' => 'id_date_range',
-        'fields' => array(
-            'time_start' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-            'time_end' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'time_start' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+            'time_end' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+        ],
+    ];
 
     /**
      * Get current range.

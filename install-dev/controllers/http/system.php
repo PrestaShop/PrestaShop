@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -92,7 +92,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                     'title' => $this->translator->trans('Required PHP parameters', array(), 'Install'),
                     'success' => 1,
                     'checks' => array(
-                        'phpversion' => $this->translator->trans('PHP 7.1.3 or later is not enabled', array(), 'Install'),
+                        'phpversion' => $this->translator->trans('PHP %version% or later is not enabled', array('%version%' => _PS_INSTALL_MINIMUM_PHP_VERSION_), 'Install'),
                         'upload' => $this->translator->trans('Cannot upload files', array(), 'Install'),
                         'system' => $this->translator->trans('Cannot create new files and folders', array(), 'Install'),
                         'curl' => $this->translator->trans('cURL extension is not enabled', array(), 'Install'),
@@ -104,6 +104,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
                         'intl' => $this->translator->trans('Intl extension is not loaded', array(), 'Install'),
+                        'memory_limit' => $this->translator->trans('PHP\'s config "memory_limit" must be to a minimum of 256M', array(), 'Install'),
                     ),
                 ),
                 array(
@@ -172,6 +173,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                 }
             }
         }
+        unset($category);
 
         //if sf2 requirement error found, force the required success to false
         if (count($testsRequiredsf2) > 0) {

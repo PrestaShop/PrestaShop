@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,7 +47,11 @@ class DatabaseCreator
         $install = new Install();
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
-        $install->installDatabase(true);
+        if (!$install->installDatabase(true)) {
+            // Something went wrong during installation
+            exit(1);
+        }
+
         $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
         $process->run();
         $install->initializeTestContext();
@@ -60,7 +64,6 @@ class DatabaseCreator
             'admin_password' => 'test',
             'admin_email' => 'test@prestashop.com',
             'configuration_agrement' => true,
-            'send_informations' => false,
         ));
         $install->installFixtures();
         $install->installTheme();

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import ProductSelect from './components/product-select';
 
 $(document).ready(function () {
   createProductSpin();
@@ -45,6 +46,9 @@ $(document).ready(function () {
     imageScrollBox();
     $($('.tabs .nav-link.active').attr('href')).addClass('active').removeClass('fade');
     $('.js-product-images-modal').replaceWith(event.product_images_modal);
+
+    let productSelect  = new ProductSelect();
+    productSelect.init();
   });
 
   function coverImage() {
@@ -106,12 +110,21 @@ $(document).ready(function () {
       max: 1000000
     });
 
+    $quantityInput.focusout(() => {
+      if ($quantityInput.val() === '' || $quantityInput.val() < $quantityInput.attr('min')) {
+        $quantityInput.val($quantityInput.attr('min'));
+        $quantityInput.trigger('change');
+      }
+    });
+
     $('body').on('change keyup', '#quantity_wanted', (e) => {
-      $(e.currentTarget).trigger('touchspin.stopspin');
-      prestashop.emit('updateProduct', {
-          eventType: 'updatedProductQuantity',
-          event: e
-      });
+      if ($quantityInput.val() !== '') {
+        $(e.currentTarget).trigger('touchspin.stopspin');
+        prestashop.emit('updateProduct', {
+            eventType: 'updatedProductQuantity',
+            event: e
+        });
+      }
     });
   }
 });

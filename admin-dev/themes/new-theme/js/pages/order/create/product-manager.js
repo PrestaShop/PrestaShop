@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,27 +18,27 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import CartEditor from './cart-editor';
-import createOrderMap from './create-order-map';
-import eventMap from './event-map';
-import {EventEmitter} from '../../../components/event-emitter';
-import ProductRenderer from './product-renderer';
-import Router from '../../../components/router';
+import CartEditor from '@pages/order/create/cart-editor';
+import createOrderMap from '@pages/order/create/create-order-map';
+import eventMap from '@pages/order/create/event-map';
+import {EventEmitter} from '@components/event-emitter';
+import ProductRenderer from '@pages/order/create/product-renderer';
+import Router from '@components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Product component Object for "Create order" page
  */
 export default class ProductManager {
   constructor() {
-    this.products = {};
-    this.selectedProductId = null;
+    this.products = [];
+    this.selectedProduct = null;
     this.selectedCombinationId = null;
     this.activeSearchRequest = null;
 
@@ -46,12 +46,15 @@ export default class ProductManager {
     this.router = new Router();
     this.cartEditor = new CartEditor();
 
-    this._initListeners();
+    this.initListeners();
 
     return {
-      search: searchPhrase => this._search(searchPhrase),
-      addProductToCart: cartId => this.cartEditor.addProduct(cartId, this._getProductData()),
+      search: (searchPhrase) => this.search(searchPhrase),
+      addProductToCart: (cartId) => this.cartEditor.addProduct(cartId, this.getProductData()),
       removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
+      /* eslint-disable-next-line max-len */
+      changeProductPrice: (cartId, customerId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
+      changeProductQty: (cartId, updatedProduct) => this.cartEditor.changeProductQty(cartId, updatedProduct),
     };
   }
 
@@ -60,13 +63,17 @@ export default class ProductManager {
    *
    * @private
    */
-  _initListeners() {
-    $(createOrderMap.productSelect).on('change', e => this._initProductSelect(e));
-    $(createOrderMap.combinationsSelect).on('change', e => this._initCombinationSelect(e));
+  initListeners() {
+    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e),
+    );
+    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e),
+    );
 
-    this._onProductSearch();
-    this._onAddProductToCart();
-    this._onRemoveProductFromCart();
+    this.onProductSearch();
+    this.onAddProductToCart();
+    this.onRemoveProductFromCart();
+    this.onProductPriceChange();
+    this.onProductQtyChange();
   }
 
   /**
@@ -74,11 +81,11 @@ export default class ProductManager {
    *
    * @private
    */
-  _onProductSearch() {
+  onProductSearch() {
     EventEmitter.on(eventMap.productSearched, (response) => {
-      this.products = JSON.parse(response);
+      this.products = response.products;
       this.productRenderer.renderSearchResults(this.products);
-      this._selectFirstResult();
+      this.selectFirstResult();
     });
   }
 
@@ -87,9 +94,16 @@ export default class ProductManager {
    *
    * @private
    */
-  _onAddProductToCart() {
+  onAddProductToCart() {
+    // on success
     EventEmitter.on(eventMap.productAddedToCart, (cartInfo) => {
+      this.productRenderer.cleanCartBlockAlerts();
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+
+    // on failure
+    EventEmitter.on(eventMap.productAddToCartFailed, (errorMessage) => {
+      this.productRenderer.renderCartBlockErrorAlert(errorMessage);
     });
   }
 
@@ -98,9 +112,39 @@ export default class ProductManager {
    *
    * @private
    */
-  _onRemoveProductFromCart() {
+  onRemoveProductFromCart() {
     EventEmitter.on(eventMap.productRemovedFromCart, (cartInfo) => {
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+  }
+
+  /**
+   * Listens for product price change in cart event
+   *
+   * @private
+   */
+  onProductPriceChange() {
+    EventEmitter.on(eventMap.productPriceChanged, (cartInfo) => {
+      this.productRenderer.cleanCartBlockAlerts();
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+  }
+
+  /**
+   * Listens for product quantity change in cart success/failure event
+   *
+   * @private
+   */
+  onProductQtyChange() {
+    // on success
+    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+      this.productRenderer.cleanCartBlockAlerts();
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+    });
+
+    // on failure
+    EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
+      this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
     });
   }
 
@@ -111,9 +155,13 @@ export default class ProductManager {
    *
    * @private
    */
-  _initProductSelect(event) {
-    const productId = Number($(event.currentTarget).find(':selected').val());
-    this._selectProduct(productId);
+  initProductSelect(event) {
+    const productId = Number(
+      $(event.currentTarget)
+        .find(':selected')
+        .val(),
+    );
+    this.selectProduct(productId);
   }
 
   /**
@@ -123,9 +171,13 @@ export default class ProductManager {
    *
    * @private
    */
-  _initCombinationSelect(event) {
-    const combinationId = Number($(event.currentTarget).find(':selected').val());
-    this._selectCombination(combinationId);
+  initCombinationSelect(event) {
+    const combinationId = Number(
+      $(event.currentTarget)
+        .find(':selected')
+        .val(),
+    );
+    this.selectCombination(combinationId);
   }
 
   /**
@@ -133,26 +185,46 @@ export default class ProductManager {
    *
    * @private
    */
-  _search(searchPhrase) {
-    if (searchPhrase.length < 3) {
+  search(searchPhrase) {
+    if (searchPhrase.length < 2) {
       return;
     }
 
+    this.productRenderer.renderSearching();
     if (this.activeSearchRequest !== null) {
       this.activeSearchRequest.abort();
     }
 
-    $.get(this.router.generate('admin_products_search'), {
+    const params = {
       search_phrase: searchPhrase,
-    }).then((response) => {
-      EventEmitter.emit(eventMap.productSearched, response);
-    }).catch((response) => {
-      if (response.statusText === 'abort') {
-        return;
-      }
+    };
 
-      showErrorMessage(response.responseJSON.message);
-    });
+    if (
+      $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId')
+      !== undefined
+    ) {
+      params.currency_id = $(createOrderMap.cartCurrencySelect).data(
+        'selectedCurrencyId',
+      );
+    }
+
+    const $searchRequest = $.get(
+      this.router.generate('admin_products_search'),
+      params,
+    );
+    this.activeSearchRequest = $searchRequest;
+
+    $searchRequest
+      .then((response) => {
+        EventEmitter.emit(eventMap.productSearched, response);
+      })
+      .catch((response) => {
+        if (response.statusText === 'abort') {
+          return;
+        }
+
+        window.showErrorMessage(response.responseJSON.message);
+      });
   }
 
   /**
@@ -160,11 +232,11 @@ export default class ProductManager {
    *
    * @private
    */
-  _selectFirstResult() {
-    this._unsetProduct();
+  selectFirstResult() {
+    this.unsetProduct();
 
     if (this.products.length !== 0) {
-      this._selectProduct(Object.keys(this.products)[0]);
+      this.selectProduct(this.products[0].productId);
     }
   }
 
@@ -173,22 +245,25 @@ export default class ProductManager {
    *
    * @private
    *
-   * @param productId
+   * @param {Number} productId
    */
-  _selectProduct(productId) {
-    this._unsetCombination();
+  selectProduct(productId) {
+    this.unsetCombination();
 
-    this.selectedProductId = productId;
-    const product = this.products[productId];
-
-    this.productRenderer.renderProductMetadata(product);
-
-    // if product has combinations select the first else leave it null
-    if (product.combinations.length !== 0) {
-      this._selectCombination(Object.keys(product.combinations)[0]);
+    const selectedProduct = Object.values(this.products).find(
+      (product) => product.productId === productId,
+    );
+    if (selectedProduct) {
+      this.selectedProduct = selectedProduct;
     }
 
-    return product;
+    this.productRenderer.renderProductMetadata(this.selectedProduct);
+    // if product has combinations select the first else leave it null
+    if (this.selectedProduct.combinations.length !== 0) {
+      this.selectCombination(Object.keys(this.selectedProduct.combinations)[0]);
+    }
+
+    return this.selectedProduct;
   }
 
   /**
@@ -198,8 +273,8 @@ export default class ProductManager {
    *
    * @private
    */
-  _selectCombination(combinationId) {
-    const combination = this.products[this.selectedProductId].combinations[combinationId];
+  selectCombination(combinationId) {
+    const combination = this.selectedProduct.combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
     this.productRenderer.renderStock(combination.stock);
@@ -212,60 +287,46 @@ export default class ProductManager {
    *
    * @private
    */
-  _unsetCombination() {
+  unsetCombination() {
     this.selectedCombinationId = null;
   }
 
   /**
-   * Sets the selected product id to null
+   * Sets the selected product to null
    *
    * @private
    */
-  _unsetProduct() {
-    this.selectedProductId = null;
+  unsetProduct() {
+    this.selectedProduct = null;
   }
 
   /**
    * Retrieves product data from product search result block fields
    *
-   * @returns {FormData}
-   * @private
-   */
-  _getProductData() {
-    const formData = new FormData();
-
-    formData.append('productId', this.selectedProductId);
-    formData.append('quantity', $(createOrderMap.quantityInput).val());
-    formData.append('combinationId', this.selectedCombinationId);
-
-    this._getCustomFieldsData(formData);
-
-    return formData;
-  }
-
-  /**
-   * Resolves product customization fields to be added to formData object
-   *
-   * @param {FormData} formData
-   *
-   * @returns {FormData}
+   * @returns {Object}
    *
    * @private
    */
-  _getCustomFieldsData(formData) {
-    const $customFields = $(createOrderMap.productCustomInput);
+  getProductData() {
+    const $fileInputs = $(createOrderMap.productCustomizationContainer).find(
+      'input[type="file"]',
+    );
+    const formData = new FormData(
+      document.querySelector(createOrderMap.productAddForm),
+    );
+    const fileSizes = {};
 
-    $customFields.each((key, field) => {
-      const $field = $(field);
-      const name = $field.attr('name');
-
-      if ($field.attr('type') === 'file') {
-        formData.append(name, $field[0].files[0]);
-      } else {
-        formData.append(name, $field.val());
+    // adds key value pairs {input name: file size} of each file in separate object
+    // in case formData size exceeds server settings.
+    $.each($fileInputs, (key, input) => {
+      if (input.files.length !== 0) {
+        fileSizes[$(input).data('customization-field-id')] = input.files[0].size;
       }
     });
 
-    return formData;
+    return {
+      product: formData,
+      fileSizes,
+    };
   }
 }

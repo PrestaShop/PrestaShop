@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@
 <?php if ($this->tests['required']['success']): ?>
 	<h3 class="okBlock"><?php echo $this->translator->trans('PrestaShop compatibility with your system environment has been verified!', array(), 'Install'); ?></h3>
 <?php else: ?>
-	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "Refresh information" to test the compatibility of your new system.', array(), 'Install'); ?></h3>
+	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "Refresh" to test the compatibility of your new system.', array(), 'Install'); ?></h3>
 <?php endif; ?>
 <!-- Display tests results -->
 <?php foreach ($this->tests_render as $type => $categories): ?>

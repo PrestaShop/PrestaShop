@@ -16,6 +16,13 @@ parameters:
     mail_themes_uri: "/mails/themes"
     mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
 
+# Autowires Core controllers
+services:
+    PrestaShopBundle\Controller\:
+        resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
+        exclude: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
+        tags: ['prestashop.core.controllers', 'controller.service_arguments']
+
 framework:
     assets:
         version: !php/const \AppKernel::VERSION
@@ -62,6 +69,7 @@ twig:
     paths:
         '%admin_page%/Product': Product
         '%admin_page%/TwigTemplateForm': Twig
+        '%admin_page%/Common': Common
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
         '%admin_page%/Configure/ShopParameters': ShopParameters
         '%kernel.root_dir%/../modules': Modules
@@ -82,8 +90,7 @@ doctrine:
                 dbname:   "%database_name%"
                 user:     "%database_user%"
                 password: "%database_password%"
-                server_version: 5.1
-                charset:  UTF8
+                charset:  utf8mb4
                 # if using pdo_sqlite as your database driver:
                 #   1. add the path in parameters.yml
                 #     e.g. database_path: "%kernel.root_dir%/data/data.db3"

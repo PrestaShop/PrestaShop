@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
 use DateTimeImmutable;
+use PrestaShop\Decimal\Number;
 
 /**
  * Contains data about order for viewing
@@ -113,6 +114,11 @@ class OrderForViewing
     private $isDelivered;
 
     /**
+     * @var bool
+     */
+    private $isShipped;
+
+    /**
      * @var OrderPricesForViewing
      */
     private $prices;
@@ -121,6 +127,11 @@ class OrderForViewing
      * @var bool
      */
     private $isTaxIncluded;
+
+    /**
+     * @var bool
+     */
+    private $hasBeenPaid;
 
     /**
      * @var bool
@@ -137,17 +148,79 @@ class OrderForViewing
      */
     private $createdAt;
 
+    /**
+     * @var bool
+     */
+    private $isVirtual;
+
+    /**
+     * @var int
+     */
+    private $carrierId;
+
+    /**
+     * @var string
+     */
+    private $carrierName;
+
+    /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
+     * @var int
+     */
+    private $invoiceManagementIsEnabled;
+
+    /**
+     * @param int $orderId
+     * @param int $currencyId
+     * @param int $carrierId
+     * @param string $carrierName
+     * @param int $shopId
+     * @param string $reference
+     * @param bool $isVirtual
+     * @param string $taxMethod
+     * @param bool $isTaxIncluded
+     * @param bool $isValid
+     * @param bool $hasBeenPaid
+     * @param bool $hasInvoice
+     * @param bool $isDelivered
+     * @param bool $isShipped
+     * @param bool $invoiceManagementIsEnabled
+     * @param DateTimeImmutable $createdAt
+     * @param OrderCustomerForViewing|null $customer
+     * @param OrderShippingAddressForViewing $shippingAddress
+     * @param OrderInvoiceAddressForViewing $invoiceAddress
+     * @param OrderProductsForViewing $products
+     * @param OrderHistoryForViewing $history
+     * @param OrderDocumentsForViewing $documents
+     * @param OrderShippingForViewing $shipping
+     * @param OrderReturnsForViewing $returns
+     * @param OrderPaymentsForViewing $payments
+     * @param OrderMessagesForViewing $messages
+     * @param OrderPricesForViewing $prices
+     * @param OrderDiscountsForViewing $discounts
+     */
     public function __construct(
         int $orderId,
         int $currencyId,
+        int $carrierId,
+        string $carrierName,
+        int $shopId,
         string $reference,
+        bool $isVirtual,
         string $taxMethod,
         bool $isTaxIncluded,
         bool $isValid,
+        bool $hasBeenPaid,
         bool $hasInvoice,
         bool $isDelivered,
+        bool $isShipped,
+        bool $invoiceManagementIsEnabled,
         DateTimeImmutable $createdAt,
-        OrderCustomerForViewing $customer,
+        ?OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
         OrderInvoiceAddressForViewing $invoiceAddress,
         OrderProductsForViewing $products,
@@ -176,11 +249,18 @@ class OrderForViewing
         $this->orderId = $orderId;
         $this->currencyId = $currencyId;
         $this->isDelivered = $isDelivered;
+        $this->isShipped = $isShipped;
         $this->prices = $prices;
         $this->isTaxIncluded = $isTaxIncluded;
+        $this->hasBeenPaid = $hasBeenPaid;
         $this->hasInvoice = $hasInvoice;
         $this->discounts = $discounts;
         $this->createdAt = $createdAt;
+        $this->isVirtual = $isVirtual;
+        $this->carrierId = $carrierId;
+        $this->carrierName = $carrierName;
+        $this->shopId = $shopId;
+        $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
     }
 
     /**
@@ -200,6 +280,27 @@ class OrderForViewing
     }
 
     /**
+     * @return int
+     */
+    public function getCarrierId(): int
+    {
+        return $this->carrierId;
+    }
+
+    public function getCarrierName(): string
+    {
+        return $this->carrierName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
+    }
+
+    /**
      * @return string
      */
     public function getReference(): string
@@ -216,9 +317,9 @@ class OrderForViewing
     }
 
     /**
-     * @return OrderCustomerForViewing
+     * @return OrderCustomerForViewing|null
      */
-    public function getCustomer(): OrderCustomerForViewing
+    public function getCustomer(): ?OrderCustomerForViewing
     {
         return $this->customer;
     }
@@ -296,6 +397,14 @@ class OrderForViewing
     }
 
     /**
+     * @return bool
+     */
+    public function hasPayments(): bool
+    {
+        return count($this->payments->getPayments()) > 0;
+    }
+
+    /**
      * @return OrderMessagesForViewing
      */
     public function getMessages(): OrderMessagesForViewing
@@ -312,6 +421,14 @@ class OrderForViewing
     }
 
     /**
+     * @return bool
+     */
+    public function isShipped(): bool
+    {
+        return $this->isShipped;
+    }
+
+    /**
      * @return OrderPricesForViewing
      */
     public function getPrices(): OrderPricesForViewing
@@ -325,6 +442,14 @@ class OrderForViewing
     public function isTaxIncluded(): bool
     {
         return $this->isTaxIncluded;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBeenPaid(): bool
+    {
+        return $this->hasBeenPaid;
     }
 
     /**
@@ -349,5 +474,36 @@ class OrderForViewing
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInvoiceManagementIsEnabled(): bool
+    {
+        return $this->invoiceManagementIsEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRefundable(): bool
+    {
+        /** @var OrderProductForViewing $product */
+        foreach ($this->products->getProducts() as $product) {
+            if ($product->getQuantity() > $product->getQuantityRefunded()) {
+                return true;
+            }
+        }
+
+        return $this->prices->getShippingRefundableAmountRaw()->isGreaterThan(new Number('0'));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -62,6 +62,7 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
     /**
      * {@inheritdoc}
      *
+     * @throws CannotAddContactException
      * @throws ContactException
      */
     public function handle(AddContactCommand $command)
@@ -83,20 +84,14 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
             }
 
             if (false === $entity->add()) {
-                throw new CannotAddContactException(
-                    'Unable to add contact'
-                );
+                throw new CannotAddContactException('Unable to add contact');
             }
 
             if (null !== $command->getShopAssociation()) {
                 $this->associateWithShops($entity, $command->getShopAssociation());
             }
         } catch (PrestaShopException $exception) {
-            throw new ContactException(
-                'An unexpected error occurred when adding contact',
-                0,
-                $exception
-            );
+            throw new ContactException('An unexpected error occurred when adding contact', 0, $exception);
         }
 
         return new ContactId((int) $entity->id);
@@ -114,10 +109,7 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
         $errors = $this->validator->validate($localisedTitle, new DefaultLanguage());
 
         if (0 !== count($errors)) {
-            throw new ContactConstraintException(
-                'Title field is not found for default language',
-                ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE
-            );
+            throw new ContactConstraintException('Title field is not found for default language', ContactConstraintException::MISSING_TITLE_FOR_DEFAULT_LANGUAGE);
         }
     }
 
@@ -134,10 +126,7 @@ final class AddContactHandler extends AbstractObjectModelHandler implements AddC
             $errors = $this->validator->validate($description, new CleanHtml());
 
             if (0 !== count($errors)) {
-                throw new ContactConstraintException(
-                    sprintf('Given description "%s" contains javascript events or script tags', $description),
-                    ContactConstraintException::INVALID_DESCRIPTION
-                );
+                throw new ContactConstraintException(sprintf('Given description "%s" contains javascript events or script tags', $description), ContactConstraintException::INVALID_DESCRIPTION);
             }
         }
     }

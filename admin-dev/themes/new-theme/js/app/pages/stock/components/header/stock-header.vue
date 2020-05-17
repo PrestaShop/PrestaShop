@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
@@ -28,7 +28,9 @@
     <div class="container-fluid">
       <Breadcrumb />
       <div class="title-row">
-        <h1 class="title">{{trans('head_title')}}</h1>
+        <h1 class="title">
+          {{ trans('head_title') }}
+        </h1>
       </div>
     </div>
     <Tabs />
@@ -39,7 +41,7 @@
   import Breadcrumb from './breadcrumb';
   import Tabs from './tabs';
 
-  const $ = global.$;
+  const {$} = window;
 
   function getOldHeaderToolbarButtons() {
     return $('.header-toolbar')

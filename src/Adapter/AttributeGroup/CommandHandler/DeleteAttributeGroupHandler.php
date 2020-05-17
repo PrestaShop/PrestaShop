@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -48,10 +48,7 @@ final class DeleteAttributeGroupHandler extends AbstractAttributeGroupHandler im
         $attributeGroup = $this->getAttributeGroupById($attributeGroupId);
 
         if (false === $this->deleteAttributeGroup($attributeGroup)) {
-            throw new DeleteAttributeGroupException(
-                sprintf('Failed deleting attribute group with id "%s"', $attributeGroupId->getValue()),
-                DeleteAttributeGroupException::FAILED_DELETE
-            );
+            throw new DeleteAttributeGroupException(sprintf('Failed deleting attribute group with id "%s"', $attributeGroupId->getValue()), DeleteAttributeGroupException::FAILED_DELETE);
         }
     }
 }

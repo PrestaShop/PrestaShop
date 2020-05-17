@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,7 @@ use Address;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\CommandHandler\AddManufacturerAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\InvalidAddressFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShopException;
 
@@ -51,17 +52,13 @@ final class AddManufacturerAddressHandler implements AddManufacturerAddressHandl
 
         try {
             if (false === $address->validateFields(false) || false === $address->validateFieldsLang(false)) {
-                throw new AddressException('Address contains invalid field values');
+                throw new InvalidAddressFieldException('Address contains invalid field values');
             }
             if (false === $address->add()) {
-                throw new AddressException(
-                    sprintf('Failed to add new address "%s"', $command->getAddress())
-                );
+                throw new AddressException(sprintf('Failed to add new address "%s"', $command->getAddress()));
             }
         } catch (PrestaShopException $e) {
-            throw new AddressException(
-                sprintf('An error occurred when adding new address "%s"', $command->getAddress())
-            );
+            throw new AddressException(sprintf('An error occurred when adding new address "%s"', $command->getAddress()));
         }
 
         return new AddressId((int) $address->id);
@@ -87,6 +84,7 @@ final class AddManufacturerAddressHandler implements AddManufacturerAddressHandl
         $address->phone = $command->getHomePhone();
         $address->phone_mobile = $command->getMobilePhone();
         $address->other = $command->getOther();
+        $address->dni = $command->getDni();
         $address->alias = 'manufacturer';
 
         return $address;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,8 +31,51 @@ namespace PrestaShop\PrestaShop\Core\Domain\Currency\Exception;
  */
 class CurrencyConstraintException extends CurrencyException
 {
+    /**
+     * Code used when the ISO code doesn't respect it's appropriate format
+     *
+     * @see AlphaIsoCode::PATTERN
+     */
     const INVALID_ISO_CODE = 1;
+
+    /**
+     * Code used when an invalid exchange rate is used (positive float expected)
+     *
+     * @see ExchangeRate
+     */
     const INVALID_EXCHANGE_RATE = 2;
+
+    /**
+     * Code used when trying to insert a currency already in database
+     */
     const CURRENCY_ALREADY_EXISTS = 3;
+
+    /**
+     * Code used when an invalid liveExchangeRate is used (boolean expected)
+     */
     const INVALID_LIVE_EXCHANGE_RATES = 4;
+
+    /**
+     * Code used when the numeric ISO code doesn't respect it's appropriate format
+     *
+     * @see NumericIsoCode::PATTERN
+     */
+    const INVALID_NUMERIC_ISO_CODE = 5;
+
+    /**
+     * Code used when trying to set an empty array of names
+     */
+    const EMPTY_NAME = 6;
+
+    /**
+     * Code used when trying to set an empty array of symbols
+     */
+    const EMPTY_SYMBOL = 7;
+
+    /**
+     * Code used when an invalid precision is used (positive integer expected)
+     *
+     * @see Precision
+     */
+    const INVALID_PRECISION = 8;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,11 +42,11 @@ class PdfOrderReturnControllerCore extends FrontController
         }
 
         if (!isset($this->orderReturn) || !Validate::isLoadedObject($this->orderReturn)) {
-            die($this->trans('Order return not found.', array(), 'Shop.Notifications.Error'));
+            die($this->trans('Order return not found.', [], 'Shop.Notifications.Error'));
         } elseif (!$from_admin && $this->orderReturn->id_customer != $this->context->customer->id) {
-            die($this->trans('Order return not found.', array(), 'Shop.Notifications.Error'));
+            die($this->trans('Order return not found.', [], 'Shop.Notifications.Error'));
         } elseif ($this->orderReturn->state < 2) {
-            die($this->trans('Order return not confirmed.', array(), 'Shop.Notifications.Error'));
+            die($this->trans('Order return not confirmed.', [], 'Shop.Notifications.Error'));
         }
     }
 

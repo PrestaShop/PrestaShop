@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,16 +18,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import '../sass/font.scss';
 import '../sass/admin-theme.sass';
 import '../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import '@openfonts/ubuntu-condensed_latin';
 
 import PerfectScrollBar from 'perfect-scrollbar';
 
-$(document).ready(function() {
-  new PerfectScrollBar('.nav-bar');
+$(document).ready(() => {
+  new PerfectScrollBar('.nav-bar-overflow');
 });

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,21 +19,23 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressDniRequired;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\AddressSettings;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -52,6 +54,11 @@ class ManufacturerAddressType extends AbstractType
      * @var array
      */
     private $countryChoices;
+
+    /**
+     * @var array
+     */
+    private $countryChoicesAttributes;
 
     /**
      * @var ConfigurableFormChoiceProviderInterface
@@ -74,19 +81,22 @@ class ManufacturerAddressType extends AbstractType
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param int $contextCountryId
      * @param TranslatorInterface $translator
+     * @param array $countryChoicesAttributes
      */
     public function __construct(
         array $manufacturerChoices,
         array $countryChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        array $countryChoicesAttributes
     ) {
         $this->manufacturerChoices = $manufacturerChoices;
         $this->countryChoices = $countryChoices;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->translator = $translator;
+        $this->countryChoicesAttributes = $countryChoicesAttributes;
     }
 
     /**
@@ -94,11 +104,9 @@ class ManufacturerAddressType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['country_id'] !== 0) {
-            $countryIdForStateChoices = $options['country_id'];
-        } else {
-            $countryIdForStateChoices = $this->contextCountryId;
-        }
+        $data = $builder->getData();
+        $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
+        $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
 
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
@@ -164,6 +172,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('address2', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'address',
@@ -180,6 +189,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('post_code', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'post_code',
@@ -214,10 +224,9 @@ class ManufacturerAddressType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('id_country', ChoiceType::class, [
+            ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
-                'choices' => $this->countryChoices,
-                'translation_domain' => false,
+                'with_dni_attr' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
@@ -227,14 +236,17 @@ class ManufacturerAddressType extends AbstractType
                 ],
             ])
             ->add('id_state', ChoiceType::class, [
-                'required' => false,
-                'translation_domain' => false,
-                'choices' => $this->statesChoiceProvider->getChoices([
-                    'id_country' => $countryIdForStateChoices,
-                ]),
+                'required' => true,
+                'choices' => $stateChoices,
+                'constraints' => [
+                    new AddressStateRequired([
+                        'id_country' => $countryId,
+                    ]),
+                ],
             ])
             ->add('home_phone', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'phone_number',
@@ -251,6 +263,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('mobile_phone', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'phone_number',
@@ -265,8 +278,30 @@ class ManufacturerAddressType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('dni', TextType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new AddressDniRequired([
+                        'required' => false,
+                        'id_country' => $countryId,
+                    ]),
+                    new TypedRegex([
+                        'type' => 'dni_lite',
+                    ]),
+                    new Length([
+                        'max' => 16,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => 16],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
             ->add('other', TextType::class, [
                 'required' => false,
+                'empty_data' => '',
                 'constraints' => [
                     new TypedRegex([
                         'type' => 'message',
@@ -295,18 +330,5 @@ class ManufacturerAddressType extends AbstractType
         $this->manufacturerChoices['--'] = 0;
 
         return $this->manufacturerChoices;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setDefaults([
-                'country_id' => 0,
-            ])
-            ->setAllowedTypes('country_id', 'integer')
-        ;
     }
 }

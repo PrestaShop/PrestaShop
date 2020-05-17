@@ -7,11 +7,11 @@ const helper = require('@utils/helpers');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BOBasePage = require('@pages/BO/BObasePage');
-const ModuleCatalogPage = require('@pages/BO/moduleCatalog');
-const ModuleManagerPage = require('@pages/BO/moduleManager');
-const ShopParamsGeneralPage = require('@pages/BO/shopParamsGeneral');
-const ShopParamsMaintenancePage = require('@pages/BO/shopParamsMaintenance');
-const AutoUpgradePage = require('@pages/BO/modulesPages/autoUpgrade');
+const ModuleCatalogPage = require('@pages/BO/modules/moduleCatalog');
+const ModuleManagerPage = require('@pages/BO/modules/moduleManager');
+const ShopParamsGeneralPage = require('@pages/BO/shopParameters/general');
+const ShopParamsMaintenancePage = require('@pages/BO/shopParameters/general/maintenance');
+const AutoUpgradePage = require('@pages/BO/modules/autoUpgrade');
 const HomePage = require('@pages/FO/home');
 const loginCommon = require('@commonTests/loginBO');
 
@@ -60,7 +60,7 @@ describe('Upgrade Prestashop to last Stable', async () => {
     await this.pageObjects.moduleCatalogPage.searchModule('autoupgrade', '1-Click Upgrade');
     const installResultMessage = await this.pageObjects.moduleCatalogPage.installModule('1-Click Upgrade');
     await expect(installResultMessage)
-      .to.equal(this.pageObjects.moduleCatalogPage.installMessageSuccessful.replace('%MODULETAG', 'autoupgrade'));
+      .to.equal(this.pageObjects.moduleCatalogPage.installMessageSuccessful('autoupgrade'));
   });
 
   it('should disable Shop', async function () {

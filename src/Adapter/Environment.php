@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -58,12 +58,11 @@ class Environment implements EnvironmentInterface
             $this->isDebug = $isDebug;
         }
 
-        $this->name = $name;
-        if (null === $this->name) {
-            if (!empty($_SERVER['APP_ENV'])) {
-                $this->name = $_SERVER['APP_ENV'];
-            } elseif (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
-                $this->name = 'test';
+        if (null !== $name) {
+            $this->name = $name;
+        } else {
+            if (defined(_PS_ENV_)) {
+                $this->name = _PS_ENV_;
             } else {
                 $this->name = $this->isDebug ? 'dev' : 'prod';
             }
@@ -91,6 +90,10 @@ class Environment implements EnvironmentInterface
      */
     public function getCacheDir()
     {
+        if (defined('_PS_CACHE_DIR_')) {
+            return _PS_CACHE_DIR_;
+        }
+
         return _PS_ROOT_DIR_ . '/var/cache/' . $this->getName() . '/';
     }
 }

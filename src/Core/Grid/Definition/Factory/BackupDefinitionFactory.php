@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
@@ -41,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
  */
 final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -65,73 +66,64 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('backup_bulk_file_names'))
-                ->setOptions([
-                    'bulk_field' => 'file_name',
-                ])
+                    ->setOptions([
+                        'bulk_field' => 'file_name',
+                    ])
             )
             ->add(
                 (new DataColumn('date'))
-                ->setName($this->trans('Date', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'date_formatted',
-                    'sortable' => false,
-                ])
+                    ->setName($this->trans('Date', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'date_formatted',
+                        'sortable' => false,
+                    ])
             )
             ->add(
                 (new DataColumn('age'))
-                ->setName($this->trans('Age', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
-                    'field' => 'age_formatted',
-                    'sortable' => false,
-                ])
+                    ->setName($this->trans('Age', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
+                        'field' => 'age_formatted',
+                        'sortable' => false,
+                    ])
             )
             ->add(
                 (new DataColumn('file_name'))
-                ->setName($this->trans('Filename', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'file_name',
-                    'sortable' => false,
-                ])
+                    ->setName($this->trans('Filename', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'file_name',
+                        'sortable' => false,
+                    ])
             )
             ->add(
                 (new DataColumn('file_size'))
-                ->setName($this->trans('File size', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
-                    'field' => 'file_size_formatted',
-                    'sortable' => false,
-                ])
+                    ->setName($this->trans('File size', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
+                        'field' => 'file_size_formatted',
+                        'sortable' => false,
+                    ])
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add(
-                            (new LinkRowAction('view'))
-                            ->setIcon('remove_red_eye')
-                            ->setOptions([
-                                'route' => 'admin_backups_download_view',
-                                'route_param_name' => 'downloadFileName',
-                                'route_param_field' => 'file_name',
-                                'clickable_row' => true,
-                            ])
-                        )
-                        ->add(
-                            (new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'method' => 'DELETE',
-                                'route' => 'admin_backups_delete',
-                                'route_param_name' => 'deleteFileName',
-                                'route_param_field' => 'file_name',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
-                        ),
-                ])
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                                (new LinkRowAction('view'))
+                                    ->setIcon('remove_red_eye')
+                                    ->setOptions([
+                                        'route' => 'admin_backups_download_view',
+                                        'route_param_name' => 'downloadFileName',
+                                        'route_param_field' => 'file_name',
+                                        'clickable_row' => true,
+                                    ])
+                            )
+                            ->add(
+                                $this->buildDeleteAction(
+                                    'admin_backups_delete',
+                                    'deleteFileName',
+                                    'file_name'
+                                )
+                            ),
+                    ])
             );
     }
 
@@ -143,11 +135,11 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('delete_backups'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_backups_bulk_delete',
-                    'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                ])
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_backups_bulk_delete',
+                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                    ])
             );
     }
 }

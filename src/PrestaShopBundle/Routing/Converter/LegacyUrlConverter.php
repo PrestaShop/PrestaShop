@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,9 +30,9 @@ use PrestaShopBundle\Routing\Converter\Exception\AlreadyConvertedException;
 use PrestaShopBundle\Routing\Converter\Exception\ArgumentException;
 use PrestaShopBundle\Routing\Converter\Exception\RouteNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\Exceptioninterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\Exception\Exceptioninterface;
 
 /**
  * Class LegacyUrlConverter is able to convert query parameters or an url into a
@@ -106,7 +106,7 @@ final class LegacyUrlConverter
         $this->checkAlreadyMatchingRoute($url);
 
         $parsedUrl = parse_url($url);
-        $parameters = array();
+        $parameters = [];
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $parameters);
         }

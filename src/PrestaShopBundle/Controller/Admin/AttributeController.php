@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Product;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +39,9 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get All Attributes as json.
      *
-     * @return string
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @return JsonResponse
      */
     public function getAllAttributesAction()
     {
@@ -79,9 +82,11 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Attributes generator.
      *
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
+     *
      * @param Request $request The request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function attributesGeneratorAction(Request $request)
     {
@@ -139,10 +144,10 @@ class AttributeController extends FrameworkBundleAdminController
 
         $response = new JsonResponse();
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
-        $result = array(
-            'ids_product_attribute' => array(),
+        $result = [
+            'ids_product_attribute' => [],
             'form' => '',
-        );
+        ];
 
         foreach ($attributes as $attribute) {
             foreach ($attribute as $combination) {
@@ -154,9 +159,9 @@ class AttributeController extends FrameworkBundleAdminController
                     );
                 $result['form'] .= $this->renderView(
                     '@Product/ProductPage/Forms/form_combination.html.twig',
-                    array(
+                    [
                         'form' => $form->createView(),
-                    )
+                    ]
                 );
                 $result['ids_product_attribute'][] = $combination['id_product_attribute'];
             }
@@ -195,10 +200,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete a product attribute.
      *
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     *
      * @param int $idProduct The product ID
      * @param Request $request The request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function deleteAttributeAction($idProduct, Request $request)
     {
@@ -230,10 +237,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete all product attributes.
      *
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     *
      * @param int $idProduct The product ID
      * @param Request $request The request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function deleteAllAttributeAction($idProduct, Request $request)
     {
@@ -268,10 +277,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get the images form for a product combinations.
      *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
      * @param int $idProduct The product id
      * @param Request $request The request
      *
-     * @return string Json
+     * @return JsonResponse
      */
     public function getFormImagesAction($idProduct, Request $request)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -80,14 +80,7 @@ class CategoryDeleteMode
     private function setMode($mode)
     {
         if (!in_array($mode, self::AVAILABLE_MODES)) {
-            throw new CategoryConstraintException(
-                sprintf(
-                    'Invalid Category delete mode %s supplied. Available delete modes are: "%s"',
-                    var_export($mode, true),
-                    implode(',', self::AVAILABLE_MODES)
-                ),
-                CategoryConstraintException::INVALID_DELETE_MODE
-            );
+            throw new CategoryConstraintException(sprintf('Invalid Category delete mode %s supplied. Available delete modes are: "%s"', var_export($mode, true), implode(',', self::AVAILABLE_MODES)), CategoryConstraintException::INVALID_DELETE_MODE);
         }
 
         $this->mode = $mode;

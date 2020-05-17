@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,13 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Supplier;
 
 use Address;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
-use Supplier;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShopException;
+use Supplier;
 
 /**
  * Provides reusable methods for supplier command/query handlers
@@ -58,9 +58,7 @@ abstract class AbstractSupplierHandler extends AbstractObjectModelHandler
         }
 
         if ($supplier->id !== $supplierId->getValue()) {
-            throw new SupplierNotFoundException(
-                sprintf('Supplier with id "%s" was not found.', $supplierId->getValue())
-            );
+            throw new SupplierNotFoundException(sprintf('Supplier with id "%s" was not found.', $supplierId->getValue()));
         }
 
         return $supplier;
@@ -82,10 +80,7 @@ abstract class AbstractSupplierHandler extends AbstractObjectModelHandler
             $address = new Address($addressId);
 
             if (null === $address->id_supplier) {
-                throw new AddressNotFoundException(sprintf(
-                    'Address for supplier with id "%s" was not found',
-                    $supplierIdValue
-                ));
+                throw new AddressNotFoundException(sprintf('Address for supplier with id "%s" was not found', $supplierIdValue));
             }
         } catch (PrestaShopException $e) {
             throw new SupplierException('Failed to get supplier address', 0, $e);
@@ -101,10 +96,7 @@ abstract class AbstractSupplierHandler extends AbstractObjectModelHandler
         try {
             return $supplier->delete();
         } catch (PrestaShopException $e) {
-            throw new SupplierException(sprintf(
-                'An error occurred when deleting Supplier object with id "%s".',
-                $supplier->id
-            ));
+            throw new SupplierException(sprintf('An error occurred when deleting Supplier object with id "%s".', $supplier->id));
         }
     }
 

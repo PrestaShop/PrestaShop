@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,11 +19,10 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,7 +37,7 @@ class AppKernel extends Kernel
     const RELEASE_VERSION = 0;
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function registerBundles()
     {
@@ -83,7 +82,7 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     protected function getKernelParameters()
     {
@@ -96,7 +95,7 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getRootDir()
     {
@@ -104,23 +103,24 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getCacheDir()
     {
-        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+        return _PS_CACHE_DIR_;
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getLogDir()
     {
-        return dirname(__DIR__).'/var/logs';
+        return dirname(__DIR__) . '/var/logs';
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
+     *
      * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -131,13 +131,13 @@ class AppKernel extends Kernel
             $container->addObjectResource($this);
         });
 
-        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 
     /**
      * Return all active modules.
      *
-     * @return array list of modules names.
+     * @return array list of modules names
      */
     private function getActiveModules()
     {
@@ -150,7 +150,6 @@ class AppKernel extends Kernel
             //Do nothing because the modules retrieval must not block the kernel, and it won't work
             //during the installation process
         }
-
 
         return $activeModules;
     }
@@ -167,7 +166,7 @@ class AppKernel extends Kernel
     private function enableComposerAutoloaderOnModules($modules)
     {
         foreach ($modules as $module) {
-            $autoloader = __DIR__.'/../modules/'.$module.'/vendor/autoload.php';
+            $autoloader = __DIR__ . '/../modules/' . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {
                 include_once $autoloader;

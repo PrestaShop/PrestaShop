@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="44aa13304026bb46ad79f4151f16634a">
+        <source>(waiting for validation)</source>
+        <target>(waiting for validation)</target>
+        <note>Line: 630</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="mails/themes/classic/components/footer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="96dad7f0d711c3408786ba1ee05402b3">
@@ -158,6 +167,11 @@
         <target>Here is your personal login information for [1]{shop_name}[/1]:</target>
         <note>Line: 29</note>
       </trans-unit>
+      <trans-unit id="78e365acb087fd1f8d494dae0001de10">
+        <source>E-mail address:</source>
+        <target>E-mail address:</target>
+        <note>Line: 32</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/classic/core/forward_msg.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -184,12 +198,7 @@
       <trans-unit id="49bea2c7e271e5cd440a295dd6fadc72">
         <source>Please be careful when sharing these login details with others.</source>
         <target>Please be careful when sharing these login details with others.</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="78e365acb087fd1f8d494dae0001de10">
-        <source>E-mail address:</source>
-        <target>E-mail address:</target>
-        <note>Line: 30</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="f4938f5d59c6c3adc14bf0cc30bc37f5">
         <source>Your guest account for [1]{shop_name}[/1] has been transformed into a customer account.</source>
@@ -1005,12 +1014,12 @@
       <trans-unit id="b75184fa489c948c6debc4d635fefa5a">
         <source>You can access your customer account on our shop:</source>
         <target>You can access your customer account on our shop:</target>
-        <note>Line: 317</note>
+        <note>Line: 311</note>
       </trans-unit>
       <trans-unit id="2df994fe4798f819768c87824ec15ced">
         <source>Email address:</source>
         <target>Email address:</target>
-        <note>Line: 254</note>
+        <note>Line: 248</note>
       </trans-unit>
       <trans-unit id="016878df57341f82e0702d9259bfb7d8">
         <source>Guest to customer</source>
@@ -1020,12 +1029,17 @@
       <trans-unit id="387c721c8acb98382f1d18feccf3dd55">
         <source>Your guest account has been turned into a customer account</source>
         <target>Your guest account has been turned into a customer account</target>
-        <note>Line: 180</note>
+        <note>Line: 177</note>
       </trans-unit>
       <trans-unit id="3008c9316cf28c5f439bbcc2e43b2e3e">
         <source>Congratulations, your guest account for [1]{shop_name}[/1] has been turned into a customer account!</source>
         <target>Congratulations, your guest account for [1]{shop_name}[/1] has been turned into a customer account!</target>
-        <note>Line: 247</note>
+        <note>Line: 242</note>
+      </trans-unit>
+      <trans-unit id="9964a987c88f49c4be016b1af2801403">
+        <source>Click on the following link to set up your password:</source>
+        <target>Click on the following link to set up your password:</target>
+        <note>Line: 249</note>
       </trans-unit>
     </body>
   </file>
@@ -1125,6 +1139,16 @@
         <source>Thank you for shopping on [1]{shop_name}[/1]!</source>
         <target>Thank you for shopping on [1]{shop_name}[/1]!</target>
         <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ff2fa78f07ffe4ac52c0d0b5ff7f0baa">
+        <source>Thank you for your order on [1]{shop_name}[/1]!</source>
+        <target>Thank you for your order on [1]{shop_name}[/1]!</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Line: 382</note>
       </trans-unit>
     </body>
   </file>

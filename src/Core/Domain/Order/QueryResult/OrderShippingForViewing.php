@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,15 +49,22 @@ class OrderShippingForViewing
     private $carrierModuleInfo;
 
     /**
+     * @var string|null
+     */
+    private $giftMessage;
+
+    /**
      * @param OrderCarrierForViewing[] $carriers
      * @param bool $isRecycledPackaging
      * @param bool $isGiftWrapping
+     * @param string|null $giftMessage
      * @param string|null $carrierModuleInfo
      */
     public function __construct(
         array $carriers,
         bool $isRecycledPackaging,
         bool $isGiftWrapping,
+        ?string $giftMessage,
         ?string $carrierModuleInfo
     ) {
         foreach ($carriers as $carrier) {
@@ -67,9 +74,12 @@ class OrderShippingForViewing
         $this->isRecycledPackaging = $isRecycledPackaging;
         $this->isGiftWrapping = $isGiftWrapping;
         $this->carrierModuleInfo = $carrierModuleInfo;
+        $this->giftMessage = $giftMessage;
     }
 
     /**
+     * hint - collection of OrderCarrierForViewing objects would be better
+     *
      * @return OrderCarrierForViewing[]
      */
     public function getCarriers(): array
@@ -99,6 +109,14 @@ class OrderShippingForViewing
     public function getCarrierModuleInfo(): ?string
     {
         return $this->carrierModuleInfo;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGiftMessage(): ?string
+    {
+        return $this->giftMessage;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -38,6 +39,8 @@ class CustomerFormCore extends AbstractForm
     private $customerPersister;
     private $guest_allowed;
     private $passwordRequired = true;
+
+    private $IDNConverter;
 
     public function __construct(
         Smarty $smarty,
@@ -56,6 +59,7 @@ class CustomerFormCore extends AbstractForm
         $this->context = $context;
         $this->urls = $urls;
         $this->customerPersister = $customerPersister;
+        $this->IDNConverter = new InternationalizedDomainNameConverter();
     }
 
     public function setGuestAllowed($guest_allowed = true)
@@ -73,10 +77,20 @@ class CustomerFormCore extends AbstractForm
         return $this;
     }
 
+    public function fillWith(array $params = [])
+    {
+        if (!empty($params['email'])) {
+            // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
+            // we need to convert it back
+            $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
+        }
+
+        return parent::fillWith($params);
+    }
+
     public function fillFromCustomer(Customer $customer)
     {
         $params = get_object_vars($customer);
-        $params['id_customer'] = $customer->id;
         $params['birthday'] = $customer->birthday === '0000-00-00' ? null : Tools::displayDate($customer->birthday);
 
         return $this->fillWith($params);
@@ -87,13 +101,10 @@ class CustomerFormCore extends AbstractForm
      */
     public function getCustomer()
     {
-        $customer = new Customer($this->getValue('id_customer'));
+        $customer = new Customer($this->context->customer->id);
 
         foreach ($this->formFields as $field) {
             $customerField = $field->getName();
-            if ($customerField === 'id_customer') {
-                $customerField = 'id';
-            }
             if (property_exists($customer, $customerField)) {
                 $customer->$customerField = $field->getValue();
             }
@@ -110,7 +121,7 @@ class CustomerFormCore extends AbstractForm
         if ($id_customer && $id_customer != $customer->id) {
             $emailField->addError($this->translator->trans(
                 'The email is already used, please choose another one or sign in',
-                array(),
+                [],
                 'Shop.Notifications.Error'
             ));
         }
@@ -119,10 +130,10 @@ class CustomerFormCore extends AbstractForm
         $birthdayField = $this->getField('birthday');
         if (!empty($birthdayField) &&
             !empty($birthdayField->getValue()) &&
-            Validate::isBirthDate($birthdayField->getValue(), Context::getContext()->language->date_format_lite)
+            Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
-                Context::getContext()->language->date_format_lite,
+                $this->context->language->date_format_lite,
                 $birthdayField->getValue()
             );
             $birthdayField->setValue($dateBuilt->format('Y-m-d'));
@@ -160,7 +171,7 @@ class CustomerFormCore extends AbstractForm
     {
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
-            array('email', 255),
+            ['email', 255],
             'Shop.Notifications.Error'
         );
     }
@@ -169,7 +180,7 @@ class CustomerFormCore extends AbstractForm
     {
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
-            array('first name', 255),
+            ['first name', 255],
             'Shop.Notifications.Error'
         );
     }
@@ -178,7 +189,7 @@ class CustomerFormCore extends AbstractForm
     {
         return $this->translator->trans(
             'The %1$s field is too long (%2$d chars max).',
-            array('last name', 255),
+            ['last name', 255],
             'Shop.Notifications.Error'
         );
     }
@@ -233,7 +244,7 @@ class CustomerFormCore extends AbstractForm
      */
     private function validateByModules()
     {
-        $formFieldsAssociated = array();
+        $formFieldsAssociated = [];
         // Group FormField instances by module name
         foreach ($this->formFields as $formField) {
             if (!empty($formField->moduleName)) {
@@ -245,7 +256,7 @@ class CustomerFormCore extends AbstractForm
         foreach ($formFieldsAssociated as $moduleName => $formFields) {
             if ($moduleId = Module::getModuleIdByName($moduleName)) {
                 // ToDo : replace Hook::exec with HookFinder, because we expect a specific class here
-                $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', array('fields' => $formFields), $moduleId, true);
+                $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', ['fields' => $formFields], $moduleId, true);
 
                 if (is_array($validatedCustomerFormFields)) {
                     array_merge($this->formFields, $validatedCustomerFormFields);

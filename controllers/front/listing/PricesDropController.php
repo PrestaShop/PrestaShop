@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,7 +38,7 @@ class PricesDropControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $this->doProductSearch('catalog/listing/prices-drop');
+        $this->doProductSearch('catalog/listing/prices-drop', ['entity' => 'prices-drop']);
     }
 
     protected function getProductSearchQuery()
@@ -62,7 +62,7 @@ class PricesDropControllerCore extends ProductListingFrontController
     {
         return $this->trans(
             'On sale',
-            array(),
+            [],
             'Shop.Theme.Catalog'
         );
     }
@@ -72,7 +72,7 @@ class PricesDropControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = [
-            'title' => $this->trans('On sale', array(), 'Shop.Theme.Catalog'),
+            'title' => $this->trans('On sale', [], 'Shop.Theme.Catalog'),
             'url' => $this->context->link->getPageLink('prices-drop', true),
         ];
 

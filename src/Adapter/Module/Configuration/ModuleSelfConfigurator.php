@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,7 +59,7 @@ class ModuleSelfConfigurator
     /**
      * @var array
      */
-    protected $configs = array();
+    protected $configs = [];
 
     /**
      * @var string
@@ -206,7 +206,7 @@ class ModuleSelfConfigurator
      */
     public function validate()
     {
-        $errors = array();
+        $errors = [];
         if ($this->module === null) {
             $errors[] = 'Module name not specified';
         }
@@ -379,7 +379,7 @@ class ModuleSelfConfigurator
             }
 
             // If we get a relative path from the yml, add the original path
-            foreach (array('source', 'dest') as $prop) {
+            foreach (['source', 'dest'] as $prop) {
                 $copy[$prop] = $this->convertRelativeToAbsolutePaths($copy[$prop]);
             }
 
@@ -405,7 +405,7 @@ class ModuleSelfConfigurator
             $file = $this->extractFilePath($data);
 
             $module = $this->moduleRepository->getModule($this->module);
-            $params = !empty($data['params']) ? $data['params'] : array();
+            $params = !empty($data['params']) ? $data['params'] : [];
 
             $this->loadPhpFile($file)->run($module, $params);
         }
@@ -451,8 +451,19 @@ class ModuleSelfConfigurator
             if (empty($sql)) {
                 continue;
             }
+
             // Set _DB_PREFIX_
-            $sql = str_replace('PREFIX_', $this->configuration->get('_DB_PREFIX_'), $sql);
+            $sql = str_replace(
+                [
+                    'PREFIX_',
+                    'DB_NAME',
+                ],
+                [
+                    $this->configuration->get('_DB_PREFIX_'),
+                    $this->configuration->get('_DB_NAME_'),
+                ],
+                $sql
+            );
 
             $stmt = $this->connection->prepare($sql);
             $stmt->execute();

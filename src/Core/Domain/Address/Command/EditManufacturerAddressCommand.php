@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,6 +98,11 @@ class EditManufacturerAddressCommand
      * @var string|null
      */
     private $other;
+
+    /**
+     * @var string|null
+     */
+    private $dni;
 
     /**
      * @param int $addressId
@@ -321,6 +326,22 @@ class EditManufacturerAddressCommand
     }
 
     /**
+     * @return string|null
+     */
+    public function getDni()
+    {
+        return $this->dni;
+    }
+
+    /**
+     * @param string|null $dni
+     */
+    public function setDni($dni)
+    {
+        $this->dni = $dni;
+    }
+
+    /**
      * @param $value
      *
      * @throws AddressConstraintException
@@ -330,9 +351,6 @@ class EditManufacturerAddressCommand
         if (null === $value || is_int($value) || 0 <= $value) {
             return;
         }
-        throw new AddressConstraintException(
-            sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)),
-            AddressConstraintException::INVALID_MANUFACTURER_ID
-        );
+        throw new AddressConstraintException(sprintf('Invalid manufacturer id "%s" provided for address.', var_export($value, true)), AddressConstraintException::INVALID_MANUFACTURER_ID);
     }
 }

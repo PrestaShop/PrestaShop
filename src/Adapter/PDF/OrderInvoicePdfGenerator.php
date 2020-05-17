@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,19 +60,13 @@ final class OrderInvoicePdfGenerator implements PDFGeneratorInterface
     public function generatePDF(array $orderId)
     {
         if (count($orderId) !== 1) {
-            throw new CoreException(
-                sprintf('"%s" supports generating invoice for single order only.', get_class($this))
-            );
+            throw new CoreException(sprintf('"%s" supports generating invoice for single order only.', get_class($this)));
         }
 
         $orderId = reset($orderId);
         $order = new Order((int) $orderId);
         if (!Validate::isLoadedObject($order)) {
-            throw new RuntimeException($this->translator->trans(
-                'The order cannot be found within your database.',
-                [],
-                'Admin.Orderscustomers.Notification'
-            ));
+            throw new RuntimeException($this->translator->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
 
         $order_invoice_list = $order->getInvoicesCollection();

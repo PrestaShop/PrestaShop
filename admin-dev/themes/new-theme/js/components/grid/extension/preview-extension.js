@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Extends grid with preview functionality.
@@ -46,12 +46,8 @@ export default class PreviewExtension {
   extend(grid) {
     this.$gridContainer = $(grid.getContainer);
 
-    this.$gridContainer.find('tbody tr').on('mouseover mouseleave', event => this._handleIconHovering(event));
-    this.$gridContainer.find(this.previewToggleSelector).on('click', event => this._togglePreview(event));
-
-    if (typeof this.previewCustomization === 'function') {
-      this.previewCustomization(this.$gridContainer);
-    }
+    this.$gridContainer.find('tbody tr').on('mouseover mouseleave', (event) => this.handleIconHovering(event));
+    this.$gridContainer.find(this.previewToggleSelector).on('click', (event) => this.togglePreview(event));
   }
 
   /**
@@ -60,13 +56,13 @@ export default class PreviewExtension {
    * @param event
    * @private
    */
-  _handleIconHovering(event) {
+  handleIconHovering(event) {
     const $previewToggle = $(event.currentTarget).find(this.previewToggleSelector);
 
     if (event.type === 'mouseover' && !$(event.currentTarget).hasClass(this.previewOpenClass)) {
-      this._showExpandIcon($previewToggle);
+      this.showExpandIcon($previewToggle);
     } else {
-      this._hideExpandIcon($previewToggle);
+      this.hideExpandIcon($previewToggle);
     }
   }
 
@@ -76,42 +72,42 @@ export default class PreviewExtension {
    * @param event
    * @private
    */
-  _togglePreview(event) {
+  togglePreview(event) {
     const $previewToggle = $(event.currentTarget);
     const $columnRow = $previewToggle.closest('tr');
 
     if ($columnRow.hasClass(this.previewOpenClass)) {
       $columnRow.next('.preview-row').remove();
       $columnRow.removeClass(this.previewOpenClass);
-      this._showExpandIcon($columnRow);
-      this._hideCollapseIcon($columnRow);
+      this.showExpandIcon($columnRow);
+      this.hideCollapseIcon($columnRow);
 
       return;
     }
 
-    this._closeOpenedPreviews();
+    this.closeOpenedPreviews();
 
     const dataUrl = $(event.currentTarget).data('preview-data-url');
 
-    if (this._isLocked(dataUrl)) {
+    if (this.isLocked(dataUrl)) {
       return;
     }
 
     // Prevents loading preview multiple times.
     // Uses "dataUrl" as lock key.
-    this._lock(dataUrl);
+    this.lock(dataUrl);
 
     $.ajax({
       url: dataUrl,
       method: 'GET',
       dataType: 'json',
       complete: () => {
-        this._unlock(dataUrl);
+        this.unlock(dataUrl);
       },
     }).then((response) => {
-      this._renderPreviewContent($columnRow, response.preview);
+      this.renderPreviewContent($columnRow, response.preview);
     }).catch((e) => {
-      showErrorMessage(e.responseJSON.message);
+      window.showErrorMessage(e.responseJSON.message);
     });
   }
 
@@ -123,19 +119,24 @@ export default class PreviewExtension {
    *
    * @private
    */
-  _renderPreviewContent($columnRow, content) {
+  renderPreviewContent($columnRow, content) {
     const rowColumnCount = $columnRow.find('td').length;
 
-    const previewTemplate = `
+    const $previewTemplate = $(`
         <tr class="preview-row">
           <td colspan="${rowColumnCount}">${content}</td>
         </tr>
-      `;
+      `);
 
     $columnRow.addClass(this.previewOpenClass);
-    this._showCollapseIcon($columnRow);
-    this._hideExpandIcon($columnRow);
-    $columnRow.after(previewTemplate);
+    this.showCollapseIcon($columnRow);
+    this.hideExpandIcon($columnRow);
+
+    if (typeof this.previewCustomization === 'function') {
+      this.previewCustomization($previewTemplate);
+    }
+
+    $columnRow.after($previewTemplate);
   }
 
   /**
@@ -144,7 +145,7 @@ export default class PreviewExtension {
    * @param parent
    * @private
    */
-  _showExpandIcon(parent) {
+  showExpandIcon(parent) {
     parent.find(this.expandSelector).removeClass('d-none');
   }
 
@@ -154,7 +155,7 @@ export default class PreviewExtension {
    * @param parent
    * @private
    */
-  _hideExpandIcon(parent) {
+  hideExpandIcon(parent) {
     parent.find(this.expandSelector).addClass('d-none');
   }
 
@@ -164,7 +165,7 @@ export default class PreviewExtension {
    * @param parent
    * @private
    */
-  _showCollapseIcon(parent) {
+  showCollapseIcon(parent) {
     parent.find(this.collapseSelector).removeClass('d-none');
   }
 
@@ -174,23 +175,23 @@ export default class PreviewExtension {
    * @param parent
    * @private
    */
-  _hideCollapseIcon(parent) {
+  hideCollapseIcon(parent) {
     parent.find(this.collapseSelector).addClass('d-none');
   }
 
-  _isLocked(key) {
+  isLocked(key) {
     return this.lock.indexOf(key) !== -1;
   }
 
-  _lock(key) {
-    if (this._isLocked(key)) {
+  lock(key) {
+    if (this.isLocked(key)) {
       return;
     }
 
     this.lock.push(key);
   }
 
-  _unlock(key) {
+  unlock(key) {
     const index = this.lock.indexOf(key);
 
     if (index === -1) {
@@ -205,7 +206,7 @@ export default class PreviewExtension {
    *
    * @private
    */
-  _closeOpenedPreviews() {
+  closeOpenedPreviews() {
     const $rows = this.$gridContainer.find('.grid-table tbody').find('tr:not(.preview-row)');
 
     $.each($rows, (i, row) => {
@@ -223,7 +224,7 @@ export default class PreviewExtension {
 
       $previewRow.remove();
       $row.removeClass(this.previewOpenClass);
-      this._hideCollapseIcon($row);
+      this.hideCollapseIcon($row);
     });
   }
 }

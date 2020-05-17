@@ -4,6 +4,9 @@ Feature: Customer Management
   As a BO user
   I must be able to create, save and edit customers
 
+  Background:
+    Given groups feature is activated
+
   Scenario: Create a simple customer and edit it
     When I create a customer "CUST-1" with following properties:
       | firstName | Mathieu                    |
@@ -74,4 +77,4 @@ Feature: Customer Management
       | defaultGroupId | Guest                     |
       | groupIds       | [Guest]                   |
     And I delete customer "CUST-5" with method "allow_registration_after"
-    Then if I query customer customer "CUST-5" I should get an error 'Customer with id "5" was not found'
+    Then if I query customer customer "CUST-5" I should get an error 'Customer with id "8" was not found'

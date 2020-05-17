@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,19 +19,19 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\MailTemplate\Transformation;
 
+use DOMAttr;
+use DOMElement;
 use Pelago\Emogrifier;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use Symfony\Component\DomCrawler\Crawler;
-use DOMElement;
-use DOMAttr;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**
@@ -67,7 +67,7 @@ class CSSInlineTransformation extends AbstractTransformation
         $cssToInlineStyles = new CssToInlineStyles();
         $templateContent = $cssToInlineStyles->convert($templateContent, $cssContent);
 
-        $converter = new CssToAttributeConverter($templateContent);
+        $converter = CssToAttributeConverter::fromHtml($templateContent);
         $templateContent = $converter->convertCssToVisualAttributes()->render();
 
         return preg_replace('/@(\w+)@/', '{\1}', $templateContent);

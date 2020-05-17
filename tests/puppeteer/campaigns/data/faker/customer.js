@@ -1,7 +1,7 @@
 const faker = require('faker');
 
 const genders = ['Mr.', 'Mrs.'];
-const defaultCustomerGroups = ['Visitor', 'Guest', 'Customer'];
+const {groupAccess} = require('@data/demo/groupAccess');
 
 module.exports = class Customer {
   constructor(customerToCreate = {}) {
@@ -16,7 +16,6 @@ module.exports = class Customer {
     this.dayOfBirth = customerToCreate.dayOfBirth || this.birthDate.getDate().toString();
     this.enabled = customerToCreate.enabled === undefined ? true : customerToCreate.enabled;
     this.partnerOffers = customerToCreate.partnerOffers === undefined ? true : customerToCreate.partnerOffers;
-    this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup
-      || faker.random.arrayElement(defaultCustomerGroups);
+    this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup || faker.random.arrayElement(groupAccess);
   }
 };

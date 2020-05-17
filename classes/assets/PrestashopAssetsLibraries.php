@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,23 +34,23 @@ class PrestashopAssetsLibraries
      *
      * @var array
      */
-    private static $assetsLibraries = array(
-        'font-awesome' => array(
+    private static $assetsLibraries = [
+        'font-awesome' => [
             // array of array because a library can have js & css
-            array(
+            [
                 'id' => 'font-awesome-css',
                 'type' => self::css,
                 'path' => '/themes/_libraries/font-awesome/css/font-awesome.min.css',
-                'params' => array('media' => 'all', 'priority' => 10),
-            ),
-        ),
+                'params' => ['media' => 'all', 'priority' => 10],
+            ],
+        ],
         // can imagine others libraries
-    );
+    ];
 
     /**
      * Get Library files from name.
      *
-     * @param $name
+     * @param string $name
      *
      * @return bool|mixed
      */

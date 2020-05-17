@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,19 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use AdminController;
 use Behat\Gherkin\Node\TableNode;
+use Context;
+use FrontController;
 use Manufacturer;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkDeleteManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\BulkToggleManufacturerStatusCommand;
@@ -36,8 +40,11 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerComma
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\ToggleManufacturerStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\QueryResult\ViewableManufacturer;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use RuntimeException;
+use stdClass;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -60,6 +67,21 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
         $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
         $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
+    }
+
+    /**
+     * Needed for getting Viewable objects from handlers, for example ViewableManufacturer
+     *
+     * @BeforeScenario
+     */
+    public function before()
+    {
+        // needed because if no controller defined then CONTEXT_ALL is selected and exception is thrown
+        /** @var AdminController|FrontController $adminControllerTestDouble */
+        $adminControllerTestDouble = new stdClass();
+        $adminControllerTestDouble->controller_type = 'admin';
+        $adminControllerTestDouble->php_self = 'dummyTestDouble';
+        Context::getContext()->controller = $adminControllerTestDouble;
     }
 
     /**
@@ -153,12 +175,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
         if ($manufacturer->name !== $name) {
-            throw new RuntimeException(sprintf(
-                'Manufacturer "%s" has "%s" name, but "%s" was expected.',
-                $reference,
-                $manufacturer->name,
-                $name
-            ));
+            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" name, but "%s" was expected.', $reference, $manufacturer->name, $name));
         }
     }
 
@@ -171,13 +188,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
         if ($manufacturer->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf(
-                'Manufacturer "%s" has "%s" %s, but "%s" was expected.',
-                $reference,
-                $manufacturer->$field[$this->defaultLangId],
-                $field,
-                $value
-            ));
+            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but "%s" was expected.', $reference, $manufacturer->$field[$this->defaultLangId], $field, $value));
         }
     }
 
@@ -189,12 +200,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
         if ($manufacturer->$field[$this->defaultLangId] !== '') {
-            throw new RuntimeException(sprintf(
-                'Manufacturer "%s" has "%s" %s, but it was expected to be empty',
-                $reference,
-                $manufacturer->$field[$this->defaultLangId],
-                $field
-            ));
+            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but it was expected to be empty', $reference, $manufacturer->$field[$this->defaultLangId], $field));
         }
     }
 
@@ -260,12 +266,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $actualStatus = (bool) $manufacturer->active;
 
         if ($actualStatus !== $isEnabled) {
-            throw new RuntimeException(sprintf(
-                'Manufacturer "%s" is %s, but it was expected to be %s',
-                $manufacturerReference,
-                $actualStatus ? 'enabled' : 'disabled',
-                $expectedStatus
-            ));
+            throw new RuntimeException(sprintf('Manufacturer "%s" is %s, but it was expected to be %s', $manufacturerReference, $actualStatus ? 'enabled' : 'disabled', $expectedStatus));
         }
     }
 
@@ -281,10 +282,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
             $query = new GetManufacturerForEditing((int) $manufacturer->id);
             $this->getQueryBus()->handle($query);
 
-            throw new NoExceptionAlthoughExpectedException(sprintf(
-                'Manufacturer %s exists, but it was expected to be deleted',
-                $manufacturerReference
-            ));
+            throw new NoExceptionAlthoughExpectedException(sprintf('Manufacturer %s exists, but it was expected to be deleted', $manufacturerReference));
         } catch (ManufacturerNotFoundException $e) {
             SharedStorage::getStorage()->clear($manufacturerReference);
         }
@@ -313,5 +311,30 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         $manufacturerId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, new Manufacturer($manufacturerId->getValue()));
+    }
+
+    /**
+     * @Then manufacturer :manufacturerReference should have :countOfAddresses addresses and :countOfProducts products
+     *
+     * @param string $manufacturerReference
+     * @param int $countOfAddresses
+     * @param int $countOfProducts
+     */
+    public function manufacturerShouldHaveAddedAddresses(
+        string $manufacturerReference,
+        int $countOfAddresses,
+        int $countOfProducts)
+    {
+        /** @var Manufacturer $manufacturer */
+        $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
+        /** @var ViewableManufacturer $viewableMaufacturer */
+        $viewableMaufacturer = $this->getQueryBus()->handle(new GetManufacturerForViewing(
+            $manufacturer->id,
+            (int) $this->getContainer()->get('prestashop.adapter.legacy.configuration')->get('PS_LANG_DEFAULT')
+        ));
+
+        Assert::assertSame($manufacturer->name, $viewableMaufacturer->getName());
+        Assert::assertSame($countOfAddresses, count($viewableMaufacturer->getManufacturerAddresses()));
+        Assert::assertSame($countOfProducts, count($viewableMaufacturer->getManufacturerProducts()));
     }
 }

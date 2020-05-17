@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,11 +27,19 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShopBundle\Form\Admin\Product\ProductCombination;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class CombinationController extends FrameworkBundleAdminController
 {
+    /**
+     * Generate combination
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     *
+     * @return Response
+     */
     public function generateCombinationFormAction($combinationIds)
     {
         $response = new Response();
@@ -55,18 +63,20 @@ class CombinationController extends FrameworkBundleAdminController
 
         return $response->setContent($this->renderView(
             '@Product/ProductPage/Forms/form_combination_collection.html.twig',
-            array(
+            [
                 'combinationForms' => $forms,
-            )
+            ]
         ));
     }
 
     /**
-     * get All Combinations for a product.
+     * Get all Combinations for a product.
+     *
+     * @AdminSecurity("is_granted(['read'], 'ADMINPRODUCTS_')")
      *
      * @param int $idProduct The product id
      *
-     * @return string Json
+     * @return JsonResponse
      */
     public function getProductCombinationsAction($idProduct)
     {
@@ -82,7 +92,7 @@ class CombinationController extends FrameworkBundleAdminController
 
         $combinations = $modelMapper->getAttributesResume($product);
 
-        $combinationList = array();
+        $combinationList = [];
 
         if (is_array($combinations)) {
             foreach ($combinations as $combination) {

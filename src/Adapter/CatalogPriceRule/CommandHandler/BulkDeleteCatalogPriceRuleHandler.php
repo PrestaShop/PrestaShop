@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\AbstractCatalogPriceRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\CommandHandler\BulkDeleteCatalogPriceRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\DeleteCatalogPriceRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCatalogPriceRuleException;
 
 /**
  * Deletes catalog prices rules in bulk action using legacy object model
@@ -45,10 +45,7 @@ final class BulkDeleteCatalogPriceRuleHandler extends AbstractCatalogPriceRuleHa
             $specificPriceRule = $this->getSpecificPriceRule($catalogPriceRuleId);
 
             if (null === $this->deleteSpecificPriceRule($specificPriceRule)) {
-                throw new DeleteCatalogPriceRuleException(
-                    sprintf('Cannot delete SpecificPriceRule object with id "%s".', $catalogPriceRuleId->getValue()),
-                    DeleteCatalogPriceRuleException::FAILED_BULK_DELETE
-                );
+                throw new CannotDeleteCatalogPriceRuleException(sprintf('Cannot delete SpecificPriceRule object with id "%s".', $catalogPriceRuleId->getValue()), CannotDeleteCatalogPriceRuleException::FAILED_BULK_DELETE);
             }
         }
     }

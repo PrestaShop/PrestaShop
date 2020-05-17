@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,17 +50,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             $this->session->admin_firstname = trim(Tools::getValue('admin_firstname'));
             $this->session->admin_lastname = trim(Tools::getValue('admin_lastname'));
             $this->session->admin_email = trim(Tools::getValue('admin_email'));
-            $this->session->send_informations = Tools::getValue('send_informations');
-            if ($this->session->send_informations) {
-                $params = http_build_query(array(
-                    'email' => $this->session->admin_email,
-                    'method' => 'addMemberToNewsletter',
-                    'language' => $this->language->getLanguageIso(),
-                    'visitorType' => 1,
-                    'source' => 'installer',
-                ));
-                Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
-            }
 
             // If password fields are empty, but are already stored in session, do not fill them again
             if (!$this->session->admin_password || trim(Tools::getValue('admin_password'))) {

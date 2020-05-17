@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,22 +18,23 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import ReloadListExtension from '../../components/grid/extension/reload-list-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+import Grid from '@components/grid/grid';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import ReloadListExtension from '@components/grid/extension/reload-list-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import TranslatableInput from '@components/translatable-input';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const attachmentGrid = new Grid('attachment');
@@ -46,4 +47,6 @@ $(() => {
   attachmentGrid.addExtension(new SubmitBulkExtension());
   attachmentGrid.addExtension(new SubmitRowActionExtension());
   attachmentGrid.addExtension(new LinkRowActionExtension());
+
+  new TranslatableInput();
 });

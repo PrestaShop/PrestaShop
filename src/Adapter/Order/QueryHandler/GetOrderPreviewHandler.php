@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,7 @@ use Carrier;
 use Country;
 use Currency;
 use Customer;
+use Group;
 use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\Number;
@@ -37,13 +38,14 @@ use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderPreviewHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewInvoiceDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewInvoiceDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewProductDetail;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use State;
+use StockAvailable;
 use Validate;
 
 /**
@@ -79,13 +81,14 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     public function handle(GetOrderPreview $query): OrderPreview
     {
         $order = $this->getOrder($query->getOrderId());
+        $priceDisplayMethod = $this->getOrderTaxCalculationMethod($order);
 
         return new OrderPreview(
             $this->getInvoiceDetails($order),
             $this->getShippingDetails($order),
             $this->getProductDetails($order),
             $order->isVirtual(),
-            PS_TAX_INC === $order->getTaxCalculationMethod()
+            $priceDisplayMethod == PS_TAX_INC
         );
     }
 
@@ -100,10 +103,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     {
         $order = new Order($orderId->getValue());
         if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException(
-                $orderId,
-                sprintf('Order with id "%s" was not found.', $orderId->getValue())
-            );
+            throw new OrderNotFoundException($orderId, sprintf('Order with id "%s" was not found.', $orderId->getValue()));
         }
 
         return $order;
@@ -123,8 +123,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $stateName = Validate::isLoadedObject($state) ? $state->name : null;
 
         return new OrderPreviewInvoiceDetails(
-            $customer->firstname,
-            $customer->lastname,
+            $address->firstname,
+            $address->lastname,
             $address->company,
             $address->vat_number,
             $address->address1,
@@ -133,9 +133,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->postcode,
             $stateName,
             $country->name[$order->id_lang],
-            $customer->email,
-            $address->phone,
-            $address->company
+            $customer ? $customer->email : null,
+            $address->phone
         );
     }
 
@@ -144,7 +143,6 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
      */
     private function getShippingDetails(Order $order): OrderPreviewShippingDetails
     {
-        $customer = new Customer($order->id_customer);
         $address = new Address($order->id_address_delivery);
         $country = new Country($address->id_country);
         $carrier = new Carrier($order->id_carrier);
@@ -161,8 +159,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $orderCarrier = new OrderCarrier($orderCarrierId);
 
         return new OrderPreviewShippingDetails(
-            $customer->firstname,
-            $customer->lastname,
+            $address->firstname,
+            $address->lastname,
             $address->company,
             $address->vat_number,
             $address->address1,
@@ -188,6 +186,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $currency = new Currency($order->id_currency);
         $locale = $this->localeRepository->getLocale($this->locale);
 
+        $taxCalculationMethod = $this->getOrderTaxCalculationMethod($order);
+
         foreach ($order->getProductsDetail() as $detail) {
             $unitPrice = $detail['unit_price_tax_excl'];
             $totalPrice = $detail['total_price_tax_excl'];
@@ -197,7 +197,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
 
             $totalTaxAmount = $totalPriceTaxIncl->minus($totalPriceTaxExcl);
 
-            if (PS_TAX_INC === $order->getTaxCalculationMethod()) {
+            if (PS_TAX_INC === $taxCalculationMethod) {
                 $unitPrice = $detail['unit_price_tax_incl'];
                 $totalPrice = $detail['total_price_tax_incl'];
             }
@@ -205,7 +205,11 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $productDetails[] = new OrderPreviewProductDetail(
                 $detail['product_name'],
                 $detail['product_reference'],
-                $detail['location'],
+                StockAvailable::getLocation(
+                    $detail['product_id'],
+                    $detail['product_attribute_id'],
+                    $detail['id_shop']
+                ),
                 (int) $detail['product_quantity'],
                 $locale->formatPrice($unitPrice, $currency->iso_code),
                 $locale->formatPrice($totalPrice, $currency->iso_code),
@@ -214,5 +218,17 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         }
 
         return $productDetails;
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return int
+     */
+    private function getOrderTaxCalculationMethod(Order $order): int
+    {
+        $customer = new Customer($order->id_customer);
+
+        return Group::getPriceDisplayMethod((int) $customer->id_default_group);
     }
 }

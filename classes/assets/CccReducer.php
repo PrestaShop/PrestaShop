@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,11 +29,18 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class CccReducerCore
 {
+    /** @var string */
     private $cacheDir;
+    /** @var Filesystem */
     protected $filesystem;
 
     use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
 
+    /**
+     * @param string $cacheDir
+     * @param ConfigurationInterface $configuration
+     * @param Filesystem $filesystem
+     */
     public function __construct($cacheDir, ConfigurationInterface $configuration, Filesystem $filesystem)
     {
         $this->cacheDir = $cacheDir;
@@ -45,9 +52,14 @@ class CccReducerCore
         }
     }
 
+    /**
+     * @param array $cssFileList
+     *
+     * @return array Same list, reduced
+     */
     public function reduceCss($cssFileList)
     {
-        $files = array();
+        $files = [];
         foreach ($cssFileList['external'] as $key => &$css) {
             if ('all' === $css['media'] && 'local' === $css['server']) {
                 $files[] = $this->getPathFromUri($css['path']);
@@ -62,12 +74,18 @@ class CccReducerCore
         if (!$this->filesystem->exists($destinationPath)) {
             CssMinifier::minify($files, $destinationPath);
         }
+        if (Tools::hasMediaServer()) {
+            $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
+            $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+        } else {
+            $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
+        }
 
         $cssFileList['external']['theme-ccc'] = [
             'id' => 'theme-ccc',
             'type' => 'external',
             'path' => $destinationPath,
-            'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
+            'uri' => $destinationUri,
             'media' => 'all',
             'priority' => StylesheetManager::DEFAULT_PRIORITY,
         ];
@@ -75,10 +93,15 @@ class CccReducerCore
         return $cssFileList;
     }
 
+    /**
+     * @param array $jsFileList
+     *
+     * @return array Same list, reduced
+     */
     public function reduceJs($jsFileList)
     {
         foreach ($jsFileList as $position => &$list) {
-            $files = array();
+            $files = [];
             foreach ($list['external'] as $key => $js) {
                 // We only CCC the file without 'refer' or 'async'
                 if ('' === $js['attribute'] && 'local' === $js['server']) {
@@ -99,13 +122,19 @@ class CccReducerCore
             if (!$this->filesystem->exists($destinationPath)) {
                 JsMinifier::minify($files, $destinationPath);
             }
+            if (Tools::hasMediaServer()) {
+                $relativePath = _THEMES_DIR_ . _THEME_NAME_ . '/assets/cache/' . $cccFilename;
+                $destinationUri = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath) . $relativePath;
+            } else {
+                $destinationUri = $this->getFQDN() . $this->getUriFromPath($destinationPath);
+            }
 
             $cccItem = [];
             $cccItem[$position . '-js-ccc'] = [
                 'id' => $position . '-js-ccc',
                 'type' => 'external',
                 'path' => $destinationPath,
-                'uri' => $this->getFQDN() . $this->getUriFromPath($destinationPath),
+                'uri' => $destinationUri,
                 'priority' => JavascriptManager::DEFAULT_PRIORITY,
                 'attribute' => '',
             ];
@@ -115,6 +144,11 @@ class CccReducerCore
         return $jsFileList;
     }
 
+    /**
+     * @param string[] $files
+     *
+     * @return string
+     */
     private function getFileNameIdentifierFromList(array $files)
     {
         return substr(sha1(implode('|', $files)), 0, 6);

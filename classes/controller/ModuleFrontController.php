@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,7 +53,7 @@ class ModuleFrontControllerCore extends FrontController
      *
      * @throws PrestaShopException
      */
-    public function setTemplate($template, $params = array(), $locale = null)
+    public function setTemplate($template, $params = [], $locale = null)
     {
         if (strpos($template, 'module:') === 0) {
             $this->template = $template;
@@ -67,9 +67,9 @@ class ModuleFrontControllerCore extends FrontController
         if (Tools::isSubmit('module') && Tools::getValue('controller') == 'payment') {
             $currency = Currency::getCurrency((int) $this->context->cart->id_currency);
             $minimalPurchase = Tools::convertPrice((float) Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
-            Hook::exec('overrideMinimalPurchasePrice', array(
+            Hook::exec('overrideMinimalPurchasePrice', [
                 'minimalPurchase' => &$minimalPurchase,
-            ));
+            ]);
             if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimalPurchase) {
                 Tools::redirect('index.php?controller=order&step=1');
             }

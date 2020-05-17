@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\Adapter\Hook;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher;
 use PrestaShopBundle\Service\Hook\HookEvent;
@@ -33,12 +34,12 @@ use PrestaShopBundle\Service\Hook\HookEvent;
 class HookDispatcherTest extends TestCase
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|HookEvent
+     * @var MockObject|HookEvent
      */
     private $hookEventMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|HookDispatcher
+     * @var MockObject|HookDispatcher
      */
     private $hookDispatcherMock;
 

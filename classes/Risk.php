@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,16 +37,16 @@ class RiskCore extends ObjectModel
     public $color;
     public $percent;
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'risk',
         'primary' => 'id_risk',
         'multilang' => true,
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20),
-            'color' => array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-            'percent' => array('type' => self::TYPE_INT, 'validate' => 'isPercentage'),
-        ),
-    );
+        'fields' => [
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isString', 'required' => true, 'size' => 20],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32],
+            'percent' => ['type' => self::TYPE_INT, 'validate' => 'isPercentage'],
+        ],
+    ];
 
     /**
      * Get fields.

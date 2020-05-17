@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -101,17 +103,16 @@ class TypedRegexValidator extends ConstraintValidator
             TypedRegex::TYPE_MESSAGE => '/[<>{}]/i',
             TypedRegex::TYPE_LANGUAGE_ISO_CODE => IsoCode::PATTERN,
             TypedRegex::TYPE_LANGUAGE_CODE => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            TypedRegex::TYPE_CURRENCY_ISO_CODE => AlphaIsoCode::PATTERN,
+            TypedRegex::TYPE_FILE_NAME => '/^[a-zA-Z0-9_.-]+$/',
+            TypedRegex::TYPE_DNI_LITE => AddressConstraint::DNI_LITE_PATTERN,
         ];
 
         if (isset($typePatterns[$type])) {
             return $typePatterns[$type];
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Type "%s" is not defined. Defined types are: %s',
-            $type,
-            implode(',', array_keys($typePatterns))
-        ));
+        throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, implode(',', array_keys($typePatterns))));
     }
 
     /**

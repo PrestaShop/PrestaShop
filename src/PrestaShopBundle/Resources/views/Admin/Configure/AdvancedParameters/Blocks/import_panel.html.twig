@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -26,7 +26,7 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{{ form_start(importForm, {'attr': { 'data-file-upload-url': importFileUploadUrl, 'data-delete-confirm-message': ('Are you sure that you would like to delete this entity:'|trans({}, 'Admin.Advparameters.Notification')), 'class': 'js-import-form' }}) }}
+{{ form_start(importForm, {'attr': { 'data-file-upload-url': importFileUploadUrl, 'data-delete-confirm-message': ('Are you sure you want to delete this entity:'|trans({}, 'Admin.Advparameters.Notification')), 'class': 'js-import-form' }}) }}
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">import_export</i> {{ 'Import'|trans({}, 'Admin.Actions') }}
@@ -35,8 +35,8 @@
     <div class="alert alert-info" role="alert">
       <p class="alert-text">
         {{ 'You can read information on import at:'|trans({}, 'Admin.Advparameters.Help') }}
-        <a href="{{ 'http://doc.prestashop.com/display/PS17/Import'|trans({}, 'Admin.Advparameters.Help') }}" class="_blank">
-          {{ 'http://doc.prestashop.com/display/PS17/Import'|trans({}, 'Admin.Advparameters.Help') }}
+        <a href="{{ 'https://doc.prestashop.com/display/PS17/Import'|trans({}, 'Admin.Advparameters.Help') }}" class="_blank">
+          {{ 'https://doc.prestashop.com/display/PS17/Import'|trans({}, 'Admin.Advparameters.Help') }}
         </a>
       </p>
       <p class="alert-text">

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,27 +27,27 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmailAlreadyUsedException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkDeleteEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\DeleteEmployeeCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\ToggleEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Command\BulkUpdateEmployeeStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\AdminEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\CannotDeleteEmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeCannotChangeItselfException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -298,6 +298,7 @@ class EmployeeController extends FrameworkBundleAdminController
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
             'showAddonsConnectButton' => false,
+            'enableSidebar' => true,
         ];
 
         return $this->render(
@@ -310,6 +311,7 @@ class EmployeeController extends FrameworkBundleAdminController
      * Show Employee edit page.
      *
      * @DemoRestricted(redirectRoute="admin_employees_index")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_employees_index")
      *
      * @param int $employeeId
      * @param Request $request

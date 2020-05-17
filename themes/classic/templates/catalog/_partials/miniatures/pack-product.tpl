@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -31,20 +31,30 @@
             <a href="{$product.url}" title="{$product.name}">
               <img
                 src="{$product.cover.medium.url}"
-                alt="{$product.cover.legend}"
+                {if !empty($product.cover.legend)}
+                  alt="{$product.cover.legend}"
+                  title="{$product.cover.legend}"
+                {else}
+                  alt="{$product.name}"
+                {/if}
                 data-full-size-image-url="{$product.cover.large.url}"
               >
             </a>
           </div>
         </div>
+
         <div class="pack-product-name">
           <a href="{$product.url}" title="{$product.name}">
             {$product.name}
           </a>
         </div>
-        <div class="pack-product-price">
-          <strong>{$product.price}</strong>
-        </div>
+
+        {if $showPackProductsPrice} 
+          <div class="pack-product-price">
+            <strong>{$product.price}</strong>
+          </div>
+        {/if}
+        
         <div class="pack-product-quantity">
           <span>x {$product.pack_quantity}</span>
         </div>

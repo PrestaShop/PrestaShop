@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,8 +51,8 @@ class Email
     public function __construct($email)
     {
         $this->assertEmailIsString($email);
+        $this->assertEmailIsNotEmpty($email);
         $this->assertEmailDoesNotExceedAllowedLength($email);
-        $this->assertEmailIsValid($email);
 
         $this->email = $email;
     }
@@ -74,23 +74,20 @@ class Email
      */
     public function isEqualTo(Email $email)
     {
-        return $email->getValue() === $this->getValue();
+        return strtolower($email->getValue()) === strtolower($this->getValue());
     }
 
     /**
-     * Assert that email is in valid format
+     * Check that email is not an empty string
      *
-     * @param string $email
+     * @param $email
      *
      * @throws DomainConstraintException
      */
-    private function assertEmailIsValid($email)
+    public function assertEmailIsNotEmpty($email)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new DomainConstraintException(
-                sprintf('Email %s is invalid.', var_export($email, true)),
-                DomainConstraintException::INVALID_EMAIL
-            );
+        if (0 === strlen($email)) {
+            throw new DomainConstraintException('Email must not be empty', DomainConstraintException::INVALID_EMAIL);
         }
     }
 
@@ -107,10 +104,7 @@ class Email
 
         $length = function_exists('mb_strlen') ? mb_strlen($email, 'UTF-8') : strlen($email);
         if (self::MAX_LENGTH < $length) {
-            throw new DomainConstraintException(
-                sprintf('Email is too long. Max allowed length is %s', self::MAX_LENGTH),
-                DomainConstraintException::INVALID_EMAIL
-            );
+            throw new DomainConstraintException(sprintf('Email is too long. Max allowed length is %s', self::MAX_LENGTH), DomainConstraintException::INVALID_EMAIL);
         }
     }
 
@@ -124,10 +118,7 @@ class Email
     private function assertEmailIsString($email)
     {
         if (!is_string($email)) {
-            throw new DomainConstraintException(
-                'Email must be of type string',
-                DomainConstraintException::INVALID_EMAIL
-            );
+            throw new DomainConstraintException('Email must be of type string', DomainConstraintException::INVALID_EMAIL);
         }
     }
 }

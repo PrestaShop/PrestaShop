@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -90,11 +90,6 @@ class EditSupplierCommand
     private $mobilePhone;
 
     /**
-     * @var array|null
-     */
-    private $logoImage;
-
-    /**
      * @var string[]|null
      */
     private $localizedMetaTitles;
@@ -120,11 +115,16 @@ class EditSupplierCommand
     private $associatedShops;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * @param int $supplierId
      *
      * @throws SupplierException
      */
-    public function __construct($supplierId)
+    public function __construct(int $supplierId)
     {
         $this->supplierId = new SupplierId($supplierId);
     }
@@ -132,7 +132,7 @@ class EditSupplierCommand
     /**
      * @return SupplierId
      */
-    public function getSupplierId()
+    public function getSupplierId(): SupplierId
     {
         return $this->supplierId;
     }
@@ -140,256 +140,320 @@ class EditSupplierCommand
     /**
      * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * @param string|null $name
+     * @param string $name
+     *
+     * @return EditSupplierCommand
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
-    public function getLocalizedDescriptions()
+    public function getLocalizedDescriptions(): ?array
     {
         return $this->localizedDescriptions;
     }
 
     /**
-     * @param string[]|null $localizedDescriptions
+     * @param string[] $localizedDescriptions
+     *
+     * @return EditSupplierCommand
      */
-    public function setLocalizedDescriptions($localizedDescriptions)
+    public function setLocalizedDescriptions(array $localizedDescriptions): self
     {
         $this->localizedDescriptions = $localizedDescriptions;
+
+        return $this;
     }
 
     /**
      * @return string|null
      */
-    public function getAddress()
+    public function getAddress(): ?string
     {
         return $this->address;
     }
 
     /**
-     * @param string|null $address
+     * @param string $address
+     *
+     * @return EditSupplierCommand
      */
-    public function setAddress($address)
+    public function setAddress(string $address): self
     {
         $this->address = $address;
+
+        return $this;
     }
 
     /**
      * @return string|null
      */
-    public function getCity()
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
     /**
-     * @param string|null $city
+     * @param string $city
+     *
+     * @return EditSupplierCommand
      */
-    public function setCity($city)
+    public function setCity(string $city): self
     {
         $this->city = $city;
+
+        return $this;
     }
 
     /**
      * @return string|null
      */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
 
     /**
-     * @param string|null $address2
+     * @param string $address2
+     *
+     * @return EditSupplierCommand
      */
-    public function setAddress2($address2)
+    public function setAddress2(string $address2): self
     {
         $this->address2 = $address2;
+
+        return $this;
     }
 
     /**
      * @return int|null
      */
-    public function getCountryId()
+    public function getCountryId(): ?int
     {
         return $this->countryId;
     }
 
     /**
-     * @param int|null $countryId
+     * @param int $countryId
+     *
+     * @return EditSupplierCommand
      */
-    public function setCountryId($countryId)
+    public function setCountryId(int $countryId): self
     {
         $this->countryId = $countryId;
+
+        return $this;
     }
 
     /**
      * @return string|null
      */
-    public function getPostCode()
+    public function getPostCode(): ?string
     {
         return $this->postCode;
     }
 
     /**
-     * @param string|null $postCode
+     * @param string $postCode
+     *
+     * @return EditSupplierCommand
      */
-    public function setPostCode($postCode)
+    public function setPostCode(string $postCode): self
     {
         $this->postCode = $postCode;
+
+        return $this;
     }
 
     /**
      * @return int|null
      */
-    public function getStateId()
+    public function getStateId(): ?int
     {
         return $this->stateId;
     }
 
     /**
-     * @param int|null $stateId
+     * @param int $stateId
+     *
+     * @return EditSupplierCommand
      */
-    public function setStateId($stateId)
+    public function setStateId(int $stateId): self
     {
         $this->stateId = $stateId;
+
+        return $this;
     }
 
     /**
      * @return string|null
      */
-    public function getPhone()
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
     /**
-     * @param string|null $phone
+     * @param string $phone
+     *
+     * @return EditSupplierCommand
      */
-    public function setPhone($phone)
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
     }
 
     /**
      * @return string|null
      */
-    public function getMobilePhone()
+    public function getMobilePhone(): ?string
     {
         return $this->mobilePhone;
     }
 
     /**
-     * @param string|null $mobilePhone
+     * @param string $mobilePhone
+     *
+     * @return EditSupplierCommand
      */
-    public function setMobilePhone($mobilePhone)
+    public function setMobilePhone(string $mobilePhone): self
     {
         $this->mobilePhone = $mobilePhone;
-    }
 
-    /**
-     * @return array|null
-     */
-    public function getLogoImage()
-    {
-        return $this->logoImage;
-    }
-
-    /**
-     * @param array|null $logoImage
-     */
-    public function setLogoImage($logoImage)
-    {
-        $this->logoImage = $logoImage;
+        return $this;
     }
 
     /**
      * @return string[]|null
      */
-    public function getLocalizedMetaTitles()
+    public function getLocalizedMetaTitles(): ?array
     {
         return $this->localizedMetaTitles;
     }
 
     /**
-     * @param string[]|null $localizedMetaTitles
+     * @param string[] $localizedMetaTitles
+     *
+     * @return EditSupplierCommand
      */
-    public function setLocalizedMetaTitles($localizedMetaTitles)
+    public function setLocalizedMetaTitles(array $localizedMetaTitles): self
     {
         $this->localizedMetaTitles = $localizedMetaTitles;
+
+        return $this;
     }
 
     /**
      * @return string[]|null
      */
-    public function getLocalizedMetaDescriptions()
+    public function getLocalizedMetaDescriptions(): ?array
     {
         return $this->localizedMetaDescriptions;
     }
 
     /**
-     * @param string[]|null $localizedMetaDescriptions
+     * @param string[] $localizedMetaDescriptions
+     *
+     * @return EditSupplierCommand
      */
-    public function setLocalizedMetaDescriptions($localizedMetaDescriptions)
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): self
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
+
+        return $this;
     }
 
     /**
      * @return string[]|null
      */
-    public function getLocalizedMetaKeywords()
+    public function getLocalizedMetaKeywords(): ?array
     {
         return $this->localizedMetaKeywords;
     }
 
     /**
-     * @param string[]|null $localizedMetaKeywords
+     * @param string[] $localizedMetaKeywords
+     *
+     * @return EditSupplierCommand
      */
-    public function setLocalizedMetaKeywords($localizedMetaKeywords)
+    public function setLocalizedMetaKeywords(array $localizedMetaKeywords): self
     {
         $this->localizedMetaKeywords = $localizedMetaKeywords;
+
+        return $this;
     }
 
     /**
      * @return bool|null
      */
-    public function isEnabled()
+    public function isEnabled(): ?bool
     {
         return $this->enabled;
     }
 
     /**
-     * @param bool|null $enabled
+     * @param bool $enabled
+     *
+     * @return EditSupplierCommand
      */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
     }
 
     /**
      * @return array|null
      */
-    public function getAssociatedShops()
+    public function getAssociatedShops(): ?array
     {
         return $this->associatedShops;
     }
 
     /**
-     * @param array|null $associatedShops
+     * @param array $associatedShops
+     *
+     * @return EditSupplierCommand
      */
-    public function setAssociatedShops($associatedShops)
+    public function setAssociatedShops(array $associatedShops): self
     {
         $this->associatedShops = $associatedShops;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDni(): ?string
+    {
+        return $this->dni;
+    }
+
+    /**
+     * @param string $dni
+     *
+     * @return EditSupplierCommand
+     */
+    public function setDni(string $dni): self
+    {
+        $this->dni = $dni;
+
+        return $this;
     }
 }

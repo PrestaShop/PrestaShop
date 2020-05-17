@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -62,14 +62,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $productFeature = SharedStorage::getStorage()->get($reference);
 
         if ($productFeature->name[$defaultLanguageId] !== $name) {
-            throw new RuntimeException(
-                sprintf(
-                    'Feature "%s" name was expected to be "%s" but is "%s"',
-                    $reference,
-                    $name,
-                    $productFeature->name[$defaultLanguageId]
-                )
-            );
+            throw new RuntimeException(sprintf('Feature "%s" name was expected to be "%s" but is "%s"', $reference, $name, $productFeature->name[$defaultLanguageId]));
         }
     }
 
@@ -115,12 +108,7 @@ class FeatureFeatureContext extends AbstractDomainFeatureContext
         $featureNames = $editableFeature->getName();
 
         if ($featureNames[$defaultLanguageId] !== $featureName) {
-            throw new RuntimeException(sprintf(
-                'Product feature with id "%s" has name "%s", but "%s" was expected',
-                $featureId,
-                $featureNames[$defaultLanguageId],
-                $featureName
-            ));
+            throw new RuntimeException(sprintf('Product feature with id "%s" has name "%s", but "%s" was expected', $featureId, $featureNames[$defaultLanguageId], $featureName));
         }
     }
 

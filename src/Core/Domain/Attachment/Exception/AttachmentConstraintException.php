@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,4 +32,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Exception;
 class AttachmentConstraintException extends AttachmentException
 {
     const INVALID_ID = 1;
+
+    const INVALID_FILE_SIZE = 2;
+
+    const EMPTY_NAME = 3;
+
+    const EMPTY_DESCRIPTION = 4;
+
+    const INVALID_FIELDS = 5;
+
+    const INVALID_DESCRIPTION = 6;
+
+    const MISSING_NAME_IN_DEFAULT_LANGUAGE = 7;
 }

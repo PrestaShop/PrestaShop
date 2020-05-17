@@ -3,22 +3,65 @@ module.exports = class CommonPage {
     this.page = page;
   }
 
+  /**
+   * Get page title
+   * @returns {Promise<*>}
+   */
   async getPageTitle() {
     return this.page.title();
   }
 
-  async goTo(URL) {
-    await this.page.goto(URL);
+  /**
+   * Go to URL
+   * @param url
+   * @returns {Promise<void>}
+   */
+  async goTo(url) {
+    await this.page.goto(url);
+  }
+
+  /**
+   * Get current url
+   * @returns {Promise<string>}
+   */
+  async getCurrentURL() {
+    return decodeURIComponent(this.page.url());
+  }
+
+  /**
+   * Wait for selector to be visible
+   * @param selector
+   * @param timeout
+   * @return {Promise<void>}
+   */
+  async waitForVisibleSelector(selector, timeout = 10000) {
+    await this.page.waitForSelector(selector, {visible: true, timeout});
   }
 
   /**
    * Get Text from element
    * @param selector, from where to get text
-   * @return textContent
+   * @param waitForSelector
+   * @return {Promise<string>}
    */
-  async getTextContent(selector) {
+  async getTextContent(selector, waitForSelector = true) {
+    if (waitForSelector) {
+      await this.waitForVisibleSelector(selector);
+    }
     const textContent = await this.page.$eval(selector, el => el.textContent);
     return textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  /**
+   * Get attribute from element
+   * @param selector
+   * @param attribute
+   * @returns {Promise<string>}
+   */
+  async getAttributeContent(selector, attribute) {
+    await this.page.waitForSelector(selector);
+    return this.page.$eval(selector, (el, attr) => el
+      .getAttribute(attr), attribute);
   }
 
   /**
@@ -31,13 +74,42 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Update checkbox value
+   * @param selector
+   * @param expectedValue
+   * @return {Promise<void>}
+   */
+  async updateCheckboxValue(selector, expectedValue) {
+    const actualValue = await this.elementChecked(selector);
+    if (actualValue !== expectedValue) {
+      await this.page.click(selector);
+    }
+  }
+
+  /**
    * Is element visible
    * @param selector, element to check
+   * @param timeout, how much should we wait
    * @return boolean, true if visible, false if not
    */
   async elementVisible(selector, timeout = 10) {
     try {
-      await this.page.waitForSelector(selector, {visible: true, timeout});
+      await this.waitForVisibleSelector(selector, timeout);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Is element not visible
+   * @param selector, element to check
+   * @param timeout, how much should we wait
+   * @return boolean, true if visible, false if not
+   */
+  async elementNotVisible(selector, timeout = 10) {
+    try {
+      await this.page.waitForSelector(selector, {hidden: true, timeout});
       return true;
     } catch (error) {
       return false;
@@ -48,6 +120,7 @@ module.exports = class CommonPage {
    * Open link in new Tab and get opened Page
    * @param currentPage, current page where to click on selector
    * @param selector, where to click
+   * @param waitForNavigation, if we should wait for navigation or not
    * @return newPage, what was opened by the browser
    */
   async openLinkWithTargetBlank(currentPage, selector, waitForNavigation = true) {
@@ -67,45 +140,8 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async waitForSelectorAndClick(selector, timeout = 5000) {
-    await this.page.waitForSelector(selector, {visible: true, timeout});
+    await this.waitForVisibleSelector(selector, timeout);
     await this.page.click(selector);
-  }
-
-  /**
-   * Check text value
-   * @param selector, element to check
-   * @param textToCheckWith, text to check with
-   * @param parameter, parameter to use
-   * @return promise<*>, boolean if check has passed or failed
-   */
-  async checkTextValue(selector, textToCheckWith, parameter = 'equal') {
-    await this.page.waitForSelector(selector);
-    let text;
-    switch (parameter) {
-      case 'equal':
-        text = await this.page.$eval(selector, el => el.innerText);
-        return text.replace(/\s+/g, ' ').trim() === textToCheckWith;
-      case 'contain':
-        text = await this.page.$eval(selector, el => el.innerText);
-        return text.includes(textToCheckWith);
-      default:
-      // do nothing
-    }
-    return false;
-  }
-
-  /**
-   * Check attribute value
-   * @param selector, element to check
-   * @param attribute, attribute to test
-   * @param textToCheckWith, text to check with
-   * @return promise, throw an error if element does not exist or attribute value is not correct
-   */
-  async checkAttributeValue(selector, attribute, textToCheckWith) {
-    await this.page.waitForSelector(selector);
-    const value = await this.page.$eval(selector, (el, attr) => el
-      .getAttribute(attr), attribute);
-    return value === textToCheckWith;
   }
 
   /**
@@ -125,6 +161,8 @@ module.exports = class CommonPage {
   async setValue(selector, value) {
     await this.waitForSelectorAndClick(selector);
     await this.page.click(selector, {clickCount: 3});
+    // Delete text from input before typing
+    await this.page.keyboard.press('Delete');
     await this.page.type(selector, value);
   }
 
@@ -142,6 +180,7 @@ module.exports = class CommonPage {
 
   /**
    * Close actual tab and goto another tab if wanted
+   * @param browser
    * @param tabId
    * @return {Promise<void>}
    */
@@ -231,5 +270,61 @@ module.exports = class CommonPage {
    */
   async goToPreviousPage(waitUntil = 'networkidle0') {
     await this.page.goBack({waitUntil});
+  }
+
+  /**
+   * Check if checkbox is selected
+   * @param selector
+   * @return {Promise<boolean>}
+   */
+  async isCheckboxSelected(selector) {
+    return this.page.$eval(selector, el => el.checked);
+  }
+
+  /**
+   * Select, unselect checkbox
+   * @param checkboxSelector, selector of checkbox
+   * @param valueWanted, true if we want to select checkBox, else otherwise
+   * @return {Promise<void>}
+   */
+  async changeCheckboxValue(checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
+      await this.page.click(checkboxSelector);
+    }
+  }
+
+  /**
+   * Sort array of strings or numbers
+   * @param arrayToSort
+   * @param isFloat
+   * @return {Promise<*>}
+   */
+  async sortArray(arrayToSort, isFloat = false) {
+    if (isFloat) {
+      return arrayToSort.sort((a, b) => a - b);
+    }
+    return arrayToSort.sort((a, b) => a.localeCompare(b));
+  }
+
+  /**
+   * Drag and drop element
+   * @param selectorToDrag
+   * @param selectorWhereToDrop
+   * @return {Promise<void>}
+   */
+  async dragAndDrop(selectorToDrag, selectorWhereToDrop) {
+    await this.page.hover(selectorToDrag);
+    await this.page.mouse.down();
+    await this.page.hover(selectorWhereToDrop);
+    await this.page.mouse.up();
+  }
+
+  /**
+   * Uppercase the first character of the word
+   * @param word
+   * @returns {string}
+   */
+  uppercaseFirstCharacter(word) {
+    return `${word[0].toUpperCase()}${word.slice(1)}`;
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,8 +29,8 @@
  */
 function ps_1770_preset_tab_enabled() {
     //First set all tabs enabled
-    Db::getInstance()->execute(
-        'UPDATE `'._DB_PREFIX_.'tab` SET `enabled`= 1'
+    $result = Db::getInstance()->execute(
+        'UPDATE `'._DB_PREFIX_.'tab` SET `enabled` = 1'
     );
 
     //Then search for inactive modules and disable their tabs
@@ -41,7 +41,11 @@ function ps_1770_preset_tab_enabled() {
     foreach ($inactiveModules as $inactiveModule) {
         $moduleNames[] = $inactiveModule['name'];
     }
-    Db::getInstance()->execute(
-        'UPDATE `'._DB_PREFIX_.'tab` SET `enabled`= 0 WHERE `module` IN (' . implode(',', $moduleNames) . ')'
-    );
+    if (count($moduleNames) > 0) {
+        $result &= Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'tab` SET `enabled` = 0 WHERE `module` IN (' . implode(',', $moduleNames) . ')'
+        );
+    }
+
+    return $result;
 }

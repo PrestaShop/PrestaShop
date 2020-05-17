@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,8 +45,8 @@ final class NetProfitPerVisitKpi implements KpiInterface
 
         $helper = new HelperKpi();
         $helper->id = 'box-net-profit-visit';
-        $helper->icon = 'person';
-        $helper->color = 'color4';
+        $helper->icon = 'account_box';
+        $helper->color = 'color1';
         $helper->title = $translator->trans('Net Profit per Visit', [], 'Admin.Orderscustomers.Feature');
         $helper->subtitle = $translator->trans('30 days', [], 'Admin.Orderscustomers.Feature');
 

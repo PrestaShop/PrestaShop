@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Cache;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 
 /**
  * This class manages CCC features configuration for a Shop.
@@ -82,11 +82,11 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array(
+        return [
             'smart_cache_css' => $this->configuration->getBoolean('PS_CSS_THEME_CACHE'),
             'smart_cache_js' => $this->configuration->getBoolean('PS_JS_THEME_CACHE'),
             'apache_optimization' => $this->configuration->getBoolean('PS_HTACCESS_CACHE_CONTROL'),
-        );
+        ];
     }
 
     /**
@@ -94,20 +94,20 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = array();
+        $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
             $this->updateCachesVersionsIfNeeded($configuration);
             if ($configuration['smart_cache_css'] || $configuration['smart_cache_js']) {
                 // Manage JS & CSS Smart cache
                 if (!$this->createThemeCacheFolder()) {
-                    $errors[] = array(
+                    $errors[] = [
                         'key' => 'To use Smarty Cache, the directory %directorypath% must be writable.',
                         'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => array(
+                        'parameters' => [
                             '%directorypath%' => $this->getThemeCacheFolder(),
-                        ),
-                    );
+                        ],
+                    ];
                 }
             }
 
@@ -194,23 +194,23 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
      */
     private function manageApacheOptimization($enabled)
     {
-        $errors = array();
+        $errors = [];
         $isCurrentlyEnabled = (bool) $this->configuration->get('PS_HTACCESS_CACHE_CONTROL');
 
         // feature activation
         if (false === $isCurrentlyEnabled && true === $enabled) {
             $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
             if (!$this->tools->generateHtaccess()) {
-                $errors = array(
+                $errors = [
                     'key' => 'Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]',
                     'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' => array(
+                    'parameters' => [
                         '[1]' => '<ul>',
                         '[/1]' => '</ul>',
                         '[2]' => '<li>',
                         '[/2]' => '</li>',
-                    ),
-                );
+                    ],
+                ];
                 $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', false);
             }
         }

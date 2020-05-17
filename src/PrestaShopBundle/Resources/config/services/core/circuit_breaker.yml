@@ -12,11 +12,15 @@ services:
     class: GuzzleHttp\Subscriber\Cache\CacheStorage
     arguments:
       - "@prestashop.core.circuit_breaker.doctrine_cache"
+      - "circuit_breaker_"
       - 86400
+
+  prestashop.core.circuit_breaker.guzzle.cache_subscriber_factory:
+    class: PrestaShopBundle\Cache\Factory\CacheSubscriberFactory
 
   prestashop.core.circuit_breaker.guzzle.cache_subscriber:
     class: GuzzleHttp\Subscriber\Cache\CacheSubscriber
-    factory: [PrestaShopBundle\Cache\Factory\CacheSubscriberFactory, create]
+    factory: ['@prestashop.core.circuit_breaker.guzzle.cache_subscriber_factory', 'create']
     arguments:
       - "@prestashop.core.circuit_breaker.guzzle.cache_storage"
 

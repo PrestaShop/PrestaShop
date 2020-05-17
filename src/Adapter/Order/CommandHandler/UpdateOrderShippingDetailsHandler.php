@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\UpdateOrderShippingDetailsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use Validate;
 
 /**
@@ -52,7 +53,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         $carrierId = $command->getNewCarrierId();
         $oldTrackingNumber = $order->shipping_number;
 
-        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        $orderCarrier = new OrderCarrier($command->getCurrentOrderCarrierId());
         if (!Validate::isLoadedObject($orderCarrier)) {
             throw new OrderException('The order carrier ID is invalid.');
         }
@@ -87,7 +88,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         //send mail only if tracking number is different AND not empty
         if (!empty($trackingNumber) && $oldTrackingNumber != $trackingNumber) {
             if (!$orderCarrier->sendInTransitEmail($order)) {
-                throw new OrderException('An error occurred while sending an email to the customer.');
+                throw new TransistEmailSendingException('An error occurred while sending an email to the customer.');
             }
 
             $customer = new Customer((int) $order->id_customer);

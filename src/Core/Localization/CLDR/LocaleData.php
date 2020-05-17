@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -334,7 +334,7 @@ class LocaleData
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData[]
+     * @return CurrencyData[]
      */
     public function getCurrencies()
     {
@@ -342,7 +342,23 @@ class LocaleData
     }
 
     /**
-     * @param \PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData[] $currencies
+     * @param string $currencyIsoCode
+     *
+     * @return CurrencyData|null
+     */
+    public function getCurrencyByIsoCode($currencyIsoCode)
+    {
+        foreach ($this->getCurrencies() as $currencyData) {
+            if ($currencyData->getIsoCode() == $currencyIsoCode) {
+                return $currencyData;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param CurrencyData[] $currencies
      *
      * @return LocaleData
      */

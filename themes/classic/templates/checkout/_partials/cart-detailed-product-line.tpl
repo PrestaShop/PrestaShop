@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -26,7 +26,11 @@
   <!--  product line left content: image-->
   <div class="product-line-grid-left col-md-3 col-xs-4">
     <span class="product-image media-middle">
-      <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
+      {if $product.cover}
+        <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}">
+      {else}
+        <img src="{$urls.no_picture_image.bySize.cart_default.url}" />
+      {/if}
     </span>
   </div>
 
@@ -57,6 +61,7 @@
           <div class="unit-price-cart">{$product.unit_price_full}</div>
         {/if}
       </div>
+      {hook h='displayProductPriceBlock' product=$product type="unit_price"}
     </div>
 
     <br/>

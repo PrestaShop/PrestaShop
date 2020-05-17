@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -119,13 +119,7 @@ class ThemeImportSource
         $supportedSources = [self::FROM_ARCHIVE, self::FROM_WEB, self::FROM_FTP];
 
         if (!in_array($sourceType, $supportedSources)) {
-            throw new NotSupportedThemeImportSourceException(
-                sprintf(
-                    'Not supported %s theme import source type supplied. Supported sources are: "%s"',
-                    var_export($sourceType, true),
-                    implode(',', $supportedSources)
-                )
-            );
+            throw new NotSupportedThemeImportSourceException(sprintf('Not supported %s theme import source type supplied. Supported sources are: "%s"', var_export($sourceType, true), implode(',', $supportedSources)));
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,7 +36,7 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findByLangAndShop($idLang, $idShop)
     {
-        $attributeGroups = array();
+        $attributeGroups = [];
 
         $qb = $this->createQueryBuilder('a')
             ->addSelect('ag.id AS attributeGroupId')
@@ -56,10 +56,10 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere('s.id = :idShop')
             ->orderBy('attributePosition')
             ->addOrderBy('attributeGroupPosition')
-            ->setParameters(array(
+            ->setParameters([
                 'idShop' => $idShop,
                 'idLang' => $idLang,
-            ));
+            ]);
 
         $result = $qb->getQuery()->getArrayResult();
 
@@ -67,15 +67,15 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
             if (isset($attributeGroups[$attribute['attributeGroupPosition']])) {
                 $attributeGroups[$attribute['attributeGroupPosition']]['attributes'][$attribute['attributePosition']] = $this->getAttributeRow($attribute);
             } else {
-                $attributeGroups[$attribute['attributeGroupPosition']] = array(
+                $attributeGroups[$attribute['attributeGroupPosition']] = [
                     'id' => $attribute['attributeGroupId'],
                     'name' => $attribute['attributeGroupName'],
                     'publicName' => $attribute['attributeGroupPublicName'],
                     'position' => $attribute['attributeGroupPosition'],
-                    'attributes' => array(
+                    'attributes' => [
                         $attribute['attributePosition'] => $this->getAttributeRow($attribute),
-                    ),
-                );
+                    ],
+                ];
             }
         }
 
@@ -84,13 +84,13 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
 
     private function getAttributeRow($attribute)
     {
-        $attributes = array(
+        $attributes = [
             'id' => $attribute['id'],
             'color' => $attribute['color'],
             'position' => $attribute['attributePosition'],
             'name' => $attribute['attributeName'],
             'texture' => '',
-        );
+        ];
         if (@file_exists(_PS_COL_IMG_DIR_ . $attribute['id'] . '.jpg')) {
             $attributes['texture'] = _THEME_COL_DIR_ . $attribute['id'] . '.jpg';
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,16 +33,25 @@ use Symfony\Component\Form\FormBuilderInterface;
 class UpdateOrderStatusType extends AbstractType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var array
      */
-    private $orderStatusChoiceProvider;
+    private $statusChoices;
 
     /**
-     * @param FormChoiceProviderInterface $orderStatusChoiceProvider
+     * @var array
      */
-    public function __construct(FormChoiceProviderInterface $orderStatusChoiceProvider)
-    {
-        $this->orderStatusChoiceProvider = $orderStatusChoiceProvider;
+    private $statusChoiceAttributes;
+
+    /**
+     * @param array $statusChoices
+     * @param array $statusChoiceAttributes
+     */
+    public function __construct(
+        array $statusChoices,
+        array $statusChoiceAttributes
+    ) {
+        $this->statusChoices = $statusChoices;
+        $this->statusChoiceAttributes = $statusChoiceAttributes;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -52,7 +60,8 @@ class UpdateOrderStatusType extends AbstractType
             ->add('new_order_status_id', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => false,
-                'choices' => $this->orderStatusChoiceProvider->getChoices(),
+                'choices' => $this->statusChoices,
+                'choice_attr' => $this->statusChoiceAttributes,
                 'translation_domain' => false,
             ])
         ;

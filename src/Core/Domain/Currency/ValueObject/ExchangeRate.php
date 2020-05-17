@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 
 /**
@@ -33,21 +34,31 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintExcep
  */
 class ExchangeRate
 {
-    const DEFAULT_RATE = 1;
+    const DEFAULT_RATE = 1.0;
 
     /**
-     * @var float|int
+     * Get the default exchange rate as a Number
+     *
+     * @return Number
+     */
+    public static function getDefaultExchangeRate(): Number
+    {
+        return new Number((string) self::DEFAULT_RATE);
+    }
+
+    /**
+     * @var float
      */
     private $exchangeRate;
 
     /**
-     * @param float|int $exchangeRate
+     * @param float $exchangeRate
      *
      * @throws CurrencyConstraintException
      */
     public function __construct($exchangeRate)
     {
-        $this->assertIsNumberAndMoreThenZero($exchangeRate);
+        $this->assertIsNumberAndMoreThanZero($exchangeRate);
         $this->exchangeRate = $exchangeRate;
     }
 
@@ -64,18 +75,12 @@ class ExchangeRate
      *
      * @throws CurrencyConstraintException
      */
-    private function assertIsNumberAndMoreThenZero($exchangeRate)
+    private function assertIsNumberAndMoreThanZero($exchangeRate)
     {
         $isIntegerOrFloat = is_int($exchangeRate) || is_float($exchangeRate);
 
         if (!$isIntegerOrFloat || 0 >= $exchangeRate) {
-            throw new CurrencyConstraintException(
-                sprintf(
-                    'Given exchange rate %s is not valid. It must be more than 0',
-                    var_export($exchangeRate, true)
-                ),
-                CurrencyConstraintException::INVALID_EXCHANGE_RATE
-            );
+            throw new CurrencyConstraintException(sprintf('Given exchange rate %s is not valid. It must be more than 0', var_export($exchangeRate, true)), CurrencyConstraintException::INVALID_EXCHANGE_RATE);
         }
     }
 }

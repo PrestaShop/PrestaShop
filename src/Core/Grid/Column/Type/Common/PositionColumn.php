@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -63,6 +63,7 @@ final class PositionColumn extends AbstractColumn
                 'sortable' => true,
                 'update_method' => 'GET',
                 'record_route_params' => [],
+                'clickable' => true,
             ])
             ->setAllowedTypes('id_field', 'string')
             ->setAllowedTypes('position_field', 'string')
@@ -70,6 +71,7 @@ final class PositionColumn extends AbstractColumn
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('update_method', 'string')
             ->setAllowedTypes('record_route_params', ['array'])
+            ->setAllowedTypes('clickable', 'bool')
             ->setAllowedValues('update_method', ['GET', 'POST']);
     }
 }

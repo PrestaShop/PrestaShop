@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -341,30 +341,30 @@ class PaymentOption implements HookContentClassInterface
         }
 
         if (array_key_exists('cta_text', $legacyOption)) {
-            $legacyOption = array($legacyOption);
+            $legacyOption = [$legacyOption];
         }
 
-        $newOptions = array();
+        $newOptions = [];
 
-        $defaults = array(
+        $defaults = [
             'additionalInformation' => null,
             'action' => null,
             'form' => null,
             'method' => null,
-            'inputs' => array(),
+            'inputs' => [],
             'logo' => null,
-        );
+        ];
 
         foreach ($legacyOption as $option) {
             $option = array_merge($defaults, $option);
 
             $newOption = new self();
             $newOption->setCallToActionText($option['cta_text'])
-                      ->setAdditionalInformation($option['additionalInformation'])
-                      ->setAction($option['action'])
-                      ->setForm($option['form'])
-                      ->setInputs($option['inputs'])
-                      ->setLogo($option['logo']);
+                ->setAdditionalInformation($option['additionalInformation'])
+                ->setAction($option['action'])
+                ->setForm($option['form'])
+                ->setInputs($option['inputs'])
+                ->setLogo($option['logo']);
 
             $newOptions[] = $newOption;
         }

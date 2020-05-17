@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,19 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Handles "Reset to defaults" action submitting on button click.
  */
 export default class ResetThemeLayoutsHandler {
   constructor() {
-    $(document).on('click', '.js-reset-theme-layouts-btn', (e) => this._handleResetting(e));
+    $(document).on('click', '.js-reset-theme-layouts-btn', (e) => this.handleResetting(e));
 
     return {};
   }
@@ -40,16 +40,16 @@ export default class ResetThemeLayoutsHandler {
    *
    * @private
    */
-  _handleResetting(event) {
+  handleResetting(event) {
     const $btn = $(event.currentTarget);
 
     const $form = $('<form>', {
-      'action': $btn.data('submit-url'),
-      'method': 'POST'
+      action: $btn.data('submit-url'),
+      method: 'POST',
     }).append($('<input>', {
-      'name': 'token',
-      'value': $btn.data('csrf-token'),
-      'type': 'hidden'
+      name: 'token',
+      value: $btn.data('csrf-token'),
+      type: 'hidden',
     }));
 
     $form.appendTo('body');

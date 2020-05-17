@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,8 +31,10 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProfileFilters;
@@ -70,7 +72,7 @@ class ProfileController extends FrameworkBundleAdminController
                         'href' => $this->generateUrl('admin_profiles_create'),
                         'desc' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
                         'icon' => 'add_circle_outline',
-                  ],
+                    ],
                 ],
                 'help_link' => $this->generateSidebarLink('AdminProfiles'),
                 'enableSidebar' => true,
@@ -264,6 +266,13 @@ class ProfileController extends FrameworkBundleAdminController
     protected function getErrorMessages()
     {
         return [
+            ProfileConstraintException::class => [
+                ProfileConstraintException::INVALID_NAME => $this->trans(
+                    'This field cannot be longer than %limit% characters (incl. HTML tags)',
+                    'Admin.Notifications.Error',
+                    ['%limit%' => ProfileSettings::NAME_MAX_LENGTH]
+                ),
+            ],
             ProfileNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'

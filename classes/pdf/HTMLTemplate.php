@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,14 +29,29 @@
  */
 abstract class HTMLTemplateCore
 {
+    /**
+     * @var string
+     */
     public $title;
+
+    /**
+     * @var string
+     */
     public $date;
+
+    /**
+     * @var bool
+     */
     public $available_in_your_account = true;
 
-    /** @var Smarty */
+    /**
+     * @var Smarty
+     */
     public $smarty;
 
-    /** @var Shop */
+    /**
+     * @var Shop
+     */
     public $shop;
 
     /**
@@ -62,14 +77,14 @@ abstract class HTMLTemplateCore
 
         $id_shop = (int) $this->shop->id;
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'available_in_your_account' => $this->available_in_your_account,
             'shop_address' => $shop_address,
             'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
             'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
             'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
             'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
-        ));
+        ]);
 
         return $this->smarty->fetch($this->getTemplate('footer'));
     }
@@ -85,7 +100,7 @@ abstract class HTMLTemplateCore
 
         $shop_address_obj = $this->shop->getAddress();
         if (isset($shop_address_obj) && $shop_address_obj instanceof Address) {
-            $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
+            $shop_address = AddressFormat::generateAddress($shop_address_obj, [], ' - ', ' ');
         }
 
         return $shop_address;
@@ -93,6 +108,8 @@ abstract class HTMLTemplateCore
 
     /**
      * Returns the invoice logo.
+     *
+     * @return string|null
      */
     protected function getLogo()
     {
@@ -136,7 +153,7 @@ abstract class HTMLTemplateCore
             $width *= $ratio;
         }
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
@@ -146,7 +163,7 @@ abstract class HTMLTemplateCore
             'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int) $id_shop),
             'width_logo' => $width,
             'height_logo' => $height,
-        ));
+        ]);
     }
 
     /**
@@ -159,9 +176,9 @@ abstract class HTMLTemplateCore
         $template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
         $hook_name = 'displayPDF' . $template;
 
-        $this->smarty->assign(array(
-            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object)),
-        ));
+        $this->smarty->assign([
+            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, ['object' => $object]),
+        ]);
     }
 
     /**

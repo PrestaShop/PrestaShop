@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,12 +40,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         $languageId = Language::getIdByIso($isoCode);
 
         if (!$languageId) {
-            throw new RuntimeException(
-                sprintf(
-                    'Iso code %s does not exist',
-                    $isoCode
-                )
-            );
+            throw new RuntimeException(sprintf('Iso code %s does not exist', $isoCode));
         }
 
         Configuration::updateValue('PS_LANG_DEFAULT', $languageId);
@@ -69,6 +64,9 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
             $language->language_code = strtolower($locale);
             $language->iso_code = substr($locale, 0, strpos($locale, '-'));
             $language->add();
+            // We need to reset the static cache, or it messes with multilang fields (because the
+            // cache doesn't contain all the expected languages)
+            Language::resetCache();
         } else {
             $language = new Language($languageId);
         }
@@ -85,12 +83,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         $language = SharedStorage::getStorage()->get($reference);
 
         if ($language->locale !== $locale) {
-            throw new RuntimeException(sprintf(
-                'Currency "%s" has "%s" iso code, but "%s" was expected.',
-                $reference,
-                $language->locale,
-                $locale
-            ));
+            throw new RuntimeException(sprintf('Currency "%s" has "%s" iso code, but "%s" was expected.', $reference, $language->locale, $locale));
         }
     }
 }

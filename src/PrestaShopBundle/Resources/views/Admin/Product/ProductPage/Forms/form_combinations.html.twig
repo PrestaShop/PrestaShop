@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -85,8 +85,8 @@
             </th>
             <th></th>
             <th>{{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}</th>
-            <th>{{ 'Impact on price'|trans({}, 'Admin.Catalog.Feature') }}</th>
-            <th>{{ 'Final price'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th>{{ 'Final price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
             {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                 <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
             {% endif %}
@@ -149,8 +149,9 @@
                 <label class="attribute-label" for="attribute-{{ attribute.id }}">
                   <span
                     class="pretty-checkbox {% if attribute.color is empty and attribute.texture is empty %} not-color {% endif %}"
-                    {% if attribute.color is not empty %} style="background-color: {{ attribute.color }}" {% endif %}
-                    {% if attribute.texture is not empty %} style="content: url({{ attribute.texture }})" {% endif %}
+                    {% if attribute.texture is not empty %} style="content: url({{ attribute.texture }})"
+                    {% elseif attribute.color is not empty %} style="background-color: {{ attribute.color }}"
+                    {% endif %}
                   >
                   </span>
                   {{ attribute.name }}

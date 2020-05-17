@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,35 +18,79 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import OrderViewPageMap from './OrderViewPageMap';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import OrderShippingManager from '@pages/order/order-shipping-manager';
+import InvoiceNoteManager from '@pages/order/invoice-note-manager';
+import OrderViewPage from '@pages/order/view/order-view-page';
+import OrderProductAutocomplete from '@pages/order/view/order-product-add-autocomplete';
+import OrderProductAdd from '@pages/order/view/order-product-add';
+import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import OrderViewPageMessagesHandler from './message/order-view-page-messages-handler';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   const DISCOUNT_TYPE_AMOUNT = 'amount';
   const DISCOUNT_TYPE_PERCENT = 'percent';
   const DISCOUNT_TYPE_FREE_SHIPPING = 'free_shipping';
 
+  new OrderShippingManager();
+  new TextWithLengthCounter();
+  const orderViewPage = new OrderViewPage();
+  const orderAddAutocomplete = new OrderProductAutocomplete($(OrderViewPageMap.productSearchInput));
+  const orderAdd = new OrderProductAdd();
+
+  orderViewPage.listenForProductPack();
+  orderViewPage.listenForProductDelete();
+  orderViewPage.listenForProductEdit();
+  orderViewPage.listenForProductAdd();
+  orderViewPage.listenForProductPagination();
+  orderViewPage.listenForRefund();
+  orderViewPage.listenForCancelProduct();
+
+  orderAddAutocomplete.listenForSearch();
+  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
+
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
   handleUpdateOrderStatusButton();
 
+  new InvoiceNoteManager();
+  const orderViewPageMessageHandler = new OrderViewPageMessagesHandler();
+  orderViewPageMessageHandler.listenForPredefinedMessageSelection();
+  orderViewPageMessageHandler.listenForFullMessagesOpen();
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();
   });
 
+  $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
+    const tempTitle = document.title;
+    document.title = $(OrderViewPageMap.mainDiv).data('orderTitle');
+    window.print();
+    document.title = tempTitle;
+  });
+
   initAddCartRuleFormHandler();
-  initAddProductFormHandler();
+  initChangeAddressFormHandler();
+  initHookTabs();
+
+  function initHookTabs() {
+    $(OrderViewPageMap.orderHookTabsContainer)
+      .find('.nav-tabs li:first-child a')
+      .tab('show');
+  }
 
   function handlePaymentDetailsToggle() {
     $(OrderViewPageMap.orderPaymentDetailsBtn).on('click', (event) => {
-      const $paymentDetailRow = $(event.currentTarget).closest('tr').next(':first');
+      const $paymentDetailRow = $(event.currentTarget)
+        .closest('tr')
+        .next(':first');
 
       $paymentDetailRow.toggleClass('d-none');
     });
@@ -72,31 +116,16 @@ $(() => {
   function handlePrivateNoteChange() {
     const $submitBtn = $(OrderViewPageMap.privateNoteSubmitBtn);
 
-    $(OrderViewPageMap.privateNoteInput).on('input', (event) => {
-      const note = $(event.currentTarget).val();
-      $submitBtn.prop('disabled', !note);
-    });
-  }
-
-  function initAddProductFormHandler() {
-    const $modal = $(OrderViewPageMap.updateOrderProductModal);
-
-    $modal.on('click', '.js-order-product-update-btn', (event) => {
-      const $btn = $(event.currentTarget);
-
-      $modal.find('.js-update-product-name').text($btn.data('product-name'));
-      $modal.find(OrderViewPageMap.updateOrderProductPriceTaxExclInput).val($btn.data('product-price-tax-excl'));
-      $modal.find(OrderViewPageMap.updateOrderProductPriceTaxInclInput).val($btn.data('product-price-tax-incl'));
-      $modal.find(OrderViewPageMap.updateOrderProductQuantityInput).val($btn.data('product-quantity'));
-      $modal.find('form').attr('action', $btn.data('update-url'));
+    $(OrderViewPageMap.privateNoteInput).on('input', () => {
+      $submitBtn.prop('disabled', false);
     });
   }
 
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
-    const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
+    const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 
@@ -108,11 +137,17 @@ $(() => {
 
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
       const selectedCartRuleType = $(event.currentTarget).val();
+      const $valueUnit = $form.find(OrderViewPageMap.addCartRuleValueUnit);
 
       if (selectedCartRuleType === DISCOUNT_TYPE_AMOUNT) {
         $valueHelp.removeClass('d-none');
+        $valueUnit.html($valueUnit.data('currencySymbol'));
       } else {
         $valueHelp.addClass('d-none');
+      }
+
+      if (selectedCartRuleType === DISCOUNT_TYPE_PERCENT) {
+        $valueUnit.html('%');
       }
 
       if (selectedCartRuleType === DISCOUNT_TYPE_FREE_SHIPPING) {
@@ -127,11 +162,25 @@ $(() => {
 
   function handleUpdateOrderStatusButton() {
     const $btn = $(OrderViewPageMap.updateOrderStatusActionBtn);
+    const $wrapper = $(OrderViewPageMap.updateOrderStatusActionInputWrapper);
 
     $(OrderViewPageMap.updateOrderStatusActionInput).on('change', (event) => {
-      const selectedOrderStatusId = $(event.currentTarget).val();
+      const $element = $(event.currentTarget);
+      const $option = $('option:selected', $element);
+      const selectedOrderStatusId = $element.val();
 
-      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('order-status-id'));
+      $wrapper.css('background-color', $option.data('background-color'));
+      $wrapper.toggleClass('is-bright', $option.data('is-bright') !== undefined);
+
+      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
+    });
+  }
+
+  function initChangeAddressFormHandler() {
+    const $modal = $(OrderViewPageMap.updateCustomerAddressModal);
+
+    $(OrderViewPageMap.openOrderAddressUpdateModalBtn).on('click', (event) => {
+      $modal.find(OrderViewPageMap.updateOrderAddressTypeInput).val($(event.currentTarget).data('addressType'));
     });
   }
 });

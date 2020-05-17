@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,18 +49,18 @@ class HistoryControllerCore extends FrontController
         }
 
         if (Tools::isSubmit('slowvalidation')) {
-            $this->warning[] = $this->trans('If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.', array(), 'Shop.Notifications.Warning');
+            $this->warning[] = $this->trans('If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.', [], 'Shop.Notifications.Warning');
         }
 
         $orders = $this->getTemplateVarOrders();
 
         if (count($orders) <= 0) {
-            $this->warning[] = $this->trans('You have not placed any orders.', array(), 'Shop.Notifications.Warning');
+            $this->warning[] = $this->trans('You have not placed any orders.', [], 'Shop.Notifications.Warning');
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'orders' => $orders,
-        ));
+        ]);
 
         parent::initContent();
         $this->setTemplate('customer/history');
@@ -68,7 +68,7 @@ class HistoryControllerCore extends FrontController
 
     public function getTemplateVarOrders()
     {
-        $orders = array();
+        $orders = [];
         $customer_orders = Order::getCustomerOrders($this->context->customer->id);
         foreach ($customer_orders as $customer_order) {
             $order = new Order((int) $customer_order['id_order']);
@@ -107,6 +107,11 @@ class HistoryControllerCore extends FrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Order history', [], 'Shop.Theme.Customeraccount'),
+            'url' => $this->context->link->getPageLink('history'),
+        ];
 
         return $breadcrumb;
     }

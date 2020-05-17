@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use Mail;
 use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
@@ -51,7 +52,6 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Mail;
 
 /**
  * Class MailThemeController manages mail theme generation, you can define the shop
@@ -371,7 +371,7 @@ class MailThemeController extends FrameworkBundleAdminController
             $this->addFlash(
                 'error',
                 $this->trans(
-                    'Cannot translate emails body contents',
+                    'Cannot translate emails body content',
                     'Admin.Notifications.Error'
                 )
             );
@@ -490,11 +490,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 $renderedLayout = $renderer->renderTxt($layout, $language);
                 break;
             default:
-                throw new NotFoundHttpException(sprintf(
-                    'Requested type %s is not managed, please use one of these: %s',
-                    $type,
-                    implode(',', [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE])
-                ));
+                throw new NotFoundHttpException(sprintf('Requested type %s is not managed, please use one of these: %s', $type, implode(',', [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE])));
                 break;
         }
 
@@ -531,12 +527,7 @@ class MailThemeController extends FrameworkBundleAdminController
         }
 
         if (null === $layout) {
-            throw new FileNotFoundException(sprintf(
-                'Cannot find layout %s%s in theme %s',
-                empty($module) ? '' : $module . ':',
-                $layoutName,
-                $themeName
-            ));
+            throw new FileNotFoundException(sprintf('Cannot find layout %s%s in theme %s', empty($module) ? '' : $module . ':', $layoutName, $themeName));
         }
 
         return $layout;

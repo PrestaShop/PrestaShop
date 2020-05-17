@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,36 +45,36 @@ class ContactCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'contact',
         'primary' => 'id_contact',
         'multilang' => true,
-        'fields' => array(
-            'email' => array(
+        'fields' => [
+            'email' => [
                 'type' => self::TYPE_STRING,
                 'validate' => 'isEmail',
                 'size' => 255,
-            ),
-            'customer_service' => array(
+            ],
+            'customer_service' => [
                 'type' => self::TYPE_BOOL,
                 'validate' => 'isBool',
-            ),
+            ],
 
             /* Lang fields */
-            'name' => array(
+            'name' => [
                 'type' => self::TYPE_STRING,
                 'lang' => true,
                 'validate' => 'isGenericName',
                 'required' => true,
                 'size' => 255,
-            ),
-            'description' => array(
+            ],
+            'description' => [
                 'type' => self::TYPE_STRING,
                 'lang' => true,
                 'validate' => 'isCleanHtml',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     /**
      * Return available contacts.

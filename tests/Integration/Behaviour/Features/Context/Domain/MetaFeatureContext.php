@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -224,14 +224,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($actualValue !== $value) {
-            throw new RuntimeException(
-                sprintf(
-                    'For given field "%s" expected value "%s" did not matched given value "%s"',
-                    $field,
-                    $value,
-                    $actualValue
-                )
-            );
+            throw new RuntimeException(sprintf('For given field "%s" expected value "%s" did not matched given value "%s"', $field, $value, $actualValue));
         }
     }
 
@@ -273,13 +266,7 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
         ;
 
         if (!in_array($pageName, $pageNames, true)) {
-            throw new RuntimeException(
-                sprintf(
-                    'Page name "%s" not found in available customization layout pages "%s"',
-                    $pageName,
-                    var_export($pageNames, true)
-                )
-            );
+            throw new RuntimeException(sprintf('Page name "%s" not found in available customization layout pages "%s"', $pageName, var_export($pageNames, true)));
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -89,7 +89,7 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getCurrencyByIsoCode($isoCode, $idLang = null)
     {
-        $currencyId = Currency::getIdByIsoCode($isoCode);
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, true);
         if (!$currencyId) {
             return null;
         }
@@ -102,11 +102,14 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $isoCode
+     * @param string $locale
+     *
+     * @return Currency|null
      */
     public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
     {
-        $idLang = Language::getIdByLocale($locale);
+        $idLang = Language::getIdByLocale($locale, true);
 
         return $this->getCurrencyByIsoCode($isoCode, $idLang);
     }
@@ -116,12 +119,12 @@ class CurrencyDataProvider implements CurrencyDataProviderInterface
      */
     public function getCurrencyByIsoCodeOrCreate($isoCode, $idLang = null)
     {
-        if (null === $idLang) {
-            $idLang = $this->configuration->get('PS_LANG_DEFAULT');
-        }
-
+        // Soft deleted currencies are not kept duplicated any more, so if one try to recreate it the one in database is reused
         $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
         if (null === $currency) {
+            if (null === $idLang) {
+                $idLang = $this->configuration->get('PS_LANG_DEFAULT');
+            }
             $currency = new Currency(null, $idLang);
         }
 

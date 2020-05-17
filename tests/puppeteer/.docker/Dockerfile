@@ -3,7 +3,7 @@
 # Based upon:
 # https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
 
-FROM node:10-slim
+FROM node:10-stretch
 
 # Install latest chrome dev package and fonts
 RUN  wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -16,8 +16,10 @@ RUN  wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
 # Copy scripts wait-for-it and run-tests
 COPY ["./.docker/prestashop/wait-for-it.sh", "./.docker/run-tests.sh", "/tmp/"]
 
-# Create folder for tests and folder for reports and copy scripts into it
-RUN mkdir -p tests/reports
+# Create folder for tests and another for downloaded files
+RUN mkdir -p /tests/reports \
+    && mkdir -p /downloads
+
 WORKDIR /tests/
 COPY ["./", "./"]
 

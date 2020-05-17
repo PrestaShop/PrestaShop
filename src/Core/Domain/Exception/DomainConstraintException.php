@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,4 +40,19 @@ class DomainConstraintException extends DomainException
      * Used when invalid money amount is provided
      */
     const INVALID_MONEY_AMOUNT = 2;
+
+    /**
+     * When price reduction type is not within defined types
+     */
+    const INVALID_REDUCTION_TYPE = 3;
+
+    /**
+     * When price reduction percentage value is not valid
+     */
+    const INVALID_REDUCTION_PERCENTAGE = 4;
+
+    /**
+     * When price reduction amount value is not valid
+     */
+    const INVALID_REDUCTION_AMOUNT = 5;
 }

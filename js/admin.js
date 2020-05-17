@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -750,21 +750,24 @@ $(document).ready(function()
       return copyMeta2friendlyURL()
   });
 
-  $('#ajax_running').ajaxStart(function() {
-    ajax_running_timeout = setTimeout(function() {showAjaxOverlay()}, 1000);
-  });
-
-  $('#ajax_running').ajaxStop(function() {
-    var element = $(this)
-    setTimeout(function(){element.hide()}, 1000);
-    clearTimeout(ajax_running_timeout);
-  });
-
-  $('#ajax_running').ajaxError(function() {
-    var element = $(this)
-    setTimeout(function(){element.hide()}, 1000);
-    clearTimeout(ajax_running_timeout);
-  });
+  $(document)
+    .ajaxStart(function() {
+      ajax_running_timeout = setTimeout(function() {
+        showAjaxOverlay()
+      }, 1000);
+    })
+    .ajaxStop(function() {
+      setTimeout(function() {
+        $('#ajax_running').hide()
+      }, 1000);
+      clearTimeout(ajax_running_timeout);
+    })
+    .ajaxError(function() {
+      setTimeout(function() {
+        $('#ajax_running').hide()
+      }, 1000);
+      clearTimeout(ajax_running_timeout);
+    });
 
   bindTabModuleListAction();
 
@@ -1547,7 +1550,7 @@ function checkLangPack(token){
           content = $.parseJSON(ret.content);
           message = langPackOk + ' <b>'+content['name'] + '</b>) :'
             +'<br />' + langPackVersion + ' ' + content['version']
-            + ' <a href="http://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
+            + ' <a href="https://www.prestashop.com/download/lang_packs/gzip/' + content['version'] + '/'
             + ($('#iso_code').val()).toLowerCase()+'.gzip" target="_blank" class="link">'+download+'</a><br />' + langPackInfo;
           $('#lang_pack_msg').html(message);
           $('#lang_pack_msg').show();

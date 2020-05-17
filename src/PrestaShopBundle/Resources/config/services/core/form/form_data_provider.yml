@@ -116,3 +116,25 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderMessageFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.catalog_price_rule_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CatalogPriceRuleFormDataProvider'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.attachment_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AttachmentFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+
+  prestashop.core.form.identifiable_object.data_provider.cancel_product_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CancelProductFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@prestashop.adapter.data_provider.currency'
+
+  prestashop.core.form.identifiable_object.data_provider.address_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\AddressFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,15 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule;
 
+use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
@@ -44,7 +46,7 @@ abstract class AbstractCatalogPriceRuleHandler
      *
      * @return SpecificPriceRule
      */
-    protected function getSpecificPriceRule(CatalogPriceRuleId $catalogPriceRuleId)
+    protected function getSpecificPriceRule(CatalogPriceRuleId $catalogPriceRuleId): SpecificPriceRule
     {
         try {
             $specificPriceRule = new SpecificPriceRule($catalogPriceRuleId->getValue());
@@ -53,9 +55,7 @@ abstract class AbstractCatalogPriceRuleHandler
         }
 
         if ($specificPriceRule->id !== $catalogPriceRuleId->getValue()) {
-            throw new CatalogPriceRuleNotFoundException(
-                sprintf('SpecificPriceRule with id "%s" was not found.', $catalogPriceRuleId->getValue())
-            );
+            throw new CatalogPriceRuleNotFoundException(sprintf('SpecificPriceRule with id "%s" was not found.', $catalogPriceRuleId->getValue()));
         }
 
         return $specificPriceRule;
@@ -75,10 +75,20 @@ abstract class AbstractCatalogPriceRuleHandler
         try {
             return $specificPriceRule->delete();
         } catch (PrestaShopException $e) {
-            throw new CatalogPriceRuleException(sprintf(
-                'An error occurred when deleting SpecificPriceRule object with id "%s".',
-                $specificPriceRule->id
-            ));
+            throw new CatalogPriceRuleException(sprintf('An error occurred when deleting SpecificPriceRule object with id "%s".', $specificPriceRule->id));
+        }
+    }
+
+    /**
+     * @param DateTime $from
+     * @param DateTime $to
+     *
+     * @throws CatalogPriceRuleConstraintException
+     */
+    protected function assertDateRangeIsNotInverse(DateTime $from, DateTime $to)
+    {
+        if ($from->diff($to)->invert) {
+            throw new CatalogPriceRuleConstraintException('The date time for catalog price rule cannot be inverse', CatalogPriceRuleConstraintException::INVALID_DATE_RANGE);
         }
     }
 }

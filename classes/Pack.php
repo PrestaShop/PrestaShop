@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,15 +53,15 @@ class PackCore extends Product
      */
     const STOCK_TYPE_DEFAULT = 3;
 
-    protected static $cachePackItems = array();
-    protected static $cacheIsPack = array();
-    protected static $cacheIsPacked = array();
+    protected static $cachePackItems = [];
+    protected static $cacheIsPack = [];
+    protected static $cacheIsPacked = [];
 
     public static function resetStaticCache()
     {
-        self::$cachePackItems = array();
-        self::$cacheIsPack = array();
-        self::$cacheIsPacked = array();
+        self::$cachePackItems = [];
+        self::$cacheIsPack = [];
+        self::$cacheIsPacked = [];
     }
 
     /**
@@ -151,21 +151,21 @@ class PackCore extends Product
     public static function getItems($id_product, $id_lang)
     {
         if (!Pack::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         if (array_key_exists($id_product, self::$cachePackItems)) {
             return self::$cachePackItems[$id_product];
         }
         $result = Db::getInstance()->executeS('SELECT id_product_item, id_product_attribute_item, quantity FROM `' . _DB_PREFIX_ . 'pack` where id_product_pack = ' . (int) $id_product);
-        $array_result = array();
+        $array_result = [];
         foreach ($result as $row) {
             $p = new Product($row['id_product_item'], false, $id_lang);
             $p->loadStockData();
             $p->pack_quantity = $row['quantity'];
             $p->id_pack_product_attribute = (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item'] ? $row['id_product_attribute_item'] : 0);
             if (isset($row['id_product_attribute_item']) && $row['id_product_attribute_item']) {
-                $sql = 'SELECT agl.`name` AS group_name, al.`name` AS attribute_name
+                $sql = 'SELECT agl.`name` AS group_name, al.`name` AS attribute_name, pa.`reference` AS attribute_reference
 					FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 					' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 					LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
@@ -180,6 +180,7 @@ class PackCore extends Product
                 $combinations = Db::getInstance()->executeS($sql);
                 foreach ($combinations as $k => $combination) {
                     $p->name .= ' ' . $combination['group_name'] . '-' . $combination['attribute_name'];
+                    $p->reference = $combination['attribute_reference'];
                 }
             }
             $array_result[] = $p;
@@ -260,12 +261,12 @@ class PackCore extends Product
             $idProductAttribute
         );
         $packStockType = $product->pack_stock_type;
-        $allPackStockType = array(
+        $allPackStockType = [
             self::STOCK_TYPE_PACK_ONLY,
             self::STOCK_TYPE_PRODUCTS_ONLY,
             self::STOCK_TYPE_PACK_BOTH,
             self::STOCK_TYPE_DEFAULT,
-        );
+        ];
 
         if (!in_array($packStockType, $allPackStockType)) {
             throw new PrestaShopException('Unknown pack stock type');
@@ -279,13 +280,13 @@ class PackCore extends Product
         }
 
         // Initialize with pack quantity if not only products
-        if (in_array($packStockType, array(self::STOCK_TYPE_PACK_ONLY, self::STOCK_TYPE_PACK_BOTH))) {
+        if (in_array($packStockType, [self::STOCK_TYPE_PACK_ONLY, self::STOCK_TYPE_PACK_BOTH])) {
             $packQuantity = $packQuantityInStock;
         }
 
         // Set pack quantity to the minimum quantity of pack, or
         // product pack
-        if (in_array($packStockType, array(self::STOCK_TYPE_PACK_BOTH, self::STOCK_TYPE_PRODUCTS_ONLY))) {
+        if (in_array($packStockType, [self::STOCK_TYPE_PACK_BOTH, self::STOCK_TYPE_PRODUCTS_ONLY])) {
             $items = array_values(Pack::getItems($idProduct, Configuration::get('PS_LANG_DEFAULT')));
 
             foreach ($items as $index => $item) {
@@ -320,7 +321,7 @@ class PackCore extends Product
     public static function getItemTable($id_product, $id_lang, $full = false)
     {
         if (!Pack::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         $context = Context::getContext();
@@ -348,7 +349,7 @@ class PackCore extends Product
             if (Combination::isFeatureActive() && isset($line['id_product_attribute_item']) && $line['id_product_attribute_item']) {
                 $line['cache_default_attribute'] = $line['id_product_attribute'] = $line['id_product_attribute_item'];
 
-                $sql = 'SELECT agl.`name` AS group_name, al.`name` AS attribute_name,  pai.`id_image` AS id_product_attribute_image
+                $sql = 'SELECT pa.`reference` AS attribute_reference, agl.`name` AS group_name, al.`name` AS attribute_name,  pai.`id_image` AS id_product_attribute_image
 				FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 				' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = ' . $line['id_product_attribute_item'] . '
@@ -366,6 +367,9 @@ class PackCore extends Product
                 if (isset($attr_name[0]['id_product_attribute_image']) && $attr_name[0]['id_product_attribute_image']) {
                     $line['id_image'] = $attr_name[0]['id_product_attribute_image'];
                 }
+
+                $line['reference'] = $attr_name[0]['attribute_reference'] ?? '';
+
                 $line['name'] .= "\n";
                 foreach ($attr_name as $value) {
                     $line['name'] .= ' ' . $value['group_name'] . '-' . $value['attribute_name'];
@@ -378,7 +382,7 @@ class PackCore extends Product
             return $result;
         }
 
-        $array_result = array();
+        $array_result = [];
         foreach ($result as $prow) {
             if (!Pack::isPack($prow['id_product'])) {
                 $prow['id_product_attribute'] = (int) $prow['id_product_attribute_item'];
@@ -392,7 +396,7 @@ class PackCore extends Product
     public static function getPacksTable($id_product, $id_lang, $full = false, $limit = null)
     {
         if (!Pack::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         $packs = Db::getInstance()->getValue('
@@ -401,7 +405,7 @@ class PackCore extends Product
 		WHERE a.`id_product_item` = ' . (int) $id_product);
 
         if (!(int) $packs) {
-            return array();
+            return [];
         }
 
         $context = Context::getContext();
@@ -428,7 +432,7 @@ class PackCore extends Product
             return $result;
         }
 
-        $array_result = array();
+        $array_result = [];
         foreach ($result as $row) {
             if (!Pack::isPacked($row['id_product'])) {
                 $array_result[] = Product::getProductProperties($id_lang, $row);
@@ -440,7 +444,7 @@ class PackCore extends Product
 
     public static function deleteItems($id_product)
     {
-        return Db::getInstance()->update('product', array('cache_is_pack' => 0), 'id_product = ' . (int) $id_product) &&
+        return Db::getInstance()->update('product', ['cache_is_pack' => 0], 'id_product = ' . (int) $id_product) &&
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'pack` WHERE `id_product_pack` = ' . (int) $id_product) &&
             Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', Pack::isCurrentlyUsed());
     }
@@ -461,13 +465,13 @@ class PackCore extends Product
     {
         $id_attribute_item = (int) $id_attribute_item ? (int) $id_attribute_item : Product::getDefaultAttribute((int) $id_item);
 
-        return Db::getInstance()->update('product', array('cache_is_pack' => 1), 'id_product = ' . (int) $id_product) &&
-            Db::getInstance()->insert('pack', array(
+        return Db::getInstance()->update('product', ['cache_is_pack' => 1], 'id_product = ' . (int) $id_product) &&
+            Db::getInstance()->insert('pack', [
                 'id_product_pack' => (int) $id_product,
                 'id_product_item' => (int) $id_item,
                 'id_product_attribute_item' => (int) $id_attribute_item,
                 'quantity' => (int) $qty,
-            ))
+            ])
             && Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
     }
 
@@ -560,7 +564,7 @@ class PackCore extends Product
     }
 
     /**
-     * Returns Packs that conatins the given product in the right declinaison.
+     * Returns Packs that contains the given product in the right declinaison.
      *
      * @param int $id_item Product item id that could be contained in a|many pack(s)
      * @param int $id_attribute_item The declinaison of the product
@@ -571,7 +575,7 @@ class PackCore extends Product
     public static function getPacksContainingItem($id_item, $id_attribute_item, $id_lang)
     {
         if (!Pack::isFeatureActive() || !$id_item) {
-            return array();
+            return [];
         }
 
         $query = 'SELECT `id_product_pack`, `quantity` FROM `' . _DB_PREFIX_ . 'pack`
@@ -580,7 +584,7 @@ class PackCore extends Product
             $query .= ' AND `id_product_attribute_item` = ' . ((int) $id_attribute_item);
         }
         $result = Db::getInstance()->executeS($query);
-        $array_result = array();
+        $array_result = [];
         foreach ($result as $row) {
             $p = new Product($row['id_product_pack'], true, $id_lang);
             $p->loadStockData();

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,6 +45,10 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
     protected $template;
     protected $unreachableStepTemplate = 'checkout/_partials/steps/unreachable.tpl';
 
+    /**
+     * @param Context $context
+     * @param TranslatorInterface $translator
+     */
     public function __construct(Context $context, TranslatorInterface $translator)
     {
         $this->context = $context;
@@ -73,14 +77,14 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
         return $this->translator;
     }
 
-    protected function renderTemplate($template, array $extraParams = array(), array $params = array())
+    protected function renderTemplate($template, array $extraParams = [], array $params = [])
     {
-        $defaultParams = array(
+        $defaultParams = [
             'title' => $this->getTitle(),
             'step_is_complete' => (int) $this->isComplete(),
             'step_is_reachable' => (int) $this->isReachable(),
             'step_is_current' => (int) $this->isCurrent(),
-        );
+        ];
 
         $scope = $this->smarty->createData(
             $this->smarty
@@ -169,7 +173,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
 
     public function getDataToPersist()
     {
-        return array();
+        return [];
     }
 
     public function restorePersistedData(array $data)

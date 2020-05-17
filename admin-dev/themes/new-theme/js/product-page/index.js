@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ import nestedCategory from './nested-categories';
 import combination from './combination';
 import Serp from '../app/utils/serp/index';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   productHeader();
@@ -51,7 +51,7 @@ $(() => {
       watchedDescription: '.serp-watched-description',
       watchedMetaUrl: '.serp-watched-url:input',
     },
-    $('#product_form_preview_btn').data('seo-url')
+    $('#product_form_preview_btn').data('seo-url'),
   );
 
   // This is the only script for the module page so there is no specific file for it.

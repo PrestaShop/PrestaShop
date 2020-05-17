@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,7 +45,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
      */
     private $shop;
 
-    public function __construct(array $parameters = array())
+    public function __construct(array $parameters = [])
     {
         // Do nothing
         if (!empty($parameters)) {
@@ -72,7 +72,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function replace(array $parameters = array())
+    public function replace(array $parameters = [])
     {
         $this->add($parameters);
     }
@@ -80,7 +80,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function add(array $parameters = array())
+    public function add(array $parameters = [])
     {
         foreach ($parameters as $key => $value) {
             $this->set($key, $value);

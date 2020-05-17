@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -195,11 +195,7 @@ abstract class AbstractDataLayer
             try {
                 $this->doWrite($id, $data);
             } catch (Exception $e) {
-                throw new DataLayerException(
-                    'Unable to write into "' . $id . '"" (data layer : "' . __CLASS__ . '")',
-                    0,
-                    $e
-                );
+                throw new DataLayerException('Unable to write into "' . $id . '"" (data layer : "' . get_class($this) . '")', 0, $e);
             }
         }
     }
@@ -229,11 +225,7 @@ abstract class AbstractDataLayer
             try {
                 $this->doWrite($id, $data);
             } catch (Exception $e) {
-                throw new DataLayerException(
-                    'Unable to write into "' . $id . '" (data layer "' . __CLASS__ . '")',
-                    0,
-                    $e
-                );
+                throw new DataLayerException('Unable to write into "' . $id . '" (data layer "' . get_class($this) . '")', 0, $e);
             }
 
             // If update needed after write

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,21 +19,27 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
+use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -56,20 +62,26 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function notificationsAction()
     {
-        // TODO: Use CQRS
-        return new JsonResponse((new \Notification())->getLastElements());
+        $employeeId = Context::getContext()->employee->id;
+        /** @var NotificationsResults $elements */
+        $elements = $this->getQueryBus()->handle(new GetNotificationLastElements($employeeId));
+
+        return new JsonResponse($elements->getNotificationsResultsForJS());
     }
 
     /**
      * Update the last time a notification type has been seen.
      *
      * @param Request $request
+     *
+     * @throws TypeException
      */
     public function notificationsAckAction(Request $request)
     {
         $type = $request->request->get('type');
-        // TODO: Use CQRS
-        return new JsonResponse((new \Notification())->updateEmployeeLastElement($type));
+        $this->getCommandBus()->handle(new UpdateEmployeeNotificationLastElementCommand($type));
+
+        return new JsonResponse(true);
     }
 
     /**
@@ -112,61 +124,61 @@ class CommonController extends FrameworkBundleAdminController
         $to = $offset + $limit - 1;
 
         // urls from route
-        $callerParameters = $request->attributes->get('caller_parameters', array());
+        $callerParameters = $request->attributes->get('caller_parameters', []);
         foreach ($callerParameters as $k => $v) {
             if (strpos($k, '_') === 0) {
                 unset($callerParameters[$k]);
             }
         }
-        $callerParameters += array('_route' => false);
+        $callerParameters += ['_route' => false];
         $routeName = $request->attributes->get('caller_route', $callerParameters['_route']);
         $nextPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => min($total - 1, $offset + $limit),
                 $limitParam => $limit,
-            )
+            ]
         ));
 
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => max(0, $offset - $limit),
                 $limitParam => $limit,
-            )
+            ]
         ));
         $firstPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 0,
                 $limitParam => $limit,
-            )
+            ]
         ));
         $lastPageUrl = (!$routeName || ($offset + $limit >= $total)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => ($pageCount - 1) * $limit,
                 $limitParam => $limit,
-            )
+            ]
         ));
         $changeLimitUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 0,
                 $limitParam => '_limit',
-            )
+            ]
         ));
         $jumpPageUrl = (!$routeName) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
-            array(
+            [
                 $offsetParam => 999999,
                 $limitParam => $limit,
-            )
+            ]
         ));
-        $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
+        $limitChoices = $request->attributes->get('limit_choices', [10, 20, 50, 100]);
 
         // Template vars injection
-        $vars = array(
+        $vars = [
             'limit' => $limit,
             'changeLimitUrl' => $changeLimitUrl,
             'first_url' => $firstPageUrl,
@@ -180,7 +192,7 @@ class CommonController extends FrameworkBundleAdminController
             'last_url' => $lastPageUrl,
             'jump_page_url' => $jumpPageUrl,
             'limit_choices' => $limitChoices,
-        );
+        ];
         if ($view != 'full') {
             return $this->render('@PrestaShop/Admin/Common/pagination_' . $view . '.html.twig', $vars);
         }
@@ -209,7 +221,7 @@ class CommonController extends FrameworkBundleAdminController
         /** @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
-        $modules = array();
+        $modules = [];
         foreach ($moduleIdList as $id) {
             try {
                 $module = $modulesRepository->getModule($id);
@@ -227,10 +239,10 @@ class CommonController extends FrameworkBundleAdminController
         $collection = AddonsCollection::createFrom($modules);
         $modules = $modulesProvider->generateAddonsUrls($collection);
 
-        return array(
+        return [
             'domain' => $domain,
             'modules' => array_slice($modules, 0, $limit, true),
-        );
+        ];
     }
 
     /**
@@ -314,11 +326,11 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function renderFieldAction($formName, $formType, $fieldName, $fieldData)
     {
-        $formData = array(
-            $formName => array(
+        $formData = [
+            $formName => [
                 $fieldName => $fieldData,
-            ),
-        );
+            ],
+        ];
 
         $form = $this->createFormBuilder($formData);
         $form->add($formName, $formType);
@@ -349,27 +361,29 @@ class CommonController extends FrameworkBundleAdminController
     ) {
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
-        /** @var GridDefinitionInterface $definition */
-        $definition = $definitionFactory->getDefinition();
 
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
+        if (!($definitionFactory instanceof FilterableGridDefinitionFactoryInterface)) {
+            /** @var ControllerResponseBuilder $responseBuilder */
+            $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
 
-        $filtersForm = $gridFilterFormFactory->create($definition);
-        $filtersForm->handleRequest($request);
-
-        $redirectParams = [];
-        if ($filtersForm->isSubmitted()) {
-            $redirectParams = [
-                'filters' => $filtersForm->getData(),
-            ];
+            return $controllerResponseBuilder->buildSearchResponse(
+                $definitionFactory,
+                $request,
+                $redirectRoute,
+                $redirectQueryParamsToKeep
+            );
         }
 
-        foreach ($redirectQueryParamsToKeep as $paramName) {
-            if ($request->query->has($paramName)) {
-                $redirectParams[$paramName] = $request->query->get($paramName);
-            }
-        }
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        return $this->redirectToRoute($redirectRoute, $redirectParams);
+        return $responseBuilder->buildSearchResponse(
+            $definitionFactory,
+            $request,
+            $definitionFactory->getFilterId(),
+            $redirectRoute,
+            $redirectQueryParamsToKeep
+        );
     }
 }

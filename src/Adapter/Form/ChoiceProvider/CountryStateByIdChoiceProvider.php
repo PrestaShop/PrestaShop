@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
+use Country;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopException;
@@ -45,20 +46,23 @@ final class CountryStateByIdChoiceProvider implements ConfigurableFormChoiceProv
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
         $resolvedOptions = $resolver->resolve($options);
+        $choices = [];
 
         try {
-            $states = State::getStatesByIdCountry($resolvedOptions['id_country'], $resolvedOptions['only_active']);
-            $choices = [];
+            $countryId = $resolvedOptions['id_country'];
+            $countryHasStates = (new Country($countryId))->contains_states;
+
+            if (!$countryHasStates) {
+                return [];
+            }
+
+            $states = State::getStatesByIdCountry($countryId, $resolvedOptions['only_active'], 'name', 'asc');
 
             foreach ($states as $state) {
                 $choices[$state['name']] = $state['id_state'];
             }
         } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf(
-                    'An error occurred when getting states for country id "%s"',
-                    $resolvedOptions['id_country'])
-            );
+            throw new CoreException(sprintf('An error occurred when getting states for country id "%s"', $countryId));
         }
 
         return $choices;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,16 +19,20 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Customer;
+use Group;
 use Order;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShopException;
 
 /**
  * Reusable methods for Order subdomain command/query handlers.
@@ -42,15 +46,49 @@ abstract class AbstractOrderHandler
      */
     protected function getOrderObject(OrderId $orderId)
     {
-        $order = new Order($orderId->getValue());
-
-        if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException(
-                $orderId,
-                sprintf('Order with id "%d" was not found.', $orderId->getValue())
+        try {
+            $order = new Order($orderId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new OrderException(
+                sprintf(
+                    'Error occured when trying to get order object #%s',
+                    $orderId->getValue()
+                ),
+                0,
+                $e
             );
         }
 
+        if ($order->id !== $orderId->getValue()) {
+            throw new OrderNotFoundException($orderId, sprintf('Order with id "%d" was not found.', $orderId->getValue()));
+        }
+
         return $order;
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return bool
+     */
+    protected function isTaxIncludedInOrder(Order $order): bool
+    {
+        $customer = new Customer($order->id_customer);
+
+        $taxCalculationMethod = Group::getPriceDisplayMethod((int) $customer->id_default_group);
+
+        return $taxCalculationMethod === PS_TAX_INC;
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return int
+     */
+    protected function getOrderTaxCalculationMethod(Order $order): int
+    {
+        $customer = new Customer($order->id_customer);
+
+        return Group::getPriceDisplayMethod((int) $customer->id_default_group);
     }
 }

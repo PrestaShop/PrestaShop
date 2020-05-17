@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -71,8 +71,7 @@ if (_PS_MODE_DEV_) {
 }
 require_once __DIR__.'/../app/AppKernel.php';
 
-$kernel = new AppKernel(_PS_MODE_DEV_?'dev':'prod', _PS_MODE_DEV_);
-//$kernel = new AppCache($kernel);
+$kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
 // When using the HttpCache, you need to call the method in your front controller instead of relying on the configuration parameter
 //Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();

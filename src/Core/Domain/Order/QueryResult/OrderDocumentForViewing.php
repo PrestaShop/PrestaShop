@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -51,6 +51,15 @@ class OrderDocumentForViewing
     private $referenceNumber;
 
     /**
+     * When eligible, document amount as a number
+     *
+     * @var float|null
+     */
+    private $numericalAmount;
+
+    /**
+     * When eligible, document amount as a string, ready to be displayed
+     *
      * @var string|null
      */
     private $amount;
@@ -75,6 +84,7 @@ class OrderDocumentForViewing
         string $type,
         DateTimeImmutable $createdAt,
         string $referenceNumber,
+        ?float $numericalAmount,
         ?string $amount,
         ?string $amountMismatch,
         ?string $note,
@@ -84,6 +94,7 @@ class OrderDocumentForViewing
         $this->type = $type;
         $this->createdAt = $createdAt;
         $this->referenceNumber = $referenceNumber;
+        $this->numericalAmount = $numericalAmount;
         $this->amount = $amount;
         $this->amountMismatch = $amountMismatch;
         $this->note = $note;
@@ -143,5 +154,13 @@ class OrderDocumentForViewing
     public function isAddPaymentAllowed(): bool
     {
         return $this->isAddPaymentAllowed;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getNumericalAmount(): ?float
+    {
+        return $this->numericalAmount;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,21 +50,13 @@ abstract class AbstractCartHandler
     protected function getCart(CartId $cartId)
     {
         try {
-            //@todo: legacy uses context cart object.
-            //@todo: Make sure it is not necessary to set the context cart.
-            //@todo: else refactor to get context cart and set it after every edit
             $cart = new Cart($cartId->getValue());
         } catch (PrestaShopException $e) {
-            throw new CartException(sprintf(
-                'An error occurred when trying to load cart with id "%s',
-                $cartId->getValue()
-            ));
+            throw new CartException(sprintf('An error occurred when trying to load cart with id "%s', $cartId->getValue()));
         }
 
         if (!Validate::isLoadedObject($cart) || $cartId->getValue() !== (int) $cart->id) {
-            throw new CartNotFoundException(
-                sprintf('Cart with id "%s" was not found', $cartId->getValue())
-            );
+            throw new CartNotFoundException(sprintf('Cart with id "%s" was not found', $cartId->getValue()));
         }
 
         return $cart;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,9 +53,7 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
         $orderState = new OrderState($command->getNewOrderStatusId());
 
         if ($orderState->id !== $command->getNewOrderStatusId()) {
-            throw new OrderException(
-                sprintf('Order state with ID "%s" was not found.', $command->getNewOrderStatusId())
-            );
+            throw new OrderException(sprintf('Order state with ID "%s" was not found.', $command->getNewOrderStatusId()));
         }
 
         $ordersWithFailedToUpdateStatus = [];
@@ -111,12 +109,7 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
             || !empty($ordersWithFailedToSendEmail)
             || !empty($ordersWithAssignedStatus)
         ) {
-            throw new ChangeOrderStatusException(
-                $ordersWithFailedToUpdateStatus,
-                $ordersWithFailedToSendEmail,
-                $ordersWithAssignedStatus,
-                'Failed to update status or sent email when changing order status.'
-            );
+            throw new ChangeOrderStatusException($ordersWithFailedToUpdateStatus, $ordersWithFailedToSendEmail, $ordersWithAssignedStatus, 'Failed to update status or sent email when changing order status.');
         }
     }
 

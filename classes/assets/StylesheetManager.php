@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 class StylesheetManagerCore extends AbstractAssetManager
 {
-    private $valid_media = array(
+    private $valid_media = [
         'all',
         'braille',
         'embossed',
@@ -36,16 +36,25 @@ class StylesheetManagerCore extends AbstractAssetManager
         'speech',
         'tty',
         'tv',
-    );
+    ];
 
     protected function getDefaultList()
     {
         return [
-            'external' => array(),
-            'inline' => array(),
+            'external' => [],
+            'inline' => [],
         ];
     }
 
+    /**
+     * @param $id
+     * @param string $relativePath
+     * @param string $media
+     * @param int $priority
+     * @param bool $inline
+     * @param string $server
+     * @param bool $needRtl
+     */
     public function register(
         $id,
         $relativePath,
@@ -79,6 +88,9 @@ class StylesheetManagerCore extends AbstractAssetManager
         }
     }
 
+    /**
+     * @return array
+     */
     public function getList()
     {
         $this->sortList();
@@ -87,6 +99,14 @@ class StylesheetManagerCore extends AbstractAssetManager
         return $this->list;
     }
 
+    /**
+     * @param $id
+     * @param string $fullPath
+     * @param string $media
+     * @param int $priority
+     * @param bool $inline
+     * @param string $server
+     */
     protected function add($id, $fullPath, $media, $priority, $inline, $server)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
@@ -100,7 +120,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             $type = ($inline) ? 'inline' : 'external';
         }
 
-        $this->list[$type][$id] = array(
+        $this->list[$type][$id] = [
             'id' => $id,
             'type' => $type,
             'path' => $fullPath,
@@ -108,7 +128,7 @@ class StylesheetManagerCore extends AbstractAssetManager
             'media' => $media,
             'priority' => $priority,
             'server' => $server,
-        );
+        ];
     }
 
     private function getSanitizedMedia($media)

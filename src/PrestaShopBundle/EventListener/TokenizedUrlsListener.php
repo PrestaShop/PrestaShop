@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -67,7 +67,7 @@ class TokenizedUrlsListener
         }
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(KernelEvent $event)
     {
         $request = $event->getRequest();
 
@@ -101,15 +101,20 @@ class TokenizedUrlsListener
             }
         }
 
-        $token = urldecode($request->query->get('_token', false));
+        $token = false;
+        if ($request->query->has('_token')) {
+            $token = new CsrfToken($this->username, $request->query->get('_token'));
+        } elseif (isset($request->query->get('form')['_token'])) {
+            $token = new CsrfToken('form', $request->query->get('form')['_token']);
+        }
 
-        if (false === $token || !$this->tokenManager->isTokenValid(new CsrfToken($this->username, $token))) {
+        if (false === $token || !$this->tokenManager->isTokenValid($token)) {
             // remove token if any
             if (false !== strpos($uri, '_token=')) {
                 $uri = substr($uri, 0, strpos($uri, '_token='));
             }
 
-            $response = new RedirectResponse($this->router->generate('admin_security_compromised', array('uri' => urlencode($uri))));
+            $response = new RedirectResponse($this->router->generate('admin_security_compromised', ['uri' => urlencode($uri)]));
             $event->setResponse($response);
         }
     }

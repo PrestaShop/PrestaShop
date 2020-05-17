@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -167,6 +167,16 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" has no discount code$/
+     */
+    public function cartRuleNamedHasNoCode($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->code = '';
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
      * @Given /^cart rule "(.+)" is restricted to product "(.+)"$/
      */
     public function cartRuleNamedIsRestrictedToProductNamed($cartRuleName, $productName)
@@ -203,6 +213,26 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->cartRules[$cartRuleName]->product_restriction = 1;
         $this->cartRules[$cartRuleName]->reduction_product = -1;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @Given /^cart rule "(.+)" is disabled$/
+     */
+    public function cartRuleIsDisabled($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->active = 0;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
+     * @When /^I enable cart rule "(.+)"$/
+     */
+    public function enableCartRule($cartRuleName)
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->active = 1;
         $this->cartRules[$cartRuleName]->save();
     }
 
@@ -255,12 +285,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $result = $this->cartRules[$cartRuleName]->checkValidity(\Context::getContext(), false, false);
         if ($result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects false, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects false, got %s instead', $result));
         }
     }
 
@@ -272,12 +297,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkCartRuleWithNameExists($cartRuleName);
         $result = $this->cartRules[$cartRuleName]->checkValidity(\Context::getContext(), false, false);
         if (!$result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects true, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
     }
 
@@ -299,12 +319,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $result = CartRule::haveCartRuleToday($customerId);
         if (!$result) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects true, got %s instead',
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects true, got %s instead', $result));
         }
     }
 
@@ -315,13 +330,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $result = count($this->getCurrentCart()->getCartRules());
         if ($result != $cartRuleCount) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $cartRuleCount,
-                    $result
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $cartRuleCount, $result));
         }
     }
 
@@ -342,13 +351,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
         $cartRules = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
         if ($expectedCount != count($cartRules)) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedCount,
-                    count($cartRules)
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedCount, count($cartRules)));
         }
     }
 
@@ -361,19 +364,11 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);
         $cartRules = CartRule::getCustomerCartRules($customer->id_lang, $customer->id, true, false);
         if (!isset($cartRules[$position - 1]['id_cart_rule'])) {
-            throw new \Exception(
-                sprintf('Undefined cartRule on position #%s', $position - 1)
-            );
+            throw new \Exception(sprintf('Undefined cartRule on position #%s', $position - 1));
         }
         $cartRule = new CartRule($cartRules[$position - 1]['id_cart_rule']);
         if ($expectedValue != $cartRule->reduction_amount) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expects %s, got %s instead',
-                    $expectedValue,
-                    $cartRule->reduction_amount
-                )
-            );
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $cartRule->reduction_amount));
         }
     }
 }

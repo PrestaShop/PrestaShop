@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 set_time_limit(0);
 
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70103);
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '7.1');
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '7.1.3');
 define('_PS_VERSION_', '%ps-version-placeholder%');
 
 define('ZIP_NAME', 'prestashop.zip');

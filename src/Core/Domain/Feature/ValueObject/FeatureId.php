@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -64,10 +64,7 @@ class FeatureId
     private function assertIntegerIsGreaterThanZero($featureId)
     {
         if (!is_numeric($featureId) || 0 > $featureId) {
-            throw new InvalidFeatureIdException(sprintf(
-                'Invalid feature id %s supplied. Feature id must be positive integer.',
-                var_export($featureId, true)
-            ));
+            throw new InvalidFeatureIdException(sprintf('Invalid feature id %s supplied. Feature id must be positive integer.', var_export($featureId, true)));
         }
     }
 }

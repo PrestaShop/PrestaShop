@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,10 +19,11 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerLoginFormCore extends AbstractForm
@@ -31,6 +32,11 @@ class CustomerLoginFormCore extends AbstractForm
     private $urls;
 
     protected $template = 'customer/_partials/login-form.tpl';
+
+    /**
+     * @var InternationalizedDomainNameConverter
+     */
+    private $IDNConverter;
 
     public function __construct(
         Smarty $smarty,
@@ -52,6 +58,7 @@ class CustomerLoginFormCore extends AbstractForm
         $this->constraintTranslator = new ValidateConstraintTranslator(
             $this->translator
         );
+        $this->IDNConverter = new InternationalizedDomainNameConverter();
     }
 
     public function submit()
@@ -81,6 +88,17 @@ class CustomerLoginFormCore extends AbstractForm
         }
 
         return !$this->hasErrors();
+    }
+
+    public function fillWith(array $params = [])
+    {
+        if (!empty($params['email'])) {
+            // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
+            // we need to convert it back
+            $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
+        }
+
+        return parent::fillWith($params);
     }
 
     public function getTemplateVariables()

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -40,9 +40,7 @@ class MetaFeatureContext extends AbstractPrestaShopFeatureContext
         $meta = SharedStorage::getStorage()->get($reference);
 
         if ($meta->page !== $expectedPageName) {
-            throw new RuntimeException(
-                sprintf('Expected page name "%s" did not matched given %s', $expectedPageName, $meta->page)
-            );
+            throw new RuntimeException(sprintf('Expected page name "%s" did not matched given %s', $expectedPageName, $meta->page));
         }
     }
 
@@ -56,14 +54,7 @@ class MetaFeatureContext extends AbstractPrestaShopFeatureContext
         $meta = SharedStorage::getStorage()->get($reference);
 
         if ($meta->title[$defaultLanguageId] !== $expectedTitle) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expected title "%s" did not matched given %s for language %s',
-                    $expectedTitle,
-                    $meta->title[$defaultLanguageId],
-                    $defaultLanguageId
-                )
-            );
+            throw new RuntimeException(sprintf('Expected title "%s" did not matched given %s for language %s', $expectedTitle, $meta->title[$defaultLanguageId], $defaultLanguageId));
         }
     }
 
@@ -77,14 +68,7 @@ class MetaFeatureContext extends AbstractPrestaShopFeatureContext
         $meta = SharedStorage::getStorage()->get($reference);
 
         if ($meta->{$field}[$defaultLanguageId] !== $expectedValue) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expected value "%s" did not matched given "%s" for language %d',
-                    $expectedValue,
-                    $meta->{$field}[$defaultLanguageId],
-                    $defaultLanguageId
-                )
-            );
+            throw new RuntimeException(sprintf('Expected value "%s" did not matched given "%s" for language %d', $expectedValue, $meta->{$field}[$defaultLanguageId], $defaultLanguageId));
         }
     }
 }

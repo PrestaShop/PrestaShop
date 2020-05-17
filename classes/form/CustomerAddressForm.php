@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -112,7 +112,7 @@ class CustomerAddressFormCore extends AbstractForm
                 if (!$country->checkZipCode($postcode->getValue())) {
                     $postcode->addError($this->translator->trans(
                         'Invalid postcode - should look like "%zipcode%"',
-                        array('%zipcode%' => $country->zip_code_format),
+                        ['%zipcode%' => $country->zip_code_format],
                         'Shop.Forms.Errors'
                     ));
                     $is_valid = false;
@@ -120,7 +120,7 @@ class CustomerAddressFormCore extends AbstractForm
             }
         }
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) !== '') {
+        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', ['form' => $this])) !== '') {
             $is_valid &= (bool) $hookReturn;
         }
 
@@ -134,7 +134,7 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         $address = new Address(
-            $this->getValue('id_address'),
+            Tools::getValue('id_address'),
             $this->language->id
         );
 
@@ -150,7 +150,7 @@ class CustomerAddressFormCore extends AbstractForm
             $address->alias = $this->translator->trans('My Address', [], 'Shop.Theme.Checkout');
         }
 
-        Hook::exec('actionSubmitCustomerAddressForm', array('address' => &$address));
+        Hook::exec('actionSubmitCustomerAddressForm', ['address' => &$address]);
 
         $this->setAddress($address);
 
@@ -210,11 +210,11 @@ class CustomerAddressFormCore extends AbstractForm
             $formFields['lastname']['value'] = $context->customer->lastname;
         }
 
-        return array(
+        return [
             'id_address' => (isset($this->address->id)) ? $this->address->id : 0,
             'action' => $this->action,
             'errors' => $this->getErrors(),
             'formFields' => $formFields,
-        );
+        ];
     }
 }

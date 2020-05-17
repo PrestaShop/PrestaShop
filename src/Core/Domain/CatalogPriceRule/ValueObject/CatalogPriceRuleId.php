@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRul
 /**
  * Provides catalog price rule id
  */
-class CatalogPriceRuleId
+final class CatalogPriceRuleId
 {
     /**
      * @var int
@@ -43,34 +43,31 @@ class CatalogPriceRuleId
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    public function __construct($catalogPriceRuleId)
+    public function __construct(int $catalogPriceRuleId)
     {
-        $this->assertIsIntegerGreaterThanZero($catalogPriceRuleId);
+        $this->assertIsGreaterThanZero($catalogPriceRuleId);
         $this->catalogPriceRuleId = $catalogPriceRuleId;
     }
 
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->catalogPriceRuleId;
     }
 
     /**
-     * Validates that the value is integer and is greater than zero
+     * Validates that the value is greater than zero
      *
-     * @param $value
+     * @param int $value
      *
      * @throws CatalogPriceRuleConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function assertIsGreaterThanZero(int $value)
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new CatalogPriceRuleConstraintException(
-                sprintf('Invalid catalog price rule id "%s".', var_export($value, true)),
-                CatalogPriceRuleConstraintException::INVALID_ID
-            );
+        if (0 >= $value) {
+            throw new CatalogPriceRuleConstraintException(sprintf('Invalid catalog price rule id "%s".', $value), CatalogPriceRuleConstraintException::INVALID_ID);
         }
     }
 }

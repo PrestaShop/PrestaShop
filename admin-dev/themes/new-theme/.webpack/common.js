@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,36 +18,49 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const cssExtractedFileName = 'theme';
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const bourbon = require('bourbon');
 
 module.exports = {
   externals: {
     jquery: 'jQuery',
   },
   entry: {
+    address: './js/pages/address',
+    attachment: './js/pages/attachment',
+    attribute: './js/pages/attribute',
+    attribute_group: './js/pages/attribute-group',
     backup: './js/pages/backup',
     catalog: './js/app/pages/catalog',
     catalog_product: './js/pages/catalog/product',
+    catalog_price_rule: './js/pages/catalog-price-rule',
+    catalog_price_rule_form: './js/pages/catalog-price-rule/form',
     category: './js/pages/category',
     cldr: './js/app/cldr',
     cms_page: './js/pages/cms-page',
     cms_page_form: './js/pages/cms-page/form',
     contacts: './js/pages/contacts',
+    credit_slip: './js/pages/credit-slip',
     currency: './js/pages/currency',
+    currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',
+    customer_address_form: './js/pages/address/form.js',
+    customer_thread_view: './js/pages/customer-thread/view.js',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
+    error: './js/pages/error',
+    feature_form: './js/pages/feature/form',
     form_popover_error: './js/components/form/form-popover-error',
     geolocation: './js/pages/geolocation',
     imports: './js/pages/import',
@@ -60,48 +73,54 @@ module.exports = {
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
     manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
     module_card: './js/app/pages/module-card',
+    monitoring: './js/pages/monitoring',
+    order: './js/pages/order',
+    order_create: './js/pages/order/create.js',
     order_delivery: './js/pages/order/delivery',
+    order_message_form: './js/pages/order_message/form',
+    order_message: './js/pages/order_message',
     order_preferences: './js/pages/order-preferences',
+    order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
-    themes: './js/pages/themes',
     profiles: './js/pages/profiles',
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     supplier: './js/pages/supplier',
     supplier_form: './js/pages/supplier/supplier-form.js',
     tax: './js/pages/tax',
+    tax_rules_group: './js/pages/tax-rules-group',
+    themes: './js/pages/themes',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
-    error: './js/pages/error',
-    monitoring: './js/pages/monitoring',
-    order: './js/pages/order',
-    order_create: './js/pages/order/create.js',
-    catalog_price_rule: './js/pages/catalog-price-rule',
-    feature_form: './js/pages/feature/form',
-    order_message_form: './js/pages/order_message/form',
-    order_message: './js/pages/order_message',
-    order_view: './js/pages/order/view.js',
-    attachment: './js/pages/attachment',
-    attribute: './js/pages/attribute',
-    attribute_group: './js/pages/attribute-group',
+    theme: ['./scss/theme.scss'],
   },
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: '[name].bundle.js',
     libraryTarget: 'window',
     library: '[name]',
+
+    sourceMapFilename: '[name].[hash:8].map',
+    chunkFilename: '[id].[hash:8].js',
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       vue$: 'vue/dist/vue.common.js',
-      app: path.resolve(__dirname, '../js/app'),
+      '@app': path.resolve(__dirname, '../js/app'),
+      '@js': path.resolve(__dirname, '../js'),
+      '@pages': path.resolve(__dirname, '../js/pages'),
+      '@components': path.resolve(__dirname, '../js/components'),
+      '@scss': path.resolve(__dirname, '../scss'),
+      '@node_modules': path.resolve(__dirname, '../node_modules'),
+      '@vue': path.resolve(__dirname, '../js/vue'),
     },
   },
   module: {
@@ -109,14 +128,15 @@ module.exports = {
       {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['es2015', {modules: false}],
-            ],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
+              plugins: ['transform-object-rest-spread', 'transform-runtime'],
+            },
           },
-        }],
+        ],
       },
       {
         test: /jquery-ui\.js/,
@@ -162,46 +182,49 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: {
-          loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
-            css: 'postcss-loader',
-            scss: 'style-loader!css-loader!sass-loader',
-          },
-        },
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader'],
-        }),
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          'css-loader',
+        ],
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true,
-                sourceMap: true,
+        include: /scss/,
+        exclude: /js/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              sassOptions: {
+                includePaths: [bourbon.includePaths],
               },
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-          ],
-        }),
+          },
+        ],
+      },
+      {
+        test: /\.scss$/,
+        include: /js/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader'],
       },
       // FILES
       {
@@ -211,18 +234,17 @@ module.exports = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin('theme.css'),
-    new CleanWebpackPlugin(['public'], {
-      root: path.resolve(__dirname, '../'),
-      exclude: ['theme.rtlfix']
+    new FixStyleOnlyEntriesPlugin(),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
+    new MiniCssExtractPlugin({filename: '[name].css'}),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
-    new CopyPlugin([
-      { from: 'static' },
-    ])
+    new CopyPlugin([{from: 'static'}]),
+    new VueLoaderPlugin(),
   ],
 };

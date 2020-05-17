@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,14 +98,10 @@ final class AttributeGroupViewDataProvider implements AttributeGroupViewDataProv
             $attributeGroup = new AttributeGroup($attributeGroupId);
 
             if ($attributeGroup->id !== $attributeGroupId) {
-                throw new AttributeGroupNotFoundException(
-                    sprintf('Attribute group with id "%s" was not found.', $attributeGroupId)
-                );
+                throw new AttributeGroupNotFoundException(sprintf('Attribute group with id "%s" was not found.', $attributeGroupId));
             }
         } catch (PrestaShopException $e) {
-            throw new AttributeGroupException(
-                sprintf('An error occurred when trying to get attribute group with id %s', $attributeGroupId)
-            );
+            throw new AttributeGroupException(sprintf('An error occurred when trying to get attribute group with id %s', $attributeGroupId));
         }
 
         return $attributeGroup;

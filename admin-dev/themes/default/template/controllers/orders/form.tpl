@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -631,7 +631,7 @@
 				action: "searchProducts",
 				id_cart: id_cart,
 				id_customer: id_customer,
-				id_currency: id_currency,
+				id_currency: $('#id_currency option:selected').val(),
 				product_search: $('#product').val()},
 			success : function(res)
 			{
@@ -1048,13 +1048,21 @@
 			if (this.id_address == id_address_invoice)
 			{
 				address_invoice_detail = this.formated_address;
-				invoice_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1])}&id_address="+this.id_address+"#";
+        // id_address parameter is required to generate url
+        // in this case id_address is dynamic
+        // so 0 is used as placeholder and later replaced with actual id_address
+				invoice_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1, 'id_address' => 0])}#";
+        invoice_address_edit_link.replace('/0/', '/' + this.id_address + '/');
 			}
 
 			if(this.id_address == id_address_delivery)
 			{
 				address_delivery_detail = this.formated_address;
-				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1])}&id_address="+this.id_address+"#";
+        // id_address parameter is required to generate url
+        // in this case id_address is dynamic
+        // so 0 is used as placeholder and later replaced with actual id_address
+				delivery_address_edit_link = "{$link->getAdminLink('AdminAddresses', true, [], ['updateaddress' => 1, 'realedit' => 1, 'liteDisplaying' => 1, 'submitFormAjax' => 1, 'id_address' => 0])}#";
+        invoice_address_edit_link.replace('/0/', '/' + this.id_address + '/');
 			}
 
 			addresses_delivery_options += '<option value="'+this.id_address+'" '+(this.id_address == id_address_delivery ? 'selected="selected"' : '')+'>'+this.alias+'</option>';
