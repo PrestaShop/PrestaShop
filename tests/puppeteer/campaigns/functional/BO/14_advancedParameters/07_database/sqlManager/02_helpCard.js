@@ -7,7 +7,6 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const SqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
@@ -23,7 +22,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     sqlManagerPage: new SqlManagerPage(page),
@@ -49,12 +47,12 @@ describe('Sql manager help card', async () => {
   it('should go to database > sql manager page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.advancedParametersLink,
-      this.pageObjects.boBasePage.databaseLink,
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.advancedParametersLink,
+      this.pageObjects.dashboardPage.databaseLink,
     );
 
-    await this.pageObjects.boBasePage.closeSfToolBar();
+    await this.pageObjects.sqlManagerPage.closeSfToolBar();
 
     const pageTitle = await this.pageObjects.sqlManagerPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.sqlManagerPage.pageTitle);
