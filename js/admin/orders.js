@@ -264,7 +264,7 @@ function updateAmounts(order)
 			$('#total_discounts td.amount').fadeIn('slow');
 		});
 	});
-	if (order.total_discounts_tax_incl > 0)
+	if (has_voucher || order.total_discounts_tax_incl > 0)
 		$('#total_discounts').slideDown('slow');
 	$('#total_wrapping td.amount').fadeOut('slow', function() {
 		formatCurrencyCldr(parseFloat(order.total_wrapping_tax_incl), function(value) {

@@ -1099,103 +1099,101 @@ abstract class PaymentModuleCore extends Module
                 'tax_excl' => $cartRuleData->getDiscountApplied()->getTaxExcluded(),
             ];
 
-            // If the reduction is not applicable to this order, then continue with the next one
-            if (!$values['tax_excl']) {
-                continue;
-            }
-
-            // IF
-            //  This is not multi-shipping
-            //  The value of the voucher is greater than the total of the order
-            //  Partial use is allowed
-            //  This is an "amount" reduction, not a reduction in % or a gift
-            // THEN
-            //  The voucher is cloned with a new value corresponding to the remainder
-            $cartRuleReductionAmountConverted = $cartRule->reduction_amount;
-            if ((int) $cartRule->reduction_currency !== $cart->id_currency) {
-                $cartRuleReductionAmountConverted = Tools::convertPriceFull(
-                    $cartRule->reduction_amount,
-                    new Currency((int) $cartRule->reduction_currency),
-                    new Currency($cart->id_currency)
-                );
-            }
-            $remainingValue = $cartRuleReductionAmountConverted - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
-            $remainingValue = Tools::ps_round($remainingValue, _PS_PRICE_COMPUTE_PRECISION_);
-            if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRuleReductionAmountConverted > 0) {
-                // Create a new voucher from the original
-                $voucher = new CartRule((int) $cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
-                unset($voucher->id);
-
-                // Set a new voucher code
-                $voucher->code = empty($voucher->code) ? substr(md5($order->id . '-' . $order->id_customer . '-' . $cartRule->id), 0, 16) : $voucher->code . '-2';
-                if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2]) {
-                    $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . (intval($matches[1]) + 1), $voucher->code);
-                }
-
-                // Set the new voucher value
-                $voucher->reduction_amount = $remainingValue;
-                if ($voucher->reduction_tax) {
-                    // Add total shipping amout only if reduction amount > total shipping
-                    if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl) {
-                        $voucher->reduction_amount -= $order->total_shipping_tax_incl;
-                    }
-                } else {
-                    // Add total shipping amout only if reduction amount > total shipping
-                    if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl) {
-                        $voucher->reduction_amount -= $order->total_shipping_tax_excl;
-                    }
-                }
-                if ($voucher->reduction_amount <= 0) {
-                    continue;
-                }
-
-                if ($this->context->customer->isGuest()) {
-                    $voucher->id_customer = 0;
-                } else {
-                    $voucher->id_customer = $order->id_customer;
-                }
-
-                $voucher->quantity = 1;
-                $voucher->reduction_currency = $order->id_currency;
-                $voucher->quantity_per_user = 1;
-                if ($voucher->add()) {
-                    // If the voucher has conditions, they are now copied to the new voucher
-                    CartRule::copyConditions($cartRule->id, $voucher->id);
-                    $orderLanguage = new Language((int) $order->id_lang);
-
-                    $params = [
-                        '{voucher_amount}' => Tools::getContextLocale($this->context)->formatPrice($voucher->reduction_amount, $this->context->currency->iso_code),
-                        '{voucher_num}' => $voucher->code,
-                        '{firstname}' => $this->context->customer->firstname,
-                        '{lastname}' => $this->context->customer->lastname,
-                        '{id_order}' => $order->id,
-                        '{order_name}' => $order->getUniqReference(),
-                    ];
-                    Mail::Send(
-                        (int) $order->id_lang,
-                        'voucher',
-                        Context::getContext()->getTranslator()->trans(
-                            'New voucher for your order %s',
-                            [$order->reference],
-                            'Emails.Subject',
-                            $orderLanguage->locale
-                        ),
-                        $params,
-                        $this->context->customer->email,
-                        $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
-                        null, null, null, null, _PS_MAIL_DIR_, false, (int) $order->id_shop
+            // If cart rule applies a reduction is not applicable to this order, check if is necesary to create a partial cart rule
+            if ($values['tax_excl'] > 0) {
+                // IF
+                //  This is not multi-shipping
+                //  The value of the voucher is greater than the total of the order
+                //  Partial use is allowed
+                //  This is an "amount" reduction, not a reduction in % or a gift
+                // THEN
+                //  The voucher is cloned with a new value corresponding to the remainder
+                $cartRuleReductionAmountConverted = $cartRule->reduction_amount;
+                if ((int)$cartRule->reduction_currency !== $cart->id_currency) {
+                    $cartRuleReductionAmountConverted = Tools::convertPriceFull(
+                        $cartRule->reduction_amount,
+                        new Currency((int)$cartRule->reduction_currency),
+                        new Currency($cart->id_currency)
                     );
                 }
+                $remainingValue = $cartRuleReductionAmountConverted - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
+                $remainingValue = Tools::ps_round($remainingValue, _PS_PRICE_COMPUTE_PRECISION_);
+                if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRuleReductionAmountConverted > 0) {
+                    // Create a new voucher from the original
+                    $voucher = new CartRule((int)$cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
+                    unset($voucher->id);
 
-                $values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
-                $values['tax_excl'] = $order->total_products - $total_reduction_value_tex;
-                if (1 == $voucher->free_shipping) {
-                    $values['tax_incl'] += $order->total_shipping_tax_incl;
-                    $values['tax_excl'] += $order->total_shipping_tax_excl;
+                    // Set a new voucher code
+                    $voucher->code = empty($voucher->code) ? substr(md5($order->id . '-' . $order->id_customer . '-' . $cartRule->id), 0, 16) : $voucher->code . '-2';
+                    if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2]) {
+                        $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . (intval($matches[1]) + 1), $voucher->code);
+                    }
+
+                    // Set the new voucher value
+                    $voucher->reduction_amount = $remainingValue;
+                    if ($voucher->reduction_tax) {
+                        // Add total shipping amout only if reduction amount > total shipping
+                        if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl) {
+                            $voucher->reduction_amount -= $order->total_shipping_tax_incl;
+                        }
+                    } else {
+                        // Add total shipping amout only if reduction amount > total shipping
+                        if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl) {
+                            $voucher->reduction_amount -= $order->total_shipping_tax_excl;
+                        }
+                    }
+                    if ($voucher->reduction_amount <= 0) {
+                        continue;
+                    }
+
+                    if ($this->context->customer->isGuest()) {
+                        $voucher->id_customer = 0;
+                    } else {
+                        $voucher->id_customer = $order->id_customer;
+                    }
+
+                    $voucher->quantity = 1;
+                    $voucher->reduction_currency = $order->id_currency;
+                    $voucher->quantity_per_user = 1;
+                    if ($voucher->add()) {
+                        // If the voucher has conditions, they are now copied to the new voucher
+                        CartRule::copyConditions($cartRule->id, $voucher->id);
+                        $orderLanguage = new Language((int)$order->id_lang);
+
+                        $params = [
+                            '{voucher_amount}' => Tools::getContextLocale($this->context)->formatPrice($voucher->reduction_amount, $this->context->currency->iso_code),
+                            '{voucher_num}' => $voucher->code,
+                            '{firstname}' => $this->context->customer->firstname,
+                            '{lastname}' => $this->context->customer->lastname,
+                            '{id_order}' => $order->id,
+                            '{order_name}' => $order->getUniqReference(),
+                        ];
+                        Mail::Send(
+                            (int)$order->id_lang,
+                            'voucher',
+                            Context::getContext()->getTranslator()->trans(
+                                'New voucher for your order %s',
+                                [$order->reference],
+                                'Emails.Subject',
+                                $orderLanguage->locale
+                            ),
+                            $params,
+                            $this->context->customer->email,
+                            $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
+                            null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop
+                        );
+                    }
+
+                    $values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
+                    $values['tax_excl'] = $order->total_products - $total_reduction_value_tex;
+                    if (1 == $voucher->free_shipping) {
+                        $values['tax_incl'] += $order->total_shipping_tax_incl;
+                        $values['tax_excl'] += $order->total_shipping_tax_excl;
+                    }
                 }
+                $total_reduction_value_ti += $values['tax_incl'];
+                $total_reduction_value_tex += $values['tax_excl'];
             }
-            $total_reduction_value_ti += $values['tax_incl'];
-            $total_reduction_value_tex += $values['tax_excl'];
 
             $order->addCartRule($cartRule->id, $cartRule->name, $values, 0, $cartRule->free_shipping);
 
