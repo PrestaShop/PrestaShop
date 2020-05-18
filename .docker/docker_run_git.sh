@@ -1,9 +1,10 @@
 #!/bin/sh
 
-if [ ! -f ./vendor/autoload.php  ]; then
-	echo "\n* Vendor autoloader not found, running composer ...";
-	runuser -g www-data -u www-data -- /usr/local/bin/composer install --no-interaction
-fi
+echo "\n* Running composer ...";
+runuser -g www-data -u www-data -- /usr/local/bin/composer install --no-interaction
+
+echo "\n* Build assets ...";
+runuser -g www-data -u www-data -- /usr/bin/make assets
 
 if [ "$DB_SERVER" = "<to be defined>" -a $PS_INSTALL_AUTO = 1 ]; then
     echo >&2 'error: You requested automatic PrestaShop installation but MySQL server address is not provided '
