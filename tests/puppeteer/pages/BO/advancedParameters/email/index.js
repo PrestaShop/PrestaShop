@@ -7,6 +7,7 @@ module.exports = class Email extends BOBasePage {
 
     this.pageTitle = 'E-mail •';
     this.sendTestEmailSuccessfulMessage = 'A test email has been sent to the email address you provided.';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // List of emails
@@ -14,19 +15,24 @@ module.exports = class Email extends BOBasePage {
     this.emailGridTitle = `${this.emailGridPanel} h3.card-header-title`;
     this.emailsListForm = '#email_logs_grid_table';
     // Filters
-    this.emailFilterColumnInput = '#email_logs_%FILTERBY';
+    this.emailFilterColumnInput = filterBy => `#email_logs_${filterBy}`;
     this.filterSearchButton = `${this.emailsListForm} button[name='email_logs[actions][search]']`;
     this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
     // Table rows and columns
     this.tableBody = `${this.emailsListForm} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
-    this.deleteRowLink = `${this.tableRow} td.column-actions a[href*='delete']`;
+    this.tableRows = `${this.tableBody} tr`;
+    this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a[data-url*='delete']`;
+    this.confirmDeleteModal = '#email_logs-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
-
+    // Email form
+    this.logEmailsLabel = toggle => `label[for='form_email_config_log_emails_${toggle}']`;
+    this.saveEmailFormButton = 'form[name=\'form\'] button.btn-primary';
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
     this.sendTestEmailInput = '#test_email_sending_send_email_to';
@@ -48,11 +54,19 @@ module.exports = class Email extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
+   * Get total of email created
+   * @return {Promise<int>}
+   */
+  async getTotalElementInGrid() {
+    return this.getNumberFromText(this.emailGridTitle);
+  }
+
+  /**
+   * Get number of elements in grid (displayed in one page)
    * @return {Promise<integer>}
    */
   async getNumberOfElementInGrid() {
-    return this.getNumberFromText(this.emailGridTitle);
+    return (await this.page.$$(`${this.tableRows}:not(.empty_row)`)).length;
   }
 
   /**
@@ -63,7 +77,7 @@ module.exports = class Email extends BOBasePage {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
-    return this.getNumberOfElementInGrid();
+    return this.getTotalElementInGrid();
   }
 
   /**
@@ -77,13 +91,10 @@ module.exports = class Email extends BOBasePage {
     await this.resetFilter();
     switch (filterType) {
       case 'input':
-        await this.setValue(this.emailFilterColumnInput.replace('%FILTERBY', filterBy), value.toString());
+        await this.setValue(this.emailFilterColumnInput(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(
-          this.emailFilterColumnInput.replace('%FILTERBY', filterBy),
-          value,
-        );
+        await this.selectByVisibleText(this.emailFilterColumnInput(filterBy), value);
         break;
       default:
       // Do nothing
@@ -99,10 +110,7 @@ module.exports = class Email extends BOBasePage {
    * @return {Promise<textContent>}
    */
   getTextColumn(columnName, row) {
-    return this.getTextContent(this.tableColumn
-      .replace('%ROW', row)
-      .replace('%COLUMN', columnName === 'id_lang' ? 'language' : columnName),
-    );
+    return this.getTextContent(this.tableColumn(row, columnName === 'id_lang' ? 'language' : columnName));
   }
 
   /**
@@ -112,8 +120,8 @@ module.exports = class Email extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterEmailLogsByDate(dateFrom, dateTo) {
-    await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_from'), dateFrom);
-    await this.page.type(this.emailFilterColumnInput.replace('%FILTERBY', 'date_add_to'), dateTo);
+    await this.page.type(this.emailFilterColumnInput('date_add_from'), dateFrom);
+    await this.page.type(this.emailFilterColumnInput('date_add_to'), dateTo);
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
@@ -124,8 +132,12 @@ module.exports = class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteEmailLog(row) {
-    this.dialogListener(true);
-    await this.waitForSelectorAndClick(this.deleteRowLink.replace('%ROW', row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.waitForSelectorAndClick(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -159,5 +171,24 @@ module.exports = class Email extends BOBasePage {
     await this.setValue(this.sendTestEmailInput, email);
     await this.page.click(this.sendTestEmailButton);
     return this.getTextContent(this.sendTestEmailAlertParagraph);
+  }
+
+  /**
+   * Enable/Disable log emails
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setLogEmails(toEnable) {
+    await this.waitForSelectorAndClick(this.logEmailsLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveEmailFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Is log emails table visible
+   * @returns {Promise<boolean>}
+   */
+  async isLogEmailsTableVisible() {
+    return this.elementVisible(this.emailGridPanel, 1000);
   }
 };

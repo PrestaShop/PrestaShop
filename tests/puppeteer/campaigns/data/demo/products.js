@@ -6,6 +6,7 @@ module.exports = {
       reference: 'demo_1',
       category: 'Men',
       price: 23.90,
+      finalPrice: 22.94,
       quantity: 2400,
       status: true,
     },

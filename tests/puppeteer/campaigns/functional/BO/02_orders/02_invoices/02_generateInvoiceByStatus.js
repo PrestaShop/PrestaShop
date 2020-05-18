@@ -5,7 +5,6 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {Invoices} = require('@data/demo/invoices');
-const {OrderStatuses} = require('@data/demo/invoices');
 const files = require('@utils/files');
 // Importing pages
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -107,7 +106,7 @@ describe('Generate PDF file by status', async () => {
 
     it('should check the error message when there is no invoice in the status selected', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceMessageError', baseContext);
-      await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.canceled.id);
+      await this.pageObjects.invoicesPage.chooseStatus(Statuses.canceled.status);
       await this.pageObjects.invoicesPage.generatePDFByStatus();
       const textMessage = await this.pageObjects.invoicesPage.getTextContent(
         this.pageObjects.invoicesPage.alertTextBlock,
@@ -117,10 +116,10 @@ describe('Generate PDF file by status', async () => {
 
     it('should choose the statuses, generate the invoice and check the file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceExistence', baseContext);
-      await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.paymentAccepted.id);
-      await this.pageObjects.invoicesPage.chooseStatus(OrderStatuses.shipped.id);
+      await this.pageObjects.invoicesPage.chooseStatus(Statuses.paymentAccepted.status);
+      await this.pageObjects.invoicesPage.chooseStatus(Statuses.shipped.status);
       await this.pageObjects.invoicesPage.generatePDFByStatus();
-      const exist = await files.checkFileExistence(Invoices.moreThanAnInvoice.fileName);
+      const exist = await files.doesFileExist(Invoices.moreThanAnInvoice.fileName);
       await expect(exist).to.be.true;
     });
   });

@@ -124,8 +124,8 @@ $(() => {
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
-    const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $invoiceSelect = $modal.find(OrderViewPageMap.addCartRuleInvoiceIdSelect);
+    const $valueHelp = $modal.find(OrderViewPageMap.cartRuleHelpText);
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 

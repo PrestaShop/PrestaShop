@@ -12,7 +12,7 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const OrderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
 const FOLoginPage = require('@pages/FO/login');
-const FOBasePage = require('@pages/FO/FObasePage');
+const HomePage = require('@pages/FO/home');
 const MyAccountPage = require('@pages/FO/myAccount');
 const OrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 // Importing data
@@ -29,7 +29,7 @@ const init = async function () {
     dashboardPage: new DashboardPage(page),
     orderSettingsPage: new OrderSettingsPage(page),
     foLoginPage: new FOLoginPage(page),
-    foBasePage: new FOBasePage(page),
+    homePage: new HomePage(page),
     myAccountPage: new MyAccountPage(page),
     orderHistoryPage: new OrderHistoryPage(page),
   };
@@ -70,19 +70,25 @@ describe('Enable reordering option', async () => {
       await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
     });
 
-    it('should go to FO and verify the reordering option', async function () {
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
+      // Click on view my shop
+      page = await this.pageObjects.orderSettingsPage.viewMyShop();
+      this.pageObjects = await init();
+      await this.pageObjects.homePage.changeLanguage('en');
+      const isHomePage = await this.pageObjects.homePage.isHomePage();
+      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
+
+    it('should verify the reordering option', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
         `checkReorderingOption${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
-      // Click on view my shop
-      page = await this.pageObjects.boBasePage.viewMyShop();
-      this.pageObjects = await init();
-      await this.pageObjects.foBasePage.changeLanguage('en');
       // Login FO
-      await this.pageObjects.foBasePage.goToLoginPage();
+      await this.pageObjects.homePage.goToLoginPage();
       await this.pageObjects.foLoginPage.customerLogin(DefaultAccount);
       const isCustomerConnected = await this.pageObjects.foLoginPage.isCustomerConnected();
       await expect(isCustomerConnected).to.be.true;
@@ -91,10 +97,16 @@ describe('Enable reordering option', async () => {
       // Check reorder link
       const isReorderLinkVisible = await this.pageObjects.orderHistoryPage.isReorderLinkVisible();
       await expect(isReorderLinkVisible).to.be.equal(test.args.reorderOption);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
       // Logout FO
-      await this.pageObjects.foBasePage.logout();
+      await this.pageObjects.orderHistoryPage.logout();
       page = await this.pageObjects.orderHistoryPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
     });
   });
 });

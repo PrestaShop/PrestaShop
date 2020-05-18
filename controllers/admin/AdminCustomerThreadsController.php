@@ -778,10 +778,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
             $content = '';
             if (!$message['private']) {
-                $content .= $this->trans('Message to: ', [], 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br/>';
+                $content .= $this->trans('Message to:', [], 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br/>';
             }
             if (Validate::isLoadedObject($product)) {
-                $content .= '<br/>' . $this->trans('Product: ', [], 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br/><br/>';
+                $content .= '<br/>' . $this->trans('Product:', [], 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br/><br/>';
             }
             $content .= Tools::safeOutput($message['message']);
 

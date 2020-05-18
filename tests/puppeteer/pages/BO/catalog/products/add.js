@@ -9,7 +9,8 @@ module.exports = class AddProduct extends BOBasePage {
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
     this.errorMessage = 'Unable to update settings.';
-    this.errorMessageWhenSummaryTooLong = 'This value is too long. It should have %NUMBER characters or less.';
+    this.errorMessageWhenSummaryTooLong = number => 'This value is too long.'
+      + ` It should have ${number} characters or less.`;
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';
@@ -30,7 +31,7 @@ module.exports = class AddProduct extends BOBasePage {
 
     // Form nav
     this.formNavList = '#form-nav';
-    this.forNavlistItemLink = `${this.formNavList} #tab_step%ID a`;
+    this.forNavlistItemLink = id => `${this.formNavList} #tab_step${id} a`;
     // Selectors of Step 2 : Pricing
     this.addSpecificPriceButton = '#js-open-create-specific-price-form';
     this.specificPriceForm = '#specific_price_form';
@@ -47,7 +48,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.productCombinationBulkQuantityInput = '#product_combination_bulk_quantity';
     this.productCombinationSelectAllCheckbox = 'input#toggle-all-combinations';
     this.applyOnCombinationsButton = '#apply-on-combinations';
-    this.productCombinationTableRow = '#accordion_combinations tr:nth-of-type(%ID)';
+    this.productCombinationTableRow = id => `#accordion_combinations tr:nth-of-type(${id})`;
     this.deleteCombinationsButton = '#delete-combinations';
     this.productCombinationsBulkForm = '#combinations-bulk-form';
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
@@ -146,7 +147,7 @@ module.exports = class AddProduct extends BOBasePage {
     await Promise.all([
       this.waitForVisibleSelector(`${this.productCombinationsBulkForm}:not(.inactive)`),
       this.waitForVisibleSelector(
-        `${this.productCombinationTableRow.replace('%ID', 1)}[style='display: table-row;']`,
+        `${this.productCombinationTableRow(1)}[style='display: table-row;']`,
       ),
       this.page.click(this.generateCombinationsButton),
     ]);
@@ -218,7 +219,7 @@ module.exports = class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToFormStep(id = 1) {
-    const selector = this.forNavlistItemLink.replace('%ID', id);
+    const selector = this.forNavlistItemLink(id);
     await Promise.all([
       this.waitForVisibleSelector(`${selector}[aria-selected='true']`),
       this.waitForSelectorAndClick(selector),
@@ -230,7 +231,7 @@ module.exports = class AddProduct extends BOBasePage {
    * @return {boolean}
    */
   hasCombinations() {
-    return this.elementVisible(this.productCombinationTableRow.replace('%ID', 1), 2000);
+    return this.elementVisible(this.productCombinationTableRow(1), 2000);
   }
 
   /**

@@ -25,6 +25,41 @@
     }
   }
 
+  #view_order_payments_block {
+    .table {
+      &-head {
+        &-invoice {
+          min-width: 200px;
+        }
+      }
+    }
+
+    #order_payment_id_currency {
+      flex: inherit;
+      min-width: 75px;
+    }
+  }
+
+  .card,
+  .product-row .tab-content {
+    margin-bottom: 1.875rem;
+  }
+
+  .product-row {
+    .nav-tabs {
+      position: relative;
+      z-index: 5;
+      padding-left: 1px;
+      margin-bottom: -2px;
+    }
+
+    .tab-content {
+      border: 1px solid #dbe6e9;
+      @include border-radius(5px);
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+    }
+  }
+
   // Todo: Looks like we don't have any custom select without JS to add in a form
   .select-status {
     position: relative;
@@ -294,6 +329,28 @@
       }
     }
 
+    .product-row {
+      > div {
+        &:first-child {
+          order: 1;
+        }
+
+        &:last-child {
+          order: 2;
+        }
+      }
+      .nav-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+        overflow-y: scroll;
+
+        .nav-item {
+          min-width: 165px;
+        }
+      }
+    }
+
     .cancel-product-element {
       margin-top: 10px;
 
@@ -310,6 +367,9 @@
       }
 
       .select-status {
+        width: 100%;
+        max-width: inherit;
+
         .select-status-colored {
           max-width: inherit;
           /* stylelint-disable-next-line */
@@ -355,6 +415,8 @@
       }
 
       .discount-action {
+        width: 100%;
+        max-width: 100%;
         margin-bottom: 10px;
 
         button {

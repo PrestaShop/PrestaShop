@@ -70,17 +70,23 @@ describe('Enable guest checkout', async () => {
       await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
     });
 
-    it('should go to FO and verify the guest checkout', async function () {
+    it('should view my shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
+      // Click on view my shop
+      page = await this.pageObjects.orderSettingsPage.viewMyShop();
+      this.pageObjects = await init();
+      await this.pageObjects.homePage.changeLanguage('en');
+      const isHomePage = await this.pageObjects.homePage.isHomePage();
+      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
+
+    it('should verify the guest checkout', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
         `checkGuestCheckout${this.pageObjects.boBasePage.uppercaseFirstCharacter(test.args.action)}`,
         baseContext,
       );
-      // Click on view my shop
-      page = await this.pageObjects.boBasePage.viewMyShop();
-      this.pageObjects = await init();
-      await this.pageObjects.foBasePage.changeLanguage('en');
       // Go to the first product page
       await this.pageObjects.homePage.goToProductPage(1);
       // Add the product to the cart
@@ -92,8 +98,14 @@ describe('Enable guest checkout', async () => {
       await expect(isNoticeVisible).to.be.equal(test.args.exist);
       const isPasswordRequired = await this.pageObjects.checkoutPage.isPasswordRequired();
       await expect(isPasswordRequired).to.be.equal(test.args.pwdRequired);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
       page = await this.pageObjects.checkoutPage.closePage(browser, 1);
       this.pageObjects = await init();
+      const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
+      await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
     });
   });
 });

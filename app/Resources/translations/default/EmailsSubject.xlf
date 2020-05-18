@@ -5,7 +5,7 @@
       <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
-        <note>Line: 1132</note>
+        <note>Line: 1144</note>
       </trans-unit>
     </body>
   </file>
@@ -14,7 +14,7 @@
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>Line: 1166</note>
+        <note>Line: 1174</note>
       </trans-unit>
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
@@ -73,7 +73,7 @@
       <trans-unit id="f2328a3f139e31d53016f94ea9477124">
         <source>Your order return status has changed</source>
         <target>Your order return status has changed</target>
-        <note>Line: 261</note>
+        <note>Line: 264</note>
       </trans-unit>
     </body>
   </file>
@@ -82,7 +82,7 @@
       <trans-unit id="381fc38b470ed543424afbd43f224453">
         <source>Message from a customer</source>
         <target>Message from a customer</target>
-        <note>Line: 108</note>
+        <note>Line: 110</note>
       </trans-unit>
     </body>
   </file>
@@ -91,12 +91,12 @@
       <trans-unit id="61afad00abe3639b3ead655a1e8696d9">
         <source>Password query confirmation</source>
         <target>Password query confirmation</target>
-        <note>Line: 90</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="c5f4622e4a63b41e7c0ddc100583ee6b">
         <source>Your new password</source>
         <target>Your new password</target>
-        <note>Line: 187</note>
+        <note>Line: 200</note>
       </trans-unit>
     </body>
   </file>

@@ -17,24 +17,24 @@ module.exports = class Currencies extends LocalizationBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
 
     // Filters
-    this.filterColumn = `${this.gridTable} #currency_%FILTERBY`;
+    this.filterColumn = filterBy => `${this.gridTable} #currency_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='currency[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='currency[actions][reset]']`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // enable column
-    this.enableColumn = this.tableColumn.replace('%COLUMN', 'active');
-    this.enableColumnValidIcon = `${this.enableColumn} i.grid-toggler-icon-valid`;
-    this.enableColumnNotValidIcon = `${this.enableColumn} i.grid-toggler-icon-not-valid`;
+    this.enableColumn = row => this.tableColumn(row, 'active');
+    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    this.enableColumnNotValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-not-valid`;
     // Actions buttons in row
-    this.actionsColumn = `${this.tableRow} td.column-actions`;
-    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
-    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
+    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     // Delete modal
     this.confirmDeleteModal = '#currency-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
@@ -60,10 +60,10 @@ module.exports = class Currencies extends LocalizationBasePage {
   async filterTable(filterType, filterBy, value) {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.filterColumn(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(this.filterColumn.replace('%FILTERBY', filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(this.filterColumn(filterBy), value ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
@@ -108,11 +108,7 @@ module.exports = class Currencies extends LocalizationBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTableCurrency(row, column) {
-    return this.getTextContent(
-      this.tableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.tableColumn(row, column));
   }
 
   /**
@@ -121,11 +117,7 @@ module.exports = class Currencies extends LocalizationBasePage {
    * @return {Promise<integer>}
    */
   async getExchangeRateValue(row) {
-    return this.getNumberFromText(
-      this.tableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', 'conversion_rate'),
-    );
+    return this.getNumberFromText(this.tableColumn(row, 'conversion_rate'));
   }
 
   /**
@@ -149,10 +141,7 @@ module.exports = class Currencies extends LocalizationBasePage {
    * @return {Promise<string>}
    */
   async getToggleColumnValue(row = 1) {
-    return this.elementVisible(
-      this.enableColumnValidIcon.replace('%ROW', row),
-      100,
-    );
+    return this.elementVisible(this.enableColumnValidIcon(row), 100);
   }
 
   /**
@@ -162,8 +151,9 @@ module.exports = class Currencies extends LocalizationBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row = 1, valueWanted = true) {
+    await this.waitForVisibleSelector(this.enableColumn(row), 2000);
     if (await this.getToggleColumnValue(row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(this.enableColumn.replace('%ROW', row));
+      await this.clickAndWaitForNavigation(this.enableColumn(row));
       return true;
     }
     return false;
@@ -176,14 +166,14 @@ module.exports = class Currencies extends LocalizationBasePage {
    */
   async deleteCurrency(row = 1) {
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
+      this.page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
+        `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.page.click(this.deleteRowLink(row)),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteCurrency();

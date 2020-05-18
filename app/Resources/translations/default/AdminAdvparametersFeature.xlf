@@ -214,7 +214,7 @@
       <trans-unit id="60e3ee398aa0ee3498c68914b5d5fb1a">
         <source>Back office connection from %ip%</source>
         <target>Back office connection from %ip%</target>
-        <note>Line: 206</note>
+        <note>Line: 214</note>
       </trans-unit>
     </body>
   </file>
@@ -548,7 +548,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="e129ae480280e47ef82fc7702f8321ba">
         <source>Refresh list</source>
         <target>Refresh list</target>
-        <note>Line: 266</note>
+        <note>Line: 267</note>
       </trans-unit>
     </body>
   </file>
@@ -946,11 +946,6 @@ Comment: voluntary do affectation here</note>
         <target>Accessories (x,y,z...)</target>
         <note>Line: 175</note>
       </trans-unit>
-      <trans-unit id="294598238a4d88a9920c7e6fba9bb843">
-        <source>MPN</source>
-        <target>MPN</target>
-        <note>Line: 76</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/Core/Import/EntityField/Provider/StoreContactFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1018,7 +1013,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="ae5977a08e8a3d45283789d99c67c3c3">
         <source>Combination reference</source>
         <target>Combination reference</target>
-        <note>Line: 170</note>
+        <note>Line: 178</note>
       </trans-unit>
     </body>
   </file>

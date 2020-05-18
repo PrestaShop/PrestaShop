@@ -238,8 +238,8 @@ describe('Configure group restrictions', async () => {
               await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
             });
           }
-          // Delivery step - Go to payment step
-          it('should continue to payment step', async function () {
+          // Delivery step - Go to payment step and check payment module
+          it('should continue to payment step and check the existence of payment method', async function () {
             await testContext.addContextItem(
               this,
               'testIdentifier',
@@ -248,15 +248,6 @@ describe('Configure group restrictions', async () => {
             );
             const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
             await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-          });
-          // Payment step - Check payment module
-          it('should check the existence of the payment methods', async function () {
-            await testContext.addContextItem(
-              this,
-              'testIdentifier',
-              `checkPaymentModule${index}${groupIndex}`,
-              baseContext,
-            );
             let isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.paymentModuleToEdit);
             await expect(isVisible).to.be.equal(test.args.wirePaymentExist);
             isVisible = await this.pageObjects.checkoutPage.isPaymentMethodExist(test.args.defaultPaymentModule);
