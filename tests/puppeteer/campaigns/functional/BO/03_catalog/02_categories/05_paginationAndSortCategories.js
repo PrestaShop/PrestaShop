@@ -5,7 +5,6 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const files = require('@utils/files');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CategoriesPage = require('@pages/BO/catalog/categories');
@@ -24,7 +23,6 @@ let numberOfCategories = 0;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     categoriesPage: new CategoriesPage(page),
@@ -55,12 +53,12 @@ describe('Pagination and sort Categories', async () => {
   it('should go to categories page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.categoriesLink,
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.categoriesLink,
     );
 
-    await this.pageObjects.boBasePage.closeSfToolBar();
+    await this.pageObjects.dashboardPage.closeSfToolBar();
 
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
@@ -135,18 +133,6 @@ describe('Pagination and sort Categories', async () => {
     {
       args:
         {
-          testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_category', sortDirection: 'asc', isFloat: true,
-        },
-    },
-    {
-      args:
-        {
           testIdentifier: 'sortByIdDesc', sortBy: 'id_category', sortDirection: 'desc', isFloat: true,
         },
     },
@@ -165,7 +151,19 @@ describe('Pagination and sort Categories', async () => {
     {
       args:
         {
+          testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
+        },
+    },
+    {
+      args:
+        {
           testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_category', sortDirection: 'asc', isFloat: true,
         },
     },
   ];
