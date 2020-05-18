@@ -240,7 +240,7 @@ class StoresControllerCore extends FrontController
 
         $breadcrumb['links'][] = [
             'title' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('stores', true)
+            'url' => $this->context->link->getPageLink('stores', true),
         ];
         
         return $breadcrumb;
