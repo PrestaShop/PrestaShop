@@ -100,6 +100,7 @@ module.exports = {
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
     theme: ['./scss/theme.scss'],
+    product: './js/pages/product',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

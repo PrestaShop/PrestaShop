@@ -1,0 +1,13 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+  <input type="text" id="test1">
+  <input type="text" id="test2">
+  <input type="text" id="test3">
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/product.bundle.js') }}"></script>
+{% endblock %}

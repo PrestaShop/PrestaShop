@@ -124,6 +124,9 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
+        //@todo;
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig');
+
         if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
