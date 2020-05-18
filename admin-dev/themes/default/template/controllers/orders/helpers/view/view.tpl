@@ -1083,7 +1083,7 @@
                       </td>
                       <td class="partial_refund_fields current-edit" style="display:none;"></td>
                     </tr>
-                    <tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
+                    <tr id="total_discounts" {if count($discounts) == 0 && $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
                       <td class="text-right">{l s='Discounts' d='Admin.Orderscustomers.Feature'}</td>
                       <td class="amount text-right nowrap">
                         -{displayPrice price=$order_discount_price currency=$currency->id}
