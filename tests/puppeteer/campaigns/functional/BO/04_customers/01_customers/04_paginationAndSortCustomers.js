@@ -1,16 +1,21 @@
 require('module-alias/register');
 
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CustomersPage = require('@pages/BO/customers');
 const AddCustomerPage = require('@pages/BO/customers/add');
-// Importing data
+
+// Import data
 const CustomerFaker = require('@data/faker/customer');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_paginationAndSortCustomers';
@@ -39,6 +44,7 @@ describe('Pagination and sort customers', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
 
@@ -72,6 +78,7 @@ describe('Pagination and sort customers', async () => {
 
   // 1 : Create 11 new customers
   const creationTests = new Array(10).fill(0, 0, 10);
+
   creationTests.forEach((test, index) => {
     describe(`Create customer n°${index + 1} in BO`, async () => {
       const createCustomerData = new CustomerFaker({email: `test@prestashop.com${index}`});
@@ -89,6 +96,7 @@ describe('Pagination and sort customers', async () => {
 
         const textResult = await this.pageObjects.addCustomerPage.createEditCustomer(createCustomerData);
         await expect(textResult).to.equal(this.pageObjects.customersPage.successfulCreationMessage);
+
         const numberOfCustomersAfterCreation = await this.pageObjects.customersPage.getNumberOfElementInGrid();
         await expect(numberOfCustomersAfterCreation).to.be.equal(numberOfCustomers + 1 + index);
       });
@@ -154,13 +162,18 @@ describe('Pagination and sort customers', async () => {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await this.pageObjects.customersPage.getAllRowsColumnContent(test.args.sortBy);
+
         await this.pageObjects.customersPage.sortTable(test.args.sortBy, test.args.sortDirection);
+
         let sortedTable = await this.pageObjects.customersPage.getAllRowsColumnContent(test.args.sortBy);
+
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
+
         const expectedResult = await this.pageObjects.customersPage.sortArray(nonSortedTable, test.args.isFloat);
+
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {
