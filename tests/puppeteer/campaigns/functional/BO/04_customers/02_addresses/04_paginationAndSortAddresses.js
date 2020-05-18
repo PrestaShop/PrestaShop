@@ -1,16 +1,20 @@
 require('module-alias/register');
 
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const AddressesPage = require('@pages/BO/customers/addresses');
 const AddAddressPage = require('@pages/BO/customers/addresses/add');
-// Importing data
+
+// Import data
 const AddressFaker = require('@data/faker/address');
-// Test context imports
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_addresses_paginationAndSortAddresses';
@@ -39,6 +43,7 @@ describe('Pagination and sort addresses', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
 
@@ -56,6 +61,7 @@ describe('Pagination and sort addresses', async () => {
       this.pageObjects.dashboardPage.customersParentLink,
       this.pageObjects.dashboardPage.addressesLink,
     );
+
     await this.pageObjects.dashboardPage.closeSfToolBar();
 
     const pageTitle = await this.pageObjects.addressesPage.getPageTitle();
@@ -73,11 +79,13 @@ describe('Pagination and sort addresses', async () => {
   const creationTests = new Array(10).fill(0, 0, 10);
   creationTests.forEach((test, index) => {
     describe(`Create address n°${index + 1} in BO`, async () => {
-      const createAddressData = new AddressFaker({
-        email: 'pub@prestashop.com',
-        address: `My address${index}`,
-        country: 'France',
-      });
+      const createAddressData = new AddressFaker(
+        {
+          email: 'pub@prestashop.com',
+          address: `My address${index}`,
+          country: 'France',
+        },
+      );
 
       it('should go to add new address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAddressPage${index}`, baseContext);
@@ -92,6 +100,7 @@ describe('Pagination and sort addresses', async () => {
 
         const textResult = await this.pageObjects.addAddressPage.createEditAddress(createAddressData);
         await expect(textResult).to.equal(this.pageObjects.addressesPage.successfulCreationMessage);
+
         const numberOfAddressesAfterCreation = await this.pageObjects.addressesPage.getNumberOfElementInGrid();
         await expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1 + index);
       });
@@ -161,13 +170,16 @@ describe('Pagination and sort addresses', async () => {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await this.pageObjects.addressesPage.getAllRowsColumnContent(test.args.sortBy);
+
         await this.pageObjects.addressesPage.sortTable(test.args.sortBy, test.args.sortDirection);
+
         let sortedTable = await this.pageObjects.addressesPage.getAllRowsColumnContent(test.args.sortBy);
 
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
+
         const expectedResult = await this.pageObjects.addressesPage.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
