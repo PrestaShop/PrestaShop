@@ -222,7 +222,7 @@ class ModuleDataProvider
         $log_context_data = [
             'object_type' => 'Module',
             'object_id' => LegacyModule::getModuleIdByName($name),
-         ];
+        ];
 
         try {
             $parser->parse(file_get_contents($file_path));

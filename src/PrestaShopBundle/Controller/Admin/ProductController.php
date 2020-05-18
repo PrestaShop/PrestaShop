@@ -1343,10 +1343,10 @@ class ProductController extends FrameworkBundleAdminController
     private function getLogDataContext($id_product = null, $error_code = null, $allow_duplicate = null): array
     {
         return [
-                'object_type' => 'Product',
-                'object_id' => $id_product,
-                'error_code' => $error_code,
-                'allow_duplicate' => $allow_duplicate,
-            ];
+            'object_type' => 'Product',
+            'object_id' => $id_product,
+            'error_code' => $error_code,
+            'allow_duplicate' => $allow_duplicate,
+        ];
     }
 }
