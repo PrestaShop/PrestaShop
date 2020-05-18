@@ -617,7 +617,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $product = new Product((int) $mess['id_product'], false, $this->context->language->id);
                 if (Validate::isLoadedObject($product)) {
                     $messages[$key]['product_name'] = $product->name;
-                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts', true, ['id_product' => (int) $product->id, 'updateproduct' => '1']);
+                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts') . '&updateproduct&id_product=' . (int) $product->id;
                 }
             }
         }
