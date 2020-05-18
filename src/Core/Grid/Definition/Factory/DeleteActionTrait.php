@@ -41,8 +41,7 @@ trait DeleteActionTrait
         string $deleteRouteParamName,
         string $deleteRouteParamField,
         string $method = 'POST',
-        array $extraRouteParams = [],
-        array $translations = []
+        array $extraRouteParams = []
     ): RowActionInterface {
         return (new SubmitRowAction('delete'))
             ->setName($this->trans('Delete', [], 'Admin.Actions'))
@@ -52,20 +51,12 @@ trait DeleteActionTrait
                 'route_param_name' => $deleteRouteParamName,
                 'route_param_field' => $deleteRouteParamField,
                 'extra_route_params' => $extraRouteParams,
-                'confirm_message' => array_key_exists('confirm_message', $translations) ?
-                    $translations['confirm_message'] :
-                    $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
+                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
                 'method' => $method,
                 'modal_options' => new ModalOptions([
-                    'title' => array_key_exists('modal_options.title', $translations) ?
-                        $translations['modal_options.title'] :
-                        $this->trans('Delete selection', [], 'Admin.Actions'),
-                    'confirm_button_label' => array_key_exists('modal_options.confirm_button_label', $translations) ?
-                        $translations['modal_options.confirm_button_label'] :
-                        $this->trans('Delete', [], 'Admin.Actions'),
-                    'close_button_label' => array_key_exists('modal_options.close_button_label', $translations) ?
-                        $translations['modal_options.close_button_label'] :
-                        $this->trans('Cancel', [], 'Admin.Actions'),
+                    'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
+                    'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                    'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
                     'confirm_button_class' => 'btn-danger',
                 ]),
             ])
