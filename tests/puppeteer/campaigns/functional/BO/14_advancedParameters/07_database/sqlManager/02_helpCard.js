@@ -1,14 +1,18 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
+
+// Import pages
 const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const SqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_database_sqlManager_helpCard';
@@ -34,33 +38,41 @@ describe('Sql manager help card', async () => {
     page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Login into BO and go to sql manager page
   loginCommon.loginBO();
 
   it('should go to database > sql manager page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
+
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.databaseLink,
     );
+
     await this.pageObjects.boBasePage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.sqlManagerPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.sqlManagerPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
+
     const isHelpSidebarVisible = await this.pageObjects.sqlManagerPage.openHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
+
     const documentURL = await this.pageObjects.sqlManagerPage.getHelpDocumentURL();
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
+
     const isHelpSidebarVisible = await this.pageObjects.sqlManagerPage.closeHelpSideBar();
     await expect(isHelpSidebarVisible).to.be.true;
   });
