@@ -159,9 +159,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                     (int) $this->context->language->id,
                     (int) $this->context->shop->id
                 );
-                if (Validate::isLoadedObject($currency)) {
-                    $this->_list[$k]['id_currency'] = $currency->getName();
-                }
+                $this->_list[$k]['id_currency'] = Validate::isLoadedObject($currency) ? $currency->getName() : null;
             }
 
             if ($list['reduction_type'] == 'amount') {
