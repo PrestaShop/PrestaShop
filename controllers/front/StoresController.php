@@ -242,6 +242,7 @@ class StoresControllerCore extends FrontController
             'title' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('stores', true),
         ];
+
         return $breadcrumb;
     }
 }
