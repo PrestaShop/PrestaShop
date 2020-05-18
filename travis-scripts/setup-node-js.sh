@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Install node js v10 for puppeteer v3";
+echo "Install Node.js";
 
 sudo rm -rf ~/.nvm
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
