@@ -33,7 +33,7 @@ const init = async function () {
 Create 11 categories
 Paginate between pages
 Sort categories table
-Delete customers with bulk actions
+Delete categories with bulk actions
  */
 describe('Pagination and sort Categories', async () => {
   // before and after functions
