@@ -102,8 +102,8 @@ describe('Pagination and sort suppliers', async () => {
         const result = await this.pageObjects.addSupplierPage.createEditSupplier(createSupplierData);
         await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
 
-        const numberOfCategoriesAfterCreation = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
-        await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfSuppliers + 1 + index);
+        const numberOfSuppliersAfterCreation = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
+        await expect(numberOfSuppliersAfterCreation).to.be.equal(numberOfSuppliers + 1 + index);
         await files.deleteFile(createSupplierData.logo);
       });
     });
