@@ -1,27 +1,32 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+
+// Import data
 const {Products} = require('@data/demo/products');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const StocksPage = require('@pages/BO/catalog/stocks');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_stocks_simpleFilterStocks';
 
 let browser;
 let page;
+
 let numberOfProducts = 0;
 
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     stocksPage: new StocksPage(page),
@@ -34,27 +39,34 @@ describe('Simple filter stocks', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Login into BO and go to stocks page
   loginCommon.loginBO();
 
   it('should go to "Catalog>Stocks" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
+
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.stocksLink,
     );
+
     await this.pageObjects.boBasePage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
   });
 
   it('should get number of products in list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
+
     numberOfProducts = await this.pageObjects.stocksPage.getTotalNumberOfProducts();
     await expect(numberOfProducts).to.be.above(0);
   });
@@ -66,20 +78,26 @@ describe('Simple filter stocks', async () => {
       {args: {testIdentifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
       {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: 'N/A'}},
     ];
+
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
         await this.pageObjects.stocksPage.simpleFilter(test.args.filterValue);
+
         const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
         await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
+
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
           const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
+
       });
 
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
+
         const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
