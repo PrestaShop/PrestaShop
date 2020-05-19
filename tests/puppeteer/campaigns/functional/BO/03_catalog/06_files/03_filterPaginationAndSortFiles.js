@@ -19,7 +19,7 @@ const AddFilePage = require('@pages/BO/catalog/files/add');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParams_team_profiles_filterAndSortFiles';
+const baseContext = 'functional_BO_advancedParams_team_profiles_filterPaginationAndSortFiles';
 
 let browser;
 let page;
@@ -39,30 +39,24 @@ const init = async function () {
     addFilePage: new AddFilePage(page),
   };
 };
-
-describe('Filter and sort files', async () => {
+/*
+Create 11 files
+Filter files
+Paginate between pages
+Sort files table
+Delete files with bulk actions
+ */
+describe('Filter, pagination and sort files', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
 
     this.pageObjects = await init();
-
-    await Promise.all([
-      files.createFile('.', firstFileData.filename, `test ${firstFileData.filename}`),
-      files.createFile('.', secondFileData.filename, `test ${secondFileData.filename}`),
-      files.createFile('.', thirdFileData.filename, `test ${thirdFileData.filename}`),
-    ]);
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
-
-    /* Delete the generated files */
-    await Promise.all([
-      files.deleteFile(firstFileData.filename),
-      files.deleteFile(secondFileData.filename),
-      files.deleteFile(thirdFileData.filename),
-    ]);
   });
 
   // Login into BO and go to files page
@@ -75,21 +69,20 @@ describe('Filter and sort files', async () => {
       this.pageObjects.dashboardPage.catalogParentLink,
       this.pageObjects.dashboardPage.filesLink,
     );
+    await this.pageObjects.dashboardPage.closeSfToolBar();
 
-    await this.pageObjects.filesPage.closeSfToolBar();
+    numberOfFiles = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
 
     const pageTitle = await this.pageObjects.filesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.filesPage.pageTitle);
   });
-  // 1: Create 3 files
-  describe('Create 3 files', async () => {
-    const tests = [
-      {args: {fileToCreate: firstFileData}},
-      {args: {fileToCreate: secondFileData}},
-      {args: {fileToCreate: thirdFileData}},
-    ];
+  // 1: Create 11 files
+  const creationTests = new Array(11).fill(0, 0, 11);
+  creationTests.forEach((test, index) => {
+    describe(`Create file n°${index + 1} in BO`, async () => {
+      const createFileData = new FileFaker({name: `todelete${index}`});
+      before(() => files.createFile('.', createFileData.filename, `test ${createFileData.filename}`));
 
-    tests.forEach((test, index) => {
       it('should go to new file page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewFilePage${index}`, baseContext);
 
@@ -101,19 +94,16 @@ describe('Filter and sort files', async () => {
       it('should create file', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createFile${index}`, baseContext);
 
-        const result = await this.pageObjects.addFilePage.createEditFile(test.args.fileToCreate);
+        const result = await this.pageObjects.addFilePage.createEditFile(createFileData);
         await expect(result).to.equal(this.pageObjects.filesPage.successfulCreationMessage);
+
+        const numberOfFilesAfterCreation = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
+        await expect(numberOfFilesAfterCreation).to.be.equal(numberOfFiles + 1 + index);
       });
-    });
 
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
-
-      numberOfFiles = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
-      await expect(numberOfFiles).to.be.above(0);
+      after(() => files.deleteFile(createFileData.filename));
     });
   });
-
   // 2 : Filter files table
   describe('Filter files in BO', async () => {
     const filterTests = [
@@ -124,7 +114,7 @@ describe('Filter and sort files', async () => {
       },
       {
         args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: secondFileData.name,
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: 'todelete',
         },
       },
       {
@@ -143,9 +133,7 @@ describe('Filter and sort files', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
         await this.pageObjects.filesPage.filterTable(test.args.filterBy, test.args.filterValue);
-
         const numberOfFilesAfterFilter = await this.pageObjects.filesPage.getNumberOfElementInGrid();
-        await expect(numberOfFilesAfterFilter).to.be.at.most(numberOfFiles);
 
         for (let i = 1; i <= numberOfFilesAfterFilter; i++) {
           const textName = await this.pageObjects.filesPage.getTextColumnFromTable(i, test.args.filterBy);
@@ -154,15 +142,44 @@ describe('Filter and sort files', async () => {
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'resetAfterFilter', baseContext);
 
         const numberOfFilesAfterReset = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
-        await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles);
+        await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles + 11);
       });
     });
   });
+  // 3 : Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-  // 3 : Sort files table
+      const paginationNumber = await this.pageObjects.filesPage.selectPaginationLimit('10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await this.pageObjects.filesPage.paginationNext();
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await this.pageObjects.filesPage.paginationPrevious();
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await this.pageObjects.filesPage.selectPaginationLimit('50');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+  // 4 : Sort files table
   describe('Sort files', async () => {
     const sortTests = [
       {
@@ -196,16 +213,13 @@ describe('Filter and sort files', async () => {
     sortTests.forEach((test) => {
       it(
         `should sort files by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`,
-
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
           let nonSortedTable = await this.pageObjects.filesPage.getAllRowsColumnContent(test.args.sortBy);
-
           await this.pageObjects.filesPage.sortTable(test.args.sortBy, test.args.sortDirection);
 
           let sortedTable = await this.pageObjects.filesPage.getAllRowsColumnContent(test.args.sortBy);
-
           if (test.args.isFloat) {
             nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
             sortedTable = await sortedTable.map(text => parseFloat(text));
@@ -222,14 +236,34 @@ describe('Filter and sort files', async () => {
       );
     });
   });
-
-  // 4 : Delete the created files
+  // 5 : Delete the created files
   describe('Delete created files with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
+
+      await this.pageObjects.filesPage.filterTable('name', 'todelete');
+      const numberOfFilesAfterFilter = await this.pageObjects.filesPage.getNumberOfElementInGrid();
+      await expect(numberOfFilesAfterFilter).to.be.above(0);
+
+      for (let i = 1; i <= numberOfFilesAfterFilter; i++) {
+        const textColumn = await this.pageObjects.filesPage.getTextColumnFromTable(
+          i,
+          'name',
+        );
+        await expect(textColumn).to.contains('todelete');
+      }
+    });
+
     it('should delete files with Bulk Actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
-
       const deleteTextResult = await this.pageObjects.filesPage.deleteFilesBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.filesPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+      const numberOfFilesAfterReset = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
+      await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles);
     });
   });
 });
