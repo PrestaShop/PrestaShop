@@ -206,6 +206,8 @@ class Datas
 
             if ($res[1] == 'license' && !isset($res[2])) {
                 $res[2] = 1;
+            } elseif ($res[1] == 'prefix' && !isset($res[2])) {
+                $res[2] = '';
             } elseif (!isset($res[2])) {
                 continue;
             }
