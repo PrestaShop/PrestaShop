@@ -1,5 +1,5 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
-
+{# @todo: test page for product edit #}
 {% block content %}
   <div class="row">
     <div class="col">
@@ -26,18 +26,18 @@
   <div class="row">
     tax rule
     <select name="" id="test1-tax">
-      <option value="1" data-tax-rate="10">value 1</option>
-      <option value="2" data-tax-rate="20">value 2</option>
-      <option value="3" data-tax-rate="2.5">value 3</option>
+      <option value="1" data-tax-rate="10">10%</option>
+      <option value="2" data-tax-rate="20">20%</option>
+      <option value="3" data-tax-rate="2.5">2.5%</option>
     </select>
   </div>
 
   <div class="row">
     tax rule
     <select name="" id="test2-tax">
-      <option value="1" data-tax-rate="10">value 1</option>
-      <option value="2" data-tax-rate="20">value 2</option>
-      <option value="3" data-tax-rate="2.5">value 3</option>
+      <option value="1" data-tax-rate="10">10%</option>
+      <option value="2" data-tax-rate="20">20%</option>
+      <option value="3" data-tax-rate="2.5">2.5%</option>
     </select>
   </div>
 {% endblock %}
@@ -45,5 +45,5 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/product.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/product_edit.bundle.js') }}"></script>
 {% endblock %}

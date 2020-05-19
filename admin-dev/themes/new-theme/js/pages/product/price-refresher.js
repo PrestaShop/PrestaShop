@@ -23,15 +23,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import productEditMap from './product-edit-map';
+import productMap from './product-map';
 import * as types from './store/mutation-types';
 
 export default class PriceRefresher {
   constructor(store) {
     this.store = store;
-    this.taxIncludedInputs = [productEditMap.priceTaxIncludedInput1, productEditMap.priceTaxIncludedInput2];
-    this.taxExcludedInputs = [productEditMap.priceTaxExcludedInput1, productEditMap.priceTaxExcludedInput2];
-    this.taxRuleInputs = [productEditMap.taxRuleInput1, productEditMap.taxRuleInput2];
+    this.taxIncludedInputs = [productMap.priceTaxIncludedInput1, productMap.priceTaxIncludedInput2];
+    this.taxExcludedInputs = [productMap.priceTaxExcludedInput1, productMap.priceTaxExcludedInput2];
+    this.taxRuleInputs = [productMap.taxRuleInput1, productMap.taxRuleInput2];
 
     this.init();
   }

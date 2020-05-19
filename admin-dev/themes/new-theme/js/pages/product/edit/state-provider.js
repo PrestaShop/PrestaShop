@@ -23,11 +23,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import PriceRefresher from './price-refresher';
-import store from './store/index';
+import productMap from '../product-map';
 
-const {$} = window;
+export default class StateProvider {
+  get() {
+    //@todo: should i get the state anyhow different? provide it in data attributes isntead of taking input value? do ajax?
+    const priceTaxIncluded = document.querySelector(productMap.priceTaxIncludedInput1).value;
+    const priceTaxExcluded = document.querySelector(productMap.priceTaxExcludedInput1).value;
+    const taxRuleSelection = document.querySelector(productMap.taxRuleInput1);
 
-$(() => {
-  new PriceRefresher(store);
-});
+    return {
+      priceTaxIncluded,
+      priceTaxExcluded,
+      taxRule: {
+        id: taxRuleSelection.value,
+        rate: taxRuleSelection.options[taxRuleSelection.selectedIndex].dataset.taxRate,
+      },
+    };
+  }
+}

@@ -23,17 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Vue from 'vue';
-import Vuex from 'vuex';
-import mutations from './mutations';
-import * as actions from './actions';
+import PriceRefresher from '../price-refresher';
+import createStore from '../store/index';
+import StateProvider from './state-provider';
 
-Vue.use(Vuex);
+const {$} = window;
+const state = new StateProvider().get();
+const store = createStore(state);
 
-const createStore = (state) => new Vuex.Store({
-  state,
-  mutations,
-  actions,
+$(() => {
+  new PriceRefresher(store);
 });
-
-export default createStore;
