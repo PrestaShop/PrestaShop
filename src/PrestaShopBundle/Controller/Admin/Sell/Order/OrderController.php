@@ -1501,8 +1501,8 @@ class OrderController extends FrameworkBundleAdminController
                 ),
             ],
             InvalidModuleException::class => $this->trans(
-                'Payment module name is invalid',
-                'Admin.Catalog.Notification'
+                'You must choose a payment module to create the order.',
+                'Admin.Orderscustomers.Notification'
             ),
             ProductOutOfStockException::class => $this->trans(
                 'There are not enough products in stock.',
@@ -1530,8 +1530,8 @@ class OrderController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
                 InvalidOrderStateException::INVALID_ID => $this->trans(
-                    'Invalid order state id.',
-                    'Admin.Notifications.Error'
+                    'You must choose an order status to create the order.',
+                    'Admin.Orderscustomers.Notification'
                 ),
             ],
             InvalidProductQuantityException::class => $this->trans(

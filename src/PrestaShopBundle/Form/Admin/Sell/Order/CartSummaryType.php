@@ -85,18 +85,18 @@ class CartSummaryType extends AbstractType
                 'choices' => $this->getPaymentModuleChoices(),
                 'required' => true,
                 'placeholder' => $this->translator->trans(
-                    'Choose a payment type',
+                    '-- Choose --',
                     [],
-                    'Admin.Catalog.Feature'
+                    'Admin.Actions'
                 ),
             ])
             ->add('order_state', ChoiceType::class, [
                 'choices' => $this->orderStatesChoiceProvider->getChoices(),
                 'required' => true,
                 'placeholder' => $this->translator->trans(
-                    'Choose an order status',
+                    '-- Choose --',
                     [],
-                    'Admin.Orderscustomers.Feature'
+                    'Admin.Actions'
                 ),
             ]);
     }
