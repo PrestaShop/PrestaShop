@@ -40,7 +40,7 @@ const init = async function () {
 Create 11 suppliers
 Paginate between pages
 Sort suppliers table
-Delete categories with bulk actions
+Delete suppliers with bulk actions
  */
 describe('Pagination and sort suppliers', async () => {
   // before and after functions
