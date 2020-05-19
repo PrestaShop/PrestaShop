@@ -516,6 +516,16 @@
       <title>actionModuleInstallAfter</title>
       <description/>
     </hook>
+    <hook id="actionModuleUninstallBefore">
+      <name>actionModuleUninstallBefore</name>
+      <title>actionModuleUninstallBefore</title>
+      <description/>
+    </hook>
+    <hook id="actionModuleUninstallAfter">
+      <name>actionModuleUninstallAfter</name>
+      <title>actionModuleUninstallAfter</title>
+      <description/>
+    </hook>
     <hook id="displayTopColumn">
       <name>displayTopColumn</name>
       <title>Top column blocks</title>
