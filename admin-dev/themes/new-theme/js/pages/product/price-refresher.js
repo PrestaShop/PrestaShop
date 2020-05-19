@@ -31,47 +31,92 @@ export default class PriceRefresher {
     this.store = store;
     this.taxIncludedInputs = [productEditMap.priceTaxIncludedInput1];
     this.taxExcludedInputs = [productEditMap.priceTaxExcludedInput1];
+    this.taxRateInputs = [productEditMap.taxRateInput1];
 
     this.init();
   }
 
   init() {
-    this.listenToDOM(this.taxIncludedInputs, true);
-    this.listenToDOM(this.taxExcludedInputs, false);
-    this.listenToStore(this.taxIncludedInputs, true);
-    this.listenToStore(this.taxExcludedInputs, false);
+    this.listenToDOM();
+    this.listenToStore();
   }
 
-  listenToDOM(selectors, forTaxIncluded) {
+  listenToDOM() {
+    this.listenToPriceInputsDOM(this.taxIncludedInputs, true);
+    this.listenToPriceInputsDOM(this.taxExcludedInputs, false);
+  }
+
+  listenToStore() {
+    this.store.subscribe((mutation) => {
+      const subscribedMutationTypes = [
+        types.SET_PRICE_TAX_INCLUDED,
+        types.SET_PRICE_TAX_EXCLUDED,
+        types.SET_TAX_RATE,
+      ];
+
+      if (!subscribedMutationTypes.includes(mutation.type)) {
+        return;
+      }
+
+      if (mutation.type === types.SET_PRICE_TAX_INCLUDED) {
+        this.updatePricesDOM(this.taxIncludedInputs, true);
+      } else if (mutation.type === types.SET_PRICE_TAX_EXCLUDED) {
+        this.updatePricesDOM(this.taxExcludedInputs, false);
+      } else {
+        this.updateTaxRatesDOM(this.taxRateInputs);
+      }
+    });
+  }
+
+  listenToPriceInputsDOM(selectors, forTaxIncluded) {
     selectors.forEach((selector) => {
       const el = document.querySelector(selector);
       el.addEventListener('change', (event) => {
         if (forTaxIncluded) {
-          this.store.dispatch('updatePriceTaxIncluded', event.currentTarget.value);
+          this.store.dispatch('updatePriceTaxIncluded', {
+            priceTaxIncluded: event.currentTarget.value,
+            rate: this.store.state.taxRate,
+          });
         } else {
-          this.store.dispatch('updatePriceTaxExcluded', event.currentTarget.value);
+          this.store.dispatch('updatePriceTaxExcluded', {
+            priceTaxExcluded: event.currentTarget.value,
+            rate: this.store.state.taxRate,
+          });
         }
       });
     });
   }
 
-  listenToStore(selectors, forTaxIncluded) {
-    this.store.subscribe((mutation, state) => {
-      const priceMutationTypes = [types.SET_PRICE_TAX_INCLUDED, types.SET_PRICE_TAX_EXCLUDED];
-
-      if (!priceMutationTypes.includes(mutation.type)) {
-        return;
-      }
-
-      selectors.forEach((selector) => {
-        const el = document.querySelector(selector);
-
-        if (forTaxIncluded && mutation.type === types.SET_PRICE_TAX_INCLUDED) {
-          el.value = state.priceTaxIncluded;
-        } else if (!forTaxIncluded && mutation.type === types.SET_PRICE_TAX_EXCLUDED) {
-          el.value = state.priceTaxExcluded;
-        }
+  listenToTaxInputsDOM(selectors) {
+    selectors.forEach((selector) => {
+      const el = document.querySelector(selector);
+      el.addEventListener('change', (event) => {
+        this.store.dispatch('updateTaxRate', {
+          rate: event.currentTarget.value,
+          priceTaxExcluded: this.store.state.priceTaxExcluded,
+          priceTaxIncluded: this.store.state.priceTaxIncluded,
+        });
       });
+    });
+  }
+
+  updatePricesDOM(selectors, forTaxIncluded) {
+    selectors.forEach((selector) => {
+      const el = document.querySelector(selector);
+
+      if (forTaxIncluded) {
+        el.value = this.store.state.priceTaxIncluded;
+      } else {
+        el.value = this.store.state.priceTaxExcluded;
+      }
+    });
+  }
+
+  updateTaxRatesDOM(selectors) {
+    selectors.forEach((selector) => {
+      const el = document.querySelector(selector);
+      //@todo: tax rate selectbox value should be id of selected element but not the RATE itself
+      el.value = this.store.state.taxRate;
     });
   }
 }

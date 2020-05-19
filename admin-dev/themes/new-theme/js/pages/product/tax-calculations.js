@@ -22,11 +22,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import {
+  add, subtract, multiply, divide,
+} from 'mathjs';
 
-export default {
-  priceTaxIncludedInput1: '#test1',
-  priceTaxExcludedInput1: '#test2',
-  priceTaxExcludedInput2: '#test3',
-  taxRateInput1: '#test4',
-  taxRateInput2: '#test5',
-};
+export function includeTaxes(priceTaxExcluded, taxRate) {
+  return add(
+    priceTaxExcluded,
+    multiply(priceTaxExcluded, divide(taxRate, 100)),
+  );
+}
+
+export function excludeTaxes(priceTaxIncluded, taxRate) {
+  return subtract(
+    priceTaxIncluded,
+    multiply(priceTaxIncluded, divide(taxRate, 100)),
+  );
+}

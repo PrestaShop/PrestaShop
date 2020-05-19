@@ -24,19 +24,20 @@
  */
 
 import * as types from './mutation-types';
+import * as taxCalculations from '../tax-calculations';
 
-export const updatePriceTaxExcluded = (state, price) => {
-  //@todo: lib for calculations;  like Big.js
-  state.commit(types.SET_PRICE_TAX_EXCLUDED, price);
-
-  //calculate and commit price included here.@todo: random value for test
-    state.commit(types.SET_PRICE_TAX_INCLUDED, price - 500);
-    debugger;
+export const updatePriceTaxExcluded = ({commit}, payload) => {
+  commit(types.SET_PRICE_TAX_EXCLUDED, payload.priceTaxExcluded);
+  commit(types.SET_PRICE_TAX_INCLUDED, taxCalculations.includeTaxes(payload.priceTaxExcluded, payload.rate));
 };
 
-export const updatePriceTaxIncluded = (state, price) => {
-  state.commit(types.SET_PRICE_TAX_INCLUDED, price);
-  //calculate and commit price excluded here.@todo: random value for test
-    state.commit(types.SET_PRICE_TAX_EXCLUDED, price + 500);
-    debugger;
+export const updatePriceTaxIncluded = ({commit}, payload) => {
+  commit(types.SET_PRICE_TAX_INCLUDED, payload.priceTaxIncluded);
+  commit(types.SET_PRICE_TAX_EXCLUDED, taxCalculations.excludeTaxes(payload.priceTaxIncluded, payload.rate));
+};
+
+export const updateTaxRate = ({commit}, payload) => {
+  commit(types.SET_TAX_RATE, payload.rate);
+  commit(types.SET_PRICE_TAX_EXCLUDED, taxCalculations.excludeTaxes(payload.priceTaxIncluded, payload.rate));
+  commit(types.SET_PRICE_TAX_INCLUDED, taxCalculations.includeTaxes(payload.priceTaxExcluded, payload.rate));
 };
