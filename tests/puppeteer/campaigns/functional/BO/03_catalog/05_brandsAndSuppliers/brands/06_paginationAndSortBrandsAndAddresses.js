@@ -147,18 +147,8 @@ describe('Pagination and sort brands and addresses', async () => {
             testIdentifier: 'sortBrandsByIdBrandDesc', sortBy: 'id_manufacturer', sortDirection: 'desc', isFloat: true,
           },
       },
-      {
-        args:
-          {
-            testIdentifier: 'sortBrandsByNameAsc', sortBy: 'name', sortDirection: 'asc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortBrandsByNameDesc', sortBy: 'name', sortDirection: 'desc',
-          },
-      },
+      {args: {testIdentifier: 'sortBrandsByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortBrandsByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
       {
         args:
           {
@@ -282,42 +272,12 @@ describe('Pagination and sort brands and addresses', async () => {
             testIdentifier: 'sortAddressesByIdAddressDesc', sortBy: 'id_address', sortDirection: 'desc', isFloat: true,
           },
       },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByNameAsc', sortBy: 'name', sortDirection: 'asc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByNameDesc', sortBy: 'name', sortDirection: 'desc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByFirstNameAsc', sortBy: 'firstname', sortDirection: 'asc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByFirstNameDesc', sortBy: 'firstname', sortDirection: 'desc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByLastNameAsc', sortBy: 'lastname', sortDirection: 'asc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByLastNameDesc', sortBy: 'lastname', sortDirection: 'desc',
-          },
-      },
+      {args: {testIdentifier: 'sortAddressesByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortAddressesByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortAddressesByFirstNameAsc', sortBy: 'firstname', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortAddressesByFirstNameDesc', sortBy: 'firstname', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortAddressesByLastNameAsc', sortBy: 'lastname', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortAddressesByLastNameDesc', sortBy: 'lastname', sortDirection: 'desc'}},
       {
         args:
           {
@@ -330,30 +290,10 @@ describe('Pagination and sort brands and addresses', async () => {
             testIdentifier: 'sortAddressesByPostCodeDesc', sortBy: 'postcode', sortDirection: 'desc', isFloat: true,
           },
       },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByCityAsc', sortBy: 'city', sortDirection: 'asc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByCityDesc', sortBy: 'city', sortDirection: 'desc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByCountryAsc', sortBy: 'country', sortDirection: 'asc',
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortAddressesByCountryDesc', sortBy: 'country', sortDirection: 'desc',
-          },
-      },
+      {args: {testIdentifier: 'sortAddressesByCityAsc', sortBy: 'city', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortAddressesByCityDesc', sortBy: 'city', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortAddressesByCountryAsc', sortBy: 'country', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortAddressesByCountryDesc', sortBy: 'country', sortDirection: 'desc'}},
       {
         args:
           {
