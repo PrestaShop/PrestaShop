@@ -31,7 +31,7 @@ export default class PriceRefresher {
     this.store = store;
     this.taxIncludedInputs = [productEditMap.priceTaxIncludedInput1];
     this.taxExcludedInputs = [productEditMap.priceTaxExcludedInput1];
-    this.taxRateInputs = [productEditMap.taxRateInput1, productEditMap.taxRateInput2];
+    this.taxRuleInputs = [productEditMap.taxRuleInput1, productEditMap.taxRuleInput2];
 
     this.init();
   }
@@ -64,7 +64,7 @@ export default class PriceRefresher {
       } else if (mutation.type === types.SET_PRICE_TAX_EXCLUDED) {
         this.updatePricesInDom(this.taxExcludedInputs, false);
       } else {
-        this.updateTaxRatesInDom(this.taxRateInputs);
+        this.updateTaxRulesInDom(this.taxRuleInputs);
       }
     });
   }
@@ -89,7 +89,7 @@ export default class PriceRefresher {
   }
 
   listenToTaxChangesInDom() {
-    this.taxRateInputs.forEach((selector) => {
+    this.taxRuleInputs.forEach((selector) => {
       const el = document.querySelector(selector);
       el.addEventListener('change', (event) => {
         this.store.dispatch('updateTaxRule', {
@@ -116,7 +116,7 @@ export default class PriceRefresher {
     });
   }
 
-  updateTaxRatesInDom(selectors) {
+  updateTaxRulesInDom(selectors) {
     selectors.forEach((selector) => {
       const el = document.querySelector(selector);
       el.value = this.store.state.taxRule.id;

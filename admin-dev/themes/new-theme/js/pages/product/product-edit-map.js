@@ -26,6 +26,6 @@
 export default {
   priceTaxExcludedInput1: '#test1',
   priceTaxIncludedInput1: '#test2',
-  taxRateInput1: '#test4',
-  taxRateInput2: '#test5',
+  taxRuleInput1: '#test4',
+  taxRuleInput2: '#test5',
 };
