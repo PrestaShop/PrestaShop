@@ -24,9 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use InvalidArgumentException;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -34,33 +37,37 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Decorated controllers using ControllerAwareTrait
- * cannot be injected the container as the injection is performed by ControllerResolver.
+ * As explained in https://github.com/symfony/symfony/issues/36567,
+ * Controllers lose the ControllerAwareTrait capabilities when they are decorated.
  *
- * This pass injects the container into PrestaShop controllers to overcome this issue.
+ * This pass injects the container into PrestaShop tagged controllers to overcome this issue.
  */
-class ContainerAwareControllersManualInjectionPass implements CompilerPassInterface
+class ContainerInjectionPass implements CompilerPassInterface
 {
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $controllers = $container->findTaggedServiceIds('prestashop.core.controllers');
+        $controllers = $container->findTaggedServiceIds(FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS);
 
         foreach ($controllers as $id => $controller) {
             $definition = $container->findDefinition($id);
             $class = $definition->getClass();
+            $reflectedClass = $container->getReflectionClass($class);
 
-            if (!$r = $container->getReflectionClass($class)) {
+            if (null === $reflectedClass) {
                 throw new InvalidArgumentException(sprintf(
                     'Class "%s" used for service "%s" cannot be found.',
                     $class,
                     $id
                 ));
             }
-            $isContainerAware = $r->implementsInterface(ContainerAwareInterface::class)
-                || is_subclass_of($class, AbstractController::class);
+
+            $isContainerAware = (
+                $reflectedClass->implementsInterface(ContainerAwareInterface::class)
+                || is_subclass_of($class, AbstractController::class)
+            );
 
             if ($isContainerAware) {
                 $definition->addMethodCall('setContainer', [new Reference('service_container')]);
