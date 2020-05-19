@@ -100,10 +100,12 @@ describe('Pagination and sort brands and addresses', async () => {
 
         const result = await this.pageObjects.addBrandPage.createEditBrand(createBrandData);
         await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
+
         const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
         await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 1 + index);
-        await files.deleteFile(createBrandData.logo);
       });
+
+      after(() => files.deleteFile(createBrandData.logo));
     });
   });
 
@@ -224,6 +226,7 @@ describe('Pagination and sort brands and addresses', async () => {
 
         const result = await this.pageObjects.addBrandAddressPage.createEditBrandAddress(createAddressData);
         await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
+
         const numberOfBrandsAddressesAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid(
           'manufacturer_address',
         );
