@@ -27,7 +27,7 @@
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
-use PrestaShopBundle\DependencyInjection\Compiler\ContainerAwareControllersManualInjectionPass;
+use PrestaShopBundle\DependencyInjection\Compiler\ContainerInjectionPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\GridDefinitionServiceIdsCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\IdentifiableObjectFormTypesCollectorPass;
@@ -72,6 +72,6 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new OptionsFormHookNameCollectorPass());
         $container->addCompilerPass(new GridDefinitionServiceIdsCollectorPass());
         $container->addCompilerPass(new IdentifiableObjectFormTypesCollectorPass());
-        $container->addCompilerPass(new ContainerAwareControllersManualInjectionPass());
+        $container->addCompilerPass(new ContainerInjectionPass());
     }
 }
