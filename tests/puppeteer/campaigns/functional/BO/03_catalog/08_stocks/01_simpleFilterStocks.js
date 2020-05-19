@@ -53,12 +53,12 @@ describe('Simple filter stocks', async () => {
   it('should go to "Catalog>Stocks" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
 
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.stocksLink,
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.stocksLink,
     );
 
-    await this.pageObjects.boBasePage.closeSfToolBar();
+    await this.pageObjects.stocksPage.closeSfToolBar();
 
     const pageTitle = await this.pageObjects.stocksPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.stocksPage.pageTitle);
@@ -92,7 +92,6 @@ describe('Simple filter stocks', async () => {
           const textColumn = await this.pageObjects.stocksPage.getTextColumnFromTableStocks(i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
-
       });
 
       it('should reset all filters', async function () {
