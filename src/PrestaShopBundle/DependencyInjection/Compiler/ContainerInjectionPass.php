@@ -49,7 +49,7 @@ class ContainerInjectionPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $controllers = $container->findTaggedServiceIds(FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS);
+        $controllers = $container->findTaggedServiceIds(FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG);
 
         foreach ($controllers as $id => $controller) {
             $definition = $container->findDefinition($id);

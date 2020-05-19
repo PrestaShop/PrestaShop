@@ -49,7 +49,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrameworkBundleAdminController extends Controller
 {
-    const PRESTASHOP_CORE_CONTROLLERS = 'prestashop.core.controllers';
+    const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
      * @var ConfigurationInterface
