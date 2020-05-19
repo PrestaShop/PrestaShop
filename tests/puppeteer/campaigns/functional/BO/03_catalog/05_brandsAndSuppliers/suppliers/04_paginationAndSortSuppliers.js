@@ -104,8 +104,9 @@ describe('Pagination and sort suppliers', async () => {
 
         const numberOfSuppliersAfterCreation = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
         await expect(numberOfSuppliersAfterCreation).to.be.equal(numberOfSuppliers + 1 + index);
-        await files.deleteFile(createSupplierData.logo);
       });
+
+      after(() => files.deleteFile(createSupplierData.logo));
     });
   });
 
