@@ -24,9 +24,8 @@
  */
 
 export default {
-  priceTaxIncludedInput1: '#test1',
-  priceTaxExcludedInput1: '#test2',
-  priceTaxExcludedInput2: '#test3',
+  priceTaxExcludedInput1: '#test1',
+  priceTaxIncludedInput1: '#test2',
   taxRateInput1: '#test4',
   taxRateInput2: '#test5',
 };

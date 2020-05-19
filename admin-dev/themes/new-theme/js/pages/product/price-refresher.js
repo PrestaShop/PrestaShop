@@ -31,7 +31,7 @@ export default class PriceRefresher {
     this.store = store;
     this.taxIncludedInputs = [productEditMap.priceTaxIncludedInput1];
     this.taxExcludedInputs = [productEditMap.priceTaxExcludedInput1];
-    this.taxRateInputs = [productEditMap.taxRateInput1];
+    this.taxRateInputs = [productEditMap.taxRateInput1, productEditMap.taxRateInput2];
 
     this.init();
   }
@@ -95,7 +95,7 @@ export default class PriceRefresher {
         this.store.dispatch('updateTaxRule', {
           taxRule: {
             id: event.currentTarget.value,
-            rate: event.currentTarget.dataset.taxRate,
+            rate: event.currentTarget.options[event.currentTarget.selectedIndex].dataset.taxRate,
           },
           priceTaxExcluded: this.store.state.priceTaxExcluded,
           priceTaxIncluded: this.store.state.priceTaxIncluded,
