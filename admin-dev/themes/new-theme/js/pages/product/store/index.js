@@ -34,7 +34,10 @@ export default new Vuex.Store({
   state: {
     priceTaxIncluded: null,
     priceTaxExcluded: null,
-    taxRate: null,
+    taxRule: {
+      id: null,
+      rate: null,
+    },
   },
   mutations,
   actions,

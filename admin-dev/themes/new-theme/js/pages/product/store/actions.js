@@ -28,16 +28,16 @@ import * as taxCalculations from '../tax-calculations';
 
 export const updatePriceTaxExcluded = ({commit}, payload) => {
   commit(types.SET_PRICE_TAX_EXCLUDED, payload.priceTaxExcluded);
-  commit(types.SET_PRICE_TAX_INCLUDED, taxCalculations.includeTaxes(payload.priceTaxExcluded, payload.rate));
+  commit(types.SET_PRICE_TAX_INCLUDED, taxCalculations.includeTaxes(payload.priceTaxExcluded, payload.taxRule.rate));
 };
 
 export const updatePriceTaxIncluded = ({commit}, payload) => {
   commit(types.SET_PRICE_TAX_INCLUDED, payload.priceTaxIncluded);
-  commit(types.SET_PRICE_TAX_EXCLUDED, taxCalculations.excludeTaxes(payload.priceTaxIncluded, payload.rate));
+  commit(types.SET_PRICE_TAX_EXCLUDED, taxCalculations.excludeTaxes(payload.priceTaxIncluded, payload.taxRule.rate));
 };
 
-export const updateTaxRate = ({commit}, payload) => {
-  commit(types.SET_TAX_RATE, payload.rate);
-  commit(types.SET_PRICE_TAX_EXCLUDED, taxCalculations.excludeTaxes(payload.priceTaxIncluded, payload.rate));
-  commit(types.SET_PRICE_TAX_INCLUDED, taxCalculations.includeTaxes(payload.priceTaxExcluded, payload.rate));
+export const updateTaxRule = ({commit}, payload) => {
+  commit(types.SET_TAX_RULE, payload.taxRule);
+  commit(types.SET_PRICE_TAX_EXCLUDED, taxCalculations.excludeTaxes(payload.priceTaxIncluded, payload.taxRule.rate));
+  commit(types.SET_PRICE_TAX_INCLUDED, taxCalculations.includeTaxes(payload.priceTaxExcluded, payload.taxRule.rate));
 };

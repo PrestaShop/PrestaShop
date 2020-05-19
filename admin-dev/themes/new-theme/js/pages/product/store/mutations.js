@@ -32,7 +32,7 @@ export default {
   [types.SET_PRICE_TAX_INCLUDED](state, price) {
     state.priceTaxIncluded = price;
   },
-  [types.SET_TAX_RATE](state, rate) {
-    state.taxRate = rate;
+  [types.SET_TAX_RULE](state, taxRule) {
+    state.taxRule = taxRule;
   },
 };
