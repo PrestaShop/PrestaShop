@@ -20,15 +20,10 @@ const AddSupplierPage = require('@pages/BO/catalog/suppliers/add');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_sortSuppliers';
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_paginationAndSortSuppliers';
 
 let browser;
 let page;
-
-const firstSupplierData = new SupplierFaker();
-const secondSupplierData = new SupplierFaker();
-const thirdSupplierData = new SupplierFaker({enabled: false});
-
 let numberOfSuppliers = 0;
 
 // Init objects needed
@@ -41,9 +36,13 @@ const init = async function () {
     addSupplierPage: new AddSupplierPage(page),
   };
 };
-
-// Sort suppliers table
-describe('Sort suppliers', async () => {
+/*
+Create 11 suppliers
+Paginate between pages
+Sort suppliers table
+Delete categories with bulk actions
+ */
+describe('Pagination and sort suppliers', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -54,12 +53,6 @@ describe('Sort suppliers', async () => {
 
   after(async () => {
     await helper.closeBrowser(browser);
-
-    await Promise.all([
-      files.deleteFile(firstSupplierData.logo),
-      files.deleteFile(secondSupplierData.logo),
-      files.deleteFile(thirdSupplierData.logo),
-    ]);
   });
 
   // Login into BO
@@ -73,56 +66,81 @@ describe('Sort suppliers', async () => {
       this.pageObjects.dashboardPage.catalogParentLink,
       this.pageObjects.dashboardPage.brandsAndSuppliersLink,
     );
-
-    await this.pageObjects.brandsPage.closeSfToolBar();
+    await this.pageObjects.dashboardPage.closeSfToolBar();
 
     const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
   });
 
   // Go to suppliers page
-  it('should go to suppliers page', async function () {
+  it('should go to suppliers page and get number of suppliers', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSuppliersPage', baseContext);
 
     await this.pageObjects.brandsPage.goToSubTabSuppliers();
+    numberOfSuppliers = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
     const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
   });
 
-  // 1: Create 3 suppliers
-  describe('Create 3 suppliers', async () => {
-    const tests = [
-      {args: {supplierToCreate: firstSupplierData}},
-      {args: {supplierToCreate: secondSupplierData}},
-      {args: {supplierToCreate: thirdSupplierData}},
-    ];
+  // 1 : Create 11 new suppliers
+  const creationTests = new Array(11).fill(0, 0, 11);
+  creationTests.forEach((test, index) => {
+    describe(`Create supplier n°${index + 1} in BO`, async () => {
+      const createSupplierData = new SupplierFaker({name: `todelete${index}`});
 
-    tests.forEach((test, index) => {
-      it('should go to new supplier page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddSupplierPage${index + 1}`, baseContext);
+      it('should go to add new supplier page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewSupplierPage${index}`, baseContext);
 
         await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
         const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitle);
       });
 
-      it('should create supplier', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index + 1}`, baseContext);
+      it('should create supplier and check result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index}`, baseContext);
 
-        const result = await this.pageObjects.addSupplierPage.createEditSupplier(test.args.supplierToCreate);
+        const result = await this.pageObjects.addSupplierPage.createEditSupplier(createSupplierData);
         await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
+
+        const numberOfCategoriesAfterCreation = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
+        await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfSuppliers + 1 + index);
+        await files.deleteFile(createSupplierData.logo);
       });
-    });
-
-    it('should reset filter and get number of suppliers after creation', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterCreation', baseContext);
-
-      numberOfSuppliers = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
-      await expect(numberOfSuppliers).to.be.at.least(2);
     });
   });
 
-  // 2 : Sort suppliers
+  // 2 : Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the item number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+
+      const paginationNumber = await this.pageObjects.suppliersPage.selectPaginationLimit('10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await this.pageObjects.suppliersPage.paginationNext();
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await this.pageObjects.suppliersPage.paginationPrevious();
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the item number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await this.pageObjects.suppliersPage.selectPaginationLimit('50');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+
+  // 3 : Sort suppliers
   describe('Sort suppliers', async () => {
     const brandsTests = [
       {
@@ -172,40 +190,32 @@ describe('Sort suppliers', async () => {
     });
   });
 
-  // 3 : Delete the 3 created suppliers
-  describe('Delete the 3 created suppliers', async () => {
-    const tests = [
-      {args: {supplierData: firstSupplierData}},
-      {args: {supplierData: secondSupplierData}},
-      {args: {supplierData: thirdSupplierData}},
-    ];
+  // 4 : Delete suppliers created with bulk actions
+  describe('Delete suppliers with Bulk Actions', async () => {
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-    tests.forEach((test, index) => {
-      it('should filter supplier by name', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index + 1}`, baseContext);
+      await this.pageObjects.suppliersPage.filterTable(
+        'input',
+        'name',
+        'todelete',
+      );
+      const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'name');
+      await expect(textColumn).to.contains('todelete');
+    });
 
-        await this.pageObjects.suppliersPage.filterTable(
-          'input',
-          'name',
-          test.args.supplierData.name,
-        );
+    it('should delete suppliers with Bulk Actions and check Result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
-        // Check number of suppliers
-        const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
-        await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
+      const deleteTextResult = await this.pageObjects.suppliersPage.deleteWithBulkActions();
+      await expect(deleteTextResult).to.be.equal(this.pageObjects.suppliersPage.successfulMultiDeleteMessage);
+    });
 
-        // check text column of first row after filter
-        const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'name');
-        await expect(textColumn).to.contains(test.args.supplierData.name);
-      });
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
 
-      it('should delete supplier', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteSupplier${index + 1}`, baseContext);
-
-        // delete supplier in first row
-        const result = await this.pageObjects.suppliersPage.deleteSupplier(1);
-        await expect(result).to.be.equal(this.pageObjects.suppliersPage.successfulDeleteMessage);
-      });
+      const numberOfSuppliersAfterReset = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
+      await expect(numberOfSuppliersAfterReset).to.equal(numberOfSuppliers);
     });
   });
 });
