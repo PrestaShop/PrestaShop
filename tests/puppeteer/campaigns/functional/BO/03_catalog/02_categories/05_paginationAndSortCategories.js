@@ -93,8 +93,9 @@ describe('Pagination and sort Categories', async () => {
 
         const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
         await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
-        await files.deleteFile(`${createCategoryData.name}.jpg`);
       });
+
+      after(() => files.deleteFile(`${createCategoryData.name}.jpg`));
     });
   });
 
