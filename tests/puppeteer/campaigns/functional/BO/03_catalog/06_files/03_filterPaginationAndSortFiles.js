@@ -262,6 +262,7 @@ describe('Filter, pagination and sort files', async () => {
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+
       const numberOfFilesAfterReset = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
       await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles);
     });
