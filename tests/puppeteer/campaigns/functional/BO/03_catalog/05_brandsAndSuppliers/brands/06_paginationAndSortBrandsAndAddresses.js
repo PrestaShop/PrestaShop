@@ -110,28 +110,28 @@ describe('Pagination and sort brands and addresses', async () => {
   // 2 : Pagination of brands table
   describe('Pagination next and previous of brands table', async () => {
     it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemNumberTo10', baseContext);
 
       const paginationNumber = await this.pageObjects.brandsPage.selectPaginationLimit('manufacturer', '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'brandsClickOnNext', baseContext);
 
       const paginationNumber = await this.pageObjects.brandsPage.paginationNext('manufacturer');
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'brandsClickOnPrevious', baseContext);
 
       const paginationNumber = await this.pageObjects.brandsPage.paginationPrevious('manufacturer');
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemNumberTo50', baseContext);
 
       const paginationNumber = await this.pageObjects.brandsPage.selectPaginationLimit('manufacturer', '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
@@ -193,7 +193,7 @@ describe('Pagination and sort brands and addresses', async () => {
   // 4 : Delete brands with bulk actions
   describe('Delete brands with bulk actions', async () => {
     it('should filter brands list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrand', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands', baseContext);
 
       await this.pageObjects.brandsPage.filterBrands('input', 'name', 'todelete');
       const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableBrands(1, 'name');
@@ -208,7 +208,7 @@ describe('Pagination and sort brands and addresses', async () => {
     });
 
     it('should reset brands filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteBrands', baseContext);
 
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
@@ -245,28 +245,28 @@ describe('Pagination and sort brands and addresses', async () => {
   // 6 : Pagination of addresses table
   describe('Pagination next and previous of addresses table', async () => {
     it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addressesChangeItemNumberTo10', baseContext);
 
       const paginationNumber = await this.pageObjects.brandsPage.selectPaginationLimit('manufacturer_address', '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addressesClickOnNext', baseContext);
 
       const paginationNumber = await this.pageObjects.brandsPage.paginationNext('manufacturer_address');
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addressesClickOnPrevious', baseContext);
 
       const paginationNumber = await this.pageObjects.brandsPage.paginationPrevious('manufacturer_address');
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addressesChangeItemNumberTo50', baseContext);
 
       const paginationNumber = await this.pageObjects.brandsPage.selectPaginationLimit('manufacturer_address', '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
@@ -395,7 +395,7 @@ describe('Pagination and sort brands and addresses', async () => {
   // 8 : Delete addresses with bulk actions
   describe('Delete addresses with bulk actions', async () => {
     it('should filter address list by city', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrand', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteAddresses', baseContext);
 
       await this.pageObjects.brandsPage.filterAddresses('input', 'city', 'todelete');
       const textColumn = await this.pageObjects.brandsPage.getTextColumnFromTableAddresses(1, 'city');
@@ -403,14 +403,14 @@ describe('Pagination and sort brands and addresses', async () => {
     });
 
     it('should delete addresses with Bulk Actions and check Result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteBrands', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAddresses', baseContext);
 
       const deleteTextResult = await this.pageObjects.brandsPage.deleteWithBulkActions('manufacturer_address');
       await expect(deleteTextResult).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
     });
 
     it('should reset addresses filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteAddresses', baseContext);
 
       const numberOfAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
         'manufacturer_address',
