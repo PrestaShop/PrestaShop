@@ -1,18 +1,45 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <input type="text" id="test1" value="100">
-  <input type="text" id="test2" value="110">
-  <select name="" id="test4">
-    <option value="1" data-tax-rate="10">value 1</option>
-    <option value="2" data-tax-rate="20">value 2</option>
-    <option value="3" data-tax-rate="2.5">value 3</option>
-  </select>
-  <select name="" id="test5">
-    <option value="1" data-tax-rate="10">value 1</option>
-    <option value="2" data-tax-rate="20">value 2</option>
-    <option value="3" data-tax-rate="2.5">value 3</option>
-  </select>
+  <div class="row">
+    <div class="col">
+      tax excluded
+      <input type="text" id="test1-excl" value="100">
+    </div>
+    <div class="col">
+      tax included
+      <input type="text" id="test1-incl" value="110">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      tax excluded
+      <input type="text" id="test2-excl" value="100">
+    </div>
+    <div class="col">
+      tax included
+      <input type="text" id="test2-incl" value="110">
+    </div>
+  </div>
+
+  <div class="row">
+    tax rule
+    <select name="" id="test1-tax">
+      <option value="1" data-tax-rate="10">value 1</option>
+      <option value="2" data-tax-rate="20">value 2</option>
+      <option value="3" data-tax-rate="2.5">value 3</option>
+    </select>
+  </div>
+
+  <div class="row">
+    tax rule
+    <select name="" id="test2-tax">
+      <option value="1" data-tax-rate="10">value 1</option>
+      <option value="2" data-tax-rate="20">value 2</option>
+      <option value="3" data-tax-rate="2.5">value 3</option>
+    </select>
+  </div>
 {% endblock %}
 
 {% block javascripts %}

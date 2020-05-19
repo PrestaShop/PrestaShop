@@ -29,8 +29,8 @@ import * as types from './store/mutation-types';
 export default class PriceRefresher {
   constructor(store) {
     this.store = store;
-    this.taxIncludedInputs = [productEditMap.priceTaxIncludedInput1];
-    this.taxExcludedInputs = [productEditMap.priceTaxExcludedInput1];
+    this.taxIncludedInputs = [productEditMap.priceTaxIncludedInput1, productEditMap.priceTaxIncludedInput2];
+    this.taxExcludedInputs = [productEditMap.priceTaxExcludedInput1, productEditMap.priceTaxExcludedInput2];
     this.taxRuleInputs = [productEditMap.taxRuleInput1, productEditMap.taxRuleInput2];
 
     this.init();
@@ -51,7 +51,7 @@ export default class PriceRefresher {
     this.store.commit(types.SET_PRICE_TAX_EXCLUDED, priceTaxExcluded);
     this.store.commit(types.SET_TAX_RULE, {
       id: taxRuleSelection.value,
-      taxRate: taxRuleSelection.options[taxRuleSelection.selectedIndex].dataset.taxRate,
+      rate: taxRuleSelection.options[taxRuleSelection.selectedIndex].dataset.taxRate,
     });
   }
 
