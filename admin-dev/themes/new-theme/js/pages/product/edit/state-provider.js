@@ -33,14 +33,14 @@ export default class StateProvider {
     // gets first elements for given class and uses it as state default value
     const priceTaxIncluded = document.querySelector(productMap.priceTaxIncludedInputs).value;
     const priceTaxExcluded = document.querySelector(productMap.priceTaxExcludedInputs).value;
-    const taxRuleGroupSelection = document.querySelector(productMap.taxRuleGroupSelections);
+    const taxRulesGroupSelection = document.querySelector(productMap.taxRulesGroupSelections);
 
     return {
       priceTaxIncluded,
       priceTaxExcluded,
-      taxRuleGroup: {
-        id: taxRuleGroupSelection.value,
-        rate: taxRuleGroupSelection.options[taxRuleGroupSelection.selectedIndex].dataset.taxRate,
+      taxRulesGroup: {
+        id: taxRulesGroupSelection.value,
+        rate: taxRulesGroupSelection.options[taxRulesGroupSelection.selectedIndex].dataset.taxRate,
       },
     };
   }

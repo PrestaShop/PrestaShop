@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Catalog\Product;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -36,13 +37,28 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ProductPriceType extends AbstractType
 {
     /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $taxRuleGroupChoiceProvider;
+
+    /**
+     * @param ConfigurableFormChoiceProviderInterface $taxRuleGroupChoiceProvider
+     */
+    public function __construct(
+        ConfigurableFormChoiceProviderInterface $taxRuleGroupChoiceProvider
+    ) {
+        $this->taxRuleGroupChoiceProvider = $taxRuleGroupChoiceProvider;
+    }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $taxRuleGroupChoices = $this->taxRuleGroupChoiceProvider->getChoices(['with_rates' => true]);
+
         $builder
-            //@todo: constraints etc.
             ->add('price_tax_excluded', NumberType::class, [
                 'attr' => [
                     'class' => 'product-price-tax-excl',
@@ -57,17 +73,27 @@ class ProductPriceType extends AbstractType
                 'attr' => [
                     'class' => 'product-tax-rule-group-selection'
                 ],
-                'choices' => [
-                    //@todo: hardcoded
-                    '10%' => 1,
-                    '20%' => 2,
-                    '30%' => 3,
-                ],
-                'choice_attr' => function($choice, $key, $value) {
-                    // adds a class like attending_yes, attending_no, etc
-                    return ['data-tax-rate' => 'attending_'.strtolower($key)];
+                'choices' => $this->presentTaxRuleGroupChoices($taxRuleGroupChoices),
+                'choice_attr' => function($choice, $key, $value) use ($taxRuleGroupChoices) {
+                    return ['data-tax-rate' => $taxRuleGroupChoices[$key]['rate']];
                 },
             ])
         ;
+    }
+
+    /**
+     * @param array $taxRuleGroupChoices
+     *
+     * @return array
+     */
+    private function presentTaxRuleGroupChoices(array $taxRuleGroupChoices): array
+    {
+        $choices = [];
+
+        foreach ($taxRuleGroupChoices as $name => $choice) {
+            $choices[$name] = $choice['id'];
+        }
+
+        return $choices;
     }
 }

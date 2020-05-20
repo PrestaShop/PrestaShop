@@ -34,7 +34,7 @@ export default class PriceRefresher {
     this.store = store;
     this.taxIncludedInputs = productMap.priceTaxIncludedInputs;
     this.taxExcludedInputs = productMap.priceTaxExcludedInputs;
-    this.taxRuleGroupSelections = productMap.taxRuleGroupSelections;
+    this.taxRulesGroupSelections = productMap.taxRulesGroupSelections;
 
     this.init();
   }
@@ -53,7 +53,7 @@ export default class PriceRefresher {
   listenToDomChanges() {
     this.listenToPriceChangesInDom(this.taxIncludedInputs, true);
     this.listenToPriceChangesInDom(this.taxExcludedInputs, false);
-    this.listenToTaxChangesInDom();
+    this.listenToTaxRulesGroupChangesInDom();
   }
 
   /**
@@ -64,7 +64,7 @@ export default class PriceRefresher {
       const subscribedMutationTypes = [
         types.SET_PRICE_TAX_INCLUDED,
         types.SET_PRICE_TAX_EXCLUDED,
-        types.SET_TAX_RULE_GROUP,
+        types.SET_TAX_RULES_GROUP,
       ];
 
       if (!subscribedMutationTypes.includes(mutation.type)) {
@@ -76,7 +76,7 @@ export default class PriceRefresher {
       } else if (mutation.type === types.SET_PRICE_TAX_EXCLUDED) {
         this.updatePricesInDom(this.taxExcludedInputs, false);
       } else {
-        this.updateTaxRulesInDom();
+        this.updateTaxRulesGroupInDom();
       }
     });
   }
@@ -106,14 +106,14 @@ export default class PriceRefresher {
   }
 
   /**
-   * Listens to tax rule selection changes
+   * Listens to tax rules selection changes
    */
-  listenToTaxChangesInDom() {
-    const elements = document.querySelectorAll(this.taxRuleGroupSelections);
+  listenToTaxRulesGroupChangesInDom() {
+    const elements = document.querySelectorAll(this.taxRulesGroupSelections);
     elements.forEach((el) => {
       el.addEventListener('change', (event) => {
-        this.store.dispatch('updateTaxRuleGroup', {
-          taxRule: {
+        this.store.dispatch('updateTaxRulesGroup', {
+          taxRulesGroup: {
             id: event.currentTarget.value,
             rate: event.currentTarget.options[event.currentTarget.selectedIndex].dataset.taxRate,
           },
@@ -141,13 +141,13 @@ export default class PriceRefresher {
   }
 
   /**
-   * Updates tax rule values in DOM
+   * Updates tax rule group values in DOM
    */
-  updateTaxRulesInDom() {
-    const elements = document.querySelectorAll(this.taxRuleGroupSelections);
+  updateTaxRulesGroupInDom() {
+    const elements = document.querySelectorAll(this.taxRulesGroupSelections);
 
     elements.forEach((el) => {
-      el.value = this.store.state.taxRule.id;
+      el.value = this.store.state.taxRulesGroup.id;
     });
   }
 }

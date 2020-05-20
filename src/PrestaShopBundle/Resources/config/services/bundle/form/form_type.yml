@@ -1145,3 +1145,11 @@ services:
         - '@translator'
       tags:
         - { name: form.type }
+
+    form.type.sell.catalog.product.product_price_type:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Catalog\Product\ProductPriceType'
+      public: true
+      arguments:
+        - '@prestashop.core.form.choice_provider.configurable_tax_rule_group_choice_provider'
+      tags:
+        - { name: form.type }

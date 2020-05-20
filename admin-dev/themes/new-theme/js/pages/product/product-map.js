@@ -29,5 +29,5 @@
 export default {
   priceTaxExcludedInputs: '.product-price-tax-excl',
   priceTaxIncludedInputs: '.product-price-tax-incl',
-  taxRuleGroupSelections: '.product-tax-rule-group-selection',
+  taxRulesGroupSelections: '.product-tax-rule-group-selection',
 };

@@ -35,7 +35,7 @@ export default {
   [types.SET_PRICE_TAX_INCLUDED](state, price) {
     state.priceTaxIncluded = price;
   },
-  [types.SET_TAX_RULE_GROUP](state, taxRule) {
-    state.taxRule = taxRule;
+  [types.SET_TAX_RULES_GROUP](state, taxRulesGroup) {
+    state.taxRulesGroup = taxRulesGroup;
   },
 };

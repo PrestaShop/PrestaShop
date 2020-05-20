@@ -41,11 +41,10 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(int $productId): Response
     {
-        //@todo: form data handler/provider. Remove hardcoded values.
         $productPriceForm = $this->createForm(ProductPriceType::class, [
             'price_tax_excluded' => 100,
             'price_tax_included' => 110,
-            'tax_rule' => 1,
+            'tax_rule_group' => 1,
         ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [

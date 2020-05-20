@@ -191,6 +191,9 @@ services:
   prestashop.core.form.choice_provider.tax_rule_group_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'
 
+  prestashop.core.form.choice_provider.configurable_tax_rule_group_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ConfigurableTaxRuleGroupChoiceProvider'
+
   prestashop.core.form.choice_provider.cms_categories:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CmsCategoriesChoiceProvider'
     arguments:
