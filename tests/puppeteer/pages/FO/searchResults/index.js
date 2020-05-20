@@ -6,8 +6,8 @@ module.exports = class SearchResults extends FOBasePage {
     super(page);
 
     // Selectors for search Results page
-    this.productArticle = '#js-product-list .products div:nth-child(%NUMBER) article';
-    this.productImg = `${this.productArticle} img`;
+    this.productArticle = number => `#js-product-list .products div:nth-child(${number}) article`;
+    this.productImg = number => `${this.productArticle(number)} img`;
   }
 
   /**
@@ -15,6 +15,6 @@ module.exports = class SearchResults extends FOBasePage {
    * @param id, product id
    */
   async goToProductPage(id) {
-    await this.clickAndWaitForNavigation(this.productImg.replace('%NUMBER', id));
+    await this.clickAndWaitForNavigation(this.productImg(id));
   }
 };

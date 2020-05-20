@@ -17,11 +17,12 @@ module.exports = class Localization extends LocalizationBasePage {
     this.importLanguagesCheckbox = '#import_localization_pack_content_to_import_3';
     this.importUnitsCheckbox = '#import_localization_pack_content_to_import_4';
     this.updatepriceDisplayForGroupsCHeckbox = '#import_localization_pack_content_to_import_5';
-    this.downloadPackDataSwitch = 'label[for=\'import_localization_pack_download_pack_data_%ID\']';
+    this.downloadPackDataSwitch = id => `label[for='import_localization_pack_download_pack_data_${id}']`;
     this.importButton = `${this.importLocalizationPackForm} .card-footer button`;
     // Configuration form selectors
     this.defaultLanguageSelector = '#form_configuration_default_language';
-    this.languageFromBrowserLabel = 'label[for=\'form_configuration_detect_language_from_browser_%TOGGLE\']';
+    this.languageFromBrowserLabel = toggle => `label[for='form_configuration_detect_language_from_browser_${toggle}']`;
+    this.defaultCurrencySelect = '#form_configuration_default_currency';
     this.saveConfigurationFormButton = '#main-div form[name=\'form\'] .card-footer button';
   }
 
@@ -47,7 +48,7 @@ module.exports = class Localization extends LocalizationBasePage {
       contentToImport.updatePriceDisplayForGroups,
     );
     // Choose if we download pack of data
-    await this.page.click(this.downloadPackDataSwitch.replace('%ID', downloadPackData ? 1 : 0));
+    await this.page.click(this.downloadPackDataSwitch(downloadPackData ? 1 : 0));
     // Import the pack
     await this.clickAndWaitForNavigation(this.importButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -62,7 +63,19 @@ module.exports = class Localization extends LocalizationBasePage {
    */
   async setDefaultLanguage(language, languageFromBrowser = true) {
     await this.selectByVisibleText(this.defaultLanguageSelector, language);
-    await this.waitForSelectorAndClick(this.languageFromBrowserLabel.replace('%TOGGLE', languageFromBrowser ? 1 : 0));
+    await this.waitForSelectorAndClick(this.languageFromBrowserLabel(languageFromBrowser ? 1 : 0));
+    await this.waitForSelectorAndClick(this.saveConfigurationFormButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Set default currency
+   * @param currency
+   * @returns {Promise<string>}
+   */
+  async setDefaultCurrency(currency) {
+    this.dialogListener();
+    await this.selectByVisibleText(this.defaultCurrencySelect, currency);
     await this.waitForSelectorAndClick(this.saveConfigurationFormButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }

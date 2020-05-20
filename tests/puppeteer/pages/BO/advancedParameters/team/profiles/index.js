@@ -29,6 +29,15 @@ module.exports = class Profiles extends BOBasePage {
     this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = `${this.profilesListForm} #profile_grid_bulk_action_bulk_delete_profiles`;
+    // Pages selectors
+    this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
+    this.pagesPaginationLabel = `${this.profilesListForm} .col-form-label`;
+    this.pagesPaginationNextLink = `${this.profilesListForm} #pagination_next_url`;
+    this.pagesPaginationPreviousLink = `${this.profilesListForm} [aria-label='Previous']`;
+    // Sort Selectors
+    this.tableHead = `${this.profileGridPanel} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -141,5 +150,69 @@ module.exports = class Profiles extends BOBasePage {
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Select profiles pagination limit
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(number) {
+    await this.selectByVisibleText(this.pagesPaginationLimitSelect, number);
+    return this.getTextContent(this.pagesPaginationLabel);
+  }
+
+  /**
+   * profiles pagination next
+   * @returns {Promise<string>}
+   */
+  async paginationNext() {
+    await this.clickAndWaitForNavigation(this.pagesPaginationNextLink);
+    return this.getTextContent(this.pagesPaginationLabel);
+  }
+
+  /**
+   * profiles pagination previous
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious() {
+    await this.clickAndWaitForNavigation(this.pagesPaginationPreviousLink);
+    return this.getTextContent(this.pagesPaginationLabel);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      let rowContent = await this.getTextContent(this.profilesListTableColumn(i, column));
+      if (column === 'active') {
+        rowContent = await this.getToggleColumnValue(i).toString();
+      }
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

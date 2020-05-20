@@ -13,17 +13,19 @@ module.exports = class moduleManager extends BOBasePage {
     this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
     this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
     this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
-    this.moduleBlock = `${this.allModulesBlock}[data-name='%MODULENAME']`;
-    this.disableModuleButton = `${this.moduleBlock} button.module_action_menu_disable`;
-    this.configureModuleButton = `${this.moduleBlock} div.module-actions>a`;
+    this.moduleBlock = moduleName => `${this.allModulesBlock}[data-name='${moduleName}']`;
+    this.disableModuleButton = moduleName => `${this.moduleBlock(moduleName)} button.module_action_menu_disable`;
+    this.configureModuleButton = moduleName => `${this.moduleBlock(moduleName)}`
+      + ' div.module-actions a[href*=\'/action/configure\']';
+    this.actionsDropdownButton = moduleName => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
     // Status dropdown selectors
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
-    this.statusDropdownItemLink = `${this.statusDropdownMenu} ul li[data-status-ref='%REF'] a`;
+    this.statusDropdownItemLink = ref => `${this.statusDropdownMenu} ul li[data-status-ref='${ref}'] a`;
     // Categories
     this.categoriesSelectDiv = '#categories';
     this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
-    this.categoryDropdownItem = `${this.categoriesDropdownDiv} li[data-category-display-name='%CAT']`;
+    this.categoryDropdownItem = cat => `${this.categoriesDropdownDiv} li[data-category-display-name='${cat}']`;
   }
 
   /*
@@ -39,7 +41,7 @@ module.exports = class moduleManager extends BOBasePage {
   async searchModule(moduleTag, moduleName) {
     await this.page.type(this.searchModuleTagInput, moduleTag);
     await this.page.click(this.searchModuleButton);
-    await this.waitForVisibleSelector(this.moduleBlock.replace('%MODULENAME', moduleName));
+    await this.waitForVisibleSelector(this.moduleBlock(moduleName));
   }
 
   /**
@@ -48,7 +50,13 @@ module.exports = class moduleManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToConfigurationPage(moduleName) {
-    await this.page.click(this.configureModuleButton.replace('%MODULENAME', moduleName));
+    if (await this.elementNotVisible(this.configureModuleButton(moduleName), 1000)) {
+      await Promise.all([
+        this.page.click(this.actionsDropdownButton(moduleName)),
+        this.waitForVisibleSelector(`${this.actionsDropdownButton(moduleName)}[aria-expanded='true']`),
+      ]);
+    }
+    await this.page.click(this.configureModuleButton(moduleName));
   }
 
   /**
@@ -62,7 +70,7 @@ module.exports = class moduleManager extends BOBasePage {
       this.waitForVisibleSelector(`${this.statusDropdownDiv}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.statusDropdownItemLink.replace('%REF', enabled ? 1 : 0)),
+      this.page.click(this.statusDropdownItemLink(enabled ? 1 : 0)),
       this.waitForVisibleSelector(`${this.statusDropdownDiv}[aria-expanded='false']`),
     ]);
   }
@@ -73,7 +81,7 @@ module.exports = class moduleManager extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async isModuleEnabled(moduleName) {
-    return this.elementNotVisible(this.disableModuleButton.replace('%MODULENAME', moduleName), 1000);
+    return this.elementNotVisible(this.disableModuleButton(moduleName), 1000);
   }
 
   /**
@@ -112,7 +120,7 @@ module.exports = class moduleManager extends BOBasePage {
       this.waitForVisibleSelector(`${this.categoriesSelectDiv}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.categoryDropdownItem.replace('%CAT', category)),
+      this.page.click(this.categoryDropdownItem(category)),
       this.waitForVisibleSelector(`${this.categoriesSelectDiv}[aria-expanded='false']`),
     ]);
   }

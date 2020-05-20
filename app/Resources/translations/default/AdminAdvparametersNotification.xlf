@@ -639,6 +639,36 @@
         <target>Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%</target>
         <note>Line: 1311</note>
       </trans-unit>
+      <trans-unit id="1f45b8f0e0e3ab3a5c43c9b99641fad5">
+        <source>Advanced stock management has incorrect value. Not set for product %name%</source>
+        <target>Advanced stock management has incorrect value. Not set for product %name%</target>
+        <note>Line: 1232</note>
+      </trans-unit>
+      <trans-unit id="0f617687e3fc1e518f830dc0ad427cd8">
+        <source>Advanced stock management is not enabled, cannot enable on product %name%</source>
+        <target>Advanced stock management is not enabled, cannot enable on product %name%</target>
+        <note>Line: 1240</note>
+      </trans-unit>
+      <trans-unit id="1e82a87bf4a4e2edca0e1063116a5328">
+        <source>Advanced stock management is not enabled, warehouse not set on product %name%</source>
+        <target>Advanced stock management is not enabled, warehouse not set on product %name%</target>
+        <note>Line: 1259</note>
+      </trans-unit>
+      <trans-unit id="068e8a1ac19374587efc15a38ce9c559">
+        <source>Incorrect value for "Depends on stock" for product %name%</source>
+        <target>Incorrect value for "Depends on stock" for product %name%</target>
+        <note>Line: 1303</note>
+      </trans-unit>
+      <trans-unit id="295a2f663d0e8cc6324b85ef49e9be26">
+        <source>Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%</source>
+        <target>Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%</target>
+        <note>Line: 1311</note>
+      </trans-unit>
+      <trans-unit id="c9b7bd5af2306a1572da86fb68d68883">
+        <source>Warehouse did not exist, cannot set on product %name%</source>
+        <target>Warehouse did not exist, cannot set on product %name%</target>
+        <note>Line: 1281</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/Adapter/Media/MediaServerConfiguration.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -994,32 +1024,32 @@
       <trans-unit id="a375d9230fd61b4a70ac109ab7b11082">
         <source>You cannot edit the SuperAdmin profile.</source>
         <target>You cannot edit the SuperAdmin profile.</target>
-        <note>Line: 344</note>
+        <note>Line: 345</note>
       </trans-unit>
       <trans-unit id="cd34716bc68eb08479ddf16f17b2580e">
         <source>The provided profile is invalid</source>
         <target>The provided profile is invalid</target>
-        <note>Line: 508</note>
+        <note>Line: 509</note>
       </trans-unit>
       <trans-unit id="f5d44b60e38b28d19549bb7a107654ca">
         <source>You cannot disable or delete your own account.</source>
         <target>You cannot disable or delete your own account.</target>
-        <note>Line: 492</note>
+        <note>Line: 493</note>
       </trans-unit>
       <trans-unit id="2450228823b8e17792cf687b8543b59d">
         <source>You cannot disable or delete the administrator account.</source>
         <target>You cannot disable or delete the administrator account.</target>
-        <note>Line: 486</note>
+        <note>Line: 487</note>
       </trans-unit>
       <trans-unit id="4220fb02fdc65e838a02a3b51c6f737f">
         <source>Your current password is invalid.</source>
         <target>Your current password is invalid.</target>
-        <note>Line: 536</note>
+        <note>Line: 537</note>
       </trans-unit>
       <trans-unit id="cfe45dd92c1b71a640ea19767578f38c">
         <source>The employee must be associated with at least one shop.</source>
         <target>The employee must be associated with at least one shop.</target>
-        <note>Line: 504</note>
+        <note>Line: 505</note>
       </trans-unit>
     </body>
   </file>
@@ -1253,6 +1283,11 @@
         <source>The locale must be installed</source>
         <target>The locale must be installed</target>
         <note>Line: 118</note>
+      </trans-unit>
+      <trans-unit id="96928d6d818f56de18860a85e4a06f43">
+        <source>Are you sure you want to delete this entity:</source>
+        <target>Are you sure you want to delete this entity:</target>
+        <note>Line: 29</note>
       </trans-unit>
     </body>
   </file>

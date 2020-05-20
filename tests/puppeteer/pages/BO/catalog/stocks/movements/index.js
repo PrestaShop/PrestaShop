@@ -17,12 +17,12 @@ module.exports = class Movements extends BOBasePage {
     this.gridTable = '.stock-movements table.table';
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
-    this.tableRow = `${this.tableRows}:nth-child(%ROW)`;
-    this.tableProductNameColumn = `${this.tableRow} td:nth-child(1) div.media-body p`;
-    this.tableProductReferenceColumn = `${this.tableRow} td:nth-child(2)`;
-    this.tableQuantityColumn = `${this.tableRow} td:nth-child(4) span.qty-number`;
+    this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
+    this.tableProductNameColumn = row => `${this.tableRow(row)} td:nth-child(1) div.media-body p`;
+    this.tableProductReferenceColumn = row => `${this.tableRow(row)} td:nth-child(2)`;
+    this.tableQuantityColumn = row => `${this.tableRow(row)} td:nth-child(4) span.qty-number`;
     // Loader
-    this.productListLoading = `${this.tableRow.replace('%ROW', 1)} td:nth-child(1) div.ps-loader`;
+    this.productListLoading = `${this.tableRow(1)} td:nth-child(1) div.ps-loader`;
   }
 
   /* Header methods */
@@ -59,12 +59,12 @@ module.exports = class Movements extends BOBasePage {
   async getTextColumnFromTable(row, column) {
     switch (column) {
       case 'name':
-        return this.getTextContent(this.tableProductNameColumn.replace('%ROW', row));
+        return this.getTextContent(this.tableProductNameColumn(row));
       case 'reference':
-        return this.getTextContent(this.tableProductReferenceColumn.replace('%ROW', row));
+        return this.getTextContent(this.tableProductReferenceColumn(row));
       case 'quantity':
         return parseFloat(
-          (await this.getTextContent(this.tableQuantityColumn.replace('%ROW', row))).replace(' ', ''),
+          (await this.getTextContent(this.tableQuantityColumn(row))).replace(' ', ''),
         );
       default:
         throw new Error(`${column} was not find as column in this table`);

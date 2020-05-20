@@ -23,6 +23,7 @@ module.exports = class SqlManager extends BOBasePage {
     this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/view']`;
     this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/edit']`;
     this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/delete']`;
+    this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
     // Filters
     this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
     this.filterSearchButton = `${this.sqlQueryListForm} button[name='sql_request[actions][search]']`;
@@ -141,5 +142,14 @@ module.exports = class SqlManager extends BOBasePage {
     // Click on delete
     await this.clickAndWaitForNavigation(this.sqlQueryListTableDeleteLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Export sql result to csv
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async exportSqlResultDataToCsv(row = 1) {
+    await this.waitForSelectorAndClick(this.sqlQueryListTableExportLink(row));
   }
 };

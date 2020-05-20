@@ -14,10 +14,10 @@ module.exports = class ViewCustomer extends BOBasePage {
     this.personnalInformationEditButton = `${this.personnalInformationDiv} a[data-original-title='Edit']`;
     // Orders
     this.ordersDiv = '.customer-orders-card';
-    this.ordersViewButton = `${this.ordersDiv} tr:nth-child(%ID) a[data-original-title='View'] i`;
+    this.ordersViewButton = row => `${this.ordersDiv} tr:nth-child(${row}) a[data-original-title='View'] i`;
     // Carts
     this.cartsDiv = '.customer-carts-card';
-    this.cartsViewButton = `${this.cartsDiv} tr:nth-child(%ID) a[data-original-title='View'] i`;
+    this.cartsViewButton = row => `${this.cartsDiv} tr:nth-child(${row}) a[data-original-title='View'] i`;
     // Viewed products
     this.viewedProductsDiv = '.customer-viewed-products-card';
     // Private note
@@ -28,6 +28,9 @@ module.exports = class ViewCustomer extends BOBasePage {
     this.messagesDiv = '.customer-messages-card';
     // Vouchers
     this.vouchersDiv = '.customer-discounts-card';
+    this.voucherEditButton = `${this.vouchersDiv} a[data-original-title='Edit']`;
+    this.voucherToggleDropdown = `${this.vouchersDiv} a[data-toggle='dropdown']`;
+    this.voucherDeleteButton = `${this.vouchersDiv} .dropdown-menu a`;
     // Last emails
     this.lastEmailsDiv = '.customer-sent-emails-card';
     // Last connections
@@ -36,7 +39,7 @@ module.exports = class ViewCustomer extends BOBasePage {
     this.groupsDiv = '.customer-groups-card';
     // Addresses
     this.addressesDiv = '.customer-addresses-card';
-    this.addressesEditButton = `${this.addressesDiv} tr:nth-child(%ID) a[data-original-title='Edit'] i`;
+    this.addressesEditButton = row => `${this.addressesDiv} tr:nth-child(${row}) a[data-original-title='Edit'] i`;
     // Purchased products
     this.purchasedProductsDiv = '.customer-bought-products-card';
   }
@@ -163,10 +166,10 @@ module.exports = class ViewCustomer extends BOBasePage {
   /**
    * Go to view/edit page
    * @param cardTitle
-   * @param id
+   * @param row
    * @returns {Promise<void>}
    */
-  async goToPage(cardTitle, id = 1) {
+  async goToPage(cardTitle, row = 1) {
     let selector;
     switch (cardTitle) {
       case 'Orders':
@@ -181,6 +184,24 @@ module.exports = class ViewCustomer extends BOBasePage {
       default:
         throw new Error(`${cardTitle} was not found`);
     }
-    return this.clickAndWaitForNavigation(selector.replace('%ID', id));
+    return this.clickAndWaitForNavigation(selector(row));
+  }
+
+  /**
+   * Go to edit voucher page
+   * @returns {Promise<void>}
+   */
+  async goToEditVoucherPage() {
+    await this.clickAndWaitForNavigation(this.voucherEditButton);
+  }
+
+  /**
+   * Delete voucher
+   * @returns {Promise<string|*>}
+   */
+  async deleteVoucher() {
+    await this.waitForSelectorAndClick(this.voucherToggleDropdown);
+    await this.waitForSelectorAndClick(this.voucherDeleteButton);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };

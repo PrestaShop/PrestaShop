@@ -305,7 +305,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search Reference', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('reference')
@@ -320,7 +320,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search Customer', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search customer', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('customer')
@@ -329,7 +329,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search Total', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search total', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('total_paid_tax_incl')
@@ -338,7 +338,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search Payment', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search payment', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('payment')
@@ -386,7 +386,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search Company', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search company', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('company')

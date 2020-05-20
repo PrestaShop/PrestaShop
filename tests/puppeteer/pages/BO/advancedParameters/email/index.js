@@ -7,6 +7,7 @@ module.exports = class Email extends BOBasePage {
 
     this.pageTitle = 'E-mail •';
     this.sendTestEmailSuccessfulMessage = 'A test email has been sent to the email address you provided.';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // List of emails
@@ -27,7 +28,9 @@ module.exports = class Email extends BOBasePage {
     this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
-
+    // Email form
+    this.logEmailsLabel = toggle => `label[for='form_email_config_log_emails_${toggle}']`;
+    this.saveEmailFormButton = 'form[name=\'form\'] button.btn-primary';
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
     this.sendTestEmailInput = '#test_email_sending_send_email_to';
@@ -162,5 +165,24 @@ module.exports = class Email extends BOBasePage {
     await this.setValue(this.sendTestEmailInput, email);
     await this.page.click(this.sendTestEmailButton);
     return this.getTextContent(this.sendTestEmailAlertParagraph);
+  }
+
+  /**
+   * Enable/Disable log emails
+   * @param toEnable
+   * @returns {Promise<string>}
+   */
+  async setLogEmails(toEnable) {
+    await this.waitForSelectorAndClick(this.logEmailsLabel(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(this.saveEmailFormButton);
+    return this.getTextContent(this.alertSuccessBlock);
+  }
+
+  /**
+   * Is log emails table visible
+   * @returns {Promise<boolean>}
+   */
+  async isLogEmailsTableVisible() {
+    return this.elementVisible(this.emailGridPanel, 1000);
   }
 };

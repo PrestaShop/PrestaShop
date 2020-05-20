@@ -15,7 +15,7 @@ module.exports = class Login extends FOBasePage {
     this.displayRegisterFormLink = '#content a[data-link-action=\'display-register-form\']';
     // Selectors for create account form
     this.createAccountForm = '#customer-form';
-    this.genderRadioButton = `${this.createAccountForm} input[name='id_gender'][value='%ID']`;
+    this.genderRadioButton = id => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
     this.firstNameInput = `${this.createAccountForm} input[name='firstname']`;
     this.lastNameInput = `${this.createAccountForm} input[name='lastname']`;
     this.newEmailInput = `${this.createAccountForm} input[name='email']`;
@@ -50,7 +50,7 @@ module.exports = class Login extends FOBasePage {
    */
   async createAccount(customer) {
     await this.waitForSelectorAndClick(this.displayRegisterFormLink);
-    await this.waitForSelectorAndClick(this.genderRadioButton.replace('%ID', customer.socialTitle === 'Mr.' ? 1 : 2));
+    await this.waitForSelectorAndClick(this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2));
     await this.setValue(this.firstNameInput, customer.firstName);
     await this.setValue(this.lastNameInput, customer.lastName);
     await this.setValue(this.newEmailInput, customer.email);

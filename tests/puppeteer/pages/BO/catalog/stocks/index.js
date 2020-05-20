@@ -24,17 +24,17 @@ module.exports = class Stocks extends BOBasePage {
 
     this.productList = 'table.table';
     this.productRows = `${this.productList} tbody tr`;
-    this.productRow = `${this.productRows}:nth-child(%ROW)`;
-    this.productRowNameColumn = `${this.productRow} td:nth-child(1) div.media-body p`;
-    this.productRowReferenceColumn = `${this.productRow} td:nth-child(2)`;
-    this.productRowSupplierColumn = `${this.productRow} td:nth-child(3)`;
-    this.productRowPhysicalColumn = `${this.productRow} td:nth-child(5)`;
-    this.productRowReservedColumn = `${this.productRow} td:nth-child(6)`;
-    this.productRowAvailableColumn = `${this.productRow} td:nth-child(7)`;
+    this.productRow = row => `${this.productRows}:nth-child(${row})`;
+    this.productRowNameColumn = row => `${this.productRow(row)} td:nth-child(1) div.media-body p`;
+    this.productRowReferenceColumn = row => `${this.productRow(row)} td:nth-child(2)`;
+    this.productRowSupplierColumn = row => `${this.productRow(row)} td:nth-child(3)`;
+    this.productRowPhysicalColumn = row => `${this.productRow(row)} td:nth-child(5)`;
+    this.productRowReservedColumn = row => `${this.productRow(row)} td:nth-child(6)`;
+    this.productRowAvailableColumn = row => `${this.productRow(row)} td:nth-child(7)`;
     // Quantity column
-    this.productRowQuantityColumn = `${this.productRow} td.qty-spinner`;
-    this.productRowQuantityColumnInput = `${this.productRowQuantityColumn} div.edit-qty input`;
-    this.productRowQuantityUpdateButton = `${this.productRowQuantityColumn} button.check-button`;
+    this.productRowQuantityColumn = row => `${this.productRow(row)} td.qty-spinner`;
+    this.productRowQuantityColumnInput = row => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
+    this.productRowQuantityUpdateButton = row => `${this.productRowQuantityColumn(row)} button.check-button`;
 
     // loader
     this.productListLoading = `${this.productRows} td:nth-child(1) div.ps-loader`;
@@ -49,13 +49,13 @@ module.exports = class Stocks extends BOBasePage {
     this.filterCategoryDiv = `${this.filtersContainerDiv} div.filter-categories`;
     this.filterCategoryExpandButton = `${this.filterCategoryDiv} button:nth-child(1)`;
     this.filterCategoryCollapseButton = `${this.filterCategoryDiv} button:nth-child(2)`;
-    this.filterCategoryTreeItems = `${this.filterCategoryDiv} div.ps-tree-items[label='%CATEGORY']`;
-    this.filterCategoryCheckBoxDiv = `${this.filterCategoryTreeItems} .md-checkbox`;
+    this.filterCategoryTreeItems = category => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
+    this.filterCategoryCheckBoxDiv = category => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
 
     // Pagination
     this.paginationList = 'nav ul.pagination';
     this.paginationListItem = `${this.paginationList} li.page-item`;
-    this.paginationListItemLink = `${this.paginationListItem}:nth-child(%ID) a`;
+    this.paginationListItemLink = id => `${this.paginationListItem}:nth-child(${id}) a`;
   }
 
   /*
@@ -117,7 +117,7 @@ module.exports = class Stocks extends BOBasePage {
    */
   async paginateTo(pageNumber = 1) {
     await Promise.all([
-      this.page.click(this.paginationListItemLink.replace('%ID', pageNumber)),
+      this.page.click(this.paginationListItemLink(pageNumber)),
       this.waitForVisibleSelector(this.productListLoading),
     ]);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
@@ -160,17 +160,17 @@ module.exports = class Stocks extends BOBasePage {
   async getTextColumnFromTableStocks(row, column) {
     switch (column) {
       case 'name':
-        return this.getTextContent(this.productRowNameColumn.replace('%ROW', row));
+        return this.getTextContent(this.productRowNameColumn(row));
       case 'reference':
-        return this.getTextContent(this.productRowReferenceColumn.replace('%ROW', row));
+        return this.getTextContent(this.productRowReferenceColumn(row));
       case 'supplier':
-        return this.getTextContent(this.productRowSupplierColumn.replace('%ROW', row));
+        return this.getTextContent(this.productRowSupplierColumn(row));
       case 'physical':
-        return this.getNumberFromText(this.productRowPhysicalColumn.replace('%ROW', row));
+        return this.getNumberFromText(this.productRowPhysicalColumn(row));
       case 'reserved':
-        return this.getNumberFromText(this.productRowReservedColumn.replace('%ROW', row));
+        return this.getNumberFromText(this.productRowReservedColumn(row));
       case 'available':
-        return this.getNumberFromText(this.productRowAvailableColumn.replace('%ROW', row));
+        return this.getNumberFromText(this.productRowAvailableColumn(row));
       default:
         throw new Error(`${column} was not find as column in this table`);
     }
@@ -210,9 +210,9 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async updateRowQuantityWithInput(row, value) {
-    await this.setValue(this.productRowQuantityColumnInput.replace('%ROW', row), value.toString());
+    await this.setValue(this.productRowQuantityColumnInput(row), value.toString());
     // Wait for check button before click
-    await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton.replace('%ROW', row));
+    await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton(row));
     // Wait for alert-Box after update quantity and close alert-Box
     await this.waitForVisibleSelector(this.alertBoxTextSpan);
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
@@ -269,7 +269,7 @@ module.exports = class Stocks extends BOBasePage {
   async filterByCategory(category) {
     await this.openCloseAdvancedFilter();
     await this.page.click(this.filterCategoryExpandButton);
-    await this.page.click(this.filterCategoryCheckBoxDiv.replace('%CATEGORY', category));
+    await this.page.click(this.filterCategoryCheckBoxDiv(category));
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
     await this.page.click(this.filterCategoryCollapseButton);
     await this.openCloseAdvancedFilter(false);

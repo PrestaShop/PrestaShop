@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
+use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -129,9 +130,15 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function modifyTranslationsAction(Request $request)
     {
-        $routeFinder = $this->get('prestashop.adapter.translation_route_finder');
-        $route = $routeFinder->findRoute($request->query);
-        $routeParameters = $routeFinder->findRouteParameters($request->query);
+        try {
+            $routeFinder = $this->get('prestashop.adapter.translation_route_finder');
+            $route = $routeFinder->findRoute($request->query);
+            $routeParameters = $routeFinder->findRouteParameters($request->query);
+        } catch (InvalidModuleException $e) {
+            $this->addFlash('error', $this->trans('An error has occurred, this module does not exist: %s', 'Admin.International.Notification', [$e->getMessage()]));
+
+            return $this->redirectToRoute('admin_international_translations_show_settings');
+        }
 
         // If route parameters are empty we are redirecting to a legacy route
         return empty($routeParameters) ? $this->redirect($route) : $this->redirectToRoute($route, $routeParameters);

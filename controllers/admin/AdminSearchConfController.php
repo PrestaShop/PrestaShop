@@ -127,7 +127,7 @@ class AdminSearchConfControllerCore extends AdminController
                 'info' => '<div class="alert alert-info">' .
                     $this->trans('We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.',
                         [],
-                        'Admin.Shopparameters.Help') .
+                        'Admin.Shopparameters.Notification') .
                     '</div>' . '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
                     . '<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
                 'fields' => [
@@ -198,7 +198,7 @@ class AdminSearchConfControllerCore extends AdminController
                                 'Admin.Shopparameters.Help'
                             ) . '<br/>' .
                             $this->trans(
-                                'Disabling this option will require exact spelling for the search to match result.',
+                                'Disabling this option will require exact spelling for the search to match results.',
                                 [],
                                 'Admin.Shopparameters.Help'
                             ),
@@ -212,7 +212,7 @@ class AdminSearchConfControllerCore extends AdminController
                     ],
                     'PS_SEARCH_FUZZY_MAX_LOOP' => [
                         'title' => $this->trans(
-                            'Maximum approximate strings allowed by fuzzy search',
+                            'Maximum approximate words allowed by fuzzy search',
                             [],
                             'Admin.Shopparameters.Feature'
                         ),
@@ -232,12 +232,12 @@ class AdminSearchConfControllerCore extends AdminController
                             'Admin.Shopparameters.Feature'
                         ),
                         'hint' => $this->trans(
-                            'Only words this maximum size or smaller will be used during the search.',
+                            'Only words fewer or equal to this maximum length will be searched.',
                             [],
                             'Admin.Shopparameters.Help'
                         ),
                         'desc' => $this->trans(
-                            'This parameter will only be used if fuzzy search is activated, the lower the value, the more tolerant your research will be.',
+                            'This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.',
                             [],
                             'Admin.Shopparameters.Help'
                         ),

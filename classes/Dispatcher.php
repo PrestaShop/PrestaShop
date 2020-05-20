@@ -291,7 +291,10 @@ class DispatcherCore
                 if (null !== $employee) {
                     $tabClassName = $employee->getDefaultTabClassName();
                     if (null !== $tabClassName) {
-                        $defaultController = $tabClassName;
+                        $tabProfileAccess = Profile::getProfileAccess($employee->id_profile, Tab::getIdFromClassName($tabClassName));
+                        if (is_array($tabProfileAccess) && isset($tabProfileAccess['view']) && $tabProfileAccess['view'] === '1') {
+                            $defaultController = $tabClassName;
+                        }
                     }
                 }
 

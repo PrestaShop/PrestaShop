@@ -15,7 +15,7 @@ module.exports = class AddTaxRules extends BOBasePage {
     // New tax rule group form
     this.taxRuleGroupForm = '#tax_rules_group_form';
     this.nameInput = `${this.taxRuleGroupForm} #name`;
-    this.enabledSwitchlabel = `${this.taxRuleGroupForm} label[for='active_%ID']`;
+    this.enabledSwitchLabel = id => `${this.taxRuleGroupForm} label[for='active_${id}']`;
     this.saveTaxButton = `${this.taxRuleGroupForm} #tax_rules_group_form_submit_btn`;
     // New tax rule form
     this.taxRuleForm = '#tax_rule_form';
@@ -37,7 +37,7 @@ module.exports = class AddTaxRules extends BOBasePage {
    */
   async createEditTaxRulesGroup(taxRuleGroupData) {
     await this.setValue(this.nameInput, taxRuleGroupData.name);
-    await this.page.click(this.enabledSwitchlabel.replace('%ID', taxRuleGroupData.enabled ? 'on' : 'off'));
+    await this.page.click(this.enabledSwitchLabel(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
     await this.clickAndWaitForNavigation(this.saveTaxButton);
     return this.getTextContent(this.alertSuccessBlock);

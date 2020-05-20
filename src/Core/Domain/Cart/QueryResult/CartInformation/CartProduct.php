@@ -81,6 +81,11 @@ class CartProduct
     private $customization;
 
     /**
+     * @var bool
+     */
+    private $isGift;
+
+    /**
      * CartProduct constructor.
      *
      * @param int $productId
@@ -93,6 +98,7 @@ class CartProduct
      * @param string $price
      * @param string $imageLink
      * @param Customization|null $customization
+     * @param bool $isGift
      */
     public function __construct(
         int $productId,
@@ -104,7 +110,8 @@ class CartProduct
         int $quantity,
         string $price,
         string $imageLink,
-        ?Customization $customization
+        ?Customization $customization,
+        bool $isGift = false
     ) {
         $this->productId = $productId;
         $this->attributeId = $attributeId;
@@ -116,6 +123,7 @@ class CartProduct
         $this->price = $price;
         $this->imageLink = $imageLink;
         $this->customization = $customization;
+        $this->isGift = $isGift;
     }
 
     /**
@@ -196,5 +204,13 @@ class CartProduct
     public function getCustomization(): ?Customization
     {
         return $this->customization;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGift(): bool
+    {
+        return $this->isGift;
     }
 }

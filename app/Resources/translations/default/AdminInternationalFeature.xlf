@@ -569,12 +569,12 @@
       <trans-unit id="02c86eb2792f3262c21d030a87e19793">
         <source>Symbol</source>
         <target>Symbol</target>
-        <note>Line: 78</note>
+        <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="ad68f9bafd9bf2dcf3865dac55662fd5">
         <source>ISO code</source>
         <target>ISO code</target>
-        <note>Line: 83</note>
+        <note>Line: 88</note>
       </trans-unit>
       <trans-unit id="c6c555ee393714da87d0fc9702b80912">
         <source>1. Enter symbol</source>
@@ -599,27 +599,47 @@
       <trans-unit id="7d9ccccf4e5cc7d7949f26f0a2f5f341">
         <source>Select a currency</source>
         <target>Select a currency</target>
-        <note>Line: 63</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="586e27d3575f00e51ad43b66eb34e49f">
         <source>Currency name</source>
         <target>Currency name</target>
-        <note>Line: 73</note>
+        <note>Line: 78</note>
       </trans-unit>
       <trans-unit id="2b417805040de3a3df31c8fd3626b57c">
         <source>Decimals</source>
         <target>Decimals</target>
-        <note>Line: 97</note>
+        <note>Line: 102</note>
       </trans-unit>
       <trans-unit id="60bc390fb7113b18e8526d72ddee6474">
         <source>Loading currency data</source>
         <target>Loading currency data</target>
-        <note>Line: 150</note>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="cec4e83264fad118a0e5464430e4c7da">
         <source>Please wait while currency data is being loaded</source>
         <target>Please wait while currency data is being loaded</target>
-        <note>Line: 153</note>
+        <note>Line: 151</note>
+      </trans-unit>
+      <trans-unit id="c98f65428c24bcc8ef00214412eca27e">
+        <source>%price%</source>
+        <target>%price%</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="0379f900f3e0cdc8ff8d9ff7ed0bcef3">
+        <source>Are you sure you want to restore default settings?</source>
+        <target>Are you sure you want to restore default settings?</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="e7847cbf6dc75fab772f2267690baaef">
+        <source>Restoring your currency's default settings will delete all the customizations you made before. Parameters will look just the same as when the currency is freshly imported.</source>
+        <target>Restoring your currency's default settings will delete all the customizations you made before. Parameters will look just the same as when the currency is freshly imported.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="1f8ff57ebb190230dac54ccb4dbe562b">
+        <source>Restore default settings</source>
+        <target>Restore default settings</target>
+        <note>Line: 132</note>
       </trans-unit>
     </body>
   </file>

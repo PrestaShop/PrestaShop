@@ -148,7 +148,7 @@
       <trans-unit id="e03982ee543fe69d4954d587f1f2a338">
         <source>The national ID card number of this person, or a unique tax identification number.</source>
         <target>The national ID card number of this person, or a unique tax identification number.</target>
-        <note>Line: 67</note>
+        <note>Line: 66</note>
       </trans-unit>
     </body>
   </file>
@@ -356,7 +356,7 @@
       <trans-unit id="4b492d24743e697b3639c862b351d1c4">
         <source>If you choose to create this discount for all invoices, only one discount will be created per order invoice.</source>
         <target>If you choose to create this discount for all invoices, only one discount will be created per order invoice.</target>
-        <note>Line: 98</note>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>

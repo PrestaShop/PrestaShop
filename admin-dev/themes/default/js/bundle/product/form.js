@@ -70,6 +70,7 @@ $(document).ready(function() {
   });
 
   $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
+  form.switchLanguage($('#form_switch_language').val());
 });
 
 /**
@@ -753,11 +754,11 @@ var form = (function() {
     });
   }
 
-  function switchLanguage(iso_code) {
-    $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
+  function switchLanguage(isoCode) {
+    $(`div.translations.tabbable > div > div.translation-field:not(.translation-label-${isoCode})`)
+      .removeClass('show active');
 
-    const langueTabSelector = 'div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code;
-    $(langueTabSelector).addClass('show active');
+    $(`div.translations.tabbable > div > div.translation-field.translation-label-${isoCode}`).addClass('show active');
     resetEditor();
   }
 

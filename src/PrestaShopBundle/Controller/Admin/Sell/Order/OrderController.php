@@ -77,7 +77,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\CommonController;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
@@ -101,7 +101,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Manages "Sell > Orders" page
  */
-class OrderController extends CommonController
+class OrderController extends FrameworkBundleAdminController
 {
     /**
      * Shows list of orders
@@ -573,7 +573,7 @@ class OrderController extends CommonController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('A return product was successfully created.', 'Admin.Orderscustomers.Notification'));
+                    $this->addFlash('success', $this->trans('The product was successfully returned.', 'Admin.Orderscustomers.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
@@ -601,7 +601,7 @@ class OrderController extends CommonController
             if ($product->getAvailableQuantity() <= 0) {
                 $this->addFlash(
                     'warning',
-                    $this->trans('This product is out of stock: ', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
+                    $this->trans('This product is out of stock:', 'Admin.Orderscustomers.Notification') . ' ' . $product->getName()
                 );
             }
         }
@@ -1400,7 +1400,7 @@ class OrderController extends CommonController
             $result = $formHandler->handleFor($orderId, $form);
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Selected products were successfully cancelled.', 'Admin.Catalog.Notification'));
+                    $this->addFlash('success', $this->trans('Selected products were successfully canceled.', 'Admin.Catalog.Notification'));
                 } else {
                     $this->addFlashFormErrors($form);
                 }
