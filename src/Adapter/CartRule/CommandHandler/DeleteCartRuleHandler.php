@@ -44,9 +44,9 @@ final class DeleteCartRuleHandler extends AbstractCartRuleHandler implements Del
     public function handle(DeleteCartRuleCommand $command): void
     {
         $cartRuleId = $command->getCartRuleId();
-        $specificPriceRule = $this->getCartRule($cartRuleId);
+        $cartRule = $this->getCartRule($cartRuleId);
 
-        if (null === $this->deleteCartRule($specificPriceRule)) {
+        if (null === $this->deleteCartRule($cartRule)) {
             throw new CannotDeleteCartRuleException(sprintf('Cannot delete SpecificPriceRule object with id "%s".', $cartRuleId->getValue()), CannotDeleteCartRuleException::FAILED_DELETE);
         }
     }
