@@ -107,8 +107,17 @@ module.exports = class Invoice extends BOBasePage {
   /** Generate PDF by status
    * @return {Promise<void>}
    */
-  async generatePDFByStatus() {
-    await this.page.click(this.generatePdfByStatusButton);
+  async generatePDFByStatusAndDownload() {
+    const [ download ] = await Promise.all([
+      this.page.waitForEvent('download'), // wait for download to start
+      this.page.click(this.generatePdfByStatusButton)
+    ]);
+    return download.path();
+  }
+
+  async generatePDFByStatusAndFail() {
+    await this.page.click(this.generatePdfByStatusButton)
+    return this.getTextContent(this.alertTextBlock);
   }
 
   /**

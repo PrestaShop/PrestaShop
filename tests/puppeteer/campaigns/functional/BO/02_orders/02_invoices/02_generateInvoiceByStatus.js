@@ -19,6 +19,7 @@ const baseContext = 'functional_BO_orders_invoices_generateInvoiceByStatus';
 
 let browser;
 let page;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -101,12 +102,7 @@ describe('Generate PDF file by status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoSelectedStatusMessageError', baseContext);
 
       // Generate PDF
-      await this.pageObjects.invoicesPage.generatePDFByStatus();
-
-      // Get error message displayed
-      const textMessage = await this.pageObjects.invoicesPage.getTextContent(
-        this.pageObjects.invoicesPage.alertTextBlock,
-      );
+      const textMessage = await this.pageObjects.invoicesPage.generatePDFByStatusAndFail();
 
       await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenNotSelectStatus);
     });
@@ -118,12 +114,7 @@ describe('Generate PDF file by status', async () => {
       await this.pageObjects.invoicesPage.chooseStatus(Statuses.canceled.status);
 
       // Generate PDF
-      await this.pageObjects.invoicesPage.generatePDFByStatus();
-
-      // Get error message
-      const textMessage = await this.pageObjects.invoicesPage.getTextContent(
-        this.pageObjects.invoicesPage.alertTextBlock,
-      );
+      const textMessage = await this.pageObjects.invoicesPage.generatePDFByStatusAndFail();
 
       await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenGenerateFileByStatus);
     });
@@ -136,10 +127,10 @@ describe('Generate PDF file by status', async () => {
       await this.pageObjects.invoicesPage.chooseStatus(Statuses.shipped.status);
 
       // Generate PDF
-      await this.pageObjects.invoicesPage.generatePDFByStatus();
+      filePath = await this.pageObjects.invoicesPage.generatePDFByStatusAndDownload();
 
       // Check that file exist
-      const exist = await files.doesFileExist(Invoices.moreThanAnInvoice.fileName);
+      const exist = await files.doesFileExist(filePath);
       await expect(exist).to.be.true;
     });
   });
