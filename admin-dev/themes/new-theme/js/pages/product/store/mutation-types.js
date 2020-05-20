@@ -23,6 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Mutation types allows to identify and reuse mutation names when subscribing or committing them to store.
+ */
+
 export const SET_PRICE_TAX_EXCLUDED = 'SET_PRICE_TAX_EXCLUDED';
 export const SET_PRICE_TAX_INCLUDED = 'SET_PRICE_TAX_INCLUDED';
 export const SET_TAX_RULE = 'SET_TAX_RULE';

@@ -30,6 +30,13 @@ import * as actions from './actions';
 
 Vue.use(Vuex);
 
+/**
+ * creates Vuex Store for state management
+ *
+ * @param state
+ *
+ * @returns {Store}
+ */
 const createStore = (state) => new Vuex.Store({
   state,
   mutations,

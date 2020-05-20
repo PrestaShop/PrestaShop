@@ -25,6 +25,9 @@
 
 import productMap from '../product-map';
 
+/**
+ * Provides the state with default values for edit product page Store.
+ */
 export default class StateProvider {
   get() {
     const priceTaxIncluded = document.querySelector(productMap.priceTaxIncludedInput1).value;

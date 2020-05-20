@@ -25,6 +25,9 @@
 
 import * as types from './mutation-types';
 
+/**
+ * Mutations for Vuex store
+ */
 export default {
   [types.SET_PRICE_TAX_EXCLUDED](state, price) {
     state.priceTaxExcluded = price;

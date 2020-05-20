@@ -26,6 +26,10 @@
 import * as types from './mutation-types';
 import * as taxCalculations from '../tax-calculations';
 
+/**
+ * Actions responsible for applying domain logic and updating the state after DOM changes.
+ */
+
 export const updatePriceTaxExcluded = ({commit, state}, payload) => {
   commit(types.SET_PRICE_TAX_EXCLUDED, payload.priceTaxExcluded);
   commit(types.SET_PRICE_TAX_INCLUDED, taxCalculations.includeTaxes(payload.priceTaxExcluded, state.taxRule.rate));

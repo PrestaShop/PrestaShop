@@ -31,6 +31,9 @@ const {$} = window;
 const state = new StateProvider().get();
 const store = createStore(state);
 
+/**
+ * Initialize product edit page components
+ */
 $(() => {
   new PriceRefresher(store);
 });

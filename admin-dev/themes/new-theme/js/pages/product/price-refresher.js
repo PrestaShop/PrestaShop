@@ -26,6 +26,9 @@
 import productMap from './product-map';
 import * as types from './store/mutation-types';
 
+/**
+ * Responsible for price tax excluded/included and tax rate selection inputs interaction
+ */
 export default class PriceRefresher {
   constructor(store) {
     this.store = store;

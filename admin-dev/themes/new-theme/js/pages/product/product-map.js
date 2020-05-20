@@ -23,6 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Holds selectors for product page DOM elements.
+ */
 export default {
   priceTaxExcludedInput1: '#test1-excl',
   priceTaxExcludedInput2: '#test2-excl',
