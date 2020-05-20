@@ -257,7 +257,7 @@ module.exports = class AddProduct extends BOBasePage {
         this.page.click(this.deleteCombinationsButton),
         this.waitForVisibleSelector(this.modalDialog),
       ]);
-      await this.page.waitFor(250);
+      await this.page.waitForTimeout(250);
       await Promise.all([
         this.page.click(this.modalDialogYesButton),
         this.waitForSelectorAndClick(this.growlCloseButton),

@@ -51,7 +51,7 @@ module.exports = class Product extends FOBasePage {
    * @returns {Promise<void>}
    */
   async addProductToTheCart(quantity = 1, attributeToChoose = '', proceedToCheckout = true) {
-    await this.page.waitFor(1000);
+    await this.page.waitForTimeout(1000);
     if (attributeToChoose.color) {
       await Promise.all([
         this.waitForVisibleSelector(this.colorInput(attributeToChoose.color)),
@@ -111,7 +111,7 @@ module.exports = class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isUnavailableProductSizeDisplayed(size) {
-    await this.page.waitFor(2000);
+    await this.page.waitForTimeout(2000);
     const exist = await this.page.$(this.productSizeOption(size)) !== null;
     return exist;
   }

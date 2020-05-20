@@ -59,7 +59,7 @@ module.exports = class Home extends FOBasePage {
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv(id),
       );
-      await this.page.waitFor(100);
+      await this.page.waitForTimeout(100);
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([

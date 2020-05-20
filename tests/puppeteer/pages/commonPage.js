@@ -234,7 +234,7 @@ module.exports = class CommonPage {
    * @return integer
    */
   async getNumberFromText(selector, timeout = 0) {
-    await this.page.waitFor(timeout);
+    await this.page.waitForTimeout(timeout);
     const text = await this.getTextContent(selector);
     const number = /\d+/g.exec(text).toString();
     return parseInt(number, 10);

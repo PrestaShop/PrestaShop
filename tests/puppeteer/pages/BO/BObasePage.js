@@ -256,7 +256,7 @@ module.exports = class BOBasePage extends CommonPage {
    */
   async deleteFile(file, wait = 0) {
     fs.unlinkSync(file);
-    await this.page.waitFor(wait);
+    await this.page.waitForTimeout(wait);
   }
 
   /**

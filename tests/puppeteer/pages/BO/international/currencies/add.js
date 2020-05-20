@@ -45,7 +45,7 @@ module.exports = class AddCurrency extends BOBasePage {
           .getPropertyValue('display') === 'none',
         this.currencyLoadingModal,
       );
-      await this.page.waitFor(200);
+      await this.page.waitForTimeout(200);
     }
     await this.page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveButton);
