@@ -161,30 +161,12 @@ describe('Pagination and sort pages', async () => {
             testIdentifier: 'sortByIdDesc', sortBy: 'id_cms', sortDirection: 'desc', isFloat: true,
           },
       },
-      {
-        args:
-          {
-            testIdentifier: 'sortByUrlAsc', sortBy: 'link_rewrite', sortDirection: 'asc', isFloat: false,
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortByUrlDesc', sortBy: 'link_rewrite', sortDirection: 'desc', isFloat: false,
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortByTitleAsc', sortBy: 'meta_title', sortDirection: 'asc', isFloat: false,
-          },
-      },
-      {
-        args:
-          {
-            testIdentifier: 'sortByTitleDesc', sortBy: 'meta_title', sortDirection: 'desc', isFloat: false,
-          },
-      },
+      {args: {testIdentifier: 'sortByUrlAsc', sortBy: 'link_rewrite', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByUrlDesc', sortBy: 'link_rewrite', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByTitleAsc', sortBy: 'meta_title', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByTitleDesc', sortBy: 'meta_title', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByStatusAsc', sortBy: 'active', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByStatusDesc', sortBy: 'active', sortDirection: 'desc'}},
       {
         args:
           {

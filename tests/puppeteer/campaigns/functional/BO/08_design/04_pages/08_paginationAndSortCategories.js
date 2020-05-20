@@ -170,6 +170,8 @@ describe('Pagination and sort categories', async () => {
       {args: {testIdentifier: 'sortBNameDesc', sortBy: 'name', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByDescriptionAsc', sortBy: 'description', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByDescriptionDesc', sortBy: 'description', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByStatusAsc', sortBy: 'active', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByStatusDesc', sortBy: 'active', sortDirection: 'desc'}},
       {
         args:
           {
