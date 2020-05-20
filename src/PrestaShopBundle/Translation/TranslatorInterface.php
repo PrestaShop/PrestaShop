@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Translation;
 
 use Symfony\Component\Translation\TranslatorInterface as SymfonyTranslatorInterface;
+
 /**
  * Interface for PrestaShop translators
  */
