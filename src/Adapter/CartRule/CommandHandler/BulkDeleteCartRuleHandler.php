@@ -31,7 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\CartRule\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\CartRule\AbstractCartRuleHandler;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\BulkDeleteCartRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\CommandHandler\BulkDeleteCartRuleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\BulkDeleteCartRuleException;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 
 /**
  * Deletes cart rules in bulk action using legacy object model
@@ -43,12 +44,22 @@ final class BulkDeleteCartRuleHandler extends AbstractCartRuleHandler implements
      */
     public function handle(BulkDeleteCartRuleCommand $command): void
     {
-        foreach ($cartRuleId = $command->getCartRuleIds() as $cartRuleId) {
-            $specificPriceRule = $this->getCartRule($cartRuleId);
+        $errors = [];
 
-            if (null === $this->deleteCartRule($specificPriceRule)) {
-                throw new CannotDeleteCartRuleException(sprintf('Cannot delete SpecificPriceRule object with id "%s".', $cartRuleId->getValue()), CannotDeleteCartRuleException::FAILED_BULK_DELETE);
+        foreach ($command->getCartRuleIds() as $cartRuleId) {
+            try {
+                $cartRule = $this->getCartRule($cartRuleId);
+
+                if (null === $this->deleteCartRule($cartRule)) {
+                    $errors[] = $cartRuleId->getValue();
+                }
+            } catch (CartRuleException $e) {
+                $errors[] = $cartRuleId->getValue();
             }
+        }
+
+        if (!empty($errors)) {
+            throw new BulkDeleteCartRuleException($errors, 'Failed to delete all of selected cart rules');
         }
     }
 }
