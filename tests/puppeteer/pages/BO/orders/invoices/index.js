@@ -45,17 +45,47 @@ module.exports = class Invoice extends BOBasePage {
    */
 
   /**
-   * Generate PDF by date
+   *
    * @param dateFrom
    * @param dateTo
-   * @return {Promise<void>}
+   * @param waitingForDownload
+   * @returns {Promise<null|*>}
    */
-  async generatePDFByDate(dateFrom = '', dateTo = '') {
-    if (dateFrom) {
-      await this.setValue(this.dateFromInput, dateFrom);
-      await this.setValue(this.dateToInput, dateTo);
-    }
+  async generatePDFByDateAndDownload(dateFrom = '', dateTo = '') {
+    await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
+    const [ download ] = await Promise.all([
+      this.page.waitForEvent('download'),
+      this.page.click(this.generatePdfByDateButton)
+    ]);
+    return download.path();
+  }
+
+  /**
+   *
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<string>}
+   */
+  async generatePDFByDateAndFail(dateFrom = '', dateTo = '') {
+    await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
     await this.page.click(this.generatePdfByDateButton);
+
+    return this.getTextContent(
+      this.alertTextBlock,
+    );
+  }
+
+  /**
+   *
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<void>}
+   */
+  async setValuesForGeneratingPDFByDate(dateFrom = '', dateTo = '') {
+    if (dateFrom) {
+      await this.page.fill(this.dateFromInput, dateFrom);
+      await this.page.fill(this.dateToInput, dateTo);
+    }
   }
 
   /**

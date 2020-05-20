@@ -42,8 +42,6 @@ describe('Generate PDF file by status', async () => {
   });
   after(async () => {
     await helper.closeBrowser(browser);
-    /* Delete the generated invoice */
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${Invoices.moreThanAnInvoice.fileName}`);
   });
 
   // Login into BO

@@ -19,6 +19,8 @@ const baseContext = 'functional_BO_orders_invoices_generateInvoiceByDate';
 
 let browser;
 let page;
+let filePath;
+
 const today = new Date();
 // Create a future date that there is no invoices (yyy-mm-dd)
 today.setFullYear(today.getFullYear() + 1);
@@ -46,8 +48,6 @@ describe('Generate PDF file by date', async () => {
   });
   after(async () => {
     await helper.closeBrowser(browser);
-    /* Delete the generated invoice */
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${Invoices.moreThanAnInvoice.fileName}`);
   });
 
   // Login into BO
@@ -110,21 +110,17 @@ describe('Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGeneratedInvoicesPdfFile', baseContext);
 
       // Generate PDF
-      await this.pageObjects.invoicesPage.generatePDFByDate();
+      filePath = await this.pageObjects.invoicesPage.generatePDFByDateAndDownload();
 
-      const exist = await files.doesFileExist(Invoices.moreThanAnInvoice.fileName);
-      await expect(exist).to.be.true;
+      const exist = await files.doesFileExist(filePath);
+      await expect(exist, "File does not exist").to.be.true;
     });
 
     it('should check the error message when there is no invoice in the entered date', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentInvoice', baseContext);
 
       // Generate PDF
-      await this.pageObjects.invoicesPage.generatePDFByDate(futureDate, futureDate);
-
-      const textMessage = await this.pageObjects.invoicesPage.getTextContent(
-        this.pageObjects.invoicesPage.alertTextBlock,
-      );
+      const textMessage = await this.pageObjects.invoicesPage.generatePDFByDateAndFail(futureDate, futureDate);
 
       await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenGenerateFileByDate);
     });
