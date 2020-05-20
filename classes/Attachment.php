@@ -53,33 +53,33 @@ class AttachmentCore extends ObjectModel
             'file_size' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+            'description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'],
         ],
-        'associations' => array(
-            'products' => array('type' => self::HAS_MANY, 'field' => 'id_product', 'object' => 'Product', 'association' => 'product_attachment'),
-        ),
+        'associations' => [
+            'products' => ['type' => self::HAS_MANY, 'field' => 'id_product', 'object' => 'Product', 'association' => 'product_attachment'],
+        ],
     ];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectNodeNames' => 'attachments',
-        'hidden_fields' => array(),
-        'fields' => array(
-            'file' => array(),
-            'file_name' => array(),
-            'file_size' => array(),
-            'mime' => array(),
-        ),
-        'associations' => array(
-            'products' => array(
+        'hidden_fields' => [],
+        'fields' => [
+            'file' => [],
+            'file_name' => [],
+            'file_size' => [],
+            'mime' => [],
+        ],
+        'associations' => [
+            'products' => [
                 'resource' => 'product',
                 'api' => 'products',
-                'fields' => array(
-                    'id' => array('required' => true),
-                ),
-            ),
-        ),
-    );
+                'fields' => [
+                    'id' => ['required' => true],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * @see ObjectModel::add()
@@ -293,7 +293,7 @@ class AttachmentCore extends ObjectModel
             return false;
         }
 
-        $idsAttachments = array();
+        $idsAttachments = [];
         foreach ($list as $attachment) {
             $idsAttachments[] = $attachment['id_attachment'];
         }
@@ -303,7 +303,7 @@ class AttachmentCore extends ObjectModel
 					WHERE `id_attachment` IN (' . implode(',', array_map('intval', $idsAttachments)) . ')
 					AND pl.`id_lang` = ' . (int) $idLang;
         $tmp = Db::getInstance()->executeS($sql);
-        $productAttachments = array();
+        $productAttachments = [];
         foreach ($tmp as $t) {
             $productAttachments[$t['id_attachment']][] = $t['name'];
         }

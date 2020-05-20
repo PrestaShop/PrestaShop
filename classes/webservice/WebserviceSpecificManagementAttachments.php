@@ -252,12 +252,12 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         }
 
         // Return file details
-        return array(
+        return [
             'file' => $file,
             'mime' => $attachment->mime,
             'file_name' => $attachment->file_name,
             'file_size' => $attachment->file_size,
-        );
+        ];
     }
 
     /**
