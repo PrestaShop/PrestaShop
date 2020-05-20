@@ -32,7 +32,7 @@ module.exports = class EmailThemes extends BOBasePage {
       if (textColumnName.includes(name)) {
         await Promise.all([
           tableRows[i].$eval(this.columnActionPreviewLink, el => el.click()),
-          this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+          this.page.waitForNavigation(),
         ]);
         found = true;
         break;

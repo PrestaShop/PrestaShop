@@ -91,7 +91,7 @@ module.exports = class Install extends CommonPage {
    */
   async nextStep() {
     await this.waitForVisibleSelector(this.nextStepButton);
-    await this.page.click(this.nextStepButton, {waitUntil: 'domcontentloaded'});
+    await this.page.click(this.nextStepButton, {waitUntil: 'load'});
   }
 
   /**

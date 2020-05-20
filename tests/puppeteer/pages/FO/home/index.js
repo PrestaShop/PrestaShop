@@ -117,7 +117,7 @@ module.exports = class Home extends FOBasePage {
   async searchProduct(productName) {
     await this.setValue(this.searchInput, productName);
     await this.page.keyboard.press('Enter');
-    await this.page.waitForNavigation({waitUntil: 'networkidle0'});
+    await this.page.waitForNavigation();
   }
 
   /**

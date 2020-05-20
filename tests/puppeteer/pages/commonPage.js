@@ -128,7 +128,7 @@ module.exports = class CommonPage {
       new Promise(resolve => this.page.once('popup', resolve)),
       currentPage.click(selector),
     ]);
-    if (waitForNavigation) await newPage.waitForNavigation({waitUntil: 'networkidle0'});
+    if (waitForNavigation) await newPage.waitForNavigation();
     await newPage.waitForSelector('body', {state: 'visible'});
     return newPage;
   }
@@ -149,7 +149,7 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async reloadPage() {
-    await this.page.reload({waitUntil: 'networkidle0'});
+    await this.page.reload();
   }
 
   /**
@@ -268,7 +268,7 @@ module.exports = class CommonPage {
    * @param waitUntil
    * @return {Promise<void>}
    */
-  async goToPreviousPage(waitUntil = 'networkidle0') {
+  async goToPreviousPage(waitUntil = 'load') {
     await this.page.goBack({waitUntil});
   }
 

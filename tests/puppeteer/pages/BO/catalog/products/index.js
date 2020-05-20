@@ -316,7 +316,7 @@ module.exports = class Product extends BOBasePage {
       return true;
     }, this.filterByCategoriesCategoryLabel, value);
     if (!found) throw new Error(`${value} not found as a category`);
-    await this.page.waitForNavigation({waitUntil: 'networkidle0'});
+    await this.page.waitForNavigation();
   }
 
   /**

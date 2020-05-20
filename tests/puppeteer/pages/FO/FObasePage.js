@@ -122,7 +122,7 @@ module.exports = class Home extends CommonPage {
   async changeCurrency(currency = 'EUR €') {
     await Promise.all([
       this.selectByVisibleText(this.currencySelect, currency),
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
+      this.page.waitForNavigation(),
     ]);
   }
 
