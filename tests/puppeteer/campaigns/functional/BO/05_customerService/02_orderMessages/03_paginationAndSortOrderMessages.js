@@ -1,15 +1,21 @@
 require('module-alias/register');
 
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
+
+// Import data
 const OrderMessageFaker = require('@data/faker/orderMessage');
-// Importing pages
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const OrderMessagesPage = require('@pages/BO/customerService/orderMessages');
 const AddOrderMessagePage = require('@pages/BO/customerService/orderMessages/add');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customerService_orderMessages_paginationAndSortOrderMessages';
@@ -39,6 +45,7 @@ describe('Order messages pagination and sort', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
 
@@ -58,6 +65,7 @@ describe('Order messages pagination and sort', async () => {
     );
 
     await this.pageObjects.dashboardPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.orderMessagesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.orderMessagesPage.pageTitle);
   });
@@ -151,14 +159,18 @@ describe('Order messages pagination and sort', async () => {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await this.pageObjects.orderMessagesPage.getAllRowsColumnContent(test.args.sortBy);
+
         await this.pageObjects.orderMessagesPage.sortTable(test.args.sortBy, test.args.sortDirection);
+
         let sortedTable = await this.pageObjects.orderMessagesPage.getAllRowsColumnContent(test.args.sortBy);
+
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
         const expectedResult = await this.pageObjects.orderMessagesPage.sortArray(nonSortedTable, test.args.isFloat);
+
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {
@@ -173,6 +185,7 @@ describe('Order messages pagination and sort', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
       await this.pageObjects.orderMessagesPage.filterTable('name', 'toSortAndPaginate');
+
       const textResult = await this.pageObjects.orderMessagesPage.getTextColumnFromTable(1, 'name');
       await expect(textResult).to.contains('toSortAndPaginate');
     });

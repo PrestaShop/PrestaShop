@@ -672,7 +672,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $currency = new Currency($order->id_currency);
         $customer = $order->getCustomer();
 
-        $isTaxExcluded = ($this->getOrderTaxCalculationMethod($order) == PS_TAX_EXC);
+        $isTaxExcluded = !$this->isTaxIncludedInOrder($order);
 
         $shipping_refundable_tax_excl = $order->total_shipping_tax_excl;
         $shipping_refundable_tax_incl = $order->total_shipping_tax_incl;
@@ -689,16 +689,17 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $wrappingPrice = (float) $order->total_wrapping_tax_excl;
             $shippingPrice = (float) $order->total_shipping_tax_excl;
             $shippingRefundable = max(0, $shipping_refundable_tax_excl);
+            $totalAmount = (float) $order->total_paid_tax_excl;
         } else {
             $productsPrice = (float) $order->total_products_wt;
             $discountsAmount = (float) $order->total_discounts_tax_incl;
             $wrappingPrice = (float) $order->total_wrapping_tax_incl;
             $shippingPrice = (float) $order->total_shipping_tax_incl;
             $shippingRefundable = max(0, $shipping_refundable_tax_incl);
+            $totalAmount = (float) $order->total_paid_tax_incl;
         }
 
         $taxesAmount = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
-        $totalAmount = (float) $order->total_paid_tax_incl;
 
         return new OrderPricesForViewing(
             new Number((string) $productsPrice),
@@ -727,16 +728,18 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      */
     private function getOrderDiscounts(Order $order): OrderDiscountsForViewing
     {
+        $isTaxIncluded = $this->isTaxIncludedInOrder($order);
         $currency = new Currency($order->id_currency);
         $discounts = $order->getCartRules();
         $discountsForViewing = [];
 
         foreach ($discounts as $discount) {
+            $discountAmount = $isTaxIncluded ? $discount['value'] : $discount['value_tax_excl'];
             $discountsForViewing[] = new OrderDiscountForViewing(
                 (int) $discount['id_order_cart_rule'],
                 $discount['name'],
-                new Number((string) $discount['value']),
-                Tools::displayPrice($discount['value'], $currency)
+                new Number((string) $discountAmount),
+                Tools::displayPrice($discountAmount, $currency)
             );
         }
 

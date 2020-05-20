@@ -32,7 +32,7 @@ namespace Tests\Integration\Behaviour\Features\Transform;
 trait StringToBooleanTransform
 {
     /**
-     * @Transform /^(enabled|included|should|includes)$/
+     * @Transform /^(enabled|enable|included|should|includes)$/
      */
     public function transformTruthyStringToBoolean(string $string)
     {
@@ -40,7 +40,7 @@ trait StringToBooleanTransform
     }
 
     /**
-     * @Transform /^(disabled|excluded|should not|excludes)$/
+     * @Transform /^(disabled|disable|excluded|should not|excludes)$/
      */
     public function transformFalsyStringToBoolean(string $string)
     {

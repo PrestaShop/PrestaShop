@@ -1,25 +1,33 @@
 require('module-alias/register');
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const SqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
 const AddSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/add');
 const ViewQueryManagerPage = require('@pages/BO/advancedParameters/database/sqlManager/view');
+
 // Import pages
 const SQLQueryFaker = require('@data/faker/sqlQuery');
 const {Tables} = require('@data/demo/sqlTables');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_database_exportSqlQuery';
 
 let browser;
 let page;
+
 let numberOfSQLQueries = 0;
+
 const sqlQueryData = new SQLQueryFaker({tableName: 'ps_alias'});
 let fileName;
 const fileContent = `${Tables.ps_alias.columns[1]};${Tables.ps_alias.columns[2]};${Tables.ps_alias.columns[3]}`;
@@ -41,6 +49,7 @@ describe('Export SQL query', async () => {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     await helper.setDownloadBehavior(page);
+
     this.pageObjects = await init();
   });
 
@@ -98,6 +107,7 @@ describe('Export SQL query', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'exportSqlQuery', baseContext);
 
       await this.pageObjects.sqlManagerPage.exportSqlResultDataToCsv();
+
       const doesFileExist = await files.doesFileExist('request_', 5000, true, 'csv');
       await expect(doesFileExist, 'Export of data has failed').to.be.true;
     });
@@ -106,6 +116,7 @@ describe('Export SQL query', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSqlQueryInCsvFile', baseContext);
 
       const numberOfQuery = await this.pageObjects.sqlManagerPage.getNumberOfElementInGrid();
+
       fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'request_', '.csv');
 
       for (let row = 1; row <= numberOfQuery; row++) {
@@ -120,7 +131,9 @@ describe('Export SQL query', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteSQLQuery', baseContext);
 
       await this.pageObjects.sqlManagerPage.resetFilter();
+
       await this.pageObjects.sqlManagerPage.filterSQLQuery('name', sqlQueryData.name);
+
       const sqlQueryName = await this.pageObjects.sqlManagerPage.getTextColumnFromTable(1, 'name');
       await expect(sqlQueryName).to.contains(sqlQueryData.name);
     });
@@ -130,6 +143,7 @@ describe('Export SQL query', async () => {
 
       const textResult = await this.pageObjects.sqlManagerPage.deleteSQLQuery(1);
       await expect(textResult).to.equal(this.pageObjects.sqlManagerPage.successfulDeleteMessage);
+
       const numberOfSQLQueriesAfterDelete = await this.pageObjects.sqlManagerPage.resetAndGetNumberOfLines();
       await expect(numberOfSQLQueriesAfterDelete).to.be.equal(numberOfSQLQueries);
     });
