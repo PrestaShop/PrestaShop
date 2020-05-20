@@ -206,7 +206,7 @@ class CartRuleController extends FrameworkBundleAdminController
             /** @var EditableCartRule $editableCartRule */
             $editableCartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing((int) $cartRuleId));
             $this->getCommandBus()->handle(
-                new ToggleCartRuleStatusCommand((int) $cartRuleId, !$editableCartRule->isEnabled())
+                new ToggleCartRuleStatusCommand((int) $cartRuleId, !$editableCartRule->getInformation()->isEnabled())
             );
             $this->addFlash(
                 'success',
@@ -311,7 +311,7 @@ class CartRuleController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
                 $e instanceof BulkToggleCartRuleException ? implode(', ', $e->getCartRuleIds()) : ''
-            )
+            ),
         ];
     }
 }
