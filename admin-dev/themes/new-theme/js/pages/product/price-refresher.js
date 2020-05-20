@@ -90,12 +90,10 @@ export default class PriceRefresher {
         if (forTaxIncluded) {
           this.store.dispatch('updatePriceTaxIncluded', {
             priceTaxIncluded: event.currentTarget.value,
-            taxRule: this.store.state.taxRule,
           });
         } else {
           this.store.dispatch('updatePriceTaxExcluded', {
             priceTaxExcluded: event.currentTarget.value,
-            taxRule: this.store.state.taxRule,
           });
         }
       });
@@ -111,8 +109,6 @@ export default class PriceRefresher {
             id: event.currentTarget.value,
             rate: event.currentTarget.options[event.currentTarget.selectedIndex].dataset.taxRate,
           },
-          priceTaxExcluded: this.store.state.priceTaxExcluded,
-          priceTaxIncluded: this.store.state.priceTaxIncluded,
         });
       });
     });
