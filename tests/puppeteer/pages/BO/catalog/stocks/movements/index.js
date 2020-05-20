@@ -46,7 +46,7 @@ module.exports = class Movements extends BOBasePage {
       this.page.click(this.searchButton),
       this.waitForVisibleSelector(this.productListLoading),
     ]);
-    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    await this.page.waitForSelector(this.productListLoading, {state: 'hidden'});
   }
 
   /* Table methods */

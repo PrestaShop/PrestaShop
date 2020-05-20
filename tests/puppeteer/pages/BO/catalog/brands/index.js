@@ -478,7 +478,7 @@ module.exports = class Brands extends BOBasePage {
     ]);
     await Promise.all([
       this.page.click(this.gridActionExportLink(table)),
-      this.page.waitForSelector(`${this.gridActionDropDownMenu(table)}.show`, {hidden: true}),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu(table)}.show`, {state: 'hidden'}),
     ]);
   }
 

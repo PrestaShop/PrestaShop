@@ -19,7 +19,7 @@ module.exports = class CartRules extends BOBasePage {
    */
   async goToCatalogPriceRulesTab() {
     await this.clickAndWaitForNavigation(this.catalogPriceRulesTab);
-    await this.page.waitForSelector(`${this.catalogPriceRulesTab}.current`, {visible: true});
+    await this.page.waitForSelector(`${this.catalogPriceRulesTab}.current`, {state: 'visible'});
   }
 
   /**

@@ -33,7 +33,7 @@ module.exports = class AddWebserviceKey extends BOBasePage {
     // id = 1 if active = YES / 0 if active = NO
     await this.page.click(this.statusSwitchLabel(webserviceData.status ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
+    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {state: 'visible'});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

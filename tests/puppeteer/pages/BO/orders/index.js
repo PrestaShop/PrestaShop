@@ -60,7 +60,7 @@ module.exports = class Order extends BOBasePage {
     ]);
     await Promise.all([
       this.page.click(this.gridActionExportLink),
-      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {hidden: true}),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
     ]);
   }
 

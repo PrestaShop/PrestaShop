@@ -61,8 +61,8 @@ module.exports = class DbBackup extends BOBasePage {
   async createDbDbBackup() {
     await Promise.all([
       this.page.click(this.newBackupButton),
-      this.page.waitForSelector(this.tableRow(1), {visible: true}),
-      this.page.waitForSelector(this.downloadBackupButton, {visible: true}),
+      this.page.waitForSelector(this.tableRow(1), {state: 'visible'}),
+      this.page.waitForSelector(this.downloadBackupButton, {state: 'visible'}),
     ]);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
@@ -117,12 +117,12 @@ module.exports = class DbBackup extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {state: 'visible'}),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {state: 'visible'}),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);

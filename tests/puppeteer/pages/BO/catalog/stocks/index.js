@@ -77,7 +77,7 @@ module.exports = class Stocks extends BOBasePage {
    */
   async getTotalNumberOfProducts() {
     await this.waitForVisibleSelector(this.searchButton, 2000);
-    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    await this.page.waitForSelector(this.productListLoading, {state: 'hidden'});
     // If pagination that return number of products in this page
     const pagesLength = await this.getProductsPagesLength();
     if (pagesLength === 0) {
@@ -98,7 +98,7 @@ module.exports = class Stocks extends BOBasePage {
    */
   async getNumberOfProductsFromList() {
     await this.waitForVisibleSelector(this.searchButton, 2000);
-    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    await this.page.waitForSelector(this.productListLoading, {state: 'hidden'});
     return (await this.page.$$(this.productRows)).length;
   }
 
@@ -120,7 +120,7 @@ module.exports = class Stocks extends BOBasePage {
       this.page.click(this.paginationListItemLink(pageNumber)),
       this.waitForVisibleSelector(this.productListLoading),
     ]);
-    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    await this.page.waitForSelector(this.productListLoading, {state: 'hidden'});
   }
 
   /**
@@ -148,7 +148,7 @@ module.exports = class Stocks extends BOBasePage {
       this.page.click(this.searchButton),
       this.waitForVisibleSelector(this.productListLoading),
     ]);
-    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    await this.page.waitForSelector(this.productListLoading, {state: 'hidden'});
   }
 
   /**
@@ -270,7 +270,7 @@ module.exports = class Stocks extends BOBasePage {
     await this.openCloseAdvancedFilter();
     await this.page.click(this.filterCategoryExpandButton);
     await this.page.click(this.filterCategoryCheckBoxDiv(category));
-    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    await this.page.waitForSelector(this.productListLoading, {state: 'hidden'});
     await this.page.click(this.filterCategoryCollapseButton);
     await this.openCloseAdvancedFilter(false);
   }
