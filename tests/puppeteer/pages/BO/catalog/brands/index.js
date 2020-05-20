@@ -63,6 +63,11 @@ module.exports = class Brands extends BOBasePage {
     } a[data-original-title='Edit']`;
     this.deleteAddressesButton = `${this.gridPanel('manufacturer_address')
     } #manufacturer_address_grid_bulk_action_delete_selection`;
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = table => `${this.gridPanel(table)} .col-form-label`;
+    this.paginationNextLink = table => `${this.gridPanel(table)} #pagination_next_url`;
+    this.paginationPreviousLink = table => `${this.gridPanel(table)} [aria-label='Previous']`;
   }
 
   /*
@@ -388,7 +393,7 @@ module.exports = class Brands extends BOBasePage {
           rowContent = await this.getTextColumnFromTableAddresses(i, column);
           break;
         default:
-          // Nothing to do
+        // Nothing to do
       }
       await allRowsContentTable.push(rowContent);
     }
@@ -506,5 +511,45 @@ module.exports = class Brands extends BOBasePage {
       + `${brand.addresses};`
       + `${brand.products};`
       + `${brand.status ? 1 : 0}`;
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(table) {
+    return this.getTextContent(this.paginationLabel(table));
+  }
+
+  /**
+   * Select pagination limit
+   * @param table
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(table, number) {
+    await this.selectByVisibleText(this.paginationLimitSelect, number);
+    return this.getPaginationLabel(table);
+  }
+
+  /**
+   * Click on next
+   * @param table
+   * @returns {Promise<string>}
+   */
+  async paginationNext(table) {
+    await this.clickAndWaitForNavigation(this.paginationNextLink(table));
+    return this.getPaginationLabel(table);
+  }
+
+  /**
+   * Click on previous
+   * @param table
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(table) {
+    await this.clickAndWaitForNavigation(this.paginationPreviousLink(table));
+    return this.getPaginationLabel(table);
   }
 };
