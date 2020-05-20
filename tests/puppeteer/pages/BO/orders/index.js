@@ -39,7 +39,7 @@ module.exports = class Order extends BOBasePage {
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
     this.tableColumnOrderBulk = row => `${this.tableRow(row)} td.column-orders_bulk`;
-    this.tableColumnOrderBulkCheckboxLabel = row => `${this.tableColumnOrderBulk(row)} .md-checkbox i`;
+    this.tableColumnOrderBulkCheckboxLabel = row => `${this.tableColumnOrderBulk(row)} .md-checkbox`;
     // Order status modal
     this.updateOrdersStatusModal = '#changeOrdersStatusModal';
     this.updateOrdersStatusModalSelect = '#change_orders_status_new_order_status_id';
@@ -58,10 +58,12 @@ module.exports = class Order extends BOBasePage {
       this.page.click(this.gridActionButton),
       this.waitForVisibleSelector(`${this.gridActionDropDownMenu}.show`),
     ]);
-    await Promise.all([
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'),
       this.page.click(this.gridActionExportLink),
       this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
     ]);
+    return download.path();
   }
 
   /**
@@ -193,7 +195,11 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadInvoice(row) {
-    await this.page.click(this.viewInvoiceRowLink(row));
+    const [ download ] = await Promise.all([
+      this.page.waitForEvent('download'),
+      this.page.click(this.viewInvoiceRowLink(row)),
+      ]);
+    return download.path();
   }
 
   /**
@@ -202,7 +208,11 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadDeliverySlip(row) {
-    await this.page.click(this.viewDeliverySlipsRowLink(row));
+    const [ download ] = await Promise.all([
+      this.page.waitForEvent('download'),
+      this.page.click(this.viewDeliverySlipsRowLink(row))
+    ]);
+    return download.path();
   }
 
   /**

@@ -27,6 +27,7 @@ const baseContext = 'functional_BO_orders_orders_checkDeliverySlipDownloadedFrom
 let browser;
 let page;
 let deliverySlipFilename;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -60,7 +61,6 @@ describe('Check delivery slip downloaded from list', async () => {
   });
   after(async () => {
     await helper.closeBrowser(browser);
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${deliverySlipFilename}`);
   });
 
   describe('Create order in FO', async () => {
@@ -159,22 +159,19 @@ describe('Check delivery slip downloaded from list', async () => {
     it('should download delivery slip', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
 
-      await this.pageObjects.ordersPage.downloadDeliverySlip(1);
-      const doesFileExist = await files.doesFileExist('DE', 5000, true, '.pdf');
+      filePath = await this.pageObjects.ordersPage.downloadDeliverySlip(1);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
 
     it('should check delivery slip pdf text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlipText', baseContext);
 
-      // Get file name
-      deliverySlipFilename = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'DE', '.pdf');
-
       // Get order information
       const orderInformation = await this.pageObjects.ordersPage.getOrderFromTable(1);
 
       // Check Reference in pdf
-      const referenceExist = await files.isTextInPDF(deliverySlipFilename, orderInformation.reference);
+      const referenceExist = await files.isTextInPDF(filePath, orderInformation.reference);
 
       await expect(
         referenceExist,
@@ -182,7 +179,7 @@ describe('Check delivery slip downloaded from list', async () => {
       ).to.be.true;
 
       // Check country name in delivery Address in pdf
-      const deliveryExist = await files.isTextInPDF(deliverySlipFilename, orderInformation.delivery);
+      const deliveryExist = await files.isTextInPDF(filePath, orderInformation.delivery);
 
       await expect(
         deliveryExist,
@@ -190,7 +187,7 @@ describe('Check delivery slip downloaded from list', async () => {
       ).to.be.true;
 
       // Check customer name in pdf
-      const customerExist = await files.isTextInPDF(deliverySlipFilename, orderInformation.customer.slice(3));
+      const customerExist = await files.isTextInPDF(filePath, orderInformation.customer.slice(3));
 
       await expect(
         customerExist,
@@ -198,7 +195,7 @@ describe('Check delivery slip downloaded from list', async () => {
       ).to.be.true;
 
       // Check total paid in pdf
-      const totalPaidExist = await files.isTextInPDF(deliverySlipFilename, orderInformation.totalPaid);
+      const totalPaidExist = await files.isTextInPDF(filePath, orderInformation.totalPaid);
 
       await expect(
         totalPaidExist,

@@ -15,7 +15,7 @@ const baseContext = 'functional_BO_orders_orders_exportOrders';
 
 let browser;
 let page;
-let fileName;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -36,7 +36,6 @@ describe('Export orders', async () => {
   });
   after(async () => {
     await helper.closeBrowser(browser);
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
   });
 
   // Login into BO and go to orders page
@@ -59,8 +58,8 @@ describe('Export orders', async () => {
   it('should export orders to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportOrders', baseContext);
 
-    await this.pageObjects.ordersPage.exportDataToCsv();
-    const doesFileExist = await files.doesFileExist('order_', 5000, true, 'csv');
+    filePath = await this.pageObjects.ordersPage.exportDataToCsv();
+    const doesFileExist = await files.doesFileExist(filePath, 5000);
     await expect(doesFileExist, 'Export of data has failed').to.be.true;
   });
 
@@ -70,13 +69,10 @@ describe('Export orders', async () => {
     // Get number of orders
     const numberOfOrders = await this.pageObjects.ordersPage.getNumberOfElementInGrid();
 
-    // Get file name
-    fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'order_', '.csv');
-
     // Check each order in file
     for (let row = 1; row <= numberOfOrders; row++) {
       const orderInCsvFormat = await this.pageObjects.ordersPage.getOrderInCsvFormat(row);
-      const textExist = await files.isTextInFile(fileName, orderInCsvFormat, true, true);
+      const textExist = await files.isTextInFile(filePath, orderInCsvFormat, true, true);
       await expect(textExist, `${orderInCsvFormat} was not found in the file`).to.be.true;
     }
   });

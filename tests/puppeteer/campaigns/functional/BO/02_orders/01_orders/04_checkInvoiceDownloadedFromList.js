@@ -27,6 +27,7 @@ const baseContext = 'functional_BO_orders_orders_checkInvoiceDownloadedFromList'
 let browser;
 let page;
 let invoiceFilename;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -60,7 +61,6 @@ describe('Check invoice downloaded from list', async () => {
   });
   after(async () => {
     await helper.closeBrowser(browser);
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${invoiceFilename}`);
   });
 
   describe('Create order in FO', async () => {
@@ -159,34 +159,31 @@ describe('Check invoice downloaded from list', async () => {
     it('should download invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
-      await this.pageObjects.ordersPage.downloadInvoice(1);
-      const doesFileExist = await files.doesFileExist('IN', 5000, true, '.pdf');
+      filePath = await this.pageObjects.ordersPage.downloadInvoice(1);
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
       await expect(doesFileExist).to.be.true;
     });
 
     it('should check invoice pdf text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceText', baseContext);
 
-      // Get file name
-      invoiceFilename = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'IN', '.pdf');
-
       // Get order information
       const orderInformation = await this.pageObjects.ordersPage.getOrderFromTable(1);
 
       // Check Reference in pdf
-      const referenceExist = await files.isTextInPDF(invoiceFilename, orderInformation.reference);
+      const referenceExist = await files.isTextInPDF(filePath, orderInformation.reference);
       await expect(referenceExist, `Reference '${orderInformation.reference}' does not exist in invoice`).to.be.true;
 
       // Check country name in delivery Address in pdf
-      const deliveryExist = await files.isTextInPDF(invoiceFilename, orderInformation.delivery);
+      const deliveryExist = await files.isTextInPDF(filePath, orderInformation.delivery);
       await expect(deliveryExist, `Country name '${orderInformation.delivery}' does not exist in invoice`).to.be.true;
 
       // Check customer name in pdf
-      const customerExist = await files.isTextInPDF(invoiceFilename, orderInformation.customer.slice(3));
+      const customerExist = await files.isTextInPDF(filePath, orderInformation.customer.slice(3));
       await expect(customerExist, `Country name '${orderInformation.customer}' does not exist in invoice`).to.be.true;
 
       // Check total paid in pdf
-      const totalPaidExist = await files.isTextInPDF(invoiceFilename, orderInformation.totalPaid);
+      const totalPaidExist = await files.isTextInPDF(filePath, orderInformation.totalPaid);
       await expect(totalPaidExist, `Total paid '${orderInformation.totalPaid}' does not exist in invoice`).to.be.true;
     });
   });

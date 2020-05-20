@@ -12,25 +12,16 @@ module.exports = {
   },
 
   /**
-   * Check File existence
-   * @param fileName
+   *
+   * @param filePath
    * @param timeDelay
-   * @param isPartialName
-   * @param fileExtension
-   * @return boolean, true if exist, false if not
+   * @returns {Promise<boolean>}
    */
-  async doesFileExist(fileName, timeDelay = 5000, isPartialName = false, fileExtension = '') {
+  async doesFileExist(filePath, timeDelay = 5000) {
     let found = false;
     for (let i = 0; i <= timeDelay && !found; i += 100) {
       await (new Promise(resolve => setTimeout(resolve, 100)));
-      if (isPartialName) {
-        found = (await fs
-          .readdirSync(global.BO.DOWNLOAD_PATH)
-          .filter(fn => fn.startsWith(fileName) && fn.endsWith(fileExtension))
-        ) !== [];
-      } else {
-        found = await fs.existsSync(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
-      }
+      found = await fs.existsSync(filePath);
     }
     return found;
   },
@@ -54,7 +45,7 @@ module.exports = {
    * @return boolean, true if text exist, false if not
    */
   async isTextInPDF(fileName, text) {
-    const pdf = await PDFJS.getDocument(`${global.BO.DOWNLOAD_PATH}/${fileName}`).promise;
+    const pdf = await PDFJS.getDocument(fileName).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
     for (let pageNo = 1; pageNo <= maxPages; pageNo += 1) {
@@ -110,7 +101,7 @@ module.exports = {
    * @return {Promise<boolean>}
    */
   async isTextInFile(fileName, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
-    let fileText = await fs.readFileSync(`${global.BO.DOWNLOAD_PATH}/${fileName}`, 'utf8');
+    let fileText = await fs.readFileSync(fileName, 'utf8');
     let text = textToCheckWith;
     if (ignoreSpaces) {
       fileText = await fileText.replace(/\s/g, '');
