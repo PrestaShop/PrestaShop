@@ -34,7 +34,7 @@ module.exports = class AddCurrency extends BOBasePage {
    */
   async addOfficialCurrency(currencyData) {
     // Select currency
-    await this.page.select(this.currencySelect, currencyData.isoCode);
+    await this.page.selectOption(this.currencySelect, currencyData.isoCode);
     await this.waitForVisibleSelector(`${this.currencyLoadingModal}.show`);
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist

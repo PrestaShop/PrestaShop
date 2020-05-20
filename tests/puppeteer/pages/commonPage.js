@@ -221,7 +221,7 @@ module.exports = class CommonPage {
     options = await options.filter(option => textValue === option.textContent);
     if (options.length !== 0) {
       const elementValue = await options[0].value;
-      await this.page.select(selector, elementValue);
+      await this.page.selectOption(selector, elementValue);
       found = true;
     }
     if (!found) throw new Error(`${textValue} was not found as option of select`);

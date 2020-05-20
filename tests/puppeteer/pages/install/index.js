@@ -83,7 +83,7 @@ module.exports = class Install extends CommonPage {
    * Change install language in step 1
    */
   async setInstallLanguage() {
-    await this.page.select(this.languageSelect, global.INSTALL.LANGUAGE);
+    await this.page.selectOption(this.languageSelect, global.INSTALL.LANGUAGE);
   }
 
   /**
@@ -109,7 +109,7 @@ module.exports = class Install extends CommonPage {
    */
   async fillInformationForm() {
     await this.page.type(this.shopNameInput, global.INSTALL.SHOPNAME);
-    await this.page.select(this.countrySelect, global.INSTALL.COUNTRY);
+    await this.page.selectOption(this.countrySelect, global.INSTALL.COUNTRY);
     await this.page.type(this.firstNameInput, global.BO.FIRSTNAME);
     await this.page.type(this.lastNameInput, global.BO.LASTNAME);
     await this.page.type(this.emailInput, global.BO.EMAIL);

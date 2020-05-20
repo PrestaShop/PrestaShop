@@ -71,7 +71,7 @@ module.exports = class AddSeoUrl extends BOBasePage {
    * @return {Promise<void>}
    */
   async createEditSeoPage(seoPageData) {
-    await this.page.select(this.pageNameSelect, seoPageData.page);
+    await this.page.selectOption(this.pageNameSelect, seoPageData.page);
     // Fill form in english
     await this.changeLanguageForSelectors('en');
     await this.setValue(this.pageTitleInput(1), seoPageData.title);

@@ -39,7 +39,7 @@ module.exports = class autoUpgrade extends BOBasePage {
       await this.page.click(this.showExpertModeButton);
     }
     await this.waitForVisibleSelector(this.channelSelect);
-    await this.page.select(this.channelSelect, upgradeChannelValue);
+    await this.page.selectOption(this.channelSelect, upgradeChannelValue);
     await this.clickAndWaitForNavigation(this.updateChannelSaveButton);
   }
 
