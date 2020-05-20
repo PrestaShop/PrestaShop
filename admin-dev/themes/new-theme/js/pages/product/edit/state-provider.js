@@ -30,16 +30,17 @@ import productMap from '../product-map';
  */
 export default class StateProvider {
   get() {
-    const priceTaxIncluded = document.querySelector(productMap.priceTaxIncludedInput1).value;
-    const priceTaxExcluded = document.querySelector(productMap.priceTaxExcludedInput1).value;
-    const taxRuleSelection = document.querySelector(productMap.taxRuleInput1);
+    // gets first elements for given class and uses it as state default value
+    const priceTaxIncluded = document.querySelector(productMap.priceTaxIncludedInputs).value;
+    const priceTaxExcluded = document.querySelector(productMap.priceTaxExcludedInputs).value;
+    const taxRuleGroupSelection = document.querySelector(productMap.taxRuleGroupSelections);
 
     return {
       priceTaxIncluded,
       priceTaxExcluded,
-      taxRule: {
-        id: taxRuleSelection.value,
-        rate: taxRuleSelection.options[taxRuleSelection.selectedIndex].dataset.taxRate,
+      taxRuleGroup: {
+        id: taxRuleGroupSelection.value,
+        rate: taxRuleGroupSelection.options[taxRuleGroupSelection.selectedIndex].dataset.taxRate,
       },
     };
   }

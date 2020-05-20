@@ -27,10 +27,7 @@
  * Holds selectors for product page DOM elements.
  */
 export default {
-  priceTaxExcludedInput1: '#test1-excl',
-  priceTaxExcludedInput2: '#test2-excl',
-  priceTaxIncludedInput1: '#test1-incl',
-  priceTaxIncludedInput2: '#test2-incl',
-  taxRuleInput1: '#test1-tax',
-  taxRuleInput2: '#test2-tax',
+  priceTaxExcludedInputs: '.product-price-tax-excl',
+  priceTaxIncludedInputs: '.product-price-tax-incl',
+  taxRuleGroupSelections: '.product-tax-rule-group-selection',
 };

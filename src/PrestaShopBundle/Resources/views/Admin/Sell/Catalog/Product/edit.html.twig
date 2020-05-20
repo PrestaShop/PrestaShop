@@ -1,45 +1,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {# @todo: test page for product edit #}
 {% block content %}
-  <div class="row">
-    <div class="col">
-      tax excluded
-      <input type="text" id="test1-excl" value="100">
-    </div>
-    <div class="col">
-      tax included
-      <input type="text" id="test1-incl" value="110">
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      tax excluded
-      <input type="text" id="test2-excl" value="100">
-    </div>
-    <div class="col">
-      tax included
-      <input type="text" id="test2-incl" value="110">
-    </div>
-  </div>
-
-  <div class="row">
-    tax rule
-    <select name="" id="test1-tax">
-      <option value="1" data-tax-rate="10">10%</option>
-      <option value="2" data-tax-rate="20">20%</option>
-      <option value="3" data-tax-rate="2.5">2.5%</option>
-    </select>
-  </div>
-
-  <div class="row">
-    tax rule
-    <select name="" id="test2-tax">
-      <option value="1" data-tax-rate="10">10%</option>
-      <option value="2" data-tax-rate="20">20%</option>
-      <option value="3" data-tax-rate="2.5">2.5%</option>
-    </select>
-  </div>
+  {{ form_start(productPriceForm) }}
+    {{ form_widget(productPriceForm) }}
+  {{ form_end(productPriceForm) }}
 {% endblock %}
 
 {% block javascripts %}

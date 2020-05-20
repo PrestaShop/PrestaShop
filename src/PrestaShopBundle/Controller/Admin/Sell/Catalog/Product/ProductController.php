@@ -29,12 +29,27 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Catalog\Product\ProductPriceType;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends FrameworkBundleAdminController
 {
+    /**
+     * @param int $productId
+     *
+     * @return Response
+     */
     public function editAction(int $productId): Response
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig');
+        //@todo: form data handler/provider. Remove hardcoded values.
+        $productPriceForm = $this->createForm(ProductPriceType::class, [
+            'price_tax_excluded' => 100,
+            'price_tax_included' => 110,
+            'tax_rule' => 1,
+        ]);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
+            'productPriceForm' => $productPriceForm->createView(),
+        ]);
     }
 }

@@ -32,9 +32,9 @@ import * as types from './store/mutation-types';
 export default class PriceRefresher {
   constructor(store) {
     this.store = store;
-    this.taxIncludedInputs = [productMap.priceTaxIncludedInput1, productMap.priceTaxIncludedInput2];
-    this.taxExcludedInputs = [productMap.priceTaxExcludedInput1, productMap.priceTaxExcludedInput2];
-    this.taxRuleInputs = [productMap.taxRuleInput1, productMap.taxRuleInput2];
+    this.taxIncludedInputs = productMap.priceTaxIncludedInputs;
+    this.taxExcludedInputs = productMap.priceTaxExcludedInputs;
+    this.taxRuleGroupSelections = productMap.taxRuleGroupSelections;
 
     this.init();
   }
@@ -64,7 +64,7 @@ export default class PriceRefresher {
       const subscribedMutationTypes = [
         types.SET_PRICE_TAX_INCLUDED,
         types.SET_PRICE_TAX_EXCLUDED,
-        types.SET_TAX_RULE,
+        types.SET_TAX_RULE_GROUP,
       ];
 
       if (!subscribedMutationTypes.includes(mutation.type)) {
@@ -76,7 +76,7 @@ export default class PriceRefresher {
       } else if (mutation.type === types.SET_PRICE_TAX_EXCLUDED) {
         this.updatePricesInDom(this.taxExcludedInputs, false);
       } else {
-        this.updateTaxRulesInDom(this.taxRuleInputs);
+        this.updateTaxRulesInDom();
       }
     });
   }
@@ -84,12 +84,13 @@ export default class PriceRefresher {
   /**
    * Listens for price tax included/excluded inputs changes
    *
-   * @param selectors
+   * @param selector
    * @param forTaxIncluded
    */
-  listenToPriceChangesInDom(selectors, forTaxIncluded) {
-    selectors.forEach((selector) => {
-      const el = document.querySelector(selector);
+  listenToPriceChangesInDom(selector, forTaxIncluded) {
+    const elements = document.querySelectorAll(selector);
+
+    elements.forEach((el) => {
       el.addEventListener('change', (event) => {
         if (forTaxIncluded) {
           this.store.dispatch('updatePriceTaxIncluded', {
@@ -108,10 +109,10 @@ export default class PriceRefresher {
    * Listens to tax rule selection changes
    */
   listenToTaxChangesInDom() {
-    this.taxRuleInputs.forEach((selector) => {
-      const el = document.querySelector(selector);
+    const elements = document.querySelectorAll(this.taxRuleGroupSelections);
+    elements.forEach((el) => {
       el.addEventListener('change', (event) => {
-        this.store.dispatch('updateTaxRule', {
+        this.store.dispatch('updateTaxRuleGroup', {
           taxRule: {
             id: event.currentTarget.value,
             rate: event.currentTarget.options[event.currentTarget.selectedIndex].dataset.taxRate,
@@ -124,13 +125,13 @@ export default class PriceRefresher {
   /**
    * Updates price values in DOM
    *
-   * @param selectors
+   * @param selector
    * @param forTaxIncluded
    */
-  updatePricesInDom(selectors, forTaxIncluded) {
-    selectors.forEach((selector) => {
-      const el = document.querySelector(selector);
+  updatePricesInDom(selector, forTaxIncluded) {
+    const elements = document.querySelectorAll(selector);
 
+    elements.forEach((el) => {
       if (forTaxIncluded) {
         el.value = this.store.state.priceTaxIncluded;
       } else {
@@ -141,12 +142,11 @@ export default class PriceRefresher {
 
   /**
    * Updates tax rule values in DOM
-   *
-   * @param selectors
    */
-  updateTaxRulesInDom(selectors) {
-    selectors.forEach((selector) => {
-      const el = document.querySelector(selector);
+  updateTaxRulesInDom() {
+    const elements = document.querySelectorAll(this.taxRuleGroupSelections);
+
+    elements.forEach((el) => {
       el.value = this.store.state.taxRule.id;
     });
   }
