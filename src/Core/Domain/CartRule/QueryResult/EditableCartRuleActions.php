@@ -58,8 +58,7 @@ class EditableCartRuleActions
         EditableCartRuleReduction $reduction,
         ?ProductId $giftProductId,
         ?CombinationId $giftCombinationId
-    )
-    {
+    ) {
         $this->freeShipping = $freeShipping;
         $this->reduction = $reduction;
         $this->giftProductId = $giftProductId;

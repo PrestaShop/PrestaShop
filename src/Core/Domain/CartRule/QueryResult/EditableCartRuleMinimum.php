@@ -59,7 +59,6 @@ class EditableCartRuleMinimum
         CurrencyId $currencyId,
         bool $shipping
     ) {
-
         $this->amount = $amount;
         $this->amountTax = $amountTax;
         $this->currencyId = $currencyId;

@@ -52,7 +52,6 @@ final class BulkToggleCartRuleStatusHandler extends AbstractCartRuleHandler impl
 
                 if (!$this->toggleCartRuleStatus($cartRule, $command->getExpectedStatus())) {
                     $errors[] = $cartRuleId->getValue();
-
                 }
             } catch (CartRuleException $e) {
                 $errors[] = $cartRuleId->getValue();
