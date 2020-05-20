@@ -1,16 +1,20 @@
 require('module-alias/register');
 
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const MonitoringPage = require('@pages/BO/catalog/monitoring');
 const ProductFaker = require('@data/faker/product');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_monitoring_sortProductsNoQuantityWithCombination';
@@ -43,6 +47,7 @@ describe('Sort list of products with combinations but without available quantiti
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
 
@@ -76,23 +81,28 @@ describe('Sort list of products with combinations but without available quantiti
         );
 
         await this.pageObjects.dashboardPage.closeSfToolBar();
+
         const pageTitle = await this.pageObjects.productsPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
       });
 
       it('should reset all filters and get number of products in BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFirst${index}`, baseContext);
+
         numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
         await expect(numberOfProducts).to.be.above(0);
       });
 
       it('should create product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
+
         await this.pageObjects.productsPage.goToAddProductPage();
+
         await this.pageObjects.addProductPage.createEditBasicProduct(test.args.productToCreate);
         const createProductMessage = await this.pageObjects.addProductPage.setCombinationsInProduct(
           test.args.productToCreate,
         );
+
         await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
       });
     });
@@ -115,9 +125,11 @@ describe('Sort list of products with combinations but without available quantiti
 
       const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
+
       numberOfProductsIngrid = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines(
         'no_qty_product_with_combination',
       );
+
       await expect(numberOfProductsIngrid).to.be.at.least(1);
     });
 
@@ -145,6 +157,7 @@ describe('Sort list of products with combinations but without available quantiti
         `should sort by '${testSort.args.sortBy}' '${testSort.args.sortDirection}' and check result`,
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', testSort.args.testIdentifier, baseContext);
+
           let nonSortedTable = await this.pageObjects.monitoringPage.getAllRowsColumnContent(
             'no_qty_product_with_combination',
             testSort.args.sortBy,
@@ -167,6 +180,7 @@ describe('Sort list of products with combinations but without available quantiti
           }
 
           const expectedResult = await this.pageObjects.monitoringPage.sortArray(nonSortedTable, testSort.args.isFloat);
+
           if (testSort.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
           } else {
@@ -217,6 +231,7 @@ describe('Sort list of products with combinations but without available quantiti
       );
 
       await expect(textResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
+
       const pageTitle = await this.pageObjects.productsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
     });
@@ -229,6 +244,7 @@ describe('Sort list of products with combinations but without available quantiti
     tests.forEach((test, index) => {
       it('should delete the created product from products page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulkDelete${index}`, baseContext);
+
         const deleteTextResult = await this.pageObjects.productsPage.deleteProduct(test.args.productToCreate);
         await expect(deleteTextResult).to.equal(this.pageObjects.productsPage.productDeletedSuccessfulMessage);
       });
