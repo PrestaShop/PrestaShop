@@ -190,7 +190,7 @@ export default class OrderProductRenderer {
     const startRow = (numPage - 1) * numRowsPerPage + 1;
     const endRow = numPage * numRowsPerPage;
 
-    for (let i = startRow-1; i < Math.min(endRow, $rows.length); i++) {
+    for (let i = startRow - 1; i < Math.min(endRow, $rows.length); i += 1) {
       $($rows[i]).removeClass('d-none');
     }
 
