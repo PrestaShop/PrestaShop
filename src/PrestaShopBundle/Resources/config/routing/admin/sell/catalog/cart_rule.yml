@@ -37,7 +37,7 @@ admin_cart_rule_toggle_status:
 
 admin_cart_rules_delete:
   path: /{cartRuleId}/delete
-  methods: [POST]
+  methods: [POST, DELETE]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Sell\Catalog\CartRule:delete'
     _legacy_controller: AdminCartRules
