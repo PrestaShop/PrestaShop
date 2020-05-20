@@ -104,8 +104,8 @@ describe('Pagination and sort categories', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToCategories${index}`, baseContext);
 
         await this.pageObjects.pagesPage.backToList();
-        const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
 
+        const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
       });
 
@@ -115,7 +115,6 @@ describe('Pagination and sort categories', async () => {
         const numberOfCategoriesAfterCreation = await this.pageObjects.pagesPage.getNumberOfElementInGrid(
           'cms_page_category',
         );
-
         await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
       });
     });
@@ -239,7 +238,6 @@ describe('Pagination and sort categories', async () => {
       const numberOfCategoriesAfterFilter = await this.pageObjects.pagesPage.resetAndGetNumberOfLines(
         'cms_page_category',
       );
-
       await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
   });
