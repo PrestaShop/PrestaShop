@@ -1,13 +1,12 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orderSettings_giftOptions';
-// Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const OrderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
@@ -17,9 +16,15 @@ const HomePage = require('@pages/FO/home');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
 const FOLoginPage = require('@pages/FO/login');
-// Importing data
+
+// Import data
 const {DefaultAccount} = require('@data/demo/customer');
 const {DefaultFrTax} = require('@data/demo/tax');
+
+// Import test context
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orderSettings_giftOptions';
 
 let browser;
 let page;
@@ -27,7 +32,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     orderSettingsPage: new OrderSettingsPage(page),
@@ -45,21 +49,27 @@ describe('Update gift options ', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Login into BO and go to Shop Parameters > Order Settings page
   loginCommon.loginBO();
 
   it('should go to \'Shop Parameters > Order Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.shopParametersParentLink,
-      this.pageObjects.boBasePage.orderSettingsLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.shopParametersParentLink,
+      this.pageObjects.dashboardPage.orderSettingsLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.orderSettingsPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
   });
@@ -122,6 +132,7 @@ describe('Update gift options ', async () => {
         },
     },
   ];
+
   tests.forEach((test) => {
     describe(`Set gift option with status: '${test.args.wantedStatus}', price: '${test.args.price}', `
       + `tax: '${test.args.tax}', recyclable package: '${test.args.isRecyclablePackage}'`, async () => {
@@ -134,12 +145,14 @@ describe('Update gift options ', async () => {
             `setOptions${test.args.testIdentifier}`,
             baseContext,
           );
+
           const result = await this.pageObjects.orderSettingsPage.setGiftOptions(
             test.args.wantedStatus,
             test.args.price,
             test.args.tax,
             test.args.isRecyclablePackage,
           );
+
           await expect(result).to.contains(this.pageObjects.orderSettingsPage.successfulUpdateMessage);
         },
       );
@@ -151,9 +164,14 @@ describe('Update gift options ', async () => {
           `viewMyShopToCheck${test.args.testIdentifier}`,
           baseContext,
         );
-        page = await this.pageObjects.boBasePage.viewMyShop();
+
+        // Go to FO
+        page = await this.pageObjects.orderSettingsPage.viewMyShop();
         this.pageObjects = await init();
+
+        // Change FO language
         await this.pageObjects.homePage.changeLanguage('en');
+
         const isHomePage = await this.pageObjects.homePage.isHomePage();
         await expect(isHomePage, 'Fail to open FO home page').to.be.true;
       });
@@ -165,7 +183,9 @@ describe('Update gift options ', async () => {
           `goToLoginPageFOToCheck${test.args.testIdentifier}`,
           baseContext,
         );
+
         await this.pageObjects.homePage.goToLoginPage();
+
         const pageTitle = await this.pageObjects.foLoginPage.getPageTitle();
         await expect(pageTitle, 'Fail to open FO login page').to.contains(this.pageObjects.foLoginPage.pageTitle);
       });
@@ -177,6 +197,7 @@ describe('Update gift options ', async () => {
           `sighInFOToCheck${test.args.testIdentifier}`,
           baseContext,
         );
+
         await this.pageObjects.foLoginPage.customerLogin(DefaultAccount);
         const isCustomerConnected = await this.pageObjects.foLoginPage.isCustomerConnected();
         await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -189,13 +210,18 @@ describe('Update gift options ', async () => {
           `goToShippingStep${test.args.testIdentifier}`,
           baseContext,
         );
+
         await this.pageObjects.foLoginPage.goToHomePage();
-        // Go to the first product page
+
+        // Go to the fourth product page
         await this.pageObjects.homePage.goToProductPage(4);
+
         // Add the product to the cart
         await this.pageObjects.productPage.addProductToTheCart();
+
         // Proceed to checkout the shopping cart
         await this.pageObjects.cartPage.clickOnProceedToCheckout();
+
         // Address step - Go to delivery step
         const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
@@ -208,7 +234,9 @@ describe('Update gift options ', async () => {
           `checkGiftVisibility${test.args.testIdentifier}`,
           baseContext,
         );
+
         const isGiftCheckboxVisible = await this.pageObjects.checkoutPage.isGiftCheckboxVisible();
+
         await expect(
           isGiftCheckboxVisible,
           'Gift checkbox has not the correct status',
@@ -223,7 +251,9 @@ describe('Update gift options ', async () => {
             `checkGiftPrice${test.args.testIdentifier}`,
             baseContext,
           );
+
           const giftPrice = await this.pageObjects.checkoutPage.getGiftPrice();
+
           await expect(giftPrice, 'Gift price is incorrect').to.equal(
             test.args.price === 0 ? 'Free'
               : `€${parseFloat(
@@ -242,7 +272,9 @@ describe('Update gift options ', async () => {
             `checkRecyclableVisibility${test.args.testIdentifier}`,
             baseContext,
           );
+
           const isRecyclableCheckboxVisible = await this.pageObjects.checkoutPage.isRecyclableCheckboxVisible();
+
           await expect(
             isRecyclableCheckboxVisible,
             'Gift checkbox has not the correct status',
@@ -256,8 +288,10 @@ describe('Update gift options ', async () => {
           `sighOutFOAfterCheck${test.args.testIdentifier}`,
           baseContext,
         );
+
         await this.pageObjects.checkoutPage.goToHomePage();
         await this.pageObjects.homePage.logout();
+
         const isCustomerConnected = await this.pageObjects.homePage.isCustomerConnected();
         await expect(isCustomerConnected, 'Customer should be disconnected').to.be.false;
       });
@@ -269,8 +303,10 @@ describe('Update gift options ', async () => {
           `goBackToBoAfterCheck${test.args.testIdentifier}`,
           baseContext,
         );
+
         page = await this.pageObjects.checkoutPage.closePage(browser, 1);
         this.pageObjects = await init();
+
         const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.orderSettingsPage.pageTitle);
       });
