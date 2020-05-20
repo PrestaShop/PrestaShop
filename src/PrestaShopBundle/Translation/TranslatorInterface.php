@@ -26,10 +26,11 @@
 
 namespace PrestaShopBundle\Translation;
 
+use Symfony\Component\Translation\TranslatorInterface as SymfonyTranslatorInterface;
 /**
  * Interface for PrestaShop translators
  */
-interface TranslatorInterface extends \Symfony\Component\Translation\TranslatorInterface
+interface TranslatorInterface extends SymfonyTranslatorInterface
 {
     /**
      * Performs a reverse search in the catalogue and returns the translation key if found.
