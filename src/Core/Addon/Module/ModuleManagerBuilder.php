@@ -159,7 +159,7 @@ class ModuleManagerBuilder
         $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
 
         $config = $yamlParser->parse($this->getConfigDir() . '/config.yml');
-        $pradmin-dev/themes/default/js/bundle/product/form.jsestashopAddonsConfig =
+        $prestashopAddonsConfig =
             $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
         $clientConfig = $config['csa_guzzle']['clients']['addons_api']['config'];
