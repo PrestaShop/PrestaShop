@@ -7,7 +7,6 @@ const {Statuses} = require('@data/demo/orderStatuses');
 const {Invoices} = require('@data/demo/invoices');
 const files = require('@utils/files');
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const InvoicesPage = require('@pages/BO/orders/invoices/index');
@@ -24,7 +23,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     invoicesPage: new InvoicesPage(page),
@@ -59,17 +57,21 @@ describe('Generate PDF file by status', async () => {
     tests.forEach((orderToEdit, index) => {
       it('should go to the orders page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index + 1}`, baseContext);
-        await this.pageObjects.boBasePage.goToSubMenu(
-          this.pageObjects.boBasePage.ordersParentLink,
-          this.pageObjects.boBasePage.ordersLink,
+
+        await this.pageObjects.dashboardPage.goToSubMenu(
+          this.pageObjects.dashboardPage.ordersParentLink,
+          this.pageObjects.dashboardPage.ordersLink,
         );
-        await this.pageObjects.boBasePage.closeSfToolBar();
+
+        await this.pageObjects.ordersPage.closeSfToolBar();
+
         const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
       });
 
       it(`should go to the order page number '${orderToEdit.args.orderRow}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index + 1}`, baseContext);
+
         await this.pageObjects.ordersPage.goToOrder(orderToEdit.args.orderRow);
         const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
@@ -77,6 +79,7 @@ describe('Generate PDF file by status', async () => {
 
       it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index + 1}`, baseContext);
+
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(orderToEdit.args.status);
         await expect(result).to.equal(orderToEdit.args.status);
       });
@@ -86,39 +89,58 @@ describe('Generate PDF file by status', async () => {
   describe('Generate invoice by status', async () => {
     it('should go to invoices page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage', baseContext);
-      await this.pageObjects.boBasePage.goToSubMenu(
-        this.pageObjects.boBasePage.ordersParentLink,
-        this.pageObjects.boBasePage.invoicesLink,
+
+      await this.pageObjects.viewOrderPage.goToSubMenu(
+        this.pageObjects.viewOrderPage.ordersParentLink,
+        this.pageObjects.viewOrderPage.invoicesLink,
       );
-      await this.pageObjects.boBasePage.closeSfToolBar();
+
       const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);
     });
 
     it('should check the error message when we don\'t select a status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoSelectedStatusMessageError', baseContext);
+
+      // Generate PDF
       await this.pageObjects.invoicesPage.generatePDFByStatus();
+
+      // Get error message displayed
       const textMessage = await this.pageObjects.invoicesPage.getTextContent(
         this.pageObjects.invoicesPage.alertTextBlock,
       );
+
       await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenNotSelectStatus);
     });
 
     it('should check the error message when there is no invoice in the status selected', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceMessageError', baseContext);
+
+      // Choose one status
       await this.pageObjects.invoicesPage.chooseStatus(Statuses.canceled.status);
+
+      // Generate PDF
       await this.pageObjects.invoicesPage.generatePDFByStatus();
+
+      // Get error message
       const textMessage = await this.pageObjects.invoicesPage.getTextContent(
         this.pageObjects.invoicesPage.alertTextBlock,
       );
+
       await expect(textMessage).to.equal(this.pageObjects.invoicesPage.errorMessageWhenGenerateFileByStatus);
     });
 
     it('should choose the statuses, generate the invoice and check the file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceExistence', baseContext);
+
+      // Choose 2 status
       await this.pageObjects.invoicesPage.chooseStatus(Statuses.paymentAccepted.status);
       await this.pageObjects.invoicesPage.chooseStatus(Statuses.shipped.status);
+
+      // Generate PDF
       await this.pageObjects.invoicesPage.generatePDFByStatus();
+
+      // Check that file exist
       const exist = await files.doesFileExist(Invoices.moreThanAnInvoice.fileName);
       await expect(exist).to.be.true;
     });

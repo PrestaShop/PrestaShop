@@ -501,6 +501,13 @@ class CartPresenter implements PresenterInterface
     {
         $shippingDisplayValue = '';
 
+        // if one of the applied cart rules have free shipping, then the shipping display value is 'Free'
+        foreach ($cart->getCartRules() as $rule) {
+            if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
+                return $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+            }
+        }
+
         if ($shippingCost != 0) {
             $shippingDisplayValue = $this->priceFormatter->format($shippingCost);
         } else {
@@ -611,7 +618,7 @@ class CartPresenter implements PresenterInterface
             } else {
                 // In all other cases, the value displayed should be the total of applied reductions for the current voucher
                 $totalCartVoucherReduction = $shippingReduction + $amountReduction + $percentageReduction;
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
+                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
             }
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
