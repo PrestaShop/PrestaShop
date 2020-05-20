@@ -18,12 +18,11 @@ const AddPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_design_pages_categoryPagination';
+const baseContext = 'functional_BO_design_pages_paginationAndSortCategories';
 
 let browser;
 let page;
 let numberOfCategories = 0;
-const createCategoryData = new CategoryPageFaker();
 
 // Init objects needed
 const init = async function () {
@@ -35,12 +34,13 @@ const init = async function () {
   };
 };
 
-describe('Category pagination', async () => {
+describe('Pagination and sort categories', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
 
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
 
@@ -52,7 +52,7 @@ describe('Category pagination', async () => {
   loginCommon.loginBO();
 
   // Go to Design>Pages page
-  it('should go to "Design > Pages" page', async function () {
+  it('should go to \'Design > Pages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
 
     await this.pageObjects.dashboardPage.goToSubMenu(
@@ -78,6 +78,8 @@ describe('Category pagination', async () => {
 
   tests.forEach((test, index) => {
     describe(`Create category n°${index + 1} in BO`, async () => {
+      const createCategoryData = new CategoryPageFaker({name: `todelete${index}`});
+
       it('should go to add new page category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewPageCategoryPage${index}`, baseContext);
 
@@ -145,24 +147,78 @@ describe('Category pagination', async () => {
     });
   });
 
-  // 3 : Delete the 11 categories with bulk actions
+  // 3 : Sort categories table
+  describe('Sort categories', async () => {
+    const sortTests = [
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdDesc', sortBy: 'id_cms_category', sortDirection: 'desc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByPositionDesc', sortBy: 'position', sortDirection: 'desc', isFloat: true,
+          },
+      },
+      {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortBNameDesc', sortBy: 'name', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByDescriptionAsc', sortBy: 'description', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByDescriptionDesc', sortBy: 'description', sortDirection: 'desc'}},
+      {
+        args:
+          {
+            testIdentifier: 'sortByPositionAsc', sortBy: 'position', sortDirection: 'asc', isFloat: true,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'sortByIdAsc', sortBy: 'id_cms_category', sortDirection: 'asc', isFloat: true,
+          },
+      },
+    ];
+
+    sortTests.forEach((test) => {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await this.pageObjects.pagesPage.getAllRowsColumnContentTableCmsPageCategory(
+          test.args.sortBy,
+        );
+        await this.pageObjects.pagesPage.sortTableCmsPageCategory(test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await this.pageObjects.pagesPage.getAllRowsColumnContentTableCmsPageCategory(
+          test.args.sortBy,
+        );
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await this.pageObjects.pagesPage.sortArray(nonSortedTable, test.args.isFloat);
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
+  // 4 : Delete the 11 categories with bulk actions
   describe('Delete categories with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-      await this.pageObjects.pagesPage.filterTable(
-        'cms_page_category',
-        'input',
-        'name',
-        createCategoryData.name,
-      );
+      await this.pageObjects.pagesPage.filterTable('cms_page_category', 'input', 'name', 'todelete');
 
       const textResult = await this.pageObjects.pagesPage.getTextColumnFromTableCmsPageCategory(
         1,
         'name',
       );
-
-      await expect(textResult).to.contains(createCategoryData.name);
+      await expect(textResult).to.contains('todelete');
     });
 
     it('should delete categories with Bulk Actions and check result', async function () {
