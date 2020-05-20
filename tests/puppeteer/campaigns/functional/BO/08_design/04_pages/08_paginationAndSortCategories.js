@@ -33,7 +33,12 @@ const init = async function () {
     addPageCategoryPage: new AddPageCategoryPage(page),
   };
 };
-
+/*
+Create 11 categories
+Paginate between pages
+Sort categories table by id, name, description, position
+Delete pages with bulk actions
+ */
 describe('Pagination and sort categories', async () => {
   // before and after functions
   before(async function () {
