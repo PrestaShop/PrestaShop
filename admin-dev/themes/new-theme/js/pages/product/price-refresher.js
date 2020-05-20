@@ -40,22 +40,8 @@ export default class PriceRefresher {
   }
 
   init() {
-    this.initState();
     this.listenToDomChanges();
     this.listenToStateChanges();
-  }
-
-  initState() {
-    const priceTaxExcluded = document.querySelector(this.taxExcludedInputs[0]).value;
-    const priceTaxIncluded = document.querySelector(this.taxIncludedInputs[0]).value;
-    const taxRuleSelection = document.querySelector(this.taxRuleInputs[0]);
-
-    this.store.commit(types.SET_PRICE_TAX_INCLUDED, priceTaxIncluded);
-    this.store.commit(types.SET_PRICE_TAX_EXCLUDED, priceTaxExcluded);
-    this.store.commit(types.SET_TAX_RULE, {
-      id: taxRuleSelection.value,
-      rate: taxRuleSelection.options[taxRuleSelection.selectedIndex].dataset.taxRate,
-    });
   }
 
   listenToDomChanges() {
