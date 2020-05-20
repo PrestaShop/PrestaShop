@@ -1,14 +1,17 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BrandsPage = require('@pages/BO/catalog/brands');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_sortBrandsAndAddresses';
@@ -20,7 +23,6 @@ let numberOfBrands = 0;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     brandsPage: new BrandsPage(page),
@@ -32,27 +34,34 @@ describe('Sort brands and addresses', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Login into BO
   loginCommon.loginBO();
 
   it('should go to brands page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.brandsAndSuppliersLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.brandsAndSuppliersLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.brandsPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
   });
 
   it('should reset all filters and get Number of brands in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
     numberOfBrands = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
@@ -84,19 +93,26 @@ describe('Sort brands and addresses', async () => {
           },
       },
     ];
+
     brandsTests.forEach((test) => {
       it(
         `should sort Brands by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`,
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
           let nonSortedTable = await this.pageObjects.brandsPage.getAllRowsColumnContentBrandsTable(test.args.sortBy);
+
           await this.pageObjects.brandsPage.sortTableBrands(test.args.sortBy, test.args.sortDirection);
+
           let sortedTable = await this.pageObjects.brandsPage.getAllRowsColumnContentBrandsTable(test.args.sortBy);
+
           if (test.args.isFloat) {
             nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
             sortedTable = await sortedTable.map(text => parseFloat(text));
           }
+
           const expectedResult = await this.pageObjects.brandsPage.sortArray(nonSortedTable, test.args.isFloat);
+
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
           } else {
@@ -194,21 +210,28 @@ describe('Sort brands and addresses', async () => {
           },
       },
     ];
+
     brandsTests.forEach((test) => {
       it(
         `should sort Addresses by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`,
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
           let nonSortedTable = await this.pageObjects.brandsPage.getAllRowsColumnContentAddressesTable(
             test.args.sortBy,
           );
+
           await this.pageObjects.brandsPage.sortTableAddresses(test.args.sortBy, test.args.sortDirection);
+
           let sortedTable = await this.pageObjects.brandsPage.getAllRowsColumnContentAddressesTable(test.args.sortBy);
+
           if (test.args.isFloat) {
             nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
             sortedTable = await sortedTable.map(text => parseFloat(text));
           }
+
           const expectedResult = await this.pageObjects.brandsPage.sortArray(nonSortedTable, test.args.isFloat);
+
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
           } else {

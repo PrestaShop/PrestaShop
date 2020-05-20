@@ -189,11 +189,10 @@ export default class OrderProductRenderer {
 
     const startRow = (numPage - 1) * numRowsPerPage + 1;
     const endRow = numPage * numRowsPerPage;
-    $(OrderViewPageMap.productsTable)
-      .find(
-        `tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`,
-      )
-      .removeClass('d-none');
+
+    for (let i = startRow - 1; i < Math.min(endRow, $rows.length); i += 1) {
+      $($rows[i]).removeClass('d-none');
+    }
 
     $customizationRows.each(function () {
       if (

@@ -1,5 +1,7 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags add-payment-to-order
 @reset-database-before-feature
+@reboot-kernel-before-feature
+@add-payment-to-order
 Feature: Add payment to Order from Back Office (BO)
   In order to manage orders for FO customers
   As a BO user

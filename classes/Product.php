@@ -3717,7 +3717,14 @@ class ProductCore extends ObjectModel
             $price = (float) $specific_price['price'];
         }
         // convert only if the specific price is in the default currency (id_currency = 0)
-        if (!$specific_price || !($specific_price['price'] >= 0 && $specific_price['id_currency'])) {
+        if (
+            !$specific_price ||
+            !(
+                $specific_price['price'] >= 0 &&
+                $specific_price['id_currency'] &&
+                $id_currency !== $specific_price['id_currency']
+            )
+        ) {
             $price = Tools::convertPrice($price, $id_currency);
 
             if (isset($specific_price['price']) && $specific_price['price'] >= 0) {
