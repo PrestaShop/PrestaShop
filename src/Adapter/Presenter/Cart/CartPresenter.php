@@ -109,22 +109,26 @@ class CartPresenter implements PresenterInterface
         }
         $rawProduct['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
             $rawProduct['id_product'],
-            $rawProduct['id_product_attribute']
+            $rawProduct['id_product_attribute'],
+            $rawProduct['id_customization']
         );
 
         $rawProduct['up_quantity_url'] = $this->link->getUpQuantityCartURL(
             $rawProduct['id_product'],
-            $rawProduct['id_product_attribute']
+            $rawProduct['id_product_attribute'],
+            $rawProduct['id_customization']
         );
 
         $rawProduct['down_quantity_url'] = $this->link->getDownQuantityCartURL(
             $rawProduct['id_product'],
-            $rawProduct['id_product_attribute']
+            $rawProduct['id_product_attribute'],
+            $rawProduct['id_customization']
         );
 
         $rawProduct['update_quantity_url'] = $this->link->getUpdateQuantityCartURL(
             $rawProduct['id_product'],
-            $rawProduct['id_product_attribute']
+            $rawProduct['id_product_attribute'],
+            $rawProduct['id_customization']
         );
 
         $resetFields = [
