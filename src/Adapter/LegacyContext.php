@@ -224,6 +224,8 @@ class LegacyContext
         $metaTitle = '',
         $useRegularH1Structure = true
     ) {
+        $previousContextController = $this->getContext()->controller;
+
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
             $title,
@@ -237,6 +239,9 @@ class LegacyContext
             $metaTitle,
             $useRegularH1Structure
         );
+
+        $this->preserveCssAndJSAssets($previousContextController, $originCtrl);
+
         $originCtrl->run();
 
         return $originCtrl->outPutHtml;
@@ -342,5 +347,28 @@ class LegacyContext
     public function getAvailableLanguages()
     {
         return $this->getLanguages(false);
+    }
+
+    /**
+     * This will transfer registered CSS and JS assets
+     * from previous context controller instance
+     * to AdminLegacyLayoutController
+     *
+     * @param Controller $previousContextController
+     * @param AdminLegacyLayoutControllerCore $originCtrl
+     */
+    private function preserveCssAndJSAssets($previousContextController, AdminLegacyLayoutControllerCore $originCtrl): void
+    {
+        if (!empty($previousContextController->js_files)) {
+            array_map(function ($jsAsset) use ($originCtrl) {
+                $originCtrl->addJS($jsAsset);
+            }, $previousContextController->js_files);
+        }
+
+        if (!empty($previousContextController->css_files)) {
+            array_map(function ($cssAsset) use ($originCtrl) {
+                $originCtrl->addCss($cssAsset);
+            }, $previousContextController->css_files);
+        }
     }
 }
