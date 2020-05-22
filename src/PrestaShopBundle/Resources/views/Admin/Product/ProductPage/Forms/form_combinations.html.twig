@@ -35,7 +35,7 @@
     <div id="attributes-generator">
       <div class="alert alert-info" role="alert">
         <p class="alert-text">
-          {{ 'To add combinations, you first need to create proper attributes and values in [1]Attributes & Features[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "Generate": it will automatically create all the combinations for you!'|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'})|raw }}
+          {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "%generate_label%": it will automatically create all the combinations for you!'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '%generate_label%': 'Generate'|trans({}, 'Admin.Actions')}, 'Admin.Catalog.Help')|replace({'[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'})|raw }}
         </p>
       </div>
       <div class="row">

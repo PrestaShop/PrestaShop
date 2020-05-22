@@ -33,10 +33,10 @@
                 <div class="alert alert-info" role="alert">
                     <p class="alert-text">{{ 'How do I create a new SQL query?'|trans({}, 'Admin.Advparameters.Help') }}</p>
                     <ul>
-                        <li>{{ 'Click "Add New".'|trans({}, 'Admin.Advparameters.Help') }}</li>
-                        <li>{{ 'Fill in the fields and click "Save".'|trans({}, 'Admin.Advparameters.Help') }}</li>
-                        <li>{{ 'You can then view the query results by clicking on the Edit action in the dropdown menu'|trans({}, 'Admin.Advparameters.Help') }}</li>
-                        <li>{{ 'You can also export the query results as a CSV file by clicking on the Export button'|trans({}, 'Admin.Advparameters.Help') }}</li>
+                        <li>{{ 'Click "%add_new_label%".'|trans({'%add_new_label%': 'Add new SQL query'|trans({}, 'Admin.Advparameters.Feature')}, 'Admin.Advparameters.Help') }}</li>
+                        <li>{{ 'Fill in the fields and click "%save_label%".'|trans({'%save_label%': 'Save'|trans({}, 'Admin.Actions')}, 'Admin.Advparameters.Help') }}</li>
+                        <li>{{ 'You can then view the query results by clicking on the "%view_label%" action in the dropdown menu'|trans({'%view_label%': 'View'|trans({}, 'Admin.Global')}, 'Admin.Advparameters.Help') }}</li>
+                        <li>{{ 'You can also export the query results as a CSV file by clicking on the "%export_label%" button'|trans({'%export_label%': 'Export'|trans({}, 'Admin.Actions')}, 'Admin.Advparameters.Help') }}</li>
                     </ul>
                 </div>
             </div>
