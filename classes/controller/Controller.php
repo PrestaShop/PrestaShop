@@ -404,8 +404,6 @@ abstract class ControllerCore
      * @param string $css_media_type
      * @param int|null $offset
      * @param bool $check_path
-     *
-     * @return true
      */
     public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
     {
