@@ -46,7 +46,6 @@ describe('Create footer link widget and check it in FO', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
-    console.log(LinkWidgets);
     this.pageObjects = await init();
   });
 
