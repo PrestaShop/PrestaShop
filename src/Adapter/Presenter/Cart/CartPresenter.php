@@ -593,7 +593,6 @@ class CartPresenter implements PresenterInterface
             } else {
                 $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
             }
-          
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
