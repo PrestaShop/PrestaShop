@@ -22,7 +22,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orderSettings_termsOfService';
+const baseContext = 'functional_BO_shopParameters_orderSettings_termsOfService';
 
 let browser;
 let page;
