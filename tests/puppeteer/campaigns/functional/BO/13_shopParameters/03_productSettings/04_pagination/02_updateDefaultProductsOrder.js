@@ -1,18 +1,21 @@
 require('module-alias/register');
-const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_shopParameters_productSettings_pagination_updateDefaultProductsOrder';
-// Using chai
 const {expect} = require('chai');
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const ProductSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const HomePageFO = require('@pages/FO/home');
 const CategoryPageFO = require('@pages/FO/category');
+
+// Import test context
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_modules_shopParameters_productSettings_pagination_updateDefaultProductsOrder';
 
 let browser;
 let page;
@@ -20,7 +23,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     productSettingsPage: new ProductSettingsPage(page),
@@ -39,8 +41,10 @@ describe('Update default product order', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
@@ -50,11 +54,14 @@ describe('Update default product order', async () => {
 
   it('should go to \'Shop parameters > Product Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductSettingsPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.shopParametersParentLink,
-      this.pageObjects.boBasePage.productSettingsLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.shopParametersParentLink,
+      this.pageObjects.dashboardPage.productSettingsLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.productSettingsPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
   });
@@ -101,29 +108,36 @@ describe('Update default product order', async () => {
         },
     },
   ];
+
   tests.forEach((test, index) => {
     describe(`Set products default order to: '${test.args.orderBy} - ${test.args.orderMethod}'`, async () => {
       it(`should set products default order to: '${test.args.orderBy} - ${test.args.orderMethod}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateProductsOrder${index + 1}`, baseContext);
+
         const result = await this.pageObjects.productSettingsPage.setDefaultProductsOrder(
           test.args.orderBy,
           test.args.orderMethod,
         );
+
         await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
       });
 
       it('should view my shop', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index + 1}`, baseContext);
+
         page = await this.pageObjects.productSettingsPage.viewMyShop();
         this.pageObjects = await init();
+
         const isHomePage = await this.pageObjects.homePageFO.isHomePage();
         await expect(isHomePage, 'Home page was not opened').to.be.true;
       });
 
       it('should go to all products page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToHomeCategory${index + 1}`, baseContext);
+
         await this.pageObjects.homePageFO.changeLanguage('en');
         await this.pageObjects.homePageFO.goToAllProductsPage();
+
         const isCategoryPage = await this.pageObjects.categoryPageFO.isCategoryPage();
         await expect(isCategoryPage, 'Home category page was not opened');
       });
@@ -132,6 +146,7 @@ describe('Update default product order', async () => {
         `should check that products are ordered by: '${test.args.orderBy} - ${test.args.orderMethod}'`,
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductsOrder${index + 1}`, baseContext);
+
           const defaultProductOrder = await this.pageObjects.categoryPageFO.getSortByValue();
           await expect(defaultProductOrder, 'Default products order is incorrect').to.contains(test.args.textOnSelect);
         },
@@ -139,8 +154,10 @@ describe('Update default product order', async () => {
 
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index + 1}`, baseContext);
+
         page = await this.pageObjects.homePageFO.closePage(browser, 1);
         this.pageObjects = await init();
+
         const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
       });
