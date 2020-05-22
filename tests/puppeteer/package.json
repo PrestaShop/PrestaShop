@@ -17,7 +17,8 @@
     "@pages": "pages",
     "@commonTests": "campaigns/commonTests",
     "@data": "campaigns/data",
-    "@utils": "campaigns/utils"
+    "@utils": "campaigns/utils",
+    "@tools": "campaigns/tools"
   },
   "repository": {
     "type": "git",
