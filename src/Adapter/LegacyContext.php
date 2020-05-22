@@ -214,7 +214,10 @@ class LegacyContext
         $metaTitle = '',
         $useRegularH1Structure = true
     ) {
-        $previousContextController = $this->getContext()->controller;
+        $previousContextController = null;
+        if (null !== $this->getContext()->controller) {
+            $previousContextController = $this->getContext()->controller;
+        }
 
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
@@ -230,7 +233,9 @@ class LegacyContext
             $useRegularH1Structure
         );
 
-        $this->preserveCssAndJSAssets($previousContextController, $originCtrl);
+        if (null !== $previousContextController) {
+            $this->preserveCssAndJSAssets($previousContextController, $originCtrl);
+        }
 
         $originCtrl->run();
 
