@@ -19,7 +19,7 @@ const SeoPageFaker = require('@data/faker/seoPage');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParams_TrafficAndSeo_seoAndUrls_CRUDSeoPage';
+const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_CRUDSeoPage';
 
 let browser;
 let page;

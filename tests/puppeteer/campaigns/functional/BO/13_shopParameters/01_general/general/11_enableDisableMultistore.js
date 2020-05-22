@@ -14,7 +14,7 @@ const GeneralPage = require('@pages/BO/shopParameters/general');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParams_general_general_enableDisableMultiStore';
+const baseContext = 'functional_BO_shopParameters_general_general_enableDisableMultiStore';
 
 let browser;
 let page;

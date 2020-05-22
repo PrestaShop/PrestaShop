@@ -17,7 +17,7 @@ const LoginFOPage = require('@pages/FO/login');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerSettings_customers_askForBirthDate';
+const baseContext = 'functional_BO_shopParameters_customerSettings_customers_askForBirthDate';
 
 let browser;
 let page;

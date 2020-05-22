@@ -19,7 +19,7 @@ const ProductFaker = require('@data/faker/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_forceUpdateFriendlyURL';
+const baseContext = 'functional_BO_shopParameters_productSettings_forceUpdateFriendlyURL';
 
 let browser;
 let page;

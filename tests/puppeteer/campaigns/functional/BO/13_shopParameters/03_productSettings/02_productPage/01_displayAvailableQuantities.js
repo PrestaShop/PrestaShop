@@ -16,7 +16,7 @@ const ProductPage = require('@pages/FO/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_displayAvailableQuantitiesOnProductPage';
+const baseContext = 'functional_BO_shopParameters_productSettings_displayAvailableQuantities';
 
 let browser;
 let page;

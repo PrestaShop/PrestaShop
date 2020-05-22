@@ -14,7 +14,7 @@ const FOHomePage = require('@pages/FO/home');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_productsStock_enableDeliveryTimeInStockProducts';
+const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_enableDeliveryTimeInStockProducts';
 
 let browser;
 let page;

@@ -19,7 +19,7 @@ const CheckoutPage = require('@pages/FO/checkout');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orderSettings_enableGuestCheckout';
+const baseContext = 'functional_BO_shopParameters_orderSettings_enableGuestCheckout';
 
 let browser;
 let page;

@@ -19,7 +19,7 @@ const ProductFaker = require('@data/faker/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_shopParameters_productSettings_maxSizeShortDescription';
+const baseContext = 'functional_BO_shopParameters_productSettings_maxSizeShortDescription';
 
 let browser;
 let page;

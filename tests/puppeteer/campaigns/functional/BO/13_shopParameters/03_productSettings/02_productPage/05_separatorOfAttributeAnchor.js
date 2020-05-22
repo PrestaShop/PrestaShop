@@ -20,7 +20,7 @@ const {Products} = require('@data/demo/products');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_separatorOfAttributeAnchor';
+const baseContext = 'functional_BO_shopParameters_productSettings_separatorOfAttributeAnchor';
 
 let browser;
 let page;

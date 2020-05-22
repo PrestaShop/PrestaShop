@@ -22,7 +22,7 @@ const CustomerFaker = require('@data/faker/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerSettings_customers_sendAnEmailAfterRegistration';
+const baseContext = 'functional_BO_shopParameters_customerSettings_customers_sendAnEmailAfterRegistration';
 
 let browser;
 let page;

@@ -15,7 +15,7 @@ const CategoryPageFO = require('@pages/FO/category');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_modules_shopParameters_productSettings_pagination_updateNumberOfProductsPerPage';
+const baseContext = 'functional_BO_shopParameters_productSettings_pagination_updateNumberOfProductsPerPage';
 
 
 let browser;

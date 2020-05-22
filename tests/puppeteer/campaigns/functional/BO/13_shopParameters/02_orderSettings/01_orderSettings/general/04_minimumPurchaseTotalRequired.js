@@ -19,7 +19,7 @@ const CartPage = require('@pages/FO/cart');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orderSettings_minimumPurchaseTotalRequired';
+const baseContext = 'functional_BO_shopParameters_orderSettings_minimumPurchaseTotalRequired';
 
 let browser;
 let page;

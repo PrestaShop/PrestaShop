@@ -19,7 +19,7 @@ const ProductData = require('@data/FO/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParams_productSetting_catalogMode';
+const baseContext = 'functional_BO_shopParameters_productSetting_catalogMode';
 
 let browser;
 let page;

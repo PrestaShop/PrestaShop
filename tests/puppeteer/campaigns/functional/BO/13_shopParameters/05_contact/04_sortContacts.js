@@ -14,7 +14,7 @@ const ContactsPage = require('@pages/BO/shopParameters/contact/index');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParams_contact_sortContacts';
+const baseContext = 'functional_BO_shopParameters_contact_sortContacts';
 
 let browser;
 let page;

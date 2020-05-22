@@ -21,7 +21,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orderSettings_disableReorderingOption';
+const baseContext = 'functional_BO_shopParameters_orderSettings_disableReorderingOption';
 
 let browser;
 let page;

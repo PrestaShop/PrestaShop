@@ -12,7 +12,7 @@ const HomePage = require('@pages/FO/home');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_newDaysNumber';
+const baseContext = 'functional_BO_shopParameters_productSettings_newDaysNumber';
 
 let browser;
 let page;

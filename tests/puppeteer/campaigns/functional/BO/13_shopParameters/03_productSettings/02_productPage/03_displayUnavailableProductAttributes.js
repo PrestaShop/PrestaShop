@@ -19,7 +19,7 @@ const SearchResultsPage = require('@pages/FO/searchResults');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_displayUnavailableProductAttributes';
+const baseContext = 'functional_BO_shopParameters_productSettings_displayUnavailableProductAttributes';
 
 // Import data
 const ProductFaker = require('@data/faker/product');

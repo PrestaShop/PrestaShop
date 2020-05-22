@@ -22,7 +22,7 @@ const ProductFaker = require('@data/faker/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_displayRemainingQuantitiesOnProductPage';
+const baseContext = 'functional_BO_shopParameters_productSettings_displayRemainingQuantities';
 
 let browser;
 let page;

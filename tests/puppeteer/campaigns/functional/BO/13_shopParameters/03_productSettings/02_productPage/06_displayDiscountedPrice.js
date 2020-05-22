@@ -22,7 +22,7 @@ const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 // import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_displayDiscountedPrice';
+const baseContext = 'functional_BO_shopParameters_productSettings_displayDiscountedPrice';
 
 let browser;
 let page;

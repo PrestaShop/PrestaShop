@@ -24,7 +24,7 @@ const {DefaultFrTax} = require('@data/demo/tax');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orderSettings_giftOptions';
+const baseContext = 'functional_BO_shopParameters_orderSettings_giftOptions';
 
 let browser;
 let page;

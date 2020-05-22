@@ -21,7 +21,7 @@ const ProductFaker = require('@data/faker/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_productsStock_allowOrderingOutOfStock';
+const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_allowOrderingOutOfStock';
 
 let browser;
 let page;

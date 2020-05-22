@@ -17,7 +17,7 @@ const {Contacts} = require('@data/demo/contacts');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParams_contact_filterContacts';
+const baseContext = 'functional_BO_shopParameters_contact_filterContacts';
 
 let browser;
 let page;

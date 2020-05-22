@@ -17,7 +17,7 @@ const SiteMapPage = require('@pages/FO/siteMap');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParams_general_general_enableDisableDisplayBrands';
+const baseContext = 'functional_BO_shopParameters_general_general_enableDisableDisplayBrands';
 
 let browser;
 let page;

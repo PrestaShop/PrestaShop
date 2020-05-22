@@ -20,7 +20,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerSettings_customer_redisplayCartAtLogin';
+const baseContext = 'functional_BO_shopParameters_customerSettings_customer_redisplayCartAtLogin';
 
 let browser;
 let page;

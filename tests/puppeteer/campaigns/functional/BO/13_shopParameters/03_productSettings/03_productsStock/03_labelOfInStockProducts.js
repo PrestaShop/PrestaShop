@@ -16,7 +16,7 @@ const HomePage = require('@pages/FO/home');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_productSettings_productsStock_labelOfInStockProducts';
+const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_labelOfInStockProducts';
 
 let browser;
 let page;
