@@ -81,7 +81,6 @@ describe('Enable re-display cart at login', async () => {
 
   tests.forEach((test, index) => {
     it(`should ${test.args.action} re-display cart at login`, async function () {
-
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -144,8 +143,7 @@ describe('Enable re-display cart at login', async () => {
 
       if (test.args.enable) {
         await expect(notificationsNumber).to.be.above(0);
-      }
-      else {
+      } else {
         await expect(notificationsNumber).to.be.equal(0);
       }
 
