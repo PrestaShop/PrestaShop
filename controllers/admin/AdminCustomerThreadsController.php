@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -640,7 +640,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $product = new Product((int) $mess['id_product'], false, $this->context->language->id);
                 if (Validate::isLoadedObject($product)) {
                     $messages[$key]['product_name'] = $product->name;
-                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts') . '&updateproduct&id_product=' . (int) $product->id;
+                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts', true, ['id_product' => (int) $product->id, 'updateproduct' => '1']);
                 }
             }
         }
@@ -775,14 +775,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $timeline = [];
         foreach ($messages as $message) {
             $product = new Product((int) $message['id_product'], false, $this->context->language->id);
-            $link_product = $this->context->link->getAdminLink('AdminOrders') . '&vieworder&id_order=' . (int) $product->id;
 
             $content = '';
             if (!$message['private']) {
-                $content .= $this->trans('Message to: ', [], 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br/>';
+                $content .= $this->trans('Message to:', [], 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br/>';
             }
             if (Validate::isLoadedObject($product)) {
-                $content .= '<br/>' . $this->trans('Product: ', [], 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br/><br/>';
+                $content .= '<br/>' . $this->trans('Product:', [], 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br/><br/>';
             }
             $content .= Tools::safeOutput($message['message']);
 
@@ -799,7 +798,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if (Validate::isLoadedObject($order)) {
             $order_history = $order->getHistory($this->context->language->id);
             foreach ($order_history as $history) {
-                $link_order = $this->context->link->getAdminLink('AdminOrders') . '&vieworder&id_order=' . (int) $order->id;
+                $parameters = ['vieworder' => 1, 'id_order' => (int) $order->id];
+                $link_order = $this->context->link->getAdminLink('AdminOrders', true, [], $parameters);
 
                 $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->trans('Order', [], 'Admin.Global') . ' #' . (int) $order->id . '</a><br/><br/>';
 
@@ -980,7 +980,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         // Show the errors.
         if (isset($sync_errors['hasError']) && $sync_errors['hasError']) {
             if (isset($sync_errors['errors'])) {
-                foreach ($sync_errors['errors'] as &$error) {
+                foreach ($sync_errors['errors'] as $error) {
                     $this->displayWarning($error);
                 }
             }

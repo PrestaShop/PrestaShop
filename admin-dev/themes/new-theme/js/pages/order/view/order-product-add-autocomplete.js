@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,20 +18,20 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderProductAutocomplete {
   constructor(input) {
     this.router = new Router();
     this.input = input;
-    this.results = {};
+    this.results = [];
     this.dropdownMenu = $(OrderViewPageMap.productSearchInputAutocompleteMenu);
     /**
      * Permit to link to each value of dropdown a callback after item is clicked
@@ -44,13 +44,18 @@ export default class OrderProductAutocomplete {
       event.stopImmediatePropagation();
       this.updateResults(this.results);
     });
-    this.input.on('keyup', event => this.search(event.target.value));
+    this.input.on('keyup', (event) => this.search(event.currentTarget.value, $(event.currentTarget).data('currency')));
     $(document).on('click', () => this.dropdownMenu.hide());
   }
 
-  search(search) {
-    $.get(this.router.generate('admin_products_search', {search_phrase: search}))
-      .then(response => this.updateResults(response));
+  search(search, currency) {
+    const params = {search_phrase: search};
+    if (currency) {
+      params.currency_id = currency;
+    }
+
+    $.get(this.router.generate('admin_products_search', params))
+      .then((response) => this.updateResults(response));
   }
 
   updateResults(results) {
@@ -63,9 +68,9 @@ export default class OrderProductAutocomplete {
     this.results = results.products;
     Object.values(this.results).forEach((val) => {
       const link = $(`<a class="dropdown-item" data-id="${val.productId}" href="#">${val.name}</a>`);
-      link.on('click', event => {
+      link.on('click', (event) => {
         event.preventDefault();
-        this.onItemClicked($(event.target).data('id'))
+        this.onItemClicked($(event.target).data('id'));
       });
       this.dropdownMenu.append(link);
     });
@@ -73,7 +78,11 @@ export default class OrderProductAutocomplete {
   }
 
   onItemClicked(id) {
-    this.input.val(this.results[id].name);
-    this.onItemClickedCallback(this.results[id]);
+    const selectedProduct = this.results.filter((product) => product.productId === id);
+
+    if (selectedProduct.length !== 0) {
+      this.input.val(selectedProduct[0].name);
+      this.onItemClickedCallback(selectedProduct[0]);
+    }
   }
 }

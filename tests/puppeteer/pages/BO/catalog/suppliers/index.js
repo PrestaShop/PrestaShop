@@ -17,33 +17,37 @@ module.exports = class Suppliers extends BOBasePage {
     this.gridTable = '#supplier_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsEnableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_enable_selection`;
     this.bulkActionsDisableButton = `${this.gridPanel} #supplier_grid_bulk_action_suppliers_disable_selection`;
     this.bulkActionsDeleteButton = `${this.gridPanel} #supplier_grid_bulk_action_delete_selection`;
-    this.confirmDeleteModal = '#supplier_grid_confirm_modal';
+    this.confirmDeleteModal = '#supplier-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
-    this.filterColumn = `${this.gridTable} #supplier_%FILTERBY`;
+    this.filterColumn = filterBy => `${this.gridTable} #supplier_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='supplier[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='supplier[actions][reset]']`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
-    this.actionsColumn = `${this.tableRow} td.column-actions`;
-    this.viewRowLink = `${this.actionsColumn} a[data-original-title='View']`;
-    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
-    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.editRowLink = `${this.dropdownToggleMenu} a[href*='/edit']`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
+    this.viewRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View']`;
+    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.editRowLink = row => `${this.dropdownToggleMenu(row)} a[href*='/edit']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     // enable column
-    this.enableColumn = this.tableColumn.replace('%COLUMN', 'active');
-    this.enableColumnValidIcon = `${this.enableColumn} i.grid-toggler-icon-valid`;
-    this.enableColumnNotValidIcon = `${this.enableColumn} i.grid-toggler-icon-not-valid`;
+    this.enableColumn = row => this.tableColumn(row, 'active');
+    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    this.enableColumnNotValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-not-valid`;
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -74,7 +78,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<void>}
    */
   async viewSupplier(row = 1) {
-    await this.clickAndWaitForNavigation(this.viewRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.viewRowLink(row));
   }
 
   /**
@@ -84,29 +88,27 @@ module.exports = class Suppliers extends BOBasePage {
    */
   async goToEditSupplierPage(row = 1) {
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
-      ),
+      this.page.click(this.dropdownToggleButton(row)),
+      this.waitForVisibleSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.editRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.editRowLink(row));
   }
 
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteSupplier(row = 1) {
-    this.dialogListener(true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
-      ),
+      this.page.click(this.dropdownToggleButton(row)),
+      this.waitForVisibleSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
+    await Promise.all([
+      this.page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteSuppliers();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -116,10 +118,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<string>}
    */
   async getToggleColumnValue(row = 1) {
-    return this.elementVisible(
-      this.enableColumnValidIcon.replace('%ROW', row),
-      100,
-    );
+    return this.elementVisible(this.enableColumnValidIcon(row), 100);
   }
 
   /**
@@ -129,8 +128,9 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async updateEnabledValue(row = 1, valueWanted = true) {
+    await this.waitForVisibleSelector(this.enableColumn(row), 2000);
     if (await this.getToggleColumnValue(row) !== valueWanted) {
-      await this.clickAndWaitForNavigation(this.enableColumn.replace('%ROW', row));
+      await this.clickAndWaitForNavigation(this.enableColumn(row));
       return true;
     }
     return false;
@@ -143,11 +143,7 @@ module.exports = class Suppliers extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTableSupplier(row, column) {
-    return this.getTextContent(
-      this.tableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.tableColumn(row, column));
   }
 
   /* Reset Methods */
@@ -189,10 +185,10 @@ module.exports = class Suppliers extends BOBasePage {
   async filterTable(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.filterColumn(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(this.filterColumn.replace('%FILTERBY', filterBy), value);
+        await this.selectByVisibleText(this.filterColumn(filterBy), value);
         break;
       default:
       // Do nothing
@@ -220,12 +216,12 @@ module.exports = class Suppliers extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
@@ -240,20 +236,71 @@ module.exports = class Suppliers extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(`${this.confirmDeleteModal}.show`, {visible: true}),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
-    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
+    await this.confirmDeleteSuppliers();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Confirm delete with modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteSuppliers() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  }
+
+  /**
+   * Get alert text message
+   * @returns {Promise<string>|*}
+   */
+  getAlertTextMessage() {
+    return this.getTextContent(this.alertTextBlock);
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      let rowContent = await this.getTextContent(this.tableColumn(i, column));
+      if (column === 'active') {
+        rowContent = await this.getToggleColumnValue(i).toString();
+      }
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

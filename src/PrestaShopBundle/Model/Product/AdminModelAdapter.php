@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -82,6 +82,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $warehouseAdapter;
     /** @var Router */
     private $router;
+
+    /**
+     * @var FloatParser
+     */
+    private $floatParser;
+
     /** @var array */
     private $multiShopKeys = [
         'category_box',
@@ -180,8 +186,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param PackDataProvider $packDataProvider
      * @param ShopContext $shopContext
      * @param TaxRuleDataProvider $taxRuleDataProvider
-     *
-     * @throws \PrestaShopException
+     * @param Router $router
+     * @param FloatParser|null $floatParser
      */
     public function __construct(
         LegacyContext $legacyContext,
@@ -194,7 +200,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         PackDataProvider $packDataProvider,
         ShopContext $shopContext,
         TaxRuleDataProvider $taxRuleDataProvider,
-        Router $router
+        Router $router,
+        FloatParser $floatParser = null
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
@@ -211,6 +218,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
         $this->router = $router;
+        $this->floatParser = $floatParser ?? new FloatParser();
     }
 
     /**
@@ -304,34 +312,32 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['combinations'][$k]['attribute_weight_impact'] = 0;
             $form_data['combinations'][$k]['attribute_unit_impact'] = 0;
 
-            $floatParser = new FloatParser();
-
-            if ($floatParser->fromString($combination['attribute_price']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_price']) > 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_price']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_price']) < 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = -1;
             }
 
-            if ($floatParser->fromString($combination['attribute_weight']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_weight']) > 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_weight']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_weight']) < 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = -1;
             }
 
-            if ($floatParser->fromString($combination['attribute_unity']) > 0) {
+            if ($this->floatParser->fromString($combination['attribute_unity']) > 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = 1;
-            } elseif ($floatParser->fromString($combination['attribute_unity']) < 0) {
+            } elseif ($this->floatParser->fromString($combination['attribute_unity']) < 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
             }
 
             $form_data['combinations'][$k]['attribute_price'] = abs(
-                $floatParser->fromString($combination['attribute_price'])
+                $this->floatParser->fromString($combination['attribute_price'])
             );
             $form_data['combinations'][$k]['attribute_weight'] = abs(
-                $floatParser->fromString($combination['attribute_weight'])
+                $this->floatParser->fromString($combination['attribute_weight'])
             );
             $form_data['combinations'][$k]['attribute_unity'] = abs(
-                $floatParser->fromString($combination['attribute_unity'])
+                $this->floatParser->fromString($combination['attribute_unity'])
             );
         }
 
@@ -526,9 +532,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function mapStep2FormData(Product $product)
     {
+        // ecotax is stored with tax included but form uses the tax excluded value
+        // using a precision of 6 digits as `AdminProductsController::_removeTaxFromEcotax()`
+        // which does the opposite uses 6 digits too
+        $ecotax = $this->tools->round(
+            $product->ecotax * (1 + $this->taxRuleDataProvider->getProductEcotaxRate() / 100),
+            6
+        );
+
         return [
             'price' => $product->price,
-            'ecotax' => $product->ecotax,
+            'ecotax' => $ecotax,
             'id_tax_rules_group' => isset($product->id_tax_rules_group)
                 ? (int) $product->id_tax_rules_group
                 : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),

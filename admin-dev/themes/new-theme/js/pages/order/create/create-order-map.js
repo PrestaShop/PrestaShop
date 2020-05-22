@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,12 +32,15 @@ export default {
 
   orderCreationContainer: '#order-creation-container',
   requiredFieldMark: '.js-required-field-mark',
+  cartInfoWrapper: '#js-cart-info-wrapper',
 
   // selectors related to customer block
   customerSearchInput: '#customer-search-input',
   customerSearchResultsBlock: '.js-customer-search-results',
   customerSearchResultTemplate: '#customer-search-result-template',
   customerSearchEmptyResultWarning: '#customer-search-empty-result-warn',
+  customerSearchLoadingNotice: '#customer-search-loading-notice',
+  customerAddBtn: '#customer-add-btn',
   changeCustomerBtn: '.js-change-customer-btn',
   customerSearchRow: '.js-search-customer-row',
   chooseCustomerBtn: '.js-choose-customer-btn',
@@ -69,8 +72,10 @@ export default {
   orderDateField: '.js-order-date',
   orderProductsField: '.js-order-products',
   orderTotalField: '.js-order-total-paid',
+  orderPaymentMethod: '.js-order-payment-method',
   orderStatusField: '.js-order-status',
   emptyListRowTemplate: '#js-empty-list-row',
+  loadingListRowTemplate: '#js-loading-list-row',
   emptyListRow: '.js-empty-row',
 
   // selectors related to cartRules block
@@ -122,7 +127,7 @@ export default {
   shippingForm: '.js-shipping-form',
   noCarrierBlock: '.js-no-carrier-block',
   deliveryOptionSelect: '#delivery-option-select',
-  totalShippingField: '.js-total-shipping',
+  totalShippingField: '.js-total-shipping-tax-inc',
   freeShippingSwitch: '.js-free-shipping-switch',
 
   // selectors related to cart block
@@ -148,12 +153,14 @@ export default {
   addToCartButton: '#add-product-to-cart-btn',
   productsTable: '#products-table',
   productsTableRowTemplate: '#products-table-row-template',
+  productsTableGiftRowTemplate: '#products-table-gift-row-template',
   listedProductImageField: '.js-product-image',
   listedProductNameField: '.js-product-name',
   listedProductAttrField: '.js-product-attr',
   listedProductReferenceField: '.js-product-ref',
   listedProductUnitPriceInput: '.js-product-unit-input',
   listedProductQtyInput: '.js-product-qty-input',
+  listedProductGiftQty: '.js-product-gift-qty',
   productTotalPriceField: '.js-product-total-price',
   listedProductCustomizedTextTemplate: '#js-table-product-customized-text-template',
   listedProductCustomizedFileTemplate: '#js-table-product-customized-file-template',
@@ -163,6 +170,7 @@ export default {
   productRemoveBtn: '.js-product-remove-btn',
   productTaxWarning: '.js-tax-warning',
   noProductsFoundWarning: '.js-no-products-found',
+  searchingProductsNotice: '.js-searching-products',
   productAddForm: '#js-add-product-form',
   cartErrorAlertBlock: '#js-cart-error-block',
   cartErrorAlertText: '#js-cart-error-block .alert-text',

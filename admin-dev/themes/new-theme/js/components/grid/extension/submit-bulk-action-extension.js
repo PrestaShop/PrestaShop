@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 import ConfirmModal from '@components/modal';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Handles submit of grid actions
@@ -61,10 +61,10 @@ export default class SubmitBulkActionExtension {
     const confirmMessage = $submitBtn.data('confirm-message');
     const confirmTitle = $submitBtn.data('confirmTitle');
 
-    if (confirmMessage !== undefined && 0 < confirmMessage.length) {
+    if (confirmMessage !== undefined && confirmMessage.length > 0) {
       if (confirmTitle !== undefined) {
         this.showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle);
-      } else if (confirm(confirmMessage)) {
+      } else if (window.confirm(confirmMessage)) {
         this.postForm($submitBtn, grid);
       }
     } else {
@@ -84,7 +84,7 @@ export default class SubmitBulkActionExtension {
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
     const modal = new ConfirmModal({
-      id: `${grid.getId()}_grid_confirm_modal`,
+      id: `${grid.getId()}-grid-confirm-modal`,
       confirmTitle,
       confirmMessage,
       confirmButtonLabel,
@@ -100,7 +100,7 @@ export default class SubmitBulkActionExtension {
    * @param {Grid} grid
    */
   postForm($submitBtn, grid) {
-    const $form = $('#' + grid.getId() + '_filter_form');
+    const $form = $(`#${grid.getId()}_filter_form`);
 
     $form.attr('action', $submitBtn.data('form-url'));
     $form.attr('method', $submitBtn.data('form-method'));

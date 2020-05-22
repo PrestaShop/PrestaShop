@@ -1,6 +1,6 @@
 {* TODO: 1.7.0.0: RENAME THIS FILE AT THE NEXT RETROCOMPATIBILITY BREAK *}
 
-<div class="header-toolbar">
+<div class="header-toolbar d-print-none">
   <div class="container-fluid">
 
     {block name=pageBreadcrumb}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,7 @@ class TemplateFinderCore
     private $directories;
     private $extension;
     private $productListEntities = ['category', 'manufacturer', 'supplier'];
-    private $productListSearchEntities = ['search', 'price-drop', 'best-sale'];
+    private $productListSearchEntities = ['search', 'price-drop', 'best-sale', 'prices-drop', 'best-sales', 'new-products'];
     private $productEntities = ['product'];
     private $brandListEntities = ['manufacturers', 'suppliers'];
 

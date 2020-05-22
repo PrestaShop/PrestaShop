@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -686,7 +686,7 @@ abstract class DbCore
      * @param string|DbQuery $sql
      * @param bool $use_cache
      *
-     * @return string|false|null
+     * @return string|false Returns false if no results
      */
     public function getValue($sql, $use_cache = true)
     {
@@ -783,10 +783,6 @@ abstract class DbCore
      */
     public function escape($string, $html_ok = false, $bq_sql = false)
     {
-        if (_PS_MAGIC_QUOTES_GPC_) {
-            $string = stripslashes($string);
-        }
-
         if (!is_numeric($string)) {
             $string = $this->_escape($string);
 
@@ -865,20 +861,6 @@ abstract class DbCore
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
         return call_user_func_array([Db::getClass(), 'checkCreatePrivilege'], [$server, $user, $pwd, $db, $prefix, $engine]);
-    }
-
-    /**
-     * Checks if auto increment value and offset is 1.
-     *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     *
-     * @return bool
-     */
-    public static function checkAutoIncrement($server, $user, $pwd)
-    {
-        return call_user_func_array([Db::getClass(), 'checkAutoIncrement'], [$server, $user, $pwd]);
     }
 
     /**

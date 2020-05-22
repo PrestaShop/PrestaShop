@@ -8,8 +8,15 @@ DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
 REPORT_PATH="${DIR_PATH}/campaigns"
 TESTS_DIR="${DIR_PATH}/prestashop/tests/puppeteer"
+LOG_DIR="/var/log/ps-reports/"
+LOG_PATH="${LOG_DIR}${REPORT_NAME}.log"
 
-exec &> >(tee -a "/var/log/ps-${REPORT_NAME}.log")
+
+if [ ! -d $LOG_DIR ]; then
+  mkdir -p $LOG_DIR
+fi
+
+exec &> >(tee -a $LOG_PATH)
 
 if [ ! -d $DIR_PATH ]; then
   mkdir -p $DIR_PATH
@@ -37,7 +44,7 @@ for command in "sanity-tests" "functional-tests"; do
 
   echo "Wait for docker-compose..."
   sleep 10
-  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T tests /tmp/wait-for-it.sh --timeout=720 --strict prestashop-web:80
+  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T tests /tmp/wait-for-it.sh --timeout=1800 --strict prestashop-web:80
 
   # Running command
   echo "Run ${command}"

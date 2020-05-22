@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class CategoryDeleteRowActionExtension handles submitting of row action
  */
 export default class DeleteCategoryRowActionExtension {
-
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
@@ -45,7 +44,7 @@ export default class DeleteCategoryRowActionExtension {
     grid.getContainer().on('click', '.js-delete-category-row-action', (event) => {
       event.preventDefault();
 
-      const $deleteCategoriesModal = $('#' + grid.getId() + '_grid_delete_categories_modal');
+      const $deleteCategoriesModal = $(`#${grid.getId()}_grid_delete_categories_modal`);
       $deleteCategoriesModal.modal('show');
 
       $deleteCategoriesModal.on('click', '.js-submit-delete-categories', () => {

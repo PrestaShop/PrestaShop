@@ -5,49 +5,49 @@
 
     & + label {
       position: relative;
-      padding-left: 28px;
-      cursor: pointer;
-      line-height: 20px;
       display: inline-block;
+      padding-left: 28px;
+      line-height: 20px;
       color: $gray-dark;
+      cursor: pointer;
 
-      &:before {
-        content: '';
+      &::before {
         position: absolute;
-        left: 0;
         top: 0;
+        left: 0;
         width: 18px;
         height: 18px;
+        content: "";
+        background: #fff;
         border: 2px solid $gray-medium;
-        border-radius: 100%;
-        background: #ffffff;
+        @include border-radius(100%);
       }
 
-      &:after {
-        content: '';
-        width: 10px;
-        height: 10px;
-        background: $primary;
+      &::after {
         position: absolute;
         top: 4px;
         left: 4px;
-        border-radius: 100%;
-        transition: all 0.2s ease;
+        width: 10px;
+        height: 10px;
+        content: "";
+        background: $primary;
+        @include border-radius(100%);
+        @include transition(all .2s ease);
       }
     }
 
     &:checked + label {
-      &:before {
+      &::before {
         border: 2px solid $primary;
       }
 
-      &:after {
+      &::after {
         opacity: 1;
         transform: scale(1);
       }
     }
 
-    &:not(:checked) + label:after {
+    &:not(:checked) + label::after {
       opacity: 0;
       transform: scale(0);
     }

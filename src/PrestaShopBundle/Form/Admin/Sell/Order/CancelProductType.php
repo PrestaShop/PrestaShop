@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,21 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class CancelProductType extends TranslatorAwareType
@@ -38,6 +42,7 @@ class CancelProductType extends TranslatorAwareType
     {
         $products = $options['data']['products'];
         $taxMethod = $options['data']['taxMethod'];
+        $precision = $options['data']['precision'];
 
         foreach ($products as $product) {
             $builder
@@ -52,12 +57,13 @@ class CancelProductType extends TranslatorAwareType
                 )
                 ->add('quantity_' . $product->getOrderDetailId(), NumberType::class, [
                     'attr' => ['max' => $product->getQuantity(), 'class' => 'refund-quantity'],
-                    'label' => $this->trans('Quantity', 'Global', []),
+                    'label' => $this->trans('Quantity', 'Admin.Global', []),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
                     'data' => 0,
+                    'scale' => 0,
                 ])
-                ->add('amount_' . $product->getOrderDetailId(), NumberType::class, [
+                ->add('amount_' . $product->getOrderDetailId(), TextType::class, [
                     'attr' => ['max' => $product->getTotalPrice(), 'class' => 'refund-amount'],
                     'label' => sprintf(
                         '%s (%s)',
@@ -66,14 +72,25 @@ class CancelProductType extends TranslatorAwareType
                     ),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
+                    'data' => (new Number('0'))->toPrecision($precision),
                 ]);
         }
         $builder
-            ->add('shipping', NumberType::class,
+            ->add('shipping_amount', TextType::class,
                 [
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
                     'required' => false,
+                    'data' => (new Number('0'))->toPrecision($precision),
+                ]
+            )
+            ->add('shipping', CheckboxType::class,
+                [
+                    'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
+                    'required' => false,
+                    'attr' => [
+                        'material_design' => true,
+                    ],
                 ]
             )
             ->add('restock', CheckboxType::class,
@@ -85,6 +102,16 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
+            ->add('credit_slip', CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => $this->trans('Generate a credit slip', 'Admin.Orderscustomers.Feature', []),
+                    'attr' => [
+                        'material_design' => true,
+                    ],
+                    'data' => true,
+                ]
+            )
             ->add('voucher', CheckboxType::class,
                 [
                     'required' => false,
@@ -94,8 +121,39 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
+            ->add('voucher_refund_type', ChoiceType::class,
+                [
+                    'required' => true,
+                    'multiple' => false,
+                    'expanded' => true,
+                    'choices' => [
+                        $this->trans('Product(s) price:', 'Admin.Orderscustomers.Feature') => VoucherRefundType::PRODUCT_PRICES_REFUND,
+                        $this->trans('Product(s) price, excluding amount of initial voucher:', 'Admin.Orderscustomers.Feature') => VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
+                    ],
+                    'choice_attr' => function ($choice, $key) {
+                        return [
+                            'voucher-refund-type' => $choice,
+                            'data-default-label' => $key,
+                        ];
+                    },
+                    'data' => VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
+                ]
+            )
+            ->add('cancel', SubmitType::class, [
+                'label' => $this->trans('Cancel', 'Admin.Actions'),
+                'attr' => [
+                    'class' => 'cancel-product-element cancel-product-element-abort btn btn-outline-secondary',
+                ],
+            ])
             ->add('save', SubmitType::class, [
-                'attr' => ['class' => 'partial-refund save btn btn-primary ml-3'],
+                'attr' => [
+                    'class' => 'cancel-product-element save btn btn-primary ml-3',
+                    'formnovalidate' => true,
+                    'data-partial-refund-label' => $this->trans('Partial refund', 'Admin.Orderscustomers.Feature'),
+                    'data-standard-refund-label' => $this->trans('Standard refund', 'Admin.Orderscustomers.Feature'),
+                    'data-return-product-label' => $this->trans('Return products', 'Admin.Orderscustomers.Feature'),
+                    'data-cancel-label' => $this->trans('Cancel products', 'Admin.Orderscustomers.Feature'),
+                ],
             ]);
     }
 }

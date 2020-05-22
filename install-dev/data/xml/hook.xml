@@ -101,6 +101,11 @@
       <title>Very top of pages</title>
       <description>Use this hook for advertisement or modals you want to load first</description>
     </hook>
+    <hook id="displayBanner">
+      <name>displayBanner</name>
+      <title>Very top of pages</title>
+      <description>Use this hook for banners on top of every pages</description>
+    </hook>
     <hook id="displayBeforeBodyClosingTag">
       <name>displayBeforeBodyClosingTag</name>
       <title>Very bottom of pages</title>
@@ -509,6 +514,16 @@
     <hook id="actionModuleInstallAfter">
       <name>actionModuleInstallAfter</name>
       <title>actionModuleInstallAfter</title>
+      <description/>
+    </hook>
+    <hook id="actionModuleUninstallBefore">
+      <name>actionModuleUninstallBefore</name>
+      <title>actionModuleUninstallBefore</title>
+      <description/>
+    </hook>
+    <hook id="actionModuleUninstallAfter">
+      <name>actionModuleUninstallAfter</name>
+      <title>actionModuleUninstallAfter</title>
       <description/>
     </hook>
     <hook id="displayTopColumn">
@@ -2118,17 +2133,27 @@
     <hook id="displayBackOfficeOrderActions">
       <name>displayBackOfficeOrderActions</name>
       <title>Admin Order Actions</title>
-      <description>This hook displays content in the order view page in the side column under the customer view</description>
+      <description>This hook displays content in the order view page after action buttons (or aliased to side column in migrated page)</description>
     </hook>
     <hook id="displayAdminOrderSide">
       <name>displayAdminOrderSide</name>
       <title>Admin Order Side Column</title>
-      <description>This hook displays content in the order view page at the end of the side column</description>
+      <description>This hook displays content in the order view page in the side column under the customer view</description>
+    </hook>
+    <hook id="displayAdminOrderBottom">
+      <name>displayAdminOrderBottom</name>
+      <title>Admin Order Side Column Bottom</title>
+      <description>This hook displays content in the order view page at the bottom of the side column</description>
     </hook>
     <hook id="displayAdminOrderMain">
       <name>displayAdminOrderMain</name>
       <title>Admin Order Main Column</title>
-      <description>This hook displays content in the order view page at the end of the main column</description>
+      <description>This hook displays content in the order view page in the main column under the details view</description>
+    </hook>
+    <hook id="displayAdminOrderMainBottom">
+      <name>displayAdminOrderMainBottom</name>
+      <title>Admin Order Main Column Bottom</title>
+      <description>This hook displays content in the order view page at the bottom of the main column</description>
     </hook>
     <hook id="displayAdminOrderTabLink">
       <name>displayAdminOrderTabLink</name>
@@ -2143,7 +2168,605 @@
     <hook id="actionGetAdminOrderButtons">
       <name>actionGetAdminOrderButtons</name>
       <title>Admin Order Buttons</title>
-      <description>This hook is used to generate the buttons collection on the order view page thanks (see ActionsBarButtonsCollection)</description>
+      <description>This hook is used to generate the buttons collection on the order view page (see ActionsBarButtonsCollection)</description>
+    </hook>
+    <hook id="actionPresentCart">
+      <name>actionPresentCart</name>
+      <title>Cart Presenter</title>
+      <description>This hook is called before a cart is presented</description>
+    </hook>
+    <hook id="actionPresentOrder">
+      <name>actionPresentOrder</name>
+      <title>Order Presenter</title>
+      <description>This hook is called before an order is presented</description>
+    </hook>
+    <hook id="actionPresentOrderReturn">
+      <name>actionPresentOrderReturn</name>
+      <title>Order Return Presenter</title>
+      <description>This hook is called before an order return is presented</description>
+    </hook>
+    <hook id="actionPresentProduct">
+      <name>actionPresentProduct</name>
+      <title>Product Presenter</title>
+      <description>This hook is called before a product is presented</description>
+    </hook>
+    <hook id="actionAdminAdminPreferencesControllerPostProcessBefore">
+      <name>actionAdminAdminPreferencesControllerPostProcessBefore</name>
+      <title>On post-process in Admin Preferences</title>
+      <description>This hook is called on Admin Preferences post-process before processing the form</description>
+    </hook>
+    <hook id="actionFeatureFormBuilderModifier">
+      <name>actionFeatureFormBuilderModifier</name>
+      <title>Modify feature identifiable object form</title>
+      <description>This hook allows to modify feature identifiable object forms content by modifying form builder data
+        or FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionOrderMessageFormBuilderModifier">
+      <name>actionOrderMessageFormBuilderModifier</name>
+      <title>Modify order message identifiable object form</title>
+      <description>This hook allows to modify order message identifiable object forms content by modifying form builder
+        data or FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionCatalogPriceRuleFormBuilderModifier">
+      <name>actionCatalogPriceRuleFormBuilderModifier</name>
+      <title>Modify catalog price rule identifiable object form</title>
+      <description>This hook allows to modify catalog price rule identifiable object forms content by modifying form
+        builder data or FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionAttachmentFormBuilderModifier">
+      <name>actionAttachmentFormBuilderModifier</name>
+      <title>Modify attachment identifiable object form</title>
+      <description>This hook allows to modify attachment identifiable object forms content by modifying form builder
+        data or FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateFeatureFormHandler">
+      <name>actionBeforeUpdateFeatureFormHandler</name>
+      <title>Modify feature identifiable object data before updating it</title>
+      <description>This hook allows to modify feature identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionBeforeUpdateOrderMessageFormHandler">
+      <name>actionBeforeUpdateOrderMessageFormHandler</name>
+      <title>Modify order message identifiable object data before updating it</title>
+      <description>This hook allows to modify order message identifiable object forms data before it was updated
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateCatalogPriceRuleFormHandler">
+      <name>actionBeforeUpdateCatalogPriceRuleFormHandler</name>
+      <title>Modify catalog price rule identifiable object data before updating it</title>
+      <description>This hook allows to modify catalog price rule identifiable object forms data before it was updated
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateAttachmentFormHandler">
+      <name>actionBeforeUpdateAttachmentFormHandler</name>
+      <title>Modify attachment identifiable object data before updating it</title>
+      <description>This hook allows to modify attachment identifiable object forms data before it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateFeatureFormHandler">
+      <name>actionAfterUpdateFeatureFormHandler</name>
+      <title>Modify feature identifiable object data after updating it</title>
+      <description>This hook allows to modify feature identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateOrderMessageFormHandler">
+      <name>actionAfterUpdateOrderMessageFormHandler</name>
+      <title>Modify order message identifiable object data after updating it</title>
+      <description>This hook allows to modify order message identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateCatalogPriceRuleFormHandler">
+      <name>actionAfterUpdateCatalogPriceRuleFormHandler</name>
+      <title>Modify catalog price rule identifiable object data after updating it</title>
+      <description>This hook allows to modify catalog price rule identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateAttachmentFormHandler">
+      <name>actionAfterUpdateAttachmentFormHandler</name>
+      <title>Modify attachment identifiable object data after updating it</title>
+      <description>This hook allows to modify attachment identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionBeforeCreateFeatureFormHandler">
+      <name>actionBeforeCreateFeatureFormHandler</name>
+      <title>Modify feature identifiable object data before creating it</title>
+      <description>This hook allows to modify feature identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionBeforeCreateOrderMessageFormHandler">
+      <name>actionBeforeCreateOrderMessageFormHandler</name>
+      <title>Modify order message identifiable object data before creating it</title>
+      <description>This hook allows to modify order message identifiable object forms data before it was created
+      </description>
+    </hook>
+    <hook id="actionBeforeCreateCatalogPriceRuleFormHandler">
+      <name>actionBeforeCreateCatalogPriceRuleFormHandler</name>
+      <title>Modify catalog price rule identifiable object data before creating it</title>
+      <description>This hook allows to modify catalog price rule identifiable object forms data before it was created
+      </description>
+    </hook>
+    <hook id="actionBeforeCreateAttachmentFormHandler">
+      <name>actionBeforeCreateAttachmentFormHandler</name>
+      <title>Modify attachment identifiable object data before creating it</title>
+      <description>This hook allows to modify attachment identifiable object forms data before it was created
+      </description>
+    </hook>
+    <hook id="actionAfterCreateFeatureFormHandler">
+      <name>actionAfterCreateFeatureFormHandler</name>
+      <title>Modify feature identifiable object data after creating it</title>
+      <description>This hook allows to modify feature identifiable object forms data after it was created</description>
+    </hook>
+    <hook id="actionAfterCreateOrderMessageFormHandler">
+      <name>actionAfterCreateOrderMessageFormHandler</name>
+      <title>Modify order message identifiable object data after creating it</title>
+      <description>This hook allows to modify order message identifiable object forms data after it was created
+      </description>
+    </hook>
+    <hook id="actionAfterCreateCatalogPriceRuleFormHandler">
+      <name>actionAfterCreateCatalogPriceRuleFormHandler</name>
+      <title>Modify catalog price rule identifiable object data after creating it</title>
+      <description>This hook allows to modify catalog price rule identifiable object forms data after it was created
+      </description>
+    </hook>
+    <hook id="actionAfterCreateAttachmentFormHandler">
+      <name>actionAfterCreateAttachmentFormHandler</name>
+      <title>Modify attachment identifiable object data after creating it</title>
+      <description>This hook allows to modify attachment identifiable object forms data after it was created
+      </description>
+    </hook>
+    <hook id="actionMerchandiseReturnForm">
+      <name>actionMerchandiseReturnForm</name>
+      <title>Modify merchandise return options form content</title>
+      <description>This hook allows to modify merchandise return options form FormBuilder</description>
+    </hook>
+    <hook id="actionCreditSlipForm">
+      <name>actionCreditSlipForm</name>
+      <title>Modify credit slip options form content</title>
+      <description>This hook allows to modify credit slip options form FormBuilder</description>
+    </hook>
+    <hook id="actionMerchandiseReturnSave">
+      <name>actionMerchandiseReturnSave</name>
+      <title>Modify merchandise return options form saved data</title>
+      <description>This hook allows to modify data of merchandise return options form after it was saved</description>
+    </hook>
+    <hook id="actionCreditSlipSave">
+      <name>actionCreditSlipSave</name>
+      <title>Modify credit slip options form saved data</title>
+      <description>This hook allows to modify data of credit slip options form after it was saved</description>
+    </hook>
+    <hook id="actionEmptyCategoryGridDefinitionModifier">
+      <name>actionEmptyCategoryGridDefinitionModifier</name>
+      <title>Modify empty category grid definition</title>
+      <description>This hook allows to alter empty category grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionNoQtyProductWithCombinationGridDefinitionModifier">
+      <name>actionNoQtyProductWithCombinationGridDefinitionModifier</name>
+      <title>Modify no qty product with combination grid definition</title>
+      <description>This hook allows to alter no qty product with combination grid columns, actions and filters
+      </description>
+    </hook>
+    <hook id="actionNoQtyProductWithoutCombinationGridDefinitionModifier">
+      <name>actionNoQtyProductWithoutCombinationGridDefinitionModifier</name>
+      <title>Modify no qty product without combination grid definition</title>
+      <description>This hook allows to alter no qty product without combination grid columns, actions and filters
+      </description>
+    </hook>
+    <hook id="actionDisabledProductGridDefinitionModifier">
+      <name>actionDisabledProductGridDefinitionModifier</name>
+      <title>Modify disabled product grid definition</title>
+      <description>This hook allows to alter disabled product grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionProductWithoutImageGridDefinitionModifier">
+      <name>actionProductWithoutImageGridDefinitionModifier</name>
+      <title>Modify product without image grid definition</title>
+      <description>This hook allows to alter product without image grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionProductWithoutDescriptionGridDefinitionModifier">
+      <name>actionProductWithoutDescriptionGridDefinitionModifier</name>
+      <title>Modify product without description grid definition</title>
+      <description>This hook allows to alter product without description grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionProductWithoutPriceGridDefinitionModifier">
+      <name>actionProductWithoutPriceGridDefinitionModifier</name>
+      <title>Modify product without price grid definition</title>
+      <description>This hook allows to alter product without price grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionOrderGridDefinitionModifier">
+      <name>actionOrderGridDefinitionModifier</name>
+      <title>Modify order grid definition</title>
+      <description>This hook allows to alter order grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCatalogPriceRuleGridDefinitionModifier">
+      <name>actionCatalogPriceRuleGridDefinitionModifier</name>
+      <title>Modify catalog price rule grid definition</title>
+      <description>This hook allows to alter catalog price rule grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionOrderMessageGridDefinitionModifier">
+      <name>actionOrderMessageGridDefinitionModifier</name>
+      <title>Modify order message grid definition</title>
+      <description>This hook allows to alter order message grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionAttachmentGridDefinitionModifier">
+      <name>actionAttachmentGridDefinitionModifier</name>
+      <title>Modify attachment grid definition</title>
+      <description>This hook allows to alter attachment grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionAttributeGroupGridDefinitionModifier">
+      <name>actionAttributeGroupGridDefinitionModifier</name>
+      <title>Modify attribute group grid definition</title>
+      <description>This hook allows to alter attribute group grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionMerchandiseReturnGridDefinitionModifier">
+      <name>actionMerchandiseReturnGridDefinitionModifier</name>
+      <title>Modify merchandise return grid definition</title>
+      <description>This hook allows to alter merchandise return grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionTaxRulesGroupGridDefinitionModifier">
+      <name>actionTaxRulesGroupGridDefinitionModifier</name>
+      <title>Modify tax rules group grid definition</title>
+      <description>This hook allows to alter tax rules group grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionAddressGridDefinitionModifier">
+      <name>actionAddressGridDefinitionModifier</name>
+      <title>Modify address grid definition</title>
+      <description>This hook allows to alter address grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCreditSlipGridDefinitionModifier">
+      <name>actionCreditSlipGridDefinitionModifier</name>
+      <title>Modify credit slip grid definition</title>
+      <description>This hook allows to alter credit slip grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionEmptyCategoryGridQueryBuilderModifier">
+      <name>actionEmptyCategoryGridQueryBuilderModifier</name>
+      <title>Modify empty category grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for empty category grid</description>
+    </hook>
+    <hook id="actionNoQtyProductWithCombinationGridQueryBuilderModifier">
+      <name>actionNoQtyProductWithCombinationGridQueryBuilderModifier</name>
+      <title>Modify no qty product with combination grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for no qty product with combination grid
+      </description>
+    </hook>
+    <hook id="actionNoQtyProductWithoutCombinationGridQueryBuilderModifier">
+      <name>actionNoQtyProductWithoutCombinationGridQueryBuilderModifier</name>
+      <title>Modify no qty product without combination grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for no qty product without combination grid
+      </description>
+    </hook>
+    <hook id="actionDisabledProductGridQueryBuilderModifier">
+      <name>actionDisabledProductGridQueryBuilderModifier</name>
+      <title>Modify disabled product grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for disabled product grid</description>
+    </hook>
+    <hook id="actionProductWithoutImageGridQueryBuilderModifier">
+      <name>actionProductWithoutImageGridQueryBuilderModifier</name>
+      <title>Modify product without image grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for product without image grid</description>
+    </hook>
+    <hook id="actionProductWithoutDescriptionGridQueryBuilderModifier">
+      <name>actionProductWithoutDescriptionGridQueryBuilderModifier</name>
+      <title>Modify product without description grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for product without description grid</description>
+    </hook>
+    <hook id="actionProductWithoutPriceGridQueryBuilderModifier">
+      <name>actionProductWithoutPriceGridQueryBuilderModifier</name>
+      <title>Modify product without price grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for product without price grid</description>
+    </hook>
+    <hook id="actionOrderGridQueryBuilderModifier">
+      <name>actionOrderGridQueryBuilderModifier</name>
+      <title>Modify order grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for order grid</description>
+    </hook>
+    <hook id="actionCatalogPriceRuleGridQueryBuilderModifier">
+      <name>actionCatalogPriceRuleGridQueryBuilderModifier</name>
+      <title>Modify catalog price rule grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for catalog price rule grid</description>
+    </hook>
+    <hook id="actionOrderMessageGridQueryBuilderModifier">
+      <name>actionOrderMessageGridQueryBuilderModifier</name>
+      <title>Modify order message grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for order message grid</description>
+    </hook>
+    <hook id="actionAttachmentGridQueryBuilderModifier">
+      <name>actionAttachmentGridQueryBuilderModifier</name>
+      <title>Modify attachment grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for attachment grid</description>
+    </hook>
+    <hook id="actionAttributeGroupGridQueryBuilderModifier">
+      <name>actionAttributeGroupGridQueryBuilderModifier</name>
+      <title>Modify attribute group grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for attribute group grid</description>
+    </hook>
+    <hook id="actionMerchandiseReturnGridQueryBuilderModifier">
+      <name>actionMerchandiseReturnGridQueryBuilderModifier</name>
+      <title>Modify merchandise return grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for merchandise return grid</description>
+    </hook>
+    <hook id="actionTaxRulesGroupGridQueryBuilderModifier">
+      <name>actionTaxRulesGroupGridQueryBuilderModifier</name>
+      <title>Modify tax rules group grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for tax rules group grid</description>
+    </hook>
+    <hook id="actionAddressGridQueryBuilderModifier">
+      <name>actionAddressGridQueryBuilderModifier</name>
+      <title>Modify address grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for address grid</description>
+    </hook>
+    <hook id="actionCreditSlipGridQueryBuilderModifier">
+      <name>actionCreditSlipGridQueryBuilderModifier</name>
+      <title>Modify credit slip grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for credit slip grid</description>
+    </hook>
+    <hook id="actionEmptyCategoryGridDataModifier">
+      <name>actionEmptyCategoryGridDataModifier</name>
+      <title>Modify empty category grid data</title>
+      <description>This hook allows to modify empty category grid data</description>
+    </hook>
+    <hook id="actionNoQtyProductWithCombinationGridDataModifier">
+      <name>actionNoQtyProductWithCombinationGridDataModifier</name>
+      <title>Modify no qty product with combination grid data</title>
+      <description>This hook allows to modify no qty product with combination grid data</description>
+    </hook>
+    <hook id="actionNoQtyProductWithoutCombinationGridDataModifier">
+      <name>actionNoQtyProductWithoutCombinationGridDataModifier</name>
+      <title>Modify no qty product without combination grid data</title>
+      <description>This hook allows to modify no qty product without combination grid data</description>
+    </hook>
+    <hook id="actionDisabledProductGridDataModifier">
+      <name>actionDisabledProductGridDataModifier</name>
+      <title>Modify disabled product grid data</title>
+      <description>This hook allows to modify disabled product grid data</description>
+    </hook>
+    <hook id="actionProductWithoutImageGridDataModifier">
+      <name>actionProductWithoutImageGridDataModifier</name>
+      <title>Modify product without image grid data</title>
+      <description>This hook allows to modify product without image grid data</description>
+    </hook>
+    <hook id="actionProductWithoutDescriptionGridDataModifier">
+      <name>actionProductWithoutDescriptionGridDataModifier</name>
+      <title>Modify product without description grid data</title>
+      <description>This hook allows to modify product without description grid data</description>
+    </hook>
+    <hook id="actionProductWithoutPriceGridDataModifier">
+      <name>actionProductWithoutPriceGridDataModifier</name>
+      <title>Modify product without price grid data</title>
+      <description>This hook allows to modify product without price grid data</description>
+    </hook>
+    <hook id="actionOrderGridDataModifier">
+      <name>actionOrderGridDataModifier</name>
+      <title>Modify order grid data</title>
+      <description>This hook allows to modify order grid data</description>
+    </hook>
+    <hook id="actionCatalogPriceRuleGridDataModifier">
+      <name>actionCatalogPriceRuleGridDataModifier</name>
+      <title>Modify catalog price rule grid data</title>
+      <description>This hook allows to modify catalog price rule grid data</description>
+    </hook>
+    <hook id="actionOrderMessageGridDataModifier">
+      <name>actionOrderMessageGridDataModifier</name>
+      <title>Modify order message grid data</title>
+      <description>This hook allows to modify order message grid data</description>
+    </hook>
+    <hook id="actionAttachmentGridDataModifier">
+      <name>actionAttachmentGridDataModifier</name>
+      <title>Modify attachment grid data</title>
+      <description>This hook allows to modify attachment grid data</description>
+    </hook>
+    <hook id="actionAttributeGroupGridDataModifier">
+      <name>actionAttributeGroupGridDataModifier</name>
+      <title>Modify attribute group grid data</title>
+      <description>This hook allows to modify attribute group grid data</description>
+    </hook>
+    <hook id="actionMerchandiseReturnGridDataModifier">
+      <name>actionMerchandiseReturnGridDataModifier</name>
+      <title>Modify merchandise return grid data</title>
+      <description>This hook allows to modify merchandise return grid data</description>
+    </hook>
+    <hook id="actionTaxRulesGroupGridDataModifier">
+      <name>actionTaxRulesGroupGridDataModifier</name>
+      <title>Modify tax rules group grid data</title>
+      <description>This hook allows to modify tax rules group grid data</description>
+    </hook>
+    <hook id="actionAddressGridDataModifier">
+      <name>actionAddressGridDataModifier</name>
+      <title>Modify address grid data</title>
+      <description>This hook allows to modify address grid data</description>
+    </hook>
+    <hook id="actionCreditSlipGridDataModifier">
+      <name>actionCreditSlipGridDataModifier</name>
+      <title>Modify credit slip grid data</title>
+      <description>This hook allows to modify credit slip grid data</description>
+    </hook>
+    <hook id="actionEmptyCategoryGridFilterFormModifier">
+      <name>actionEmptyCategoryGridFilterFormModifier</name>
+      <title>Modify empty category grid filters</title>
+      <description>This hook allows to modify filters for empty category grid</description>
+    </hook>
+    <hook id="actionNoQtyProductWithCombinationGridFilterFormModifier">
+      <name>actionNoQtyProductWithCombinationGridFilterFormModifier</name>
+      <title>Modify no qty product with combination grid filters</title>
+      <description>This hook allows to modify filters for no qty product with combination grid</description>
+    </hook>
+    <hook id="actionNoQtyProductWithoutCombinationGridFilterFormModifier">
+      <name>actionNoQtyProductWithoutCombinationGridFilterFormModifier</name>
+      <title>Modify no qty product without combination grid filters</title>
+      <description>This hook allows to modify filters for no qty product without combination grid</description>
+    </hook>
+    <hook id="actionDisabledProductGridFilterFormModifier">
+      <name>actionDisabledProductGridFilterFormModifier</name>
+      <title>Modify disabled product grid filters</title>
+      <description>This hook allows to modify filters for disabled product grid</description>
+    </hook>
+    <hook id="actionProductWithoutImageGridFilterFormModifier">
+      <name>actionProductWithoutImageGridFilterFormModifier</name>
+      <title>Modify product without image grid filters</title>
+      <description>This hook allows to modify filters for product without image grid</description>
+    </hook>
+    <hook id="actionProductWithoutDescriptionGridFilterFormModifier">
+      <name>actionProductWithoutDescriptionGridFilterFormModifier</name>
+      <title>Modify product without description grid filters</title>
+      <description>This hook allows to modify filters for product without description grid</description>
+    </hook>
+    <hook id="actionProductWithoutPriceGridFilterFormModifier">
+      <name>actionProductWithoutPriceGridFilterFormModifier</name>
+      <title>Modify product without price grid filters</title>
+      <description>This hook allows to modify filters for product without price grid</description>
+    </hook>
+    <hook id="actionOrderGridFilterFormModifier">
+      <name>actionOrderGridFilterFormModifier</name>
+      <title>Modify order grid filters</title>
+      <description>This hook allows to modify filters for order grid</description>
+    </hook>
+    <hook id="actionCatalogPriceRuleGridFilterFormModifier">
+      <name>actionCatalogPriceRuleGridFilterFormModifier</name>
+      <title>Modify catalog price rule grid filters</title>
+      <description>This hook allows to modify filters for catalog price rule grid</description>
+    </hook>
+    <hook id="actionOrderMessageGridFilterFormModifier">
+      <name>actionOrderMessageGridFilterFormModifier</name>
+      <title>Modify order message grid filters</title>
+      <description>This hook allows to modify filters for order message grid</description>
+    </hook>
+    <hook id="actionAttachmentGridFilterFormModifier">
+      <name>actionAttachmentGridFilterFormModifier</name>
+      <title>Modify attachment grid filters</title>
+      <description>This hook allows to modify filters for attachment grid</description>
+    </hook>
+    <hook id="actionAttributeGroupGridFilterFormModifier">
+      <name>actionAttributeGroupGridFilterFormModifier</name>
+      <title>Modify attribute group grid filters</title>
+      <description>This hook allows to modify filters for attribute group grid</description>
+    </hook>
+    <hook id="actionMerchandiseReturnGridFilterFormModifier">
+      <name>actionMerchandiseReturnGridFilterFormModifier</name>
+      <title>Modify merchandise return grid filters</title>
+      <description>This hook allows to modify filters for merchandise return grid</description>
+    </hook>
+    <hook id="actionTaxRulesGroupGridFilterFormModifier">
+      <name>actionTaxRulesGroupGridFilterFormModifier</name>
+      <title>Modify tax rules group grid filters</title>
+      <description>This hook allows to modify filters for tax rules group grid</description>
+    </hook>
+    <hook id="actionAddressGridFilterFormModifier">
+      <name>actionAddressGridFilterFormModifier</name>
+      <title>Modify address grid filters</title>
+      <description>This hook allows to modify filters for address grid</description>
+    </hook>
+    <hook id="actionCreditSlipGridFilterFormModifier">
+      <name>actionCreditSlipGridFilterFormModifier</name>
+      <title>Modify credit slip grid filters</title>
+      <description>This hook allows to modify filters for credit slip grid</description>
+    </hook>
+    <hook id="actionEmptyCategoryGridPresenterModifier">
+      <name>actionEmptyCategoryGridPresenterModifier</name>
+      <title>Modify empty category grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for empty category grid
+      </description>
+    </hook>
+    <hook id="actionNoQtyProductWithCombinationGridPresenterModifier">
+      <name>actionNoQtyProductWithCombinationGridPresenterModifier</name>
+      <title>Modify no qty product with combination grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for no qty product with
+        combination grid
+      </description>
+    </hook>
+    <hook id="actionNoQtyProductWithoutCombinationGridPresenterModifier">
+      <name>actionNoQtyProductWithoutCombinationGridPresenterModifier</name>
+      <title>Modify no qty product without combination grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for no qty product without
+        combination grid
+      </description>
+    </hook>
+    <hook id="actionDisabledProductGridPresenterModifier">
+      <name>actionDisabledProductGridPresenterModifier</name>
+      <title>Modify disabled product grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for disabled product grid
+      </description>
+    </hook>
+    <hook id="actionProductWithoutImageGridPresenterModifier">
+      <name>actionProductWithoutImageGridPresenterModifier</name>
+      <title>Modify product without image grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for product without image
+        grid
+      </description>
+    </hook>
+    <hook id="actionProductWithoutDescriptionGridPresenterModifier">
+      <name>actionProductWithoutDescriptionGridPresenterModifier</name>
+      <title>Modify product without description grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for product without description
+        grid
+      </description>
+    </hook>
+    <hook id="actionProductWithoutPriceGridPresenterModifier">
+      <name>actionProductWithoutPriceGridPresenterModifier</name>
+      <title>Modify product without price grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for product without price
+        grid
+      </description>
+    </hook>
+    <hook id="actionOrderGridPresenterModifier">
+      <name>actionOrderGridPresenterModifier</name>
+      <title>Modify order grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for order grid</description>
+    </hook>
+    <hook id="actionCatalogPriceRuleGridPresenterModifier">
+      <name>actionCatalogPriceRuleGridPresenterModifier</name>
+      <title>Modify catalog price rule grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for catalog price rule grid
+      </description>
+    </hook>
+    <hook id="actionOrderMessageGridPresenterModifier">
+      <name>actionOrderMessageGridPresenterModifier</name>
+      <title>Modify order message grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for order message grid
+      </description>
+    </hook>
+    <hook id="actionAttachmentGridPresenterModifier">
+      <name>actionAttachmentGridPresenterModifier</name>
+      <title>Modify attachment grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for attachment grid
+      </description>
+    </hook>
+    <hook id="actionAttributeGroupGridPresenterModifier">
+      <name>actionAttributeGroupGridPresenterModifier</name>
+      <title>Modify attribute group grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for attribute group grid
+      </description>
+    </hook>
+    <hook id="actionMerchandiseReturnGridPresenterModifier">
+      <name>actionMerchandiseReturnGridPresenterModifier</name>
+      <title>Modify merchandise return grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for merchandise return grid
+      </description>
+    </hook>
+    <hook id="actionTaxRulesGroupGridPresenterModifier">
+      <name>actionTaxRulesGroupGridPresenterModifier</name>
+      <title>Modify tax rules group grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for tax rules group grid
+      </description>
+    </hook>
+    <hook id="actionAddressGridPresenterModifier">
+      <name>actionAddressGridPresenterModifier</name>
+      <title>Modify address grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for address grid</description>
+    </hook>
+    <hook id="actionCreditSlipGridPresenterModifier">
+      <name>actionCreditSlipGridPresenterModifier</name>
+      <title>Modify credit slip grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for credit slip grid
+      </description>
+    </hook>
+    <hook id="displayAdditionalCustomerAddressFields">
+      <name>displayAdditionalCustomerAddressFields</name>
+      <title>Display additional customer address fields</title>
+      <description>This hook allows to display extra field values added in an address form using hook 'additionalCustomerAddressFields'</description>
+    </hook>
+    <hook id="displayFooterCategory">
+      <name>displayFooterCategory</name>
+      <title>Category footer</title>
+      <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
   </entities>
 </entity_hook>

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import tableDnD from "tablednd/dist/jquery.tablednd.min";
+import 'tablednd/dist/jquery.tablednd.min';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class PositionExtension extends Grid with reorderable positions
@@ -34,7 +34,7 @@ export default class PositionExtension {
   constructor() {
     return {
       extend: (grid) => this.extend(grid),
-    }
+    };
   }
 
   /**
@@ -44,19 +44,19 @@ export default class PositionExtension {
    */
   extend(grid) {
     this.grid = grid;
-    this._addIdsToGridTableRows();
+    this.addIdsToGridTableRows();
     grid.getContainer().find('.js-grid-table').tableDnD({
       onDragClass: 'position-row-while-drag',
       dragHandle: '.js-drag-handle',
-      onDrop: (table, row) => this._handlePositionChange(row),
+      onDrop: (table, row) => this.handlePositionChange(row),
     });
     grid.getContainer().find('.js-drag-handle').hover(
-      function() {
+      function () {
         $(this).closest('tr').addClass('hover');
       },
-      function() {
+      function () {
         $(this).closest('tr').removeClass('hover');
-      }
+      },
     );
   }
 
@@ -67,15 +67,14 @@ export default class PositionExtension {
    *
    * @private
    */
-  _handlePositionChange(row) {
-    const $rowPositionContainer = $(row).find('.js-' + this.grid.getId() + '-position:first');
+  handlePositionChange(row) {
+    const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
-    const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
-    const positions = this._getRowsPositions(paginationOffset);
+    const positions = this.getRowsPositions();
     const params = {positions};
 
-    this._updatePosition(updateUrl, params, method);
+    this.updatePosition(updateUrl, params, method);
   }
 
   /**
@@ -83,24 +82,26 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  _getRowsPositions(paginationOffset) {
+  getRowsPositions() {
     const tableData = JSON.parse($.tableDnD.jsonize());
-    const rowsData = tableData[this.grid.getId()+'_grid_table'];
-    const regex = /^row_(\d+)_(\d+)$/;
+    const rowsData = tableData[`${this.grid.getId()}_grid_table`];
+    const completeRowsData = [];
 
-    const rowsNb = rowsData.length;
-    const positions = [];
-    let rowData, i;
-    for (i = 0; i < rowsNb; ++i) {
-      rowData = regex.exec(rowsData[i]);
-      positions.push({
-        rowId: rowData[1],
-        newPosition: paginationOffset + i,
-        oldPosition: parseInt(rowData[2], 10),
+    let trData;
+
+    // retrieve dragAndDropOffset offset to have all needed data
+    // for positions mapping evolution over time
+    for (let i = 0; i < rowsData.length; i += 1) {
+      trData = this.grid.getContainer()
+        .find(`#${rowsData[i]}`);
+
+      completeRowsData.push({
+        rowMarker: rowsData[i],
+        offset: trData.data('dragAndDropOffset'),
       });
     }
 
-    return positions;
+    return this.computeMappingBetweenOldAndNewPositions(completeRowsData);
   }
 
   /**
@@ -108,9 +109,11 @@ export default class PositionExtension {
    *
    * @private
    */
-  _addIdsToGridTableRows() {
+  addIdsToGridTableRows() {
+    let counter = 0;
+
     this.grid.getContainer()
-      .find('.js-grid-table .js-' + this.grid.getId() + '-position')
+      .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
         const rowId = $positionWrapper.data('id');
@@ -118,6 +121,9 @@ export default class PositionExtension {
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
         $positionWrapper.closest('td').addClass('js-drag-handle');
+        $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
+
+        counter += 1;
       });
   }
 
@@ -130,46 +136,109 @@ export default class PositionExtension {
    *
    * @private
    */
-  _updatePosition(url, params, method) {
+  updatePosition(url, params, method) {
     const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
     const $form = $('<form>', {
-      'action': url,
-      'method': isGetOrPostMethod ? method : 'POST',
+      action: url,
+      method: isGetOrPostMethod ? method : 'POST',
     }).appendTo('body');
 
     const positionsNb = params.positions.length;
     let position;
-    for (let i = 0; i < positionsNb; ++i) {
+    for (let i = 0; i < positionsNb; i += 1) {
       position = params.positions[i];
       $form.append(
         $('<input>', {
-          'type': 'hidden',
-          'name': 'positions['+i+'][rowId]',
-          'value': position.rowId
+          type: 'hidden',
+          name: `positions[${i}][rowId]`,
+          value: position.rowId,
         }),
         $('<input>', {
-          'type': 'hidden',
-          'name': 'positions['+i+'][oldPosition]',
-          'value': position.oldPosition
+          type: 'hidden',
+          name: `positions[${i}][oldPosition]`,
+          value: position.oldPosition,
         }),
         $('<input>', {
-          'type': 'hidden',
-          'name': 'positions['+i+'][newPosition]',
-          'value': position.newPosition
-        })
+          type: 'hidden',
+          name: `positions[${i}][newPosition]`,
+          value: position.newPosition,
+        }),
       );
     }
 
     // This _method param is used by Symfony to simulate DELETE and PUT methods
     if (!isGetOrPostMethod) {
       $form.append($('<input>', {
-        'type': 'hidden',
-        'name': '_method',
-        'value': method,
+        type: 'hidden',
+        name: '_method',
+        value: method,
       }));
     }
 
     $form.submit();
+  }
+
+  /**
+   * Rows have been reordered. This function
+   * finds, for each row ID: the old position, the new position
+   *
+   * @returns {Array}
+   * @private
+   */
+  computeMappingBetweenOldAndNewPositions(rowsData) {
+    const regex = /^row_(\d+)_(\d+)$/;
+
+    const rowsNb = rowsData.length;
+    const positionsBeforeDragAndDrop = {};
+    const positionsAfterDragAndDrop = {};
+    const mapping = [];
+
+    let rowDataMarker;
+    let rowDataParsedData;
+    let i;
+    let rowID;
+    let rowOldPosition;
+    let rowOldOffset;
+    let rowNewOffset;
+
+    // first, compute for each position,
+    // where they were before the drag-and-drop
+    // and where they are after the drag-and-drop
+    for (i = 0; i < rowsNb; i += 1) {
+      rowDataMarker = rowsData[i].rowMarker;
+      rowDataParsedData = regex.exec(rowDataMarker);
+
+      rowID = rowDataParsedData[1];
+      rowOldPosition = parseInt(rowDataParsedData[2], 10);
+      rowOldOffset = rowsData[i].offset;
+      rowNewOffset = i;
+
+      positionsBeforeDragAndDrop[rowOldOffset] = rowOldPosition;
+      positionsAfterDragAndDrop[rowNewOffset] = rowOldPosition;
+    }
+
+    let previousRowPositionWithThisOffset;
+
+    // for each row in table, we look at before the drag-and-drop
+    // and find what other row was there, this is the new position
+    // of current row
+    for (i = 0; i < rowsNb; i += 1) {
+      rowDataMarker = rowsData[i].rowMarker;
+      rowDataParsedData = regex.exec(rowDataMarker);
+      rowID = rowDataParsedData[1];
+      rowOldPosition = parseInt(rowDataParsedData[2], 10);
+
+      rowNewOffset = i;
+      previousRowPositionWithThisOffset = positionsBeforeDragAndDrop[rowNewOffset];
+
+      mapping.push({
+        rowId: rowID,
+        oldPosition: rowOldPosition,
+        newPosition: previousRowPositionWithThisOffset,
+      });
+    }
+
+    return mapping;
   }
 }

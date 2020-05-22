@@ -19,7 +19,7 @@ cache:
     - $HOME/.composer/cache
 
 os: linux
-dist: trusty
+dist: xenial
 
 php:
   - 7.1
@@ -72,12 +72,16 @@ before_install:
   # Apache & php-fpm configuration
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
+  - bash travis-scripts/setup-node-js.sh
 
   # PrestaShop configuration
   - cp tests-legacy/parameters.yml.travis app/config/parameters.yml
 
+  # Always test with non-unity MySQL autoincrement
+  - mysql -e 'SET @@GLOBAL.auto_increment_increment = 2, @@GLOBAL.auto_increment_offset = 2;'
+
 install:
-  - composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet;
+  - composer install --ansi --prefer-dist --no-interaction --no-progress --quiet;
   - if [ "$PRESTASHOP_TEST_TYPE" != "sanity" ]; then
       bash travis-scripts/install-prestashop;
     fi
@@ -85,6 +89,9 @@ install:
 script:
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests/check_file_syntax.sh;
+    fi
+
+  - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests-legacy/check_phpunit.sh;
     fi
 
@@ -93,10 +100,12 @@ script:
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "integration" ]; then
+        make assets;
         bash tests/check_integration.sh;
     fi
 
   - if [ "$PRESTASHOP_TEST_TYPE" = "sanity" ]; then
+        make assets;
         bash tests/check_sanity.sh;
     fi
 

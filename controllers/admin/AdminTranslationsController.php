@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -86,8 +86,8 @@ class AdminTranslationsControllerCore extends AdminController
         $this->link_lang_pack = str_replace('%ps_version%', _PS_VERSION_, $this->link_lang_pack);
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
-                            ->buildRepository()
-                            ->getList();
+            ->buildRepository()
+            ->getList();
     }
 
     /*
@@ -1664,11 +1664,6 @@ class AdminTranslationsControllerCore extends AdminController
                         $content = htmlspecialchars_decode($content);
                         // replace correct end of line
                         $content = str_replace("\r\n", PHP_EOL, $content);
-
-                        // Magic Quotes shall... not.. PASS!
-                        if (_PS_MAGIC_QUOTES_GPC_) {
-                            $content = stripslashes($content);
-                        }
                     }
 
                     if (Validate::isCleanHTML($content)) {
@@ -2962,10 +2957,6 @@ class AdminTranslationsControllerCore extends AdminController
             fwrite($fd, "<?php\n\nglobal \$_" . $tab . ";\n\$_" . $tab . " = array();\n");
 
             foreach ($sub as $key => $value) {
-                // Magic Quotes shall... not.. PASS!
-                if (_PS_MAGIC_QUOTES_GPC_) {
-                    $value = stripslashes($value);
-                }
                 fwrite($fd, '$_' . $tab . '[\'' . pSQL($key) . '\'] = \'' . pSQL($value) . '\';' . "\n");
             }
 

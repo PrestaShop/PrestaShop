@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Toggle DNI input requirement on country selection
@@ -69,7 +69,7 @@ export default class CountryDniRequiredToggler {
   toggle() {
     $(this.countryDniInputLabelDangerSelector).remove();
     this.$countryDniInput.prop('required', false);
-    if (1 === parseInt($(this.countryInputSelectedSelector).attr('need_dni'), 10)) {
+    if (parseInt($(this.countryInputSelectedSelector).attr('need_dni'), 10) === 1) {
       this.$countryDniInput.prop('required', true);
       this.$countryDniInputLabel.prepend($('<span class="text-danger">*</span>'));
     }

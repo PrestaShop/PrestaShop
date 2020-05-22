@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,9 +55,9 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        $this->_select = 's.name shop_name, cu.iso_code as currency_iso_code, cl.name country_name, gl.name group_name';
+        $this->_select = 's.name shop_name, cul.name as currency_name, cl.name country_name, gl.name group_name';
         $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = a.id_shop)
-		LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON (cu.id_currency = a.id_currency)
+		LEFT JOIN ' . _DB_PREFIX_ . 'currency_lang cul ON (cul.id_currency = a.id_currency AND cul.id_lang=' . (int) $this->context->language->id . ')
 		LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang=' . (int) $this->context->language->id . ')
 		LEFT JOIN ' . _DB_PREFIX_ . 'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang=' . (int) $this->context->language->id . ')';
         $this->_use_found_rows = false;
@@ -85,10 +85,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'title' => $this->trans('Shop', [], 'Admin.Global'),
                 'filter_key' => 's!name',
             ],
-            'currency_name' => [
+            'id_currency' => [
                 'title' => $this->trans('Currency', [], 'Admin.Global'),
                 'align' => 'center',
-                'filter_key' => 'cu!name',
+                'filter_key' => 'cul!name',
             ],
             'country_name' => [
                 'title' => $this->trans('Country', [], 'Admin.Global'),
@@ -153,9 +153,13 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
         foreach ($this->_list as $k => $list) {
-            if (null !== $this->_list[$k]['currency_iso_code']) {
-                $currency = new Currency(Currency::getIdByIsoCode($this->_list[$k]['currency_iso_code']));
-                $this->_list[$k]['currency_name'] = $currency->name;
+            if (null !== $this->_list[$k]['id_currency']) {
+                $currency = new Currency(
+                    (int) $this->_list[$k]['id_currency'],
+                    (int) $this->context->language->id,
+                    (int) $this->context->shop->id
+                );
+                $this->_list[$k]['id_currency'] = Validate::isLoadedObject($currency) ? $currency->getName() : null;
             }
 
             if ($list['reduction_type'] == 'amount') {

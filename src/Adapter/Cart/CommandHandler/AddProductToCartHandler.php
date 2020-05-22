@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
@@ -37,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 /**
  * Handles add product to cart command
  */
-final class AddProductToCartHandler implements AddProductToCartHandlerInterface
+final class AddProductToCartHandler extends AbstractCartHandler implements AddProductToCartHandlerInterface
 {
     /**
      * @var AddCustomizationFieldsHandlerInterface
@@ -66,27 +67,31 @@ final class AddProductToCartHandler implements AddProductToCartHandlerInterface
      */
     public function handle(AddProductToCartCommand $command): void
     {
-        $quantity = $command->getQuantity();
-        $this->assertQuantityIsPositiveInt($quantity);
-
         $cartIdValue = $command->getCartId()->getValue();
         $productIdValue = $command->getProductId()->getValue();
-        $combinationId = $command->getCombinationId();
+        $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : null;
+        $customizationId = null;
 
         if (!empty($command->getCustomizationsByFieldIds())) {
             $customizationId = $this->addCustomizationFieldsHandler->handle(new AddCustomizationFieldsCommand(
                 $cartIdValue,
                 $command->getProductId()->getValue(),
                 $command->getCustomizationsByFieldIds()
-            ));
+            ))->getValue();
         }
+
+        $cart = $this->getCart($command->getCartId());
+        $product = $cart->getProductQuantity($productIdValue, $combinationId, $customizationId);
+
+        $quantity = $command->getQuantity() + (int) $product['quantity'];
+        $this->assertQuantityIsPositiveInt($quantity);
 
         $this->updateProductQuantityInCartHandler->handle(new UpdateProductQuantityInCartCommand(
             $cartIdValue,
             $productIdValue,
             $quantity,
-            $combinationId ? $combinationId->getValue() : null,
-            isset($customizationId) ? $customizationId->getValue() : null
+            $combinationId,
+            $customizationId
         ));
     }
 

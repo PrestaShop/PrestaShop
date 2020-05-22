@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,7 +54,7 @@ class Money
     public function __construct(Number $amount, CurrencyId $currencyId)
     {
         if (!$amount->isGreaterOrEqualThan(new Number('0'))) {
-            throw new DomainConstraintException(sprintf('Money amount cannot be lower than zero, %f given', $amount), DomainConstraintException::INVALID_MONEY_AMOUNT);
+            throw new DomainConstraintException(sprintf('Money amount cannot be lower than zero, %s given', (string) $amount), DomainConstraintException::INVALID_MONEY_AMOUNT);
         }
 
         $this->amount = $amount;

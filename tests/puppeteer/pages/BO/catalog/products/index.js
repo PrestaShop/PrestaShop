@@ -15,12 +15,14 @@ module.exports = class Product extends BOBasePage {
     // Selectors
     // List of products
     this.productListForm = '#product_catalog_list';
-    this.productRow = `${this.productListForm} table tbody tr`;
+    this.productTable = `${this.productListForm} table`;
+    this.productRow = `${this.productTable} tbody tr`;
     this.productListfooterRow = `${this.productListForm} div.row:nth-of-type(3)`;
     this.productNumberBloc = `${this.productListfooterRow} label.col-form-label`;
-    this.dropdownToggleButton = `${this.productRow}:nth-of-type(%ROW) button.dropdown-toggle`;
-    this.dropdownMenu = `${this.productRow}:nth-of-type(%ROW) div.dropdown-menu`;
-    this.dropdownMenuDeleteLink = `${this.dropdownMenu} a.product-edit[onclick*='delete']`;
+    this.dropdownToggleButton = row => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
+    this.dropdownMenu = row => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
+    this.dropdownMenuDeleteLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='delete']`;
+    this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
@@ -28,8 +30,8 @@ module.exports = class Product extends BOBasePage {
     // Filters input
     this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
     this.productFilterIDMaxInput = `${this.productListForm} #filter_column_id_product_max`;
-    this.productFilterInput = `${this.productListForm} input[name='filter_column_%FILTERBY']`;
-    this.productFilterSelect = `${this.productListForm} select[name='filter_column_%FILTERBY']`;
+    this.productFilterInput = filterBy => `${this.productListForm} input[name='filter_column_${filterBy}']`;
+    this.productFilterSelect = filterBy => `${this.productListForm} select[name='filter_column_${filterBy}']`;
     this.productFilterPriceMinInput = `${this.productListForm} #filter_column_price_min`;
     this.productFilterPriceMaxInput = `${this.productListForm} #filter_column_price_max`;
     this.productFilterQuantityMinInput = `${this.productListForm} #filter_column_sav_quantity_min`;
@@ -37,16 +39,17 @@ module.exports = class Product extends BOBasePage {
     this.filterSearchButton = `${this.productListForm} button[name='products_filter_submit']`;
     this.filterResetButton = `${this.productListForm} button[name='products_filter_reset']`;
     // Products list
-    this.productsListTableRow = `${this.productRow}:nth-child(%ROW)`;
-    this.productsListTableColumnID = `${this.productsListTableRow}[data-product-id]`;
-    this.productsListTableColumnName = `${this.productsListTableRow} td:nth-child(4)`;
-    this.productsListTableColumnReference = `${this.productsListTableRow} td:nth-child(5)`;
-    this.productsListTableColumnCategory = `${this.productsListTableRow} td:nth-child(6)`;
-    this.productsListTableColumnPrice = `${this.productsListTableRow} td:nth-child(7)`;
-    this.productsListTableColumnQuantity = `${this.productsListTableRow} td.product-sav-quantity`;
-    this.productsListTableColumnStatus = `${this.productsListTableRow} td:nth-child(10)`;
-    this.productsListTableColumnStatusEnabled = `${this.productsListTableColumnStatus} .action-enabled`;
-    this.productsListTableColumnStatusDisabled = `${this.productsListTableColumnStatus} .action-disabled`;
+    this.productsListTableRow = row => `${this.productRow}:nth-child(${row})`;
+    this.productsListTableColumnID = row => `${this.productsListTableRow(row)}[data-product-id]`;
+    this.productsListTableColumnName = row => `${this.productsListTableRow(row)} td:nth-child(4) a`;
+    this.productsListTableColumnReference = row => `${this.productsListTableRow(row)} td:nth-child(5)`;
+    this.productsListTableColumnCategory = row => `${this.productsListTableRow(row)} td:nth-child(6)`;
+    this.productsListTableColumnPrice = row => `${this.productsListTableRow(row)} td:nth-child(7)`;
+    this.productsListTableColumnPriceTTC = row => `${this.productsListTableRow(row)} td:nth-child(8)`;
+    this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.product-sav-quantity`;
+    this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10)`;
+    this.productsListTableColumnStatusEnabled = row => `${this.productsListTableColumnStatus(row)} .action-enabled`;
+    this.productsListTableColumnStatusDisabled = row => `${this.productsListTableColumnStatus(row)} .action-disabled`;
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
     this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
@@ -60,6 +63,10 @@ module.exports = class Product extends BOBasePage {
     // Modal Dialog
     this.catalogDeletionModalDialog = '#catalog_deletion_modal div.modal-dialog';
     this.modalDialogDeleteNowButton = `${this.catalogDeletionModalDialog} button[value='confirm']`;
+    // Sort Selectors
+    this.tableHead = `${this.productTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -83,7 +90,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getProductIDFromList(row) {
-    return this.getNumberFromText(this.productsListTableColumnID.replace('%ROW', row));
+    return this.getNumberFromText(this.productsListTableColumnID(row));
   }
 
   /**
@@ -92,7 +99,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getProductNameFromList(row) {
-    return this.getTextContent(this.productsListTableColumnName.replace('%ROW', row));
+    return this.getTextContent(this.productsListTableColumnName(row));
   }
 
   /**
@@ -101,7 +108,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getProductReferenceFromList(row) {
-    return this.getTextContent(this.productsListTableColumnReference.replace('%ROW', row));
+    return this.getTextContent(this.productsListTableColumnReference(row));
   }
 
   /**
@@ -110,7 +117,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getProductCategoryFromList(row) {
-    return this.getTextContent(this.productsListTableColumnCategory.replace('%ROW', row));
+    return this.getTextContent(this.productsListTableColumnCategory(row));
   }
 
   /**
@@ -127,11 +134,13 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get Product Price
-   * @param row
+   * @param {int} row
+   * @param {boolean} withTaxes
    * @return Float
    */
-  async getProductPriceFromList(row) {
-    const text = await this.getTextContent(this.productsListTableColumnPrice.replace('%ROW', row));
+  async getProductPriceFromList(row, withTaxes) {
+    const selector = withTaxes ? this.productsListTableColumnPriceTTC : this.productsListTableColumnPrice;
+    const text = await this.getTextContent(selector(row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
     return parseFloat(price);
   }
@@ -154,7 +163,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getProductQuantityFromList(row) {
-    return this.getNumberFromText(this.productsListTableColumnQuantity.replace('%ROW', row));
+    return this.getNumberFromText(this.productsListTableColumnQuantity(row));
   }
 
   /**
@@ -163,7 +172,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getProductStatusFromList(row) {
-    return this.getTextContent(this.productsListTableColumnStatus.replace('%ROW', row));
+    return this.getTextContent(this.productsListTableColumnStatus(row));
   }
 
   /**
@@ -177,21 +186,21 @@ module.exports = class Product extends BOBasePage {
     switch (filterType) {
       case 'input':
         switch (filterBy) {
-          case 'product_id':
+          case 'id_product':
             await this.filterIDProducts(value.min, value.max);
             break;
           case 'price':
             await this.filterPriceProducts(value.min, value.max);
             break;
-          case 'quantity':
+          case 'sav_quantity':
             await this.filterQuantityProducts(value.min, value.max);
             break;
           default:
-            await this.page.type(this.productFilterInput.replace('%FILTERBY', filterBy), value);
+            await this.page.type(this.productFilterInput(filterBy), value);
         }
         break;
       case 'select':
-        await this.selectByVisibleText(this.productFilterSelect.replace('%FILTERBY', filterBy),
+        await this.selectByVisibleText(this.productFilterSelect(filterBy),
           value ? 'Active' : 'Inactive',
         );
         break;
@@ -206,11 +215,11 @@ module.exports = class Product extends BOBasePage {
    * Get Text Column
    * @param columnName
    * @param row
-   * @return {Promise<void>, Float}
+   * @return {Promise<float|string>}
    */
   async getTextColumn(columnName, row) {
     switch (columnName) {
-      case 'product_id':
+      case 'id_product':
         return this.getProductIDFromList(row);
       case 'name':
         return this.getProductNameFromList(row);
@@ -220,7 +229,7 @@ module.exports = class Product extends BOBasePage {
         return this.getProductCategoryFromList(row);
       case 'price':
         return this.getProductPriceFromList(row);
-      case 'quantity':
+      case 'sav_quantity':
         return this.getProductQuantityFromList(row);
       case 'active':
         return this.getProductStatusFromList(row);
@@ -228,6 +237,21 @@ module.exports = class Product extends BOBasePage {
       // Do nothing
     }
     throw new Error(`${columnName} was not found as column`);
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfProductsFromList();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumn(column, i);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -245,6 +269,14 @@ module.exports = class Product extends BOBasePage {
   }
 
   /**
+   * Get number of products displayed on the page
+   * @return integer
+   */
+  async getNumberOfProductsOnPage() {
+    return (await this.page.$$(this.productRow)).length;
+  }
+
+  /**
    * Reset input filters
    * @return {Promise<void>}
    */
@@ -252,6 +284,7 @@ module.exports = class Product extends BOBasePage {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(this.filterResetButton);
     }
+    await this.waitForVisibleSelector(this.filterSearchButton, 2000);
   }
 
   /**
@@ -271,7 +304,7 @@ module.exports = class Product extends BOBasePage {
   async filterProductsByCategory(value = 'home') {
     // Click and wait to be open
     await this.page.click(this.filterByCategoriesButton);
-    await this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
+    await this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
     // Click on expand button
     await this.page.click(this.filterByCategoriesExpandButton);
     // Choose category to filter with
@@ -293,11 +326,10 @@ module.exports = class Product extends BOBasePage {
   async resetFilterCategory() {
     // Click and wait to be open
     await this.page.click(this.filterByCategoriesButton);
-    await this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
+    await this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='true']`);
     await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(`${this.filterByCategoriesButton}[aria-expanded='false']`),
-      this.page.click(this.filterByCategoriesUnselectButton),
+      this.waitForVisibleSelector(`${this.filterByCategoriesButton}[aria-expanded='false']`),
+      this.clickAndWaitForNavigation(this.filterByCategoriesUnselectButton),
     ]);
   }
 
@@ -310,6 +342,15 @@ module.exports = class Product extends BOBasePage {
   }
 
   /**
+   * GOTO edit product page from row
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToEditProductPage(row) {
+    await this.clickAndWaitForNavigation(this.productRowEditLink(row));
+  }
+
+  /**
    * Delete product with dropdown Menu
    * @param productData
    * @return {Promise<textContent>}
@@ -319,18 +360,14 @@ module.exports = class Product extends BOBasePage {
     await this.filterProducts('reference', productData.reference);
     // Then delete first product and only product shown
     await Promise.all([
-      this.page.waitForSelector(`${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', '1')),
-      this.page.click(this.dropdownToggleButton.replace('%ROW', '1')),
+      this.waitForVisibleSelector(`${this.dropdownToggleButton(1)}[aria-expanded='true']`),
+      this.page.click(this.dropdownToggleButton(1)),
     ]);
     await Promise.all([
-      this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
-      this.page.click(this.dropdownMenuDeleteLink.replace('%ROW', '1')),
+      this.waitForVisibleSelector(this.catalogDeletionModalDialog),
+      this.page.click(this.dropdownMenuDeleteLink(1)),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.modalDialogDeleteNowButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -341,22 +378,18 @@ module.exports = class Product extends BOBasePage {
   async deleteAllProductsWithBulkActions() {
     // Then delete first product and only product shown
     await Promise.all([
-      this.page.waitForSelector(this.productBulkMenuButton, {visible: true}),
-      this.page.click(this.selectAllBulkCheckboxLabel.replace('%ROW', '1')),
+      this.waitForVisibleSelector(this.productBulkMenuButton),
+      this.page.click(this.selectAllBulkCheckboxLabel),
     ]);
     await Promise.all([
-      this.page.waitForSelector(`${this.productBulkMenuButton}[aria-expanded='true']`, {visible: true}),
-      this.page.click(this.productBulkMenuButton.replace('%ROW', '1')),
+      this.waitForVisibleSelector(`${this.productBulkMenuButton}[aria-expanded='true']`),
+      this.page.click(this.productBulkMenuButton),
     ]);
     await Promise.all([
-      this.page.waitForSelector(this.catalogDeletionModalDialog, {visible: true}),
-      this.page.click(this.productBulkDeleteLink.replace('%ROW', '1')),
+      this.waitForVisibleSelector(this.catalogDeletionModalDialog),
+      this.page.click(this.productBulkDeleteLink),
     ]);
-    await Promise.all([
-      this.page.waitForNavigation({waitUntil: 'networkidle0'}),
-      this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true}),
-      this.page.click(this.modalDialogDeleteNowButton),
-    ]);
+    await this.clickAndWaitForNavigation(this.modalDialogDeleteNowButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -366,10 +399,7 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row) {
-    return this.elementVisible(
-      this.productsListTableColumnStatusEnabled.replace('%ROW', row),
-      100,
-    );
+    return this.elementVisible(this.productsListTableColumnStatusEnabled(row), 100);
   }
 
   /**
@@ -379,17 +409,41 @@ module.exports = class Product extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
-    if (await this.getToggleColumnValue(row) !== valueWanted) {
-      this.page.click(this.productsListTableColumnStatus.replace('%ROW', row));
-      if (valueWanted) {
-        await this.page.waitForSelector(this.productsListTableColumnStatusEnabled.replace('%ROW', row));
-      } else {
-        await this.page.waitForSelector(
-          this.productsListTableColumnStatusDisabled.replace('%ROW', row),
-        );
-      }
+    await this.waitForVisibleSelector(this.productsListTableColumnStatus(row), 2000);
+    const actualValue = await this.getToggleColumnValue(row);
+    if (actualValue !== valueWanted) {
+      await this.clickAndWaitForNavigation(this.productsListTableColumnStatus(row));
       return true;
     }
     return false;
+  }
+
+  /**
+   * Go to product page
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async goToProductPage(row = 1) {
+    await this.waitForVisibleSelector(this.productsListTableColumnName(row));
+    await this.clickAndWaitForNavigation(this.productsListTableColumnName(row));
+  }
+
+  /* Sort methods */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
+      await this.page.hover(this.sortColumnDiv(sortBy));
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -96,16 +96,11 @@ require_once __DIR__ . '/bootstrap.php';
 
 $context = Context::getContext();
 
-// Not used anymore, but kept just in case
-if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
-    readfile('https://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
-}
-
 /**
  * Import controller: Fields available for a given entity
  * -> Duplicated in Symfony
  */
-elseif (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
+if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     $import = new AdminImportController();
 
     $fields = array_map(function ($elem) {

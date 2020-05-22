@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,20 +18,20 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-const $ = window.$;
+const {$} = window;
 const IpInput = {};
 
 IpInput.addRemoteAddr = (event) => {
   const input = $(event.target).prev('input');
-  const inputValue = input.val() || "";
-  const ip = event.target.dataset.ip || "";
+  const inputValue = input.val() || '';
+  const ip = event.target.dataset.ip || '';
   if (inputValue.length > 0) {
     if (input.val().indexOf(ip) < 0) {
-      input.val(input.val() + ',' + ip);
+      input.val(`${input.val()},${ip}`);
     }
   } else {
     input.val(ip);
@@ -39,7 +39,7 @@ IpInput.addRemoteAddr = (event) => {
 };
 
 IpInput.init = () => {
-    $("body").on("click", '.add_ip_button', IpInput.addRemoteAddr);
+  $('body').on('click', '.add_ip_button', IpInput.addRemoteAddr);
 };
 
 export default IpInput;

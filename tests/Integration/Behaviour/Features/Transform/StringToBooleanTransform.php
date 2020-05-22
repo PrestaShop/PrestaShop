@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@ namespace Tests\Integration\Behaviour\Features\Transform;
 trait StringToBooleanTransform
 {
     /**
-     * @Transform /^(enabled|included|should|includes)$/
+     * @Transform /^(enabled|enable|included|should|includes)$/
      */
     public function transformTruthyStringToBoolean(string $string)
     {
@@ -40,7 +40,7 @@ trait StringToBooleanTransform
     }
 
     /**
-     * @Transform /^(disabled|excluded|should not|excludes)$/
+     * @Transform /^(disabled|disable|excluded|should not|excludes)$/
      */
     public function transformFalsyStringToBoolean(string $string)
     {

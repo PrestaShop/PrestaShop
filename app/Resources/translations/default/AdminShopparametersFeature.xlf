@@ -78,7 +78,7 @@
       <trans-unit id="57297718fdb439175177cf6b196172d1">
         <source>Order status</source>
         <target>Order status</target>
-        <note>Line: 1570</note>
+        <note>Line: 1576</note>
       </trans-unit>
     </body>
   </file>
@@ -318,7 +318,7 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="22ffd0379431f3b615eb8292f6c31d12">
         <source>Registration date</source>
         <target>Registration date</target>
-        <note>Line: 265</note>
+        <note>Line: 269</note>
       </trans-unit>
       <trans-unit id="c6155aaecccf794cd2a00fcc35898022">
         <source>Group name</source>
@@ -373,22 +373,22 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="c38266740494aa4980d05c606fccac10">
         <source>Customer group</source>
         <target>Customer group</target>
-        <note>Line: 305</note>
+        <note>Line: 309</note>
       </trans-unit>
       <trans-unit id="e8c371079e194d26e5e912e8f5e60408">
         <source>Price display method</source>
         <target>Price display method</target>
-        <note>Line: 331</note>
+        <note>Line: 335</note>
       </trans-unit>
       <trans-unit id="c97b6c7f99c3c50efe826e657024d29b">
         <source>Category discount</source>
         <target>Category discount</target>
-        <note>Line: 374</note>
+        <note>Line: 378</note>
       </trans-unit>
       <trans-unit id="a5b82d7328e66186000f675d6618c414">
         <source>Modules authorization</source>
         <target>Modules authorization</target>
-        <note>Line: 380</note>
+        <note>Line: 384</note>
       </trans-unit>
     </body>
   </file>
@@ -536,7 +536,7 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="9ab81f57823f6aeb02362291f23883e6">
         <source>Aliases</source>
         <target>Aliases</target>
-        <note>Line: 353</note>
+        <note>Line: 418</note>
       </trans-unit>
       <trans-unit id="325c9099ecef84ddc2912d5f0ed3fe2f">
         <source>The "indexed" products have been analyzed by PrestaShop and will appear in the results of a front office search.</source>
@@ -576,102 +576,117 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="f4ff8a799e3f7446a3a67254cf038e7e">
         <source>Search within word</source>
         <target>Search within word</target>
-        <note>Line: 129</note>
+        <note>Line: 135</note>
       </trans-unit>
       <trans-unit id="969e3f96787be55242155cad3cd630d3">
         <source>Search exact end match</source>
         <target>Search exact end match</target>
-        <note>Line: 157</note>
+        <note>Line: 163</note>
       </trans-unit>
       <trans-unit id="8e7ace556216459cd9197423709bdd3a">
         <source>Minimum word length (in characters)</source>
         <target>Minimum word length (in characters)</target>
-        <note>Line: 186</note>
+        <note>Line: 251</note>
       </trans-unit>
       <trans-unit id="5bff181421d95b49ad5ce5bb08f0ffbe">
         <source>Blacklisted words</source>
         <target>Blacklisted words</target>
-        <note>Line: 200</note>
+        <note>Line: 265</note>
       </trans-unit>
       <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
         <source>Weight</source>
         <target>Weight</target>
-        <note>Line: 213</note>
+        <note>Line: 278</note>
       </trans-unit>
       <trans-unit id="a9f445d59022dee4cb33385aef61620f">
         <source>The "weight" represents its importance and relevance for the ranking of the products when completing a new search.</source>
         <target>The "weight" represents its importance and relevance for the ranking of the products when completing a new search.</target>
-        <note>Line: 216</note>
+        <note>Line: 281</note>
       </trans-unit>
       <trans-unit id="892e1b613b7d9628760008536bdef5da">
         <source>A word with a weight of eight will have four times more value than a word with a weight of two.</source>
         <target>A word with a weight of eight will have four times more value than a word with a weight of two.</target>
-        <note>Line: 221</note>
+        <note>Line: 286</note>
       </trans-unit>
       <trans-unit id="33846fa0095bd29abbc2a8b742669b25">
         <source>We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.</source>
         <target>We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.</target>
-        <note>Line: 226</note>
+        <note>Line: 291</note>
       </trans-unit>
       <trans-unit id="15b481c8ea8041ab6000bec80b97db5a">
         <source>Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0</source>
         <target>Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0</target>
-        <note>Line: 231</note>
+        <note>Line: 296</note>
       </trans-unit>
       <trans-unit id="76a591808a254d4094e1c43f937b834f">
         <source>Product name weight</source>
         <target>Product name weight</target>
-        <note>Line: 237</note>
+        <note>Line: 302</note>
       </trans-unit>
       <trans-unit id="f391844c98222451204cbb678d591f86">
         <source>Reference weight</source>
         <target>Reference weight</target>
-        <note>Line: 243</note>
+        <note>Line: 308</note>
       </trans-unit>
       <trans-unit id="6af0a6ff1f2f2a61cbd8b98232314b03">
         <source>Short description weight</source>
         <target>Short description weight</target>
-        <note>Line: 250</note>
+        <note>Line: 315</note>
       </trans-unit>
       <trans-unit id="f90f799bc686f5d6a731b1f8074b4580">
         <source>Description weight</source>
         <target>Description weight</target>
-        <note>Line: 259</note>
+        <note>Line: 324</note>
       </trans-unit>
       <trans-unit id="05cdca5b85ff26e596c3af66ed4820d5">
         <source>Category weight</source>
         <target>Category weight</target>
-        <note>Line: 265</note>
+        <note>Line: 330</note>
       </trans-unit>
       <trans-unit id="3474b76644954c739226a10127d83329">
         <source>Brand weight</source>
         <target>Brand weight</target>
-        <note>Line: 271</note>
+        <note>Line: 336</note>
       </trans-unit>
       <trans-unit id="c152439199cebb7e1c27633efeaf1eda">
         <source>Tags weight</source>
         <target>Tags weight</target>
-        <note>Line: 277</note>
+        <note>Line: 342</note>
       </trans-unit>
       <trans-unit id="1b25f9ffbf4d185dbb985380a04732cc">
         <source>Attributes weight</source>
         <target>Attributes weight</target>
-        <note>Line: 283</note>
+        <note>Line: 348</note>
       </trans-unit>
       <trans-unit id="4871216a35362aebc0d9908e6e288765">
         <source>Features weight</source>
         <target>Features weight</target>
-        <note>Line: 289</note>
+        <note>Line: 354</note>
       </trans-unit>
       <trans-unit id="58e8dcd40d13b2c661ac86dbc9e04e02">
         <source>Add new alias</source>
         <target>Add new alias</target>
-        <note>Line: 305</note>
+        <note>Line: 370</note>
       </trans-unit>
       <trans-unit id="8eea62084ca7e541d918e823422bd82e">
         <source>Result</source>
         <target>Result</target>
-        <note>Line: 369</note>
+        <note>Line: 434</note>
+      </trans-unit>
+      <trans-unit id="b0d4e69d1ce1d2db2c060d311a4e2144">
+        <source>Fuzzy search</source>
+        <target>Fuzzy search</target>
+        <note>Line: 191</note>
+      </trans-unit>
+      <trans-unit id="91ef1a24c02b7efb35b5ff3c79230d5c">
+        <source>Maximum word length (in characters)</source>
+        <target>Maximum word length (in characters)</target>
+        <note>Line: 230</note>
+      </trans-unit>
+      <trans-unit id="dc759a9deb56cc5ad4974559da2a148f">
+        <source>Maximum approximate words allowed by fuzzy search</source>
+        <target>Maximum approximate words allowed by fuzzy search</target>
+        <note>Line: 215</note>
       </trans-unit>
     </body>
   </file>
@@ -1072,47 +1087,124 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="843fbaec27e324378999e09cc665a7f4">
         <source>Round up away from zero, when it is half way there (recommended)</source>
         <target>Round up away from zero, when it is half way there (recommended)</target>
-        <note>Line: 109</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="9d70eb834e3574ca07a1f28083ecba1e">
         <source>Round down towards zero, when it is half way there</source>
         <target>Round down towards zero, when it is half way there</target>
-        <note>Line: 110</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="5f9d1d092dc5658734b8af7187460b32">
         <source>Round towards the next even value</source>
         <target>Round towards the next even value</target>
-        <note>Line: 111</note>
+        <note>Line: 110</note>
       </trans-unit>
       <trans-unit id="8700a0015f3fc1c5d96ccc5140475dc3">
         <source>Round towards the next odd value</source>
         <target>Round towards the next odd value</target>
-        <note>Line: 112</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="6186ae4fe9ec55025a9777dd973e0af2">
         <source>Round up to the nearest value</source>
         <target>Round up to the nearest value</target>
-        <note>Line: 113</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="35853630b5da054ef55e8e02d8df4954">
         <source>Round down to the nearest value</source>
         <target>Round down to the nearest value</target>
-        <note>Line: 114</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="41032c67b9a3d88ff9a824a1f0845513">
         <source>Round on each item</source>
         <target>Round on each item</target>
-        <note>Line: 120</note>
+        <note>Line: 119</note>
       </trans-unit>
       <trans-unit id="a899eacfb98f1740127be5fe16bee5c7">
         <source>Round on each line</source>
         <target>Round on each line</target>
-        <note>Line: 121</note>
+        <note>Line: 120</note>
       </trans-unit>
       <trans-unit id="6d19eb8a9ca35d858824737173ebd011">
         <source>Round on the total</source>
         <target>Round on the total</target>
-        <note>Line: 122</note>
+        <note>Line: 121</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="28e503c3e4f502b3631e255dfc527620">
+        <source>Enable final summary</source>
+        <target>Enable final summary</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="403e42a4b26e379cb13563c98ab63067">
+        <source>Enable guest checkout</source>
+        <target>Enable guest checkout</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="f30598053df0edf94d9463a2133d7f13">
+        <source>Recalculate shipping costs after editing the order</source>
+        <target>Recalculate shipping costs after editing the order</target>
+        <note>Line: 100</note>
+      </trans-unit>
+      <trans-unit id="8f32f059d66d7f10db7668e75b4742e6">
+        <source>Allow multishipping</source>
+        <target>Allow multishipping</target>
+        <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="cd6aaf6d8287fd5a49122d36f0ff7024">
+        <source>Delayed shipping</source>
+        <target>Delayed shipping</target>
+        <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="e4045598261988d9988c594243a9434d">
+        <source>Terms of service</source>
+        <target>Terms of service</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="9bf6ad8b3a08781c7f86684e464e75de">
+        <source>Disable reordering option</source>
+        <target>Disable reordering option</target>
+        <note>Line: 88</note>
+      </trans-unit>
+      <trans-unit id="010193873d7a198ce7004342b145dbc9">
+        <source>Page for terms and conditions</source>
+        <target>Page for terms and conditions</target>
+        <note>Line: 125</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GiftOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2a0677dae563d574fb1c50badaa4eabf">
+        <source>Gift-wrapping price</source>
+        <target>Gift-wrapping price</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="d2c8471bccf2bbf30151cf50a96c3877">
+        <source>Offer gift wrapping</source>
+        <target>Offer gift wrapping</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="0d8bdbe98feb696dd76760ee1374a740">
+        <source>Gift-wrapping tax</source>
+        <target>Gift-wrapping tax</target>
+        <note>Line: 93</note>
+      </trans-unit>
+      <trans-unit id="b667478ccafce4bff6d427a6bca06269">
+        <source>Offer recycled packaging</source>
+        <target>Offer recycled packaging</target>
+        <note>Line: 102</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c6ca929dc4c8193ad6cd154e9e075ac9">
+        <source>Minimum purchase total required in order to validate the order</source>
+        <target>Minimum purchase total required in order to validate the order</target>
+        <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>
@@ -1418,45 +1510,10 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c6ca929dc4c8193ad6cd154e9e075ac9">
-        <source>Minimum purchase total required in order to validate the order</source>
-        <target>Minimum purchase total required in order to validate the order</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="28e503c3e4f502b3631e255dfc527620">
-        <source>Enable final summary</source>
-        <target>Enable final summary</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="403e42a4b26e379cb13563c98ab63067">
-        <source>Enable guest checkout</source>
-        <target>Enable guest checkout</target>
-        <note>Line: 45</note>
-      </trans-unit>
       <trans-unit id="0fb43a164e61d758c5eddcceb67be0c1">
         <source>Disable Reordering Option</source>
         <target>Disable Reordering Option</target>
         <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="f30598053df0edf94d9463a2133d7f13">
-        <source>Recalculate shipping costs after editing the order</source>
-        <target>Recalculate shipping costs after editing the order</target>
-        <note>Line: 66</note>
-      </trans-unit>
-      <trans-unit id="8f32f059d66d7f10db7668e75b4742e6">
-        <source>Allow multishipping</source>
-        <target>Allow multishipping</target>
-        <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="cd6aaf6d8287fd5a49122d36f0ff7024">
-        <source>Delayed shipping</source>
-        <target>Delayed shipping</target>
-        <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="e4045598261988d9988c594243a9434d">
-        <source>Terms of service</source>
-        <target>Terms of service</target>
-        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="960e3de6241e862401f2bd93539e0381">
         <source>Page for the Terms and conditions</source>
@@ -1467,30 +1524,10 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderPreferences/Blocks/order_preferences_gift_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2a0677dae563d574fb1c50badaa4eabf">
-        <source>Gift-wrapping price</source>
-        <target>Gift-wrapping price</target>
-        <note>Line: 45</note>
-      </trans-unit>
       <trans-unit id="bf3b3ed0e4fd43efff9c26b3d35c6c2f">
         <source>Gift options</source>
         <target>Gift options</target>
         <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="d2c8471bccf2bbf30151cf50a96c3877">
-        <source>Offer gift wrapping</source>
-        <target>Offer gift wrapping</target>
-        <note>Line: 38</note>
-      </trans-unit>
-      <trans-unit id="0d8bdbe98feb696dd76760ee1374a740">
-        <source>Gift-wrapping tax</source>
-        <target>Gift-wrapping tax</target>
-        <note>Line: 54</note>
-      </trans-unit>
-      <trans-unit id="b667478ccafce4bff6d427a6bca06269">
-        <source>Offer recycled packaging</source>
-        <target>Offer recycled packaging</target>
-        <note>Line: 63</note>
       </trans-unit>
     </body>
   </file>
@@ -1775,6 +1812,16 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Please click here to check if your shop supports HTTPS.</source>
         <target>Please click here to check if your shop supports HTTPS.</target>
         <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="9fcc7a5ba2d12f5c77290e0bc6457a93">
+        <source>Display suppliers</source>
+        <target>Display suppliers</target>
+        <note>Line: 122</note>
+      </trans-unit>
+      <trans-unit id="9cc328444bdc1b5f54550d04d57138a9">
+        <source>Display brands</source>
+        <target>Display brands</target>
+        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>

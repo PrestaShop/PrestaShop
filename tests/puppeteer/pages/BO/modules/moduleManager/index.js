@@ -10,14 +10,22 @@ module.exports = class moduleManager extends BOBasePage {
     // Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
-    this.allModulesBloc = '.module-short-list .module-item-list';
-    this.moduleBloc = `${this.allModulesBloc}[data-name='%MODULENAME']`;
-    this.disableModuleButton = `${this.moduleBloc} button.module_action_menu_disable`;
-    this.configureModuleButton = `${this.moduleBloc} div.module-actions>a`;
+    this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
+    this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
+    this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
+    this.moduleBlock = moduleName => `${this.allModulesBlock}[data-name='${moduleName}']`;
+    this.disableModuleButton = moduleName => `${this.moduleBlock(moduleName)} button.module_action_menu_disable`;
+    this.configureModuleButton = moduleName => `${this.moduleBlock(moduleName)}`
+      + ' div.module-actions a[href*=\'/action/configure\']';
+    this.actionsDropdownButton = moduleName => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
     // Status dropdown selectors
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
-    this.statusDropdownItemLink = `${this.statusDropdownMenu} ul li[data-status-ref='%REF'] a`;
+    this.statusDropdownItemLink = ref => `${this.statusDropdownMenu} ul li[data-status-ref='${ref}'] a`;
+    // Categories
+    this.categoriesSelectDiv = '#categories';
+    this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
+    this.categoryDropdownItem = cat => `${this.categoriesDropdownDiv} li[data-category-display-name='${cat}']`;
   }
 
   /*
@@ -33,7 +41,7 @@ module.exports = class moduleManager extends BOBasePage {
   async searchModule(moduleTag, moduleName) {
     await this.page.type(this.searchModuleTagInput, moduleTag);
     await this.page.click(this.searchModuleButton);
-    await this.page.waitForSelector(this.moduleBloc.replace('%MODULENAME', moduleName), {visible: true});
+    await this.waitForVisibleSelector(this.moduleBlock(moduleName));
   }
 
   /**
@@ -42,7 +50,13 @@ module.exports = class moduleManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToConfigurationPage(moduleName) {
-    await this.page.click(this.configureModuleButton.replace('%MODULENAME', moduleName));
+    if (await this.elementNotVisible(this.configureModuleButton(moduleName), 1000)) {
+      await Promise.all([
+        this.page.click(this.actionsDropdownButton(moduleName)),
+        this.waitForVisibleSelector(`${this.actionsDropdownButton(moduleName)}[aria-expanded='true']`),
+      ]);
+    }
+    await this.page.click(this.configureModuleButton(moduleName));
   }
 
   /**
@@ -53,11 +67,11 @@ module.exports = class moduleManager extends BOBasePage {
   async filterByStatus(enabled) {
     await Promise.all([
       this.page.click(this.statusDropdownDiv),
-      this.page.waitForSelector(`${this.statusDropdownDiv}[aria-expanded='true']`),
+      this.waitForVisibleSelector(`${this.statusDropdownDiv}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.statusDropdownItemLink.replace('%REF', enabled ? 1 : 0)),
-      this.page.waitForSelector(`${this.statusDropdownDiv}[aria-expanded='false']`),
+      this.page.click(this.statusDropdownItemLink(enabled ? 1 : 0)),
+      this.waitForVisibleSelector(`${this.statusDropdownDiv}[aria-expanded='false']`),
     ]);
   }
 
@@ -67,7 +81,7 @@ module.exports = class moduleManager extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async isModuleEnabled(moduleName) {
-    return this.elementNotVisible(this.disableModuleButton.replace('%MODULENAME', moduleName), 1000);
+    return this.elementNotVisible(this.disableModuleButton(moduleName), 1000);
   }
 
   /**
@@ -84,10 +98,40 @@ module.exports = class moduleManager extends BOBasePage {
     return modulesStatus;
   }
 
+  /**
+   * Get All modules names
+   * @return {Promise<table>}
+   */
   async getAllModulesNames() {
     return this.page.$$eval(
-      this.allModulesBloc,
+      this.allModulesBlock,
       all => all.map(el => el.getAttribute('data-name')),
     );
+  }
+
+  /**
+   * Filter by category
+   * @param category
+   * @return {Promise<void>}
+   */
+  async filterByCategory(category) {
+    await Promise.all([
+      this.page.click(this.categoriesSelectDiv),
+      this.waitForVisibleSelector(`${this.categoriesSelectDiv}[aria-expanded='true']`),
+    ]);
+    await Promise.all([
+      this.page.click(this.categoryDropdownItem(category)),
+      this.waitForVisibleSelector(`${this.categoriesSelectDiv}[aria-expanded='false']`),
+    ]);
+  }
+
+  /**
+   * Get modules block title (administration / payment ...)
+   * @param position
+   * @return {Promise<void>}
+   */
+  async getBlockModuleTitle(position) {
+    const modulesBlocks = await this.page.$$eval(this.modulesListBlockTitle, all => all.map(el => el.textContent));
+    return modulesBlocks[position - 1];
   }
 };

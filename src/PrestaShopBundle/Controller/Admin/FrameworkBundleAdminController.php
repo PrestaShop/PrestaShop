@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,11 +31,15 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,6 +49,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrameworkBundleAdminController extends Controller
 {
+    const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
+
     /**
      * @var ConfigurationInterface
      */
@@ -191,6 +197,27 @@ class FrameworkBundleAdminController extends Controller
     protected function getContext()
     {
         return $this->get('prestashop.adapter.legacy.context')->getContext();
+    }
+
+    /**
+     * Get the locale based on the context
+     *
+     * @return Locale
+     */
+    protected function getContextLocale(): Locale
+    {
+        $locale = $this->getContext()->getCurrentLocale();
+        if (null !== $locale) {
+            return $locale;
+        }
+
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $this->get('prestashop.core.localization.locale.repository');
+        $locale = $localeRepository->getLocale(
+            $this->getContext()->language->getLocale()
+        );
+
+        return $locale;
     }
 
     /**
@@ -451,6 +478,17 @@ class FrameworkBundleAdminController extends Controller
     protected function getContextShopId()
     {
         return $this->getContext()->shop->id;
+    }
+
+    /**
+     * @param FormInterface $form
+     */
+    protected function addFlashFormErrors(FormInterface $form)
+    {
+        /** @var FormError $formError */
+        foreach ($form->getErrors(true) as $formError) {
+            $this->addFlash('error', $formError->getMessage());
+        }
     }
 
     /**

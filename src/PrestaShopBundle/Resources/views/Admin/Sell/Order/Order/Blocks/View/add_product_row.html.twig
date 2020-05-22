@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,13 +18,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr id="addProductTableRow" class="d-none">
-  <td colspan="2" class="pr-5">
+<tr id="addProductTableRow" class="add-product d-none">
+  <td colspan="2" class="pr-2">
     {{ form_row(addProductRowForm.product_id) }}
     {{ form_row(addProductRowForm.tax_rate) }}
     {{ form_label(addProductRowForm.search) }}
@@ -39,25 +39,41 @@
       <select id="addProductCombinationId" class="custom-select"></select>
     </div>
   </td>
-  <td class="pr-5">
-    {{ form_row(addProductRowForm.price_tax_excluded) }}
-    {{ form_row(addProductRowForm.price_tax_included) }}
+  <td class="pr-2">
+   <div class="row add-product-inputs">
+     <div class="col-sm-6">
+      {{ form_widget(addProductRowForm.price_tax_excluded) }}
+     </div>
+
+     <div class="col-sm-6">
+      {{ form_widget(addProductRowForm.price_tax_included) }}
+     </div>
+   </div>
   </td>
-  <td class="pr-5">
-    {{ form_row(addProductRowForm.quantity) }}
+  <td class="pr-2 add-product-quantity">
+    {{ form_row(addProductRowForm.quantity, {'type':'number'}) }}
   </td>
-  <td id="addProductLocation"></td>
-  <td id="addProductRefunded"></td>
+  <td id="addProductLocation" class="cellProductLocation"></td>
+  <td id="addProductRefunded" class="cellProductRefunded"></td>
   <td id="addProductAvailable"></td>
   <td id="addProductTotalPrice"></td>
-  <td colspan="2" class="pr-2">
-    {% if orderForViewing.hasInvoice() %}
-      {{ form_row(addProductRowForm.invoice) }}
-    {% endif %}
-  </td>
-  <td class="text-right btn-group">
-    {{ form_row(addProductRowForm.cancel) }}
-    {{ form_row(addProductRowForm.add) }}
+  {% if orderForViewing.hasInvoice() %}
+    <td class="addProductInvoice pr-2">
+      {{ form_row(addProductRowForm.invoice, {
+        'attr': {
+          'data-modal-title': 'Create a new invoice'|trans({}, 'Admin.Orderscustomers.Feature'),
+          'data-modal-apply': 'Create'|trans({}, 'Admin.Actions'),
+          'data-modal-cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+          'data-modal-body': 'Are you sure you want to create a new invoice?'|trans({}, 'Admin.Orderscustomers.Notification')
+        }})
+      }}
+    </td>
+  {% endif %}
+  <td class="text-right add-product-buttons">
+    <div class="btn-group">
+      {{ form_row(addProductRowForm.cancel) }}
+      {{ form_row(addProductRowForm.add) }}
+    </div>
   </td>
 </tr>
 <tr id="addProductNewInvoiceInfo" class="d-none">

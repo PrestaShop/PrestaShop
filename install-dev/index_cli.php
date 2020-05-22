@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,9 +33,20 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSI
 
 /* Redefine REQUEST_URI */
 $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes/datas.php';
+/**
+ * The autoload needs constant (__PS_BASE_URI__) declared in the init.php
+ * to work properly.
+ * And, this one can have a custom value depending on what the user specify in arguments.
+ *
+ * Using getAndCheckArgs is quite redundant because it's also used in controllerConsole,
+ * but it prevent a duplicate logic and allows the program to retrieve the base_uri
+ * value from the CLI.
+ */
+Datas::getInstance()->getAndCheckArgs($argv);
+
 require_once dirname(__FILE__).'/init.php';
 require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
-require_once _PS_INSTALL_PATH_.'classes/datas.php';
 
 try {
     require_once _PS_INSTALL_PATH_.'classes/controllerConsole.php';

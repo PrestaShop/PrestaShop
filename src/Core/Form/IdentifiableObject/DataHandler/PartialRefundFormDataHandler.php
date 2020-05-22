@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 
 /**
- * Class CurrencyFormDataHandler
+ * Class PartialRefundFormDataHandler
  */
 final class PartialRefundFormDataHandler implements FormDataHandlerInterface
 {
@@ -64,21 +64,20 @@ final class PartialRefundFormDataHandler implements FormDataHandlerInterface
         $refunds = [];
         foreach ($data['products'] as $product) {
             $orderDetailId = $product->getOrderDetailId();
-            if (!empty($data['quantity_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId];
-            }
-            if (!empty($data['amount_' . $orderDetailId])) {
-                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId];
+            if (!empty($data['quantity_' . $orderDetailId]) || !empty((float) $data['amount_' . $orderDetailId])) {
+                $refunds[$orderDetailId]['quantity'] = $data['quantity_' . $orderDetailId] ?? 0;
+                $refunds[$orderDetailId]['amount'] = $data['amount_' . $orderDetailId] ?? 0;
             }
         }
 
         $command = new IssuePartialRefundCommand(
             $id,
             $refunds,
-            $data['shipping'],
+            $data['shipping_amount'],
             $data['restock'],
+            $data['credit_slip'],
             $data['voucher'],
-            VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
+            $data['voucher_refund_type'] ?? VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND
         );
 
         $this->commandBus->handle($command);

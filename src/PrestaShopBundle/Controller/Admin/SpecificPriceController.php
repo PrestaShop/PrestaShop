@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityDataInconsistencyException;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShopBundle\Form\Admin\Product\ProductSpecificPrice as SpecificPriceFormType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,11 +44,13 @@ use Symfony\Component\HttpFoundation\Response;
 class SpecificPriceController extends FrameworkBundleAdminController
 {
     /**
-     * get specific price list for a product.
+     * Get specific price list for a product.
+     *
+     * @AdminSecurity("is_granted(['read'], 'ADMINPRODUCTS_')")
      *
      * @param $idProduct The product ID
      *
-     * @return string JSON
+     * @return JsonResponse
      */
     public function listAction($idProduct)
     {
@@ -86,9 +89,11 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Add specific price Form process.
      *
+     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     *
      * @param Request $request The request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function addAction(Request $request)
     {
@@ -110,6 +115,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
      * Get one specific price list for a product.
      *
      * @Template("@PrestaShop/Admin/Product/ProductPage/Forms/form_specific_price.html.twig")
+     *
+     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
      *
      * @param int $idSpecificPrice
      *
@@ -157,10 +164,12 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Update specific price Form process.
      *
+     * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
+     *
      * @param int idSpecificPrice
      * @param Request $request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function updateAction($idSpecificPrice, Request $request)
     {
@@ -185,10 +194,12 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * Delete a specific price.
      *
+     * @AdminSecurity("is_granted(['delete'], 'ADMINPRODUCTS_')")
+     *
      * @param int $idSpecificPrice The specific price ID
      * @param Request $request The request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function deleteAction($idSpecificPrice, Request $request)
     {
@@ -253,7 +264,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * @param string $dateAsString
      *
-     * @return string|null If date is 0000-00-00 00:00:00, null is returned
+     * @return JsonResponse|null If date is 0000-00-00 00:00:00, null is returned
      *
      * @throws \PrestaShopDatabaseExceptionCore if date is not valid
      */

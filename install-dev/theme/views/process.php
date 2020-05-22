@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -103,25 +103,6 @@ var admin = '<?php echo file_exists('../admin-dev') ? '../admin-dev' : '../admin
 				<a class="FO" target="_blank"><span><?php echo $this->translator->trans('Discover your store', array(), 'Install') ?></span></a>
 			</p>
 		</div>
-	</div>
-
-	<div class="sharing">
-		<p><?php echo $this->translator->trans('Share your experience with your friends!', array(), 'Install'); ?></p>
-		<button type="button" class="btn-twitter" onclick="psinstall_twitter_click('<?php echo $this->translator->trans('I just built an online store with PrestaShop!', array(), 'Install'); ?> <?php echo $this->translator->trans('Watch this exhilarating experience: http://vimeo.com/89298199', array(), 'Install'); ?>');">
-			<i></i> <?php echo $this->translator->trans('Tweet', array(), 'Install'); ?>
-		</button>
-		<button type="button" class="btn-facebook" onclick="psinstall_facebook_click();">
-			<i></i> <?php echo $this->translator->trans('Share', array(), 'Install'); ?>
-		</button>
-		<button type="button" class="btn-google-plus" onclick="psinstall_google_click();">
-			<i></i> <?php echo $this->translator->trans('Google+', array(), 'Install'); ?>
-		</button>
-		<button type="button" class="btn-pinterest" onclick="psinstall_pinterest_click();">
-			<i></i> <?php echo $this->translator->trans('Pinterest', array(), 'Install'); ?>
-		</button>
-		<button type="button" class="btn-linkedin" onclick="psinstall_linkedin_click();">
-			<i></i> <?php echo $this->translator->trans('LinkedIn', array(), 'Install'); ?>
-		</button>
 	</div>
 </div>
 

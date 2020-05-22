@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,12 +31,34 @@ class PDFGeneratorCore extends TCPDF
 {
     const DEFAULT_FONT = 'helvetica';
 
+    /**
+     * @var string
+     */
     public $header;
+
+    /**
+     * @var string
+     */
     public $footer;
+
+    /**
+     * @var string
+     */
     public $pagination;
+
+    /**
+     * @var string
+     */
     public $content;
+
+    /**
+     * @var string
+     */
     public $font;
 
+    /**
+     * @var array
+     */
     public $font_by_lang = [
         'ja' => 'cid0jp',
         'bg' => 'freeserif',
@@ -216,6 +238,10 @@ class PDFGeneratorCore extends TCPDF
 
     /**
      * Override of TCPDF::getRandomSeed() - getmypid() is blocked on several hosting.
+     *
+     * @param string $seed
+     *
+     * @return string
      */
     protected function getRandomSeed($seed = '')
     {

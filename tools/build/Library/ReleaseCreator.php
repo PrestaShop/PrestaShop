@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -280,6 +280,7 @@ class ReleaseCreator
             ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
+            ->runBuildAssets()
             ->createPackage();
         $endTime = date('H:i:s');
         $this->consoleWriter->displayText(
@@ -509,9 +510,32 @@ class ReleaseCreator
         $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
-        if ($returnCode != 0) {
+        if ($returnCode !== 0) {
             throw new BuildException('Unable to run composer install.');
         }
+
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
+
+        return $this;
+    }
+
+    /**
+     * Build assets.
+     *
+     * @return $this
+     * @throws BuildException
+     */
+    protected function runBuildAssets()
+    {
+        $this->consoleWriter->displayText("Running build assets...", ConsoleWriter::COLOR_YELLOW);
+        $argProjectPath = escapeshellarg($this->tempProjectPath);
+        $command = "cd {$argProjectPath} && make assets 2>&1";
+        exec($command, $output, $returnCode);
+
+        if ($returnCode !== 0) {
+            throw new BuildException('Unable to build assets.');
+        }
+
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;

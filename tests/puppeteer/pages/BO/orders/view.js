@@ -9,30 +9,28 @@ module.exports = class Order extends BOBasePage {
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
 
     // Order page
-    this.orderProductsTable = '#orderProducts';
-    this.orderProductsRowTable = `${this.orderProductsTable} tr:nth-child(%ID)`;
-    this.editProductButton = `${this.orderProductsRowTable} .edit_product_change_link`;
-    this.editProductQuantityInput = `${this.orderProductsRowTable} span.product_quantity_edit > input`;
-    this.productQuantitySpan = `${this.orderProductsRowTable} span.product_quantity_show.badge`;
-    this.UpdateProductButton = `${this.orderProductsRowTable} .submitProductChange`;
-    this.partialRefundButton = '#desc-order-partial_refund';
+    this.orderProductsTable = '#orderProductsTable';
+    this.orderProductsRowTable = row => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
+    this.editProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Edit']`;
+    this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
+    this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
+    this.editProductQuantityInput = `${this.orderProductsEditRowTable} input#edit_product_row_quantity`;
+    this.UpdateProductButton = `${this.orderProductsEditRowTable} button#edit_product_row_save`;
+    this.partialRefundButton = 'button.partial-refund-display';
     // Status tab
-    this.orderStatusesSelect = '#id_order_state_chosen';
-    this.orderStatusesSearchInput = `${this.orderStatusesSelect} input[type='text']`;
-    this.orderStatusSearchResult = `${this.orderStatusesSelect} li:nth-child(1)`;
-    this.updateStatusButton = '#submit_state';
-    this.statusValidation = '#status tr:nth-child(1) > td:nth-child(2)';
+    this.orderStatusesSelect = '#update_order_status_action_input';
+    this.updateStatusButton = '#update_order_status_action_btn';
     // Document tab
-    this.documentTab = '#tabOrder a[href=\'#documents\']';
-    this.documentNumberLink = '#documents_table tr:nth-child(%ID) td:nth-child(3) a';
-    this.documentName = '#documents_table tr:nth-child(%ID) td:nth-child(2)';
+    this.documentTab = 'a#orderDocumentsTab';
+    this.documentsTableDiv = '#orderDocumentsTabContent';
+    this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
+    this.documentNumberLink = row => `${this.documentsTableRow(row)} td:nth-child(3) a`;
+    this.documentName = row => `${this.documentsTableRow(row)} td:nth-child(2)`;
     // Refund form
-    this.refundProductQuantity = `${this.orderProductsTable} tr:nth-child(%ID)
-    input[onchange*='checkPartialRefundProductQuantity']`;
-    this.refundProductAmount = `${this.orderProductsTable} tr:nth-child(%ID)
-    input[onchange*='checkPartialRefundProductAmount']`;
-    this.refundShippingCost = 'input[name="partialRefundShippingCost"]';
-    this.partialRefundSubmitButton = '[name=\'partialRefund\']';
+    this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
+    this.refundProductAmount = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
+    this.refundShippingCost = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_shipping_amount']`;
+    this.partialRefundSubmitButton = 'button#cancel_product_save';
   }
 
   /*
@@ -41,39 +39,58 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Modify the product quantity
-   * @param id, product id
+   * @param row, product row
    * @param quantity, new quantity
    * @returns {Promise<void>}
    */
-  async modifyProductQuantity(id, quantity) {
-    await this.dialogListener();
-    await this.waitForSelectorAndClick(this.editProductButton.replace('%ID', id));
-    await this.setValue(this.editProductQuantityInput.replace('%ID', id), quantity);
-    await this.waitForSelectorAndClick(this.UpdateProductButton.replace('%ID', id));
-    return this.checkTextValue(this.productQuantitySpan.replace('%ID', id), quantity);
+  async modifyProductQuantity(row, quantity) {
+    this.dialogListener();
+    await Promise.all([
+      this.page.click(this.editProductButton(row)),
+      this.waitForVisibleSelector(this.editProductQuantityInput),
+    ]);
+    await this.setValue(this.editProductQuantityInput, quantity.toString());
+    await Promise.all([
+      this.page.click(this.UpdateProductButton),
+      this.waitForVisibleSelector(this.editProductQuantityInput),
+    ]);
+    return parseFloat(await this.getTextContent(this.productQuantitySpan(row)));
   }
 
   /**
    * Modify the order status
    * @param status
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
   async modifyOrderStatus(status) {
-    await this.waitForSelectorAndClick(this.orderStatusesSelect);
-    await this.page.type(this.orderStatusesSearchInput, status);
-    await this.page.click(this.orderStatusSearchResult);
-    await this.page.click(this.updateStatusButton);
-    return this.checkTextValue(this.statusValidation, status);
+    const actualStatus = await this.getOrderStatus();
+    if (status !== actualStatus) {
+      await this.selectByVisibleText(this.orderStatusesSelect, status);
+      await this.clickAndWaitForNavigation(this.updateStatusButton);
+      return this.getOrderStatus();
+    }
+    return actualStatus;
+  }
+
+  /**
+   * Get order status
+   * @return {Promise<string>}
+   */
+  async getOrderStatus() {
+    return this.getTextContent(`${this.orderStatusesSelect} option[selected='selected']`, false);
   }
 
   /**
    * Get document name
    * @param rowChild
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
   async getDocumentName(rowChild = 1) {
-    await this.page.click(this.documentTab);
-    return this.getTextContent(this.documentName.replace('%ID', rowChild));
+    await Promise.all([
+      this.page.click(this.documentTab),
+      this.waitForVisibleSelector(`${this.documentTab}.active`),
+    ]);
+    return this.getTextContent(this.documentName(rowChild));
   }
 
   /**
@@ -82,8 +99,11 @@ module.exports = class Order extends BOBasePage {
    * @returns fileName
    */
   async getFileName(rowChild = 1) {
-    await this.page.click(this.documentTab);
-    const fileName = await this.getTextContent(this.documentNumberLink.replace('%ID', rowChild));
+    await Promise.all([
+      this.page.click(this.documentTab),
+      this.waitForVisibleSelector(`${this.documentTab}.active`),
+    ]);
+    const fileName = await this.getTextContent(this.documentNumberLink(rowChild));
     return fileName.replace('#', '').trim();
   }
 
@@ -92,10 +112,10 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async downloadInvoice() {
-    /* eslint-disable no-return-assign, no-param-reassign */
+    /* eslint-disable no-return-assign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink.replace('%ID', 1), el => el.target = '');
-    await this.page.click(this.documentNumberLink.replace('%ID', 1));
+    await this.page.$eval(this.documentNumberLink(1), el => el.target = '');
+    await this.page.click(this.documentNumberLink(1));
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 
@@ -105,22 +125,27 @@ module.exports = class Order extends BOBasePage {
    */
   async clickOnPartialRefund() {
     await this.page.click(this.partialRefundButton);
+    await this.waitForVisibleSelector(this.refundProductQuantity(1));
   }
 
   /**
    * Add partial refund product
-   * @param productID
+   * @param productRow
    * @param quantity
    * @param amount
    * @param shipping
    * @returns {Promise<textContent>}
    */
-  async addPartialRefundProduct(productID, quantity = 0, amount = 0, shipping = 0) {
-    await this.setValue(this.refundProductQuantity.replace('%ID', productID), quantity.toString());
-    await this.setValue(this.refundProductAmount.replace('%ID', productID), amount.toString());
-    await this.setValue(this.refundShippingCost, shipping.toString());
-    await this.page.click(this.partialRefundSubmitButton);
-    return this.getTextContent(this.alertSuccessBloc);
+  async addPartialRefundProduct(productRow, quantity = 0, amount = 0, shipping = 0) {
+    await this.setValue(this.refundProductQuantity(productRow), quantity.toString());
+    if (amount !== 0) {
+      await this.setValue(this.refundProductAmount(productRow), amount.toString());
+    }
+    if (shipping !== 0) {
+      await this.setValue(this.refundShippingCost(productRow), shipping.toString());
+    }
+    await this.clickAndWaitForNavigation(this.partialRefundSubmitButton);
+    return this.getTextContent(this.alertTextBlock);
   }
 
   /**
@@ -130,8 +155,8 @@ module.exports = class Order extends BOBasePage {
   async downloadDeliverySlip() {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink.replace('%ID', 3), el => el.target = '');
-    await this.page.click(this.documentNumberLink.replace('%ID', 3));
+    await this.page.$eval(this.documentNumberLink(3), el => el.target = '');
+    await this.page.click(this.documentNumberLink(3));
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -441,25 +441,6 @@ class DbMySQLiCore extends Db
     {
         $link = @new mysqli($server, $user, $pwd);
         $ret = $link->query('SET NAMES utf8mb4');
-        $link->close();
-
-        return $ret;
-    }
-
-    /**
-     * Checks if auto increment value and offset is 1.
-     *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     *
-     * @return bool
-     */
-    public static function checkAutoIncrement($server, $user, $pwd)
-    {
-        $link = @new mysqli($server, $user, $pwd);
-        $ret = (bool) (($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch_assoc()) && $row['aii'] == 1);
-        $ret &= (bool) (($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch_assoc()) && $row['aio'] == 1);
         $link->close();
 
         return $ret;

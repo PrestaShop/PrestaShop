@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Exception;
+use Hook;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 
@@ -67,6 +68,12 @@ class OrderReturnPresenter implements PresenterInterface
             throw new Exception('orderReturnPresenter can only present order_return passed as array');
         }
 
-        return new OrderReturnLazyArray($this->prefix, $this->link, $orderReturn);
+        $orderReturnLazyArray = new OrderReturnLazyArray($this->prefix, $this->link, $orderReturn);
+
+        Hook::exec('actionPresentOrderReturn',
+            ['presentedOrderReturn' => &$orderReturnLazyArray]
+        );
+
+        return $orderReturnLazyArray;
     }
 }

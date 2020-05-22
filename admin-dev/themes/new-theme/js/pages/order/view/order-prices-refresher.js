@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -26,7 +26,7 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderPricesRefresher {
   constructor() {
@@ -37,6 +37,8 @@ export default class OrderPricesRefresher {
     $.ajax(this.router.generate('admin_orders_get_prices', {orderId}))
       .then((response) => {
         $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
+        $(OrderViewPageMap.orderDiscountsTotal).text(response.discountsAmountFormatted);
+        $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass('d-none', !response.discountsAmountDisplayed);
         $(OrderViewPageMap.orderProductsTotal).text(response.productsTotalFormatted);
         $(OrderViewPageMap.orderShippingTotal).text(response.shippingTotalFormatted);
         $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);

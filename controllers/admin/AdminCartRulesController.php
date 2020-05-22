@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,6 +56,10 @@ class AdminCartRulesControllerCore extends AdminController
 
     public function ajaxProcessLoadCartRules()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $type = $token = $search = '';
         $limit = $count = $id_cart_rule = 0;
         if (Tools::getIsset('limit')) {
@@ -170,9 +174,9 @@ class AdminCartRulesControllerCore extends AdminController
                     // Add a new rule group
                     $rule_group_id = 1;
                     if (is_array($rule_group_array)) {
-                        // Empty for (with a ; at the end), that just find the first rule_group_id available in rule_group_array
-                        for ($rule_group_id = 1; in_array($rule_group_id, $rule_group_array); ++$rule_group_id) {
-                            42;
+                        // Find the first rule_group_id that is not available in the array
+                        while (in_array($rule_group_id, $rule_group_array)) {
+                            ++$rule_group_id;
                         }
                         $_POST['product_rule_group'][] = $rule_group_id;
                     } else {
@@ -268,6 +272,10 @@ class AdminCartRulesControllerCore extends AdminController
         }
         if (Tools::getValue('submitFormAjax')) {
             $this->redirect_after = false;
+            if ($cart_rule) {
+                $this->context->smarty->assign('refresh_cart', true);
+                $this->display = 'edit';
+            }
         }
 
         return $cart_rule;
@@ -601,6 +609,11 @@ class AdminCartRulesControllerCore extends AdminController
     public function renderForm()
     {
         $limit = 40;
+        $this->toolbar_btn['save'] = [
+            'href' => '#',
+            'desc' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
+
         $this->toolbar_btn['save-and-stay'] = [
             'href' => '#',
             'desc' => $this->trans('Save and stay', [], 'Admin.Actions'),
@@ -700,7 +713,7 @@ class AdminCartRulesControllerCore extends AdminController
                 'show_toolbar' => true,
                 'toolbar_btn' => $this->toolbar_btn,
                 'toolbar_scroll' => $this->toolbar_scroll,
-                'title' => [$this->trans('Payment: ', [], 'Admin.Catalog.Feature'), $this->trans('Cart Rules', [], 'Admin.Catalog.Feature')],
+                'title' => [$this->trans('Payment:', [], 'Admin.Catalog.Feature'), $this->trans('Cart Rules', [], 'Admin.Catalog.Feature')],
                 'defaultDateFrom' => date('Y-m-d H:00:00'),
                 'defaultDateTo' => date('Y-m-d H:00:00', strtotime('+1 month')),
                 'customerFilter' => $customer_filter,

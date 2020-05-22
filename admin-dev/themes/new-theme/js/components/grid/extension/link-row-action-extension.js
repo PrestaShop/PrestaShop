@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class LinkRowActionExtension handles link row actions
@@ -48,7 +48,7 @@ export default class LinkRowActionExtension {
     grid.getContainer().on('click', '.js-link-row-action', (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
-      if (confirmMessage.length && !confirm(confirmMessage)) {
+      if (confirmMessage.length && !window.confirm(confirmMessage)) {
         event.preventDefault();
       }
     });
@@ -66,15 +66,13 @@ export default class LinkRowActionExtension {
       $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(function propagateFirstLinkAction() {
         const $rowAction = $(this);
         const $parentCell = $rowAction.closest('td');
-        
-        const clickableCells = $('td.clickable', $parentRow)
-          .not($parentCell)
-        ;
 
+        const clickableCells = $('td.clickable', $parentRow)
+          .not($parentCell);
         clickableCells.addClass('cursor-pointer').click(() => {
           const confirmMessage = $rowAction.data('confirm-message');
 
-          if (!confirmMessage.length || confirm(confirmMessage)) {
+          if (!confirmMessage.length || window.confirm(confirmMessage)) {
             document.location = $rowAction.attr('href');
           }
         });

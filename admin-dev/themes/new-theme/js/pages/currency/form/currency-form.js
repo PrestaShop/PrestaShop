@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,16 +18,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueResource from 'vue-resource';
-import CurrencyFormatter from './components/CurrencyFormatter.vue';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import {showGrowl} from '@app/utils/growl';
+import ConfirmModal from '@components/modal';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import CurrencyFormatter from './components/CurrencyFormatter.vue';
 
 Vue.use(VueResource);
 Vue.use(VueI18n);
@@ -52,23 +53,29 @@ export default class CurrencyForm {
     this.$resetDefaultSettingsButton = $(this.map.resetDefaultSettingsInput);
     this.$loadingDataModal = $(this.map.loadingDataModal);
     this.currencyFormatterId = this.map.currencyFormatter.replace('#', '');
+    this.hideModal = true;
+    this.$loadingDataModal.on('shown.bs.modal', () => {
+      if (this.hideModal) {
+        this.$loadingDataModal.modal('hide');
+      }
+    });
   }
 
   init() {
-    this._initListeners();
-    this._initFields();
-    this._initState();
-    this._initCurrencyFormatter();
+    this.initListeners();
+    this.initFields();
+    this.initState();
+    this.initCurrencyFormatter();
   }
 
-  _initState() {
+  initState() {
     this.state = {
-      currencyData: this._getCurrencyDataFromForm(),
+      currencyData: this.getCurrencyDataFromForm(),
       languages: [...this.originalLanguages],
     };
   }
 
-  _initCurrencyFormatter() {
+  initCurrencyFormatter() {
     // Customizer only present when languages data are present (for installed currencies only)
     if (!this.originalLanguages.length) {
       return;
@@ -76,31 +83,35 @@ export default class CurrencyForm {
 
     $(`<div id="${this.currencyFormatterId}"></div>`).insertBefore(this.$currencyFormFooter);
     this.currencyFormatter = new Vue({
-        el: this.map.currencyFormatter,
-        i18n: new VueI18n({
-          locale: 'en',
-          formatter: new ReplaceFormatter(),
-          messages: { en: this.translations }
-        }),
-        components: {CurrencyFormatter},
-        data: this.state,
-        template: `<currency-formatter id="${this.currencyFormatterId}" :languages="languages" :currencyData="currencyData"></currency-formatter>`
+      el: this.map.currencyFormatter,
+      i18n: new VueI18n({
+        locale: 'en',
+        formatter: new ReplaceFormatter(),
+        messages: {en: this.translations},
+      }),
+      components: {CurrencyFormatter},
+      data: this.state,
+      template: `<currency-formatter
+        id="${this.currencyFormatterId}"
+        :languages="languages"
+        :currencyData="currencyData">
+      </currency-formatter>`,
     });
 
     this.currencyFormatter.$watch('currencyData', () => {
-        // We use the state value directly since the object is shared with the Vue component and already updated
-        this._fillCurrencyCustomData(this.state.currencyData);
-      },{deep: true, immediate: true})
+      // We use the state value directly since the object is shared with the Vue component and already updated
+      this.fillCurrencyCustomData(this.state.currencyData);
+    }, {deep: true, immediate: true});
   }
 
-  _initListeners() {
-    this.$currencySelector.change(this._onCurrencySelectorChange.bind(this));
-    this.$isUnofficialCheckbox.change(this._onIsUnofficialCheckboxChange.bind(this));
-    this.$resetDefaultSettingsButton.click(this._onResetDefaultSettingsClick.bind(this));
+  initListeners() {
+    this.$currencySelector.change(this.onCurrencySelectorChange.bind(this));
+    this.$isUnofficialCheckbox.change(this.onIsUnofficialCheckboxChange.bind(this));
+    this.$resetDefaultSettingsButton.click(this.onResetDefaultSettingsClick.bind(this));
   }
 
-  _initFields() {
-    if (!this._isUnofficialCurrency()) {
+  initFields() {
+    if (!this.isUnofficialCurrency()) {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
     } else {
@@ -109,28 +120,28 @@ export default class CurrencyForm {
     }
   }
 
-  _onCurrencySelectorChange() {
+  onCurrencySelectorChange() {
     const selectedISOCode = this.$currencySelector.val();
-    if ('' !== selectedISOCode) {
+    if (selectedISOCode !== '') {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
-      this._resetCurrencyData(selectedISOCode);
+      this.resetCurrencyData(selectedISOCode);
     } else {
       this.$isUnofficialCheckbox.prop('checked', true);
       this.$isoCodeInput.prop('readonly', false);
     }
   }
 
-  _isUnofficialCurrency() {
-    if ('hidden' === this.$isUnofficialCheckbox.prop('type')) {
-      return '1' === this.$isUnofficialCheckbox.attr('value');
+  isUnofficialCurrency() {
+    if (this.$isUnofficialCheckbox.prop('type') === 'hidden') {
+      return this.$isUnofficialCheckbox.attr('value') === '1';
     }
 
     return this.$isUnofficialCheckbox.prop('checked');
   }
 
-  _onIsUnofficialCheckboxChange() {
-    if (this._isUnofficialCurrency()) {
+  onIsUnofficialCheckboxChange() {
+    if (this.isUnofficialCurrency()) {
       this.$currencySelector.val('');
       this.$isoCodeInput.prop('readonly', false);
     } else {
@@ -138,32 +149,51 @@ export default class CurrencyForm {
     }
   }
 
-  async _onResetDefaultSettingsClick() {
-    await this._resetCurrencyData(this.$isoCodeInput.val());
+  async onResetDefaultSettingsClick() {
+    await this.resetCurrencyData(this.$isoCodeInput.val());
   }
 
-  async _resetCurrencyData(selectedISOCode) {
+  showResetDefaultSettingsConfirmModal() {
+    const confirmTitle = this.translations['modal.restore.title'];
+    const confirmMessage = this.translations['modal.restore.body'];
+    const confirmButtonLabel = this.translations['modal.restore.apply'];
+    const closeButtonLabel = this.translations['modal.restore.cancel'];
+
+    const modal = new ConfirmModal({
+      id: 'currency_restore_default_settings',
+      confirmTitle,
+      confirmMessage,
+      confirmButtonLabel,
+      closeButtonLabel,
+    }, () => this.onResetDefaultSettingsClick());
+
+    modal.show();
+  }
+
+  async resetCurrencyData(selectedISOCode) {
     this.$loadingDataModal.modal('show');
     this.$resetDefaultSettingsButton.addClass('spinner');
 
-    this.state.currencyData = await this._fetchCurrency(selectedISOCode);
-    this._fillCurrencyData(this.state.currencyData);
+    this.state.currencyData = await this.fetchCurrency(selectedISOCode);
+    this.fillCurrencyData(this.state.currencyData);
 
     // Reset languages
     this.originalLanguages.forEach((language) => {
-      // Use language data (which contain the reference) to reset price specification data (which contain the custom values)
+      // Use language data (which contain the reference) to reset
+      // price specification data (which contain the custom values)
       const patterns = language.currencyPattern.split(';');
       language.priceSpecification.positivePattern = patterns[0];
-      language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : '-' + patterns[0];
+      language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
       language.priceSpecification.currencySymbol = language.currencySymbol;
     });
     this.state.languages = [...this.originalLanguages];
 
+    this.hideModal = true;
     this.$loadingDataModal.modal('hide');
     this.$resetDefaultSettingsButton.removeClass('spinner');
   }
 
-  async _fetchCurrency(currencyIsoCode) {
+  async fetchCurrency(currencyIsoCode) {
     let currencyData = null;
     if (currencyIsoCode) {
       await this.referenceCurrencyResource.get({id: currencyIsoCode}).then((response) => {
@@ -172,54 +202,57 @@ export default class CurrencyForm {
         if (errorResponse.body && errorResponse.body.error) {
           showGrowl('error', errorResponse.body.error, 3000);
         } else {
-          showGrowl('error', 'Can not find CLDR data for currency ' + currencyIsoCode, 3000);
+          showGrowl('error', `Can not find CLDR data for currency ${currencyIsoCode}`, 3000);
         }
       });
     }
 
     if (currencyData && currencyData.transformations === undefined) {
       currencyData.transformations = {};
-      for (let langId in currencyData.symbols) {
+      Object.keys(currencyData.symbols).forEach((langId) => {
         currencyData.transformations[langId] = '';
-      }
+      });
     }
 
     return currencyData;
   }
 
-  _fillCurrencyData(currencyData) {
+  fillCurrencyData(currencyData) {
     if (!currencyData) {
       return;
     }
-    for (let langId in currencyData.names) {
-      let langNameSelector = this.map.namesInput(langId);
+
+    Object.keys(currencyData.symbols).forEach((langId) => {
+      const langNameSelector = this.map.namesInput(langId);
       $(langNameSelector).val(currencyData.names[langId]);
-    }
-    this._fillCurrencyCustomData(currencyData);
+    });
+
+    this.fillCurrencyCustomData(currencyData);
     this.$isoCodeInput.val(currencyData.isoCode);
     this.$exchangeRateInput.val(currencyData.exchangeRate);
     this.$precisionInput.val(currencyData.precision);
   }
 
-  _fillCurrencyCustomData(currencyData) {
-    for (let langId in currencyData.symbols) {
-      let langSymbolSelector = this.map.symbolsInput(langId);
+  fillCurrencyCustomData(currencyData) {
+    Object.keys(currencyData.symbols).forEach((langId) => {
+      const langSymbolSelector = this.map.symbolsInput(langId);
       $(langSymbolSelector).val(currencyData.symbols[langId]);
-    }
-    for (let langId in currencyData.transformations) {
-      let langTransformationSelector = this.map.transformationsInput(langId);
+    });
+
+    Object.keys(currencyData.transformations).forEach((langId) => {
+      const langTransformationSelector = this.map.transformationsInput(langId);
       $(langTransformationSelector).val(currencyData.transformations[langId]);
-    }
+    });
   }
 
-  _getCurrencyDataFromForm() {
-    let currencyData = {
+  getCurrencyDataFromForm() {
+    const currencyData = {
       names: {},
       symbols: {},
       transformations: {},
       isoCode: this.$isoCodeInput.val(),
       exchangeRate: this.$exchangeRateInput.val(),
-      precision: this.$precisionInput.val()
+      precision: this.$precisionInput.val(),
     };
 
     this.originalLanguages.forEach((lang) => {

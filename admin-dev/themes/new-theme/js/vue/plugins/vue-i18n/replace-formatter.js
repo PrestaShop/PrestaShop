@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -37,11 +37,12 @@ export default class ReplaceFormatter {
    *
    * @returns {array}
    */
-  interpolate (message, values) {
-    for (let param in values) {
-      message = message.replace(param, values[param]);
-    }
+  interpolate(message, values) {
+    let msg = message;
+    Object.keys(values).forEach((param) => {
+      msg = msg.replace(param, values[param]);
+    });
 
-    return [message];
+    return [msg];
   }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,11 +27,13 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
+use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCartRule;
+use PHPUnit\Framework\Assert as Assert;
 use RuntimeException;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
@@ -150,6 +152,29 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         }
         if ((float) $discountTaxExcluded != (float) $orderCartRule->value_tax_excl) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $discountTaxExcluded, $orderCartRule->value_tax_excl));
+        }
+    }
+
+    /**
+     * @Then order :reference should have following details:
+     */
+    public function checkOrderDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        foreach ($orderData as $orderField => $orderValue) {
+            Assert::assertEquals(
+                (float) $orderValue,
+                $order->{$orderField},
+                sprintf(
+                    'Invalid order field %s, expected %s instead of %s',
+                    $orderField,
+                    $orderValue,
+                    $order->{$orderField}
+                )
+            );
         }
     }
 

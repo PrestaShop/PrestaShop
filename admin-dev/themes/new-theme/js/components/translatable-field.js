@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 import {EventEmitter} from './event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class is used to automatically toggle translated fields (displayed with tabs
@@ -34,10 +34,10 @@ const $ = window.$;
  */
 class TranslatableField {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
 
-    this.localeButtonSelector = options.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
-    this.localeNavigationSelector = options.localeNavigationSelector || '.translationsLocales.nav';
+    this.localeButtonSelector = opts.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
+    this.localeNavigationSelector = opts.localeNavigationSelector || '.translationsLocales.nav';
 
     $('body').on('shown.bs.tab', this.localeButtonSelector, this.toggleLanguage.bind(this));
     EventEmitter.on('languageSelected', this.toggleFields.bind(this));
@@ -51,7 +51,7 @@ class TranslatableField {
   toggleLanguage(event) {
     const localeLink = $(event.target);
     const form = localeLink.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeLink.data('locale'), form: form});
+    EventEmitter.emit('languageSelected', {selectedLocale: localeLink.data('locale'), form});
   }
 
   /**
@@ -64,7 +64,7 @@ class TranslatableField {
       const selectedLink = $('.nav-item a.active', navigation);
       const selectedLocale = selectedLink.data('locale');
       if (event.selectedLocale !== selectedLocale) {
-        $('.nav-item a[data-locale="'+event.selectedLocale+'"]', navigation).tab('show');
+        $(`.nav-item a[data-locale="${event.selectedLocale}"]`, navigation).tab('show');
       }
     });
   }

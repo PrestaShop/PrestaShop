@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -284,7 +284,10 @@ abstract class PaymentModuleCore extends Module
 
             $this->currentOrderReference = $reference;
 
-            $cart_total_paid = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
+            $cart_total_paid = (float) Tools::ps_round(
+                (float) $this->context->cart->getOrderTotal(true, Cart::BOTH),
+                Context::getContext()->getComputingPrecision()
+            );
 
             foreach ($cart_delivery_option as $id_address => $key_carriers) {
                 foreach ($delivery_option_list[$id_address][$key_carriers]['carrier_list'] as $id_carrier => $data) {
@@ -424,7 +427,7 @@ abstract class PaymentModuleCore extends Module
                         $price = Product::getPriceStatic((int) $product['id_product'], false, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
                         $price_wt = Product::getPriceStatic((int) $product['id_product'], true, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
 
-                        $product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt;
+                        $product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, Context::getContext()->getComputingPrecision()) : $price_wt;
 
                         $product_var_tpl = [
                             'id_product' => $product['id_product'],
@@ -524,7 +527,7 @@ abstract class PaymentModuleCore extends Module
                         $customer_message->id_customer_thread = $customer_thread->id;
                         $customer_message->id_employee = 0;
                         $customer_message->message = $update_message->message;
-                        $customer_message->private = 1;
+                        $customer_message->private = 0;
 
                         if (!$customer_message->add()) {
                             $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
@@ -582,6 +585,7 @@ abstract class PaymentModuleCore extends Module
                         $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
                         $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
                         $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
+                        $orderLanguage = new Language((int) $order->id_lang);
 
                         $data = [
                             '{firstname}' => $this->context->customer->firstname,
@@ -645,12 +649,17 @@ abstract class PaymentModuleCore extends Module
 
                         // Join PDF invoice
                         if ((int) Configuration::get('PS_INVOICE') && $order_status->invoice && $order->invoice_number) {
+                            $currentLanguage = $this->context->language;
+                            $this->context->language = $orderLanguage;
+                            $this->context->getTranslator()->setLocale($orderLanguage->locale);
                             $order_invoice_list = $order->getInvoicesCollection();
                             Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                             $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                             $file_attachement['content'] = $pdf->render(false);
                             $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
                             $file_attachement['mime'] = 'application/pdf';
+                            $this->context->language = $currentLanguage;
+                            $this->context->getTranslator()->setLocale($currentLanguage->locale);
                         } else {
                             $file_attachement = null;
                         }
@@ -659,13 +668,11 @@ abstract class PaymentModuleCore extends Module
                             PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                         }
 
-                        $orderLanguage = new Language((int) $order->id_lang);
-
                         if (Validate::isEmail($this->context->customer->email)) {
                             Mail::Send(
                                 (int) $order->id_lang,
                                 'order_conf',
-                                Context::getContext()->getTranslator()->trans(
+                                $this->context->getTranslator()->trans(
                                     'Order confirmation',
                                     [],
                                     'Emails.Subject',
@@ -781,7 +788,7 @@ abstract class PaymentModuleCore extends Module
     /**
      * @param int $current_id_currency optional but on 1.5 it will be REQUIRED
      *
-     * @return Currency|false
+     * @return Currency|array|false
      */
     public function getCurrency($current_id_currency = null)
     {
@@ -1104,9 +1111,17 @@ abstract class PaymentModuleCore extends Module
             //  This is an "amount" reduction, not a reduction in % or a gift
             // THEN
             //  The voucher is cloned with a new value corresponding to the remainder
-            $remainingValue = $cartRule->reduction_amount - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
-            $remainingValue = Tools::ps_round($remainingValue, $computingPrecision);
-            if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRule->reduction_amount > 0) {
+            $cartRuleReductionAmountConverted = $cartRule->reduction_amount;
+            if ((int) $cartRule->reduction_currency !== $cart->id_currency) {
+                $cartRuleReductionAmountConverted = Tools::convertPriceFull(
+                    $cartRule->reduction_amount,
+                    new Currency((int) $cartRule->reduction_currency),
+                    new Currency($cart->id_currency)
+                );
+            }
+            $remainingValue = $cartRuleReductionAmountConverted - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
+            $remainingValue = Tools::ps_round($remainingValue, _PS_PRICE_COMPUTE_PRECISION_);
+            if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRuleReductionAmountConverted > 0) {
                 // Create a new voucher from the original
                 $voucher = new CartRule((int) $cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
                 unset($voucher->id);

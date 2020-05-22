@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -655,9 +655,7 @@ class OrderCore extends ObjectModel
 
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
-
-            $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int) $row['id_customization']);
-
+            $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, $this->id_shop, (int) $row['id_customization']);
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
@@ -1121,7 +1119,7 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_customer Customer id
      *
-     * @return array Customer orders number
+     * @return int Customer orders number
      */
     public static function getCustomerNbOrders($id_customer)
     {
@@ -1131,7 +1129,7 @@ class OrderCore extends ObjectModel
                     . Shop::addSqlRestriction();
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
-        return isset($result['nb']) ? $result['nb'] : 0;
+        return isset($result['nb']) ? (int) $result['nb'] : 0;
     }
 
     /**
@@ -1817,6 +1815,16 @@ class OrderCore extends ObjectModel
     }
 
     /**
+     * Indicates if order has any associated payments.
+     *
+     * @return bool
+     */
+    public function hasPayments(): bool
+    {
+        return $this->getOrderPaymentCollection()->count() > 0;
+    }
+
+    /**
      * This method allows to add a payment to the current order.
      *
      * @since 1.5.0.1
@@ -1848,11 +1856,35 @@ class OrderCore extends ObjectModel
             $order_payment->date_add .= ' ' . date('H:i:s');
         }
 
+        /*
+         * 4 cases
+         *
+         * Order is in default_currency + Payment is in Order currency
+         *    for example default = 1, order = 1, payment = 1
+         *    ==> NO conversion to do
+         * Order is in default_currency + Payment is NOT in Order currency
+         *    for example default = 1, order = 1, payment = 2
+         *    ==> convert payment in order's currency
+         * Order is NOT in default_currency + Payment is in Order currency
+         *    for example default = 1, order = 2, payment = 2
+         *    ==> NO conversion to do
+         * Order is NOT in default_currency + Payment is NOT in Order currency
+         *    for example default = 1, order = 2, payment = 3
+         *    ==> As conversion rates are set regarding the default currency,
+         *        convert payment to default and from default to order's currency
+         */
+
         // Update total_paid_real value for backward compatibility reasons
         if ($order_payment->id_currency == $this->id_currency) {
             $this->total_paid_real += $order_payment->amount;
         } else {
-            $this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false), 2);
+            $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+            if ($this->id_currency === $default_currency) {
+                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $this->id_currency, false), 2);
+            } else {
+                $amountInDefaultCurrency = Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false);
+                $this->total_paid_real += Tools::ps_round(Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, true), 2);
+            }
         }
 
         // We put autodate parameter of add method to true if date_add field is null
@@ -2688,10 +2720,13 @@ class OrderCore extends ObjectModel
         $this->update();
 
         // save order_carrier prices, we'll save order right after this in update() method
-        $order_carrier = new OrderCarrier((int) $this->getIdOrderCarrier());
-        $order_carrier->shipping_cost_tax_excl = $this->total_shipping_tax_excl;
-        $order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
-        $order_carrier->update();
+        $orderCarrierId = (int) $this->getIdOrderCarrier();
+        if ($orderCarrierId > 0) {
+            $order_carrier = new OrderCarrier($orderCarrierId);
+            $order_carrier->shipping_cost_tax_excl = $this->total_shipping_tax_excl;
+            $order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
+            $order_carrier->update();
+        }
 
         // remove fake cart
         $new_cart->delete();

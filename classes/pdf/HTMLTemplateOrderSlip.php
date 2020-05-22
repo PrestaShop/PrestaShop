@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,16 +29,26 @@
  */
 class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 {
+    /**
+     * @var Order
+     */
     public $order;
+
+    /**
+     * @var OrderSlip
+     */
     public $order_slip;
+
+    /** @var int Cart id */
+    public $id_cart;
 
     /**
      * @param OrderSlip $order_slip
-     * @param $smarty
+     * @param Smarty $smarty
      *
      * @throws PrestaShopException
      */
-    public function __construct(OrderSlip $order_slip, $smarty)
+    public function __construct(OrderSlip $order_slip, Smarty $smarty)
     {
         $this->order_slip = $order_slip;
         $this->order = new Order((int) $order_slip->id_order);
@@ -114,11 +124,10 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                 $this->order->total_paid_tax_excl = $this->order->total_products;
                 $this->order->total_paid_tax_incl = $this->order->total_products_wt;
             }
+            unset($product);
         } else {
             $this->order->products = null;
         }
-
-        unset($product); // remove reference
 
         if ($this->order_slip->shipping_cost == 0) {
             $this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
@@ -259,6 +268,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         return $breakdowns;
     }
 
+    /**
+     * @return array
+     */
     public function getProductTaxesBreakdown()
     {
         // $breakdown will be an array with tax rates as keys and at least the columns:

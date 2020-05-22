@@ -20,5 +20,14 @@ module.exports = {
       isRtlLanguage: false,
       enabled: true,
     },
+    spanish: {
+      name: 'Español (Spanish)',
+      isoCode: 'es',
+      languageCode: 'es-es',
+      dateFormat: 'd/m/Y',
+      fullDateFormat: 'd/m/Y H:i:s',
+      isRtlLanguage: false,
+      enabled: true,
+    },
   },
 };

@@ -10,9 +10,11 @@ admin_order_messages_filter:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/CustomerService/OrderMessage:filter
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_message
     _legacy_controller: AdminOrderMessage
     _legacy_link: AdminOrderMessage:submitFilterorder_message
+    redirectRoute: admin_order_messages_index
 
 admin_order_messages_create:
   path: /new

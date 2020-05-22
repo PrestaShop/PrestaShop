@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -142,7 +142,7 @@ class AdminImportControllerCore extends AdminController
                     'reference' => ['label' => $this->trans('Reference', [], 'Admin.Global')],
                     'ean13' => ['label' => $this->trans('EAN13', [], 'Admin.Advparameters.Feature')],
                     'upc' => ['label' => $this->trans('UPC', [], 'Admin.Advparameters.Feature')],
-                    'mpn' => ['label' => $this->trans('MPN', [], 'Admin.Advparameters.Feature')],
+                    'mpn' => ['label' => $this->trans('MPN', [], 'Admin.Catalog.Feature')],
                     'wholesale_price' => ['label' => $this->trans('Cost price', [], 'Admin.Catalog.Feature')],
                     'price' => ['label' => $this->trans('Impact on price', [], 'Admin.Catalog.Feature')],
                     'ecotax' => ['label' => $this->trans('Ecotax', [], 'Admin.Catalog.Feature')],
@@ -256,7 +256,7 @@ class AdminImportControllerCore extends AdminController
                     'manufacturer' => ['label' => $this->trans('Brand', [], 'Admin.Global')],
                     'ean13' => ['label' => $this->trans('EAN13', [], 'Admin.Advparameters.Feature')],
                     'upc' => ['label' => $this->trans('UPC', [], 'Admin.Advparameters.Feature')],
-                    'mpn' => ['label' => $this->trans('MPN', [], 'Admin.Advparameters.Feature')],
+                    'mpn' => ['label' => $this->trans('MPN', [], 'Admin.Catalog.Feature')],
                     'ecotax' => ['label' => $this->trans('Ecotax', [], 'Admin.Catalog.Feature')],
                     'width' => ['label' => $this->trans('Width', [], 'Admin.Global')],
                     'height' => ['label' => $this->trans('Height', [], 'Admin.Global')],
@@ -429,7 +429,7 @@ class AdminImportControllerCore extends AdminController
                     'supplier' => ['label' => $this->trans('Supplier', [], 'Admin.Global')],
                     'company' => ['label' => $this->trans('Company', [], 'Admin.Global')],
                     'lastname' => ['label' => $this->trans('Last name', [], 'Admin.Global') . '*'],
-                    'firstname' => ['label' => $this->trans('First name ', [], 'Admin.Global') . '*'],
+                    'firstname' => ['label' => $this->trans('First name', [], 'Admin.Global') . '*'],
                     'address1' => ['label' => $this->trans('Address', [], 'Admin.Global') . '*'],
                     'address2' => ['label' => $this->trans('Address (2)', [], 'Admin.Global')],
                     'postcode' => ['label' => $this->trans('Zip/postal code', [], 'Admin.Global') . '*'],
@@ -2310,7 +2310,7 @@ class AdminImportControllerCore extends AdminController
             if (!$validateOnly && isset($product->advanced_stock_management)) {
                 if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management has incorrect value. Not set for product %name% ',
+                        'Advanced stock management has incorrect value. Not set for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2318,7 +2318,7 @@ class AdminImportControllerCore extends AdminController
                     );
                 } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot enable on product %name% ',
+                        'Advanced stock management is not enabled, cannot enable on product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2337,7 +2337,7 @@ class AdminImportControllerCore extends AdminController
             if (isset($product->warehouse) && $product->warehouse) {
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, warehouse not set on product %name% ',
+                        'Advanced stock management is not enabled, warehouse not set on product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2377,7 +2377,7 @@ class AdminImportControllerCore extends AdminController
             if (isset($product->depends_on_stock)) {
                 if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
                     $this->warnings[] = $this->trans(
-                        'Incorrect value for "Depends on stock" for product %name% ',
+                        'Incorrect value for "Depends on stock" for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2385,7 +2385,7 @@ class AdminImportControllerCore extends AdminController
                     );
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ',
+                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language_id]),
                         ],
@@ -2961,7 +2961,7 @@ class AdminImportControllerCore extends AdminController
             if (isset($info['depends_on_stock'])) {
                 if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1) {
                     $this->warnings[] = $this->trans(
-                        'Incorrect value for "Depends on stock" for product %name% ',
+                        'Incorrect value for "Depends on stock" for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
                         ],
@@ -2969,7 +2969,7 @@ class AdminImportControllerCore extends AdminController
                     );
                 } elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1) {
                     $this->warnings[] = $this->trans(
-                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ',
+                        'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',
                         [
                             '%name%' => Tools::htmlentitiesUTF8($product->name[$default_language]),
                         ],

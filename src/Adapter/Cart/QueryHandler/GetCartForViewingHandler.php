@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -145,11 +145,12 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 Product::addProductCustomizationPrice($product, $customized_datas);
             }
         }
+        unset($product);
 
         $customerStats = $customer->getStats();
         $gender = new Gender($customer->id_gender, $context->language->id);
 
-        $products = $this->prepareProductForView($products, $currency);
+        $products = $this->prepareProductForView($products, $currency, $context->language->id);
 
         $customerInformation = [
             'id' => $customer->id,
@@ -192,15 +193,20 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
     /**
      * @param array $products
      * @param Currency $currency
+     * @param int $languageId
      *
      * @return array
      */
-    private function prepareProductForView(array $products, Currency $currency)
+    private function prepareProductForView(array $products, Currency $currency, int $languageId)
     {
         $formattedProducts = [];
 
         foreach ($products as $product) {
-            $image = Product::getCover($product['id_product']);
+            if ($product['id_product_attribute']) {
+                $image = Product::getCombinationImageById($product['id_product_attribute'], $languageId);
+            } else {
+                $image = Product::getCover($product['id_product']);
+            }
 
             $formattedProduct = [
                 'id' => $product['id_product'],

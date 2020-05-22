@@ -6,6 +6,7 @@ module.exports = class Addresses extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Addresses •';
+    this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
     // Header links
@@ -14,20 +15,33 @@ module.exports = class Addresses extends BOBasePage {
     this.addressGridPanel = '#address_grid_panel';
     this.addressGridTitle = `${this.addressGridPanel} h3.card-header-title`;
     this.addressesListForm = '#address_grid';
-    this.addressesListTableRow = `${this.addressesListForm} tbody tr:nth-child(%ROW)`;
-    this.addressesListTableColumn = `${this.addressesListTableRow} td.column-%COLUMN`;
-    this.addressesListTableColumnAction = this.addressesListTableColumn.replace('%COLUMN', 'actions');
-    this.addressesListTableToggleDropDown = `${this.addressesListTableColumnAction} a[data-toggle='dropdown']`;
-    this.addressesListTableDeleteLink = `${this.addressesListTableColumnAction} a[data-url]`;
-    this.addressesListTableEditLink = `${this.addressesListTableColumnAction} a[href*='edit']`;
+    this.addressesListTableRow = row => `${this.addressesListForm} tbody tr:nth-child(${row})`;
+    this.addressesListTableColumn = (row, column) => `${this.addressesListTableRow(row)} td.column-${column}`;
+    this.addressesListTableColumnAction = row => this.addressesListTableColumn(row, 'actions');
+    this.addressesListTableToggleDropDown = row => `${this.addressesListTableColumnAction(row)}`
+      + ' a[data-toggle=\'dropdown\']';
+    this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a[data-url]`;
+    this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a[href*='edit']`;
     // Filters
-    this.addressFilterColumnInput = `${this.addressesListForm} #address_%FILTERBY`;
+    this.addressFilterColumnInput = filterBy => `${this.addressesListForm} #address_${filterBy}`;
     this.filterSearchButton = `${this.addressesListForm} button[name='address[actions][search]']`;
     this.filterResetButton = `${this.addressesListForm} button[name='address[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.addressesListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
+    // Modal Dialog
+    this.deleteAddressModal = '#address_grid_confirm_modal.show';
+    this.deleteCustomerModalDeleteButton = `${this.deleteAddressModal} button.btn-confirm-submit`;
+    // Sort Selectors
+    this.tableHead = `${this.addressesListForm} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.addressGridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.addressGridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.addressGridPanel} [aria-label='Previous']`;
   }
 
   /*
@@ -70,13 +84,10 @@ module.exports = class Addresses extends BOBasePage {
   async filterAddresses(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.addressFilterColumnInput.replace('%FILTERBY', filterBy), value.toString());
+        await this.setValue(this.addressFilterColumnInput(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(
-          this.addressFilterColumnInput.replace('%FILTERBY', filterBy),
-          value,
-        );
+        await this.selectByVisibleText(this.addressFilterColumnInput(filterBy), value);
         break;
       default:
         // Do nothing
@@ -92,7 +103,22 @@ module.exports = class Addresses extends BOBasePage {
    * @return {Promise<string>}
    */
   async getTextColumnFromTableAddresses(row, column) {
-    return this.getTextContent(this.addressesListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+    return this.getTextContent(this.addressesListTableColumn(row, column));
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableAddresses(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -109,9 +135,7 @@ module.exports = class Addresses extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditAddressPage(row) {
-    await this.clickAndWaitForNavigation(
-      this.addressesListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions'),
-    );
+    await this.clickAndWaitForNavigation(this.addressesListTableEditLink(row));
   }
 
   /**
@@ -123,13 +147,13 @@ module.exports = class Addresses extends BOBasePage {
     this.dialogListener();
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.addressesListTableToggleDropDown.replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.addressesListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`, {visible: true},
+      this.page.click(this.addressesListTableToggleDropDown(row)),
+      this.waitForVisibleSelector(
+        `${this.addressesListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
-    await this.page.click(this.addressesListTableDeleteLink.replace('%ROW', row));
+    await this.page.click(this.addressesListTableDeleteLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -138,19 +162,77 @@ module.exports = class Addresses extends BOBasePage {
    * @return {Promise<string>}
    */
   async deleteAddressesBulkActions() {
-    this.dialogListener();
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
-    // Click on delete
-    await this.page.click(this.bulkActionsDeleteButton);
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(this.deleteAddressModal),
+    ]);
+    await this.page.click(this.deleteCustomerModalDeleteButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @return {Promise<string>}
+   */
+  getPaginationLabel() {
+    return this.getTextContent(this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(number) {
+    await this.selectByVisibleText(this.paginationLimitSelect, number);
+    return this.getPaginationLabel();
+  }
+
+  /**
+   * Click on next
+   * @returns {Promise<string>}
+   */
+  async paginationNext() {
+    await this.clickAndWaitForNavigation(this.paginationNextLink);
+    return this.getPaginationLabel();
+  }
+
+  /**
+   * Click on previous
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious() {
+    await this.clickAndWaitForNavigation(this.paginationPreviousLink);
+    return this.getPaginationLabel();
   }
 };

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -688,6 +688,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function uninstall()
     {
+        Hook::exec('actionModuleUninstallBefore', ['object' => $this]);
+
         // Check module installation id validation
         if (!Validate::isUnsignedId($this->id)) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('The module is not installed.', [], 'Admin.Modules.Notification');
@@ -741,6 +743,8 @@ abstract class ModuleCore implements ModuleInterface
         if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = ' . (int) $this->id)) {
             Cache::clean('Module::isInstalled' . $this->name);
             Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
+
+            Hook::exec('actionModuleUninstallAfter', ['object' => $this]);
 
             return true;
         }
@@ -3338,7 +3342,7 @@ abstract class ModuleCore implements ModuleInterface
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = [];
         $registeredHookList = Hook::getHookModuleList();
-        foreach ($hooks_list as &$current_hook) {
+        foreach ($hooks_list as $current_hook) {
             $hook_name = $current_hook['name'];
             $retro_hook_name = Hook::getRetroHookName($hook_name);
 

@@ -6,14 +6,14 @@ module.exports = class moduleCatalog extends BOBasePage {
     super(page);
 
     this.pageTitle = 'Module Catalog •';
-    this.installMessageSuccessful = 'Install action on module %MODULETAG succeeded.';
+    this.installMessageSuccessful = moduleTag => `Install action on module ${moduleTag} succeeded.`;
 
     // Selectors
     this.searchModuleTagInput = '#search-input-group input.pstaggerAddTagInput';
     this.searchModuleButton = '#module-search-button';
-    this.moduleBloc = '#modules-list-container-all div[data-name=\'%MODULENAME\']:not([style])';
-    this.installModuleButton = `${this.moduleBloc} form>button.module_action_menu_install`;
-    this.configureModuleButton = `${this.moduleBloc} div.module-actions>a`;
+    this.moduleBloc = moduleName => `#modules-list-container-all div[data-name='${moduleName}']:not([style])`;
+    this.installModuleButton = moduleName => `${this.moduleBloc(moduleName)} form>button.module_action_menu_install`;
+    this.configureModuleButton = moduleName => `${this.moduleBloc(moduleName)} div.module-actions>a`;
   }
 
   /*
@@ -29,7 +29,7 @@ module.exports = class moduleCatalog extends BOBasePage {
   async searchModule(moduleTag, moduleName) {
     await this.page.type(this.searchModuleTagInput, moduleTag);
     await this.page.click(this.searchModuleButton);
-    await this.page.waitForSelector(this.moduleBloc.replace('%MODULENAME', moduleName), {visible: true});
+    await this.waitForVisibleSelector(this.moduleBloc(moduleName));
   }
 
   /**
@@ -38,8 +38,7 @@ module.exports = class moduleCatalog extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async installModule(moduleName) {
-    await this.page.click(this.installModuleButton.replace('%MODULENAME', moduleName));
-    await this.page.waitForSelector(this.growlMessageBlock, {visible: true});
+    await this.page.click(this.installModuleButton(moduleName));
     return this.getTextContent(this.growlMessageBlock);
   }
 };

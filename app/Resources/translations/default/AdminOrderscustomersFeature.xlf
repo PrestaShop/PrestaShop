@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/addresses/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="03361eda68f746619c2ae3341eaa2f07">
-        <source>Customer email</source>
-        <target>Customer email</target>
-        <note>Line: 34</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1d949d2235747b894bbaae35fbf44f1d">
@@ -466,12 +457,12 @@
       <trans-unit id="03ab340b3f99e03cff9e84314ead38c0">
         <source>Qty</source>
         <target>Qty</target>
-        <note>Line: 250</note>
+        <note>Line: 253</note>
       </trans-unit>
       <trans-unit id="f8a09f634b7b3ede2da34607da2aaebe">
         <source>Available quantity</source>
         <target>Available quantity</target>
-        <note>Line: 251</note>
+        <note>Line: 254</note>
       </trans-unit>
       <trans-unit id="5e1ce9eb796081fea13e0d0dd3c3d76f">
         <source>Reference number:</source>
@@ -511,17 +502,17 @@
       <trans-unit id="ca70428d9ed105c07f40d3c21d130859">
         <source>Package item</source>
         <target>Package item</target>
-        <note>Line: 258</note>
+        <note>Line: 261</note>
       </trans-unit>
       <trans-unit id="dd70925db57b570bcb660d68c30d5e0b">
         <source>Ref Supplier:</source>
         <target>Ref Supplier:</target>
-        <note>Line: 264</note>
+        <note>Line: 267</note>
       </trans-unit>
       <trans-unit id="e78b6f4eb3be046f4d25c07ce54954d4">
         <source>Ref:</source>
         <target>Ref:</target>
-        <note>Line: 263</note>
+        <note>Line: 266</note>
       </trans-unit>
     </body>
   </file>
@@ -539,152 +530,152 @@
       <trans-unit id="267806034cfac4481cabe7b81c81f91d">
         <source>Back office order</source>
         <target>Back office order</target>
-        <note>Line: 1564</note>
+        <note>Line: 1570</note>
       </trans-unit>
       <trans-unit id="a82868319826fb092b73968e661b5b38">
         <source>Vouchers</source>
         <target>Vouchers</target>
-        <note>Line: 1325</note>
+        <note>Line: 1331</note>
       </trans-unit>
       <trans-unit id="257630448a4acd9cfc1ce6c7a5ce05f3">
         <source>Add new customer</source>
         <target>Add new customer</target>
-        <note>Line: 1135</note>
+        <note>Line: 1141</note>
       </trans-unit>
       <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
         <source>Search for a product</source>
         <target>Search for a product</target>
-        <note>Line: 1209</note>
+        <note>Line: 1215</note>
       </trans-unit>
       <trans-unit id="c112bd7d596888979be02bd780e6a94f">
         <source>View this order</source>
         <target>View this order</target>
-        <note>Line: 581</note>
+        <note>Line: 579</note>
       </trans-unit>
       <trans-unit id="1a747e98fba823d6be62189cbac46dcb">
         <source>Recycled packaging</source>
         <target>Recycled packaging</target>
-        <note>Line: 1460</note>
+        <note>Line: 1466</note>
       </trans-unit>
       <trans-unit id="449fae749af1f675c63510eecb0b88c4">
         <source>View this cart</source>
         <target>View this cart</target>
-        <note>Line: 571</note>
+        <note>Line: 569</note>
       </trans-unit>
       <trans-unit id="0aed4e816d2ab18361bbfe990b4fdcde">
         <source>Use this cart</source>
         <target>Use this cart</target>
-        <note>Line: 572</note>
+        <note>Line: 570</note>
       </trans-unit>
       <trans-unit id="ad8783089f828b927473fb61d51940ec">
         <source>Use</source>
         <target>Use</target>
-        <note>Line: 582</note>
+        <note>Line: 580</note>
       </trans-unit>
       <trans-unit id="90bf4568676d012fc21b3556fbd0303b">
         <source>Duplicate this order</source>
         <target>Duplicate this order</target>
-        <note>Line: 582</note>
+        <note>Line: 580</note>
       </trans-unit>
       <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
         <source>Gift</source>
         <target>Gift</target>
-        <note>Line: 1471</note>
+        <note>Line: 1477</note>
       </trans-unit>
       <trans-unit id="eeddc7284795f5c71b12156c06e9e821">
         <source>Search for a customer</source>
         <target>Search for a customer</target>
-        <note>Line: 1118</note>
+        <note>Line: 1124</note>
       </trans-unit>
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
-        <note>Line: 1185</note>
+        <note>Line: 1191</note>
       </trans-unit>
       <trans-unit id="a85eba4c6c699122b2bb1387ea4813ad">
         <source>Cart</source>
         <target>Cart</target>
-        <note>Line: 1204</note>
+        <note>Line: 1210</note>
       </trans-unit>
       <trans-unit id="fcebe56087b9373f15514831184fa572">
         <source>In stock</source>
         <target>In stock</target>
-        <note>Line: 1249</note>
+        <note>Line: 1255</note>
       </trans-unit>
       <trans-unit id="2d0f6b8300be19cf35e89e66f0677f95">
         <source>Add to cart</source>
         <target>Add to cart</target>
-        <note>Line: 1257</note>
+        <note>Line: 1263</note>
       </trans-unit>
       <trans-unit id="c89db248919294ef0291a6586f6e9a5b">
         <source>Search for a voucher</source>
         <target>Search for a voucher</target>
-        <note>Line: 1329</note>
+        <note>Line: 1335</note>
       </trans-unit>
       <trans-unit id="11599f38f7ac080ae579f1bf32f08561">
         <source>Add new voucher</source>
         <target>Add new voucher</target>
-        <note>Line: 1345</note>
+        <note>Line: 1351</note>
       </trans-unit>
       <trans-unit id="b15e1100a6196acba01ef7aaa5b2a9e5">
         <source>Add a new address</source>
         <target>Add a new address</target>
-        <note>Line: 1407</note>
+        <note>Line: 1413</note>
       </trans-unit>
       <trans-unit id="19dfe063714422004b75043eaf74c9b8">
         <source>Delivery option</source>
         <target>Delivery option</target>
-        <note>Line: 1421</note>
+        <note>Line: 1427</note>
       </trans-unit>
       <trans-unit id="4c15f9bb0c76e90180c701b2d39994d8">
         <source>Shipping price (Tax incl.)</source>
         <target>Shipping price (Tax incl.)</target>
-        <note>Line: 1430</note>
+        <note>Line: 1436</note>
       </trans-unit>
       <trans-unit id="0fe067d5d05655a4c80602c1d6e7d0c5">
         <source>Gift message</source>
         <target>Gift message</target>
-        <note>Line: 1476</note>
+        <note>Line: 1482</note>
       </trans-unit>
       <trans-unit id="db205f01b4fd580fb5daa9072d96849d">
         <source>Total products</source>
         <target>Total products</target>
-        <note>Line: 1496</note>
+        <note>Line: 1502</note>
       </trans-unit>
       <trans-unit id="58a13b9a4e13f53cf70a60bf583321e1">
         <source>Total vouchers (Tax excl.)</source>
         <target>Total vouchers (Tax excl.)</target>
-        <note>Line: 1502</note>
+        <note>Line: 1508</note>
       </trans-unit>
       <trans-unit id="96a2d6388d5c73e22a1edbe506f86b17">
         <source>Total shipping (Tax excl.)</source>
         <target>Total shipping (Tax excl.)</target>
-        <note>Line: 1508</note>
+        <note>Line: 1514</note>
       </trans-unit>
       <trans-unit id="7bf753e0cbb2d38818ba2a3ee3b36f4d">
         <source>Total taxes</source>
         <target>Total taxes</target>
-        <note>Line: 1514</note>
+        <note>Line: 1520</note>
       </trans-unit>
       <trans-unit id="b94cb106eaa958b2ab473da305e57977">
         <source>Total (Tax excl.)</source>
         <target>Total (Tax excl.)</target>
-        <note>Line: 1520</note>
+        <note>Line: 1526</note>
       </trans-unit>
       <trans-unit id="eed1808b8206c5a62cc6407f85cf95bc">
         <source>Total (Tax incl.)</source>
         <target>Total (Tax incl.)</target>
-        <note>Line: 1526</note>
+        <note>Line: 1532</note>
       </trans-unit>
       <trans-unit id="f13673c7e261fd8d00915c9cb768ad95">
         <source>Order message</source>
         <target>Order message</target>
-        <note>Line: 1536</note>
+        <note>Line: 1542</note>
       </trans-unit>
       <trans-unit id="034d2690db87b737dd810afccbe41b7a">
         <source>Create the order</source>
         <target>Create the order</target>
-        <note>Line: 1583</note>
+        <note>Line: 1589</note>
       </trans-unit>
     </body>
   </file>
@@ -722,27 +713,27 @@
       <trans-unit id="4b6c6cda10a23d1bdc920f2e47e5f46f">
         <source>Add a product</source>
         <target>Add a product</target>
-        <note>Line: 983</note>
+        <note>Line: 984</note>
       </trans-unit>
       <trans-unit id="77fd2b4393b379bedd30efcd5df02090">
         <source>Partial refund</source>
         <target>Partial refund</target>
-        <note>Line: 1245</note>
+        <note>Line: 1246</note>
       </trans-unit>
       <trans-unit id="4f68183551e5dbd7c341347ffe308682">
         <source>SIRET</source>
         <target>SIRET</target>
-        <note>Line: 617</note>
+        <note>Line: 618</note>
       </trans-unit>
       <trans-unit id="85fb93a8ee9440499692da24a1621769">
         <source>APE</source>
         <target>APE</target>
-        <note>Line: 619</note>
+        <note>Line: 620</note>
       </trans-unit>
       <trans-unit id="cb8fe83175bea4ba19d633b1dc6ea656">
         <source>View order</source>
         <target>View order</target>
-        <note>Line: 1313</note>
+        <note>Line: 1314</note>
       </trans-unit>
       <trans-unit id="01abfc750a0c942167651c40d088531d">
         <source>#</source>
@@ -842,7 +833,7 @@
       <trans-unit id="f4ec5f57bd4d31b803312d873be40da9">
         <source>Change</source>
         <target>Change</target>
-        <note>Line: 755</note>
+        <note>Line: 756</note>
       </trans-unit>
       <trans-unit id="6fe50cb3c0bf60f28ac9049ae6cb8c26">
         <source>This order has been placed by a guest.</source>
@@ -852,207 +843,232 @@
       <trans-unit id="6a7bac4a86e299a2718b9d2c7c8aaea9">
         <source>Account registered</source>
         <target>Account registered</target>
-        <note>Line: 610</note>
+        <note>Line: 611</note>
       </trans-unit>
       <trans-unit id="d53b54a2bdbf970c70b7de7de4f6021f">
         <source>Valid orders placed</source>
         <target>Valid orders placed</target>
-        <note>Line: 612</note>
+        <note>Line: 613</note>
       </trans-unit>
       <trans-unit id="8a8ece2eaecf6b5771d66434212e060d">
         <source>Total spent since registration</source>
         <target>Total spent since registration</target>
-        <note>Line: 614</note>
+        <note>Line: 615</note>
       </trans-unit>
       <trans-unit id="5d9fe8726be08b6e26a0c05319590b01">
         <source>View full details...</source>
         <target>View full details...</target>
-        <note>Line: 628</note>
+        <note>Line: 629</note>
       </trans-unit>
       <trans-unit id="66dc0eb61ab4157d6170494e6841a77a">
         <source>Private note</source>
         <target>Private note</target>
-        <note>Line: 633</note>
+        <note>Line: 634</note>
       </trans-unit>
       <trans-unit id="0c458988127eb2150776881e2ef3f0c4">
         <source>Shipping address</source>
         <target>Shipping address</target>
-        <note>Line: 679</note>
+        <note>Line: 680</note>
       </trans-unit>
       <trans-unit id="601d8c4b9f72fc1862013c19b677a499">
         <source>Invoice address</source>
         <target>Invoice address</target>
-        <note>Line: 731</note>
+        <note>Line: 732</note>
       </trans-unit>
       <trans-unit id="47f9082fc380ca62d531096aa1d110f1">
         <source>Private</source>
         <target>Private</target>
-        <note>Line: 810</note>
+        <note>Line: 811</note>
       </trans-unit>
       <trans-unit id="2ab74fb771ac34b95b1657895282d5d9">
         <source>Choose a standard message</source>
         <target>Choose a standard message</target>
-        <note>Line: 830</note>
+        <note>Line: 831</note>
       </trans-unit>
       <trans-unit id="a76e7775f5454953c7152f5160e75182">
         <source>Configure predefined messages</source>
         <target>Configure predefined messages</target>
-        <note>Line: 840</note>
+        <note>Line: 841</note>
       </trans-unit>
       <trans-unit id="b7623e931f082f027293f27dbfe7a8ea">
         <source>Display to customer?</source>
         <target>Display to customer?</target>
-        <note>Line: 848</note>
+        <note>Line: 849</note>
       </trans-unit>
       <trans-unit id="747c6a3564774149c989884e0c581d53">
         <source>Send message</source>
         <target>Send message</target>
-        <note>Line: 876</note>
+        <note>Line: 877</note>
       </trans-unit>
       <trans-unit id="a2eda4e1c4dfc9bade7150b878c57a46">
         <source>Show all messages</source>
         <target>Show all messages</target>
-        <note>Line: 879</note>
+        <note>Line: 880</note>
       </trans-unit>
       <trans-unit id="fdfac28b5ad628f25649d9c2eb4fc62e">
         <source>Returned</source>
         <target>Returned</target>
-        <note>Line: 936</note>
+        <note>Line: 937</note>
       </trans-unit>
       <trans-unit id="cdba184783a0253218efd734da81a9da">
         <source>Stock location</source>
         <target>Stock location</target>
-        <note>Line: 938</note>
+        <note>Line: 939</note>
       </trans-unit>
       <trans-unit id="988fd738de9c6d177440c5dcf69e73ce">
         <source>Return</source>
         <target>Return</target>
-        <note>Line: 949</note>
+        <note>Line: 950</note>
       </trans-unit>
       <trans-unit id="76f0ed934de85cc7131910b32ede7714">
         <source>Refund</source>
         <target>Refund</target>
-        <note>Line: 951</note>
+        <note>Line: 952</note>
       </trans-unit>
       <trans-unit id="4320b10eab24c2b8ee337355e7deb4c6">
         <source>Add a new discount</source>
         <target>Add a new discount</target>
-        <note>Line: 988</note>
+        <note>Line: 989</note>
       </trans-unit>
       <trans-unit id="f14b582c1b0eab88ed5904fb781568c0">
         <source>Discount name</source>
         <target>Discount name</target>
-        <note>Line: 1020</note>
+        <note>Line: 1021</note>
       </trans-unit>
       <trans-unit id="689202409e48743b914713f96d93947c">
         <source>Value</source>
         <target>Value</target>
-        <note>Line: 1025</note>
+        <note>Line: 1026</note>
       </trans-unit>
       <trans-unit id="c990c4027126c39a93fcaaafb68732b3">
         <source>Delete voucher</source>
         <target>Delete voucher</target>
-        <note>Line: 1047</note>
+        <note>Line: 1048</note>
       </trans-unit>
       <trans-unit id="b52b44c9d23e141b067d7e83b44bb556">
         <source>Products:</source>
         <target>Products:</target>
-        <note>Line: 1079</note>
+        <note>Line: 1080</note>
       </trans-unit>
       <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
         <source>Discounts</source>
         <target>Discounts</target>
-        <note>Line: 1086</note>
+        <note>Line: 1087</note>
       </trans-unit>
       <trans-unit id="ba794350deb07c0c96fe73bd12239059">
         <source>Wrapping</source>
         <target>Wrapping</target>
-        <note>Line: 1093</note>
+        <note>Line: 1094</note>
       </trans-unit>
       <trans-unit id="7fc63f077cf04742cf02e7c589b428e9">
         <source>(Max %s %s)</source>
         <target>(Max %s %s)</target>
-        <note>Line: 1111</note>
+        <note>Line: 1112</note>
       </trans-unit>
       <trans-unit id="1067f7778added234b6064bc8aa0765d">
         <source>Re-stock products</source>
         <target>Re-stock products</target>
-        <note>Line: 1207</note>
+        <note>Line: 1208</note>
       </trans-unit>
       <trans-unit id="e413f403aa8d5253b487d09fc84e47a0">
         <source>Generate a credit slip</source>
         <target>Generate a credit slip</target>
-        <note>Line: 1153</note>
+        <note>Line: 1154</note>
       </trans-unit>
       <trans-unit id="400264c3cd8f2e65b9f19375230b59b8">
         <source>Generate a voucher</source>
         <target>Generate a voucher</target>
-        <note>Line: 1213</note>
+        <note>Line: 1214</note>
       </trans-unit>
       <trans-unit id="711cb64729ed5b666cf97c01691f5806">
         <source>Repay shipping costs</source>
         <target>Repay shipping costs</target>
-        <note>Line: 1165</note>
+        <note>Line: 1166</note>
       </trans-unit>
       <trans-unit id="d68a1671669f7e55d73dd78c22d52dfa">
         <source>This order has been partially paid by voucher. Choose the amount you want to refund:</source>
         <target>This order has been partially paid by voucher. Choose the amount you want to refund:</target>
-        <note>Line: 1169</note>
+        <note>Line: 1218</note>
       </trans-unit>
       <trans-unit id="6188ffe19286d3bf694160609cf15e82">
         <source>Include amount of initial voucher: </source>
         <target>Include amount of initial voucher: </target>
-        <note>Line: 1173</note>
+        <note>Line: 1174</note>
       </trans-unit>
       <trans-unit id="b9313ee2094019f4ee5212f784f45d65">
         <source>Exclude amount of initial voucher: </source>
         <target>Exclude amount of initial voucher: </target>
-        <note>Line: 1179</note>
+        <note>Line: 1180</note>
       </trans-unit>
       <trans-unit id="7731388b0fae4c0d7214f6a1f6f1771f">
         <source>Amount of your choice: </source>
         <target>Amount of your choice: </target>
-        <note>Line: 1232</note>
+        <note>Line: 1233</note>
       </trans-unit>
       <trans-unit id="67dd576afa3b807903e847f6ebb11f22">
         <source>This order has been partially paid by voucher. Choose the amount you want to refund: </source>
         <target>This order has been partially paid by voucher. Choose the amount you want to refund: </target>
-        <note>Line: 1217</note>
+        <note>Line: 1218</note>
       </trans-unit>
       <trans-unit id="8e0398b929d533c18fff7f5e21e8fcbd">
         <source>Product(s) price: </source>
         <target>Product(s) price: </target>
-        <note>Line: 1221</note>
+        <note>Line: 1222</note>
       </trans-unit>
       <trans-unit id="34623cd7893be21da4239d08f79aec9a">
         <source>Product(s) price, excluding amount of initial voucher: </source>
         <target>Product(s) price, excluding amount of initial voucher: </target>
-        <note>Line: 1227</note>
+        <note>Line: 1228</note>
       </trans-unit>
       <trans-unit id="fb61758d0f0fda4ba867c3d5a46c16a7">
         <source>Sources</source>
         <target>Sources</target>
-        <note>Line: 1260</note>
+        <note>Line: 1261</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
-        <note>Line: 1266</note>
+        <note>Line: 1267</note>
       </trans-unit>
       <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
         <source>To</source>
         <target>To</target>
-        <note>Line: 1267</note>
+        <note>Line: 1268</note>
       </trans-unit>
       <trans-unit id="010cd82f1f972dc6b720536adb555533">
         <source>Linked orders</source>
         <target>Linked orders</target>
-        <note>Line: 1280</note>
+        <note>Line: 1281</note>
       </trans-unit>
       <trans-unit id="0da6a00e3eb2132d5cf97463a099c49f">
         <source>Order no. </source>
         <target>Order no. </target>
-        <note>Line: 1287</note>
+        <note>Line: 1288</note>
+      </trans-unit>
+      <trans-unit id="532c865e83cd29bf74e7b968c8216767">
+        <source>Product(s) price:</source>
+        <target>Product(s) price:</target>
+        <note>Line: 1222</note>
+      </trans-unit>
+      <trans-unit id="6e3a26f187c697d1d8c6668a55cd5561">
+        <source>Product(s) price, excluding amount of initial voucher:</source>
+        <target>Product(s) price, excluding amount of initial voucher:</target>
+        <note>Line: 1228</note>
+      </trans-unit>
+      <trans-unit id="9e95da88fdfc002080300ef14cfba583">
+        <source>Include amount of initial voucher:</source>
+        <target>Include amount of initial voucher:</target>
+        <note>Line: 1174</note>
+      </trans-unit>
+      <trans-unit id="ec7ef95eeedfb53da36578da83b77ca6">
+        <source>Exclude amount of initial voucher:</source>
+        <target>Exclude amount of initial voucher:</target>
+        <note>Line: 1180</note>
+      </trans-unit>
+      <trans-unit id="6b743762523778c559d152e58f15af70">
+        <source>Amount of your choice:</source>
+        <target>Amount of your choice:</target>
+        <note>Line: 1233</note>
       </trans-unit>
     </body>
   </file>
@@ -1062,15 +1078,6 @@
         <source>Text #%d</source>
         <target>Text #%d</target>
         <note>Line: 92</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/slip/_print_pdf_icon.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a4c0c09247c3e56ff08971ff5558c596">
-        <source>Download credit slip</source>
-        <target>Download credit slip</target>
-        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
@@ -1158,11 +1165,6 @@ Best regards,</target>
         <source>Canceled</source>
         <target>Canceled</target>
         <note>Line: 36</note>
-      </trans-unit>
-      <trans-unit id="cc61945cbbf46721a053467c395c666f">
-        <source>Refunded</source>
-        <target>Refunded</target>
-        <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="1e97d97a923eaddd810e056c828e99ea">
         <source>Payment error</source>
@@ -1266,11 +1268,6 @@ Best regards,</target>
         <target>The national ID card number of this person, or a unique tax identification number.</target>
         <note>Line: 157</note>
       </trans-unit>
-      <trans-unit id="baa31a65f29121c32b637bb845d41acf">
-        <source>Address alias</source>
-        <target>Address alias</target>
-        <note>Line: 161</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1310,108 +1307,29 @@ Best regards,</target>
         <target>Net Profit per Visitor</target>
         <note>Line: 197</note>
       </trans-unit>
-      <trans-unit id="50cc07e9963519545552b1ac2c5f7a1e">
-        <source>Cart #%ID%</source>
-        <target>Cart #%ID%</target>
-        <note>Line: 284</note>
-      </trans-unit>
-      <trans-unit id="0b91ef9198a761459c595de4b12ca109">
-        <source>Total Cart</source>
-        <target>Total Cart</target>
-        <note>Line: 283</note>
-      </trans-unit>
-      <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
-        <source>Free Shipping</source>
-        <target>Free Shipping</target>
-        <note>Line: 601</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminOrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="38d6bc03067212bb0c2633f8a57d5881">
-        <source>Order messages</source>
-        <target>Order messages</target>
-        <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="80c05dda6b88c30a777e8777e23be8d7">
-        <source>Add new order message</source>
-        <target>Add new order message</target>
-        <note>Line: 105</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="94003250a2187a9f51b227b490e5ab6b">
-        <source>New client</source>
-        <target>New client</target>
-        <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="e13004b81566bfc42daa48372c15111b">
-        <source>Change Order Status</source>
-        <target>Change Order Status</target>
-        <note>Line: 184</note>
-      </trans-unit>
-      <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
-        <source>Add new order</source>
-        <target>Add new order</target>
-        <note>Line: 207</note>
-      </trans-unit>
-      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
-        <source>Orders</source>
-        <target>Orders</target>
-        <note>Line: 268</note>
-      </trans-unit>
-      <trans-unit id="0262a3dc4fae9adc8cb46e788806ccbf">
-        <source>Create order</source>
-        <target>Create order</target>
-        <note>Line: 268</note>
-      </trans-unit>
       <trans-unit id="0f005bd8209a61e4fc96a69736eb9798">
         <source>Order %reference% from %firstname% %lastname%</source>
         <target>Order %reference% from %firstname% %lastname%</target>
-        <note>Line: 285</note>
-      </trans-unit>
-      <trans-unit id="d201284604b35aa9392cb9c1acc434a6">
-        <source>Credit slip for order #%d</source>
-        <target>Credit slip for order #%d</target>
-        <note>Line: 809</note>
+        <note>Line: 286</note>
       </trans-unit>
       <trans-unit id="bbee72681d2c075d95355d3d9ccefb4e">
         <source>Credit card slip for order #%d</source>
         <target>Credit card slip for order #%d</target>
-        <note>Line: 1078</note>
-      </trans-unit>
-      <trans-unit id="e49701f123af735cf327227e8ab09bac">
-        <source>Manual order -- Employee:</source>
-        <target>Manual order -- Employee:</target>
-        <note>Line: 1250</note>
-      </trans-unit>
-      <trans-unit id="1f065062cdb50b501c5cb5160cf21ab0">
-        <source>Net Profit per Visit</source>
-        <target>Net Profit per Visit</target>
-        <note>Line: 1687</note>
-      </trans-unit>
-      <trans-unit id="947d8520f04473da621f2718138f3bc6">
-        <source>30 days</source>
-        <target>30 days</target>
-        <note>Line: 1688</note>
+        <note>Line: 1079</note>
       </trans-unit>
       <trans-unit id="52ec3221b595bb84def222e275d0152b">
         <source>Order #%id% (%ref%) - %firstname% %lastname%</source>
         <target>Order #%id% (%ref%) - %firstname% %lastname%</target>
-        <note>Line: 1741</note>
+        <note>Line: 1761</note>
       </trans-unit>
       <trans-unit id="95abd3be6297996994738f735a369d4a">
         <source>Shop: %shop_name%</source>
         <target>Shop: %shop_name%</target>
-        <note>Line: 1752</note>
-      </trans-unit>
-      <trans-unit id="272c853e39b8c65c81afd3661a8fd17f">
-        <source>%amount% tax excl.</source>
-        <target>%amount% tax excl.</target>
-        <note>Line: 1677</note>
+        <note>Line: 1772</note>
       </trans-unit>
     </body>
   </file>
@@ -1436,26 +1354,6 @@ Best regards,</target>
   </file>
   <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9442975514755961788cc54bf8b43ddf">
-        <source>Merchandise return (RMA) options</source>
-        <target>Merchandise return (RMA) options</target>
-        <note>Line: 55</note>
-      </trans-unit>
-      <trans-unit id="f374280fc7cab62785714cfca79b85a1">
-        <source>Enable returns</source>
-        <target>Enable returns</target>
-        <note>Line: 58</note>
-      </trans-unit>
-      <trans-unit id="587398fde24739a1b7ecdb632e6855dd">
-        <source>Time limit of validity</source>
-        <target>Time limit of validity</target>
-        <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="942fb8edc78a4c5be5b86cc4ad009538">
-        <source>Returns prefix</source>
-        <target>Returns prefix</target>
-        <note>Line: 68</note>
-      </trans-unit>
       <trans-unit id="bfc23574a242be4531bcb29877ac1d8a">
         <source>Return Merchandise Authorization (RMA)</source>
         <target>Return Merchandise Authorization (RMA)</target>
@@ -1474,36 +1372,16 @@ Best regards,</target>
       <trans-unit id="4f3bf7771a1ecc368092d952d698c12c">
         <source>Order #%id% from %date%</source>
         <target>Order #%id% from %date%</target>
-        <note>Line: 175</note>
+        <note>Line: 178</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d79cf3f429596f77db95c65074663a54">
-        <source>Order ID</source>
-        <target>Order ID</target>
-        <note>Line: 51</note>
-      </trans-unit>
-      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
-        <source>Date issued</source>
-        <target>Date issued</target>
-        <note>Line: 57</note>
-      </trans-unit>
       <trans-unit id="c95ed58f8c9573f7d58667e6847758d9">
         <source>Slip</source>
         <target>Slip</target>
         <note>Line: 73</note>
-      </trans-unit>
-      <trans-unit id="44180a771d7f3bf534550199c3293441">
-        <source>Credit slip options</source>
-        <target>Credit slip options</target>
-        <note>Line: 77</note>
-      </trans-unit>
-      <trans-unit id="d3174688da67b4530a7c8e774a7f31d5">
-        <source>Credit slip prefix</source>
-        <target>Credit slip prefix</target>
-        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="9a0e3730cac2d4abdda4cfa04483318e">
         <source>Print a PDF</source>
@@ -1526,7 +1404,16 @@ Best regards,</target>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
         <source>Newsletter</source>
         <target>Newsletter</target>
-        <note>Line: 1235</note>
+        <note>Line: 1329</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Cart/CommandHandler/SetFreeShippingToCartHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
+        <source>Free Shipping</source>
+        <target>Free Shipping</target>
+        <note>Line: 120</note>
       </trans-unit>
     </body>
   </file>
@@ -1535,12 +1422,12 @@ Best regards,</target>
       <trans-unit id="88183b946cc5f0e8c96b2e66e1c74a7e">
         <source>Unknown</source>
         <target>Unknown</target>
-        <note>Line: 169</note>
+        <note>Line: 185</note>
       </trans-unit>
       <trans-unit id="56b80d8cc0afeaff5a2e624583b976ab">
         <source>%1$d years old (birth date: %2$s)</source>
         <target>%1$d years old (birth date: %2$s)</target>
-        <note>Line: 164</note>
+        <note>Line: 180</note>
       </trans-unit>
     </body>
   </file>
@@ -1550,6 +1437,29 @@ Best regards,</target>
         <source>Average Age</source>
         <target>Average Age</target>
         <note>Line: 74</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Kpi/AverageOrderValueKpi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="272c853e39b8c65c81afd3661a8fd17f">
+        <source>%amount% tax excl.</source>
+        <target>%amount% tax excl.</target>
+        <note>Line: 55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Kpi/NetProfitPerVisitKpi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f065062cdb50b501c5cb5160cf21ab0">
+        <source>Net Profit per Visit</source>
+        <target>Net Profit per Visit</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="947d8520f04473da621f2718138f3bc6">
+        <source>30 days</source>
+        <target>30 days</target>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
@@ -1571,40 +1481,155 @@ Best regards,</target>
       </trans-unit>
     </body>
   </file>
+  <file original="src/Adapter/Kpi/ShoppingCartTotalKpi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="50cc07e9963519545552b1ac2c5f7a1e">
+        <source>Cart #%ID%</source>
+        <target>Cart #%ID%</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="0b91ef9198a761459c595de4b12ca109">
+        <source>Total Cart</source>
+        <target>Total Cart</target>
+        <note>Line: 74</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Order/CommandHandler/AddOrderFromBackOfficeHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e49701f123af735cf327227e8ab09bac">
+        <source>Manual order -- Employee:</source>
+        <target>Manual order -- Employee:</target>
+        <note>Line: 96</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Order/Refund/VoucherGenerator.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d201284604b35aa9392cb9c1acc434a6">
+        <source>Credit slip for order #%d</source>
+        <target>Credit slip for order #%d</target>
+        <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Data/Factory/CreditSlipGridDataFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a4c0c09247c3e56ff08971ff5558c596">
+        <source>Download credit slip</source>
+        <target>Download credit slip</target>
+        <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/CreditSlipGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d79cf3f429596f77db95c65074663a54">
+        <source>Order ID</source>
+        <target>Order ID</target>
+        <note>Line: 94</note>
+      </trans-unit>
+      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
+        <source>Date issued</source>
+        <target>Date issued</target>
+        <note>Line: 100</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/CustomerGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0f98b7f230f3c91292f0de4c99e263f2">
         <source>Registration</source>
         <target>Registration</target>
-        <note>Line: 195</note>
+        <note>Line: 197</note>
       </trans-unit>
       <trans-unit id="5e5914912e8d2f2765525840acf98bea">
         <source>Last visit</source>
         <target>Last visit</target>
-        <note>Line: 202</note>
+        <note>Line: 204</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Import/EntityField/Provider/AddressFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Core/Grid/Definition/Factory/OrderGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7cb32e708d6b961d476baced73d362bb">
-        <source>VAT number</source>
-        <target>VAT number</target>
-        <note>Line: 76</note>
+      <trans-unit id="94003250a2187a9f51b227b490e5ab6b">
+        <source>New client</source>
+        <target>New client</target>
+        <note>Line: 195</note>
       </trans-unit>
-      <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
-        <source>Identification number</source>
-        <target>Identification number</target>
-        <note>Line: 77</note>
+      <trans-unit id="e13004b81566bfc42daa48372c15111b">
+        <source>Change Order Status</source>
+        <target>Change Order Status</target>
+        <note>Line: 437</note>
+      </trans-unit>
+      <trans-unit id="9efa6b952ad382ca6a636523732c85cd">
+        <source>Open in new tabs</source>
+        <target>Open in new tabs</target>
+        <note>Line: 444</note>
+      </trans-unit>
+      <trans-unit id="b6df865141bb721c8c46d548b8e2846c">
+        <source>It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.</source>
+        <target>It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.</target>
+        <note>Line: 451</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/ManufacturerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Address/AddressController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="bed08e8af70a98c1a8361f13ec477be0">
         <source>Add new address</source>
         <target>Add new address</target>
-        <note>Line: 579</note>
+        <note>Line: 189</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="80c05dda6b88c30a777e8777e23be8d7">
+        <source>Add new order message</source>
+        <target>Add new order message</target>
+        <note>Line: 70</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
+        <source>Add new order</source>
+        <target>Add new order</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
+        <source>Orders</source>
+        <target>Orders</target>
+        <note>Line: 464</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/PrivateNoteType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c68f674c6a04b2f75537e41318706b5c">
+        <source>Add a note on this customer. It will only be visible to you.</source>
+        <target>Add a note on this customer. It will only be visible to you.</target>
+        <note>Line: 64</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/AddProductRowType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
+        <source>Free shipping</source>
+        <target>Free shipping</target>
+        <note>Line: 133</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/CancelProductType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="282c7d15f714ec30b64b7db218f232f0">
+        <source>The "shipping" field must be a valid number</source>
+        <target>The "shipping" field must be a valid number</target>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -1619,6 +1644,30 @@ Best regards,</target>
         <source>Before the sequential number</source>
         <target>Before the sequential number</target>
         <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Address/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="03361eda68f746619c2ae3341eaa2f07">
+        <source>Customer email</source>
+        <target>Customer email</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="baa31a65f29121c32b637bb845d41acf">
+        <source>Address alias</source>
+        <target>Address alias</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="7cb32e708d6b961d476baced73d362bb">
+        <source>VAT number</source>
+        <target>VAT number</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
+        <source>Identification number</source>
+        <target>Identification number</target>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -1803,7 +1852,7 @@ Best regards,</target>
       <trans-unit id="b70a3b711156c78fa558c596980b2e30">
         <source>Last emails</source>
         <target>Last emails</target>
-        <note>Line: 30</note>
+        <note>Line: 29</note>
       </trans-unit>
     </body>
   </file>
@@ -1907,6 +1956,67 @@ Best regards,</target>
         <source>Information about customer %name%</source>
         <target>Information about customer %name%</target>
         <note>Line: 26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/CustomerThread/Block/customer_information.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="eab6d6f993963d4c9de8a900abeef8df">
+        <source>No order validated for the moment. By default, an order is considered validated when its payment is accepted.</source>
+        <target>No order validated for the moment. By default, an order is considered validated when its payment is accepted.</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="3bf63a999cda6c9d95c3827e7942f41d">
+        <source>Customer since: %s</source>
+        <target>Customer since: %s</target>
+        <note>Line: 78</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9442975514755961788cc54bf8b43ddf">
+        <source>Merchandise return (RMA) options</source>
+        <target>Merchandise return (RMA) options</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="f374280fc7cab62785714cfca79b85a1">
+        <source>Enable returns</source>
+        <target>Enable returns</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="587398fde24739a1b7ecdb632e6855dd">
+        <source>Time limit of validity</source>
+        <target>Time limit of validity</target>
+        <note>Line: 41</note>
+      </trans-unit>
+      <trans-unit id="942fb8edc78a4c5be5b86cc4ad009538">
+        <source>Returns prefix</source>
+        <target>Returns prefix</target>
+        <note>Line: 46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/OrderMessage/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="38d6bc03067212bb0c2633f8a57d5881">
+        <source>Order messages</source>
+        <target>Order messages</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/CreditSlip/Blocks/credit_slip_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="44180a771d7f3bf534550199c3293441">
+        <source>Credit slip options</source>
+        <target>Credit slip options</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="d3174688da67b4530a7c8e774a7f31d5">
+        <source>Credit slip prefix</source>
+        <target>Credit slip prefix</target>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -2038,6 +2148,144 @@ Best regards,</target>
         <source>Use the disk as cache for PDF invoices</source>
         <target>Use the disk as cache for PDF invoices</target>
         <note>Line: 122</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/cart_rules.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c6ba3f7beac8724d025d570d002b1579">
+        <source>No voucher was found</source>
+        <target>No voucher was found</target>
+        <note>Line: 83</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/summary.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="57297718fdb439175177cf6b196172d1">
+        <source>Order status</source>
+        <target>Order status</target>
+        <note>Line: 110</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/customer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1402e450396cb76b53b95f6e1746d700">
+        <source>Account registered:</source>
+        <target>Account registered:</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="73f60d0b9f47c606d71c17498266776e">
+        <source>Validated orders placed:</source>
+        <target>Validated orders placed:</target>
+        <note>Line: 84</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/details.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
+        <source>Merchandise returns</source>
+        <target>Merchandise returns</target>
+        <note>Line: 39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/documents.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
+        <source>Credit slip</source>
+        <target>Credit slip</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/messages.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b1c1a2457e49ccd06d304774d50947c6">
+        <source>View full conversation</source>
+        <target>View full conversation</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="4d16da2eaa070d98b8495ccf1b0b42bb">
+        <source>Choose your order message</source>
+        <target>Choose your order message</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5735196b42849ae4fe6adac3ae14c3d1">
+        <source>Card type</source>
+        <target>Card type</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="0bef7cd06cee6711378b85d90ce11527">
+        <source>Cardholder name</source>
+        <target>Cardholder name</target>
+        <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="a44217022190f5734b2f72ba1e4f8a79">
+        <source>Card number</source>
+        <target>Card number</target>
+        <note>Line: 73</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cc61945cbbf46721a053467c395c666f">
+        <source>Refunded</source>
+        <target>Refunded</target>
+        <note>Line: 69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/products.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d9c66f411da5faef9c46d5b679214ae1">
+        <source>Add a discount</source>
+        <target>Add a discount</target>
+        <note>Line: 145</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="858591a7d8647b4535c51a4ad506db9c">
+        <source>Shipping does not apply to virtual orders</source>
+        <target>Shipping does not apply to virtual orders</target>
+        <note>Line: 99</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/create.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0262a3dc4fae9adc8cb46e788806ccbf">
+        <source>Create order</source>
+        <target>Create order</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/preview.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="169d7487a2ea841e5cdd6b9052c54f37">
+        <source>Shipping details</source>
+        <target>Shipping details</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="e3f32212a2ad38fc762cff6ba6d44936">
+        <source>Invoice details</source>
+        <target>Invoice details</target>
+        <note>Line: 95</note>
+      </trans-unit>
+      <trans-unit id="0da9511b88a62642518334bda95c7370">
+        <source>Open details</source>
+        <target>Open details</target>
+        <note>Line: 185</note>
       </trans-unit>
     </body>
   </file>

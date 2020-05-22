@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -87,8 +88,8 @@ final class CatalogPriceRuleGridDataFactory implements GridDataFactoryInterface
                     $value = '--';
                 }
             }
-            //@todo: take amount from Reduction VO. PR #13716
-            $priceRule['reduction_type'] === 'amount' ?
+
+            Reduction::TYPE_AMOUNT === $priceRule['reduction_type'] ?
                 $priceRule['reduction_type'] = $this->translator->trans('Amount', [], 'Admin.Global') :
                 $priceRule['reduction_type'] = $this->translator->trans('Percentage', [], 'Admin.Global');
         }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,7 +56,24 @@ $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
 if (!defined('__PS_BASE_URI__')) {
-    define('__PS_BASE_URI__', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1))));
+    if (PHP_SAPI !== 'cli') {
+        define(
+            '__PS_BASE_URI__',
+            substr(
+                $_SERVER['REQUEST_URI'],
+                0,
+                -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/'))
+                - strlen(
+                    substr(
+                        dirname($_SERVER['REQUEST_URI']),
+                        strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1
+                    )
+                )
+            )
+        );
+    } else {
+        define('__PS_BASE_URI__', '/' . trim(Datas::getInstance()->base_uri, '/') . '/');
+    }
 }
 
 if (!defined('_PS_CORE_DIR_')) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,13 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use ErrorException;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand;
@@ -35,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentUploadFailedException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\BulkDeleteAttachmentsException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotAddAttachmentException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUnlinkAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\CannotUpdateAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\DeleteAttachmentException;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\EmptyFileException;
@@ -57,11 +57,6 @@ class AttachmentController extends FrameworkBundleAdminController
 {
     /**
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     * @param AttachmentFilters $filters
-     *
-     * @return Response
      */
     public function indexAction(Request $request, AttachmentFilters $filters): Response
     {
@@ -84,8 +79,6 @@ class AttachmentController extends FrameworkBundleAdminController
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to create this."
      * )
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -132,7 +125,6 @@ class AttachmentController extends FrameworkBundleAdminController
      * )
      *
      * @param int $attachmentId
-     * @param Request $request
      *
      * @return Response
      */
@@ -159,11 +151,20 @@ class AttachmentController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_attachments_index');
             }
+        } catch (CannotUnlinkAttachmentException $e) {
+            $this->addFlash('warning', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_attachments_index');
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-            if ($e instanceof AttachmentNotFoundException || $e instanceof ErrorException) {
+
+            if ($e instanceof AttachmentNotFoundException) {
                 return $this->redirectToRoute('admin_attachments_index');
             }
+        }
+
+        if (!isset($attachmentInformation) || !isset($attachmentForm)) {
+            return $this->redirectToRoute('admin_attachments_index');
         }
 
         $names = $attachmentInformation->getName();
@@ -189,10 +190,6 @@ class AttachmentController extends FrameworkBundleAdminController
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to edit this."
      * )
-     *
-     * @param int $attachmentId
-     *
-     * @return Response
      */
     public function viewAction(int $attachmentId): Response
     {
@@ -213,10 +210,6 @@ class AttachmentController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_attachments_index")
      * @DemoRestricted(redirectRoute="admin_attachments_index")
-     *
-     * @param int $attachmentId
-     *
-     * @return RedirectResponse
      */
     public function deleteAction(int $attachmentId): RedirectResponse
     {
@@ -241,10 +234,6 @@ class AttachmentController extends FrameworkBundleAdminController
      *     redirectRoute="admin_attachments_index",
      *     message="You do not have permission to delete this."
      * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
     public function deleteBulkAction(Request $request): RedirectResponse
     {
@@ -265,8 +254,6 @@ class AttachmentController extends FrameworkBundleAdminController
 
     /**
      * @param Exception $e
-     *
-     * @return array
      */
     private function getErrorMessages(Exception $e = null): array
     {
@@ -364,7 +351,7 @@ class AttachmentController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_attachment_create'),
+            'href' => $this->generateUrl('admin_attachments_create'),
             'desc' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
             'icon' => 'add_circle_outline',
         ];

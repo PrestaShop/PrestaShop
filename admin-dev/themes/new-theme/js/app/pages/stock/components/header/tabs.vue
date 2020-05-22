@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,37 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="page-head-tabs" id="head_tabs">
+  <div
+    class="page-head-tabs"
+    id="head_tabs"
+  >
     <ul class="nav nav-pills">
       <li class="nav-item">
-        <router-link data-toggle="tab" class="nav-link" :class="{active : isOverview}" to="/" role="tab">{{trans('menu_stock')}}</router-link>
+        <router-link
+          data-toggle="tab"
+          class="nav-link"
+          :class="{active : isOverview}"
+          to="/"
+          role="tab"
+        >
+          {{ trans('menu_stock') }}
+        </router-link>
       </li>
       <li class="nav-item">
-        <router-link data-toggle="tab" class="nav-link" :class="{active : isMovements}" to="/movements" role="tab">{{trans('menu_movements')}}</router-link>
+        <router-link
+          data-toggle="tab"
+          class="nav-link"
+          :class="{active : isMovements}"
+          to="/movements"
+          role="tab"
+        >
+          {{ trans('menu_movements') }}
+        </router-link>
       </li>
     </ul>
   </div>

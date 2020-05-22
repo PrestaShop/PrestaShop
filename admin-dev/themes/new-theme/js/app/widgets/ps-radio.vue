@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,25 +18,45 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 
 <template>
   <div class="ps-radio">
-    <input type="radio" :id="id" name="radio-group" :checked="checked" @change="onChange">
-    <label :for="id">{{label}}</label>
+    <input
+      type="radio"
+      :id="id"
+      name="radio-group"
+      :checked="checked"
+      @change="onChange"
+    >
+    <label :for="id">{{ label }}</label>
   </div>
 </template>
 
 <script>
-  export default{
+  export default {
     props: {
-      id: { type: String, required: true },
-      label: { type: String, required: false },
-      checked: { type: Boolean, required: false },
-      value: { type: String, required: false },
+      id: {
+        type: String,
+        required: true,
+      },
+      label: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      checked: {
+        type: Boolean,
+        required: false,
+      },
+      value: {
+        type: String,
+        required: false,
+        default: '',
+      },
     },
     methods: {
       onChange() {

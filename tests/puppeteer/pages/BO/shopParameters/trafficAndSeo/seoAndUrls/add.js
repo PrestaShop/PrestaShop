@@ -9,15 +9,16 @@ module.exports = class AddSeoUrl extends BOBasePage {
 
     // Selectors
     this.pageTitleLangButton = '#meta_page_title';
-    this.pageTitleLangSpan = 'div.dropdown-menu[aria-labelledby=\'meta_page_title\'] span[data-locale=\'%LANG\']';
+    this.pageTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'meta_page_title\']'
+      + ` span[data-locale='${lang}']`;
     this.pageNameSelect = '#meta_page_name';
-    this.pageTitleInput = '#meta_page_title_%ID';
-    this.metaDescriptionInput = '#meta_meta_description_%ID';
-    this.metaKeywordsInput = '#meta_meta_keywords_%ID-tokenfield';
-    this.friendlyUrlInput = '#meta_url_rewrite_%ID';
+    this.pageTitleInput = id => `#meta_page_title_${id}`;
+    this.metaDescriptionInput = id => `#meta_meta_description_${id}`;
+    this.metaKeywordsInput = id => `#meta_meta_keywords_${id}-tokenfield`;
+    this.friendlyUrlInput = id => `#meta_url_rewrite_${id}`;
     // Selectors for Meta keywords
-    this.taggableFieldDiv = 'div.input-group div.js-locale-%LANG';
-    this.deleteKeywordLink = `${this.taggableFieldDiv} a.close`;
+    this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
+    this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = 'div.card-footer button';
   }
 
@@ -31,11 +32,11 @@ module.exports = class AddSeoUrl extends BOBasePage {
   async changeLanguageForSelectors(lang = 'en') {
     await Promise.all([
       this.page.click(this.pageTitleLangButton),
-      this.page.waitForSelector(`${this.pageTitleLangButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.pageTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.pageTitleLangSpan.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.pageTitleLangButton}[aria-expanded='false']`, {visible: true}),
+      this.page.click(this.pageTitleLangSpan(lang)),
+      this.waitForVisibleSelector(`${this.pageTitleLangButton}[aria-expanded='false']`),
     ]);
   }
 
@@ -45,7 +46,7 @@ module.exports = class AddSeoUrl extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteKeywords(lang = 'en') {
-    const closeButtons = await this.page.$$(this.deleteKeywordLink.replace('%LANG', lang));
+    const closeButtons = await this.page.$$(this.deleteKeywordLink(lang));
     for (let i = 0; i < closeButtons.length; i++) {
       await closeButtons[i].click();
     }
@@ -59,7 +60,7 @@ module.exports = class AddSeoUrl extends BOBasePage {
    */
   async addKeywords(keywords, idLang = 1) {
     for (let i = 0; i < keywords.length; i++) {
-      await this.page.type(this.metaKeywordsInput.replace('%ID', idLang), keywords[i]);
+      await this.page.type(this.metaKeywordsInput(idLang), keywords[i]);
       await this.page.keyboard.press('Enter');
     }
   }
@@ -73,18 +74,18 @@ module.exports = class AddSeoUrl extends BOBasePage {
     await this.page.select(this.pageNameSelect, seoPageData.page);
     // Fill form in english
     await this.changeLanguageForSelectors('en');
-    await this.setValue(this.pageTitleInput.replace('%ID', 1), seoPageData.title);
-    await this.setValue(this.metaDescriptionInput.replace('%ID', 1), seoPageData.metaDescription);
+    await this.setValue(this.pageTitleInput(1), seoPageData.title);
+    await this.setValue(this.metaDescriptionInput(1), seoPageData.metaDescription);
     await this.deleteKeywords('en');
     await this.addKeywords(seoPageData.metaKeywords, 1);
-    await this.setValue(this.friendlyUrlInput.replace('%ID', 1), seoPageData.friendlyUrl);
+    await this.setValue(this.friendlyUrlInput(1), seoPageData.friendlyUrl);
     // Fill form in french
     await this.changeLanguageForSelectors('fr');
-    await this.setValue(this.pageTitleInput.replace('%ID', 2), seoPageData.frTitle);
-    await this.setValue(this.metaDescriptionInput.replace('%ID', 2), seoPageData.frMetaDescription);
+    await this.setValue(this.pageTitleInput(2), seoPageData.frTitle);
+    await this.setValue(this.metaDescriptionInput(2), seoPageData.frMetaDescription);
     await this.deleteKeywords('fr');
     await this.addKeywords(seoPageData.frMetaKeywords, 2);
-    await this.setValue(this.friendlyUrlInput.replace('%ID', 2), seoPageData.frFriendlyUrl);
+    await this.setValue(this.friendlyUrlInput(2), seoPageData.frFriendlyUrl);
 
     // Save seo page
     await this.clickAndWaitForNavigation(this.saveButton);

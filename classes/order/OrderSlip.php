@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -138,7 +138,7 @@ class OrderSlipCore extends ObjectModel
         SELECT *
         FROM `' . _DB_PREFIX_ . 'order_slip`
         WHERE `id_customer` = ' . (int) ($customer_id) .
-        ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
+            ($order_id ? ' AND `id_order` = ' . (int) ($order_id) : '') . '
         ORDER BY `date_add` DESC');
     }
 
@@ -183,6 +183,8 @@ class OrderSlipCore extends ObjectModel
      * Get resume of all refund for one product line.
      *
      * @param $id_order_detail
+     *
+     * @deprecated This method should not be used any more because sometimes OrderSlip is not created, you should use the OrderDetail::total_refunded_tax_excl/incl fields instead
      */
     public static function getProductSlipResume($id_order_detail)
     {
@@ -190,6 +192,22 @@ class OrderSlipCore extends ObjectModel
             SELECT SUM(product_quantity) product_quantity, SUM(amount_tax_excl) amount_tax_excl, SUM(amount_tax_incl) amount_tax_incl
             FROM `' . _DB_PREFIX_ . 'order_slip_detail`
             WHERE `id_order_detail` = ' . (int) $id_order_detail);
+    }
+
+    /**
+     * Get resume of all shipping refund for one order.
+     *
+     * @param int $idOrder
+     */
+    public static function getShippingSlipResume(int $idOrder)
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+            SELECT
+                SUM(total_shipping_tax_incl) total_shipping_tax_incl,
+                SUM(total_shipping_tax_excl) total_shipping_tax_excl,
+                SUM(shipping_cost_amount) shipping_cost_amount
+            FROM `' . _DB_PREFIX_ . 'order_slip`
+            WHERE `id_order` = ' . $idOrder);
     }
 
     /**
@@ -329,8 +347,8 @@ class OrderSlipCore extends ObjectModel
 
             $address = Address::initialize($order->id_address_invoice, false);
             $id_address = (int) $address->id;
-            $id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int) $order_detail->product_id);
-            $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+            $id_tax_rules_group = (int) $order_detail->id_tax_rules_group;
+            $tax_calculator = $order_detail->getTaxCalculator();
 
             $order_slip->{'total_products_tax_' . $inc_or_ex_1} += $price * $quantity;
 
@@ -369,7 +387,6 @@ class OrderSlipCore extends ObjectModel
             $product['total_price_tax_' . $inc_or_ex_1] = Tools::ps_round($price * $quantity, Context::getContext()->getComputingPrecision());
             $product['total_price_tax_' . $inc_or_ex_2] = Tools::ps_round($product_tax_incl, Context::getContext()->getComputingPrecision());
         }
-
         unset($product);
 
         foreach ($total_products as $key => $price) {

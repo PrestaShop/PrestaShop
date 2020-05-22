@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -62,16 +62,16 @@
     var new_msg = '{l s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
     var see_msg = '{l s='Read this message' js=1 d='Admin.Navigation.Header'}';
     var token = '{$token|addslashes}';
-    var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
+    var token_admin_orders = tokenAdminOrders = '{getAdminToken tab='AdminOrders'}';
     var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
-    var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
+    var token_admin_customer_threads = tokenAdminCustomerThreads = '{getAdminToken tab='AdminCustomerThreads'}';
     var currentIndex = '{$currentIndex|@addcslashes:'\''}';
     var employee_token = '{getAdminToken tab='AdminEmployees'}';
     var choose_language_translate = '{l s='Choose language:' js=1 d='Admin.Actions'}';
     var default_language = '{$default_language|intval}';
     var admin_modules_link = '{$link->getAdminLink("AdminModulesSf", true, ['route' => "admin_module_catalog_post"])|addslashes}';
     var admin_notification_get_link = '{$link->getAdminLink("AdminCommon")|addslashes}';
-    var admin_notification_push_link = '{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
+    var admin_notification_push_link = adminNotificationPushLink = '{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
     var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
     var update_success_msg = '{l s='Update successful' js=1 d='Admin.Notifications.Success'}';
     var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1 d='Admin.Notifications.Warning'}';

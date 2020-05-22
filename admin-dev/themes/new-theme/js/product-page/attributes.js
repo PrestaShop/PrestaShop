@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,19 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 export default function () {
-  $(document).ready(function () {
+  $(document).ready(() => {
     $('.js-attribute-checkbox').change((event) => {
       if ($(event.target).is(':checked')) {
         if ($(`.token[data-value="${$(event.target).data('value')}"] .close`).length === 0) {
           $('#form_step3_attributes').tokenfield(
             'createToken',
-            {value: $(event.target).data('value'), label: $(event.target).data('label')}
+            {value: $(event.target).data('value'), label: $(event.target).data('label')},
           );
         }
       } else {
@@ -40,21 +40,21 @@ export default function () {
   });
 
   $('#form_step3_attributes')
-    .on('tokenfield:createdtoken', function (e) {
+    .on('tokenfield:createdtoken', (e) => {
       if (!$(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`).is(':checked')) {
         $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`).prop('checked', true);
       }
     })
-    .on('tokenfield:removedtoken', function (e) {
+    .on('tokenfield:removedtoken', (e) => {
       if ($(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`).is(':checked')) {
         $(`.js-attribute-checkbox[data-value="${e.attrs.value}"]`).prop('checked', false);
       }
     });
 
   $('input.form-control[counter], textarea.form-control:not(.autoload_rte)[counter]').each(function () {
-    let counter = $(this).attr('counter');
+    const counter = $(this).attr('counter');
 
-    if (typeof counter === undefined || counter === false) {
+    if (typeof counter === 'undefined' || counter === false) {
       return;
     }
 
@@ -64,12 +64,12 @@ export default function () {
     });
 
     function handleCounter(object) {
-      let counter = $(object).attr('counter');
-      let counter_type = $(object).attr('counter_type');
-      let max = $(object).val().length;
+      const counterObject = $(object).attr('counter');
+      const counterType = $(object).attr('counterType');
+      const max = $(object).val().length;
 
       $(object).parent().find('span.currentLength').text(max);
-      if ('recommended' !== counter_type && max > counter) {
+      if (counterType !== 'recommended' && max > counterObject) {
         $(object).parent().find('span.maxLength').addClass('text-danger');
       } else {
         $(object).parent().find('span.maxLength').removeClass('text-danger');

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,9 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -86,6 +84,7 @@ class AddOrderCartRuleType extends AbstractType
             $this->orderInvoiceByIdChoiceProvider->getChoices([
                 'id_order' => $options['order_id'],
                 'id_lang' => $this->contextLangId,
+                'display_total' => true,
             ]) : [];
 
         $builder
@@ -103,10 +102,7 @@ class AddOrderCartRuleType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'choices' => $this->orderDiscountTypeChoiceProvider->getChoices(),
             ])
-            ->add('value', NumberType::class, [
-                'attr' => [
-                    'step' => 0.01,
-                ],
+            ->add('value', TextType::class, [
                 'constraints' => new Type([
                     'type' => 'numeric',
                     'message' => $this->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
@@ -116,10 +112,6 @@ class AddOrderCartRuleType extends AbstractType
                 'choices' => $invoices,
                 'required' => false,
                 'placeholder' => false,
-            ])
-            ->add('apply_on_all_invoices', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans('Apply on all invoices', [], 'Admin.Orderscustomers.Feature'),
             ])
         ;
     }

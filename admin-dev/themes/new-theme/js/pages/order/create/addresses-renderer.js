@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -26,7 +26,7 @@
 import createOrderMap from './create-order-map';
 import Router from '../../../components/router';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Renders Delivery & Invoice addresses select
@@ -35,30 +35,29 @@ export default class AddressesRenderer {
   constructor() {
     this.router = new Router();
   }
+
   /**
    * @param {Array} addresses
    */
   render(addresses) {
-    this._cleanAddresses();
+    this.cleanAddresses();
     if (addresses.length === 0) {
-      this._hideAddressesContent();
-      this._showEmptyAddressesWarning();
-      this._showAddressesBlock();
+      this.hideAddressesContent();
+      this.showEmptyAddressesWarning();
+      this.showAddressesBlock();
 
       return;
     }
 
-    this._showAddressesContent();
-    this._hideEmptyAddressesWarning();
+    this.showAddressesContent();
+    this.hideEmptyAddressesWarning();
 
-    for (const key in addresses) {
-      const address = addresses[key];
+    Object.values(addresses).forEach((address) => {
+      this.renderDeliveryAddress(address);
+      this.renderInvoiceAddress(address);
+    });
 
-      this._renderDeliveryAddress(address);
-      this._renderInvoiceAddress(address);
-    }
-
-    this._showAddressesBlock();
+    this.showAddressesBlock();
   }
 
   /**
@@ -68,7 +67,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _renderDeliveryAddress(address) {
+  renderDeliveryAddress(address) {
     const deliveryAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -77,12 +76,14 @@ export default class AddressesRenderer {
     if (address.delivery) {
       $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
       deliveryAddressOption.selected = 'selected';
+      $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+        addressId: address.addressId,
+        liteDisplaying: 1,
+        submitFormAjax: 1,
+      }));
     }
 
     $(createOrderMap.deliveryAddressSelect).append($('<option>', deliveryAddressOption));
-    $(createOrderMap.deliveryAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
-      addressId: address.addressId,
-    }));
   }
 
   /**
@@ -92,7 +93,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _renderInvoiceAddress(address) {
+  renderInvoiceAddress(address) {
     const invoiceAddressOption = {
       value: address.addressId,
       text: address.alias,
@@ -101,12 +102,14 @@ export default class AddressesRenderer {
     if (address.invoice) {
       $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
       invoiceAddressOption.selected = 'selected';
+      $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
+        addressId: address.addressId,
+        liteDisplaying: 1,
+        submitFormAjax: 1,
+      }));
     }
 
     $(createOrderMap.invoiceAddressSelect).append($('<option>', invoiceAddressOption));
-    $(createOrderMap.invoiceAddressEditBtn).prop('href', this.router.generate('admin_addresses_edit', {
-      addressId: address.addressId,
-    }));
   }
 
   /**
@@ -114,7 +117,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _showAddressesBlock() {
+  showAddressesBlock() {
     $(createOrderMap.addressesBlock).removeClass('d-none');
   }
 
@@ -123,7 +126,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _cleanAddresses() {
+  cleanAddresses() {
     $(createOrderMap.deliveryAddressDetails).empty();
     $(createOrderMap.deliveryAddressSelect).empty();
     $(createOrderMap.invoiceAddressDetails).empty();
@@ -135,7 +138,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _showAddressesContent() {
+  showAddressesContent() {
     $(createOrderMap.addressesContent).removeClass('d-none');
     $(createOrderMap.addressesWarning).addClass('d-none');
   }
@@ -145,7 +148,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _hideAddressesContent() {
+  hideAddressesContent() {
     $(createOrderMap.addressesContent).addClass('d-none');
     $(createOrderMap.addressesWarning).removeClass('d-none');
   }
@@ -155,7 +158,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _showEmptyAddressesWarning() {
+  showEmptyAddressesWarning() {
     $(createOrderMap.addressesWarning).removeClass('d-none');
   }
 
@@ -164,7 +167,7 @@ export default class AddressesRenderer {
    *
    * @private
    */
-  _hideEmptyAddressesWarning() {
+  hideEmptyAddressesWarning() {
     $(createOrderMap.addressesWarning).addClass('d-none');
   }
 }

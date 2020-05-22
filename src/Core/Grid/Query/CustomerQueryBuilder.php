@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -209,10 +209,6 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('date_add' === $filterName) {
-                $qb->andWhere('c.date_add >= :date_from AND c.date_add <= :date_to');
-                $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
-                $qb->setParameter('date_to', sprintf('%s 23:59:59', $filterValue['to']));
-
                 if (isset($filterValue['from'])) {
                     $qb->andWhere('c.date_add >= :date_from');
                     $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));

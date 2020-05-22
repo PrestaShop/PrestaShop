@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -221,12 +221,12 @@ class ThemeManager implements AddonManagerInterface
         $this->disable($this->shop->theme_name);
 
         $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
-                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
-                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
-                ->doEnableModules($theme->getModulesToEnable())
-                ->doResetModules($theme->get('global_settings.modules.to_reset', []))
-                ->doApplyImageTypes($theme->get('global_settings.image_types'))
-                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
+            ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+            ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+            ->doEnableModules($theme->getModulesToEnable())
+            ->doResetModules($theme->get('global_settings.modules.to_reset', []))
+            ->doApplyImageTypes($theme->get('global_settings.image_types'))
+            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
         $theme->onEnable();
 
@@ -432,8 +432,8 @@ class ThemeManager implements AddonManagerInterface
         $modules_parent_dir = $sandboxPath . '/dependencies/modules';
         if ($this->filesystem->exists($modules_parent_dir)) {
             $module_dirs = $this->finder->directories()
-                                        ->in($modules_parent_dir)
-                                        ->depth('== 0');
+                ->in($modules_parent_dir)
+                ->depth('== 0');
             /** @var SplFileInfo $dir */
             foreach (iterator_to_array($module_dirs) as $dir) {
                 $destination = $module_root_dir . basename($dir->getFileName());

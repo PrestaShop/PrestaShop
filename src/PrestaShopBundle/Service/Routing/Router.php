@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -38,18 +38,35 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
  */
 class Router extends BaseRouter
 {
+    /**
+     * @var UserProvider
+     */
     private $userProvider;
+
+    /**
+     * @var CsrfTokenManager
+     */
     private $tokenManager;
+
+    /**
+     * @var array
+     */
+    private $tokens = [];
 
     /**
      * {@inheritdoc}
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        $url = parent::generate($name, $parameters, $referenceType);
-        $token = $this->tokenManager->getToken($this->userProvider->getUsername())->getValue();
+        $username = $this->userProvider->getUsername();
+        // Do not generate token each time we want to generate a route for a user
+        if (!isset($this->tokens[$username])) {
+            $this->tokens[$username] = $this->tokenManager->getToken($username)->getValue();
+        }
 
-        return self::generateTokenizedUrl($url, $token);
+        $url = parent::generate($name, $parameters, $referenceType);
+
+        return self::generateTokenizedUrl($url, $this->tokens[$username]);
     }
 
     public function setTokenManager(CsrfTokenManager $tokenManager)
@@ -67,6 +84,7 @@ class Router extends BaseRouter
         if (TokenInUrls::isDisabled()) {
             return $url;
         }
+
         $components = parse_url($url);
         $baseUrl = (isset($components['path']) ? $components['path'] : '');
         $queryParams = [];

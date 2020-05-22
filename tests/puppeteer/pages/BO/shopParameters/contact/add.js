@@ -10,11 +10,11 @@ module.exports = class AddContact extends BOBasePage {
 
     // Selectors
     this.pageTitleLangButton = '#contact_title';
-    this.pageTitleLangSpan = 'div.dropdown-menu[aria-labelledby=\'contact_title\'] span[data-locale=\'%LANG\']';
+    this.pageTitleLangSpan = lang => `div.dropdown-menu[aria-labelledby='contact_title'] span[data-locale='${lang}']`;
     this.titleInputEN = '#contact_title_1';
     this.titleInputFR = '#contact_title_2';
     this.emailAddressInput = '#contact_email';
-    this.enableSaveMessageslabel = 'label[for=\'contact_is_messages_saving_enabled_%ID\']';
+    this.enableSaveMessagesLabel = id => `label[for='contact_is_messages_saving_enabled_${id}']`;
     this.descriptionTextareaEN = '#contact_description_1';
     this.descriptionTextareaFR = '#contact_description_2';
     this.saveContactButton = 'div.card-footer button';
@@ -32,11 +32,11 @@ module.exports = class AddContact extends BOBasePage {
   async changeLanguageForSelectors(lang = 'en') {
     await Promise.all([
       this.page.click(this.pageTitleLangButton),
-      this.page.waitForSelector(`${this.pageTitleLangButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.pageTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.pageTitleLangSpan.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.pageTitleLangButton}[aria-expanded='false']`, {visible: true}),
+      this.page.click(this.pageTitleLangSpan(lang)),
+      this.waitForVisibleSelector(`${this.pageTitleLangButton}[aria-expanded='false']`),
     ]);
   }
 
@@ -52,7 +52,7 @@ module.exports = class AddContact extends BOBasePage {
     await this.changeLanguageForSelectors('fr');
     await this.setValue(this.titleInputFR, contactData.title);
     await this.setValue(this.descriptionTextareaFR, contactData.description);
-    await this.page.click(this.enableSaveMessageslabel.replace('%ID', contactData.saveMessage ? 1 : 0));
+    await this.page.click(this.enableSaveMessagesLabel(contactData.saveMessage ? 1 : 0));
     // Save Contact
     await this.clickAndWaitForNavigation(this.saveContactButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);

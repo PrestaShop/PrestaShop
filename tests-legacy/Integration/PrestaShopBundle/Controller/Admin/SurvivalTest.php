@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -177,7 +177,9 @@ class SurvivalTest extends WebTestCase
             'admin_order_messages_index' => ['Order messages', 'admin_order_messages_index'],
             'admin_order_messages_create' => ['Add new', 'admin_order_messages_create'],
             'admin_attachments_index' => ['Files', 'admin_attachments_index'],
-            'admin_attachment_create' => ['Add new', 'admin_attachment_create'],
+            'admin_attachments_create' => ['Add new', 'admin_attachments_create'],
+            'admin_orders_index' => ['Orders', 'admin_orders_index'],
+            'admin_orders_create' => ['Add new', 'admin_orders_create'],
         ];
     }
 

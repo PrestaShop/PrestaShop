@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -105,7 +105,7 @@ class GeneralType extends TranslatorAwareType
             $builder->add('allow_multishipping', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Allow multishipping', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders .', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Allow the customer to ship orders to multiple addresses. This option will convert the customer\'s cart into one or more orders.', 'Admin.Shopparameters.Help'),
             ]);
         }
 
@@ -113,7 +113,7 @@ class GeneralType extends TranslatorAwareType
             ->add('allow_delayed_shipping', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Delayed shipping', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Allows you to delay shipping at your customers\' request .', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('It allows you to delay shipping if your customers request it.', 'Admin.Shopparameters.Help'),
             ])
             ->add('enable_tos', SwitchType::class, [
                 'required' => false,

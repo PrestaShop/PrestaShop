@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -74,9 +74,9 @@ class CountryChoiceType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['withDniAttr'] || $options['withPostcodeAttr']) {
-            $this->needDni = $options['withDniAttr'];
-            $this->needPostcode = $options['withPostcodeAttr'];
+        if ($options['with_dni_attr'] || $options['with_postcode_attr']) {
+            $this->needDni = $options['with_dni_attr'];
+            $this->needPostcode = $options['with_postcode_attr'];
             $this->countriesAttr = $this->countriesAttrChoicesProvider->getChoicesAttributes();
         }
         parent::buildForm($builder, $options);
@@ -95,13 +95,13 @@ class CountryChoiceType extends AbstractType
         $resolver->setDefaults([
             'choices' => $choices,
             'choice_attr' => [$this, 'getChoiceAttr'],
-            'withDniAttr' => false,
-            'withPostcodeAttr' => false,
+            'with_dni_attr' => false,
+            'with_postcode_attr' => false,
         ]);
 
         $resolver
-            ->setAllowedTypes('withDniAttr', 'boolean')
-            ->setAllowedTypes('withPostcodeAttr', 'boolean');
+            ->setAllowedTypes('with_dni_attr', 'boolean')
+            ->setAllowedTypes('with_postcode_attr', 'boolean');
     }
 
     public function getChoiceAttr($value, $key)

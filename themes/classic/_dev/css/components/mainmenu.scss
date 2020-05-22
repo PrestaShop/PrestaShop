@@ -34,6 +34,11 @@
     &.collapse {
       opacity: 0;
       visibility: hidden;
+
+      &.in {
+        opacity: 1;
+        visibility: visible;
+      }
     }
     box-shadow: 2px 1px 11px 2px rgba(0, 0, 0, 0.1);
     border: none;
@@ -43,7 +48,8 @@
     z-index: 18;
     opacity: 0;
     visibility: hidden;
-    transition: opacity .5s ease, visibility .5s ease;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+
     ul[data-depth="1"] > li {
       float: left;
       margin: 0 1.25rem;
@@ -180,6 +186,16 @@
         display: block;
         width: 100%;
       }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .top-menu {
+    .sub-menu {
+      opacity: 1;
+      visibility: visible;
+      transition: 0.5s ease-out;
     }
   }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\Form\FormHandler;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -51,7 +51,7 @@ class DeliveryController extends FrameworkBundleAdminController
      */
     public function slipAction(Request $request)
     {
-        /** @var $formHandler FormHandler */
+        /** @var $formHandler FormHandlerInterface */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.options.form_handler');
         /** @var $form Form */
         $form = $formHandler->getForm();
@@ -94,7 +94,7 @@ class DeliveryController extends FrameworkBundleAdminController
      */
     public function generatePdfAction(Request $request)
     {
-        /** @var $formHandler FormHandler */
+        /** @var $formHandler FormHandlerInterface */
         $formHandler = $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler');
         /** @var $form Form */
         $form = $formHandler->getForm();

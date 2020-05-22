@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,39 +18,43 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% if customerInformation.sentEmailsInformation is not empty %}
-  <div class="card">
-    <h3 class="card-header">
-      <i class="material-icons">mail_outline</i>
-      {{ 'Last emails'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      <span class="badge badge-primary rounded">{{ customerInformation.productsInformation.boughtProductsInformation|length }}</span>
-    </h3>
-    <div class="card-body">
+<div class="card customer-sent-emails-card">
+  <h3 class="card-header">
+    <i class="material-icons">mail_outline</i>
+    {{ 'Last emails'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    <span class="badge badge-primary rounded">{{ customerInformation.sentEmailsInformation|length }}</span>
+  </h3>
+  <div class="card-body">
+    {% if customerInformation.sentEmailsInformation is not empty %}
       <table class="table">
         <thead>
-        <tr>
-          <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Language'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Subject'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Template'|trans({}, 'Admin.Global') }}</th>
-        </tr>
+          <tr>
+            <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Language'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Subject'|trans({}, 'Admin.Global') }}</th>
+            <th>{{ 'Template'|trans({}, 'Admin.Global') }}</th>
+          </tr>
         </thead>
         <tbody>
-        {% for sentEmail in customerInformation.sentEmailsInformation %}
-          <tr>
-            <td>{{ sentEmail.date }}</td>
-            <td>{{ sentEmail.language }}</td>
-            <td>{{ sentEmail.subject }}</td>
-            <td>{{ sentEmail.template }}</td>
-          </tr>
-        {% endfor %}
+          {% for sentEmail in customerInformation.sentEmailsInformation %}
+            <tr class="customer-sent-email">
+              <td class="customer-sent-email-date">{{ sentEmail.date }}</td>
+              <td class="customer-sent-email-language">{{ sentEmail.language }}</td>
+              <td class="customer-sent-email-subject">{{ sentEmail.subject }}</td>
+              <td class="customer-sent-email-template">{{ sentEmail.template }}</td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
-    </div>
+    {% else %}
+      <p class="text-muted text-center mb-0">
+        {{ 'No records found'|trans({}, 'Admin.Global') }}
+      </p>
+    {% endif %}
   </div>
-{% endif %}
+</div>

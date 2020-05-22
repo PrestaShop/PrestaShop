@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,10 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-const $ = window.$;
 
 import PreviewOpener from '@components/form/preview-opener';
 import ChoiceTree from '@components/form/choice-tree';
@@ -33,6 +31,8 @@ import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import TranslatableField from '@components/translatable-field';
 import TinyMCEEditor from '@components/tinymce-editor';
 import Serp from '@app/utils/serp/index';
+
+const {$} = window;
 
 $(() => {
   new ChoiceTree('#cms_page_page_category_id');
@@ -67,6 +67,7 @@ $(() => {
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input.js-copier-source-title',
+    /* eslint-disable-next-line max-len */
     destinationElementSelector: `${translatorInput.localeInputSelector}:not(.d-none) input.js-copier-destination-friendly-url`,
   });
 

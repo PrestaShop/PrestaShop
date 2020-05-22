@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -581,5 +581,20 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->products[$productName]->id_category_default = $category->id_category;
         $this->products[$productName]->addToCategories([$category->id]);
         $this->products[$productName]->save();
+    }
+
+    /**
+     * @Then The price of each product :productName after reduction should be :priceWithReduction
+     */
+    public function productPriceAfterReduction($productName, $priceWithReduction)
+    {
+        $this->checkProductWithNameExists($productName);
+        $productPricesList = $this->getCurrentCart()->getProducts(true);
+
+        foreach ($productPricesList as $productPrices) {
+            if ($this->products[$productName]->id == $productPrices['id_product'] && $productPrices['price_with_reduction'] != $priceWithReduction) {
+                throw new \RuntimeException(sprintf('Expects %s, got %s instead', $priceWithReduction, $productPrices['price_with_reduction']));
+            }
+        }
     }
 }

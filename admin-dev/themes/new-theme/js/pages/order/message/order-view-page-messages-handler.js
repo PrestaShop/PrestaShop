@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 import OrderViewPageMap from '../OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * All actions for order view page messages are registered in this class.
@@ -36,8 +36,8 @@ export default class OrderViewPageMessagesHandler {
     this.$messagesContainer = $(OrderViewPageMap.orderMessagesContainer);
 
     return {
-      listenForPredefinedMessageSelection: () => this._handlePredefinedMessageSelection(),
-      listenForFullMessagesOpen: () => this._onFullMessagesOpen(),
+      listenForPredefinedMessageSelection: () => this.handlePredefinedMessageSelection(),
+      listenForFullMessagesOpen: () => this.onFullMessagesOpen(),
     };
   }
 
@@ -46,7 +46,7 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  _handlePredefinedMessageSelection() {
+  handlePredefinedMessageSelection() {
     $(document).on('change', OrderViewPageMap.orderMessageNameSelect, (e) => {
       const $currentItem = $(e.currentTarget);
       const valueId = $currentItem.val();
@@ -55,7 +55,6 @@ export default class OrderViewPageMessagesHandler {
         return;
       }
 
-      // @todo: check size if is over then max not allow?
       const message = this.$messagesContainer.find(`div[data-id=${valueId}]`).text().trim();
       const $orderMessage = $(OrderViewPageMap.orderMessage);
       const isSameMessage = $orderMessage.val().trim() === message;
@@ -64,7 +63,7 @@ export default class OrderViewPageMessagesHandler {
         return;
       }
 
-      if ($orderMessage.val() && !confirm(this.$orderMessageChangeWarning.text())) {
+      if ($orderMessage.val() && !window.confirm(this.$orderMessageChangeWarning.text())) {
         return;
       }
 
@@ -77,8 +76,8 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  _onFullMessagesOpen() {
-    $(document).on('click', OrderViewPageMap.openAllMessagesBtn, () => this._scrollToMsgListBottom());
+  onFullMessagesOpen() {
+    $(document).on('click', OrderViewPageMap.openAllMessagesBtn, () => this.scrollToMsgListBottom());
   }
 
   /**
@@ -86,7 +85,7 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  _scrollToMsgListBottom() {
+  scrollToMsgListBottom() {
     const $msgModal = $(OrderViewPageMap.allMessagesModal);
     const msgList = document.querySelector(OrderViewPageMap.allMessagesList);
 
@@ -96,7 +95,5 @@ export default class OrderViewPageMessagesHandler {
         clearInterval(classCheckInterval);
       }
     }, 10);
-
-
   }
 }

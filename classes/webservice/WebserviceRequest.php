@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -307,6 +307,7 @@ class WebserviceRequestCore
             'manufacturers' => ['description' => 'The product brands', 'class' => 'Manufacturer'],
             'messages' => ['description' => 'The Messages', 'class' => 'Message'],
             'order_carriers' => ['description' => 'The Order carriers', 'class' => 'OrderCarrier'],
+            'order_cart_rules' => ['description' => 'The Order cart rules', 'class' => 'OrderCartRule'],
             'order_details' => ['description' => 'Details of an order', 'class' => 'OrderDetail'],
             'order_histories' => ['description' => 'The Order histories', 'class' => 'OrderHistory'],
             'order_invoices' => ['description' => 'The Order invoices', 'class' => 'OrderInvoice'],
@@ -610,7 +611,7 @@ class WebserviceRequestCore
                     } else {
                         $this->objectSpecificManagement = new $specificObjectName();
                         $this->objectSpecificManagement->setObjectOutput($this->objOutput)
-                                                       ->setWsObject($this);
+                            ->setWsObject($this);
 
                         try {
                             $this->objectSpecificManagement->manage();
@@ -1803,9 +1804,9 @@ class WebserviceRequestCore
 
         // write headers
         $this->objOutput->setHeaderParams('Access-Time', time())
-                        ->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
-                        ->setHeaderParams('PSWS-Version', _PS_VERSION_)
-                        ->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3));
+            ->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
+            ->setHeaderParams('PSWS-Version', _PS_VERSION_)
+            ->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3));
 
         $return['type'] = strtolower($this->outputFormat);
 

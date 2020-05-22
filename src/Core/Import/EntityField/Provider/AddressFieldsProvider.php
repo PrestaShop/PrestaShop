@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -63,7 +63,7 @@ final class AddressFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('supplier', $this->trans('Supplier', 'Admin.Global')),
             new EntityField('company', $this->trans('Company', 'Admin.Global')),
             new EntityField('lastname', $this->trans('Last name', 'Admin.Global'), '', true),
-            new EntityField('firstname', $this->trans('First name ', 'Admin.Global'), '', true),
+            new EntityField('firstname', $this->trans('First name', 'Admin.Global'), '', true),
             new EntityField('address1', $this->trans('Address', 'Admin.Global'), '', true),
             new EntityField('address2', $this->trans('Address (2)', 'Admin.Global')),
             new EntityField('postcode', $this->trans('Zip/postal code', 'Admin.Global'), '', true),

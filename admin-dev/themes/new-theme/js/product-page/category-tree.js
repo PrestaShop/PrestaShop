@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,18 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-export default function() {
-
+export default function () {
   /**
    * scroll right to show radio buttons on the category tree
    */
   const scrollCategoryTree = function scrollCategoryTree() {
-    let $categoryTreeOverflow = $('.category-tree-overflow');
-    let leftPos = $categoryTreeOverflow.width();
+    const $categoryTreeOverflow = $('.category-tree-overflow');
+    const leftPos = $categoryTreeOverflow.width();
     $categoryTreeOverflow.animate({scrollLeft: leftPos}, 200);
   };
 
@@ -46,12 +45,12 @@ export default function() {
     }
   };
 
-  $('#categories-tree-expand').on('click', (e) => {
+  $('#categories-tree-expand').on('click', () => {
     treeAction('expand');
     $('#categories-tree-expand').hide();
     $('#categories-tree-reduce').show();
   });
-  $('#categories-tree-reduce').on('click', (e) => {
+  $('#categories-tree-reduce').on('click', () => {
     treeAction('collapse');
     $('#categories-tree-reduce').hide();
     $('#categories-tree-expand').show();
@@ -60,15 +59,15 @@ export default function() {
   // scroll right to see the radio buttons
   $('.category-tree-overflow .checkbox').on('click', (e) => {
     if (!$(e.target).is('input')) {
-        // do not scroll if (un)checking some inputs
-        scrollCategoryTree();
+      // do not scroll if (un)checking some inputs
+      scrollCategoryTree();
     }
   });
 
   $('.category-tree-overflow .checkbox label').on('click', (e) => {
     if (!$(e.target).is('input')) {
-        // do not scroll if (un)checking some inputs
-        scrollCategoryTree();
+      // do not scroll if (un)checking some inputs
+      scrollCategoryTree();
     }
   });
 }

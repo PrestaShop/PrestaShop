@@ -1,5 +1,5 @@
 <!--**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,21 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <div class="media">
-    <img v-if="displayThumb" :src="thumbnail" class="thumbnail d-flex"  />
-    <div v-else class="no-img"></div>
+    <img
+      v-if="displayThumb"
+      :src="thumbnail"
+      class="thumbnail d-flex"
+    >
+    <div
+      v-else
+      class="no-img"
+    />
     <div class="ml-2 desc media-body">
       <slot />
     </div>
@@ -33,7 +40,12 @@
 </template>
 <script>
   export default {
-    props: ['thumbnail'],
+    props: {
+      thumbnail: {
+        type: String,
+        required: true,
+      },
+    },
     computed: {
       displayThumb() {
         return !!this.thumbnail;
@@ -43,15 +55,16 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../../scss/config/_settings.scss";
+  @import '~@scss/config/_settings.scss';
+
   .product-title {
     .has-combination & {
       font-weight: 600;
     }
   }
   .thumbnail, .no-img {
-      border: $gray-light 1px solid;
-      max-width: 47px;
+    border: $gray-light 1px solid;
+    max-width: 47px;
   }
   .no-img {
     background: white;

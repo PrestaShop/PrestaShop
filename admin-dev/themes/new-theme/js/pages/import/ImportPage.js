@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import FormFieldToggle from "./FormFieldToggle";
+import FormFieldToggle from './FormFieldToggle';
 
-const $ = window.$;
+const {$} = window;
 
 export default class ImportPage {
   constructor() {
@@ -46,11 +46,14 @@ export default class ImportPage {
    * deleting all entities before import is checked
    */
   handleSubmit() {
-    $('.js-import-form').on('submit', function() {
+    $('.js-import-form').on('submit', function () {
       const $this = $(this);
       if ($this.find('input[name="truncate"]:checked').val() === '1') {
-        return confirm(`${$this.data('delete-confirm-message')} ${$.trim($('#entity > option:selected').text().toLowerCase())}?`);
+        /* eslint-disable-next-line max-len */
+        return window.confirm(`${$this.data('delete-confirm-message')} ${$.trim($('#entity > option:selected').text().toLowerCase())}?`);
       }
+
+      return true;
     });
   }
 
@@ -58,7 +61,7 @@ export default class ImportPage {
    * Check if selected file names exists and if so, then display it
    */
   toggleSelectedFile() {
-    let selectFilename = $('#csv').val();
+    const selectFilename = $('#csv').val();
     if (selectFilename.length > 0) {
       this.showImportFileAlert(selectFilename);
       this.hideFileUploadBlock();
@@ -104,7 +107,7 @@ export default class ImportPage {
    *  Prefill hidden file input with selected file name from history
    */
   useFileFromFilesHistory(event) {
-    let filename = $(event.target).closest('.btn-group').data('file');
+    const filename = $(event.target).closest('.btn-group').data('file');
 
     $('.js-import-file-input').val(filename);
 
@@ -158,10 +161,10 @@ export default class ImportPage {
   showImportFileError(fileName, fileSize, message) {
     const $alert = $('.js-import-file-error');
 
-    const fileData = fileName + ' (' + this.humanizeSize(fileSize) + ')';
+    const fileData = `${fileName} (${this.humanizeSize(fileSize)})`;
 
-    $alert.find('.js-file-data').html(fileData);
-    $alert.find('.js-error-message').html(message);
+    $alert.find('.js-file-data').text(fileData);
+    $alert.find('.js-error-message').text(message);
     $alert.removeClass('d-none');
   }
 
@@ -186,14 +189,14 @@ export default class ImportPage {
     }
 
     if (bytes >= 1000000000) {
-      return (bytes / 1000000000).toFixed(2) + ' GB';
+      return `${(bytes / 1000000000).toFixed(2)} GB`;
     }
 
     if (bytes >= 1000000) {
-      return (bytes / 1000000).toFixed(2) + ' MB';
+      return `${(bytes / 1000000).toFixed(2)} MB`;
     }
 
-    return (bytes / 1000).toFixed(2) + ' KB';
+    return `${(bytes / 1000).toFixed(2)} KB`;
   }
 
   /**
@@ -217,17 +220,17 @@ export default class ImportPage {
     $.ajax({
       type: 'POST',
       url: $('.js-import-form').data('file-upload-url'),
-      data: data,
+      data,
       cache: false,
       contentType: false,
       processData: false,
-    }).then(response => {
+    }).then((response) => {
       if (response.error) {
         this.showImportFileError(uploadedFile.name, uploadedFile.size, response.error);
         return;
       }
 
-      let filename = response.file.name;
+      const filename = response.file.name;
 
       $('.js-import-file-input').val(filename);
 
@@ -246,13 +249,13 @@ export default class ImportPage {
   addFileToHistoryTable(filename) {
     const $table = $('#fileHistoryTable');
 
-    let baseDeleteUrl = $table.data('delete-file-url');
-    let deleteUrl = baseDeleteUrl + '&filename=' + encodeURIComponent(filename);
+    const baseDeleteUrl = $table.data('delete-file-url');
+    const deleteUrl = `${baseDeleteUrl}&filename=${encodeURIComponent(filename)}`;
 
-    let baseDownloadUrl = $table.data('download-file-url');
-    let downloadUrl = baseDownloadUrl + '&filename=' + encodeURIComponent(filename);
+    const baseDownloadUrl = $table.data('download-file-url');
+    const downloadUrl = `${baseDownloadUrl}&filename=${encodeURIComponent(filename)}`;
 
-    let $template = $table.find('tr:first').clone();
+    const $template = $table.find('tr:first').clone();
 
     $template.removeClass('d-none');
     $template.find('td:first').text(filename);
@@ -262,7 +265,7 @@ export default class ImportPage {
 
     $table.find('tbody').append($template);
 
-    let filesNumber = $table.find('tr').length - 1;
+    const filesNumber = $table.find('tr').length - 1;
     $('.js-files-history-number').text(filesNumber);
   }
 }

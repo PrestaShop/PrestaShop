@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\OrderMessageConstraint;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
@@ -77,7 +78,7 @@ class OrderMessageType extends AbstractType
             ])
             ->add('message', TextWithLengthCounterType::class, [
                 'input' => 'textarea',
-                'max_length' => 600,
+                'max_length' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,
                 'position' => 'after',
                 'constraints' => [
                     new NotBlank([
@@ -86,20 +87,20 @@ class OrderMessageType extends AbstractType
                         ),
                     ]),
                     new CleanHtml([
-                            'message' => $this->trans(
-                                'The %s field is not valid',
-                                [
-                                    sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
-                                ],
-                                'Admin.Notifications.Error'
-                            ),
-                        ]
+                        'message' => $this->trans(
+                            'The %s field is not valid',
+                            [
+                                sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
+                            ],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]
                     ),
                     new Length([
-                        'max' => 600,
+                        'max' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 600],
+                            ['%limit%' => OrderMessageConstraint::MAX_MESSAGE_LENGTH],
                             'Admin.Notifications.Error'
                         ),
                     ]),

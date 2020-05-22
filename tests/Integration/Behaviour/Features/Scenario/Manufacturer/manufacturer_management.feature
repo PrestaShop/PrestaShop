@@ -76,3 +76,29 @@ Feature: Manufacturer management
   Scenario: Deleting multiple manufacturers in bulk action
     When I delete manufacturers: "baller, rocket" using bulk action
     Then manufacturers: "baller, rocket" should be deleted
+
+  Scenario: Get manufacturer for viewing
+    When I add new manufacturer "shoeman" with following properties:
+      | name             | testBrand                         |
+      | short_description| Makes best shoes in Europe         |
+      | description      | Lorem ipsum dolor sit amets ornare |
+      | meta_title       | Perfect quality shoes              |
+      | meta_description |                                    |
+      | meta_keywords    | Boots, shoes, slippers             |
+      | enabled          | true                               |
+    And I add new brand address "testBrandAddress" with following details:
+      | Brand            | testBrand                          |
+      | Last name        | testLastName                       |
+      | First name       | testFirstName                      |
+      | Address          | test street 123                    |
+      | City             | Kaunas                             |
+      | Country          | Lithuania                          |
+    And I add new brand address "testBrandAddress2" with following details:
+      | Brand            | testBrand                          |
+      | Last name        | testLastName                       |
+      | First name       | testFirstName                      |
+      | Address          | test street 12345                  |
+      | City             | Vilnius                            |
+      | Country          | Lithuania                          |
+    Then manufacturer "shoeman" should have 2 addresses and 0 products
+

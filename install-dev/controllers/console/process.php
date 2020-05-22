@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -164,17 +164,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         foreach (Language::getLanguages() as $lang) {
             Language::updateMultilangTable($lang['iso_code']);
         }
-
-        if ($this->datas->newsletter) {
-            $params = http_build_query(array(
-                'email' => $this->datas->admin_email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $this->datas->lang,
-                'visitorType' => 1,
-                'source' => 'installer',
-            ));
-            Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
-        }
     }
 
     /**
@@ -246,18 +235,18 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->initializeContext();
 
         return $this->model_install->configureShop(array(
-            'shop_name' =>                $this->datas->shop_name,
-            'shop_activity' =>            $this->datas->shop_activity,
-            'shop_country' =>            $this->datas->shop_country,
-            'shop_timezone' =>            $this->datas->timezone,
-            'use_smtp' =>                false,
-            'admin_firstname' =>        $this->datas->admin_firstname,
-            'admin_lastname' =>            $this->datas->admin_lastname,
-            'admin_password' =>            $this->datas->admin_password,
-            'admin_email' =>            $this->datas->admin_email,
-            'configuration_agrement' =>    true,
-            'send_informations' => true,
+            'shop_name' => $this->datas->shop_name,
+            'shop_activity' => $this->datas->shop_activity,
+            'shop_country' => $this->datas->shop_country,
+            'shop_timezone' => $this->datas->timezone,
+            'use_smtp' => false,
+            'admin_firstname' => $this->datas->admin_firstname,
+            'admin_lastname' => $this->datas->admin_lastname,
+            'admin_password' => $this->datas->admin_password,
+            'admin_email' => $this->datas->admin_email,
+            'configuration_agrement' => true,
             'enable_ssl' => $this->datas->enable_ssl,
+            'rewrite_engine' => $this->datas->rewrite_engine,
         ));
     }
 

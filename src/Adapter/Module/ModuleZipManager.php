@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -118,11 +118,11 @@ class ModuleZipManager
 
             // Inside of this folder, we MUST have a file called <module name>.php
             $moduleFolder = Finder::create()
-                    ->files()
-                    ->in($sandboxPath . $moduleName)
-                    ->depth('== 0')
-                    ->exclude(['__MACOSX'])
-                    ->ignoreVCS(true);
+                ->files()
+                ->in($sandboxPath . $moduleName)
+                ->depth('== 0')
+                ->exclude(['__MACOSX'])
+                ->ignoreVCS(true);
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;

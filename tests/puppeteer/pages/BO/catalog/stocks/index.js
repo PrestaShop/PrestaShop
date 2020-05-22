@@ -9,7 +9,7 @@ module.exports = class Stocks extends BOBasePage {
     this.successfulUpdateMessage = 'Stock successfully updated';
 
     // Selectors
-    this.MovementNavItemLink = '#head_tabs li:nth-child(2) > a';
+    this.movementsNavItemLink = '#head_tabs li:nth-child(2) > a';
     this.searchForm = 'form.search-form';
     this.searchInput = `${this.searchForm} input.input`;
     this.searchButton = `${this.searchForm} button.search-button`;
@@ -23,20 +23,21 @@ module.exports = class Stocks extends BOBasePage {
     this.applyNewQuantityButton = 'button.update-qty';
 
     this.productList = 'table.table';
-    this.productRow = `${this.productList} tbody tr:nth-child(%ROW)`;
-    this.productRowNameColumn = `${this.productRow} td:nth-child(1) div.media-body p`;
-    this.productRowReferenceColumn = `${this.productRow} td:nth-child(2)`;
-    this.productRowSupplierColumn = `${this.productRow} td:nth-child(3)`;
-    this.productRowPhysicalColumn = `${this.productRow} td:nth-child(5)`;
-    this.productRowReservedColumn = `${this.productRow} td:nth-child(6)`;
-    this.productRowAvailableColumn = `${this.productRow} td:nth-child(7)`;
+    this.productRows = `${this.productList} tbody tr`;
+    this.productRow = row => `${this.productRows}:nth-child(${row})`;
+    this.productRowNameColumn = row => `${this.productRow(row)} td:nth-child(1) div.media-body p`;
+    this.productRowReferenceColumn = row => `${this.productRow(row)} td:nth-child(2)`;
+    this.productRowSupplierColumn = row => `${this.productRow(row)} td:nth-child(3)`;
+    this.productRowPhysicalColumn = row => `${this.productRow(row)} td:nth-child(5)`;
+    this.productRowReservedColumn = row => `${this.productRow(row)} td:nth-child(6)`;
+    this.productRowAvailableColumn = row => `${this.productRow(row)} td:nth-child(7)`;
     // Quantity column
-    this.productRowQuantityColumn = `${this.productRow} td.qty-spinner`;
-    this.productRowQuantityColumnInput = `${this.productRowQuantityColumn} div.edit-qty input`;
-    this.productRowQuantityUpdateButton = `${this.productRowQuantityColumn} button.check-button`;
+    this.productRowQuantityColumn = row => `${this.productRow(row)} td.qty-spinner`;
+    this.productRowQuantityColumnInput = row => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
+    this.productRowQuantityUpdateButton = row => `${this.productRowQuantityColumn(row)} button.check-button`;
 
     // loader
-    this.productListLoading = `${this.productRow.replace('%ROW', 1)} td:nth-child(1) div.ps-loader`;
+    this.productListLoading = `${this.productRows} td:nth-child(1) div.ps-loader`;
 
     // Filters containers
     this.filtersContainerDiv = '#filters-container';
@@ -44,6 +45,17 @@ module.exports = class Stocks extends BOBasePage {
     this.filterStatusEnabledLabel = '#enable + label';
     this.filterStatusDisabledLabel = '#disable + label';
     this.filterStatusAllLabel = '#all + label';
+    // Filter category
+    this.filterCategoryDiv = `${this.filtersContainerDiv} div.filter-categories`;
+    this.filterCategoryExpandButton = `${this.filterCategoryDiv} button:nth-child(1)`;
+    this.filterCategoryCollapseButton = `${this.filterCategoryDiv} button:nth-child(2)`;
+    this.filterCategoryTreeItems = category => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
+    this.filterCategoryCheckBoxDiv = category => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
+
+    // Pagination
+    this.paginationList = 'nav ul.pagination';
+    this.paginationListItem = `${this.paginationList} li.page-item`;
+    this.paginationListItemLink = id => `${this.paginationListItem}:nth-child(${id}) a`;
   }
 
   /*
@@ -55,16 +67,60 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabMovements() {
-    await this.page.click(this.MovementNavItemLink, {waitUntil: 'networkidle2'});
+    await this.page.click(this.movementsNavItemLink);
+    await this.waitForVisibleSelector(`${this.movementsNavItemLink}.active`);
+  }
+
+  /**
+   * Get the total number of products
+   * @returns {Promise<int>}
+   */
+  async getTotalNumberOfProducts() {
+    await this.waitForVisibleSelector(this.searchButton, 2000);
+    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    // If pagination that return number of products in this page
+    const pagesLength = await this.getProductsPagesLength();
+    if (pagesLength === 0) {
+      return (await this.page.$$(this.productRows)).length;
+    }
+    // Get number of products in all pages
+    let numberOfProducts = 0;
+    for (let i = pagesLength; i > 0; i--) {
+      await this.paginateTo(i);
+      numberOfProducts += (await this.page.$$(this.productRows)).length;
+    }
+    return numberOfProducts;
   }
 
   /**
    * Get the number of lines in the main table
-   * @returns {Promise<*>}
+   * @returns {Promise<int>}
    */
   async getNumberOfProductsFromList() {
+    await this.waitForVisibleSelector(this.searchButton, 2000);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
-    return (await this.page.$$(this.productRow.replace('%ROW', 1))).length;
+    return (await this.page.$$(this.productRows)).length;
+  }
+
+  /**
+   * Get number of products pages stocks page
+   * @return {Promise<int>}
+   */
+  async getProductsPagesLength() {
+    return (await this.page.$$(this.paginationListItem)).length;
+  }
+
+  /**
+   * Paginate to a product page
+   * @param pageNumber
+   * @return {Promise<void>}
+   */
+  async paginateTo(pageNumber = 1) {
+    await Promise.all([
+      this.page.click(this.paginationListItemLink(pageNumber)),
+      this.waitForVisibleSelector(this.productListLoading),
+    ]);
+    await this.page.waitForSelector(this.productListLoading, {hidden: true});
   }
 
   /**
@@ -78,7 +134,7 @@ module.exports = class Stocks extends BOBasePage {
       await closeButton.click();
     }
     /* eslint-enable no-restricted-syntax */
-    return this.getNumberOfProductsFromList();
+    return this.getTotalNumberOfProducts();
   }
 
   /**
@@ -90,7 +146,7 @@ module.exports = class Stocks extends BOBasePage {
     await this.page.type(this.searchInput, value);
     await Promise.all([
       this.page.click(this.searchButton),
-      this.page.waitForSelector(this.productListLoading),
+      this.waitForVisibleSelector(this.productListLoading),
     ]);
     await this.page.waitForSelector(this.productListLoading, {hidden: true});
   }
@@ -104,20 +160,34 @@ module.exports = class Stocks extends BOBasePage {
   async getTextColumnFromTableStocks(row, column) {
     switch (column) {
       case 'name':
-        return this.getTextContent(this.productRowNameColumn.replace('%ROW', row));
+        return this.getTextContent(this.productRowNameColumn(row));
       case 'reference':
-        return this.getTextContent(this.productRowReferenceColumn.replace('%ROW', row));
+        return this.getTextContent(this.productRowReferenceColumn(row));
       case 'supplier':
-        return this.getTextContent(this.productRowSupplierColumn.replace('%ROW', row));
+        return this.getTextContent(this.productRowSupplierColumn(row));
       case 'physical':
-        return this.getNumberFromText(this.productRowPhysicalColumn.replace('%ROW', row));
+        return this.getNumberFromText(this.productRowPhysicalColumn(row));
       case 'reserved':
-        return this.getNumberFromText(this.productRowReservedColumn.replace('%ROW', row));
+        return this.getNumberFromText(this.productRowReservedColumn(row));
       case 'available':
-        return this.getNumberFromText(this.productRowAvailableColumn.replace('%ROW', row));
+        return this.getNumberFromText(this.productRowAvailableColumn(row));
       default:
         throw new Error(`${column} was not find as column in this table`);
     }
+  }
+
+
+  /**
+   * Get all products names from table
+   * @return {Promise<[]>}
+   */
+  async getAllProductsName() {
+    const productsNames = [];
+    const numberOfProductsInlist = await (await this.page.$$(this.productRows)).length;
+    for (let row = 1; row <= numberOfProductsInlist; row++) {
+      await productsNames.push(await this.getTextColumnFromTableStocks(row, 'name'));
+    }
+    return productsNames;
   }
 
   /**
@@ -140,11 +210,11 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async updateRowQuantityWithInput(row, value) {
-    await this.setValue(this.productRowQuantityColumnInput.replace('%ROW', row), value.toString());
+    await this.setValue(this.productRowQuantityColumnInput(row), value.toString());
     // Wait for check button before click
-    await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton.replace('%ROW', row));
+    await this.waitForSelectorAndClick(this.productRowQuantityUpdateButton(row));
     // Wait for alert-Box after update quantity and close alert-Box
-    await this.page.waitForSelector(this.alertBoxTextSpan, {visible: true});
+    await this.waitForVisibleSelector(this.alertBoxTextSpan);
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
     await this.page.click(this.alertBoxButtonClose);
     return textContent;
@@ -163,7 +233,7 @@ module.exports = class Stocks extends BOBasePage {
     // Wait for check button before click
     await this.page.click(this.applyNewQuantityButton);
     // Wait for alert-Box after update quantity and close alert-Box
-    await this.page.waitForSelector(this.alertBoxTextSpan, {visible: true});
+    await this.waitForVisibleSelector(this.alertBoxTextSpan);
     const textContent = await this.getTextContent(this.alertBoxTextSpan);
     await this.page.click(this.alertBoxButtonClose);
     return textContent;
@@ -175,10 +245,7 @@ module.exports = class Stocks extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterByStatus(status) {
-    await Promise.all([
-      this.page.click(this.advancedFiltersButton),
-      this.page.waitForSelector(`${this.advancedFiltersButton}[aria-expanded='true']`, {visible: true}),
-    ]);
+    await this.openCloseAdvancedFilter();
     switch (status) {
       case 'enabled':
         await this.page.click(this.filterStatusEnabledLabel);
@@ -192,5 +259,40 @@ module.exports = class Stocks extends BOBasePage {
       default:
         throw Error(`${status} was not found as an option`);
     }
+  }
+
+  /**
+   * Filter stocks by product's category
+   * @param category
+   * @return {Promise<void>}
+   */
+  async filterByCategory(category) {
+    await this.openCloseAdvancedFilter();
+    await this.page.click(this.filterCategoryExpandButton);
+    await this.page.click(this.filterCategoryCheckBoxDiv(category));
+    await this.page.waitForSelector(this.productListLoading, {hidden: true});
+    await this.page.click(this.filterCategoryCollapseButton);
+    await this.openCloseAdvancedFilter(false);
+  }
+
+  /**
+   * Open / close advanced filter
+   * @param toOpen
+   * @return {Promise<void>}
+   */
+  async openCloseAdvancedFilter(toOpen = true) {
+    await Promise.all([
+      this.page.click(this.advancedFiltersButton),
+      this.waitForVisibleSelector(`${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
+    ]);
+  }
+
+  /**
+   * Reset and get number of products in list
+   * @return {Promise<int>}
+   */
+  async resetAndGetNumberOfProductsFromList() {
+    await this.reloadPage();
+    return this.getTotalNumberOfProducts();
   }
 };

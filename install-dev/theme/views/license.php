@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,11 +35,6 @@
 <div>
 	<input type="checkbox" id="set_license" class="required" name="licence_agrement" value="1" style="vertical-align: middle;float:left" <?php if ($this->session->licence_agrement): ?>checked="checked"<?php endif; ?> />
 	<div style="float:left;width:600px;margin-left:8px"><label for="set_license"><strong><?php echo $this->translator->trans('I agree to the above terms and conditions.', array(), 'Install'); ?></strong></label></div>
-	<!--
-	<br />
-	<input type="checkbox" id="configuration_agrement" name="configuration_agrement" value="1" style="vertical-align: middle;float:left" <?php if ($this->session->configuration_agrement): ?>checked="checked"<?php endif; ?> />
-	<div style="float:left;width:600px;margin-left:8px"><label for="configuration_agrement"><strong><?php echo $this->translator->trans('I agree to participate in improving the solution by sending anonymous information about my configuration.', array(), 'Install'); ?></strong></label></div>
-	-->
 </div>
 
 <?php $this->displayTemplate('footer') ?>

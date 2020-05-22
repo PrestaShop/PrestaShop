@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,38 +28,39 @@ import DropDown from './drop-down';
 export default class TopMenu extends DropDown {
   init() {
     let elmtClass;
-    let self = this;
-    this.el.find('li').hover((e) => {
+    const self = this;
+    this.el.find('li').hover(e => {
       if (this.el.parent().hasClass('mobile')) {
         return;
       }
       const currentTargetClass = $(e.currentTarget).attr('class');
       if (elmtClass !== currentTargetClass) {
-        elmtClass = currentTargetClass;
-        
+        const classesSelected = Array.prototype.slice.call(e.currentTarget.classList).map(e => (typeof e === 'string' ? `.${e}` : false));
+
+        elmtClass = classesSelected.join('');
+
         if (elmtClass && $(e.target).data('depth') === 0) {
-          $(`.${elmtClass} .js-sub-menu`).css({
-            top: $(`.${elmtClass}`).height() + $(`.${elmtClass}`).position().top
+          $(`${elmtClass} .js-sub-menu`).css({
+            top: $(`${elmtClass}`).height() + $(`${elmtClass}`).position().top
           });
         }
       }
     });
-    $('#menu-icon').on('click', function() {
+    $('#menu-icon').on('click', () => {
       $('#mobile_top_menu_wrapper').toggle();
       self.toggleMobileMenu();
     });
     $('.js-top-menu .category').mouseleave(() => {
       if (this.el.parent().hasClass('mobile')) {
-        return;
       }
     });
-    this.el.on('click', (e) => {
+    this.el.on('click', e => {
       if (this.el.parent().hasClass('mobile')) {
         return;
       }
       e.stopPropagation();
     });
-    prestashop.on('responsive update', function(event) {
+    prestashop.on('responsive update', event => {
       $('.js-sub-menu').removeAttr('style');
       self.toggleMobileMenu();
     });
@@ -68,7 +69,7 @@ export default class TopMenu extends DropDown {
 
   toggleMobileMenu() {
     $('#header').toggleClass('is-open');
-    if ($('#mobile_top_menu_wrapper').is(":visible")) {
+    if ($('#mobile_top_menu_wrapper').is(':visible')) {
       $('#notifications, #wrapper, #footer').hide();
     } else {
       $('#notifications, #wrapper, #footer').show();

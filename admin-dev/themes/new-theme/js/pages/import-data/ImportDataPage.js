@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -50,20 +50,20 @@ export default class ImportDataPage {
       return;
     }
 
-    let configuration = {};
+    const configuration = {};
 
     // Collect the configuration from the form into an array.
     $('.import-data-configuration-form').find(
-      '#skip, select[name^=type_value], #csv, #iso_lang, #entity,' +
-      '#truncate, #match_ref, #regenerate, #forceIDs, #sendemail,' +
-      '#separator, #multiple_value_separator'
+      '#skip, select[name^=type_value], #csv, #iso_lang, #entity,'
+      + '#truncate, #match_ref, #regenerate, #forceIDs, #sendemail,'
+      + '#separator, #multiple_value_separator',
     ).each((index, $input) => {
       configuration[$($input).attr('name')] = $($input).val();
     });
 
     this.importer.import(
       $('.js-import-process-button').data('import_url'),
-      configuration
+      configuration,
     );
   }
 }

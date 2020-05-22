@@ -26,16 +26,24 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Refund;
 
+use Address;
+use Carrier;
+use Currency;
 use Customer;
+use Customization;
 use Group;
 use Order;
 use OrderDetail;
+use OrderSlip;
+use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
-use Tax;
 use TaxCalculator;
+use Tools;
 
 /**
  * Performs all computation for a refund on an Order, returns a OrderRefundDetail
@@ -43,51 +51,88 @@ use TaxCalculator;
  */
 class OrderRefundCalculator
 {
-    public function computeOrderFund(
+    /**
+     * @param Order $order
+     * @param array $orderDetailRefunds
+     * @param Number $shippingRefund
+     * @param int $voucherRefundType
+     * @param Number|null $chosenVoucherAmount
+     *
+     * @return OrderRefundSummary
+     *
+     * @throws InvalidCancelProductException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function computeOrderRefund(
         Order $order,
         array $orderDetailRefunds,
-        float $shippingRefund,
+        Number $shippingRefund,
         int $voucherRefundType,
-        ?float $chosenVoucherAmount
+        ?Number $chosenVoucherAmount
     ): OrderRefundSummary {
         $isTaxIncluded = $this->isTaxIncludedInOrder($order);
+        $precision = $this->getPrecision($order);
 
-        $orderDetailList = $this->getOrderTailList($orderDetailRefunds);
-        $productRefunds = $this->flattenProductRefunds($orderDetailRefunds, $isTaxIncluded, $orderDetailList);
-        $refundedAmount = 0;
+        $orderDetailList = $this->getOrderDetailList($orderDetailRefunds);
+        $productRefunds = $this->flattenCheckedProductRefunds(
+            $orderDetailRefunds,
+            $isTaxIncluded,
+            $orderDetailList,
+            $precision
+        );
+
+        $numberZero = new Number('0');
+
+        $refundedAmount = $numberZero;
         foreach ($productRefunds as $orderDetailId => $productRefund) {
-            $refundedAmount += $productRefund['amount'];
+            $refundedAmount = $refundedAmount->plus(new Number((string) $productRefund['amount']));
         }
 
         $voucherChosen = false;
-        $voucherAmount = 0;
+        $voucherAmount = $numberZero;
         if ($voucherRefundType === VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND) {
-            //@todo: Check if it matches order_discount_price in legacy
-            $refundedAmount -= $voucherAmount = (float) $order->total_discounts;
+            $voucherAmount = new Number((string) $order->total_discounts);
+            $refundedAmount = $refundedAmount->minus($voucherAmount);
         } elseif ($voucherRefundType === VoucherRefundType::SPECIFIC_AMOUNT_REFUND) {
             $voucherChosen = true;
             $refundedAmount = $voucherAmount = $chosenVoucherAmount;
         }
 
-        $shippingCostAmount = $shippingRefund ?: false;
-        if ($shippingCostAmount > 0) {
-            if (!$isTaxIncluded) {
-                // @todo: use https://github.com/PrestaShop/decimal for price computations
-                $taxCalculator = $this->getTaxCalculator($order->carrier_tax_rate);
-                $refundedAmount += $taxCalculator->addTaxes($shippingCostAmount);
-            } else {
-                $refundedAmount += $shippingCostAmount;
+        $shippingCostAmount = $shippingRefund ?? $numberZero;
+        if ($shippingCostAmount->isPositive()) {
+            $shippingMaxRefund = new Number(
+                $isTaxIncluded ?
+                    (string) $order->total_shipping_tax_incl :
+                    (string) $order->total_shipping_tax_excl
+            );
+
+            $shippingSlipResume = OrderSlip::getShippingSlipResume($order->id);
+            $shippingSlipTotalTaxIncl = new Number((string) ($shippingSlipResume['total_shipping_tax_incl'] ?? 0));
+            $shippingMaxRefund = $shippingMaxRefund->minus($shippingSlipTotalTaxIncl);
+
+            if ($shippingCostAmount->isGreaterThan($shippingMaxRefund)) {
+                $shippingCostAmount = $shippingMaxRefund;
             }
+            // Previously taxes were computed but then some values are mixed with and without taxes
+            // They all should be in the same state since OrderRefundSummary contains $isTaxIncluded
+            $refundedAmount = $refundedAmount->plus($shippingCostAmount);
+        }
+
+        // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
+        if (count($productRefunds) <= 0 && $refundedAmount->isLowerOrEqualThan($numberZero)) {
+            throw new InvalidCancelProductException(InvalidCancelProductException::NO_REFUNDS);
         }
 
         return new OrderRefundSummary(
             $orderDetailList,
             $productRefunds,
-            $refundedAmount,
-            $shippingCostAmount,
-            $voucherAmount,
+            (float) (string) $refundedAmount,
+            (float) (string) $shippingCostAmount,
+            (float) (string) $voucherAmount,
             $voucherChosen,
-            $isTaxIncluded
+            $isTaxIncluded,
+            $precision
         );
     }
 
@@ -99,7 +144,7 @@ class OrderRefundCalculator
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function getOrderTailList(array $orderDetailRefunds)
+    private function getOrderDetailList(array $orderDetailRefunds)
     {
         $orderDetailList = [];
         /** @var OrderDetailRefund $orderDetailRefund */
@@ -114,44 +159,74 @@ class OrderRefundCalculator
      * @param array $orderDetailRefunds
      * @param bool $isTaxIncluded
      * @param array $orderDetails
+     * @param TaxCalculator $taxCalculator
+     * @param int $precision
      *
      * @return array
      *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
+     * @throws InvalidCancelProductException
      */
-    private function flattenProductRefunds(array $orderDetailRefunds, bool $isTaxIncluded, array $orderDetails)
-    {
+    private function flattenCheckedProductRefunds(
+        array $orderDetailRefunds,
+        bool $isTaxIncluded,
+        array $orderDetails,
+        int $precision
+    ) {
         $productRefunds = [];
         /** @var OrderDetailRefund $orderDetailRefund */
         foreach ($orderDetailRefunds as $orderDetailRefund) {
             $orderDetailId = $orderDetailRefund->getOrderDetailId();
+            /** @var OrderDetail $orderDetail */
             $orderDetail = $orderDetails[$orderDetailId];
             $quantity = $orderDetailRefund->getProductQuantity();
+            if ($orderDetail->id_customization) {
+                $customization = new Customization($orderDetail->id_customization);
+                $quantityLeft = (int) $customization->quantity - (int) $customization->quantity_refunded - $customization->quantity_returned;
+            } else {
+                $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
+            }
+            if ($quantity > $quantityLeft) {
+                throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $quantityLeft);
+            }
 
             $productRefunds[$orderDetailId] = [
                 'quantity' => $quantity,
                 'id_order_detail' => $orderDetailId,
             ];
 
+            // Compute max refund by product (based on quantity left and already refunded amount)
+            $productUnitPrice = $isTaxIncluded ? (float) $orderDetail->unit_price_tax_incl : (float) $orderDetail->unit_price_tax_excl;
+            $productMaxRefund = (int) $quantity * $productUnitPrice;
+
+            // If refunded amount is null it means the whole product is refunded (used for standard refund, and return product)
             if (null === $orderDetailRefund->getRefundedAmount()) {
-                $productRefundAmount = $isTaxIncluded ?
-                    $orderDetail->unit_price_tax_excl :
-                    $orderDetail->unit_price_tax_incl;
-                $productRefundAmount *= $quantity;
+                $productRefundAmount = (float) (string) $productMaxRefund;
             } else {
-                $productRefundAmount = $orderDetailRefund->getRefundedAmount();
+                $productRefundAmount = (float) (string) $orderDetailRefund->getRefundedAmount() <= $productMaxRefund ?
+                    (float) (string) $orderDetailRefund->getRefundedAmount() : $productMaxRefund;
             }
 
             $productRefunds[$orderDetailId]['amount'] = $productRefundAmount;
             $productRefunds[$orderDetailId]['unit_price'] =
                 $productRefunds[$orderDetailId]['amount'] / $productRefunds[$orderDetailId]['quantity'];
 
-            // add missing fields
-            $productRefunds[$orderDetailId]['unit_price_tax_excl'] = $orderDetail->unit_price_tax_excl;
-            $productRefunds[$orderDetailId]['unit_price_tax_incl'] = $orderDetail->unit_price_tax_incl;
-            $productRefunds[$orderDetailId]['total_price_tax_excl'] = $orderDetail->unit_price_tax_excl * $productRefunds[$orderDetailId]['quantity'];
-            $productRefunds[$orderDetailId]['total_price_tax_incl'] = $orderDetail->unit_price_tax_incl * $productRefunds[$orderDetailId]['quantity'];
+            // We get the tax calculator from the OrderDetail which will make it use the tax rate at the moment the order was placed
+            $taxCalculator = $orderDetail->getTaxCalculator();
+
+            // Add data for OrderDetail updates, it's important to round because too many decimals will fail in Validate::isPrice
+            if ($isTaxIncluded) {
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($productRefundAmount, $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($taxCalculator->removeTaxes($productRefundAmount), $precision);
+            } else {
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($productRefundAmount, $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($taxCalculator->addTaxes($productRefundAmount), $precision);
+            }
+
+            // Add missing fields
+            $productRefunds[$orderDetailId]['unit_price_tax_excl'] = (float) $orderDetail->unit_price_tax_excl;
+            $productRefunds[$orderDetailId]['unit_price_tax_incl'] = (float) $orderDetail->unit_price_tax_incl;
+            $productRefunds[$orderDetailId]['total_price_tax_excl'] = (float) $orderDetail->unit_price_tax_excl * $productRefunds[$orderDetailId]['quantity'];
+            $productRefunds[$orderDetailId]['total_price_tax_incl'] = (float) $orderDetail->unit_price_tax_incl * $productRefunds[$orderDetailId]['quantity'];
         }
 
         return $productRefunds;
@@ -172,18 +247,31 @@ class OrderRefundCalculator
     }
 
     /**
-     * @param float $taxRate
+     * @param Order $order
      *
      * @return TaxCalculator
      *
-     * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function getTaxCalculator(float $taxRate)
+    private function getCarrierTaxCalculatorFromOrder(Order $order): TaxCalculator
     {
-        $tax = new Tax();
-        $tax->rate = $taxRate;
+        $carrier = new Carrier((int) $order->id_carrier);
+        // @todo: define if we use invoice or delivery address, or we use configuration PS_TAX_ADDRESS_TYPE
+        $address = Address::initialize($order->id_address_delivery, false);
 
-        return new TaxCalculator([$tax]);
+        return $carrier->getTaxCalculator($address);
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return int
+     */
+    private function getPrecision(Order $order): int
+    {
+        $currency = new Currency($order->id_currency);
+        $computingPrecision = new ComputingPrecision();
+
+        return $computingPrecision->getPrecision($currency->precision);
     }
 }

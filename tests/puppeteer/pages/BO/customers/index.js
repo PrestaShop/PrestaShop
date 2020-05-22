@@ -15,30 +15,51 @@ module.exports = class Customers extends BOBasePage {
     this.customerGridPanel = '#customer_grid_panel';
     this.customerGridTitle = `${this.customerGridPanel} h3.card-header-title`;
     this.customersListForm = '#customer_grid';
-    this.customersListTableRow = `${this.customersListForm} tbody tr:nth-child(%ROW)`;
-    this.customersListTableColumn = `${this.customersListTableRow} td.column-%COLUMN`;
-    this.customersListTableEditLink = `${this.customersListTableColumn} a[data-original-title='Edit']`;
-    this.customersListTableToggleDropDown = `${this.customersListTableColumn} a[data-toggle='dropdown']`;
-    this.customersListTableViewLink = `${this.customersListTableColumn} a[href*='/view']`;
-    this.customersListTableDeleteLink = `${this.customersListTableColumn} a[data-customer-delete-url]`;
-    this.customersListColumnValidIcon = `${this.customersListTableColumn} i.grid-toggler-icon-valid`;
-    this.customersListColumnNotValidIcon = `${this.customersListTableColumn} i.grid-toggler-icon-not-valid`;
+    this.customersListTableRow = row => `${this.customersListForm} tbody tr:nth-child(${row})`;
+    this.customersListTableColumn = (row, column) => `${this.customersListTableRow(row)} td.column-${column}`;
+    this.customersListTableActionsColumn = row => this.customersListTableColumn(row, 'actions');
+    this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)}`
+      + ' a[data-original-title=\'Edit\']';
+    this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)}`
+      + ' a[data-toggle=\'dropdown\']';
+    this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a[href*='/view']`;
+    this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)}`
+      + ' a[data-customer-delete-url]';
+    this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
+      + ' i.grid-toggler-icon-valid';
+    this.customersListColumnNotValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
+      + ' i.grid-toggler-icon-not-valid';
     // Filters
-    this.customerFilterColumnInput = `${this.customersListForm} #customer_%FILTERBY`;
+    this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
     this.filterSearchButton = `${this.customersListForm} button[name='customer[actions][search]']`;
     this.filterResetButton = `${this.customersListForm} button[name='customer[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.customersListForm} .md-checkbox label`;
+    this.selectAllRowsLabel = `${this.customersListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.customersListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.customersListForm} #customer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.customersListForm} #customer_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.customersListForm} #customer_grid_bulk_action_delete_selection`;
-
-
+    // Sort Selectors
+    this.tableHead = `${this.customersListForm} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.customerGridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.customerGridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.customerGridPanel} [aria-label='Previous']`;
+    // Required field section
+    this.setRequiredFieldsButton = 'button[data-target=\'#customerRequiredFieldsContainer\']';
+    this.requiredFieldCheckBox = id => `#required_fields_required_fields_${id}`;
+    this.saveButton = '#customerRequiredFieldsContainer button';
     // Modal Dialog
     this.deleteCustomerModal = '#customer_grid_delete_customers_modal.show';
     this.deleteCustomerModalDeleteButton = `${this.deleteCustomerModal} button.js-submit-delete-customers`;
-    this.deleteCustomerModalMethodInput = `${this.deleteCustomerModal} #delete_customers_delete_method_%ID`;
+    this.deleteCustomerModalMethodInput = id => `${this.deleteCustomerModal} #delete_customers_delete_method_${id}`;
+    // Grid Actions
+    this.customerGridActionsButton = '#customer-grid-actions-button';
+    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'customer-grid-actions-button\']';
+    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
   }
 
   /*
@@ -81,16 +102,16 @@ module.exports = class Customers extends BOBasePage {
   async filterCustomers(filterType, filterBy, value = '') {
     switch (filterType) {
       case 'input':
-        await this.setValue(this.customerFilterColumnInput.replace('%FILTERBY', filterBy), value);
+        await this.setValue(this.customerFilterColumnInput(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(
-          this.customerFilterColumnInput.replace('%FILTERBY', filterBy),
+          this.customerFilterColumnInput(filterBy),
           value,
         );
         break;
       default:
-        // Do nothing
+      // Do nothing
     }
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
@@ -117,10 +138,8 @@ module.exports = class Customers extends BOBasePage {
    * @return {Promise<boolean|true>}
    */
   async getToggleColumnValue(row, column) {
-    return this.elementVisible(
-      this.customersListColumnValidIcon.replace('%ROW', row).replace('%COLUMN', column),
-      100,
-    );
+    await this.waitForVisibleSelector(this.customersListTableColumn(row, column), 2000);
+    return this.elementVisible(this.customersListColumnValidIcon(row, column), 100);
   }
 
   /**
@@ -132,9 +151,7 @@ module.exports = class Customers extends BOBasePage {
    */
   async updateToggleColumnValue(row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      await this.clickAndWaitForNavigation(
-        this.customersListTableColumn.replace('%ROW', row).replace('%COLUMN', column),
-      );
+      await this.clickAndWaitForNavigation(this.customersListTableColumn(row, column));
       return true;
     }
     return false;
@@ -147,11 +164,41 @@ module.exports = class Customers extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTableCustomers(row, column) {
-    return this.getTextContent(
-      this.customersListTableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.customersListTableColumn(row, column));
+  }
+
+  /**
+   * Get all information for a customer in table
+   * @param row, row of customer in table
+   * @return {Promise<{object}>}
+   */
+  async getCustomerFromTable(row) {
+    return {
+      id: await this.getTextColumnFromTableCustomers(row, 'id_customer'),
+      socialTitle: await this.getTextColumnFromTableCustomers(row, 'social_title'),
+      firstName: await this.getTextColumnFromTableCustomers(row, 'firstname'),
+      lastName: await this.getTextColumnFromTableCustomers(row, 'lastname'),
+      email: await this.getTextColumnFromTableCustomers(row, 'email'),
+      sales: await this.getTextColumnFromTableCustomers(row, 'total_spent'),
+      status: await this.getToggleColumnValue(row, 'active'),
+      newsletter: await this.getToggleColumnValue(row, 'newsletter'),
+      partnerOffers: await this.getToggleColumnValue(row, 'optin'),
+    };
+  }
+
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      const rowContent = await this.getTextColumnFromTableCustomers(i, column);
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
   }
 
   /**
@@ -169,16 +216,10 @@ module.exports = class Customers extends BOBasePage {
    */
   async goToViewCustomerPage(row) {
     await Promise.all([
-      this.page.click(this.customersListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
-        `${this.customersListTableToggleDropDown
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
-      ),
+      this.page.click(this.customersListTableToggleDropDown(row)),
+      this.waitForVisibleSelector(`${this.customersListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(
-      this.customersListTableViewLink.replace('%ROW', row).replace('%COLUMN', 'actions'),
-    );
+    await this.clickAndWaitForNavigation(this.customersListTableViewLink(row));
   }
 
   /**
@@ -187,9 +228,7 @@ module.exports = class Customers extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditCustomerPage(row) {
-    await this.clickAndWaitForNavigation(
-      this.customersListTableEditLink.replace('%ROW', row).replace('%COLUMN', 'actions'),
-    );
+    await this.clickAndWaitForNavigation(this.customersListTableEditLink(row));
   }
 
   /**
@@ -201,17 +240,13 @@ module.exports = class Customers extends BOBasePage {
   async deleteCustomer(row, allowRegistrationAfterDelete = true) {
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.customersListTableToggleDropDown.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(
-        `${this.customersListTableToggleDropDown
-          .replace('%ROW', row).replace('%COLUMN', 'actions')}[aria-expanded='true']`,
-        {visible: true},
-      ),
+      this.page.click(this.customersListTableToggleDropDown(row)),
+      this.waitForVisibleSelector(`${this.customersListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.customersListTableDeleteLink.replace('%ROW', row).replace('%COLUMN', 'actions')),
-      this.page.waitForSelector(this.deleteCustomerModal, {visible: true}),
+      this.page.click(this.customersListTableDeleteLink(row)),
+      this.waitForVisibleSelector(this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(allowRegistrationAfterDelete);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -226,17 +261,17 @@ module.exports = class Customers extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
       this.page.click(this.bulkActionsDeleteButton),
-      this.page.waitForSelector(this.deleteCustomerModal, {visible: true}),
+      this.waitForVisibleSelector(this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(allowRegistrationAfterDelete);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -249,11 +284,11 @@ module.exports = class Customers extends BOBasePage {
    */
   async chooseRegistrationAndDelete(allowRegistrationAfterDelete) {
     // Choose deletion method
-    if (allowRegistrationAfterDelete) await this.page.click(this.deleteCustomerModalMethodInput.replace('%ID', '0'));
-    else await this.page.click(this.deleteCustomerModalMethodInput.replace('%ID', '1'));
+    if (allowRegistrationAfterDelete) await this.page.click(this.deleteCustomerModalMethodInput(0));
+    else await this.page.click(this.deleteCustomerModalMethodInput(1));
     // Click on delete button and wait for action to finish
     await this.clickAndWaitForNavigation(this.deleteCustomerModalDeleteButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
+    await this.waitForVisibleSelector(this.alertSuccessBlockParagraph);
   }
 
   /**
@@ -265,15 +300,121 @@ module.exports = class Customers extends BOBasePage {
     // Click on Select All
     await Promise.all([
       this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {visible: true}),
+      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
+  }
+
+  /**
+   * Set required fields
+   * @param id
+   * @param valueWanted
+   * @returns {Promise<string>}
+   */
+  async setRequiredFields(id, valueWanted = true) {
+    await this.waitForSelectorAndClick(this.setRequiredFieldsButton);
+    const isCheckboxSelected = await this.isCheckboxSelected(this.requiredFieldCheckBox(id));
+    if (valueWanted !== isCheckboxSelected) {
+      await this.page.click(`${this.requiredFieldCheckBox(id)}+ i`);
+    }
+    await this.waitForSelectorAndClick(this.saveButton);
+    return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  // Export methods
+  /**
+   * Click on link to export customers to a csv file
+   * @return {Promise<void>}
+   */
+  async exportDataToCsv() {
+    await Promise.all([
+      this.page.click(this.customerGridActionsButton),
+      this.waitForVisibleSelector(`${this.gridActionDropDownMenu}.show`),
+    ]);
+    await Promise.all([
+      this.page.click(this.gridActionExportLink),
+      this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {hidden: true}),
+    ]);
+  }
+
+  /**
+   * Get customer from table in csv format
+   * Adding an empty csv case after email is for company column which is always empty (Except when B2B mode is enabled)
+   * @param row
+   * @return {Promise<string>}
+   */
+  async getCustomerInCsvFormat(row) {
+    const customer = await this.getCustomerFromTable(row);
+    return `${customer.id};`
+      + `${customer.socialTitle};`
+      + `${customer.firstName};`
+      + `${customer.lastName};`
+      + `${customer.email};;`
+      + `${customer.sales !== '--' ? customer.sales : ''};`
+      + `${customer.status ? 1 : 0};`
+      + `${customer.newsletter ? 1 : 0};`
+      + `${customer.partnerOffers ? 1 : 0}`;
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @return {Promise<string>}
+   */
+  getPaginationLabel() {
+    return this.getTextContent(this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(number) {
+    await this.selectByVisibleText(this.paginationLimitSelect, number);
+    return this.getPaginationLabel();
+  }
+
+  /**
+   * Click on next
+   * @returns {Promise<string>}
+   */
+  async paginationNext() {
+    await this.clickAndWaitForNavigation(this.paginationNextLink);
+    return this.getPaginationLabel();
+  }
+
+  /**
+   * Click on previous
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious() {
+    await this.clickAndWaitForNavigation(this.paginationPreviousLink);
+    return this.getPaginationLabel();
   }
 };

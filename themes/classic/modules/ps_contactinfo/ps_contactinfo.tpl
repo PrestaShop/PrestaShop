@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -54,21 +54,14 @@
       {/if}
       {if $contact_infos.email && $display_email}
         <br>
-        {* [1][/1] is for a HTML tag. *}
-        {l
-          s='Email us: [1]%email%[/1]'
-          sprintf=[
-            '[1]' => '<a href="mailto:'|cat:$contact_infos.email|cat:'" class="dropdown">',
-            '[/1]' => '</a>',
-            '%email%' => $contact_infos.email
-          ]
-          d='Shop.Theme.Global'
-        }
+          {l s='Email us:' d='Shop.Theme.Global'}
+          {mailto address=$contact_infos.email encode="javascript"}
       {/if}
   </div>
   <div class="hidden-md-up">
     <div class="title">
       <a class="h3" href="{$urls.pages.stores}">{l s='Store information' d='Shop.Theme.Global'}</a>
+
     </div>
   </div>
 </div>

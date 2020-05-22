@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -240,11 +240,11 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 
             'admin_attachments_index' => ['/sell/attachments/', 'AdminAttachments'],
             'admin_attachments_filter' => ['/sell/attachments/', 'AdminAttachments', 'submitFilterattachment'],
-            'admin_attachment_create' => ['/sell/attachments/new', 'AdminAttachments', 'addattachment'],
-            'admin_attachment_edit' => ['/sell/attachments/42/edit', 'AdminAttachments', 'updateattachment', ['id_attachment' => 42]],
-            'admin_attachment_view' => ['/sell/attachments/42/view', 'AdminAttachments', 'viewattachment', ['id_attachment' => 42]],
+            'admin_attachments_create' => ['/sell/attachments/new', 'AdminAttachments', 'addattachment'],
+            'admin_attachments_edit' => ['/sell/attachments/42/edit', 'AdminAttachments', 'updateattachment', ['id_attachment' => 42]],
+            'admin_attachments_view' => ['/sell/attachments/42/view', 'AdminAttachments', 'viewattachment', ['id_attachment' => 42]],
             'admin_attachments_delete_bulk' => ['/sell/attachments/delete-bulk', 'AdminAttachments', 'submitBulkdeleteattachment'],
-            'admin_attachment_delete' => ['/sell/attachments/42/delete', 'AdminAttachments', 'deleteattachment', ['id_attachment' => 42]],
+            'admin_attachments_delete' => ['/sell/attachments/42/delete', 'AdminAttachments', 'deleteattachment', ['id_attachment' => 42]],
         ];
     }
 

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,18 +18,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class ShowcaseCardCloseExtension is responsible for providing helper block closing behavior
  */
 export default class ShowcaseCardCloseExtension {
-
   /**
    * Extend helper block.
    *
@@ -50,8 +49,8 @@ export default class ShowcaseCardCloseExtension {
           url,
           {
             close: 1,
-            name: cardName
-          }
+            name: cardName,
+          },
         );
       }
     });

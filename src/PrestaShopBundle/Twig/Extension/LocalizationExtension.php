@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -39,20 +39,33 @@ class LocalizationExtension extends AbstractExtension
     private $dateFormatFull;
 
     /**
-     * @param string $contextDateFormatFull
+     * @var string
      */
-    public function __construct(string $contextDateFormatFull)
+    private $dateFormatLight;
+
+    /**
+     * @param string $contextDateFormatFull
+     * @param string $contextDateFormatLight
+     */
+    public function __construct(string $contextDateFormatFull, string $contextDateFormatLight)
     {
         $this->dateFormatFull = $contextDateFormatFull;
+        $this->dateFormatLight = $contextDateFormatLight;
     }
 
     public function getFilters(): array
     {
         return [
             new Twig_SimpleFilter('date_format_full', [$this, 'dateFormatFull']),
+            new Twig_SimpleFilter('date_format_lite', [$this, 'dateFormatLite']),
         ];
     }
 
+    /**
+     * @param DateTimeInterface|string $date
+     *
+     * @return string
+     */
     public function dateFormatFull($date): string
     {
         if (!$date instanceof DateTimeInterface) {
@@ -60,5 +73,19 @@ class LocalizationExtension extends AbstractExtension
         }
 
         return $date->format($this->dateFormatFull);
+    }
+
+    /**
+     * @param DateTimeInterface|string $date
+     *
+     * @return string
+     */
+    public function dateFormatLite($date): string
+    {
+        if (!$date instanceof DateTimeInterface) {
+            $date = new DateTime($date);
+        }
+
+        return $date->format($this->dateFormatLight);
     }
 }

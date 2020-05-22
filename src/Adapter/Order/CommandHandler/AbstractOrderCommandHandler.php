@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -76,13 +76,11 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
                 $quantityToReinject
             );
 
-            $leftToReinject = $quantityToReinject;
             foreach ($movements as $movement) {
-                if ($leftToReinject > $movement['physical_quantity']) {
+                if ($quantityToReinject > $movement['physical_quantity']) {
                     $quantityToReinject = $movement['physical_quantity'];
                 }
 
-                $leftToReinject -= $quantityToReinject;
                 if (Pack::isPack((int) $product->id)) {
                     // Gets items
                     if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY

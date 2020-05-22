@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -188,7 +188,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             if (!$message['private']) {
                 $content .= sprintf(
                     '%s <span class="badge badge-primary rounded">%s</span><br/>',
-                    $this->translator->trans('Message to: ', [], 'Admin.Catalog.Feature'),
+                    $this->translator->trans('Message to:', [], 'Admin.Catalog.Feature'),
                     !$message['id_employee'] ? $message['subject'] : $message['customer_name']
                 );
             }
@@ -196,7 +196,7 @@ final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForVi
             if (Validate::isLoadedObject($product)) {
                 $content .= sprintf(
                     '<br/>%s<span class="badge badge-primary-hover rounded">%s</span><br/><br/>',
-                    $this->translator->trans('Product: ', [], 'Admin.Catalog.Feature'),
+                    $this->translator->trans('Product:', [], 'Admin.Catalog.Feature'),
                     $product->name
                 );
             }

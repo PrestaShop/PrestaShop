@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -195,14 +195,15 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         $combinations_groups = $this->product->getAttributesGroups($this->context->language->id);
         $attributes = [];
         $impacts = Product::getAttributesImpacts($this->product->id);
-        foreach ($combinations_groups as &$combination) {
-            $target = &$attributes[$combination['id_attribute_group']][$combination['id_attribute']];
-            $target = $combination;
+        foreach ($combinations_groups as $combination) {
             if (isset($impacts[$combination['id_attribute']])) {
-                $target['price'] = $impacts[$combination['id_attribute']]['price'];
-                $target['weight'] = $impacts[$combination['id_attribute']]['weight'];
+                $combination['price'] = $impacts[$combination['id_attribute']]['price'];
+                $combination['weight'] = $impacts[$combination['id_attribute']]['weight'];
             }
+
+            $attributes[$combination['id_attribute_group']][$combination['id_attribute']] = $combination;
         }
+
         $this->context->smarty->assign([
             'currency_sign' => $this->context->currency->sign,
             'weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),

@@ -9,6 +9,10 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const SeoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 const FOBasePage = require('@pages/FO/FObasePage');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_shopParams_TrafficAndSeo_seoAndUrls_enableDisableFriendlyUrl';
 
 let browser;
 let page;
@@ -39,6 +43,7 @@ describe('Enable/Disable friendly URL', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.trafficAndSeoLink,
@@ -49,11 +54,13 @@ describe('Enable/Disable friendly URL', async () => {
   });
 
   it('should disable friendly URL', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'disableFriendlyUrl', baseContext);
     const result = await this.pageObjects.seoAndUrlsPage.enableDisableFriendlyURL(false);
     await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to FO and check the URL', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkDisabledFriendlyUrlFO', baseContext);
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
     const url = await this.pageObjects.seoAndUrlsPage.getCurrentURL();
@@ -63,11 +70,13 @@ describe('Enable/Disable friendly URL', async () => {
   });
 
   it('should enable friendly URL', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'enableFriendlyUrl', baseContext);
     const result = await this.pageObjects.seoAndUrlsPage.enableDisableFriendlyURL(true);
     await expect(result).to.contains(this.pageObjects.seoAndUrlsPage.successfulSettingsUpdateMessage);
   });
 
   it('should go to FO and check the URL', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkEnabledFriendlyUrlFO', baseContext);
     page = await this.pageObjects.boBasePage.viewMyShop();
     this.pageObjects = await init();
     await this.pageObjects.foBasePage.changeLanguage('en');

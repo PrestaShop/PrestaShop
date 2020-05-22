@@ -176,49 +176,48 @@ Comment: Link to localized forum</note>
       <trans-unit id="cdc5a0619e8dadc368c1d5feb2d83986">
         <source>Create file parameters</source>
         <target>Create file parameters</target>
-        <note>Line: 304
+        <note>Line: 301
 Comment: We fill the process step used for Ajax queries</note>
       </trans-unit>
       <trans-unit id="0b1b557a66c34f8467d364c5f6ac36a5">
         <source>Create database tables</source>
         <target>Create database tables</target>
-        <note>Line: 305</note>
+        <note>Line: 302</note>
       </trans-unit>
       <trans-unit id="22242e741d52f57289ac8b72b9e8c96d">
         <source>Create default shop and languages</source>
         <target>Create default shop and languages</target>
-        <note>Line: 306</note>
+        <note>Line: 303</note>
       </trans-unit>
       <trans-unit id="33f1b48d4dac0408b87bb952b6b0799f">
         <source>Populate database tables</source>
         <target>Populate database tables</target>
-        <note>Line: 309
-Comment: If low memory or big fixtures, create subtasks for populateDatabase step (entity per entity)</note>
+        <note>Line: 305</note>
       </trans-unit>
       <trans-unit id="039c15f5a6879d4a65fb0f67f8f90f09">
         <source>Configure shop information</source>
         <target>Configure shop information</target>
-        <note>Line: 321</note>
+        <note>Line: 306</note>
       </trans-unit>
       <trans-unit id="23de8b7f5abcac68c426e405975411bb">
         <source>Install demonstration data</source>
         <target>Install demonstration data</target>
-        <note>Line: 352</note>
+        <note>Line: 314</note>
       </trans-unit>
       <trans-unit id="e819ad111fcd4023d34b419946936265">
         <source>Install modules</source>
         <target>Install modules</target>
-        <note>Line: 323</note>
+        <note>Line: 308</note>
       </trans-unit>
       <trans-unit id="fe931ab87bd95a63a886c40e311ab838">
         <source>Install Addons modules</source>
         <target>Install Addons modules</target>
-        <note>Line: 331</note>
+        <note>Line: 309</note>
       </trans-unit>
       <trans-unit id="7ad8960b5505289cf368e247f7ac72ef">
         <source>Install theme</source>
         <target>Install theme</target>
-        <note>Line: 349</note>
+        <note>Line: 311</note>
       </trans-unit>
     </body>
   </file>
@@ -287,67 +286,77 @@ Comment: If low memory or big fixtures, create subtasks for populateDatabase ste
       <trans-unit id="9985ec427b90450fffe50ef87916f316">
         <source>Required Apache configuration</source>
         <target>Required Apache configuration</target>
-        <note>Line: 110</note>
+        <note>Line: 111</note>
       </trans-unit>
       <trans-unit id="0b9193ca4af6867c1f50a07097254b62">
         <source>Enable the Apache mod_rewrite module</source>
         <target>Enable the Apache mod_rewrite module</target>
-        <note>Line: 113</note>
+        <note>Line: 114</note>
       </trans-unit>
       <trans-unit id="91f3a2c0e4424c87689525da44c4db11">
         <source>Files</source>
         <target>Files</target>
-        <note>Line: 117</note>
+        <note>Line: 118</note>
       </trans-unit>
       <trans-unit id="65c896ec6e9dd47cfc8498d0554e50ae">
         <source>Not all files were successfully uploaded on your server</source>
         <target>Not all files were successfully uploaded on your server</target>
-        <note>Line: 120</note>
+        <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="0b7a9eb57523a26174e9ba358ced79a6">
         <source>Permissions on files and folders</source>
         <target>Permissions on files and folders</target>
-        <note>Line: 124</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="9fa7c3c4ae8d448c7536e98947b51d75">
         <source>Recursive write permissions for %user% user on %folder%</source>
         <target>Recursive write permissions for %user% user on %folder%</target>
-        <note>Line: 138</note>
+        <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="4b3fafb5b9b053c5d3d39d5af60a5154">
         <source>Write permissions for %user% user on %folder%</source>
         <target>Write permissions for %user% user on %folder%</target>
-        <note>Line: 140</note>
+        <note>Line: 141</note>
       </trans-unit>
       <trans-unit id="cae2fd0d1edf2730523324e86f4113d0">
         <source>Recommended PHP parameters</source>
         <target>Recommended PHP parameters</target>
-        <note>Line: 146</note>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="5b845252f12353a62a52a120f1613f1c">
         <source>GZIP compression is not activated</source>
         <target>GZIP compression is not activated</target>
-        <note>Line: 149</note>
+        <note>Line: 150</note>
       </trans-unit>
       <trans-unit id="250ca84e0a4b02ebcfe7b99dfba30f00">
         <source>Mbstring extension is not enabled</source>
         <target>Mbstring extension is not enabled</target>
-        <note>Line: 150</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="14bab7de5cc2553ed7686416eda1b1dd">
         <source>Dom extension is not loaded</source>
         <target>Dom extension is not loaded</target>
-        <note>Line: 151</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="a69c52258e44151f43f0d4bf17526d3e">
         <source>Cannot open external URLs (requires allow_url_fopen as On)</source>
         <target>Cannot open external URLs (requires allow_url_fopen as On)</target>
-        <note>Line: 152</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="e1aa192240d00d1f6ea2ad7a030f9642">
         <source>Intl extension is not loaded</source>
         <target>Intl extension is not loaded</target>
         <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="b980f0f59e930d473eefd5968dd06e7e">
+        <source>PHP %version% or later is not enabled</source>
+        <target>PHP %version% or later is not enabled</target>
+        <note>Line: 95</note>
+      </trans-unit>
+      <trans-unit id="c6805f594c7b2b56eccf7d5d6cd377da">
+        <source>PHP's config "memory_limit" must be to a minimum of 256M</source>
+        <target>PHP's config "memory_limit" must be to a minimum of 256M</target>
+        <note>Line: 107</note>
       </trans-unit>
     </body>
   </file>
@@ -593,32 +602,32 @@ Comment: If low memory or big fixtures, create subtasks for populateDatabase ste
       <trans-unit id="e6a7f8a2f42cc35979973da8dfb10720">
         <source>Forum</source>
         <target>Forum</target>
-        <note>Line: 37</note>
+        <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="be8df1f28c0abc85a0ed0c6860e5d832">
         <source>Blog</source>
         <target>Blog</target>
-        <note>Line: 40</note>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="83b14f196cda2257c76ef2fa682893ca">
         <source>Contact us!</source>
         <target>Contact us!</target>
-        <note>Line: 76</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="301fedbe35369c411966a9e6a396ee95">
         <source>Installation Assistant</source>
         <target>Installation Assistant</target>
-        <note>Line: 86</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="bf66566854c3a0177681632a7839105d">
         <source>To install PrestaShop, you need to have JavaScript enabled in your browser.</source>
         <target>To install PrestaShop, you need to have JavaScript enabled in your browser.</target>
-        <note>Line: 95</note>
+        <note>Line: 96</note>
       </trans-unit>
       <trans-unit id="9d90b6827ed904399354488b99074a4b">
         <source>https://enable-javascript.com/</source>
         <target>https://enable-javascript.com/</target>
-        <note>Line: 96</note>
+        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>
@@ -812,6 +821,11 @@ Comment: If low memory or big fixtures, create subtasks for populateDatabase ste
         <target>Refresh</target>
         <note>Line: 51</note>
       </trans-unit>
+      <trans-unit id="f0b73b6383e71f71d32e9dff781c6a32">
+        <source>Oops! Please correct the item(s) below, and then click "Refresh" to test the compatibility of your new system.</source>
+        <target>Oops! Please correct the item(s) below, and then click "Refresh" to test the compatibility of your new system.</target>
+        <note>Line: 35</note>
+      </trans-unit>
     </body>
   </file>
   <file original="install-dev/theme/views/welcome.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -824,32 +838,32 @@ Comment: If low memory or big fixtures, create subtasks for populateDatabase ste
       <trans-unit id="c8c27951cbaf7da257e6af50a6fc4116">
         <source><![CDATA[<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>]]></source>
         <target><![CDATA[<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %version% installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%doc%">%doc%</a>]]></target>
-        <note>Line: 36</note>
+        <note>Line: 32</note>
       </trans-unit>
       <trans-unit id="bcc5d67b4832784ca5e4f09a40b28bb2">
         <source>Welcome to the PrestaShop %version% Installer</source>
         <target>Welcome to the PrestaShop %version% Installer</target>
-        <note>Line: 42</note>
+        <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="78a57ffff28849e5627e564bc055acea">
         <source>Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 250,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.</source>
         <target>Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 250,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.</target>
-        <note>Line: 43</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="d9b205f1e80dee567296d14611add4a2">
         <source><![CDATA[If you need help, do not hesitate to <a href="%tutoriellink%" target="_blank">watch this short tutorial</a>, or check <a href="%linkdoc%" target="_blank">our documentation</a>.]]></source>
         <target><![CDATA[If you need help, do not hesitate to <a href="%tutoriellink%" target="_blank">watch this short tutorial</a>, or check <a href="%linkdoc%" target="_blank">our documentation</a>.]]></target>
-        <note>Line: 44</note>
+        <note>Line: 40</note>
       </trans-unit>
       <trans-unit id="edbaa44341f3064baa5a5676aabc91e5">
         <source>Continue the installation in:</source>
         <target>Continue the installation in:</target>
-        <note>Line: 48</note>
+        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="239e971a06ff313e2b8aafa9b51286c9">
         <source>The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d% translations, all for free!</source>
         <target>The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d% translations, all for free!</target>
-        <note>Line: 58</note>
+        <note>Line: 54</note>
       </trans-unit>
     </body>
   </file>
@@ -868,107 +882,107 @@ File: modules/autoupgrade/classes/UpgradePage.php:414</note>
       <trans-unit id="21084da7c0a49b229bd7f905e93d4aaa">
         <source>Lingerie and Adult</source>
         <target>Lingerie and Adult</target>
-        <note>Line: 154</note>
+        <note>Line: 149</note>
       </trans-unit>
       <trans-unit id="0fe4ca3df29658482098bb33a2ff66e5">
         <source>Animals and Pets</source>
         <target>Animals and Pets</target>
-        <note>Line: 140</note>
+        <note>Line: 135</note>
       </trans-unit>
       <trans-unit id="9e4359f35054190eba36e09466e39d01">
         <source>Art and Culture</source>
         <target>Art and Culture</target>
-        <note>Line: 141</note>
+        <note>Line: 136</note>
       </trans-unit>
       <trans-unit id="066cd752c82ddc6231a9723b5822a945">
         <source>Babies</source>
         <target>Babies</target>
-        <note>Line: 142</note>
+        <note>Line: 137</note>
       </trans-unit>
       <trans-unit id="41a081c3f3042ac40117cf295350870d">
         <source>Beauty and Personal Care</source>
         <target>Beauty and Personal Care</target>
-        <note>Line: 143</note>
+        <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="f2b545a8abb14f8706f808a79277c061">
         <source>Cars</source>
         <target>Cars</target>
-        <note>Line: 144</note>
+        <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="39bb2fdc532f8984d8348863c86ebfca">
         <source>Computer Hardware and Software</source>
         <target>Computer Hardware and Software</target>
-        <note>Line: 145</note>
+        <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
         <source>Download</source>
         <target>Download</target>
-        <note>Line: 146</note>
+        <note>Line: 141</note>
       </trans-unit>
       <trans-unit id="8bdd8b2357d516da5b81eb16746ba9a9">
         <source>Fashion and accessories</source>
         <target>Fashion and accessories</target>
-        <note>Line: 147</note>
+        <note>Line: 142</note>
       </trans-unit>
       <trans-unit id="33cb31c5505618a808d3bcd7490a793c">
         <source>Flowers, Gifts and Crafts</source>
         <target>Flowers, Gifts and Crafts</target>
-        <note>Line: 148</note>
+        <note>Line: 143</note>
       </trans-unit>
       <trans-unit id="0570b6d9de5c37a026e69c6987fc27f6">
         <source>Food and beverage</source>
         <target>Food and beverage</target>
-        <note>Line: 149</note>
+        <note>Line: 144</note>
       </trans-unit>
       <trans-unit id="4b73b8913afcdf06d9f49c176306d950">
         <source>HiFi, Photo and Video</source>
         <target>HiFi, Photo and Video</target>
-        <note>Line: 150</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="2e9d6500d9b2a65985a621f0f0afdeb3">
         <source>Home and Garden</source>
         <target>Home and Garden</target>
-        <note>Line: 151</note>
+        <note>Line: 146</note>
       </trans-unit>
       <trans-unit id="83dd3493957bcd92a37bc39111f670b8">
         <source>Home Appliances</source>
         <target>Home Appliances</target>
-        <note>Line: 152</note>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="565631402af79df42f22a117b0d6f1a5">
         <source>Jewelry</source>
         <target>Jewelry</target>
-        <note>Line: 153</note>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="18848d605251b3627014c6a58c14c449">
         <source>Mobile and Telecom</source>
         <target>Mobile and Telecom</target>
-        <note>Line: 155</note>
+        <note>Line: 150</note>
       </trans-unit>
       <trans-unit id="992a0f0542384f1ee5ef51b7cf4ae6c4">
         <source>Services</source>
         <target>Services</target>
-        <note>Line: 156</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="4ef7205b13f6821177d0dbc2fb90f79e">
         <source>Shoes and accessories</source>
         <target>Shoes and accessories</target>
-        <note>Line: 157</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="1fb0f99b55e6c2be35aed72ebe38c245">
         <source>Travel</source>
         <target>Travel</target>
-        <note>Line: 159</note>
+        <note>Line: 154</note>
       </trans-unit>
       <trans-unit id="4d0a6a9777a818ecc3b59b9a8ecd0c43">
         <source>-- Please choose your main activity --</source>
         <target>-- Please choose your main activity --</target>
-        <note>Line: 138</note>
+        <note>Line: 133</note>
       </trans-unit>
       <trans-unit id="9503054261b8aeed48e0a3902019b579">
         <source>Sport and Entertainment</source>
         <target>Sport and Entertainment</target>
-        <note>Line: 158</note>
+        <note>Line: 153</note>
       </trans-unit>
     </body>
   </file>
@@ -1106,22 +1120,22 @@ File: modules/autoupgrade/classes/UpgradePage.php:414</note>
       <trans-unit id="27654955bc85150712aa0bc53bcc6224">
         <source>Cannot create admin account</source>
         <target>Cannot create admin account</target>
-        <note>Line: 830</note>
+        <note>Line: 829</note>
       </trans-unit>
       <trans-unit id="26b901ba3ecdcb91823f05ce15a70ce4">
         <source>Cannot install module "%module%"</source>
         <target>Cannot install module "%module%"</target>
-        <note>Line: 1049</note>
+        <note>Line: 1050</note>
       </trans-unit>
       <trans-unit id="4a85cd1d84d691a2e0b73a5f08cd3483">
         <source>Fixtures class "%class%" not found</source>
         <target>Fixtures class "%class%" not found</target>
-        <note>Line: 1085</note>
+        <note>Line: 1086</note>
       </trans-unit>
       <trans-unit id="e1120cceb6bcfd9596161e3912b2ad9d">
         <source>"%class%" must be an instance of "InstallXmlLoader"</source>
         <target>"%class%" must be an instance of "InstallXmlLoader"</target>
-        <note>Line: 1092</note>
+        <note>Line: 1093</note>
       </trans-unit>
     </body>
   </file>
@@ -1199,32 +1213,32 @@ File: modules/autoupgrade/classes/UpgradePage.php:414</note>
       <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
         <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
         <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
-        <note>Line: 1207</note>
+        <note>Line: 1205</note>
       </trans-unit>
       <trans-unit id="5b56439cb79f3a01ae56d92e52be2218">
         <source><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></source>
         <target><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></target>
-        <note>Line: 469</note>
+        <note>Line: 467</note>
       </trans-unit>
       <trans-unit id="11b53a5381cd2ca843a6089493de6716">
         <source>Cannot create image "%identifier%" for entity "%entity%"</source>
         <target>Cannot create image "%identifier%" for entity "%entity%"</target>
-        <note>Line: 805</note>
+        <note>Line: 803</note>
       </trans-unit>
       <trans-unit id="a6bc945aa3c279156298ed70872cd20b">
         <source>Cannot create image "%identifier%" (bad permissions on folder "%folder%")</source>
         <target>Cannot create image "%identifier%" (bad permissions on folder "%folder%")</target>
-        <note>Line: 783</note>
+        <note>Line: 781</note>
       </trans-unit>
       <trans-unit id="25b42d449f5ebcdb85fb6cae0663c40f">
         <source>Cannot create image "%identifier%"</source>
         <target>Cannot create image "%identifier%"</target>
-        <note>Line: 710</note>
+        <note>Line: 708</note>
       </trans-unit>
       <trans-unit id="44a700a0c9496b4436c16c5e46351707">
         <source>Cannot create image "%1$s" for entity "%2$s"</source>
         <target>Cannot create image "%1$s" for entity "%2$s"</target>
-        <note>Line: 794</note>
+        <note>Line: 792</note>
       </trans-unit>
     </body>
   </file>

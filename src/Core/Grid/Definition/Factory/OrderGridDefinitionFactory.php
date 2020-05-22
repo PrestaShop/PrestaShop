@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,8 +45,8 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DisableableLinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\OrderPriceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\PreviewColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -61,7 +61,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Creates definition for Orders grid
  */
-final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     const GRID_ID = 'order';
 
@@ -178,76 +178,78 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new IdentifierColumn('id_order'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'identifier_field' => 'id_order',
-                    'preview' => $previewColumn,
-                    'clickable' => false,
-                ])
+            ->setName($this->trans('ID', [], 'Admin.Global'))
+            ->setOptions([
+                'identifier_field' => 'id_order',
+                'preview' => $previewColumn,
+                'clickable' => false,
+            ])
             )
             ->add((new DataColumn('reference'))
-                ->setName($this->trans('Reference', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'reference',
-                ])
+            ->setName($this->trans('Reference', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'reference',
+            ])
             )
             ->add((new BooleanColumn('new'))
-                ->setName($this->trans('New client', [], 'Admin.Orderscustomers.Feature'))
-                ->setOptions([
-                    'field' => 'new',
-                    'true_name' => $this->trans('Yes', [], 'Admin.Global'),
-                    'false_name' => $this->trans('No', [], 'Admin.Global'),
-                    'clickable' => true,
-                ])
+            ->setName($this->trans('New client', [], 'Admin.Orderscustomers.Feature'))
+            ->setOptions([
+                'field' => 'new',
+                'true_name' => $this->trans('Yes', [], 'Admin.Global'),
+                'false_name' => $this->trans('No', [], 'Admin.Global'),
+                'clickable' => true,
+            ])
             )
-            ->add((new LinkColumn('customer'))
-                ->setName($this->trans('Customer', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'customer',
-                    'route' => 'admin_customers_view',
-                    'route_param_name' => 'customerId',
-                    'route_param_field' => 'id_customer',
-                ])
+            ->add((new DisableableLinkColumn('customer'))
+            ->setName($this->trans('Customer', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'customer',
+                'disabled_field' => 'deleted_customer',
+                'route' => 'admin_customers_view',
+                'route_param_name' => 'customerId',
+                'route_param_field' => 'id_customer',
+                'target' => '_blank',
+            ])
             )
             ->add((new OrderPriceColumn('total_paid_tax_incl'))
-                ->setName($this->trans('Total', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'total_paid_tax_incl',
-                    'is_paid_field' => 'paid',
-                    'clickable' => true,
-                ])
+            ->setName($this->trans('Total', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'total_paid_tax_incl',
+                'is_paid_field' => 'paid',
+                'clickable' => true,
+            ])
             )
             ->add((new DataColumn('payment'))
-                ->setName($this->trans('Payment', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'payment',
-                ])
+            ->setName($this->trans('Payment', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'payment',
+            ])
             )
             ->add((new ChoiceColumn('osname'))
-                ->setName($this->trans('Status', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'current_state',
-                    'route' => 'admin_orders_list_update_status',
-                    'color_field' => 'color',
-                    'choice_provider' => $this->orderStatesChoiceProvider,
-                    'record_route_params' => [
-                        'id_order' => 'orderId',
-                    ],
-                ])
+            ->setName($this->trans('Status', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'current_state',
+                'route' => 'admin_orders_list_update_status',
+                'color_field' => 'color',
+                'choice_provider' => $this->orderStatesChoiceProvider,
+                'record_route_params' => [
+                    'id_order' => 'orderId',
+                ],
+            ])
             )
             ->add((new DateTimeColumn('date_add'))
-                ->setName($this->trans('Date', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'date_add',
-                    'format' => $this->contextDateFormat,
-                    'clickable' => true,
-                ])
+            ->setName($this->trans('Date', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'date_add',
+                'format' => $this->contextDateFormat,
+                'clickable' => true,
+            ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => $this->getRowActions(),
-                ])
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => $this->getRowActions(),
+            ])
             )
         ;
 
@@ -291,79 +293,79 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
 
         $filters
             ->add((new Filter('id_order', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_order')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('id_order')
             )
             ->add((new Filter('reference', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search Reference', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('reference')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('reference')
             )
             ->add((new Filter('new', YesAndNoChoiceType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('new')
+            ->setTypeOptions([
+                'required' => false,
+            ])
+            ->setAssociatedColumn('new')
             )
             ->add((new Filter('customer', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search Customer', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('customer')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search customer', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('customer')
             )
             ->add((new Filter('total_paid_tax_incl', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search Total', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('total_paid_tax_incl')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search total', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('total_paid_tax_incl')
             )
             ->add((new Filter('payment', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search Payment', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('payment')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search payment', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('payment')
             )
             ->add((new Filter('osname', ChoiceType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'choices' => $this->orderStatusesChoiceProvider->getChoices(),
-                    'translation_domain' => false,
-                ])
-                ->setAssociatedColumn('osname')
+            ->setTypeOptions([
+                'required' => false,
+                'choices' => $this->orderStatusesChoiceProvider->getChoices(),
+                'translation_domain' => false,
+            ])
+            ->setAssociatedColumn('osname')
             )
             ->add((new Filter('date_add', DateRangeType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('date_add')
+            ->setTypeOptions([
+                'required' => false,
+            ])
+            ->setAssociatedColumn('date_add')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                    ],
-                    'redirect_route' => 'admin_orders_index',
-                ])
-                ->setAssociatedColumn('actions')
+            ->setTypeOptions([
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
+                ],
+                'redirect_route' => 'admin_orders_index',
+            ])
+            ->setAssociatedColumn('actions')
             )
         ;
 
@@ -384,7 +386,7 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
-                        'placeholder' => $this->trans('Search Company', [], 'Admin.Actions'),
+                        'placeholder' => $this->trans('Search company', [], 'Admin.Actions'),
                     ],
                 ])
                 ->setAssociatedColumn('company')
@@ -432,26 +434,26 @@ final class OrderGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add((new ModalFormSubmitBulkAction('change_order_status'))
-                ->setName($this->trans('Change Order Status', [], 'Admin.Orderscustomers.Feature'))
-                ->setOptions([
-                    'submit_route' => 'admin_orders_change_orders_status',
-                    'modal_id' => 'changeOrdersStatusModal',
-                ])
+            ->setName($this->trans('Change Order Status', [], 'Admin.Orderscustomers.Feature'))
+            ->setOptions([
+                'submit_route' => 'admin_orders_change_orders_status',
+                'modal_id' => 'changeOrdersStatusModal',
+            ])
             )
             ->add((new ButtonBulkAction('open_tabs'))
-                ->setName($this->trans('Open in new tabs', [], 'Admin.Orderscustomers.Feature'))
-                ->setOptions([
-                    'class' => 'open_tabs',
-                    'attributes' => [
-                        'data-route' => 'admin_orders_view',
-                        'data-route-param-name' => 'orderId',
-                        'data-tabs-blocked-message' => $this->trans(
-                            'It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.',
-                            [],
-                            'Admin.Orderscustomers.Feature'
-                        ),
-                    ],
-                ])
+            ->setName($this->trans('Open in new tabs', [], 'Admin.Orderscustomers.Feature'))
+            ->setOptions([
+                'class' => 'open_tabs',
+                'attributes' => [
+                    'data-route' => 'admin_orders_view',
+                    'data-route-param-name' => 'orderId',
+                    'data-tabs-blocked-message' => $this->trans(
+                        'It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.',
+                        [],
+                        'Admin.Orderscustomers.Feature'
+                    ),
+                ],
+            ])
             )
         ;
     }

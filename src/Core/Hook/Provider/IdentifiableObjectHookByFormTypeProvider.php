@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,18 +19,21 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
+use Exception;
 use Generator;
+use Logger;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRegistryInterface;
+use Throwable;
 
 /**
  * Gets hook names by identifiable object form types.
@@ -125,7 +128,13 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
     private function getFormNames(array $formTypes)
     {
         foreach ($formTypes as $formType) {
-            yield $this->formFactory->createBuilder($formType)->getName();
+            try {
+                yield $this->formFactory->createBuilder($formType)->getName();
+            } catch (Exception $e) {
+                Logger::addLog(sprintf('Error while loading formType: %s . Error: %s', $formType, $e));
+            } catch (Throwable $e) {
+                Logger::addLog(sprintf('Invalid argument exception: %s . Error: %s', $formType, $e));
+            }
         }
     }
 

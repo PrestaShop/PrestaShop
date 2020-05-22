@@ -4,6 +4,7 @@ admin_orders_index:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:index
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders
 
 admin_orders_create:
   path: /new
@@ -11,7 +12,7 @@ admin_orders_create:
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Order\Order:create
     _legacy_controller: AdminOrders
-#    _legacy_link: AdminOrders:addorder
+    _legacy_link: AdminOrders:addorder
 
 admin_orders_place:
   path: /place
@@ -26,8 +27,10 @@ admin_orders_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:search
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
     _legacy_controller: AdminOrders
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order
+    redirectRoute: admin_orders_index
 
 admin_orders_generate_invoice_pdf:
   path: /{orderId}/generate-invoice-pdf
@@ -67,6 +70,9 @@ admin_orders_view:
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:view
     _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:vieworder
+    _legacy_parameters:
+      id_order: orderId
   options:
     expose: true
   requirements:
@@ -140,7 +146,7 @@ admin_orders_update_product:
 
 admin_orders_remove_cart_rule:
   path: /{orderId}/cart-rules/{orderCartRuleId}/delete
-  methods: [POST]
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:removeCartRule
   requirements:
@@ -216,6 +222,30 @@ admin_orders_partial_refund:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
+  options:
+    expose: true
+
+admin_orders_standard_refund:
+  path: /{orderId}/standard-refund
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:standardRefund
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_return_product:
+  path: /{orderId}/return-product
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:returnProduct
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
 
 admin_orders_send_process_order_email:
   path: /process-order-email
@@ -247,6 +277,17 @@ admin_orders_delete_product:
   options:
     expose: true
 
+admin_orders_get_discounts:
+  path: /{orderId}/discounts
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getDiscounts
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
 admin_orders_get_prices:
   path: /{orderId}/prices
   methods: [GET]
@@ -258,22 +299,33 @@ admin_orders_get_prices:
   options:
     expose: true
 
-admin_orders_get_paginated_products:
-  path: /{orderId}/products
+admin_orders_get_invoices:
+  path: /{orderId}/invoices
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getPaginatedProducts
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getInvoices
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
   options:
     expose: true
 
-admin_orders_get_invoices:
-  path: /{orderId}/invoices
+admin_orders_get_documents:
+  path: /{orderId}/documents
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getInvoices
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getDocuments
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_cancellation:
+  path: /{orderId}/cancellation
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:cancellation
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+

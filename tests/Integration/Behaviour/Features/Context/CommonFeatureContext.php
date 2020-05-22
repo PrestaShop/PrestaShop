@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,6 +69,20 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     {
         DatabaseCreator::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
+    }
+
+    /**
+     * This hook can be used to flag a feature for kernel reboot, this is useful
+     * to force recreation of services (e.g: when you add some currencies in the
+     * database, you may need to reset the CLDR related services to use the new ones)
+     *
+     * @BeforeFeature @reboot-kernel-before-feature
+     */
+    public static function rebootKernelPrepareFeature()
+    {
+        $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
+        $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
+        self::$kernel->reboot($warmupDir);
     }
 
     /**

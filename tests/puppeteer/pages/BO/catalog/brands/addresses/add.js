@@ -46,7 +46,6 @@ module.exports = class AddBrandAddress extends BOBasePage {
     await this.setValue(this.otherInput, brandAddressData.other);
     // Click on Save button and successful message
     await this.clickAndWaitForNavigation(this.saveButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

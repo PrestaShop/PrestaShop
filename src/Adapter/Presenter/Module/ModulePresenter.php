@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Module;
 
 use Currency;
 use Exception;
+use Hook;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -64,11 +65,18 @@ class ModulePresenter implements PresenterInterface
         $attributes['picos'] = $this->addPicos($attributes);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
         $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
-        return [
+
+        $result = [
             'attributes' => $attributes,
             'disk' => $module->disk->all(),
             'database' => $module->database->all(),
         ];
+
+        Hook::exec('actionPresentModule',
+            ['presentedModule' => &$result]
+        );
+
+        return $result;
     }
 
     private function getModulePrice($prices)

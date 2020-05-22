@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class SubmitGridActionExtension handles grid action submits
@@ -31,7 +31,7 @@ const $ = window.$;
 export default class SubmitGridActionExtension {
   constructor() {
     return {
-      extend: (grid) => this.extend(grid)
+      extend: (grid) => this.extend(grid),
     };
   }
 
@@ -54,15 +54,15 @@ export default class SubmitGridActionExtension {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
 
-    if (typeof confirmMessage !== "undefined" && 0 < confirmMessage.length && !confirm(confirmMessage)) {
-        return;
+    if (typeof confirmMessage !== 'undefined' && confirmMessage.length > 0 && !window.confirm(confirmMessage)) {
+      return;
     }
 
-    const $form = $('#' + grid.getId() + '_filter_form');
+    const $form = $(`#${grid.getId()}_filter_form`);
 
     $form.attr('action', $submitBtn.data('url'));
     $form.attr('method', $submitBtn.data('method'));
-    $form.find('input[name="' + grid.getId() + '[_token]"]').val($submitBtn.data('csrf'));
+    $form.find(`input[name="${grid.getId()}[_token]"]`).val($submitBtn.data('csrf'));
     $form.submit();
   }
 }

@@ -1,14 +1,21 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const EmailThemesPage = require('@pages/BO/design/emailThemes');
 const PreviewEmailThemesPage = require('@pages/BO/design/emailThemes/preview');
+
+// Import test context
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_design_emailThemes_previewEmailThemes';
 
 let browser;
 let page;
@@ -16,7 +23,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     emailThemesPage: new EmailThemesPage(page),
@@ -29,19 +35,25 @@ describe('Preview Email themes classic and modern', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
   // Login into BO and go to taxes page
   loginCommon.loginBO();
   it('should go to design > email themes page', async function () {
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.designParentLink,
-      this.pageObjects.boBasePage.emailThemeLink,
+    await testContext.addContextItem(this, 'testIdentifier', 'goToEmailThemesPage', baseContext);
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.designParentLink,
+      this.pageObjects.dashboardPage.emailThemeLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.emailThemesPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.emailThemesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.emailThemesPage.pageTitle);
   });
@@ -51,10 +63,20 @@ describe('Preview Email themes classic and modern', async () => {
       {args: {emailThemeName: 'classic', numberOfLayouts: 50}},
       {args: {emailThemeName: 'modern', numberOfLayouts: 50}},
     ];
+
     tests.forEach((test) => {
       it(`should preview email theme ${test.args.emailThemeName} and check number of layouts`, async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `previewEmailTheme_${test.args.emailThemeName}`,
+          baseContext,
+        );
+
         await this.pageObjects.emailThemesPage.previewEmailTheme(test.args.emailThemeName);
+
         const pageTitle = await this.pageObjects.emailThemesPage.getPageTitle();
+
         await expect(pageTitle).to.contains(
           `${this.pageObjects.previewEmailThemesPage.pageTitle} ${test.args.emailThemeName}`,
         );
@@ -64,6 +86,13 @@ describe('Preview Email themes classic and modern', async () => {
       });
 
       it('should go back to email themes page', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `backToEmailThemePageFrom${test.args.emailThemeName}`,
+          baseContext,
+        );
+
         await this.pageObjects.previewEmailThemesPage.goBackToEmailThemesPage();
         const pageTitle = await this.pageObjects.emailThemesPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.emailThemesPage.pageTitle);

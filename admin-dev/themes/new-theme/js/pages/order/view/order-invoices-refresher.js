@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -26,7 +26,7 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderInvoicesRefresher {
   constructor() {
@@ -44,17 +44,23 @@ export default class OrderInvoicesRefresher {
         const $addProductInvoiceSelect = $(OrderViewPageMap.productAddInvoiceSelect);
         const $existingInvoicesGroup = $addProductInvoiceSelect.find('optgroup:first');
         const $productEditInvoiceSelect = $(OrderViewPageMap.productEditInvoiceSelect);
+        const $addDiscountInvoiceSelect = $(OrderViewPageMap.addCartRuleInvoiceIdSelect);
         $existingInvoicesGroup.empty();
         $paymentInvoiceSelect.empty();
         $productEditInvoiceSelect.empty();
+        $addDiscountInvoiceSelect.empty();
 
         Object.keys(response.invoices).forEach((invoiceName) => {
           const invoiceId = response.invoices[invoiceName];
+          const invoiceNameWithoutPrice = invoiceName.split(' - ')[0];
 
-          $existingInvoicesGroup.append(`<option value="${invoiceId}">${invoiceName}</option>`);
-          $paymentInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
-          $productEditInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
+          $existingInvoicesGroup.append(`<option value="${invoiceId}">${invoiceNameWithoutPrice}</option>`);
+          $paymentInvoiceSelect.append(`<option value="${invoiceId}">${invoiceNameWithoutPrice}</option>`);
+          $productEditInvoiceSelect.append(`<option value="${invoiceId}">${invoiceNameWithoutPrice}</option>`);
+          $addDiscountInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
         });
+
+        document.querySelector(OrderViewPageMap.productAddInvoiceSelect).selectedIndex = 0;
       });
   }
 }

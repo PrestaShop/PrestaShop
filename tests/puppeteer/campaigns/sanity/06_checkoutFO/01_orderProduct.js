@@ -2,16 +2,19 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+const baseContext = 'sanity_checkoutFO_orderProduct';
 
 // Importing pages
 const HomePage = require('@pages/FO/home');
 const CartPage = require('@pages/FO/cart');
 const LoginPage = require('@pages/FO/login');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const {DefaultAccount} = require('@data/demo/customer');
 const CartData = require('@data/FO/cart');
-const {PaymentMethods} = require('@data/demo/orders');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 let browser;
 let page;
@@ -46,30 +49,35 @@ describe('Order a product and check order confirmation', async () => {
 
   // Steps
   it('should open the shop page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
     await this.pageObjects.homePage.goTo(global.FO.URL);
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
   });
 
   it('should go to login page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
     await this.pageObjects.homePage.goToLoginPage();
     const pageTitle = await this.pageObjects.loginPage.getPageTitle();
     await expect(pageTitle).to.equal(this.pageObjects.loginPage.pageTitle);
   });
 
   it('should sign In in FO With default account', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
     await this.pageObjects.loginPage.customerLogin(DefaultAccount);
     const connected = await this.pageObjects.homePage.isCustomerConnected();
     await expect(connected, 'Customer is not connected in FO').to.be.true;
   });
 
   it('should go to home page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
     await this.pageObjects.homePage.goToHomePage();
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
   });
 
   it('should add first product to cart and Proceed to checkout', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
     await this.pageObjects.homePage.addProductToCartByQuickView('1', '1');
     await this.pageObjects.homePage.proceedToCheckout();
     const pageTitle = await this.pageObjects.cartPage.getPageTitle();
@@ -77,15 +85,17 @@ describe('Order a product and check order confirmation', async () => {
   });
 
   it('should check the cart details', async function () {
-    const result = await this.pageObjects.cartPage.checkProductInCart(CartData.customCartData.firstProduct, '1');
+    await testContext.addContextItem(this, 'testIdentifier', 'checkCartDetails', baseContext);
+    const result = await this.pageObjects.cartPage.getProductDetail(1);
     await Promise.all([
-      expect(result.name).to.be.true,
-      expect(result.price).to.be.true,
-      expect(result.quantity).to.be.true,
+      expect(result.name).to.equal(CartData.customCartData.firstProduct.name),
+      expect(result.price).to.equal(CartData.customCartData.firstProduct.price),
+      expect(result.quantity).to.equal(CartData.customCartData.firstProduct.quantity),
     ]);
   });
 
   it('should proceed to checkout and check Step Address', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkAddressStep', baseContext);
     await this.pageObjects.cartPage.clickOnProceedToCheckout();
     const isCheckoutPage = await this.pageObjects.checkoutPage.isCheckoutPage();
     await expect(isCheckoutPage, 'Browser is not in checkout Page').to.be.true;
@@ -95,6 +105,7 @@ describe('Order a product and check order confirmation', async () => {
   });
 
   it('should validate Step Address and go to Delivery Step', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkDeliveryStep', baseContext);
     const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
     await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
   });
@@ -105,6 +116,7 @@ describe('Order a product and check order confirmation', async () => {
   });
 
   it('should Pay by back wire and confirm order', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
     await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
     const pageTitle = await this.pageObjects.orderConfirmationPage.getPageTitle();
     await expect(pageTitle).to.equal(this.pageObjects.orderConfirmationPage.pageTitle);

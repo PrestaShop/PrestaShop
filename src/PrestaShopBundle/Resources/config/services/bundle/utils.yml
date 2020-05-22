@@ -4,3 +4,8 @@ services:
 
     prestashop.utils.zip_manager:
         class: PrestaShopBundle\Utils\ZipManager
+
+    prestashop.utils.float_parser:
+      class: PrestaShopBundle\Utils\FloatParser
+      arguments:
+        - '@prestashop.core.util.arabic_to_latin_digit_converter'

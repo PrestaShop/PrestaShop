@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,11 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 
 /**
- * Provides data for category add/edit category forms
+ * Provides data for product cancellation form in order page
  */
 final class CancelProductFormDataProvider implements FormDataProviderInterface
 {
@@ -41,12 +43,20 @@ final class CancelProductFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
+     * @var CurrencyDataProviderInterface
+     */
+    private $currencyDataProvider;
+
+    /**
      * @param CommandBusInterface $queryBus
+     * @param CurrencyDataProviderInterface $currencyDataProvider
      */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        CurrencyDataProviderInterface $currencyDataProvider
     ) {
         $this->queryBus = $queryBus;
+        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
@@ -56,10 +66,13 @@ final class CancelProductFormDataProvider implements FormDataProviderInterface
     {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->queryBus->handle(new GetOrderForViewing((int) $orderId));
+        $computingPrecision = new ComputingPrecision();
+        $currency = $this->currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
 
         return [
             'products' => $orderForViewing->getProducts()->getProducts(),
             'taxMethod' => $orderForViewing->getTaxMethod(),
+            'precision' => $computingPrecision->getPrecision($currency->precision),
         ];
     }
 

@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -97,16 +97,18 @@
       {/if}
       {hook h='displayProductPriceBlock' product=$product type="price"}
       {hook h='displayProductPriceBlock' product=$product type="after_price"}
-      {if $product.additional_delivery_times == 1}
-        {if $product.delivery_information}
-          <span class="delivery-information">{$product.delivery_information}</span>
-        {/if}
-      {elseif $product.additional_delivery_times == 2}
-        {if $product.quantity > 0}
-          <span class="delivery-information">{$product.delivery_in_stock}</span>
-        {* Out of stock message should not be displayed if customer can't order the product. *}
-        {elseif $product.quantity <= 0 && $product.add_to_cart_url}
-          <span class="delivery-information">{$product.delivery_out_stock}</span>
+      {if $product.is_virtual	== 0}
+        {if $product.additional_delivery_times == 1}
+          {if $product.delivery_information}
+            <span class="delivery-information">{$product.delivery_information}</span>
+          {/if}
+        {elseif $product.additional_delivery_times == 2}
+          {if $product.quantity > 0}
+            <span class="delivery-information">{$product.delivery_in_stock}</span>
+          {* Out of stock message should not be displayed if customer can't order the product. *}
+          {elseif $product.quantity <= 0 && $product.add_to_cart_url}
+            <span class="delivery-information">{$product.delivery_out_stock}</span>
+          {/if}
         {/if}
       {/if}
     </div>

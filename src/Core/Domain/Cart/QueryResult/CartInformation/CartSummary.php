@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -45,6 +45,11 @@ class CartSummary
      * @var string
      */
     private $totalShippingPrice;
+
+    /**
+     * @var string
+     */
+    private $totalShippingWithoutTaxes;
 
     /**
      * @var string
@@ -75,6 +80,7 @@ class CartSummary
      * @param string $totalProductsPrice
      * @param string $totalDiscount
      * @param string $totalShippingPrice
+     * @param string $totalShippingWithoutTaxes
      * @param string $totalTaxes
      * @param string $totalPriceWithTaxes
      * @param string $totalPriceWithoutTaxes
@@ -85,6 +91,7 @@ class CartSummary
         string $totalProductsPrice,
         string $totalDiscount,
         string $totalShippingPrice,
+        string $totalShippingWithoutTaxes,
         string $totalTaxes,
         string $totalPriceWithTaxes,
         string $totalPriceWithoutTaxes,
@@ -94,6 +101,7 @@ class CartSummary
         $this->totalProductsPrice = $totalProductsPrice;
         $this->totalDiscount = $totalDiscount;
         $this->totalShippingPrice = $totalShippingPrice;
+        $this->totalShippingWithoutTaxes = $totalShippingWithoutTaxes;
         $this->totalTaxes = $totalTaxes;
         $this->totalPriceWithTaxes = $totalPriceWithTaxes;
         $this->totalPriceWithoutTaxes = $totalPriceWithoutTaxes;
@@ -123,6 +131,14 @@ class CartSummary
     public function getTotalShippingPrice(): string
     {
         return $this->totalShippingPrice;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalShippingWithoutTaxes(): string
+    {
+        return $this->totalShippingWithoutTaxes;
     }
 
     /**

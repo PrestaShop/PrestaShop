@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -42,7 +42,7 @@
       <div class="col">
         <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
 
-        <a class="btn btn-primary" href="{{ path('admin_customers_create') }}">
+        <a id="customer-add-btn" class="btn btn-primary" href="{{ path('admin_customers_create', {'liteDisplaying': 1, 'submitFormAjax': 1}) }}">
           {{ 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       </div>
@@ -53,6 +53,18 @@
         <div class="col">
           <div class="alert alert-warning" role="alert">
             <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="customer-search-loading-notice" class="row d-none">
+      <div class="col">
+        <div class="col">
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">
+              {{ 'Searching for customers'|trans({}, 'Admin.Orderscustomers.Notification') }}
+            </p>
           </div>
         </div>
       </div>
@@ -194,6 +206,7 @@
     <td class="js-order-date"></td>
     <td class="js-order-products"></td>
     <td class="js-order-total-paid"></td>
+    <td class="js-order-payment-method"></td>
     <td class="js-order-status"></td>
     <td class="text-right">
       <a
@@ -217,6 +230,17 @@
       <div class="text-center grid-table-empty">
         <p class="mb-0 mt-2"><i class="material-icons">warning</i></p>
         <p class="mb-2">{{ 'No records found'|trans({}, 'Admin.Global') }}</p>
+      </div>
+    </td>
+  </tr>
+</script>
+
+<script id="js-loading-list-row" type="text/template">
+  <tr class="empty_row js-empty-row">
+    <td colspan="8" class="border-0">
+      <div class="text-center grid-table-empty">
+        <p class="mb-0 mt-2"><i class="material-icons">autorenew</i></p>
+        <p class="mb-2">{{ 'Loading...'|trans({}, 'Admin.Global') }}</p>
       </div>
     </td>
   </tr>

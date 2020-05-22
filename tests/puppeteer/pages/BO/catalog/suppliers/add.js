@@ -11,8 +11,8 @@ module.exports = class AddSupplier extends BOBasePage {
     // Selectors
     this.nameInput = '#supplier_name';
     this.descriptionDiv = '#supplier_description';
-    this.descriptionLangNavItemLink = `${this.descriptionDiv} ul li a[data-locale='%LANG']`;
-    this.descriptionIFrame = '#supplier_description_%ID_ifr';
+    this.descriptionLangNavItemLink = lang => `${this.descriptionDiv} ul li a[data-locale='${lang}']`;
+    this.descriptionIFrame = id => `#supplier_description_${id}_ifr`;
     this.homePhoneInput = '#supplier_phone';
     this.mobilePhoneInput = '#supplier_mobile_phone';
     this.addressInput = '#supplier_address';
@@ -23,14 +23,15 @@ module.exports = class AddSupplier extends BOBasePage {
     this.stateInput = '#supplier_id_state';
     this.logoFileInput = '#supplier_logo';
     this.metaTitleLangButton = '#supplier_meta_title';
-    this.metaTitleLangSpan = 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title\'] span[data-locale=\'%LANG\']';
-    this.metaTitleInput = '#supplier_meta_title_%ID';
-    this.metaDescriptionTextarea = '#supplier_meta_description_%ID';
-    this.metaKeywordsInput = '#supplier_meta_keyword_%ID-tokenfield';
-    this.enabledSwitchlabel = 'label[for=\'supplier_is_enabled_%ID\']';
+    this.metaTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title\']'
+      + ` span[data-locale='${lang}']`;
+    this.metaTitleInput = id => `#supplier_meta_title_${id}`;
+    this.metaDescriptionTextarea = id => `#supplier_meta_description_${id}`;
+    this.metaKeywordsInput = id => `#supplier_meta_keyword_${id}-tokenfield`;
+    this.enabledSwitchLabel = id => `label[for='supplier_is_enabled_${id}']`;
     // Selectors for Meta keywords
-    this.taggableFieldDiv = 'div.input-group div.js-locale-%LANG';
-    this.deleteKeywordLink = `${this.taggableFieldDiv} a.close`;
+    this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
+    this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '.card-footer button';
   }
 
@@ -59,32 +60,31 @@ module.exports = class AddSupplier extends BOBasePage {
 
     // Fill Description, meta title, meta description and meta keywords in english
     await this.changeLanguageForSelectors('en');
-    await this.setValueOnTinymceInput(this.descriptionIFrame.replace('%ID', 1), supplierData.description);
-    await this.setValue(this.metaTitleInput.replace('%ID', 1), supplierData.metaTitle);
-    await this.setValue(this.metaDescriptionTextarea.replace('%ID', 1), supplierData.metaDescription);
+    await this.setValueOnTinymceInput(this.descriptionIFrame(1), supplierData.description);
+    await this.setValue(this.metaTitleInput(1), supplierData.metaTitle);
+    await this.setValue(this.metaDescriptionTextarea(1), supplierData.metaDescription);
     // delete Keywords and other new ones
     await this.deleteKeywords('en');
     await this.addKeywords(supplierData.metaKeywords, 1);
 
     // Fill Description, meta title, meta description and meta keywords in french
     await this.changeLanguageForSelectors('fr');
-    await this.setValueOnTinymceInput(this.descriptionIFrame.replace('%ID', 2), supplierData.descriptionFr);
-    await this.setValue(this.metaTitleInput.replace('%ID', 2), supplierData.metaTitleFr);
-    await this.setValue(this.metaDescriptionTextarea.replace('%ID', 2), supplierData.metaDescriptionFr);
+    await this.setValueOnTinymceInput(this.descriptionIFrame(2), supplierData.descriptionFr);
+    await this.setValue(this.metaTitleInput(2), supplierData.metaTitleFr);
+    await this.setValue(this.metaDescriptionTextarea(2), supplierData.metaDescriptionFr);
     // delete Keywords and other new ones
     await this.deleteKeywords('fr');
     await this.addKeywords(supplierData.metaKeywords, 2);
 
     // set enabled value
     if (supplierData.enabled) {
-      await this.page.click(this.enabledSwitchlabel.replace('%ID', 1));
+      await this.page.click(this.enabledSwitchLabel(1));
     } else {
-      await this.page.click(this.enabledSwitchlabel.replace('%ID', 0));
+      await this.page.click(this.enabledSwitchLabel(0));
     }
 
     // Save Supplier
     await this.clickAndWaitForNavigation(this.saveButton);
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -94,7 +94,7 @@ module.exports = class AddSupplier extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteKeywords(lang = 'en') {
-    const closeButtons = await this.page.$$(this.deleteKeywordLink.replace('%LANG', lang));
+    const closeButtons = await this.page.$$(this.deleteKeywordLink(lang));
     /* eslint-disable no-restricted-syntax */
     for (const closeButton of closeButtons) {
       await closeButton.click();
@@ -111,7 +111,7 @@ module.exports = class AddSupplier extends BOBasePage {
   async addKeywords(keywords, idLang = 1) {
     /* eslint-disable no-restricted-syntax */
     for (const keyword of keywords) {
-      await this.page.type(this.metaKeywordsInput.replace('%ID', idLang), keyword);
+      await this.page.type(this.metaKeywordsInput(idLang), keyword);
       await this.page.keyboard.press('Enter');
     }
     /* eslint-enable no-restricted-syntax */
@@ -125,17 +125,17 @@ module.exports = class AddSupplier extends BOBasePage {
   async changeLanguageForSelectors(lang = 'en') {
     // Change language for Description input
     await Promise.all([
-      this.page.click(this.descriptionLangNavItemLink.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.descriptionLangNavItemLink.replace('%LANG', lang)}.active`, {visible: true}),
+      this.page.click(this.descriptionLangNavItemLink(lang)),
+      this.waitForVisibleSelector(`${this.descriptionLangNavItemLink(lang)}.active`),
     ]);
     // Change language for meta selectors
     await Promise.all([
       this.page.click(this.metaTitleLangButton),
-      this.page.waitForSelector(`${this.metaTitleLangButton}[aria-expanded='true']`, {visible: true}),
+      this.waitForVisibleSelector(`${this.metaTitleLangButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.metaTitleLangSpan.replace('%LANG', lang)),
-      this.page.waitForSelector(`${this.metaTitleLangButton}[aria-expanded='false']`, {visible: true}),
+      this.page.click(this.metaTitleLangSpan(lang)),
+      this.waitForVisibleSelector(`${this.metaTitleLangButton}[aria-expanded='false']`),
     ]);
   }
 };

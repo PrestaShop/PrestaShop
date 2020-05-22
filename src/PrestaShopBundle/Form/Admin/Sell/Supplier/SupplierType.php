@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -75,11 +75,6 @@ class SupplierType extends TranslatorAwareType
     private $contextCountryId;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var bool
      */
     private $isMultistoreEnabled;
@@ -114,9 +109,11 @@ class SupplierType extends TranslatorAwareType
     {
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
+        $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
 
         $builder
             ->add('name', TextType::class, [
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -153,21 +150,26 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('phone', TextType::class, [
+                'empty_data' => '',
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('mobile_phone', TextType::class, [
+                'empty_data' => '',
                 'required' => false,
                 'constraints' => $this->getPhoneCommonConstraints(),
             ])
             ->add('address', TextType::class, [
+                'empty_data' => '',
                 'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('address2', TextType::class, [
+                'empty_data' => '',
                 'required' => false,
                 'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('post_code', TextType::class, [
+                'empty_data' => '',
                 'required' => false,
                 'constraints' => [
                     new TypedRegex([
@@ -184,6 +186,7 @@ class SupplierType extends TranslatorAwareType
                 ],
             ])
             ->add('city', TextType::class, [
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -205,7 +208,7 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
-                'withDniAttr' => true,
+                'with_dni_attr' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -216,7 +219,7 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => true,
-                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'choices' => $stateChoices,
                 'constraints' => [
                     new AddressStateRequired([
                         'id_country' => $countryId,

@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,12 +18,12 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Generates a password and informs about it's strength.
@@ -59,7 +59,7 @@ export default class ChangePasswordHandler {
       $outputContainer.insertAfter($(element));
 
       $(element).passy((strength, valid) => {
-        this._displayFeedback($outputContainer, strength, valid);
+        this.displayFeedback($outputContainer, strength, valid);
       });
     });
   }
@@ -82,8 +82,8 @@ export default class ChangePasswordHandler {
    *
    * @private
    */
-  _displayFeedback($outputContainer, passwordStrength, isPasswordValid) {
-    const feedback = this._getPasswordStrengthFeedback(passwordStrength);
+  displayFeedback($outputContainer, passwordStrength, isPasswordValid) {
+    const feedback = this.getPasswordStrengthFeedback(passwordStrength);
     $outputContainer.text(feedback.message);
     $outputContainer.removeClass('text-danger text-warning text-success');
     $outputContainer.addClass(feedback.elementClass);
@@ -98,7 +98,7 @@ export default class ChangePasswordHandler {
    *
    * @private
    */
-  _getPasswordStrengthFeedback(strength) {
+  getPasswordStrengthFeedback(strength) {
     switch (strength) {
       case $.passy.strength.LOW:
         return {
@@ -123,8 +123,9 @@ export default class ChangePasswordHandler {
           message: this.$feedbackContainer.find('.strength-extreme').text(),
           elementClass: 'text-success',
         };
-    }
 
-    throw 'Invalid password strength indicator.';
+      default:
+        throw new Error('Invalid password strength indicator.');
+    }
   }
 }

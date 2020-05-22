@@ -18,6 +18,7 @@
         "jquery.browser": "^0.1.0",
         "@prestashop-core/jquery.live-polyfill": "^1.0.3",
         "path": "^0.12.7",
+        "punycode": "^2.1.1",
         "webpack": "^4.17.0",
         "webpack-cli": "^3.1.0"
     }

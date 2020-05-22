@@ -22,6 +22,7 @@
         "doctrine/cache": "^1.8",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.7",
+        "egulias/email-validator": "^2.1",
         "ezyang/htmlpurifier": "^4.10",
         "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",
@@ -115,7 +116,7 @@
         "symfony/polyfill-mbstring": "^1.12",
         "symfony/polyfill-php73": "^1.10",
         "symfony/swiftmailer-bundle": "^3.1",
-        "symfony/symfony": ">=3.4.26",
+        "symfony/symfony": ">=3.4.37",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
         "twig/twig": "^1.38"
@@ -132,7 +133,7 @@
     ],
     "require-dev": {
         "behat/behat": "^3.5",
-        "friendsofphp/php-cs-fixer": "^2.15.1",
+        "friendsofphp/php-cs-fixer": "^2.16.1",
         "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
         "phake/phake": "@stable",
@@ -205,7 +206,7 @@
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
         ],
         "integration-behaviour-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml --no-snippets --strict"
+            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml  --format progress --no-snippets --strict"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",

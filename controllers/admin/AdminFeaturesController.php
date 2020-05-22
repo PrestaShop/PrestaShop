@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -115,7 +115,7 @@ class AdminFeaturesControllerCore extends AdminController
 
     public function renderView()
     {
-        if (($id = Tools::getValue('id_feature'))) {
+        if (($id = (int) Tools::getValue('id_feature'))) {
             $this->setTypeValue();
             $this->list_id = 'feature_value';
             $this->lang = true;
@@ -299,7 +299,7 @@ class AdminFeaturesControllerCore extends AdminController
 
             case 'editFeatureValue':
                 if (Tools::getValue('id_feature_value')) {
-                    if (($id = Tools::getValue('id_feature'))) {
+                    if (($id = (int) Tools::getValue('id_feature'))) {
                         if (Validate::isLoadedObject($obj = new Feature((int) $id))) {
                             $bread_extended[] = '<a href="' . Context::getContext()->link->getAdminLink('AdminFeatures') . '&id_feature=' . $id . '&viewfeature">' . $obj->name[$this->context->employee->id_lang] . '</a>';
                         }

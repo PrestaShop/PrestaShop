@@ -9,15 +9,15 @@ module.exports = class LinkWidgets extends BOBasePage {
 
     // Header Selectors
     this.newBlockLink = '#page-header-desc-configuration-add';
-    this.gridPanel = '#link_widget_grid_%HOOKID_grid_panel';
-    this.gridheaderTitle = `${this.gridPanel} h3.card-header-title`;
-    this.gridTable = 'table#link_widget_grid_%HOOKID_grid_table';
-    this.tableRow = `${this.gridTable} tbody tr`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
-    this.actionsColumn = `${this.tableRow} td.column-actions`;
-    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
-    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    this.gridPanel = hookId => `#link_widget_grid_${hookId}_grid_panel`;
+    this.gridHeaderTitle = hookId => `${this.gridPanel(hookId)} h3.card-header-title`;
+    this.gridTable = hookId => `table#link_widget_grid_${hookId}_grid_table`;
+    this.tableRow = (hookId, row) => `${this.gridTable(hookId)} tbody tr:nth-child(${row})`;
+    this.tableColumn = (hookId, row, column) => `${this.tableRow(hookId, row)} td.column-${column}`;
+    this.actionsColumn = (hookId, row) => `${this.tableRow(hookId, row)} td.column-actions`;
+    this.dropdownToggleButton = (hookId, row) => `${this.actionsColumn(hookId, row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (hookId, row) => `${this.actionsColumn(hookId, row)} div.dropdown-menu`;
+    this.deleteRowLink = (hookId, row) => `${this.dropdownToggleMenu(hookId, row)} a[data-url*='/delete']`;
   }
 
   /* Header methods */
@@ -36,7 +36,7 @@ module.exports = class LinkWidgets extends BOBasePage {
    * @return {Promise<integer>}
    */
   async getNumberOfElementInGrid(hookId) {
-    return this.getNumberFromText(this.gridheaderTitle.replace('%HOOKID', hookId));
+    return this.getNumberFromText(this.gridHeaderTitle(hookId));
   }
 
   /**
@@ -48,13 +48,10 @@ module.exports = class LinkWidgets extends BOBasePage {
   async deleteLinkWidget(hookId, row) {
     this.dialogListener(true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%HOOKID', hookId).replace('%ROW', row)),
-      this.page.waitForSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%HOOKID', hookId).replace('%ROW', row),
-      ),
+      this.page.click(this.dropdownToggleButton(hookId, row)),
+      this.waitForVisibleSelector(`${this.dropdownToggleButton(hookId, row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%HOOKID', hookId).replace('%ROW', row));
-    await this.page.waitForSelector(this.alertSuccessBlockParagraph, {visible: true});
+    await this.clickAndWaitForNavigation(this.deleteRowLink(hookId, row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 };

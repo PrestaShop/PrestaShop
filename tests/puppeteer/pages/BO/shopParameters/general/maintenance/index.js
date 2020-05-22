@@ -10,9 +10,9 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
 
     // Selectors
     this.generalNavItemLink = '#subtab-AdminPreferences';
-    this.switchShopLabel = 'label[for=\'form_general_enable_shop_%TOGGLE\']';
+    this.switchShopLabel = toggle => `label[for='form_general_enable_shop_${toggle}']`;
     this.maintenanceTextInputEN = '#form_general_maintenance_text_1_ifr';
-    this.customMaintenanceFrTab = '#form_general_maintenance_text  a[data-locale="fr"]';
+    this.customMaintenanceFrTab = '#form_general_maintenance_text a[data-locale=\'fr\']';
     this.maintenanceTextInputFR = '#form_general_maintenance_text_2_ifr';
     this.addMyIPAddressButton = 'form .add_ip_button';
     this.maintenanceIpInput = '#form_general_maintenance_ip';
@@ -28,7 +28,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToSubTabGeneral() {
-    await this.page.click(this.generalNavItemLink, {waitUntil: 'networkidle2'});
+    await this.clickAndWaitForNavigation(this.generalNavItemLink);
   }
 
   /**
@@ -37,9 +37,9 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
    * @return {Promise<string>}
    */
   async changeShopStatus(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchShopLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.waitForSelectorAndClick(this.switchShopLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -52,7 +52,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
     await this.page.click(this.customMaintenanceFrTab);
     await this.setValueOnTinymceInput(this.maintenanceTextInputFR, text);
     await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -62,7 +62,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   async addMyIpAddress() {
     await this.page.click(this.addMyIPAddressButton);
     await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -73,6 +73,6 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   async addMaintenanceIPAddress(ipAddress) {
     await this.setValue(this.maintenanceIpInput, ipAddress);
     await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };

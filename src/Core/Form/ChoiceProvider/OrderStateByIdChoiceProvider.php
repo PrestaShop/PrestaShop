@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,20 +19,22 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 
 /**
  * Class OrderStateByIdChoiceProvider provides order state choices with ID values.
  */
-final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface
+final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
 {
     /**
      * @var int language ID
@@ -45,13 +47,22 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface
     private $orderStateDataProvider;
 
     /**
+     * @var ColorBrightnessCalculator
+     */
+    private $colorBrightnessCalculator;
+
+    /**
      * @param int $languageId language ID
      * @param OrderStateDataProviderInterface $orderStateDataProvider
      */
-    public function __construct($languageId, OrderStateDataProviderInterface $orderStateDataProvider)
-    {
+    public function __construct(
+        $languageId,
+        OrderStateDataProviderInterface $orderStateDataProvider,
+        ColorBrightnessCalculator $colorBrightnessCalculator
+    ) {
         $this->languageId = $languageId;
         $this->orderStateDataProvider = $orderStateDataProvider;
+        $this->colorBrightnessCalculator = $colorBrightnessCalculator;
     }
 
     /**
@@ -69,5 +80,23 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface
         }
 
         return $choices;
+    }
+
+    /**
+     * Get order state choices attributes.
+     *
+     * @return array
+     */
+    public function getChoicesAttributes()
+    {
+        $orderStates = $this->orderStateDataProvider->getOrderStates($this->languageId);
+        $attrs = [];
+
+        foreach ($orderStates as $orderState) {
+            $attrs[$orderState['name']]['data-background-color'] = $orderState['color'];
+            $attrs[$orderState['name']]['data-is-bright'] = $this->colorBrightnessCalculator->isBright($orderState['color']);
+        }
+
+        return $attrs;
     }
 }

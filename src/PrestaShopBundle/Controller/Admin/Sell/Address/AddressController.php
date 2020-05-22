@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Address;
 
 use Exception;
+use Order;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand;
@@ -48,13 +49,12 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerByEmailNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\AddressFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Address\RequiredFieldsAddressType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -132,7 +132,7 @@ class AddressController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction(int $addressId): RedirectResponse
+    public function deleteAction(Request $request, int $addressId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteAddressCommand($addressId));
@@ -144,7 +144,9 @@ class AddressController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_addresses_index');
+        return $request->query->has('redirectUrl') ?
+            $this->redirect($request->query->get('redirectUrl')) :
+            $this->redirectToRoute('admin_addresses_index');
     }
 
     /**
@@ -175,30 +177,6 @@ class AddressController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_addresses_index');
-    }
-
-    /**
-     * Responsible for grid filtering
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
-     *     redirectRoute="admin_addresses_index",
-     * )
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request)
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.address'),
-            $request,
-            AddressGridDefinitionFactory::GRID_ID,
-            'admin_addresses_index'
-        );
     }
 
     /**
@@ -307,6 +285,13 @@ class AddressController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render(
+                        '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
+                        ['refreshCartAddresses' => 'true']
+                    );
+                }
+
                 return $this->redirectToRoute('admin_addresses_index');
             }
         } catch (Exception $e) {
@@ -319,6 +304,7 @@ class AddressController extends FrameworkBundleAdminController
             'customerId' => $customerId,
             'customerInformation' => $customerInfo,
             'enableSidebar' => true,
+            'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
@@ -351,6 +337,7 @@ class AddressController extends FrameworkBundleAdminController
             );
 
             $formData = [];
+            // Country needs to be preset before building form type because it is used to build state field choices
             if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
                 $formCountryId = (int) $request->request->get('customer_address')['id_country'];
                 $formData['id_country'] = $formCountryId;
@@ -361,7 +348,14 @@ class AddressController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render(
+                        '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
+                        ['refreshCartAddresses' => 'false']
+                    );
+                }
 
                 return $this->redirectToRoute('admin_addresses_index');
             }
@@ -380,8 +374,93 @@ class AddressController extends FrameworkBundleAdminController
             'customerId' => $editableAddress->getCustomerId()->getValue(),
             'customerInformation' => $customerInfo,
             'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
+    }
+
+    /**
+     * Handles edit form rendering and submission for order address
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_orders_index"
+     * )
+     *
+     * @param int $orderId
+     * @param string $addressType
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editOrderAction(int $orderId, string $addressType, Request $request): Response
+    {
+        try {
+            $order = new Order($orderId);
+            $addressId = null;
+            switch ($addressType) {
+                case 'delivery':
+                    $addressType = OrderAddressType::DELIVERY_ADDRESS_TYPE;
+                    $addressId = $order->id_address_delivery;
+                    break;
+                case 'invoice':
+                    $addressType = OrderAddressType::INVOICE_ADDRESS_TYPE;
+                    $addressId = $order->id_address_invoice;
+                    break;
+            }
+
+            /** @var EditableCustomerAddress $editableAddress */
+            $editableAddress = $this->getQueryBus()->handle(new GetCustomerAddressForEditing((int) $addressId));
+
+            $addressFormBuilder = $this->get(
+                'prestashop.core.form.identifiable_object.builder.address_form_builder'
+            );
+            // Special order handler
+            $addressFormHandler = $this->get(
+                'prestashop.core.form.identifiable_object.handler.order_address_form_handler'
+            );
+
+            // Address type required for EditOrderAddressCommand
+            $formData = [
+                'address_type' => $addressType,
+            ];
+            // Country needs to be preset before building form type because it is used to build state field choices
+            if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
+                $formCountryId = (int) $request->request->get('customer_address')['id_country'];
+                $formData['id_country'] = $formCountryId;
+            }
+
+            // Addres form is built based on address id to fill the data related to this address
+            $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
+            $addressForm->handleRequest($request);
+
+            // Form is handled based on Order ID because that's the order that needs update
+            $result = $addressFormHandler->handleFor($orderId, $addressForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
+        }
+
+        $customerInfo = $editableAddress->getLastName() . ' ' .
+            $editableAddress->getFirstName() . ' (' .
+            $editableAddress->getCustomerEmail() . ')';
+
+        return $this->render('@PrestaShop/Admin/Sell/Address/edit.html.twig', [
+            'enableSidebar' => true,
+            'customerId' => $editableAddress->getCustomerId()->getValue(),
+            'customerInformation' => $customerInfo,
+            'layoutTitle' => $this->trans('Edit', 'Admin.Actions'),
+            'addressForm' => $addressForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'cancelPath' => $this->generateUrl('admin_orders_view', ['orderId' => $orderId]),
         ]);
     }
 
@@ -405,7 +484,7 @@ class AddressController extends FrameworkBundleAdminController
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof BulkDeleteAddressException ? $e->getAddressIds() : ''
+                $e instanceof BulkDeleteAddressException ? implode(', ', $e->getAddressIds()) : ''
             ),
             AddressNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',

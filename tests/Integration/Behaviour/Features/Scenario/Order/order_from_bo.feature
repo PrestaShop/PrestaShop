@@ -1,5 +1,6 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-from-bo
 @reset-database-before-feature
+@order-from-bo
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
   As a BO user
@@ -43,23 +44,23 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" has Tracking number "TEST1234"
     And order "bo_order1" has Carrier "2 - My carrier (Delivery next day!)"
 
-#  failing scenario related to: https://github.com/PrestaShop/PrestaShop/issues/16582
-#  Scenario: pay order with negative amount and see it is not valid
-#    When order "bo_order1" has 0 payments
-#    And I pay order "bo_order1" with the invalid following details:
-#      | date           | 2019-11-26 13:56:22 |
-#      | payment_method | Payments by check   |
-#      | transaction_id | test!@#$%%^^&* OR 1 |
-#      | id_currency    | 1                   |
-#      | amount         | -5.548              |
-#    Then order "bo_order1" has 0 payments
+  Scenario: pay order with negative amount and see it is not valid
+    When order "bo_order1" has 0 payments
+    And I pay order "bo_order1" with the invalid following details:
+      | date           | 2019-11-26 13:56:22 |
+      | payment_method | Payments by check   |
+      | transaction_id | test!@#$%%^^&* OR 1 |
+      | currency       | USD                 |
+      | amount         | -5.548              |
+    Then I should get error that payment amount is negative
+    And order "bo_order1" has 0 payments
 
   Scenario: pay for order
     When I pay order "bo_order1" with the following details:
       | date           | 2019-11-26 13:56:23 |
       | payment_method | Payments by check   |
       | transaction_id | test123             |
-      | id_currency    | 1                   |
+      | currency       | USD                 |
       | amount         | 6.00                |
     Then order "bo_order1" payments should have the following details:
       | date           | 2019-11-26 13:56:23 |
@@ -76,7 +77,7 @@ Feature: Order from Back Office (BO)
     When I duplicate order "bo_order1" cart "dummy_cart" with reference "duplicated_dummy_cart"
     Then there is duplicated cart "duplicated_dummy_cart" for cart dummy_cart
 
-  Scenario: Add product to an existing Order with free shipping and new invoice
+  Scenario: Add product to an existing Order without invoice with free shipping and new invoice
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
@@ -84,25 +85,178 @@ Feature: Order from Back Office (BO)
       | price         | 16                      |
       | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    # no exception is thrown when zero/negative amount is passed and nothing changes in the db`
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Mug Today is a good day |
-      | amount        | -1                      |
-      | price         | 16                      |
-      | free_shipping | true                    |
-    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Mug Today is a good day |
-      | amount        | 0                       |
-      | price         | 16                      |
-      | free_shipping | true                    |
-    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    Then order "bo_order1" should have 0 invoices
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
       | amount        | 1                       |
       | price         | 16                      |
       | free_shipping | true                    |
     Then order "bo_order1" should contain 3 products "Mug Today is a good day"
+    Then order "bo_order1" should have 0 invoices
+
+  Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice And remove this product
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
+    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 500.0 with priority 1, quantity of 100 and quantity per user 100
+    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
+    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 15                                        |
+      | free_shipping | true                                      |
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
+    Then order "bo_order1" should have following details:
+      | total_products           | 38.800 |
+      | total_products_wt        | 40.230 |
+      | total_discounts_tax_excl | 15.000 |
+      | total_discounts_tax_incl | 15.000 |
+      | total_paid_tax_excl      | 30.8   |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I remove product "Test Product Cart Rule On Select Product" from order "bo_order1"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Select Product"
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Add product to an existing Order with invoice with free shipping to new invoice
+    Given I update order "bo_order1" status to "Payment accepted"
+    And order "bo_order1" should have 1 invoices
+    And order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 2                       |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    Then order "bo_order1" should have 2 invoices
+
+  Scenario: Add product to an existing Order with invoice with free shipping to last invoice
+    Given I update order "bo_order1" status to "Payment accepted"
+    And order "bo_order1" should have 1 invoices
+    And order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    When I add products to order "bo_order1" to last invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 2                       |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    Then order "bo_order1" should have 1 invoices
+
+  Scenario: Add product with negative quantity is forbidden
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 2                       |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | -1                      |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then I should get error that product quantity is invalid
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+
+  Scenario: Add product with zero quantity is forbidden
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 2                       |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | -1                      |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then I should get error that product quantity is invalid
+    Then order "bo_order1" should contain 2 products "Mug Today is a good day"
+
+  Scenario: Add product with quantity higher than stock is forbidden
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Mug Today is a good day |
+      | amount        | 1500                    |
+      | price         | 16                      |
+      | free_shipping | true                    |
+    Then I should get error that product is out of stock
+    Then order "bo_order1" should contain 0 products "Mug Today is a good day"
+
+  Scenario: Update product in order
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 12                      |
+    Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 3  |
+      | product_price               | 12 |
+      | unit_price_tax_incl         | 12 |
+      | unit_price_tax_excl         | 12 |
+      | total_price_tax_incl        | 36 |
+      | total_price_tax_excl        | 36 |
+
+  Scenario: Update product in order with zero quantity is forbidden
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | 0                       |
+      | price         | 12                      |
+    Then I should get error that product quantity is invalid
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.9   |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.9   |
+      | total_price_tax_incl        | 25.230000 |
+      | total_price_tax_excl        | 23.8   |
+
+  Scenario: Update product in order with negative quantity is forbidden
+    When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
+      | amount        | -1                      |
+      | price         | 12                      |
+    Then I should get error that product quantity is invalid
+    And order "bo_order1" should contain 2 products "Mug The best is yet to come"
+    And product "Mug The best is yet to come" in order "bo_order1" has following details:
+      | product_quantity            | 2      |
+      | product_price               | 11.9   |
+      | unit_price_tax_incl         | 12.614 |
+      | unit_price_tax_excl         | 11.9   |
+      | total_price_tax_incl        | 25.230000 |
+      | total_price_tax_excl        | 23.8   |
 
   Scenario: Generating invoice for Order
     When I generate invoice for "bo_order1" order

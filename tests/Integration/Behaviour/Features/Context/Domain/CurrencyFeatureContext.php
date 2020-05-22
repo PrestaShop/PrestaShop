@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Currency;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddOfficialCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
@@ -73,7 +73,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
                 (bool) $data['is_enabled']
             );
         } else {
-            $command = new AddOfficialCurrencyCommand(
+            $command = new AddCurrencyCommand(
                 $data['iso_code'],
                 (float) $data['exchange_rate'],
                 (bool) $data['is_enabled']
@@ -273,14 +273,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsCurrencyAlreadyExists()
     {
         $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::CURRENCY_ALREADY_EXISTS);
-    }
-
-    /**
-     * @Then I should get error that currency iso codes don't match
-     */
-    public function assertLastErrorIsMismatchingIsoCodes()
-    {
-        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::ISO_CODES_MISMATCH);
     }
 
     /**

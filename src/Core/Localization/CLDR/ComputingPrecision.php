@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
  */
 final class ComputingPrecision implements ComputingPrecisionInterface
 {
-    const MULTIPLIER = 3;
+    const MULTIPLIER = 1;
     const MINIMAL_VALUE = 2;
 
     /**
@@ -40,6 +40,7 @@ final class ComputingPrecision implements ComputingPrecisionInterface
      */
     public function getPrecision(int $displayPrecision)
     {
+        // the MULTIPLIER attribute is set to 1 for now, so that it matches display precision
         $computingPrecision = $displayPrecision * self::MULTIPLIER;
 
         return ($computingPrecision < self::MINIMAL_VALUE) ? self::MINIMAL_VALUE : $computingPrecision;

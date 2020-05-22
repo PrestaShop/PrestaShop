@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,53 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import CreateOrderPage from './create/create-order-page';
 
-const $ = window.$;
+const {$} = window;
+let orderPageManager = null;
+
+/**
+ * proxy to allow other scripts within the page to trigger the search
+ * @param string
+ */
+function searchCustomerByString(string) {
+  if (orderPageManager !== null) {
+    orderPageManager.search(string);
+  } else {
+    console.log('Error: Could not search customer as orderPageManager is null');
+  }
+}
+
+/**
+ * proxy to allow other scripts within the page to refresh addresses list
+ */
+function refreshAddressesList(refreshCartAddresses) {
+  if (orderPageManager !== null) {
+    orderPageManager.refreshAddressesList(refreshCartAddresses);
+  } else {
+    console.log('Error: Could not refresh addresses list as orderPageManager is null');
+  }
+}
+
+/**
+ * proxy to allow other scripts within the Create Order page to refresh cart
+ */
+function refreshCart() {
+  if (orderPageManager === null) {
+    console.log('Error: Could not refresh addresses list as orderPageManager is null');
+    return;
+  }
+  orderPageManager.refreshCart();
+}
 
 $(document).ready(() => {
-  new CreateOrderPage();
+  orderPageManager = new CreateOrderPage();
 });
+
+export {searchCustomerByString};
+export {refreshAddressesList};
+export {refreshCart};

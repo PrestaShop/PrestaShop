@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -79,17 +79,24 @@ class AdminProductWrapper
     private $employeeAssociatedShops;
 
     /**
+     * @var FloatParser
+     */
+    private $floatParser;
+
+    /**
      * Constructor : Inject Symfony\Component\Translation Translator.
      *
      * @param object $translator
      * @param array $employeeAssociatedShops
      * @param Locale $locale
+     * @param FloatParser|null $floatParser
      */
-    public function __construct($translator, array $employeeAssociatedShops, Locale $locale)
+    public function __construct($translator, array $employeeAssociatedShops, Locale $locale, FloatParser $floatParser = null)
     {
         $this->translator = $translator;
         $this->employeeAssociatedShops = $employeeAssociatedShops;
         $this->locale = $locale;
+        $this->floatParser = $floatParser ?? new FloatParser();
     }
 
     /**
@@ -260,8 +267,6 @@ class AdminProductWrapper
      */
     public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
-        $floatParser = new FloatParser();
-
         // ---- data formatting ----
         $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
@@ -269,9 +274,9 @@ class AdminProductWrapper
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;
         $id_group = $specificPriceValues['sp_id_group'] ? $specificPriceValues['sp_id_group'] : 0;
         $id_customer = !empty($specificPriceValues['sp_id_customer']['data']) ? $specificPriceValues['sp_id_customer']['data'][0] : 0;
-        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $floatParser->fromString($specificPriceValues['sp_price']);
+        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $this->floatParser->fromString($specificPriceValues['sp_price']);
         $from_quantity = $specificPriceValues['sp_from_quantity'];
-        $reduction = $floatParser->fromString($specificPriceValues['sp_reduction']);
+        $reduction = $this->floatParser->fromString($specificPriceValues['sp_reduction']);
         $reduction_tax = $specificPriceValues['sp_reduction_tax'];
         $reduction_type = !$reduction ? 'amount' : $specificPriceValues['sp_reduction_type'];
         $reduction_type = $reduction_type == '-' ? 'amount' : $reduction_type;

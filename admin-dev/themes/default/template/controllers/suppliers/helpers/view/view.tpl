@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -38,7 +38,7 @@
 				<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
 				<th><span class="title_box">{l s='EAN13'}</span></th>
 				<th><span class="title_box">{l s='UPC'}</span></th>
-				<th><span class="title_box">{l s='MPN'}</span></th>
+				<th><span class="title_box">{l s='MPN' d='Admin.Catalog.Feature'}</span></th>
 				{if $stock_management && $shopContext != Shop::CONTEXT_ALL}<th class="right"><span class="title_box">{l s='Available Quantity'}</span></th>{/if}
 			</tr>
 		</thead>

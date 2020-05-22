@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,11 +53,6 @@ final class OrderGridDataFactory implements GridDataFactoryInterface
     private $contextLocale;
 
     /**
-     * @var string
-     */
-    private $contextCurrencyIsoCode;
-
-    /**
      * @var ConfigurationInterface
      */
     private $configuration;
@@ -67,19 +62,16 @@ final class OrderGridDataFactory implements GridDataFactoryInterface
      * @param RepositoryInterface $localeRepository
      * @param ConfigurationInterface $configuration
      * @param string $contextLocale
-     * @param string $contextCurrencyIsoCode
      */
     public function __construct(
         GridDataFactoryInterface $dataFactory,
         RepositoryInterface $localeRepository,
         ConfigurationInterface $configuration,
-        $contextLocale,
-        $contextCurrencyIsoCode
+        $contextLocale
     ) {
         $this->dataFactory = $dataFactory;
         $this->localeRepository = $localeRepository;
         $this->contextLocale = $contextLocale;
-        $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
         $this->configuration = $configuration;
     }
 
@@ -101,7 +93,7 @@ final class OrderGridDataFactory implements GridDataFactoryInterface
 
             $record['total_paid_tax_incl'] = $locale->formatPrice(
                 $record['total_paid_tax_incl'],
-                $this->contextCurrencyIsoCode
+                $record['iso_code']
             );
 
             $record['is_invoice_available'] = $isInvoicesEnabled && $record['invoice_number'];

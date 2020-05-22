@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,11 +29,18 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class CccReducerCore
 {
+    /** @var string */
     private $cacheDir;
+    /** @var Filesystem */
     protected $filesystem;
 
     use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
 
+    /**
+     * @param string $cacheDir
+     * @param ConfigurationInterface $configuration
+     * @param Filesystem $filesystem
+     */
     public function __construct($cacheDir, ConfigurationInterface $configuration, Filesystem $filesystem)
     {
         $this->cacheDir = $cacheDir;
@@ -45,6 +52,11 @@ class CccReducerCore
         }
     }
 
+    /**
+     * @param array $cssFileList
+     *
+     * @return array Same list, reduced
+     */
     public function reduceCss($cssFileList)
     {
         $files = [];
@@ -81,6 +93,11 @@ class CccReducerCore
         return $cssFileList;
     }
 
+    /**
+     * @param array $jsFileList
+     *
+     * @return array Same list, reduced
+     */
     public function reduceJs($jsFileList)
     {
         foreach ($jsFileList as $position => &$list) {
@@ -127,6 +144,11 @@ class CccReducerCore
         return $jsFileList;
     }
 
+    /**
+     * @param string[] $files
+     *
+     * @return string
+     */
     private function getFileNameIdentifierFromList(array $files)
     {
         return substr(sha1(implode('|', $files)), 0, 6);

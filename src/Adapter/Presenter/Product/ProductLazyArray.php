@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -223,7 +223,7 @@ class ProductLazyArray extends AbstractLazyArray
             case 'new':
                 return [
                     'type' => 'new',
-                    'label' => $this->translator->trans('New product', [], 'Shop.Theme.Catalog'),
+                    'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
                     'schema_url' => 'https://schema.org/NewCondition',
                 ];
             case 'used':
@@ -291,7 +291,7 @@ class ProductLazyArray extends AbstractLazyArray
         if (!isset($this->product['attachments'])) {
             return null;
         }
-        foreach ($this->product['attachments'] as &$attachment) {
+        foreach ($this->product['attachments'] as $attachment) {
             return Tools::formatBytes($attachment['file_size'], 2);
         }
 
@@ -467,7 +467,7 @@ class ProductLazyArray extends AbstractLazyArray
         if ($this->product['new']) {
             $flags['new'] = [
                 'type' => 'new',
-                'label' => $this->translator->trans('New', [], 'Shop.Theme.Catalog'),
+                'label' => $this->translator->trans('New product', [], 'Shop.Theme.Catalog'),
             ];
         }
 
@@ -702,7 +702,8 @@ class ProductLazyArray extends AbstractLazyArray
         if ($settings->stock_management_enabled
             && !$product['allow_oosp']
             && ($product['quantity'] <= 0
-            || $product['quantity'] - $this->getQuantityWanted() < 0)
+            || $product['quantity'] - $this->getQuantityWanted() < 0
+            || $product['quantity'] - $this->getMinimalQuantity() < 0)
         ) {
             $shouldEnable = false;
         }
@@ -716,6 +717,14 @@ class ProductLazyArray extends AbstractLazyArray
     private function getQuantityWanted()
     {
         return (int) Tools::getValue('quantity_wanted', 1);
+    }
+
+    /**
+     * @return int Minimal quantity of product requested by the customer
+     */
+    private function getMinimalQuantity()
+    {
+        return (int) $this->product['minimal_quantity'];
     }
 
     /**
@@ -770,7 +779,11 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         if ($show_availability) {
-            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
+            $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
+            if (isset($product['stock_quantity'])) {
+                $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
+            }
+            if ($availableQuantity >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
                 if ($product['quantity'] < $settings->lastRemainingItems) {
@@ -842,7 +855,7 @@ class ProductLazyArray extends AbstractLazyArray
             case 'upc':
                 return $this->translator->trans('upc', [], 'Shop.Theme.Catalog');
             case 'mpn':
-                return $this->translator->trans('mpn', [], 'Shop.Theme.Catalog');
+                return $this->translator->trans('MPN', [], 'Shop.Theme.Catalog');
         }
 
         return $key;

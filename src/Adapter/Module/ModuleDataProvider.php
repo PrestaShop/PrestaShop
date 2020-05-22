@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -219,6 +219,10 @@ class ModuleDataProvider
         }
 
         $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+        $log_context_data = [
+            'object_type' => 'Module',
+            'object_id' => LegacyModule::getModuleIdByName($name),
+        ];
 
         try {
             $parser->parse(file_get_contents($file_path));
@@ -231,7 +235,7 @@ class ModuleDataProvider
                         '%parse_error%' => $exception->getMessage(),
                     ],
                     'Admin.Modules.Notification'
-                )
+                ), $log_context_data
             );
 
             return false;
@@ -254,7 +258,7 @@ class ModuleDataProvider
                             '%module%' => $name,
                             '%error_message%' => $e->getMessage(), ],
                         'Admin.Modules.Notification'
-                    )
+                    ), $log_context_data
                 );
 
                 return false;

@@ -3,8 +3,21 @@ require('./globals');
 const puppeteer = require('puppeteer');
 
 module.exports = {
-  async createBrowser() {
-    return puppeteer.launch(global.BROWSER_CONFIG);
+  /**
+   * Create puppeteer browser
+   * @param attempt, number of attempts to restart browser creation if function throw error
+   * @return {Promise<browser>}
+   */
+  async createBrowser(attempt = 1) {
+    try {
+      return await puppeteer.launch(global.BROWSER_CONFIG);
+    } catch (e) {
+      if (attempt <= 3) {
+        await (new Promise(resolve => setTimeout(resolve, 5000)));
+        return this.createBrowser(attempt + 1);
+      }
+      throw new Error(e);
+    }
   },
   async newTab(browser) {
     return browser.newPage();

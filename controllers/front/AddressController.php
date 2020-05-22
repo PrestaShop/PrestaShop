@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -54,35 +54,50 @@ class AddressControllerCore extends FrontController
     public function postProcess()
     {
         $this->context->smarty->assign('editing', false);
+        $id_address = (int) Tools::getValue('id_address');
+        // Initialize address if an id exists
+        if ($id_address) {
+            $this->address_form->loadAddressById($id_address);
+        }
+
+        // Fill the form with data
         $this->address_form->fillWith(Tools::getAllValues());
+
+        // Submit the address, don't care if it's an edit or add
         if (Tools::isSubmit('submitAddress')) {
             if (!$this->address_form->submit()) {
                 $this->errors[] = $this->trans('Please fix the error below.', [], 'Shop.Notifications.Error');
             } else {
-                if (Tools::getValue('id_address')) {
+                if ($id_address) {
                     $this->success[] = $this->trans('Address successfully updated!', [], 'Shop.Notifications.Success');
                 } else {
                     $this->success[] = $this->trans('Address successfully added!', [], 'Shop.Notifications.Success');
                 }
+
                 $this->should_redirect = true;
             }
-        } elseif (($id_address = (int) Tools::getValue('id_address'))) {
-            $this->address_form->loadAddressById($id_address);
 
-            if (Tools::getValue('delete')) {
-                $ok = $this->makeAddressPersister()->delete(
-                    new Address($id_address, $this->context->language->id),
-                    Tools::getValue('token')
-                );
-                if ($ok) {
-                    $this->success[] = $this->trans('Address successfully deleted!', [], 'Shop.Notifications.Success');
-                    $this->should_redirect = true;
-                } else {
-                    $this->errors[] = $this->trans('Could not delete address.', [], 'Shop.Notifications.Error');
-                }
+            return;
+        }
+
+        // There is no id_adress, no need to continue
+        if (!$id_address) {
+            return;
+        }
+
+        if (Tools::getValue('delete')) {
+            $ok = $this->makeAddressPersister()->delete(
+                new Address($id_address, $this->context->language->id),
+                Tools::getValue('token')
+            );
+            if ($ok) {
+                $this->success[] = $this->trans('Address successfully deleted!', [], 'Shop.Notifications.Success');
+                $this->should_redirect = true;
             } else {
-                $this->context->smarty->assign('editing', true);
+                $this->errors[] = $this->trans('Could not delete address.', [], 'Shop.Notifications.Error');
             }
+        } else {
+            $this->context->smarty->assign('editing', true);
         }
     }
 
@@ -103,7 +118,13 @@ class AddressControllerCore extends FrontController
         }
 
         parent::initContent();
-        $this->setTemplate('customer/address', ['entity' => 'address', 'id' => Tools::getValue('id_address')]);
+        $this->setTemplate(
+            'customer/address',
+            [
+                'entity' => 'address',
+                'id' => (int) Tools::getValue('id_address'),
+            ]
+        );
     }
 
     public function getBreadcrumbLinks()

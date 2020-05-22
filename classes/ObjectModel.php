@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -260,6 +260,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if ($id) {
+            /** @var \PrestaShop\PrestaShop\Adapter\EntityMapper $entity_mapper */
             $entity_mapper = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper');
             $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
@@ -661,10 +662,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return false;
             }
 
-            foreach ($result as &$row) {
-                foreach ($row as $field => &$value) {
+            foreach ($result as $rowKey => $row) {
+                foreach ($row as $field => $value) {
                     if (isset($definition['fields'][$field])) {
-                        $value = ObjectModel::formatValue(
+                        $result[$rowKey][$field] = ObjectModel::formatValue(
                             $value,
                             $definition['fields'][$field]['type'],
                             false,
