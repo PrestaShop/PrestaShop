@@ -526,4 +526,61 @@ class FrameworkBundleAdminController extends Controller
             $e->getMessage()
         );
     }
+
+    /**
+     * Adds a new stylesheet(s) to the page header.
+     *
+     * @param string|array $cssUri Path to CSS file, or list of css files like this : array(array(uri => media_type), ...)
+     * @param string $cssMediaType
+     * @param int|null $offset
+     * @param bool $checkPath
+     */
+    protected function addCSS(
+        $cssUri,
+        $cssMediaType = 'all',
+        $offset = null,
+        $checkPath = true): void
+    {
+        $this->getContext()->controller->addCSS(
+            $cssUri, $cssMediaType, $offset, $checkPath
+        );
+    }
+
+    /**
+     * Adds a new JavaScript file(s) to the page header.
+     *
+     * @param string|array $jsUri Path to JS file or an array like: array(uri, ...)
+     * @param bool $checkPath
+     */
+    protected function addJS($jsUri, $checkPath = true): void
+    {
+        $this->getContext()->controller->addJS(
+            $jsUri, $checkPath
+        );
+    }
+
+    /**
+     * Removes CSS stylesheet(s) from the queued stylesheet list.
+     *
+     * @param string|array $cssUri Path to CSS file or an array like: array(array(uri => media_type), ...)
+     * @param string $cssMediaType
+     * @param bool $checkPath
+     */
+    protected function removeCSS($cssUri, $cssMediaType = 'all', bool $checkPath = true): void
+    {
+        $this->getContext()->controller->removeCSS(
+            $cssUri, $cssMediaType, $checkPath
+        );
+    }
+
+    /**
+     * Removes JS file(s) from the queued JS file list.
+     *
+     * @param string|array $jsUri Path to JS file or an array like: array(uri, ...)
+     * @param bool $checkPath
+     */
+    protected function removeJS($jsUri, $checkPath = true): void
+    {
+        $this->getContext()->controller->removeJS($jsUri, $checkPath);
+    }
 }
