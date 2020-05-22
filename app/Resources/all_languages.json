@@ -576,6 +576,15 @@
     "language_code": "sv-se",
     "locale": "sv-SE"
   },
+  "sw": {
+    "name": "Kiswahili (Swahili)",
+    "iso_code": "sw",
+    "date_format_lite": "n/d/Y",
+    "date_format_full": "n/d/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "sw-ke",
+    "locale": "sw-KE"
+  },
   "ta": {
     "name": "தமிழ் (Tamil)",
     "iso_code": "ta",
