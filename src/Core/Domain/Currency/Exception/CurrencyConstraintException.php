@@ -73,17 +73,11 @@ class CurrencyConstraintException extends CurrencyException
     const EMPTY_SYMBOL = 7;
 
     /**
-     * Code used when trying to insert a currency referenced in CLDR database but ISO code and
-     * numeric ISO code are not matching the expected ones
-     */
-    const ISO_CODES_MISMATCH = 8;
-
-    /**
      * Code used when an invalid precision is used (positive integer expected)
      *
      * @see Precision
      */
-    const INVALID_PRECISION = 9;
+    const INVALID_PRECISION = 8;
 
     /**
      * @var int Code is used when empty data is used when deleting currencies

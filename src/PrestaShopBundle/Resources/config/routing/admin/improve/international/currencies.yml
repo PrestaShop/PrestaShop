@@ -83,7 +83,7 @@ admin_currencies_get_reference_data:
 
 admin_currencies_bulk_delete:
   path: /bulk-delete
-  methods: [POST]
+  methods: [POST, DELETE]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:bulkDelete'
     _legacy_controller: AdminCurrencies
