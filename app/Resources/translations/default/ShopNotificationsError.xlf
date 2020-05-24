@@ -99,7 +99,7 @@
       <trans-unit id="eefb581d7c421334e62a68223c7a242a">
         <source>The email is already used, please choose another one or sign in</source>
         <target>The email is already used, please choose another one or sign in</target>
-        <note>Line: 112</note>
+        <note>Line: 123</note>
       </trans-unit>
     </body>
   </file>
@@ -108,12 +108,12 @@
       <trans-unit id="90162cff1b4a1a5a765c542ddc499998">
         <source>Your account isn't available at this time, please contact us</source>
         <target>Your account isn't available at this time, please contact us</target>
-        <note>Line: 69</note>
+        <note>Line: 76</note>
       </trans-unit>
       <trans-unit id="802b207b05fe5cea22e11b9db804b33d">
         <source>Authentication failed.</source>
         <target>Authentication failed.</target>
-        <note>Line: 71</note>
+        <note>Line: 78</note>
       </trans-unit>
     </body>
   </file>
@@ -165,12 +165,12 @@
       <trans-unit id="0adae640fffe5e6c0208e25f13aaa414">
         <source>Please fix the error below.</source>
         <target>Please fix the error below.</target>
-        <note>Line: 60</note>
+        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="2af64b8ece83492468fbc41f9b692556">
         <source>Could not delete address.</source>
         <target>Could not delete address.</target>
-        <note>Line: 81</note>
+        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>
@@ -348,42 +348,42 @@
       <trans-unit id="ffabab221ec5c24fbdb4a70ad48bc985">
         <source>The order is no longer valid.</source>
         <target>The order is no longer valid.</target>
-        <note>Line: 49</note>
+        <note>Line: 51</note>
       </trans-unit>
       <trans-unit id="15efe0f18ecffd8e75556c5c60cb1cb6">
         <source>This message is invalid (HTML is not allowed).</source>
         <target>This message is invalid (HTML is not allowed).</target>
-        <note>Line: 53</note>
+        <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="8a6034d3379499b66d730aa17e007683">
         <source>You do not have enough products to request an additional merchandise return.</source>
         <target>You do not have enough products to request an additional merchandise return.</target>
-        <note>Line: 170</note>
+        <note>Line: 172</note>
       </trans-unit>
       <trans-unit id="229ca46a5d762e19a428f59449c916ad">
         <source>Please provide an explanation for your RMA.</source>
         <target>Please provide an explanation for your RMA.</target>
-        <note>Line: 172</note>
+        <note>Line: 174</note>
       </trans-unit>
       <trans-unit id="e6f6a5e58ee6d010f22e4b3dbd756213">
         <source>Please check at least one product you would like to return.</source>
         <target>Please check at least one product you would like to return.</target>
-        <note>Line: 174</note>
+        <note>Line: 176</note>
       </trans-unit>
       <trans-unit id="1819b587867a9c604a4d21c753756b4a">
         <source>For each product you wish to add, please specify the desired quantity.</source>
         <target>For each product you wish to add, please specify the desired quantity.</target>
-        <note>Line: 176</note>
+        <note>Line: 178</note>
       </trans-unit>
       <trans-unit id="a3c5d3c6953c588760d90657e4f0b790">
         <source>This order cannot be returned</source>
         <target>This order cannot be returned</target>
-        <note>Line: 178</note>
+        <note>Line: 180</note>
       </trans-unit>
       <trans-unit id="3dc245110e1f3601860c20299d97c01d">
         <source>The message cannot be blank.</source>
         <target>The message cannot be blank.</target>
-        <note>Line: 51</note>
+        <note>Line: 53</note>
       </trans-unit>
     </body>
   </file>
@@ -401,62 +401,62 @@
       <trans-unit id="909179695703d6a048fab0bcc9af4758">
         <source>We cannot regenerate your password with the data you've submitted</source>
         <target>We cannot regenerate your password with the data you've submitted</target>
-        <note>Line: 211</note>
+        <note>Line: 224</note>
       </trans-unit>
       <trans-unit id="194496a52d41fba1c9e6140c4eb34f83">
         <source>You cannot regenerate the password for this account.</source>
         <target>You cannot regenerate the password for this account.</target>
-        <note>Line: 123</note>
+        <note>Line: 136</note>
       </trans-unit>
       <trans-unit id="922dc0515643fb69585b67281692644a">
         <source>You can regenerate your password only every %d minute(s)</source>
         <target>You can regenerate your password only every %d minute(s)</target>
-        <note>Line: 71</note>
+        <note>Line: 84</note>
       </trans-unit>
       <trans-unit id="6e2fc94479ac0c63543886a235e3370c">
         <source>An error occurred while sending the email.</source>
         <target>An error occurred while sending the email.</target>
-        <note>Line: 203</note>
+        <note>Line: 216</note>
       </trans-unit>
       <trans-unit id="f7ae511276e04d42e9cfe2f714b5128e">
         <source>Customer account not found</source>
         <target>Customer account not found</target>
-        <note>Line: 121</note>
+        <note>Line: 134</note>
       </trans-unit>
       <trans-unit id="da9aa00ef0107af3e55d9ae1e8a1f361">
         <source>The password and its confirmation do not match.</source>
         <target>The password and its confirmation do not match.</target>
-        <note>Line: 144</note>
+        <note>Line: 157</note>
       </trans-unit>
       <trans-unit id="cf84bfe60dba837405db6f0a3cb9c086">
         <source>The password change request expired. You should ask for a new one.</source>
         <target>The password change request expired. You should ask for a new one.</target>
-        <note>Line: 125</note>
+        <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="619469491be87d328254b6f41cd73770">
         <source>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</source>
         <target>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</target>
-        <note>Line: 206</note>
+        <note>Line: 219</note>
       </trans-unit>
       <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
         <source>Invalid email address.</source>
         <target>Invalid email address.</target>
-        <note>Line: 53</note>
+        <note>Line: 66</note>
       </trans-unit>
       <trans-unit id="375dee52ced3330cd3496340b32098ca">
         <source>The password is missing: please enter your new password.</source>
         <target>The password is missing: please enter your new password.</target>
-        <note>Line: 135</note>
+        <note>Line: 148</note>
       </trans-unit>
       <trans-unit id="f3e3f424a084383aa2931fae612b1ff1">
         <source>The confirmation is empty: please fill in the password confirmation as well</source>
         <target>The confirmation is empty: please fill in the password confirmation as well</target>
-        <note>Line: 139</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="f01fb987f60542e0bff1bf7bed42d142">
         <source>The password is not in a valid format.</source>
         <target>The password is not in a valid format.</target>
-        <note>Line: 148</note>
+        <note>Line: 161</note>
       </trans-unit>
     </body>
   </file>
@@ -498,27 +498,27 @@
       <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
         <source>Invalid message</source>
         <target>Invalid message</target>
-        <note>Line: 863</note>
+        <note>Line: 862</note>
       </trans-unit>
       <trans-unit id="91e6cde963af2000218553722fc7a093">
         <source>This product is no longer available.</source>
         <target>This product is no longer available.</target>
-        <note>Line: 169</note>
+        <note>Line: 168</note>
       </trans-unit>
       <trans-unit id="a5df8bfce318a15ea55f18082b9b56c0">
         <source>You do not have access to this product.</source>
         <target>You do not have access to this product.</target>
-        <note>Line: 178</note>
+        <note>Line: 177</note>
       </trans-unit>
       <trans-unit id="636ae3559a19937ca8e53781d804a34d">
         <source>An error occurred while deleting the selected picture.</source>
         <target>An error occurred while deleting the selected picture.</target>
-        <note>Line: 259</note>
+        <note>Line: 258</note>
       </trans-unit>
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 835</note>
+        <note>Line: 834</note>
       </trans-unit>
     </body>
   </file>
@@ -573,7 +573,7 @@ File: modules/trackingfront/trackingfront.php:99</note>
       <trans-unit id="a923575984949608ce04c4984806ec2a">
         <source>There are not enough products in stock</source>
         <target>There are not enough products in stock</target>
-        <note>Line: 790</note>
+        <note>Line: 799</note>
       </trans-unit>
     </body>
   </file>

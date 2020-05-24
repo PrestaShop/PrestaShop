@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -53,6 +52,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'address';
 
     /**
@@ -285,12 +286,7 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_addresses_delete_bulk',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildBulkDeleteAction('admin_addresses_delete_bulk')
             );
     }
 }

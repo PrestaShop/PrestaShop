@@ -56,8 +56,8 @@ class ComputingPrecisionTest extends TestCase
     public function provider()
     {
         return [
-            [1, 3],
-            [3, 9],
+            [1, 2],
+            [3, 3],
             [0, 2],
         ];
     }

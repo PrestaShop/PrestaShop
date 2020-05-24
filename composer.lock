@@ -4931,16 +4931,16 @@
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "6f25e80e1374549254cf1f703b971088a5e228c7"
+                "reference": "69482091a23a68caa19aedc89f04f01fa997db77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/6f25e80e1374549254cf1f703b971088a5e228c7",
-                "reference": "6f25e80e1374549254cf1f703b971088a5e228c7",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/69482091a23a68caa19aedc89f04f01fa997db77",
+                "reference": "69482091a23a68caa19aedc89f04f01fa997db77",
                 "shasum": ""
             },
             "require": {
@@ -4969,7 +4969,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2019-11-22T11:44:15+00:00"
+            "time": "2020-04-29T06:18:04+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
@@ -6336,23 +6336,24 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.34",
+            "version": "v3.1.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "c9f0de05f41b9e52798b268ab1e625fac3b8578c"
+                "reference": "fd148f7ade295014fff77f89ee3d5b20d9d55451"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/c9f0de05f41b9e52798b268ab1e625fac3b8578c",
-                "reference": "c9f0de05f41b9e52798b268ab1e625fac3b8578c",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/fd148f7ade295014fff77f89ee3d5b20d9d55451",
+                "reference": "fd148f7ade295014fff77f89ee3d5b20d9d55451",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "6.4.1"
+                "phpunit/phpunit": "6.4.1",
+                "smarty/smarty-lexer": "^3.1"
             },
             "type": "library",
             "extra": {
@@ -6388,7 +6389,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-02-28T06:42:20+00:00"
+            "time": "2020-04-14T14:44:26+00:00"
         },
         {
             "name": "soundasleep/html2text",

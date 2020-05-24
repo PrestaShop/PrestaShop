@@ -31,11 +31,15 @@ const {$} = window;
  */
 export default class InvoiceNoteManager {
   constructor() {
+    this.setupListeners();
+
+    return {};
+  }
+
+  setupListeners() {
     this.initShowNoteFormEventHandler();
     this.initCloseNoteFormEventHandler();
     this.initEnterPaymentEventHandler();
-
-    return {};
   }
 
   initShowNoteFormEventHandler() {

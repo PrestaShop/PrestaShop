@@ -8,7 +8,7 @@ module.exports = class EmailThemes extends BOBasePage {
     this.pageTitle = 'Email Theme •';
 
     // Selectors
-    this.blockDiv = 'div.content-div div.justify-content-center:nth-child(%ID)';
+    this.blockDiv = id => `div.content-div div.justify-content-center:nth-child(${id})`;
     // Email Theme table selectors
     this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;

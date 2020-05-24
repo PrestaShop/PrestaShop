@@ -16,23 +16,23 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.gridTable = '#meta_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
-    this.filterColumn = `${this.gridTable} #meta_%FILTERBY`;
+    this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='meta[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='meta[actions][reset]']`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
-    this.actionsColumn = `${this.tableRow} td.column-actions`;
-    this.editRowLink = `${this.actionsColumn} a[href*='/edit']`;
-    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
-    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     // Set up URL form
-    this.switchFriendlyUrlLabel = 'label[for=\'meta_settings_form_set_up_urls_friendly_url_%TOGGLE\']';
-    this.switchAccentedUrlLabel = 'label[for=\'meta_settings_form_set_up_urls_accented_url_%TOGGLE\']';
+    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_friendly_url_${toggle}']`;
+    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_accented_url_${toggle}']`;
     this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
     // Delete modal
     this.confirmDeleteModal = '#meta-grid-confirm-modal';
@@ -56,11 +56,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTable(row, column) {
-    return this.getTextContent(
-      this.tableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.tableColumn(row, column));
   }
 
   /**
@@ -69,7 +65,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToEditSeoUrlPage(row = 1) {
-    await this.clickAndWaitForNavigation(this.editRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.editRowLink(row));
   }
 
   /**
@@ -79,14 +75,14 @@ module.exports = class SeoAndUrls extends BOBasePage {
    */
   async deleteSeoUrlPage(row = 1) {
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
+      this.page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
+        `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
-      this.page.click(this.deleteRowLink.replace('%ROW', row)),
+      this.page.click(this.deleteRowLink(row)),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSeoUrlPage();
@@ -137,7 +133,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(filterBy, value = '') {
-    await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value.toString());
+    await this.setValue(this.filterColumn(filterBy), value.toString());
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
@@ -148,7 +144,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async enableDisableFriendlyURL(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchFriendlyUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.waitForSelectorAndClick(this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }
@@ -159,7 +155,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async enableDisableAccentedURL(toEnable = true) {
-    await this.waitForSelectorAndClick(this.switchAccentedUrlLabel.replace('%TOGGLE', toEnable ? 1 : 0));
+    await this.waitForSelectorAndClick(this.switchAccentedUrlLabel(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveSeoAndUrlFormButton);
     return this.getTextContent(this.alertSuccessBlock);
   }

@@ -27,7 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Translations;
 
 use Link;
+use Module;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
+use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Service\TranslationService;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -203,6 +205,10 @@ class TranslationRouteFinder
     private function isModuleUsingNewTranslationSystem($moduleName)
     {
         $module = $this->moduleRepository->getInstanceByName($moduleName);
+
+        if (!($module instanceof Module)) {
+            throw new InvalidModuleException($moduleName);
+        }
 
         return $module->isUsingNewTranslationSystem();
     }

@@ -9,13 +9,13 @@ module.exports = class AddCurrency extends BOBasePage {
 
     // Selectors
     this.currencySelect = '#currency_selected_iso_code';
-    this.selectResultOption = 'li.select2-results__option:nth-child(%ID)';
+    this.selectResultOption = id => `li.select2-results__option:nth-child(${id})`;
     this.alternativeCurrencyCheckBox = '#currency_unofficial + i';
-    this.currencyNameInput = '#currency_names_%ID';
+    this.currencyNameInput = id => `#currency_names_${id}`;
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
     this.decimalsInput = '#currency_precision';
-    this.statusSwitch = 'label[for=\'currency_active_%ID\']';
+    this.statusSwitch = id => `label[for='currency_active_${id}']`;
     this.resetDefaultSettingsButton = '#currency_reset_default_settings';
     this.saveButton = 'div.card-footer button[type=\'submit\']';
 
@@ -47,7 +47,7 @@ module.exports = class AddCurrency extends BOBasePage {
       );
       await this.page.waitFor(200);
     }
-    await this.page.click(this.statusSwitch.replace('%ID', currencyData.enabled ? 1 : 0));
+    await this.page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
@@ -59,10 +59,10 @@ module.exports = class AddCurrency extends BOBasePage {
    */
   async createUnOfficialCurrency(currencyData) {
     await this.changeCheckboxValue(this.alternativeCurrencyCheckBox, true);
-    await this.setValue(this.currencyNameInput.replace('%ID', 1), currencyData.name);
+    await this.setValue(this.currencyNameInput(1), currencyData.name);
     await this.setValue(this.isoCodeInput, currencyData.isoCode);
     await this.setValue(this.exchangeRateInput, currencyData.exchangeRate.toString());
-    await this.page.click(this.statusSwitch.replace('%ID', currencyData.enabled ? 1 : 0));
+    await this.page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }

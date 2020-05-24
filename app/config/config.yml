@@ -16,6 +16,15 @@ parameters:
     mail_themes_uri: "/mails/themes"
     mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
 
+# Autowires Core controllers
+services:
+    PrestaShopBundle\Controller\:
+        resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
+        exclude: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
+        tags:
+          - 'controller.service_arguments'
+          - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
+
 framework:
     assets:
         version: !php/const \AppKernel::VERSION

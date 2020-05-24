@@ -16,8 +16,8 @@ module.exports = class AddLanguage extends BOBasePage {
     this.fullDataFormatInput = '#language_full_date_format';
     this.flagInput = '#language_flag_image';
     this.noPictureInput = '#language_no_picture_image';
-    this.isRtlSwitch = 'label[for=\'language_is_rtl_%ID\']';
-    this.statusSwitch = 'label[for=\'language_is_active_%ID\']';
+    this.isRtlSwitch = id => `label[for='language_is_rtl_${id}']`;
+    this.statusSwitch = id => `label[for='language_is_active_${id}']`;
     this.saveButton = 'div.card-footer button';
   }
 
@@ -39,8 +39,8 @@ module.exports = class AddLanguage extends BOBasePage {
     await this.generateAndUploadImage(this.flagInput, languageData.flag);
     await this.generateAndUploadImage(this.noPictureInput, languageData.noPicture);
     // Add switch
-    await this.page.click(this.isRtlSwitch.replace('%ID', languageData.isRtl ? 1 : 0));
-    await this.page.click(this.statusSwitch.replace('%ID', languageData.status ? 1 : 0));
+    await this.page.click(this.isRtlSwitch(languageData.isRtl ? 1 : 0));
+    await this.page.click(this.statusSwitch(languageData.status ? 1 : 0));
     // Save and return result
     await this.clickAndWaitForNavigation(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);

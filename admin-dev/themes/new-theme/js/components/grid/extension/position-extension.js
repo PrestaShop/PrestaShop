@@ -71,8 +71,7 @@ export default class PositionExtension {
     const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
-    const paginationOffset = parseInt($rowPositionContainer.data('pagination-offset'), 10);
-    const positions = this.getRowsPositions(paginationOffset);
+    const positions = this.getRowsPositions();
     const params = {positions};
 
     this.updatePosition(updateUrl, params, method);
@@ -83,25 +82,26 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  getRowsPositions(paginationOffset) {
+  getRowsPositions() {
     const tableData = JSON.parse($.tableDnD.jsonize());
     const rowsData = tableData[`${this.grid.getId()}_grid_table`];
-    const regex = /^row_(\d+)_(\d+)$/;
+    const completeRowsData = [];
 
-    const rowsNb = rowsData.length;
-    const positions = [];
-    let rowData; let
-      i;
-    for (i = 0; i < rowsNb; i += 1) {
-      rowData = regex.exec(rowsData[i]);
-      positions.push({
-        rowId: rowData[1],
-        newPosition: paginationOffset + i,
-        oldPosition: parseInt(rowData[2], 10),
+    let trData;
+
+    // retrieve dragAndDropOffset offset to have all needed data
+    // for positions mapping evolution over time
+    for (let i = 0; i < rowsData.length; i += 1) {
+      trData = this.grid.getContainer()
+        .find(`#${rowsData[i]}`);
+
+      completeRowsData.push({
+        rowMarker: rowsData[i],
+        offset: trData.data('dragAndDropOffset'),
       });
     }
 
-    return positions;
+    return this.computeMappingBetweenOldAndNewPositions(completeRowsData);
   }
 
   /**
@@ -110,6 +110,8 @@ export default class PositionExtension {
    * @private
    */
   addIdsToGridTableRows() {
+    let counter = 0;
+
     this.grid.getContainer()
       .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
@@ -119,6 +121,9 @@ export default class PositionExtension {
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
         $positionWrapper.closest('td').addClass('js-drag-handle');
+        $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
+
+        counter += 1;
       });
   }
 
@@ -172,5 +177,68 @@ export default class PositionExtension {
     }
 
     $form.submit();
+  }
+
+  /**
+   * Rows have been reordered. This function
+   * finds, for each row ID: the old position, the new position
+   *
+   * @returns {Array}
+   * @private
+   */
+  computeMappingBetweenOldAndNewPositions(rowsData) {
+    const regex = /^row_(\d+)_(\d+)$/;
+
+    const rowsNb = rowsData.length;
+    const positionsBeforeDragAndDrop = {};
+    const positionsAfterDragAndDrop = {};
+    const mapping = [];
+
+    let rowDataMarker;
+    let rowDataParsedData;
+    let i;
+    let rowID;
+    let rowOldPosition;
+    let rowOldOffset;
+    let rowNewOffset;
+
+    // first, compute for each position,
+    // where they were before the drag-and-drop
+    // and where they are after the drag-and-drop
+    for (i = 0; i < rowsNb; i += 1) {
+      rowDataMarker = rowsData[i].rowMarker;
+      rowDataParsedData = regex.exec(rowDataMarker);
+
+      rowID = rowDataParsedData[1];
+      rowOldPosition = parseInt(rowDataParsedData[2], 10);
+      rowOldOffset = rowsData[i].offset;
+      rowNewOffset = i;
+
+      positionsBeforeDragAndDrop[rowOldOffset] = rowOldPosition;
+      positionsAfterDragAndDrop[rowNewOffset] = rowOldPosition;
+    }
+
+    let previousRowPositionWithThisOffset;
+
+    // for each row in table, we look at before the drag-and-drop
+    // and find what other row was there, this is the new position
+    // of current row
+    for (i = 0; i < rowsNb; i += 1) {
+      rowDataMarker = rowsData[i].rowMarker;
+      rowDataParsedData = regex.exec(rowDataMarker);
+      rowID = rowDataParsedData[1];
+      rowOldPosition = parseInt(rowDataParsedData[2], 10);
+
+      rowNewOffset = i;
+      previousRowPositionWithThisOffset = positionsBeforeDragAndDrop[rowNewOffset];
+
+      mapping.push({
+        rowId: rowID,
+        oldPosition: rowOldPosition,
+        newPosition: previousRowPositionWithThisOffset,
+      });
+    }
+
+    return mapping;
   }
 }

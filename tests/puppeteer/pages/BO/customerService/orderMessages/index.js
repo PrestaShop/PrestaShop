@@ -15,27 +15,36 @@ module.exports = class OrderMessages extends BOBasePage {
     this.gridTable = '#order_message_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
-    this.filterColumn = `${this.gridTable} #order_message_%FILTERBY`;
+    this.filterColumn = filterBy => `${this.gridTable} #order_message_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} button[name='order_message[actions][search]']`;
     this.filterResetButton = `${this.gridTable} button[name='order_message[actions][reset]']`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = `${this.tableBody} tr:nth-child(%ROW)`;
+    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = `${this.tableRow} td.column-%COLUMN`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
-    this.actionsColumn = `${this.tableRow} td.column-actions`;
-    this.editRowLink = `${this.actionsColumn} a[data-original-title='Edit']`;
-    this.dropdownToggleButton = `${this.actionsColumn} a.dropdown-toggle`;
-    this.dropdownToggleMenu = `${this.actionsColumn} div.dropdown-menu`;
-    this.deleteRowLink = `${this.dropdownToggleMenu} a[data-url*='/delete']`;
+    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a[data-original-title='Edit']`;
+    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#order_message_grid_bulk_action_delete_selection';
     // Delete modal
-    this.confirmDeleteModal = '#order_message_grid_confirm_modal';
+    this.confirmDeleteModal = '#order_message-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+    // Sort Selectors
+    this.tableHead = `${this.gridPanel} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Header Methods */
@@ -84,7 +93,7 @@ module.exports = class OrderMessages extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(filterBy, value) {
-    await this.setValue(this.filterColumn.replace('%FILTERBY', filterBy), value);
+    await this.setValue(this.filterColumn(filterBy), value);
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
 
@@ -95,7 +104,7 @@ module.exports = class OrderMessages extends BOBasePage {
    * @return {Promise<void>}
    */
   async gotoEditOrderMessage(row = 1) {
-    await this.clickAndWaitForNavigation(this.editRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.editRowLink(row));
   }
 
   /**
@@ -106,12 +115,12 @@ module.exports = class OrderMessages extends BOBasePage {
   async deleteOrderMessage(row = 1) {
     this.dialogListener(true);
     await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
+      this.page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
-        `${this.dropdownToggleButton}[aria-expanded='true']`.replace('%ROW', row),
+        `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.deleteRowLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.deleteRowLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -122,11 +131,7 @@ module.exports = class OrderMessages extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTable(row, column) {
-    return this.getTextContent(
-      this.tableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.tableColumn(row, column));
   }
 
   /* Bulk Actions Methods */
@@ -161,5 +166,78 @@ module.exports = class OrderMessages extends BOBasePage {
    */
   async confirmDeleteOrderMessages() {
     await this.clickAndWaitForNavigation(this.confirmDeleteButton);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @return {Promise<string>}
+   */
+  getPaginationLabel() {
+    return this.getTextContent(this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param number
+   * @returns {Promise<string >}
+   */
+  async selectPaginationLimit(number) {
+    await this.selectByVisibleText(this.paginationLimitSelect, number);
+    return this.getPaginationLabel();
+  }
+
+  /**
+   * Click on next
+   * @returns {Promise<string>}
+   */
+  async paginationNext() {
+    await this.clickAndWaitForNavigation(this.paginationNextLink);
+    return this.getPaginationLabel();
+  }
+
+  /**
+   * Click on previous
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious() {
+    await this.clickAndWaitForNavigation(this.paginationPreviousLink);
+    return this.getPaginationLabel();
+  }
+
+  // Sort methods
+  /**
+   * Get content from all rows
+   * @param column
+   * @return {Promise<[]>}
+   */
+  async getAllRowsColumnContent(column) {
+    const rowsNumber = await this.getNumberOfElementInGrid();
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      let rowContent = await this.getTextContent(this.tableColumn(i, column));
+      if (column === 'active') {
+        rowContent = await this.getToggleColumnValue(i).toString();
+      }
+      await allRowsContentTable.push(rowContent);
+    }
+    return allRowsContentTable;
+  }
+
+  /**
+   * Sort table
+   * @param sortBy, column to sort with
+   * @param sortDirection, asc or desc
+   * @return {Promise<void>}
+   */
+  async sortTable(sortBy, sortDirection = 'asc') {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+    let i = 0;
+    while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      i += 1;
+    }
+    await this.waitForVisibleSelector(sortColumnDiv);
   }
 };

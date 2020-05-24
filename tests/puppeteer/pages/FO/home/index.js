@@ -7,14 +7,14 @@ module.exports = class Home extends FOBasePage {
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
-    this.productArticle = '#content .products div:nth-child(%NUMBER) article';
-    this.productImg = `${this.productArticle} img`;
-    this.productDescriptionDiv = `${this.productArticle} div.product-description`;
-    this.productQuickViewLink = `${this.productArticle} a.quick-view`;
+    this.productArticle = number => `#content .products div:nth-child(${number}) article`;
+    this.productImg = number => `${this.productArticle(number)} img`;
+    this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
+    this.productQuickViewLink = number => `${this.productArticle(number)} a.quick-view`;
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
-    this.productPrice = `${this.productArticle} span[aria-label="Price"]`;
-    this.newFlag = `${this.productArticle} .product-flag.new`;
+    this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
+    this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
     this.searchInput = '#search_widget input.ui-autocomplete-input';
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -27,6 +27,7 @@ module.exports = class Home extends FOBasePage {
 
   /**
    * Check home page
+   * @returns {Promise<boolean>}
    */
   async isHomePage() {
     return this.elementVisible(this.homePageSection, 3000);
@@ -35,9 +36,10 @@ module.exports = class Home extends FOBasePage {
   /**
    * Go to the product page
    * @param id, product id
+   * @returns {Promise<void>}
    */
   async goToProductPage(id) {
-    await this.clickAndWaitForNavigation(this.productImg.replace('%NUMBER', id));
+    await this.clickAndWaitForNavigation(this.productImg(id));
   }
 
   /**
@@ -46,7 +48,7 @@ module.exports = class Home extends FOBasePage {
    * @return {Promise<void>}
    */
   async quickViewProduct(id) {
-    await this.page.hover(this.productImg.replace('%NUMBER', id));
+    await this.page.hover(this.productImg(id));
     let displayed = false;
     /* eslint-disable no-await-in-loop */
     // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
@@ -55,14 +57,14 @@ module.exports = class Home extends FOBasePage {
       displayed = await this.page.evaluate(
         selector => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
-        this.productDescriptionDiv.replace('%NUMBER', id),
+        this.productDescriptionDiv(id),
       );
       await this.page.waitFor(100);
     }
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(this.quickViewModalDiv),
-      this.page.$eval(this.productQuickViewLink.replace('%NUMBER', id), el => el.click()),
+      this.page.$eval(this.productQuickViewLink(id), el => el.click()),
     ]);
   }
 
@@ -95,16 +97,16 @@ module.exports = class Home extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isPriceVisible(id = 1) {
-    return this.elementVisible(this.productPrice.replace('%NUMBER', id), 1000);
+    return this.elementVisible(this.productPrice(id), 1000);
   }
 
   /**
    * Check new flag
    * @param id
-   * @returns {Promise<boolean|true>}
+   * @returns {Promise<boolean>}
    */
   async isNewFlagVisible(id = 1) {
-    return this.elementVisible(this.newFlag.replace('%NUMBER', id), 1000);
+    return this.elementVisible(this.newFlag(id), 1000);
   }
 
   /**

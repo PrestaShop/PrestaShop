@@ -80,7 +80,7 @@
 
   .cellProductTaxes,
   .cellProductQuantity,
-  .editProductInvoice {
+  .cellProductInvoice {
     > .form-group:last-child {
       margin-bottom: 0;
     }
@@ -269,22 +269,13 @@ td .editProductInvoice {
 }
 
 .partial-refund {
-  display: none;
-
   .shipping-price-container {
     display: flex;
     margin-top: 8px;
   }
   .form-group {
-    display: inline-flex;
     width: max-content;
   }
-}
-
-.partial-refund label {
-  height: 30px;
-  padding: 0;
-  line-height: 30px;
 }
 
 .cancel-product-element,
@@ -302,7 +293,6 @@ td .editProductInvoice {
 .refund-checkboxes-container {
   display: none;
   width: fit-content;
-  max-width: 90px;
   margin: 16px auto;
 }
 

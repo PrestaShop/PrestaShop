@@ -15,15 +15,17 @@ module.exports = class SqlManager extends BOBasePage {
     this.sqlQueryGridPanel = '#sql_request_grid_panel';
     this.sqlQueryGridTitle = `${this.sqlQueryGridPanel} h3.card-header-title`;
     this.sqlQueryListForm = '#sql_request_grid';
-    this.sqlQueryListTableRow = `${this.sqlQueryListForm} tbody tr:nth-child(%ROW)`;
-    this.sqlQueryListTableColumn = `${this.sqlQueryListTableRow} td.column-%COLUMN`;
-    this.sqlQueryListTableColumnActions = `${this.sqlQueryListTableRow} td.column-actions`;
-    this.sqlQueryListTableToggleDropDown = `${this.sqlQueryListTableColumnActions} a[data-toggle='dropdown']`;
-    this.sqlQueryListTableViewLink = `${this.sqlQueryListTableColumnActions} a[href*='/view']`;
-    this.sqlQueryListTableEditLink = `${this.sqlQueryListTableColumnActions} a[href*='/edit']`;
-    this.sqlQueryListTableDeleteLink = `${this.sqlQueryListTableColumnActions} a[href*='/delete']`;
+    this.sqlQueryListTableRow = row => `${this.sqlQueryListForm} tbody tr:nth-child(${row})`;
+    this.sqlQueryListTableColumn = (row, column) => `${this.sqlQueryListTableRow(row)} td.column-${column}`;
+    this.sqlQueryListTableColumnActions = row => `${this.sqlQueryListTableRow(row)} td.column-actions`;
+    this.sqlQueryListTableToggleDropDown = row => `${this.sqlQueryListTableColumnActions(row)
+    } a[data-toggle='dropdown']`;
+    this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/view']`;
+    this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/edit']`;
+    this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/delete']`;
+    this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
     // Filters
-    this.filterInput = `${this.sqlQueryListForm} #sql_request_%FILTERBY`;
+    this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
     this.filterSearchButton = `${this.sqlQueryListForm} button[name='sql_request[actions][search]']`;
     this.filterResetButton = `${this.sqlQueryListForm} button[name='sql_request[actions][reset]']`;
   }
@@ -79,7 +81,7 @@ module.exports = class SqlManager extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterSQLQuery(filterBy, value = '') {
-    await this.setValue(this.filterInput.replace('%FILTERBY', filterBy), value.toString());
+    await this.setValue(this.filterInput(filterBy), value.toString());
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
@@ -91,7 +93,7 @@ module.exports = class SqlManager extends BOBasePage {
    * @returns {Promise<string>}
    */
   getTextColumnFromTable(row, column) {
-    return this.getTextContent(this.sqlQueryListTableColumn.replace('%ROW', row).replace('%COLUMN', column));
+    return this.getTextContent(this.sqlQueryListTableColumn(row, column));
   }
 
   /**
@@ -101,12 +103,12 @@ module.exports = class SqlManager extends BOBasePage {
    */
   async goToViewSQLQueryPage(row = 1) {
     await Promise.all([
-      this.page.click(this.sqlQueryListTableToggleDropDown.replace('%ROW', row)),
+      this.page.click(this.sqlQueryListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
-        `${this.sqlQueryListTableToggleDropDown}[aria-expanded='true']`.replace('%ROW', row),
+        `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(this.sqlQueryListTableViewLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.sqlQueryListTableViewLink(row));
   }
 
   /**
@@ -116,11 +118,11 @@ module.exports = class SqlManager extends BOBasePage {
    */
   async goToEditSQLQueryPage(row = 1) {
     await Promise.all([
-      this.page.click(this.sqlQueryListTableToggleDropDown.replace('%ROW', row)),
+      this.page.click(this.sqlQueryListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
-        `${this.sqlQueryListTableToggleDropDown}[aria-expanded='true']`.replace('%ROW', row)),
+        `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(this.sqlQueryListTableEditLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.sqlQueryListTableEditLink(row));
   }
 
   /**
@@ -132,13 +134,22 @@ module.exports = class SqlManager extends BOBasePage {
     this.dialogListener();
     // Click on dropDown
     await Promise.all([
-      this.page.click(this.sqlQueryListTableToggleDropDown.replace('%ROW', row)),
+      this.page.click(this.sqlQueryListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
-        `${this.sqlQueryListTableToggleDropDown.replace('%ROW', row)}[aria-expanded='true']`,
+        `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
     // Click on delete
-    await this.clickAndWaitForNavigation(this.sqlQueryListTableDeleteLink.replace('%ROW', row));
+    await this.clickAndWaitForNavigation(this.sqlQueryListTableDeleteLink(row));
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Export sql result to csv
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async exportSqlResultDataToCsv(row = 1) {
+    await this.waitForSelectorAndClick(this.sqlQueryListTableExportLink(row));
   }
 };

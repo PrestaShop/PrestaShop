@@ -8,7 +8,7 @@ module.exports = class Import extends BOBasePage {
     this.pageTitle = 'Import • ';
 
     // Selectors
-    this.downloadSampleFileLink = 'a[href*=\'import/sample/download/%TYPE\']';
+    this.downloadSampleFileLink = type => `a[href*='import/sample/download/${type}']`;
   }
 
   /*
@@ -21,6 +21,6 @@ module.exports = class Import extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadSampleFile(type) {
-    await this.page.click(this.downloadSampleFileLink.replace('%TYPE', type));
+    await this.page.click(this.downloadSampleFileLink(type));
   }
 };

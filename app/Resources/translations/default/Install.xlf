@@ -1213,32 +1213,32 @@ File: modules/autoupgrade/classes/UpgradePage.php:414</note>
       <trans-unit id="6c16e88afa7f92cfe15e74a1fbe9c250">
         <source><![CDATA[SQL error on query <i>%query%</i>]]></source>
         <target><![CDATA[SQL error on query <i>%query%</i>]]></target>
-        <note>Line: 1207</note>
+        <note>Line: 1205</note>
       </trans-unit>
       <trans-unit id="5b56439cb79f3a01ae56d92e52be2218">
         <source><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></source>
         <target><![CDATA[An SQL error occurred for entity <i>%entity%</i>: <i>%message%</i>]]></target>
-        <note>Line: 469</note>
+        <note>Line: 467</note>
       </trans-unit>
       <trans-unit id="11b53a5381cd2ca843a6089493de6716">
         <source>Cannot create image "%identifier%" for entity "%entity%"</source>
         <target>Cannot create image "%identifier%" for entity "%entity%"</target>
-        <note>Line: 805</note>
+        <note>Line: 803</note>
       </trans-unit>
       <trans-unit id="a6bc945aa3c279156298ed70872cd20b">
         <source>Cannot create image "%identifier%" (bad permissions on folder "%folder%")</source>
         <target>Cannot create image "%identifier%" (bad permissions on folder "%folder%")</target>
-        <note>Line: 783</note>
+        <note>Line: 781</note>
       </trans-unit>
       <trans-unit id="25b42d449f5ebcdb85fb6cae0663c40f">
         <source>Cannot create image "%identifier%"</source>
         <target>Cannot create image "%identifier%"</target>
-        <note>Line: 710</note>
+        <note>Line: 708</note>
       </trans-unit>
       <trans-unit id="44a700a0c9496b4436c16c5e46351707">
         <source>Cannot create image "%1$s" for entity "%2$s"</source>
         <target>Cannot create image "%1$s" for entity "%2$s"</target>
-        <note>Line: 794</note>
+        <note>Line: 792</note>
       </trans-unit>
     </body>
   </file>

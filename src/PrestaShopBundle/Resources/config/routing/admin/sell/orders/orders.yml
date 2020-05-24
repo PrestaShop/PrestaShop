@@ -310,6 +310,17 @@ admin_orders_get_invoices:
   options:
     expose: true
 
+admin_orders_get_documents:
+  path: /{orderId}/documents
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getDocuments
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
 admin_orders_cancellation:
   path: /{orderId}/cancellation
   methods: [POST]

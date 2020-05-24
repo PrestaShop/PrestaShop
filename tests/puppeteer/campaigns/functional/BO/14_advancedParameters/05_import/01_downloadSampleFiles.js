@@ -1,15 +1,18 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const ImportPage = require('@pages/BO/advancedParameters/import');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_import_downloadSampleFiles';
@@ -20,7 +23,6 @@ let page;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     importPage: new ImportPage(page),
@@ -33,21 +35,27 @@ describe('Download import sample csv files', async () => {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     await helper.setDownloadBehavior(page);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
+
   // Login from BO and go to webservice page
   loginCommon.loginBO();
 
   it('should go to import page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
+
     await this.pageObjects.dashboardPage.goToSubMenu(
       this.pageObjects.dashboardPage.advancedParametersLink,
       this.pageObjects.dashboardPage.importLink,
     );
+
     await this.pageObjects.importPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.importPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.importPage.pageTitle);
   });
@@ -136,19 +144,24 @@ describe('Download import sample csv files', async () => {
     describe(`Download and check text for ${sampleFile.args.type} sample file`, async () => {
       it(`should download ${sampleFile.args.type} sample file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}DownloadFile`, baseContext);
+
         await this.pageObjects.importPage.downloadSampleFile(sampleFile.args.type);
-        const fileExist = await files.checkFileExistence(`${sampleFile.args.type}.csv`);
-        await expect(fileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
+
+        const doesFileExist = await files.doesFileExist(`${sampleFile.args.type}.csv`);
+        await expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
       });
 
       it(`should check ${sampleFile.args.type} sample text file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}checkTextFile`, baseContext);
-        const textExist = await files.checkTextInFile(`${sampleFile.args.type}.csv`, sampleFile.args.textToCheck);
+
+        const textExist = await files.isTextInFile(`${sampleFile.args.type}.csv`, sampleFile.args.textToCheck);
         await expect(textExist, `Text was not found in ${sampleFile.args.type} sample file`).to.be.true;
       });
 
       // Delete file downloaded after checking it
-      after(() => files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${sampleFile.args.type}.csv`));
+      after(
+        () => files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${sampleFile.args.type}.csv`),
+      );
     });
   });
 });

@@ -10,9 +10,9 @@ module.exports = class Order extends BOBasePage {
 
     // Order page
     this.orderProductsTable = '#orderProductsTable';
-    this.orderProductsRowTable = `${this.orderProductsTable} tbody tr:nth-child(%ROW)`;
-    this.editProductButton = `${this.orderProductsRowTable} button[data-original-title='Edit']`;
-    this.productQuantitySpan = `${this.orderProductsRowTable} td.cellProductQuantity span`;
+    this.orderProductsRowTable = row => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
+    this.editProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Edit']`;
+    this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input#edit_product_row_quantity`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button#edit_product_row_save`;
@@ -23,13 +23,13 @@ module.exports = class Order extends BOBasePage {
     // Document tab
     this.documentTab = 'a#orderDocumentsTab';
     this.documentsTableDiv = '#orderDocumentsTabContent';
-    this.documentsTableRow = `${this.documentsTableDiv} table tbody tr:nth-child(%ROW)`;
-    this.documentNumberLink = `${this.documentsTableRow} td:nth-child(3) a`;
-    this.documentName = `${this.documentsTableRow} td:nth-child(2)`;
+    this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
+    this.documentNumberLink = row => `${this.documentsTableRow(row)} td:nth-child(3) a`;
+    this.documentName = row => `${this.documentsTableRow(row)} td:nth-child(2)`;
     // Refund form
-    this.refundProductQuantity = `${this.orderProductsRowTable} input[id*='cancel_product_quantity']`;
-    this.refundProductAmount = `${this.orderProductsRowTable} input[id*='cancel_product_amount']`;
-    this.refundShippingCost = `${this.orderProductsRowTable} input[id*='cancel_product_shipping_amount']`;
+    this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
+    this.refundProductAmount = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
+    this.refundShippingCost = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_shipping_amount']`;
     this.partialRefundSubmitButton = 'button#cancel_product_save';
   }
 
@@ -46,7 +46,7 @@ module.exports = class Order extends BOBasePage {
   async modifyProductQuantity(row, quantity) {
     this.dialogListener();
     await Promise.all([
-      this.page.click(this.editProductButton.replace('%ROW', row)),
+      this.page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(this.editProductQuantityInput),
     ]);
     await this.setValue(this.editProductQuantityInput, quantity.toString());
@@ -54,7 +54,7 @@ module.exports = class Order extends BOBasePage {
       this.page.click(this.UpdateProductButton),
       this.waitForVisibleSelector(this.editProductQuantityInput),
     ]);
-    return parseFloat(await this.getTextContent(this.productQuantitySpan.replace('%ROW', row)));
+    return parseFloat(await this.getTextContent(this.productQuantitySpan(row)));
   }
 
   /**
@@ -90,7 +90,7 @@ module.exports = class Order extends BOBasePage {
       this.page.click(this.documentTab),
       this.waitForVisibleSelector(`${this.documentTab}.active`),
     ]);
-    return this.getTextContent(this.documentName.replace('%ROW', rowChild));
+    return this.getTextContent(this.documentName(rowChild));
   }
 
   /**
@@ -103,7 +103,7 @@ module.exports = class Order extends BOBasePage {
       this.page.click(this.documentTab),
       this.waitForVisibleSelector(`${this.documentTab}.active`),
     ]);
-    const fileName = await this.getTextContent(this.documentNumberLink.replace('%ROW', rowChild));
+    const fileName = await this.getTextContent(this.documentNumberLink(rowChild));
     return fileName.replace('#', '').trim();
   }
 
@@ -114,8 +114,8 @@ module.exports = class Order extends BOBasePage {
   async downloadInvoice() {
     /* eslint-disable no-return-assign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink.replace('%ROW', 1), el => el.target = '');
-    await this.page.click(this.documentNumberLink.replace('%ROW', 1));
+    await this.page.$eval(this.documentNumberLink(1), el => el.target = '');
+    await this.page.click(this.documentNumberLink(1));
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 
@@ -125,7 +125,7 @@ module.exports = class Order extends BOBasePage {
    */
   async clickOnPartialRefund() {
     await this.page.click(this.partialRefundButton);
-    await this.waitForVisibleSelector(this.refundProductQuantity.replace('%ROW', 1));
+    await this.waitForVisibleSelector(this.refundProductQuantity(1));
   }
 
   /**
@@ -137,14 +137,14 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<textContent>}
    */
   async addPartialRefundProduct(productRow, quantity = 0, amount = 0, shipping = 0) {
-    await this.setValue(this.refundProductQuantity.replace('%ROW', productRow), quantity.toString());
+    await this.setValue(this.refundProductQuantity(productRow), quantity.toString());
     if (amount !== 0) {
-      await this.setValue(this.refundProductAmount.replace('%ROW', productRow), amount.toString());
+      await this.setValue(this.refundProductAmount(productRow), amount.toString());
     }
     if (shipping !== 0) {
-      await this.setValue(this.refundShippingCost.replace('%ROW', productRow), shipping.toString());
+      await this.setValue(this.refundShippingCost(productRow), shipping.toString());
     }
-    await this.clickAndWaitForNavigation(this.partialRefundSubmitButton.replace('%ROW', productRow));
+    await this.clickAndWaitForNavigation(this.partialRefundSubmitButton);
     return this.getTextContent(this.alertTextBlock);
   }
 
@@ -155,8 +155,8 @@ module.exports = class Order extends BOBasePage {
   async downloadDeliverySlip() {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink.replace('%ROW', 3), el => el.target = '');
-    await this.page.click(this.documentNumberLink.replace('%ROW', 3));
+    await this.page.$eval(this.documentNumberLink(3), el => el.target = '');
+    await this.page.click(this.documentNumberLink(3));
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 };

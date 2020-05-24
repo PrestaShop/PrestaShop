@@ -133,6 +133,8 @@ module.exports = class BOBasePage extends CommonPage {
     // Alert Text
     this.alertSuccessBlock = "div.alert.alert-success:not([style='display: none;'])";
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} div.alert-text p`;
+    this.alertDangerBlock = 'div.alert.alert-danger';
+    this.alertDangerBlockParagraph = `${this.alertDangerBlock} div.alert-text p`;
     this.alertTextBlock = '.alert-text';
 
     // Alert Box
@@ -302,8 +304,16 @@ module.exports = class BOBasePage extends CommonPage {
     const growlMessageText = await this.getTextContent(this.growlMessageBlock);
     await Promise.all([
       this.page.$eval(this.growlCloseButton, e => e.click()),
-      this.page.waitForSelector(this.growlMessageBlock, {hidden: true})
+      this.page.waitForSelector(this.growlMessageBlock, {hidden: true}),
     ]);
     return growlMessageText;
+  }
+
+  /**
+   * Get error message from alert danger block
+   * @return {Promise<string>}
+   */
+  getAlertDangerMessage() {
+    return this.getTextContent(this.alertDangerBlockParagraph);
   }
 };

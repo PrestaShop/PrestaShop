@@ -208,7 +208,7 @@ class SupplierType extends TranslatorAwareType
             ])
             ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
-                'withDniAttr' => true,
+                'with_dni_attr' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(

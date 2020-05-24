@@ -9,7 +9,7 @@ module.exports = class AddCustomer extends BOBasePage {
     this.pageTitleEdit = 'Editing customer';
 
     // Selectors
-    this.socialTitleInput = '#customer_gender_id_%ID';
+    this.socialTitleInput = id => `#customer_gender_id_${id}`;
     this.firstNameInput = '#customer_first_name';
     this.lastNameInput = '#customer_last_name';
     this.emailInput = '#customer_email';
@@ -17,9 +17,9 @@ module.exports = class AddCustomer extends BOBasePage {
     this.yearOfBirthSelect = 'select#customer_birthday_year';
     this.monthOfBirthSelect = 'select#customer_birthday_month';
     this.dayOfBirthSelect = 'select#customer_birthday_day';
-    this.enabledSwitchlabel = 'label[for=\'customer_is_enabled_%ID\']';
-    this.partnerOffersSwitchlabel = 'label[for=\'customer_is_partner_offers_subscribed_%ID\']';
-    this.groupAccessCheckkbox = '#customer_group_ids_%ID';
+    this.enabledSwitchLabel = id => `label[for='customer_is_enabled_${id}']`;
+    this.partnerOffersSwitchLabel = id => `label[for='customer_is_partner_offers_subscribed_${id}']`;
+    this.groupAccessCheckkbox = id => `#customer_group_ids_${id}`;
     this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
     this.saveCustomerButton = 'div.card-footer button';
@@ -35,7 +35,7 @@ module.exports = class AddCustomer extends BOBasePage {
    * @return {Promise<string>}
    */
   async createEditCustomer(customerData) {
-    await this.page.click(this.socialTitleInput.replace('%ID', customerData.socialTitle === 'Mr.' ? 0 : 1));
+    await this.page.click(this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
     await this.setValue(this.firstNameInput, customerData.firstName);
     await this.setValue(this.lastNameInput, customerData.lastName);
     await this.setValue(this.emailInput, customerData.email);
@@ -43,8 +43,8 @@ module.exports = class AddCustomer extends BOBasePage {
     await this.page.select(this.yearOfBirthSelect, customerData.yearOfBirth);
     await this.page.select(this.monthOfBirthSelect, customerData.monthOfBirth);
     await this.page.select(this.dayOfBirthSelect, customerData.dayOfBirth);
-    await this.page.click(this.enabledSwitchlabel.replace('%ID', customerData.enabled ? 1 : 0));
-    await this.page.click(this.partnerOffersSwitchlabel.replace('%ID', customerData.partnerOffers ? 1 : 0));
+    await this.page.click(this.enabledSwitchLabel(customerData.enabled ? 1 : 0));
+    await this.page.click(this.partnerOffersSwitchLabel(customerData.partnerOffers ? 1 : 0));
     await this.setCustomerGroupAccess(customerData.defaultCustomerGroup);
     await this.selectByVisibleText(this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
     // Save Customer
@@ -63,14 +63,14 @@ module.exports = class AddCustomer extends BOBasePage {
         await this.changeCheckboxValue(this.selectAllGroupAccessCheckbox);
         break;
       case 'Guest':
-        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 0), false);
-        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 2), false);
-        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 1));
+        await this.changeCheckboxValue(this.groupAccessCheckkbox(0), false);
+        await this.changeCheckboxValue(this.groupAccessCheckkbox(2), false);
+        await this.changeCheckboxValue(this.groupAccessCheckkbox(1));
         break;
       case 'Visitor':
-        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 1), false);
-        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 2), false);
-        await this.changeCheckboxValue(this.groupAccessCheckkbox.replace('%ID', 0));
+        await this.changeCheckboxValue(this.groupAccessCheckkbox(1), false);
+        await this.changeCheckboxValue(this.groupAccessCheckkbox(2), false);
+        await this.changeCheckboxValue(this.groupAccessCheckkbox(0));
         break;
       default:
         throw new Error(`${customerGroup} was not found as a group access`);

@@ -57,8 +57,12 @@ class CartRule
      * @param string $description
      * @param string $value
      */
-    public function __construct(int $cartRuleId, string $name, string $description, string $value)
-    {
+    public function __construct(
+        int $cartRuleId,
+        string $name,
+        string $description,
+        string $value
+    ) {
         $this->cartRuleId = $cartRuleId;
         $this->name = $name;
         $this->description = $description;

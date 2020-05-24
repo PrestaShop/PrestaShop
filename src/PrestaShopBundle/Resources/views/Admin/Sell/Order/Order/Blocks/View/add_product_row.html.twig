@@ -51,7 +51,7 @@
    </div>
   </td>
   <td class="pr-2 add-product-quantity">
-    {{ form_row(addProductRowForm.quantity) }}
+    {{ form_row(addProductRowForm.quantity, {'type':'number'}) }}
   </td>
   <td id="addProductLocation" class="cellProductLocation"></td>
   <td id="addProductRefunded" class="cellProductRefunded"></td>
@@ -59,7 +59,14 @@
   <td id="addProductTotalPrice"></td>
   {% if orderForViewing.hasInvoice() %}
     <td class="addProductInvoice pr-2">
-      {{ form_row(addProductRowForm.invoice) }}
+      {{ form_row(addProductRowForm.invoice, {
+        'attr': {
+          'data-modal-title': 'Create a new invoice'|trans({}, 'Admin.Orderscustomers.Feature'),
+          'data-modal-apply': 'Create'|trans({}, 'Admin.Actions'),
+          'data-modal-cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+          'data-modal-body': 'Are you sure you want to create a new invoice?'|trans({}, 'Admin.Orderscustomers.Notification')
+        }})
+      }}
     </td>
   {% endif %}
   <td class="text-right add-product-buttons">

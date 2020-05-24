@@ -16,10 +16,10 @@ module.exports = class CreditSlips extends BOBasePage {
     this.creditSlipGridTable = '#credit_slip_grid_table';
     this.filterResetButton = `${this.creditSlipGridTable} button[name='credit_slip[actions][reset]']`;
     this.filterSearchButton = `${this.creditSlipGridTable} button[name='credit_slip[actions][search]']`;
-    this.creditSlipsFilterColumnInput = '#credit_slip_%FILTERBY';
-    this.creditSlipsTableRow = `${this.creditSlipGridTable} tbody tr:nth-child(%ROW)`;
-    this.creditSlipsTableColumn = `${this.creditSlipsTableRow} td.column-%COLUMN`;
-    this.creditSlipDownloadButton = `${this.creditSlipGridTable} tr:nth-child(%ID) td.link-type.column-pdf`;
+    this.creditSlipsFilterColumnInput = filterBy => `#credit_slip_${filterBy}`;
+    this.creditSlipsTableRow = row => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
+    this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
+    this.creditSlipDownloadButton = id => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
     // By date form
     this.generateByDateForm = '[name=\'generate_pdf_by_date\']';
     this.dateFromInput = '#generate_pdf_by_date_from';
@@ -68,7 +68,7 @@ module.exports = class CreditSlips extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterCreditSlips(filterBy, value = '') {
-    await this.setValue(this.creditSlipsFilterColumnInput.replace('%FILTERBY', filterBy), value.toString());
+    await this.setValue(this.creditSlipsFilterColumnInput(filterBy), value.toString());
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
@@ -80,8 +80,8 @@ module.exports = class CreditSlips extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterCreditSlipsByDate(dateFrom, dateTo) {
-    await this.page.type(this.creditSlipsFilterColumnInput.replace('%FILTERBY', 'date_issued_from'), dateFrom);
-    await this.page.type(this.creditSlipsFilterColumnInput.replace('%FILTERBY', 'date_issued_to'), dateTo);
+    await this.page.type(this.creditSlipsFilterColumnInput('date_issued_from'), dateFrom);
+    await this.page.type(this.creditSlipsFilterColumnInput('date_issued_to'), dateTo);
     // click on search
     await this.clickAndWaitForNavigation(this.filterSearchButton);
   }
@@ -93,11 +93,7 @@ module.exports = class CreditSlips extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTableCreditSlips(row, column) {
-    return this.getTextContent(
-      this.creditSlipsTableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.creditSlipsTableColumn(row, column));
   }
 
   /**
@@ -106,7 +102,7 @@ module.exports = class CreditSlips extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadCreditSlip(lineNumber = 1) {
-    await this.page.click(this.creditSlipDownloadButton.replace('%ID', lineNumber));
+    await this.page.click(this.creditSlipDownloadButton(lineNumber));
   }
 
   /**

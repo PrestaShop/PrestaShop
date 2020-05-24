@@ -10,8 +10,8 @@ module.exports = class ViewBrand extends BOBasePage {
     this.addressesGrid = `${this.contentDiv} > div.row > div > div.row:nth-of-type(2)`;
     this.addressesGridHeader = `${this.addressesGrid} h3.card-header`;
     this.addressesTableBody = `${this.addressesGrid} .card-body table tbody`;
-    this.addressesTableRow = `${this.addressesTableBody} tr:nth-of-type(%ROW)`;
-    this.addressesTableColumn = `${this.addressesTableRow} td:nth-of-type(%COLUMN)`;
+    this.addressesTableRow = row => `${this.addressesTableBody} tr:nth-of-type(${row})`;
+    this.addressesTableColumn = (row, column) => `${this.addressesTableRow(row)} td:nth-of-type(${column})`;
     this.productsGrid = `${this.contentDiv} > div.row > div > div.row:nth-of-type(3)`;
     this.productsGridHeader = `${this.productsGrid} h3.card-header`;
   }
@@ -26,11 +26,7 @@ module.exports = class ViewBrand extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async getTextColumnFromTableAddresses(row, column) {
-    return this.getTextContent(
-      this.addressesTableColumn
-        .replace('%ROW', row)
-        .replace('%COLUMN', column),
-    );
+    return this.getTextContent(this.addressesTableColumn(row, column));
   }
 
   /**

@@ -9,7 +9,7 @@ module.exports = class ViewSQLQuery extends BOBasePage {
 
     // Selectors
     this.sqlQueryResultTitle = '#main-div  div.card-header h3';
-    this.tableColumnName = '#main-div .table th:nth-child(%ID)';
+    this.tableColumnName = id => `#main-div .table th:nth-child(${id})`;
   }
 
   /*
@@ -29,6 +29,6 @@ module.exports = class ViewSQLQuery extends BOBasePage {
    * @returns {Promise<string>}
    */
   getColumnName(id = 1) {
-    return this.getTextContent(this.tableColumnName.replace('%ID', id));
+    return this.getTextContent(this.tableColumnName(id));
   }
 };
