@@ -2194,6 +2194,7 @@ class AdminTranslationsControllerCore extends AdminController
     
     /**
      * @param $directory : name of directory
+     *
      * @return array
      */
     protected function getSubjectMailContent($directory)
