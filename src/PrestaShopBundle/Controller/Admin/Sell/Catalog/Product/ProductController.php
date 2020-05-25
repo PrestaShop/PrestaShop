@@ -32,6 +32,12 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Product\ProductPriceType;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Admin controller to manage Products
+ *
+ * This controller is a re-migration of the initial ProductController which was the first
+ * one to be migrated but doesn't meet the standards of the recently migrated controller.
+ */
 class ProductController extends FrameworkBundleAdminController
 {
     public function editAction(int $productId): Response

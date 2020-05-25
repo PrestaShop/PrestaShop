@@ -132,7 +132,42 @@ class TaxRulesGroupCore extends ObjectModel
         );
     }
 
-    public static function getTaxRulesGroups($only_active = true, bool $includeRates = false)
+    public static function getTaxRulesGroups($only_active = true)
+    {
+        return static::getTaxRulesGroupsData($only_active, false);
+    }
+
+    /**
+     * @return array an array of tax rules group formatted as:
+     *               [
+     *               [
+     *               'id_tax_rules_group' => ...,
+     *               'name' => ...,
+     *               'active' => ...,
+     *               'rate' => ...,
+     *               ],
+     *               ...
+     *               ]
+     */
+    public static function getTaxRulesGroupsForOptions()
+    {
+        $tax_rules[] = [
+            'id_tax_rules_group' => 0,
+            'name' => Context::getContext()->getTranslator()->trans('No tax', [], 'Admin.International.Notification'),
+        ];
+
+        return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroupsData(true, true));
+    }
+
+    /**
+     * @param bool $only_active Filter active tax rules group only
+     * @param bool $includeRates Include tax rate amount in returned data
+     *
+     * @return array|bool|false|mysqli_result|PDOStatement|resource|null
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private static function getTaxRulesGroupsData($only_active = true, bool $includeRates = false)
     {
         $sql = 'SELECT DISTINCT g.id_tax_rules_group, g.name, g.active';
 
@@ -157,21 +192,6 @@ class TaxRulesGroupCore extends ObjectModel
         ORDER BY name ASC';
 
         return Db::getInstance()->executeS($sql);
-    }
-
-    /**
-     * @param bool $includeRates
-     *
-     * @return array an array of tax rules group formatted as $id => $name
-     */
-    public static function getTaxRulesGroupsForOptions(bool $includeRates = false)
-    {
-        $tax_rules[] = [
-            'id_tax_rules_group' => 0,
-            'name' => Context::getContext()->getTranslator()->trans('No tax', [], 'Admin.International.Notification'),
-        ];
-
-        return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups(true, $includeRates));
     }
 
     public function delete()
