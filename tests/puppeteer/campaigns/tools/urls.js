@@ -1,40 +1,40 @@
+require('module-alias/register');
+const {DefaultAccount} = require('@data/demo/customer');
+
 module.exports = [
   {
     name: 'BO',
-    urlPrefix: 'URL_BO', // replaced
-    description: 'Parcours du Back Office',
+    urlPrefix: global.BO.URL,
+    description: 'Crawling Back Office',
     urls: [
-      {name: 'BO_login', url: 'index.php?controller=AdminLogin'},
       {
-        name: 'BO_dashboard',
+        name: 'BO_login',
         url: 'index.php?controller=AdminLogin',
-        async customAction({page, LOGININFOS}) {
-          await page.type('#email', LOGININFOS.admin.login);
-          await page.type('#passwd', LOGININFOS.admin.password);
+        async customAction(page) {
+          await page.type('#email', global.BO.EMAIL);
+          await page.type('#passwd', global.BO.PASSWD);
           await Promise.all([
             page.click('#submit_login'),
             page.waitForNavigation({waitUntil: 'networkidle0'}),
           ]);
-
-          page.evaluate(async () => {
-            const block = document.querySelector('button.onboarding-button-shut-down');
-            if (block) {
-              await page.click('button.onboarding-button-shut-down');
-              await page.waitForSelector('a.onboarding-button-stop', {visible: true});
-              await page.click('a.onboarding-button-stop');
-            }
-          });
+          const block = await page.$('button.onboarding-button-shut-down');
+          if (block !== null) {
+            await page.click('button.onboarding-button-shut-down');
+            await page.waitForSelector('a.onboarding-button-stop', {visible: true});
+            await page.click('a.onboarding-button-stop');
+          }
         },
       },
-      {name: 'BO_orders', url: 'index.php?controller=AdminOrders'},
-      {name: 'BO_add_orders', url: 'index.php?controller=AdminOrders&addorder'},
+      {name: 'BO_dashboard', url: 'index.php?controller=AdminDashboard'},
+      {name: 'BO_orders', url: 'index.php/sell/orders/orders/'},
+      {name: 'BO_add_orders', url: 'index.php/sell/orders/orders/new'},
       {name: 'BO_invoices', url: 'index.php/sell/orders/invoices/'},
-      {name: 'BO_credits_slips', url: 'index.php?controller=AdminSlip'},
+      {name: 'BO_credits_slips', url: 'index.php/sell/orders/credit-slips'},
       {name: 'BO_delivery_slips', url: 'index.php/sell/orders/delivery-slips/'},
       {name: 'BO_products', url: 'index.php/sell/catalog/products'},
       {name: 'BO_categories', url: 'index.php/sell/catalog/categories'},
       {name: 'BO_add_category', url: 'index.php/sell/catalog/categories/new'},
-      {name: 'BO_monitoring', url: 'index.php?controller=AdminTracking'},
+      {name: 'BO_monitoring', url: 'index.php/sell/catalog/monitoring'},
       {name: 'BO_attributes', url: 'index.php?controller=AdminAttributesGroups'},
       {name: 'BO_add_attribute', url: 'index.php?controller=AdminAttributesGroups&addattribute_group'},
       {name: 'BO_add_attribute_value', url: 'index.php?controller=AdminAttributesGroups&updateattribute'},
@@ -44,10 +44,10 @@ module.exports = [
       {name: 'BO_brands', url: 'index.php/sell/catalog/brands/'},
       {name: 'BO_add_brand', url: 'index.php/sell/catalog/brands/new'},
       {name: 'BO_add_brand_address', url: 'index.php/sell/catalog/brands/addresses/new'},
-      {name: 'BO_suppliers', url: 'index.php?controller=AdminSuppliers'},
-      {name: 'BO_add_supplier', url: 'index.php?controller=AdminSuppliers&addsupplier'},
-      {name: 'BO_files', url: 'index.php?controller=AdminAttachments'},
-      {name: 'BO_add_file', url: 'index.php?controller=AdminAttachments&addattachment'},
+      {name: 'BO_suppliers', url: 'index.php/sell/catalog/suppliers'},
+      {name: 'BO_add_supplier', url: 'index.php/sell/catalog/suppliers/new'},
+      {name: 'BO_files', url: 'index.php/sell/attachments'},
+      {name: 'BO_add_file', url: 'index.php/sell/attachments/new'},
       {name: 'BO_discounts', url: 'index.php?controller=AdminCartRules'},
       {name: 'BO_cart_rules', url: 'index.php?controller=AdminCartRules'},
       {name: 'BO_add_cart_rule', url: 'index.php?controller=AdminCartRules&addcart_rule'},
@@ -57,14 +57,13 @@ module.exports = [
       {name: 'BO_movements', url: 'index.php/sell/stocks/movements'},
       {name: 'BO_customers', url: 'index.php/sell/customers/'},
       {name: 'BO_add_customer', url: 'index.php/sell/customers/new'},
-      {name: 'BO_addresses', url: 'index.php?controller=AdminAddresses'},
-      {name: 'BO_add_address', url: 'index.php?controller=AdminAddresses&addaddress'},
+      {name: 'BO_addresses', url: 'index.php/sell/addresses/'},
+      {name: 'BO_add_address', url: 'index.php/sell/addresses/new'},
       {name: 'BO_customer_service', url: 'index.php?controller=AdminCustomerThreads'},
-      {name: 'BO_order_messages', url: 'index.php?controller=AdminOrderMessage'},
-      {name: 'BO_add_order_message', url: 'index.php?controller=AdminOrderMessage&addorder_message'},
+      {name: 'BO_order_messages', url: 'index.php/sell/customer-service/order-messages/'},
+      {name: 'BO_add_order_message', url: 'index.php/sell/customer-service/order-messages/new'},
       {name: 'BO_merchandise_returns', url: 'index.php?controller=AdminReturn'},
       {name: 'BO_stats', url: 'index.php?controller=AdminStats'},
-      {name: 'BO_module_manager', url: 'index.php/improve/modules/manage'},
       {name: 'BO_module_manager', url: 'index.php/improve/modules/manage'},
       {name: 'BO_module_manager_alerts', url: 'index.php/improve/modules/alerts'},
       {name: 'BO_module_manager_updates', url: 'index.php/improve/modules/updates'},
@@ -77,7 +76,6 @@ module.exports = [
       {name: 'BO_theme_catalog', url: 'index.php?controller=AdminPsMboTheme'},
       {name: 'BO_email_theme', url: 'index.php/improve/design/mail_theme/'},
       {name: 'BO_pages', url: 'index.php/improve/design/cms-pages/'},
-      {name: 'BO_add_page_category', url: 'index.php/improve/design/cms-pages/category/new'},
       {name: 'BO_add_page_category', url: 'index.php/improve/design/cms-pages/category/new'},
       {name: 'BO_add_page', url: 'index.php/improve/design/cms-pages/new'},
       {name: 'BO_positions', url: 'index.php/improve/design/modules/positions/'},
@@ -151,17 +149,17 @@ module.exports = [
   },
   {
     name: 'FO',
-    urlPrefix: 'URL_FO',
-    description: 'Parcours du Front Office',
+    urlPrefix: global.FO.URL,
+    description: 'Crawling Front Office',
     urls: [
       {name: 'FO_homepage', url: 'index.php'},
       {name: 'FO_login', url: 'index.php?controller=authentication&back=my-account'},
       {
         name: 'FO_my_account',
         url: 'index.php?controller=authentication&back=my-account',
-        async customAction({page, LOGININFOS}) {
-          await page.type('#login-form input[name=email]', LOGININFOS.user.login);
-          await page.type('#login-form input[name=password]', LOGININFOS.user.password);
+        async customAction(page) {
+          await page.type('#login-form input[name=email]', DefaultAccount.email);
+          await page.type('#login-form input[name=password]', DefaultAccount.password);
           await page.click('#submit-login');
         },
       },
