@@ -55,6 +55,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param MerchandiseReturnFilters $filters
      *
      * @return Response
+     * @throws Exception
      */
     public function indexAction(Request $request, MerchandiseReturnFilters $filters): Response
     {
@@ -96,15 +97,13 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     public function editAction(int $merchandiseReturnId, Request $request): Response
     {
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.merchandise_return_form_builder');
-
-       // $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_message_form_handler');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.merchandise_return_form_handler');
 
         try {
             /** @var EditableMerchandiseReturn $editableMerchandiseReturn */
             $editableMerchandiseReturn = $this->getQueryBus()->handle(
                 new GetMerchandiseReturnForEditing(
-                    $merchandiseReturnId,
-                    $this->getContextLangId()
+                    $merchandiseReturnId
                 )
             );
 
@@ -115,15 +114,15 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             );
 
             $form = $formBuilder->getFormFor($merchandiseReturnId);
-//            $form->handleRequest($request);
-//
-//            $result = $formHandler->handleFor($merchandiseReturnId, $form);
-//
-//            if ($result->getIdentifiableObjectId()) {
-//                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-//
-//                return $this->redirectToRoute('admin_merchandise_returns_index');
-//            }
+            $form->handleRequest($request);
+
+            $result = $formHandler->handleFor($merchandiseReturnId, $form);
+
+            if ($result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_merchandise_returns_index');
+            }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -155,7 +154,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages()
+    private function getErrorMessages(): array
     {
         return [
             MerchandiseReturnConstraintException::class => [
