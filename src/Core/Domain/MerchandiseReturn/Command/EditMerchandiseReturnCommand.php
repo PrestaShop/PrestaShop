@@ -26,16 +26,16 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnStateId;
 
 /**
- * Gets merchandise return for editing in Back Office
+ * Edits provided merchandise return.
+ * It can edit either all or partial data.
  */
-class GetMerchandiseReturnForEditing
+class EditMerchandiseReturnCommand
 {
     /**
      * @var MerchandiseReturnId
@@ -43,13 +43,16 @@ class GetMerchandiseReturnForEditing
     private $merchandiseReturnId;
 
     /**
-     * @param int $merchandiseReturnId
-     *
-     * @throws MerchandiseReturnConstraintException
+     * @var MerchandiseReturnStateId|null
      */
-    public function __construct(int $merchandiseReturnId)
+    private $merchandiseReturnStateId;
+
+    /**
+     * @param MerchandiseReturnId $merchandiseReturnId
+     */
+    public function __construct(MerchandiseReturnId $merchandiseReturnId)
     {
-        $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
+        $this->merchandiseReturnId = $merchandiseReturnId;
     }
 
     /**
@@ -58,5 +61,24 @@ class GetMerchandiseReturnForEditing
     public function getMerchandiseReturnId(): MerchandiseReturnId
     {
         return $this->merchandiseReturnId;
+    }
+
+    /**
+     * @return MerchandiseReturnStateId
+     */
+    public function getMerchandiseReturnStateId(): MerchandiseReturnStateId
+    {
+        return $this->merchandiseReturnStateId;
+    }
+
+    /**
+     * @param MerchandiseReturnStateId $merchandiseReturnStateId
+     *
+     * @return EditMerchandiseReturnCommand
+     */
+    public function setMerchandiseReturnStateId(MerchandiseReturnStateId $merchandiseReturnStateId): EditMerchandiseReturnCommand
+    {
+        $this->merchandiseReturnStateId = $merchandiseReturnStateId;
+        return $this;
     }
 }

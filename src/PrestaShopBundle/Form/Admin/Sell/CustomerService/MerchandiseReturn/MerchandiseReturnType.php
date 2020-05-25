@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -54,9 +53,8 @@ class MerchandiseReturnType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('state', ChoiceType::class, [
+            ->add('merchandise_return_order_state', ChoiceType::class, [
                 'required' => true,
-                'placeholder' => null,
                 'choices' => $this->stateChoices,
             ])
         ;

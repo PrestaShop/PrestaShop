@@ -32,6 +32,7 @@ use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MissingMerchandiseReturnRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 use PrestaShopException;
 
@@ -40,6 +41,20 @@ use PrestaShopException;
  */
 abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandler
 {
+
+    /**
+     * @param MerchandiseReturnId $merchandiseReturnId
+     * @param OrderReturn $orderReturn
+     *
+     * @throws MerchandiseReturnNotFoundException
+     */
+    protected function assertOrderReturnWasFound(MerchandiseReturnId $merchandiseReturnId, OrderReturn $orderReturn): void
+    {
+        if ($orderReturn->id !== $merchandiseReturnId->getValue()) {
+            throw new MerchandiseReturnNotFoundException($merchandiseReturnId, sprintf('Order return with id "%s" was not found.', $merchandiseReturnId->getValue()));
+        }
+    }
+
     /**
      * Gets legacy OrderReturn
      *
@@ -49,7 +64,7 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
      *
      * @throws MerchandiseReturnException
      */
-    protected function getOrderReturn(MerchandiseReturnId $merchandiseReturnId)
+    protected function getOrderReturn(MerchandiseReturnId $merchandiseReturnId): OrderReturn
     {
         try {
             $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
@@ -58,9 +73,26 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         }
 
         if ($orderReturn->id !== $merchandiseReturnId->getValue()) {
-            throw new MerchandiseReturnNotFoundException(sprintf('Merchandise return with id "%s" was not found.', $orderReturn->getValue()));
+            throw new MerchandiseReturnNotFoundException($merchandiseReturnId, sprintf('Merchandise return with id "%s" was not found.', $merchandiseReturnId->getValue()));
         }
 
         return $orderReturn;
+    }
+
+    /**
+     * @param OrderReturn $orderReturn
+     *
+     * @throws MissingMerchandiseReturnRequiredFieldsException
+     * @throws PrestaShopException
+     */
+    protected function assertRequiredFieldsAreNotMissing(OrderReturn $orderReturn): void
+    {
+        $errors = $orderReturn->validateFieldsRequiredDatabase();
+
+        if (!empty($errors)) {
+            $missingFields = array_keys($errors);
+
+            throw new MissingMerchandiseReturnRequiredFieldsException($missingFields, sprintf('One or more required fields for order return are missing. Missing fields are: %s', implode(',', $missingFields)));
+        }
     }
 }
