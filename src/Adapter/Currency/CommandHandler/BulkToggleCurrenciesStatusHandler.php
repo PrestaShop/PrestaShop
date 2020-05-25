@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkToggleCurrenciesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\BulkToggleCurrenciesStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotToggleCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkToggleCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 
 /**
@@ -49,7 +49,7 @@ final class BulkToggleCurrenciesStatusHandler extends AbstractCurrencyHandler im
     /**
      * @param int $defaultCurrencyId
      */
-    public function __construct(int $defaultCurrencyId)
+    public function __construct($defaultCurrencyId)
     {
         $this->defaultCurrencyId = (int) $defaultCurrencyId;
     }
@@ -57,10 +57,12 @@ final class BulkToggleCurrenciesStatusHandler extends AbstractCurrencyHandler im
     /**
      * @param BulkToggleCurrenciesStatusCommand $command
      *
-     * @throws CurrencyException
+     * @throws BulkToggleCurrenciesException
      */
     public function handle(BulkToggleCurrenciesStatusCommand $command)
     {
+        $faileds = [];
+
         foreach ($command->getCurrencyIds() as $currency) {
             $entity = new Currency((int) $currency->getValue());
 
@@ -69,21 +71,31 @@ final class BulkToggleCurrenciesStatusHandler extends AbstractCurrencyHandler im
             }
 
             if (0 >= $entity->id) {
-                throw new CurrencyNotFoundException(sprintf('Currency object with id "%s" has not been found for toggling.', $currency->getValue()));
+                $faileds[] = $currency->getValue();
+                continue;
             }
 
             if ($entity->active) {
-                $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabled($entity, $this->defaultCurrencyId);
-                $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop($entity);
+                try {
+                    $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabled($entity, $this->defaultCurrencyId);
+                    $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop($entity);
+                } catch (CurrencyException $e) {
+                    $faileds[] = $currency->getValue();
+                    continue;
+                }
             }
 
             try {
                 if (false === $entity->toggleStatus()) {
-                    throw new CannotToggleCurrencyException(sprintf('Unable to toggle Currency with id "%s"', $currency->getValue()));
+                    $faileds[] = $currency->getValue();
                 }
             } catch (PrestaShopException $e) {
-                throw new CurrencyException(sprintf('An error occurred when toggling status for Currency object with id "%s"', $currency->getValue()), 0, $e);
+                $faileds[] = $currency->getValue();
             }
+        }
+
+        if (!empty($faileds)) {
+            throw new BulkToggleCurrenciesException($faileds, 'Failed to delete all of selected currencies');
         }
     }
 }

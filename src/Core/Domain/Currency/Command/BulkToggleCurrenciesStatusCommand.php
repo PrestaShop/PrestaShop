@@ -24,8 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Currency\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
@@ -50,8 +48,10 @@ class BulkToggleCurrenciesStatusCommand
      * @param int[] $currencyIds
      * @param bool $expectedStatus
      */
-    public function __construct(array $currencyIds, bool $expectedStatus)
+    public function __construct(array $currencyIds, $expectedStatus)
     {
+        $this->assertStatusIsBool($expectedStatus);
+
         $this->setCurrencies($currencyIds);
         $this->expectedStatus = $expectedStatus;
     }
@@ -78,11 +78,23 @@ class BulkToggleCurrenciesStatusCommand
     private function setCurrencies(array $currencyIds)
     {
         if (empty($currencyIds)) {
-            throw new CurrencyConstraintException('Currencies must be provided in order to toggle their status');
+            throw new CurrencyConstraintException('Currencies must be provided in order to toggle their status', CurrencyConstraintException::EMPTY_BULK_TOGGLE);
         }
 
         foreach ($currencyIds as $currencyId) {
             $this->currencyIds[] = new CurrencyId($currencyId);
+        }
+    }
+
+    /**
+     * @param bool $status
+     *
+     * @throws CurrencyConstraintException
+     */
+    private function assertStatusIsBool($status)
+    {
+        if (!is_bool($status)) {
+            throw new CurrencyConstraintException('Invalid status provided, currency status must be type of "bool"', CurrencyConstraintException::INVALID_STATUS_PROVIDER);
         }
     }
 }

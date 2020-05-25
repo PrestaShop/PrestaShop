@@ -31,9 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkDeleteCurrenciesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\BulkDeleteCurrenciesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkDeleteCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShopException;
 
 /**
@@ -59,27 +58,39 @@ final class BulkDeleteCurrenciesHandler extends AbstractCurrencyHandler implemen
     /**
      * @param BulkDeleteCurrenciesCommand $command
      *
-     * @throws CurrencyException
+     * @throws BulkDeleteCurrenciesException
      */
     public function handle(BulkDeleteCurrenciesCommand $command)
     {
+        $faileds = [];
+
         foreach ($command->getCurrencyIds() as $currencyId) {
             $entity = new Currency($currencyId->getValue());
 
             if (0 >= $entity->id) {
-                throw new CurrencyNotFoundException(sprintf('Currency object with id "%s" has not been found for deletion.', $currencyId->getValue()));
+                $faileds[] = $currencyId->getValue();
+                continue;
             }
 
-            $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabled($currencyId->getValue(), $this->defaultCurrencyId);
-            $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop($entity);
+            try {
+                $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabled($currencyId->getValue(), $this->defaultCurrencyId);
+                $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop($entity);
+            } catch (CurrencyException $e) {
+                $faileds[] = $currencyId->getValue();
+                continue;
+            }
 
             try {
                 if (false === $entity->delete()) {
-                    throw new CannotDeleteCurrencyException(sprintf('Unable to delete currency object with id "%s"', $currencyId->getValue()));
+                    $faileds[] = $currencyId->getValue();
                 }
             } catch (PrestaShopException $e) {
-                throw new CurrencyException(sprintf('An error occurred when  deleting Currency object with id "%s"', $currencyId->getValue()), 0, $e);
+                $faileds[] = $currencyId->getValue();
             }
+        }
+
+        if (!empty($faileds)) {
+            throw new BulkDeleteCurrenciesException($faileds, 'Failed to delete all of selected currencies');
         }
     }
 }

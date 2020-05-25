@@ -83,4 +83,14 @@ class CurrencyConstraintException extends CurrencyException
      * @var int Code is used when empty data is used when deleting currencies
      */
     const EMPTY_BULK_DELETE = 9;
+
+    /**
+     * @var int Code is used when empty data is used when toggling currencies
+     */
+    const EMPTY_BULK_TOGGLE = 10;
+
+    /**
+     * @var int Code is used when another value instead of bool
+     */
+    const INVALID_STATUS_PROVIDER = 11;
 }
