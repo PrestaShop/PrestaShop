@@ -315,14 +315,11 @@ describe('Enable tax breakdown', async () => {
       it('should download the invoice', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceTaxBreakdown', baseContext);
 
-        // Get file name
-        firstInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
-
         // Download invoice
-        await this.pageObjects.viewOrderPage.downloadInvoice();
+        firstInvoiceFileName = await this.pageObjects.viewOrderPage.downloadInvoice();
 
         // Check that file exist
-        const exist = await files.doesFileExist(`${firstInvoiceFileName}.pdf`);
+        const exist = await files.doesFileExist(firstInvoiceFileName);
         await expect(exist).to.be.true;
       });
 
@@ -330,15 +327,12 @@ describe('Enable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkTaxBreakdownInFile', baseContext);
 
         // Check the existence of the first tax
-        let exist = await files.isTextInPDF(`${firstInvoiceFileName}.pdf`, '10.000 %');
+        let exist = await files.isTextInPDF(firstInvoiceFileName, '10.000 %');
         await expect(exist).to.be.true;
 
         // Check the existence of the second tax
-        exist = await files.isTextInPDF(`${firstInvoiceFileName}.pdf`, '20.000 %');
+        exist = await files.isTextInPDF(firstInvoiceFileName, '20.000 %');
         await expect(exist).to.be.true;
-
-        // Delete the invoice file
-        await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstInvoiceFileName}.pdf`);
       });
     });
   });
@@ -390,13 +384,10 @@ describe('Enable tax breakdown', async () => {
       it('should download the invoice', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceNoTaxBreakdown', baseContext);
 
-        // Get file name
-        secondInvoiceFileName = await this.pageObjects.viewOrderPage.getFileName();
-
         // Download invoice and check existence
-        await this.pageObjects.viewOrderPage.downloadInvoice();
+        secondInvoiceFileName = await this.pageObjects.viewOrderPage.downloadInvoice();
 
-        const exist = await files.doesFileExist(`${secondInvoiceFileName}.pdf`);
+        const exist = await files.doesFileExist(secondInvoiceFileName);
         await expect(exist).to.be.true;
       });
 
@@ -405,13 +396,13 @@ describe('Enable tax breakdown', async () => {
 
         // Check that there is only one tax line 30.000 %
 
-        let exist = await files.isTextInPDF(`${secondInvoiceFileName}.pdf`, '10.000 %');
+        let exist = await files.isTextInPDF(secondInvoiceFileName, '10.000 %');
         await expect(exist).to.be.false;
 
-        exist = await files.isTextInPDF(`${secondInvoiceFileName}.pdf`, '20.000 %');
+        exist = await files.isTextInPDF(secondInvoiceFileName, '20.000 %');
         await expect(exist).to.be.false;
 
-        exist = await files.isTextInPDF(`${secondInvoiceFileName}.pdf`, '30.000 %');
+        exist = await files.isTextInPDF(secondInvoiceFileName, '30.000 %');
         await expect(exist).to.be.true;
       });
     });

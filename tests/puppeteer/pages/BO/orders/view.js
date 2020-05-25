@@ -112,11 +112,15 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async downloadInvoice() {
-    /* eslint-disable no-return-assign, no-param-reassign */
-    // Delete the target because a new tab is opened when downloading the file
     await this.page.$eval(this.documentNumberLink(1), el => el.target = '');
-    await this.page.click(this.documentNumberLink(1));
-    /* eslint-enable no-return-assign, no-param-reassign */
+
+    // Delete the target because a new tab is opened when downloading the file
+    const [ download ] = await Promise.all([
+      this.page.waitForEvent('download'), // wait for download to start
+      this.page.click(this.documentNumberLink(1))
+    ]);
+
+    return download.path();
   }
 
   /**
