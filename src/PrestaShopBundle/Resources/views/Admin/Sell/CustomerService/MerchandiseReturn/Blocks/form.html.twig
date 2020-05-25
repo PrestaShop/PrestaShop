@@ -38,7 +38,7 @@
         {{ 'View details on the customer page'|trans({}, 'Admin.Actions') }}
       </a>
 
-      <p>Order: Order # {{ editableMerchandiseReturn.orderId }} froms {{ editableMerchandiseReturn.orderDate.format('d/m/y') }}</p>
+      <p>Order: Order # {{ editableMerchandiseReturn.orderId }} from {{ editableMerchandiseReturn.orderDate.format('d/m/y') }}</p>
       <a href="{{ path('admin_orders_view', {'orderId': editableMerchandiseReturn.orderId.value }) }}" class="btn btn-outline-secondary">
         {{ 'View details on the order page'|trans({}, 'Admin.Actions') }}
       </a>
@@ -46,7 +46,7 @@
 
       <p> {{ editableMerchandiseReturn.question }}</p>
 
-      {{ ps.form_group_row(merchandiseReturnForm.state, {}, {
+      {{ ps.form_group_row(merchandiseReturnForm.merchandise_return_order_state, {}, {
         'label': 'Order State'|trans({}, 'Admin.Global')
       }) }}
 

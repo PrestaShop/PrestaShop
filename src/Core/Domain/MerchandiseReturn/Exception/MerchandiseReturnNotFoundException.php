@@ -28,9 +28,36 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+
 /**
  * Is thrown when merchandise return is not found in merchandise return subdomain
  */
 class MerchandiseReturnNotFoundException extends MerchandiseReturnException
 {
+    /**
+     * @var MerchandiseReturnId
+     */
+    private $merchandiseReturnId;
+
+    /**
+     * @param MerchandiseReturnId $merchandiseReturnId
+     * @param string $message
+     * @param int $code
+     * @param \Exception|null $previous
+     */
+    public function __construct(MerchandiseReturnId $merchandiseReturnId, $message = '', $code = 0, $previous = null)
+    {
+
+        parent::__construct($message, $code, $previous);
+        $this->merchandiseReturnId = $merchandiseReturnId;
+    }
+
+    /**
+     * @return MerchandiseReturnId
+     */
+    public function getMerchandiseReturnId(): MerchandiseReturnId
+    {
+        return $this->merchandiseReturnId;
+    }
 }

@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryHandler\GetMerchandiseReturnForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnStateId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 /**
@@ -46,12 +47,11 @@ final class GetMerchandiseReturnForEditingHandler extends AbstractMerchandiseRet
     /**
      * {@inheritdoc}
      */
-    public function handle(GetMerchandiseReturnForEditing $query)
+    public function handle(GetMerchandiseReturnForEditing $query): EditableMerchandiseReturn
     {
         $merchandiseReturnId = $query->getMerchandiseReturnId();
-        $languageId = $query->getLanguageId();
         $orderReturn = $this->getOrderReturn($merchandiseReturnId);
-        $customer = new Customer($orderReturn->id_customer, $languageId->getValue());
+        $customer = new Customer($orderReturn->id_customer);
         $order = new Order($orderReturn->id_order);
 
         return new EditableMerchandiseReturn(
@@ -61,7 +61,7 @@ final class GetMerchandiseReturnForEditingHandler extends AbstractMerchandiseRet
             $customer->lastname,
             new OrderId((int) $orderReturn->id_order),
             new DateTime($order->date_add),
-            (int) $orderReturn->state,
+            new MerchandiseReturnStateId((int) $orderReturn->state),
             $orderReturn->question
         );
     }

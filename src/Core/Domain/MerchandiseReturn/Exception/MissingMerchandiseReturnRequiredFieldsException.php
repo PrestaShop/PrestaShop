@@ -26,37 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
-
-/**
- * Gets merchandise return for editing in Back Office
- */
-class GetMerchandiseReturnForEditing
+class MissingMerchandiseReturnRequiredFieldsException extends MerchandiseReturnException
 {
     /**
-     * @var MerchandiseReturnId
+     * @var array
      */
-    private $merchandiseReturnId;
+    private $missingFields;
 
     /**
-     * @param int $merchandiseReturnId
-     *
-     * @throws MerchandiseReturnConstraintException
+     * @param array $missingFields
+     * @param string $message
+     * @param int $code
+     * @param \Exception|null $previous
      */
-    public function __construct(int $merchandiseReturnId)
+    public function __construct(array $missingFields, $message = '', $code = 0, $previous = null)
     {
-        $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
+
+        parent::__construct($message, $code, $previous);
+        $this->missingFields = $missingFields;
     }
 
     /**
-     * @return MerchandiseReturnId
+     * @return array
      */
-    public function getMerchandiseReturnId(): MerchandiseReturnId
+    public function getMissingFields(): array
     {
-        return $this->merchandiseReturnId;
+        return $this->missingFields;
     }
 }

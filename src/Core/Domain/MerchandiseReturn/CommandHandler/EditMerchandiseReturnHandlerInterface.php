@@ -26,37 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query;
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\EditMerchandiseReturnCommand;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
 
-/**
- * Gets merchandise return for editing in Back Office
- */
-class GetMerchandiseReturnForEditing
+interface EditMerchandiseReturnHandlerInterface
 {
-    /**
-     * @var MerchandiseReturnId
-     */
-    private $merchandiseReturnId;
-
-    /**
-     * @param int $merchandiseReturnId
-     *
-     * @throws MerchandiseReturnConstraintException
-     */
-    public function __construct(int $merchandiseReturnId)
-    {
-        $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
-    }
-
-    /**
-     * @return MerchandiseReturnId
-     */
-    public function getMerchandiseReturnId(): MerchandiseReturnId
-    {
-        return $this->merchandiseReturnId;
-    }
+    public function handle(EditMerchandiseReturnCommand $command): EditableMerchandiseReturn;
 }

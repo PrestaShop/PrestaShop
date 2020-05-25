@@ -6,6 +6,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnStateId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use DateTime;
 
@@ -43,9 +44,9 @@ class EditableMerchandiseReturn
     private $orderDate;
 
     /**
-     * @var int
+     * @var MerchandiseReturnStateId
      */
-    private $state;
+    private $merchandiseReturnStateId;
 
     /**
      * @var string
@@ -59,7 +60,7 @@ class EditableMerchandiseReturn
         string $customerLastName,
         OrderId $orderId,
         DateTime $orderDate,
-        int $state,
+        MerchandiseReturnStateId $merchandiseReturnStateId,
         string $question
     )
     {
@@ -69,7 +70,7 @@ class EditableMerchandiseReturn
         $this->customerLastName = $customerLastName;
         $this->orderId = $orderId;
         $this->orderDate = $orderDate;
-        $this->state = $state;
+        $this->merchandiseReturnStateId = $merchandiseReturnStateId;
         $this->question = $question;
     }
 
@@ -98,11 +99,11 @@ class EditableMerchandiseReturn
     }
 
     /**
-     * @return int
+     * @return MerchandiseReturnStateId
      */
-    public function getState(): int
+    public function getMerchandiseReturnStateId(): MerchandiseReturnStateId
     {
-        return $this->state;
+        return $this->merchandiseReturnStateId;
     }
 
     /**
