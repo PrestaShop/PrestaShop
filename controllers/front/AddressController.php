@@ -138,6 +138,18 @@ class AddressControllerCore extends FrontController
             'url' => $this->context->link->getPageLink('addresses'),
         ];
 
+        $title = $this->trans('New address', [], 'Shop.Theme.Customeraccount');
+
+        $id_address = Tools::getValue('id_address');
+        if ($id_address) {
+            $title = $this->trans('Update your address', [], 'Shop.Theme.Customeraccount');
+        }
+
+        $breadcrumb['links'][] = [
+            'title' => $title,
+            'url' => '#',
+        ];
+
         return $breadcrumb;
     }
 
