@@ -214,14 +214,19 @@ module.exports = class BOBasePage extends CommonPage {
   }
 
   /**
-   * Set value on tinyMce textareas
+   * Set value on tinyMce textarea
    * @param iFrameSelector
    * @param value
    * @return {Promise<void>}
    */
   async setValueOnTinymceInput(iFrameSelector, value) {
-    await this.page.click(iFrameSelector, {clickCount: 3});
-    await this.page.keyboard.type(value);
+    const args = {selector: iFrameSelector, vl: value};
+    await this.page.evaluate(async (args) => {
+      const iFrameElement = await document.querySelector(args.selector);
+      const iFrameHtml = iFrameElement.contentDocument.documentElement;
+      const textElement = await iFrameHtml.querySelector('body p');
+      textElement.textContent = args.vl;
+    }, args);
   }
 
   /**
