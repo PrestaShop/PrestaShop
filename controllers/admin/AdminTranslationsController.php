@@ -2191,7 +2191,6 @@ class AdminTranslationsControllerCore extends AdminController
 
         return $modules;
     }
-    
     /**
      * @param $directory : name of directory
      *
