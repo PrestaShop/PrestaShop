@@ -2198,7 +2198,7 @@ class AdminTranslationsControllerCore extends AdminController
      */
     protected function getSubjectMailContent($directory)
     {
-        $subject_mail_content = array();
+        $subject_mail_content = [];
 
         if (Tools::file_exists_cache($directory.'/lang.php')) {
             // we need to include this even if already included (no include once)
