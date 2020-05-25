@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -22,28 +21,29 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-declare(strict_types=1);
+{% form_theme productPriceForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
+{# @todo: starter for product page. Feel free to move/modify while appending more fields to form #}
+{% block content %}
+  {% block product_price_form %}
+    {{ form_start(productPriceForm) }}
+    <div class="card">
+      <div class="card-block row">
+        <div class="card-text">
+          {{ form_widget(productPriceForm) }}
+        </div>
+      </div>
+    </div>
+    {{ form_end(productPriceForm) }}
+  {% endblock %}
+{% endblock %}
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Product\ProductPriceType;
-use Symfony\Component\HttpFoundation\Response;
+{% block javascripts %}
+  {{ parent() }}
 
-class ProductController extends FrameworkBundleAdminController
-{
-    public function editAction(int $productId): Response
-    {
-        $productPriceForm = $this->createForm(ProductPriceType::class, [
-            'price_tax_excluded' => 100,
-            'price_tax_included' => 110,
-            'tax_rule_group' => 1,
-        ]);
-
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
-            'productPriceForm' => $productPriceForm->createView(),
-        ]);
-    }
-}
+  {# To uncomment when javascript is integrated #}
+  {# <script src="{{ asset('themes/new-theme/public/product_edit.bundle.js') }}"></script> #}
+{% endblock %}
