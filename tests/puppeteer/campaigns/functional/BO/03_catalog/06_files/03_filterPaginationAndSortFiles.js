@@ -26,9 +26,6 @@ let page;
 
 let numberOfFiles = 0;
 
-const firstFileData = new FileFaker();
-const secondFileData = new FileFaker();
-const thirdFileData = new FileFaker();
 
 // Init objects needed
 const init = async function () {
@@ -142,7 +139,7 @@ describe('Filter, pagination and sort files', async () => {
       });
 
       it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetAfterFilter', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
         const numberOfFilesAfterReset = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
         await expect(numberOfFilesAfterReset).to.be.equal(numberOfFiles + 11);

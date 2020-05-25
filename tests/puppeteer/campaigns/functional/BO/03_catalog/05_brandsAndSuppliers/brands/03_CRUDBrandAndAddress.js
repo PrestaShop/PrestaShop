@@ -323,7 +323,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     });
 
     it('should return brands Page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageAfterViewCreatedBrand', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageAfterViewEditedBrand', baseContext);
 
       await this.pageObjects.viewBrandPage.goToPreviousPage();
       const pageTitle = await this.pageObjects.brandsPage.getPageTitle();

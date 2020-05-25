@@ -304,7 +304,7 @@ describe('Configure group restrictions', async () => {
           });
 
           it('should go back to BO', async function () {
-            await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index + groupIndex}`, baseContext);
+            await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}${groupIndex}`, baseContext);
 
             // Close current tab
             page = await this.pageObjects.foBasePage.closePage(browser, 1);
