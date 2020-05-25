@@ -2191,7 +2191,6 @@ class AdminTranslationsControllerCore extends AdminController
 
         return $modules;
     }
-    
     /**
      * @param $directory : name of directory
      *
@@ -2215,10 +2214,8 @@ class AdminTranslationsControllerCore extends AdminController
         } else {
             $this->errors[] = sprintf($this->l('Email subject translation file not found in "%s".'), $directory);
         }
-        
         return $subject_mail_content;
     }
-    
     /**
      * This method generate the form for errors translations.
      */
