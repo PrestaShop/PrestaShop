@@ -155,7 +155,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         await expect(categoryName).to.contains(createCategoryData.name);
 
         // Go back to BO
-        page = await this.pageObjects.foBasePage.closePage(browser, 1);
+        page = await this.pageObjects.foBasePage.closePage(browser, 0);
         this.pageObjects = await init();
       });
     });
@@ -222,7 +222,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         await expect(categoryName).to.contains(createSubCategoryData.name);
 
         // Go back to BO
-        page = await this.pageObjects.foBasePage.closePage(browser, 1);
+        page = await this.pageObjects.foBasePage.closePage(browser, 0);
         this.pageObjects = await init();
       });
     });
@@ -365,7 +365,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       await expect(categoryName).to.be.false;
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 1);
+      page = await this.pageObjects.foBasePage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

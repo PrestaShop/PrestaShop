@@ -129,7 +129,7 @@ describe('Allow ordering of out-of-stock products', async () => {
       await expect(lastQuantityIsVisible).to.be.equal(test.args.enable);
 
       // Go back to BO
-      page = await this.pageObjects.productPage.closePage(browser, 1);
+      page = await this.pageObjects.productPage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

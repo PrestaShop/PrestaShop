@@ -85,7 +85,7 @@ describe('Number of days for which the product is considered \'new\'', async () 
       const isNewFlagVisible = await this.pageObjects.homePage.isNewFlagVisible(1);
       await expect(isNewFlagVisible).to.be.equal(test.args.exist);
 
-      page = await this.pageObjects.homePage.closePage(browser, 1);
+      page = await this.pageObjects.homePage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

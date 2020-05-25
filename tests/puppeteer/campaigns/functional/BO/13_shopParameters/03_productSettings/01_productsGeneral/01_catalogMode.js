@@ -85,7 +85,6 @@ describe('Enable/Disable catalog mode', async () => {
         `${test.args.actionCatalogMode}CatalogMode`,
         baseContext,
       );
-
       const result = await this.pageObjects.productSettingsPage.changeCatalogModeStatus(test.args.enable);
       await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
     });
@@ -158,7 +157,7 @@ describe('Enable/Disable catalog mode', async () => {
           isVisible = await this.pageObjects.productPage.isAddToCartButtonDisplayed();
           await expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
 
-          page = await this.pageObjects.productPage.closePage(browser, 1);
+          page = await this.pageObjects.productPage.closePage(browser, 0);
           this.pageObjects = await init();
         });
       });
@@ -202,7 +201,7 @@ describe('Enable/Disable catalog mode', async () => {
         isVisible = await this.pageObjects.productPage.isAddToCartButtonDisplayed();
         await expect(isVisible).to.be.true;
 
-        page = await this.pageObjects.productPage.closePage(browser, 1);
+        page = await this.pageObjects.productPage.closePage(browser, 0);
         this.pageObjects = await init();
       });
     }

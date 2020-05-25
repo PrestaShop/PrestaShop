@@ -83,7 +83,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.getProductInformation(productData);
-    page = await this.pageObjects.foProductPage.closePage(browser, 1);
+    page = await this.pageObjects.foProductPage.closePage(browser, 0);
     this.pageObjects = await init();
     // Check that all Product attribute are correct
     await Promise.all([
@@ -104,7 +104,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     page = await this.pageObjects.addProductPage.previewProduct();
     this.pageObjects = await init();
     const result = await this.pageObjects.foProductPage.getProductInformation(editedProductData);
-    page = await this.pageObjects.foProductPage.closePage(browser, 1);
+    page = await this.pageObjects.foProductPage.closePage(browser, 0);
     this.pageObjects = await init();
     // Check that all Product attribute are correct
     await Promise.all([

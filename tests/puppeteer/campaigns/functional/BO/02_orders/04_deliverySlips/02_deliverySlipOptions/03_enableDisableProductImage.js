@@ -158,7 +158,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
           await this.pageObjects.foBasePage.logout();
 
           // Go back to BO
-          page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
+          page = await this.pageObjects.orderConfirmationPage.closePage(browser, 0);
           this.pageObjects = await init();
         });
       });

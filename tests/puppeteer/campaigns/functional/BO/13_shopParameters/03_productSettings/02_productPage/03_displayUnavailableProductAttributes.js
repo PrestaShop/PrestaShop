@@ -152,7 +152,7 @@ describe('Display unavailable product attributes on the product page', async () 
 
       await expect(colorIsVisible).to.be.equal(test.args.enable);
 
-      page = await this.pageObjects.productPage.closePage(browser, 1);
+      page = await this.pageObjects.productPage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

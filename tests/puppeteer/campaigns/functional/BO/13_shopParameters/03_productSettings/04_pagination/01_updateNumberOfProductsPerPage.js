@@ -120,7 +120,7 @@ describe('Update number of product displayed on FO', async () => {
           'Number of product displayed is incorrect',
         ).to.equal(test.args.numberOfProductsPerPage);
 
-        page = await this.pageObjects.homePageFO.closePage(browser, 1);
+        page = await this.pageObjects.homePageFO.closePage(browser, 0);
         this.pageObjects = await init();
       });
     });

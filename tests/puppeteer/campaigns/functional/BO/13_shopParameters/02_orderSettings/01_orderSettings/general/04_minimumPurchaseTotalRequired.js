@@ -132,7 +132,7 @@ describe('Test minimum purchase total required in order to validate the order', 
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `BackToBO${index}`, baseContext);
 
-      page = await this.pageObjects.cartPage.closePage(browser, 1);
+      page = await this.pageObjects.cartPage.closePage(browser, 0);
       this.pageObjects = await init();
 
       const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();

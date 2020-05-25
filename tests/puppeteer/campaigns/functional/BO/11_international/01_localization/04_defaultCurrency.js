@@ -149,7 +149,7 @@ describe('Update default currency', async () => {
         await expect(defaultCurrency).to.equal(test.args.currency);
 
         // Go back to BO
-        page = await this.pageObjects.foBasePage.closePage(browser, 1);
+        page = await this.pageObjects.foBasePage.closePage(browser, 0);
         this.pageObjects = await init();
       });
 

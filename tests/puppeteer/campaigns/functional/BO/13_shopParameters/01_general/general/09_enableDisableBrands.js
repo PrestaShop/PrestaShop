@@ -123,7 +123,7 @@ describe('Enable display brands', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
 
-      page = await this.pageObjects.siteMapPage.closePage(browser, 1);
+      page = await this.pageObjects.siteMapPage.closePage(browser, 0);
       this.pageObjects = await init();
 
       const pageTitle = await this.pageObjects.brandsPage.getPageTitle();

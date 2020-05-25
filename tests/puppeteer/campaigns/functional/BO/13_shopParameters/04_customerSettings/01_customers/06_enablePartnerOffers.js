@@ -104,7 +104,7 @@ describe('Enable partner offer', async () => {
       await expect(isPartnerOfferVisible).to.be.equal(test.args.enable);
 
       // Go back to BO
-      page = await this.pageObjects.loginFOPage.closePage(browser, 1);
+      page = await this.pageObjects.loginFOPage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

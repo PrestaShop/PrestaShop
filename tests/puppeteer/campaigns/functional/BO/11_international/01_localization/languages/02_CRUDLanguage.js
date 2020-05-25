@@ -128,7 +128,7 @@ describe('CRUD language', async () => {
       await expect(isLanguageInFO, `${createLanguageData.name} was not found as a language in FO`).to.be.true;
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 1);
+      page = await this.pageObjects.foBasePage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });
@@ -178,7 +178,7 @@ describe('CRUD language', async () => {
       await expect(isLanguageInFO, `${editLanguageData.name} was found as a language in FO`).to.be.false;
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 1);
+      page = await this.pageObjects.foBasePage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

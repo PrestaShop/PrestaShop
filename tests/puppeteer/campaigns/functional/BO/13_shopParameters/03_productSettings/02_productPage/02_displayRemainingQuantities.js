@@ -133,7 +133,7 @@ describe('Display remaining quantities', async () => {
       const lastQuantityIsVisible = await this.pageObjects.productPage.isAvailabilityQuantityDisplayed();
       await expect(lastQuantityIsVisible).to.be.equal(test.args.exist);
 
-      page = await this.pageObjects.productPage.closePage(browser, 1);
+      page = await this.pageObjects.productPage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

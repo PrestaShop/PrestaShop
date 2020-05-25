@@ -146,7 +146,7 @@ describe('Enable delivery time out-of-stocks products', async () => {
         it('should go back to BO', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-          page = await this.pageObjects.foProductPage.closePage(browser, 1);
+          page = await this.pageObjects.foProductPage.closePage(browser, 0);
           this.pageObjects = await init();
 
           const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();

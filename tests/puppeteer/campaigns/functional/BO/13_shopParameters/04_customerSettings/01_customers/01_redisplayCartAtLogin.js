@@ -151,7 +151,7 @@ describe('Enable re-display cart at login', async () => {
       await this.pageObjects.homePage.logout();
 
       // Go back to BO
-      page = await this.pageObjects.homePage.closePage(browser, 1);
+      page = await this.pageObjects.homePage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

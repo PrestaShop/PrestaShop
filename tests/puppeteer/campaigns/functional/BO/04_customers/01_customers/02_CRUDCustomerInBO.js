@@ -123,7 +123,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await this.pageObjects.foBasePage.logout();
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 1);
+      page = await this.pageObjects.foBasePage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });
@@ -222,7 +222,7 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
       await expect(isCustomerConnected).to.be.false;
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 1);
+      page = await this.pageObjects.foBasePage.closePage(browser, 0);
       this.pageObjects = await init();
     });
   });

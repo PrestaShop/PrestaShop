@@ -126,7 +126,7 @@ describe('Enable send an email after registration', async () => {
       await this.pageObjects.loginFOPage.logout();
 
       // Go back to BO
-      page = await this.pageObjects.loginFOPage.closePage(browser, 1);
+      page = await this.pageObjects.loginFOPage.closePage(browser, 0);
       this.pageObjects = await init();
     });
 

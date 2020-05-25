@@ -125,7 +125,7 @@ describe('Enable reordering option', async () => {
       // Logout FO
       await this.pageObjects.orderHistoryPage.logout();
 
-      page = await this.pageObjects.orderHistoryPage.closePage(browser, 1);
+      page = await this.pageObjects.orderHistoryPage.closePage(browser, 0);
       this.pageObjects = await init();
 
       const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();
