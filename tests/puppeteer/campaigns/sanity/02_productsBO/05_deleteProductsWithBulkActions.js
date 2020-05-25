@@ -5,7 +5,7 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_productsBO_deleteProduct';
+const baseContext = 'sanity_productsBO_deleteProductsWithBulkActions';
 
 // importing pages
 const LoginPage = require('@pages/BO/login');

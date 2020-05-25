@@ -21,7 +21,7 @@ const {Tables} = require('@data/demo/sqlTables');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParams_database_exportSqlQuery';
+const baseContext = 'functional_BO_advancedParams_database_sqlManager_exportSqlQuery';
 
 let browser;
 let page;
