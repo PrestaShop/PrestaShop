@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkDeleteCurrenciesException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkToggleCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDisableDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotRefreshExchangeRatesException;
@@ -563,6 +565,18 @@ class CurrencyController extends FrameworkBundleAdminController
                     'This currency already exists.',
                     'Admin.International.Notification'
                 ),
+                CurrencyConstraintException::EMPTY_BULK_TOGGLE => $this->trans(
+                    'Currencies must be provided in order to toggle their status',
+                    'Admin.International.Notification'
+                ),
+                CurrencyConstraintException::EMPTY_BULK_DELETE => $this->trans(
+                    'At least one currency must be provided for deleting',
+                    'Admin.International.Notification'
+                ),
+                CurrencyConstraintException::INVALID_STATUS_PROVIDER => $this->trans(
+                    'Invalid status provided, currency status must be type of "bool"',
+                    'Admin.International.Notification'
+                ),
             ],
             AutomateExchangeRatesUpdateException::class => [
                 AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
@@ -617,6 +631,22 @@ class CurrencyController extends FrameworkBundleAdminController
                     '[2]' => '<li>',
                     '[/2]' => '</li>',
                 ]
+            ),
+            BulkDeleteCurrenciesException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteCurrenciesException ? implode(', ', $e->getCurrenciesNames()) : ''
+            ),
+            BulkToggleCurrenciesException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while updating the status.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkToggleCurrenciesException ? implode(', ', $e->getCurrenciesNames()) : ''
             ),
         ];
     }
