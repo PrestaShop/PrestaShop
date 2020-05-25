@@ -26,37 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
 
 /**
- * Gets merchandise return for editing in Back Office
+ * Is thrown when merchandise return constraint is violated
  */
-class GetMerchandiseReturnForEditing
+class MerchandiseReturnOrderStateConstraintException extends MerchandiseReturnException
 {
     /**
-     * @var MerchandiseReturnId
+     * When merchandise return order state id is not valid
      */
-    private $merchandiseReturnId;
-
-    /**
-     * @param int $merchandiseReturnId
-     *
-     * @throws MerchandiseReturnConstraintException
-     */
-    public function __construct(int $merchandiseReturnId)
-    {
-        $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
-    }
-
-    /**
-     * @return MerchandiseReturnId
-     */
-    public function getMerchandiseReturnId(): MerchandiseReturnId
-    {
-        return $this->merchandiseReturnId;
-    }
+    const INVALID_ID = 10;
 }

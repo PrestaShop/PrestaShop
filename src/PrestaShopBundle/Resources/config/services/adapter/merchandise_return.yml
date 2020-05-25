@@ -15,3 +15,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing'
+
+  prestashop.adapter.merchandise_return.command_handler.edit_merchandise_return_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler\EditMerchandiseReturnHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\EditMerchandiseReturnCommand'
