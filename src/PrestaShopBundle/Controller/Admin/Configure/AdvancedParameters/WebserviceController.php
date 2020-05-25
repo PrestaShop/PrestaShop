@@ -45,6 +45,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class WebserviceController extends FrameworkBundleAdminController
 {
+    const WEBSERVICE_ENTRY_ENDPOINT = '/api';
+
     /**
      * Displays the Webservice main page.
      *
@@ -66,6 +68,22 @@ class WebserviceController extends FrameworkBundleAdminController
 
         $configurationWarnings = $this->lookForWarnings();
 
+        $webserviceConfiguration = $this->get('prestashop.admin.webservice.form_data_provider')->getData();
+        $webserviceIsEnabled = $webserviceConfiguration['webservice_configuration']['enable_webservice'];
+        $webserviceStatus = [
+            'enabled' => $webserviceIsEnabled,
+            'isFunctional' => true,
+            'endpoint' => null,
+        ];
+
+        if ($webserviceIsEnabled) {
+            $expectedWebserviceEntryPoint = $request->getSchemeAndHttpHost() . self::WEBSERVICE_ENTRY_ENDPOINT;
+            $webServiceEntryPointIsReachable = $this->checkWebserviceEndpoint($expectedWebserviceEntryPoint);
+
+            $webserviceStatus['endpoint'] = $expectedWebserviceEntryPoint;
+            $webserviceStatus['isFunctional'] = $webServiceEntryPointIsReachable;
+        }
+
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
             [
@@ -73,8 +91,38 @@ class WebserviceController extends FrameworkBundleAdminController
                 'webserviceConfigurationForm' => $form->createView(),
                 'grid' => $presentedGrid,
                 'configurationWarnings' => $configurationWarnings,
+                'webserviceStatus' => $webserviceStatus,
             ]
         );
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return bool
+     */
+    private function checkWebserviceEndpoint($url): bool
+    {
+        if ($url === null) {
+            return false;
+        }
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $data = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode >= 200 && $httpCode < 300) {
+            return true;
+        } elseif ($httpCode == 401) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
