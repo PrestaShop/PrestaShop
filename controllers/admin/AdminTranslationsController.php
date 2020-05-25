@@ -2193,33 +2193,6 @@ class AdminTranslationsControllerCore extends AdminController
     }
     
     /**
-     * @param $directory : name of directory
-     *
-     * @return array
-     */
-    protected function getSubjectMailContent($directory)
-    {
-        $subject_mail_content = [];
-
-        if (Tools::file_exists_cache($directory . '/lang.php')) {
-            // we need to include this even if already included (no include once)
-            include $directory . '/lang.php';
-            foreach ($GLOBALS[$this->translations_informations[$this->type_selected]['var']] as $key => $subject) {
-                ++$this->total_expression;
-                $subject = str_replace('\n', ' ', $subject);
-                $subject = str_replace("\\'", "\'", $subject);
-
-                $subject_mail_content[$key]['trad'] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
-                $subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
-            }
-        } else {
-            $this->errors[] = sprintf($this->l('Email subject translation file not found in "%s".'), $directory);
-        }
-        
-        return $subject_mail_content;
-    }
-    
-    /**
      * This method generate the form for errors translations.
      */
     public function initFormErrors()
@@ -3336,5 +3309,32 @@ class AdminTranslationsControllerCore extends AdminController
         $this->ajaxRender(
             AdminTranslationsController::getEmailHTML($email)
         );
+    }
+    
+    /**
+     * @param $directory : name of directory
+     *
+     * @return array
+     */
+    protected function getSubjectMailContent($directory)
+    {
+        $subject_mail_content = [];
+
+        if (Tools::file_exists_cache($directory . '/lang.php')) {
+            // we need to include this even if already included (no include once)
+            include $directory . '/lang.php';
+            foreach ($GLOBALS[$this->translations_informations[$this->type_selected]['var']] as $key => $subject) {
+                ++$this->total_expression;
+                $subject = str_replace('\n', ' ', $subject);
+                $subject = str_replace("\\'", "\'", $subject);
+
+                $subject_mail_content[$key]['trad'] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
+                $subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
+            }
+        } else {
+            $this->errors[] = sprintf($this->l('Email subject translation file not found in "%s".'), $directory);
+        }
+        
+        return $subject_mail_content;
     }
 }
