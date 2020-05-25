@@ -132,24 +132,46 @@ class TaxRulesGroupCore extends ObjectModel
         );
     }
 
-    public static function getTaxRulesGroups($only_active = true)
+    public static function getTaxRulesGroups($only_active = true, bool $includeRates = false)
     {
-        return Db::getInstance()->executeS('
-			SELECT DISTINCT g.id_tax_rules_group, g.name, g.active
-			FROM `' . _DB_PREFIX_ . 'tax_rules_group` g'
-            . Shop::addSqlAssociation('tax_rules_group', 'g') . ' WHERE deleted = 0'
-            . ($only_active ? ' AND g.`active` = 1' : '') . '
-			ORDER BY name ASC');
+        $sql = 'SELECT DISTINCT g.id_tax_rules_group, g.name, g.active';
+
+        if ($includeRates) {
+            $sql .= ', t.rate';
+        }
+
+        $sql .= ' FROM `' . _DB_PREFIX_ . 'tax_rules_group` g';
+
+        if ($includeRates) {
+            $sql .= '
+                INNER JOIN ' . _DB_PREFIX_ . 'tax_rule tr
+                ON g.id_tax_rules_group = tr.id_tax_rules_group
+                INNER JOIN ' . _DB_PREFIX_ . 'tax t
+                ON tr.id_tax = t.id_tax
+            ';
+        }
+
+        $sql .= Shop::addSqlAssociation('tax_rules_group', 'g') . ' WHERE g.deleted = 0'
+            . ($only_active ? ' AND g.`active` = 1' : '')
+            . '
+        ORDER BY name ASC';
+
+        return Db::getInstance()->executeS($sql);
     }
 
     /**
+     * @param bool $includeRates
+     *
      * @return array an array of tax rules group formatted as $id => $name
      */
-    public static function getTaxRulesGroupsForOptions()
+    public static function getTaxRulesGroupsForOptions(bool $includeRates = false)
     {
-        $tax_rules[] = ['id_tax_rules_group' => 0, 'name' => Context::getContext()->getTranslator()->trans('No tax', [], 'Admin.International.Notification')];
+        $tax_rules[] = [
+            'id_tax_rules_group' => 0,
+            'name' => Context::getContext()->getTranslator()->trans('No tax', [], 'Admin.International.Notification'),
+        ];
 
-        return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups());
+        return array_merge($tax_rules, TaxRulesGroup::getTaxRulesGroups(true, $includeRates));
     }
 
     public function delete()
