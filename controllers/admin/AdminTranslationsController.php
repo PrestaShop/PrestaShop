@@ -2191,6 +2191,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         return $modules;
     }
+    
     /**
      * @param $directory : name of directory
      *
@@ -2200,9 +2201,9 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $subject_mail_content = [];
 
-        if (Tools::file_exists_cache($directory.'/lang.php')) {
+        if (Tools::file_exists_cache($directory . '/lang.php')) {
             // we need to include this even if already included (no include once)
-            include($directory . '/lang.php');
+            include $directory . '/lang.php';
             foreach ($GLOBALS[$this->translations_informations[$this->type_selected]['var']] as $key => $subject) {
                 ++$this->total_expression;
                 $subject = str_replace('\n', ' ', $subject);
@@ -2214,6 +2215,7 @@ class AdminTranslationsControllerCore extends AdminController
         } else {
             $this->errors[] = sprintf($this->l('Email subject translation file not found in "%s".'), $directory);
         }
+        
         return $subject_mail_content;
     }
     
