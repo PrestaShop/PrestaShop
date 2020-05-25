@@ -5,7 +5,7 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_productsBO_deleteProduct';
+const baseContext = 'sanity_productsBO_deleteProductsWithBulkActions';
 
 // importing pages
 const LoginPage = require('@pages/BO/login');
@@ -77,7 +77,7 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
     });
 
     it('should go to Products page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index + 1}`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goToProductsPageAfterCreate${index + 1}`, baseContext);
 
       await this.pageObjects.addProductPage.goToSubMenu(
         this.pageObjects.addProductPage.catalogParentLink,

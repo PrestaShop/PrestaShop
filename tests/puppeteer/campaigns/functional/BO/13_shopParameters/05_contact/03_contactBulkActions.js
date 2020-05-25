@@ -18,7 +18,7 @@ const ContactFaker = require('@data/faker/contact');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_contact_CRUDContact';
+const baseContext = 'functional_BO_shopParameters_contact_contactBulkActions';
 
 let browser;
 let page;

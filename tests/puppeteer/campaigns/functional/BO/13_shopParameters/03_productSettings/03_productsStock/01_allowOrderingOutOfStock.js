@@ -112,7 +112,7 @@ describe('Allow ordering of out-of-stock products', async () => {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `checkOrderingOutOfStock${test.args.state}`,
+        `checkOrderingOutOfStock${test.args.action}`,
         baseContext,
       );
 

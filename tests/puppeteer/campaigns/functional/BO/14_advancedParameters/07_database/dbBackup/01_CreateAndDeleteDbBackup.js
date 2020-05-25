@@ -16,7 +16,7 @@ const DbBackupPage = require('@pages/BO/advancedParameters/database/dbBackup');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_advancedParams_database_dbBackup';
+const baseContext = 'functional_BO_advancedParams_database_dbBackup_createAndDeleteDbBackup';
 
 let browser;
 let page;

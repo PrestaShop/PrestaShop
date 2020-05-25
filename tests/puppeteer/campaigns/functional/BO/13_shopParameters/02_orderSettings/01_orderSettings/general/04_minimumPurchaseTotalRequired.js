@@ -19,7 +19,7 @@ const CartPage = require('@pages/FO/cart');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_minimumPurchaseTotalRequired';
+const baseContext = 'functional_BO_shopParameters_orderSettings_general_minimumPurchaseTotalRequired';
 
 let browser;
 let page;
@@ -88,7 +88,7 @@ describe('Test minimum purchase total required in order to validate the order', 
     });
 
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // Click on view my shop
       page = await this.pageObjects.orderSettingsPage.viewMyShop();
@@ -130,7 +130,7 @@ describe('Test minimum purchase total required in order to validate the order', 
     });
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `BackToBO${index}`, baseContext);
 
       page = await this.pageObjects.cartPage.closePage(browser, 1);
       this.pageObjects = await init();

@@ -113,7 +113,7 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
       });
 
       it(`should check that the invoice file name contain the prefix '${invoiceData.prefix}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageForUpdatedPrefix', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
         // Get invoice file name
         fileName = await this.pageObjects.viewOrderPage.getFileName();

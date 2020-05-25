@@ -498,7 +498,7 @@ describe('View information about customer', async () => {
     });
 
     it('should modify order status', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateCustomer', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'modifyOrderStatus', baseContext);
 
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
