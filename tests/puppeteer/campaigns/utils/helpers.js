@@ -14,8 +14,8 @@ module.exports = {
       return await browser.newContext({
         acceptDownloads:true,
         viewport: {
-          width: 1280,
-          height: 720
+          width: 1680,
+          height: 900,
         }
       });
     } catch (e) {

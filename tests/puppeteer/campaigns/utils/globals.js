@@ -25,6 +25,6 @@ global.BROWSER_CONFIG = {
   headless: JSON.parse(process.env.HEADLESS || true),
   timeout: 0,
   slowMo: parseInt(process.env.SLOWMO, 10) || 5,
-  args: ['--start-maximized', '--no-sandbox', '--lang=en-GB'],
+  args: ['--window-size=1680,900', '--start-maximized', '--no-sandbox', '--lang=en-GB'],
 };
 global.BROWSER = process.env.BROWSER || 'chromium';
