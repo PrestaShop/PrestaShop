@@ -178,7 +178,7 @@ describe('Filter And Quick Edit Categories', async () => {
 
     tests.forEach((test) => {
       it(`should ${test.args.action} first Category`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.status}Category`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Category`, baseContext);
 
         const isActionPerformed = await this.pageObjects.categoriesPage.updateToggleColumnValue(
           1,
