@@ -20,7 +20,7 @@ const ProductFaker = require('@data/faker/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_enableDisableFriendlyUrl';
+const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_enableDisableAccentedUrl';
 
 let browser;
 let page;
@@ -106,7 +106,7 @@ describe('Enable/Disable accented URL', async () => {
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToSeoPageTo${test.args.action}`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goToProductsPageAfter${test.args.action}`, baseContext);
 
       await this.pageObjects.seoAndUrlsPage.goToSubMenu(
         this.pageObjects.seoAndUrlsPage.catalogParentLink,
@@ -118,7 +118,7 @@ describe('Enable/Disable accented URL', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goToSeoPageTo${test.args.action}`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfter${test.args.action}`, baseContext);
 
       await this.pageObjects.productsPage.resetFilterCategory();
       const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();

@@ -120,7 +120,7 @@ describe('Enable/Disable shop', async () => {
   });
 
   it('should back to the default maintenance text', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'verifyNewMaintenanceText', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultMaintenanceText', baseContext);
 
     const result = await this.pageObjects.maintenancePage.changeMaintenanceTextShopStatus(
       this.pageObjects.maintenancePage.maintenanceText,
