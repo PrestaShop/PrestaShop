@@ -97,7 +97,7 @@ describe('Sort taxes', async () => {
     {
       args:
         {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_tax', sortDirection: 'asc', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_tax', sortDirection: 'asc', isFloat: true,
         },
     },
   ];
