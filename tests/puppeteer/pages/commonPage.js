@@ -188,7 +188,6 @@ module.exports = class CommonPage {
     await this.page.close();
     if (tabId !== -1) {
       this.page = (await browser.pages())[tabId];
-      await this.page.bringToFront();
     }
     return this.page;
   }
