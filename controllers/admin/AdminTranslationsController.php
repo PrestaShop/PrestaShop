@@ -2202,7 +2202,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         if (Tools::file_exists_cache($directory.'/lang.php')) {
             // we need to include this even if already included (no include once)
-            include($directory.'/lang.php');
+            include($directory . '/lang.php');
             foreach ($GLOBALS[$this->translations_informations[$this->type_selected]['var']] as $key => $subject) {
                 $this->total_expression++;
                 $subject = str_replace('\n', ' ', $subject);
