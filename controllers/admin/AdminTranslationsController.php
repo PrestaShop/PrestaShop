@@ -2204,7 +2204,7 @@ class AdminTranslationsControllerCore extends AdminController
             // we need to include this even if already included (no include once)
             include($directory . '/lang.php');
             foreach ($GLOBALS[$this->translations_informations[$this->type_selected]['var']] as $key => $subject) {
-                $this->total_expression++;
+                ++$this->total_expression;
                 $subject = str_replace('\n', ' ', $subject);
                 $subject = str_replace("\\'", "\'", $subject);
 
