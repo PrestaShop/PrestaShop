@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Container;
+namespace PrestaShopBundle\DependencyInjection\Config;
 
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;

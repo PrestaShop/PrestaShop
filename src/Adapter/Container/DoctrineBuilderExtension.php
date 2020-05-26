@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Container;
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
+use PrestaShopBundle\DependencyInjection\Config\ConfigYamlLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
