@@ -115,7 +115,7 @@ module.exports = class Order extends BOBasePage {
     await this.page.$eval(this.documentNumberLink(1), el => el.target = '');
 
     // Delete the target because a new tab is opened when downloading the file
-    const [ download ] = await Promise.all([
+    const [download] = await Promise.all([
       this.page.waitForEvent('download'), // wait for download to start
       this.page.click(this.documentNumberLink(1))
     ]);
