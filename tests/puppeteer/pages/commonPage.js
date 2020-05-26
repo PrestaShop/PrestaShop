@@ -180,14 +180,14 @@ module.exports = class CommonPage {
 
   /**
    * Close actual tab and goto another tab if wanted
-   * @param browser
+   * @param browserContext
    * @param tabId
    * @return {Promise<void>}
    */
-  async closePage(browser, tabId = -1) {
+  async closePage(browserContext, tabId = -1) {
     await this.page.close();
     if (tabId !== -1) {
-      this.page = (await browser.pages())[tabId];
+      this.page = (await browserContext.pages())[tabId];
     }
     return this.page;
   }

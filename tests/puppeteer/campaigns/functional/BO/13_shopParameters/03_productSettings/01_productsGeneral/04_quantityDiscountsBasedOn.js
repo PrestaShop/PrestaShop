@@ -153,7 +153,7 @@ describe('Choose quantity discount based on', async () => {
     const priceTTC = await this.pageObjects.cartPage.getTTCPrice();
     await expect(priceTTC).to.equal(firstCartTotalTTC);
 
-    page = await this.pageObjects.cartPage.closePage(browser, 0);
+    page = await this.pageObjects.cartPage.closePage(browserContext, 0);
     this.pageObjects = await init();
   });
 
@@ -186,7 +186,7 @@ describe('Choose quantity discount based on', async () => {
     const priceTTC = await this.pageObjects.cartPage.getTTCPrice();
     await expect(priceTTC).to.equal(secondCartTotalTTC);
 
-    page = await this.pageObjects.cartPage.closePage(browser, 0);
+    page = await this.pageObjects.cartPage.closePage(browserContext, 0);
     this.pageObjects = await init();
   });
 

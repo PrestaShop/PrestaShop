@@ -128,7 +128,7 @@ describe('Filter, delete and bulk actions email log', async () => {
       await this.pageObjects.foBasePage.logout();
 
       // Go Back to BO
-      page = await this.pageObjects.orderConfirmationPage.closePage(browser, 0);
+      page = await this.pageObjects.orderConfirmationPage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });

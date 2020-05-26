@@ -181,7 +181,7 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
-      page = await this.pageObjects.orderConfirmationPage.closePage(browser, 0);
+      page = await this.pageObjects.orderConfirmationPage.closePage(browserContext, 0);
       this.pageObjects = await init();
       const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.invoicesPage.pageTitle);

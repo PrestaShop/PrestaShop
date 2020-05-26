@@ -115,7 +115,7 @@ describe('Create footer link widget and check it in FO', async () => {
       ]);
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 0);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });

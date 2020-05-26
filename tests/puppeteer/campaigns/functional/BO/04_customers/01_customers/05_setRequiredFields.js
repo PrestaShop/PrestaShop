@@ -103,7 +103,7 @@ describe('Set required fields for customers', async () => {
       await expect(isPartnerOfferRequired).to.be.equal(test.args.exist);
 
       // Go back to BO
-      page = await this.pageObjects.loginFOPage.closePage(browser, 0);
+      page = await this.pageObjects.loginFOPage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });

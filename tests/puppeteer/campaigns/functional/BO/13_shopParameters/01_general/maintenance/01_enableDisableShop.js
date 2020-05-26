@@ -97,7 +97,7 @@ describe('Enable/Disable shop', async () => {
     await expect(pageContent).to.equal(this.pageObjects.maintenancePage.maintenanceText);
 
     // Go back to BO
-    page = await this.pageObjects.homePage.closePage(browser, 0);
+    page = await this.pageObjects.homePage.closePage(browserContext, 0);
     this.pageObjects = await init();
   });
 
@@ -117,7 +117,7 @@ describe('Enable/Disable shop', async () => {
     const pageContent = await this.pageObjects.homePage.getTextContent(this.pageObjects.homePage.content);
     await expect(pageContent).to.equal(newMaintenanceText);
 
-    page = await this.pageObjects.homePage.closePage(browser, 0);
+    page = await this.pageObjects.homePage.closePage(browserContext, 0);
     this.pageObjects = await init();
   });
 
@@ -150,7 +150,7 @@ describe('Enable/Disable shop', async () => {
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
 
-    page = await this.pageObjects.homePage.closePage(browser, 0);
+    page = await this.pageObjects.homePage.closePage(browserContext, 0);
     this.pageObjects = await init();
   });
 
@@ -176,7 +176,7 @@ describe('Enable/Disable shop', async () => {
     const result = await this.pageObjects.homePage.isHomePage();
     await expect(result).to.be.true;
 
-    page = await this.pageObjects.homePage.closePage(browser, 0);
+    page = await this.pageObjects.homePage.closePage(browserContext, 0);
     this.pageObjects = await init();
   });
 });

@@ -104,7 +104,7 @@ describe('Enable B2B mode', async () => {
       await expect(isCompanyInputVisible).to.be.equal(test.args.enable);
 
       // Go back to BO
-      page = await this.pageObjects.loginFOPage.closePage(browser, 0);
+      page = await this.pageObjects.loginFOPage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });

@@ -147,7 +147,7 @@ describe('Create official currency and check it in FO', async () => {
       await this.pageObjects.foBasePage.changeCurrency(`${Currencies.mad.isoCode} ${Currencies.mad.symbol}`);
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 0);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
 
@@ -215,7 +215,7 @@ describe('Create official currency and check it in FO', async () => {
       );
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 0);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
 

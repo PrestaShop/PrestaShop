@@ -136,7 +136,7 @@ describe('Enable display suppliers', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo_${test.args.action}`, baseContext);
 
-      page = await this.pageObjects.siteMapPage.closePage(browser, 0);
+      page = await this.pageObjects.siteMapPage.closePage(browserContext, 0);
       this.pageObjects = await init();
 
       const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();

@@ -105,7 +105,7 @@ describe('Import a localization pack including a language and a currency', async
       await this.pageObjects.foBasePage.changeLanguage(Languages.spanish.isoCode);
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 0);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });

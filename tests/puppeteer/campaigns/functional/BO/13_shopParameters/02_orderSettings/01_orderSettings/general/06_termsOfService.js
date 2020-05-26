@@ -133,7 +133,7 @@ describe('Enable terms of service', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
 
-      page = await this.pageObjects.checkoutPage.closePage(browser, 0);
+      page = await this.pageObjects.checkoutPage.closePage(browserContext, 0);
       this.pageObjects = await init();
 
       const pageTitle = await this.pageObjects.orderSettingsPage.getPageTitle();

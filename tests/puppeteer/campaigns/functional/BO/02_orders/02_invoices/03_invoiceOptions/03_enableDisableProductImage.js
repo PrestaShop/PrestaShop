@@ -191,7 +191,7 @@ describe('Enable product image in invoices', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${test.args.action}`, baseContext);
 
           // Close page and init page objects
-          page = await this.pageObjects.orderConfirmationPage.closePage(browser, 0);
+          page = await this.pageObjects.orderConfirmationPage.closePage(browserContext, 0);
           this.pageObjects = await init();
 
           const pageTitle = await this.pageObjects.invoicesPage.getPageTitle();

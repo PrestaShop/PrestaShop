@@ -277,7 +277,7 @@ describe('Enable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
         // Close tab and init other page objects with new current tab
-        page = await this.pageObjects.orderConfirmationPage.closePage(browser, 0);
+        page = await this.pageObjects.orderConfirmationPage.closePage(browserContext, 0);
         this.pageObjects = await init();
 
         const pageTitle = await this.pageObjects.addProductPage.getPageTitle();

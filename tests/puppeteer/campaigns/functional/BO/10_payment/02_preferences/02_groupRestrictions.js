@@ -309,7 +309,7 @@ describe('Configure group restrictions', async () => {
             await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}${groupIndex}`, baseContext);
 
             // Close current tab
-            page = await this.pageObjects.foBasePage.closePage(browser, 0);
+            page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
             this.pageObjects = await init();
 
             const pageTitle = await this.pageObjects.preferencesPage.getPageTitle();

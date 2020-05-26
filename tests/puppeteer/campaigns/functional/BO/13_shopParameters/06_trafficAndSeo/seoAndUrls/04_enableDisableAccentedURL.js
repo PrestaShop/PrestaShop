@@ -156,7 +156,7 @@ describe('Enable/Disable accented URL', async () => {
       await expect(url).to.contains(test.args.productNameInURL.toLowerCase());
 
       // Go back to BO
-      page = await this.pageObjects.foHomePage.closePage(browser, 0);
+      page = await this.pageObjects.foHomePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });

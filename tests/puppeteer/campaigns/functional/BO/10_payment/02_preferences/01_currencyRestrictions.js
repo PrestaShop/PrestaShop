@@ -132,7 +132,7 @@ describe('Configure currency restrictions', async () => {
       await expect(isVisible).to.be.equal(test.args.exist);
 
       // Go back to BO
-      page = await this.pageObjects.checkoutPage.closePage(browser, 0);
+      page = await this.pageObjects.checkoutPage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });

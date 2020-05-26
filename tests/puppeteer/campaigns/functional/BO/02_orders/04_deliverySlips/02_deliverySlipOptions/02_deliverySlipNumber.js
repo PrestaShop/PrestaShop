@@ -145,7 +145,7 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
       await this.pageObjects.foBasePage.logout();
 
       // Close tab and go back to BO
-      page = await this.pageObjects.orderConfirmationPage.closePage(browser, 0);
+      page = await this.pageObjects.orderConfirmationPage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });

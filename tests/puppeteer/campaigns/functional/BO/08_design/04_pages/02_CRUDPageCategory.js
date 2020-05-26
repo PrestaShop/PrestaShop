@@ -144,7 +144,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
       const pageCategoryName = await this.pageObjects.siteMapPage.getPageCategoryName(pageCategoryID);
       await expect(pageCategoryName).to.contains(createCategoryData.name);
-      page = await this.pageObjects.foBasePage.closePage(browser, 0);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });
@@ -208,7 +208,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await expect(metaTitle).to.equal(createPageData.metaTitle);
       const pageContent = await this.pageObjects.cmsPage.getTextContent(this.pageObjects.cmsPage.pageContent);
       await expect(pageContent).to.include(createPageData.content);
-      page = await this.pageObjects.cmsPage.closePage(browser, 0);
+      page = await this.pageObjects.cmsPage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
 
@@ -285,7 +285,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       await expect(pageTitle).to.equal(this.pageObjects.siteMapPage.pageTitle);
       const pageCategoryName = await this.pageObjects.siteMapPage.getPageCategoryName(pageCategoryID);
       await expect(pageCategoryName).to.contains(editCategoryData.name);
-      page = await this.pageObjects.foBasePage.closePage(browser, 0);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });
@@ -354,7 +354,7 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
       this.pageObjects = await init();
       const pageTitle = await this.pageObjects.cmsPage.getTextContent(this.pageObjects.cmsPage.pageTitle);
       await expect(pageTitle).to.include(this.pageObjects.cmsPage.pageNotFound);
-      page = await this.pageObjects.foBasePage.closePage(browser, 0);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
 

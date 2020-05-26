@@ -183,7 +183,7 @@ describe('Set label out-of-stock with allowed/denied backorders', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
-      page = await this.pageObjects.productPage.closePage(browser, 0);
+      page = await this.pageObjects.productPage.closePage(browserContext, 0);
       this.pageObjects = await init();
 
       const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();

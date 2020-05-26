@@ -276,7 +276,7 @@ describe('View information about customer', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
 
-      page = await this.pageObjects.foBasePage.closePage(browser, 0);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
 
       const pageTitle = await this.pageObjects.viewCustomerPage.getPageTitle();

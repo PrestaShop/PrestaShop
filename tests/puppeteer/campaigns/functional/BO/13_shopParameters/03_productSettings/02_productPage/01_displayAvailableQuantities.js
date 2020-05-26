@@ -103,7 +103,7 @@ describe('Display available quantities on the product page', async () => {
 
       const quantityIsVisible = await this.pageObjects.productPage.isQuantityDisplayed();
       await expect(quantityIsVisible).to.be.equal(test.args.enable);
-      page = await this.pageObjects.homePage.closePage(browser, 0);
+      page = await this.pageObjects.homePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
   });
