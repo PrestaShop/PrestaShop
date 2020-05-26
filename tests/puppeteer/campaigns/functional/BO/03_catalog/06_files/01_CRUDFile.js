@@ -63,9 +63,7 @@ describe('Create, update and delete file', async () => {
     await helper.closeBrowser(browser);
 
     await Promise.all([
-      files.deleteFile(createFileData.filename),
       files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${createFileData.filename}`),
-      files.deleteFile(editFileData.filename),
       files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${editFileData.filename}`),
     ]);
   });
@@ -109,9 +107,9 @@ describe('Create, update and delete file', async () => {
     it('should view file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedFile', baseContext);
 
-      await this.pageObjects.filesPage.viewFile(1);
+      const filePath = await this.pageObjects.filesPage.viewFile(1);
 
-      const found = await files.doesFileExist(createFileData.filename);
+      const found = await files.doesFileExist(filePath);
       await expect(found, `${createFileData.filename} was not downloaded`).to.be.true;
     });
   });
@@ -137,9 +135,9 @@ describe('Create, update and delete file', async () => {
     it('should view file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedFile', baseContext);
 
-      await this.pageObjects.filesPage.viewFile(1);
+      const filePath = await this.pageObjects.filesPage.viewFile(1);
 
-      const found = await files.doesFileExist(editFileData.filename);
+      const found = await files.doesFileExist(filePath);
       await expect(found, `${editFileData.filename} was not downloaded`).to.be.true;
     });
   });

@@ -76,7 +76,13 @@ module.exports = class Files extends BOBasePage {
       this.page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.page.click(this.viewRowLink(row));
+
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'), // wait for download to start
+      this.page.click(this.viewRowLink(row)),
+    ]);
+
+    return download.path();
   }
 
   /**
@@ -154,8 +160,8 @@ module.exports = class Files extends BOBasePage {
   async deleteFilesBulkActions() {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([

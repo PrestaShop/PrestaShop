@@ -99,8 +99,6 @@ describe('Filter, pagination and sort files', async () => {
         const numberOfFilesAfterCreation = await this.pageObjects.filesPage.resetAndGetNumberOfLines();
         await expect(numberOfFilesAfterCreation).to.be.equal(numberOfFiles + 1 + index);
       });
-
-      after(() => files.deleteFile(createFileData.filename));
     });
   });
   // 2 : Filter files table
