@@ -26,13 +26,21 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
 use Cache;
+use Configuration;
 use Context;
+use Exception;
+use Pack;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ProductFeatureContext extends AbstractDomainFeatureContext
 {
@@ -56,6 +64,152 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I add product :productReference with following basic information in default language:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function addProduct(string $productReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $defaultLangId = (int)Configuration::get('PS_LANG_DEFAULT');
+
+        try {
+            /** @var ProductId $productId */
+            $productId = $this->getCommandBus()->handle(new AddProductCommand(
+                [$defaultLangId => $data['name']],
+                $this->getProductTypeValueByName($table['type'])
+            ));
+
+            $this->getSharedStorage()->set($productReference, $productId->getValue());
+        } catch (Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then /^product "(.+)" name should be "(.+)" in default language$/
+     *
+     * @param string $productReference
+     * @param string $name
+     */
+    private function assertProductNameInDefaultLang(string $productReference, string $name)
+    {
+        $defaultLangId = (int)Configuration::get('PS_LANG_DEFAULT');
+        $product = $this->getProductByReference($productReference);
+
+        if ($product->name[$defaultLangId] !== $name) {
+            return;
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'Expected product name to be "%s" in default language, but it is "%s"',
+                $name,
+                $product->name[$defaultLangId]
+            )
+        );
+    }
+
+    /**
+     * @Then product :productReference should have following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertProductFields(string $productReference, TableNode $table)
+    {
+        $product = $this->getProductByReference($productReference);
+        $data = $table->getRowsHash();
+
+        if (!empty($data['active'])) {
+            $status = PrimitiveUtils::castStringBooleanIntoBoolean($data['active']);
+            $statusInWords = $status ? 'enabled' : 'disabled';
+
+            if ($product->active !== $status) {
+                throw new RuntimeException(sprintf('Product expected to be %s', $statusInWords));
+            }
+        }
+
+        if (!empty($data['condition'])) {
+            if ($product->condition !== $data['condition']) {
+                throw new RuntimeException(sprintf(
+                    'Product condition expected to be "%s, but is "%s"',
+                    $data['condition'],
+                        $product->condition
+                    )
+                );
+            }
+        }
+
+    }
+
+    /**
+     * @Then product :productReference should be assigned to default category
+     *
+     * @param string $productReference
+     */
+    public function assertProductAssignedToDefaultCategory(string $productReference)
+    {
+        $defaultCategoryId = (int) Configuration::get('PS_HOME_CATEGORY');
+        $product = $this->getProductByReference($productReference);
+
+        if ($product->category !== $defaultCategoryId || $product->id_category_default !== $defaultCategoryId) {
+            throw new RuntimeException('Product is not assigned to default category');
+        }
+    }
+
+    /**
+     * @Then product :productReference type should be :productType
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertProductType(string $productReference, string $productTypeName)
+    {
+        $product = $this->getProductByReference($productReference);
+        $productTypeValue = $this->getProductTypeValueByName($productTypeName);
+
+        $isVirtual = $product->is_virtual;
+        $isPack = Pack::isPack($product->id);
+        $isStandard = !Pack::isPack($product->id) && !$product->is_virtual;
+
+
+        if ($isVirtual && $productTypeValue === ProductType::TYPE_VIRTUAL) {
+            return;
+        } elseif ($isPack && $productTypeValue === ProductType::TYPE_PACK) {
+            return;
+        } elseif ($isStandard && $productTypeValue === ProductType::TYPE_STANDARD) {
+            return;
+        }
+
+        throw new RuntimeException(sprintf('Product type is not as expected. Expected %s', $productTypeName));
+    }
+
+    /**
+     * @param string $typeName
+     *
+     * @return int
+     */
+    private function getProductTypeValueByName(string $typeName): int
+    {
+        $typeValueByName = [
+            'standard' => ProductType::TYPE_STANDARD,
+            'pack' => ProductType::TYPE_PACK,
+            'virtual' => ProductType::TYPE_VIRTUAL,
+        ];
+
+        if (!array_key_exists($typeName, $typeValueByName)) {
+            throw new RuntimeException(sprintf(
+                'Product type "%s" does not exist',
+                $typeName
+            ));
+        }
+
+        return $typeValueByName[$typeName];
+    }
+
+    /**
      * @param string $productName
      *
      * @return int
@@ -73,5 +227,33 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $product = reset($products);
 
         return $product->getProductId();
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Product
+     */
+    private function getProductByReference(string $reference): Product
+    {
+        $productId = $this->getSharedStorage()->get($reference);
+
+        return $this->getProductById($productId);
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return Product
+     */
+    private function getProductById(int $productId): Product
+    {
+        $product = new Product($productId->getValue());
+
+        if (!$product->id) {
+            throw new RuntimeException('Product with id "%s" was not found');
+        }
+
+        return $product;
     }
 }
