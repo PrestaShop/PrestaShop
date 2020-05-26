@@ -463,7 +463,7 @@ class CartCore extends ObjectModel
             CartRule::autoAddToCart($virtual_context);
         }
 
-        $cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter. '-' . $active;
+        $cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter . '-' . $active;
         if (!Cache::isStored($cache_key)) {
             $result = Db::getInstance()->executeS(
                 'SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
