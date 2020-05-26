@@ -573,10 +573,6 @@ class CurrencyController extends FrameworkBundleAdminController
                     'At least one currency must be provided for deleting',
                     'Admin.International.Notification'
                 ),
-                CurrencyConstraintException::INVALID_STATUS_PROVIDER => $this->trans(
-                    'Invalid status provided, currency status must be type of "bool"',
-                    'Admin.International.Notification'
-                ),
             ],
             AutomateExchangeRatesUpdateException::class => [
                 AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
