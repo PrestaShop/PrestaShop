@@ -71,6 +71,7 @@ class CustomerLoginFormCore extends AbstractForm
                 $this->errors[''][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
             } else {
                 $this->context->updateCustomer($customer);
+                $this->context->cookie->registerSession(new CustomerSession());
 
                 Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
 
