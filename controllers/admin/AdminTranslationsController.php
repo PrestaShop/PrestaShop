@@ -3330,7 +3330,6 @@ class AdminTranslationsControllerCore extends AdminController
         } else {
             $this->errors[] = sprintf($this->l('Email subject translation file not found in "%s".'), $directory);
         }
-        
         return $subject_mail_content;
     }
 }
