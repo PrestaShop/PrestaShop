@@ -2191,7 +2191,6 @@ class AdminTranslationsControllerCore extends AdminController
 
         return $modules;
     }
-    
     /**
      * This method generate the form for errors translations.
      */
