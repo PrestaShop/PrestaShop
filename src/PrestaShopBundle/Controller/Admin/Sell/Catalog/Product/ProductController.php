@@ -30,16 +30,33 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Product\ProductPriceType;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Admin controller to manage Products
+ * Admin controller for the Product pages using the Symfony architecture:
+ * - product list (display, search)
+ * - product form (creation, edition)
+ * - ...
+ *
+ * Some component displayed in this form are based on ajax request which might implemented
+ * in another Controller.
  *
  * This controller is a re-migration of the initial ProductController which was the first
  * one to be migrated but doesn't meet the standards of the recently migrated controller.
+ * The retro-compatibility is dropped for the legacy Admin pages, the former hook are no longer
+ * managed for backward compatibility, new hooks need to be used in the modules, migration process
+ * is detailed in the devdoc. (@todo add devdoc link when ready?)
  */
 class ProductController extends FrameworkBundleAdminController
 {
+    /**
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     *
+     * @param int $productId
+     *
+     * @return Response
+     */
     public function editAction(int $productId): Response
     {
         $productPriceForm = $this->createForm(ProductPriceType::class, [

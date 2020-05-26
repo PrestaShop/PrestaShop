@@ -51,7 +51,7 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
     /**
      * {@inheritdoc}
      */
-    public function getChoicesAttributes()
+    public function getChoicesAttributes(): array
     {
         $attrs = [];
         foreach ($this->getRules() as $rule) {

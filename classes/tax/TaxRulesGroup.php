@@ -134,20 +134,23 @@ class TaxRulesGroupCore extends ObjectModel
 
     public static function getTaxRulesGroups($only_active = true)
     {
-        return static::getTaxRulesGroupsData($only_active, false);
+        return static::getTaxRulesGroupsData($only_active);
     }
 
     /**
+     * This method returns the list of TaxRulesGroup as array with default placeholder
+     * it is used to populate a select box. The returned array is formatted like this:
+     * [
+     *   [
+     *     'id_tax_rules_group' => ...,
+     *     'name' => ...,
+     *     'active' => ...,
+     *     'rate' => ...,
+     *   ],
+     *   ...
+     * ]
+     *
      * @return array an array of tax rules group formatted as:
-     *               [
-     *               [
-     *               'id_tax_rules_group' => ...,
-     *               'name' => ...,
-     *               'active' => ...,
-     *               'rate' => ...,
-     *               ],
-     *               ...
-     *               ]
      */
     public static function getTaxRulesGroupsForOptions()
     {
@@ -160,14 +163,14 @@ class TaxRulesGroupCore extends ObjectModel
     }
 
     /**
-     * @param bool $only_active Filter active tax rules group only
+     * @param bool $onlyActive Filter active tax rules group only
      * @param bool $includeRates Include tax rate amount in returned data
      *
-     * @return array|bool|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false
      *
      * @throws PrestaShopDatabaseException
      */
-    private static function getTaxRulesGroupsData($only_active = true, bool $includeRates = false)
+    private static function getTaxRulesGroupsData($onlyActive = true, bool $includeRates = false)
     {
         $sql = 'SELECT DISTINCT g.id_tax_rules_group, g.name, g.active';
 
@@ -187,9 +190,8 @@ class TaxRulesGroupCore extends ObjectModel
         }
 
         $sql .= Shop::addSqlAssociation('tax_rules_group', 'g') . ' WHERE g.deleted = 0'
-            . ($only_active ? ' AND g.`active` = 1' : '')
-            . '
-        ORDER BY name ASC';
+            . ($onlyActive ? ' AND g.`active` = 1' : '')
+            . ' ORDER BY name ASC';
 
         return Db::getInstance()->executeS($sql);
     }

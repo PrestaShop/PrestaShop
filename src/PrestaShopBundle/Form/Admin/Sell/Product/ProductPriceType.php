@@ -33,6 +33,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * This is the parent product form type (for now it only contains example fields
+ * but it will soon be improved with more accurate sub forms).
+ */
 class ProductPriceType extends AbstractType
 {
     /**
