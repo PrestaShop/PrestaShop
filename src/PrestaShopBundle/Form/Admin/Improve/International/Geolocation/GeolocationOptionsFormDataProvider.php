@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
