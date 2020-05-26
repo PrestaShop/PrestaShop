@@ -34,7 +34,7 @@ module.exports = class AddFile extends BOBasePage {
     await this.setValue(this.descriptionInput(2), fileData.frDescription);
     // Upload file
     const fileInputElement = await this.page.$(this.fileInput);
-    await fileInputElement.uploadFile(fileData.filename);
+    await fileInputElement.setInputFiles(fileData.filename);
     // Save Supplier
     await this.clickAndWaitForNavigation(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);

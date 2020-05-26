@@ -250,7 +250,7 @@ module.exports = class BOBasePage extends CommonPage {
       fs.writeFileSync(imageName, image.data);
     });
     const input = await this.page.$(selector);
-    await input.uploadFile(imageName);
+    await input.setInputFiles(imageName);
   }
 
   /**
