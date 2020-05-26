@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShop\PrestaShop\Adapter\Validate;

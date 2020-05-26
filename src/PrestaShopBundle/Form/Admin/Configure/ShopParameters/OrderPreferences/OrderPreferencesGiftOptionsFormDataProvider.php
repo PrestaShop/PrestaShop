@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
 use PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider;
@@ -96,27 +97,25 @@ class OrderPreferencesGiftOptionsFormDataProvider implements FormDataProviderInt
      */
     protected function validate(array $data)
     {
-        $errors = [];
-        $invalidFields = [];
         $giftWrappingPrice = $data['gift_wrapping_price'] ?? null;
 
         // Check if purchase minimum value is a positive number
         if (!empty($giftWrappingPrice) && (!is_numeric($giftWrappingPrice) || $giftWrappingPrice < 0)) {
-            $invalidFields[] = $this->translator->trans(
-                'Gift-wrapping price',
-                [],
-                'Admin.Shopparameters.Feature'
-            );
-        }
-
-        foreach ($invalidFields as $invalidField) {
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$invalidField],
+            return [
+                [
+                    'key' => 'The %s field is invalid.',
+                    'domain' => 'Admin.Notifications.Error',
+                    'parameters' => [
+                        $this->translator->trans(
+                            'Gift-wrapping price',
+                            [],
+                            'Admin.Shopparameters.Feature'
+                        ),
+                    ],
+                ],
             ];
         }
 
-        return $errors;
+        return [];
     }
 }
