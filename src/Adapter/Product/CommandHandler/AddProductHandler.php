@@ -61,7 +61,7 @@ final class AddProductHandler implements AddProductHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(AddProductCommand $command): ProductId
     {
@@ -75,7 +75,7 @@ final class AddProductHandler implements AddProductHandlerInterface
             throw new ProductException('Error occurred when trying to add new basic product.', 0, $e);
         }
 
-        return new ProductId((int)$product->id);
+        return new ProductId((int) $product->id);
     }
 
     /**

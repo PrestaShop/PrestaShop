@@ -72,7 +72,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function addProduct(string $productReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
-        $defaultLangId = (int)Configuration::get('PS_LANG_DEFAULT');
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
 
         try {
             /** @var ProductId $productId */
@@ -95,7 +95,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     private function assertProductNameInDefaultLang(string $productReference, string $name)
     {
-        $defaultLangId = (int)Configuration::get('PS_LANG_DEFAULT');
+        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
         $product = $this->getProductByReference($productReference);
 
         if ($product->name[$defaultLangId] !== $name) {
@@ -141,7 +141,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 );
             }
         }
-
     }
 
     /**
@@ -173,7 +172,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $isVirtual = $product->is_virtual;
         $isPack = Pack::isPack($product->id);
         $isStandard = !Pack::isPack($product->id) && !$product->is_virtual;
-
 
         if ($isVirtual && $productTypeValue === ProductType::TYPE_VIRTUAL) {
             return;

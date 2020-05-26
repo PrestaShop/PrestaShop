@@ -82,7 +82,7 @@ class ProductType
         $allowedTypes = [
             self::TYPE_STANDARD,
             self::TYPE_PACK,
-            self::TYPE_VIRTUAL
+            self::TYPE_VIRTUAL,
         ];
 
         if (!in_array($value, $allowedTypes, true)) {
