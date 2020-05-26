@@ -24,17 +24,52 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddBasicProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-interface AddBasicProductHandlerInterface
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+
+/**
+ * Command for creating product with basic information
+ */
+class AddProductCommand
 {
     /**
-     * @param AddBasicProductCommand $command
-     *
-     * @return ProductId
+     * @var string[]
      */
-    public function handle(AddBasicProductCommand $command): ProductId;
+    private $localizedNames;
+
+    /**
+     * @var ProductType
+     */
+    private $type;
+
+    /**
+     * @param array $localizedNames
+     * @param int $type
+     */
+    public function __construct(
+        array $localizedNames,
+        int $type
+    ) {
+        $this->localizedNames = $localizedNames;
+        $this->type = new ProductType($type);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return ProductType
+     */
+    public function getType(): ProductType
+    {
+        return $this->type;
+    }
 }

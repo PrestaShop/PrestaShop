@@ -28,15 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddBasicProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddBasicProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopException;
 use Product;
 
-final class AddBasicProductHandler implements AddBasicProductHandlerInterface
+final class AddProductHandler implements AddProductHandlerInterface
 {
     /**
      * @var int
@@ -54,14 +55,11 @@ final class AddBasicProductHandler implements AddBasicProductHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(AddBasicProductCommand $command): ProductId
+    public function handle(AddProductCommand $command): ProductId
     {
         $product = $this->createProduct($command);
-        $this->addOptionalProperties($product, $command);
 
         try {
-            //@todo: Check old ProductController::517 for hooks
-            //  will those hooks in new form handler be enough to replace old ones?
             if (!$product->add()) {
                 throw new ProductException('Failed to add new basic product');
             }
@@ -69,49 +67,34 @@ final class AddBasicProductHandler implements AddBasicProductHandlerInterface
             throw new ProductException('Error occurred when trying to add new basic product.', 0, $e);
         }
 
-        $product->addToCategories($command->getCategoryIds());
-
         return new ProductId((int)$product->id);
     }
 
     /**
-     * @param AddBasicProductCommand $command
+     * @param AddProductCommand $command
      *
      * @return Product
      */
-    private function createProduct(AddBasicProductCommand $command): Product
+    private function createProduct(AddProductCommand $command): Product
     {
-        //@todo: dont forget multishop when specs are prepared.
+        //@todo: multistore?
         $product = new Product();
         $product->name = $command->getLocalizedNames();
-        //@todo: check if there is anything more for product type
         $product->is_virtual = $command->getType() === ProductType::TYPE_VIRTUAL;
-        $product->price = $command->getPrice();
-        $product->quantity = $command->getQuantity();
+        $product->active = false;
+
+        foreach ($product->name as $langId => $name) {
+            if (true !== $product->validateField('name', $name, $langId)) {
+                throw new ProductConstraintException(
+                    sprintf(
+                        'Invalid localized product name for language with id "%s"',
+                        $langId
+                    ),
+                    ProductConstraintException::INVALID_NAME,
+                );
+            }
+        }
 
         return $product;
-    }
-
-    /**
-     * @param Product $product
-     * @param AddBasicProductCommand $command
-     */
-    private function addOptionalProperties(Product $product, AddBasicProductCommand $command): void
-    {
-        if ($command->getLocalizedShortDescriptions()) {
-            $product->description_short = $command->getLocalizedShortDescriptions();
-        }
-        if ($command->getLocalizedDescriptions()) {
-            $product->description = $command->getLocalizedDescriptions();
-        }
-        if ($command->getReference()) {
-            $product->reference = $command->getReference();
-        }
-        if ($command->getManufacturerId()) {
-            $product->id_manufacturer = $command->getManufacturerId()->getValue();
-        }
-        if ($command->getTaxRulesGroupId()) {
-            $product->id_tax_rules_group = $command->getTaxRulesGroupId()->getValue();
-        }
     }
 }
