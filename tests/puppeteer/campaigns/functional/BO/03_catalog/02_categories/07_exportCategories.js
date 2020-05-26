@@ -21,6 +21,8 @@ let browser;
 let browserContext;
 let page;
 
+let filePath;
+
 // Init objects needed
 const init = async function () {
   return {
@@ -70,8 +72,8 @@ describe('Export categories', async () => {
   it('should export categories to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportCategories', baseContext);
 
-    await this.pageObjects.categoriesPage.exportDataToCsv();
-    const doesFileExist = await files.doesFileExist('category_', 5000, true, 'csv');
+    filePath = await this.pageObjects.categoriesPage.exportDataToCsv();
+    const doesFileExist = await files.doesFileExist(filePath, 5000);
     await expect(doesFileExist, 'Export of data has failed').to.be.true;
   });
 
@@ -80,14 +82,10 @@ describe('Export categories', async () => {
 
     const numberOfCategories = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
 
-    const fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'category_', '.csv');
-
     for (let row = 1; row <= numberOfCategories; row++) {
       const categoryInCsvFormat = await this.pageObjects.categoriesPage.getCategoryInCsvFormat(row);
-      const textExist = await files.isTextInFile(fileName, categoryInCsvFormat, true);
+      const textExist = await files.isTextInFile(filePath, categoryInCsvFormat, true);
       await expect(textExist, `${categoryInCsvFormat} was not found in the file`).to.be.true;
     }
-
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
   });
 });

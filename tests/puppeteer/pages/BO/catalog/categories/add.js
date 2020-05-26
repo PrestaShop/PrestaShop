@@ -15,7 +15,7 @@ module.exports = class AddCategory extends BOBasePage {
     this.categoryCoverImage = '#category_cover_image';
     this.metaTitleInput = '#category_meta_title_1';
     this.metaDescriptionTextarea = '#category_meta_description_1';
-    this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label .md-checkbox-control';
+    this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label';
     this.saveCategoryButton = 'div.card-footer button';
     // Selectors fo root category
     this.rootCategoryNameInput = '#root_category_name_1';

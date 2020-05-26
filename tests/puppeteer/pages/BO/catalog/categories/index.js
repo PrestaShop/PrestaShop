@@ -37,7 +37,7 @@ module.exports = class Categories extends BOBasePage {
     this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
     this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.categoriesListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters div.md-checkbox`;
     this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
@@ -266,13 +266,13 @@ module.exports = class Categories extends BOBasePage {
   async changeCategoriesEnabledColumnBulkActions(enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.click(this.selectAllRowsDiv),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
@@ -287,13 +287,13 @@ module.exports = class Categories extends BOBasePage {
   async deleteCategoriesBulkActions(modeID = '0') {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.click(this.selectAllRowsDiv),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
@@ -340,17 +340,19 @@ module.exports = class Categories extends BOBasePage {
   // Export methods
   /**
    * Click on lint to export categories to a csv file
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
   async exportDataToCsv() {
     await Promise.all([
       this.page.click(this.categoryGridActionsButton),
       this.waitForVisibleSelector(`${this.gridActionDropDownMenu}.show`),
     ]);
-    await Promise.all([
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'),
       this.page.click(this.gridActionExportLink),
       this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
     ]);
+    return download.path();
   }
 
   /**
