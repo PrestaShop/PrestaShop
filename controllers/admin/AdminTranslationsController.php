@@ -3324,7 +3324,6 @@ class AdminTranslationsControllerCore extends AdminController
                 ++$this->total_expression;
                 $subject = str_replace('\n', ' ', $subject);
                 $subject = str_replace("\\'", "\'", $subject);
-                
                 $subject_mail_content[$key]['trad'] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
                 $subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
             }
