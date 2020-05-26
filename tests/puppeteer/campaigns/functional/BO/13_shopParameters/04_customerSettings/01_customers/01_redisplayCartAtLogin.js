@@ -42,7 +42,7 @@ Disable re-display cart at login
 Login FO and add a product to the cart
 Logout FO then Login and check that the cart is empty
  */
-describe('Enable/Disable re-display cart at login', async () => {
+describe('Enable re-display cart at login', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

@@ -19,10 +19,10 @@ module.exports = {
    * @param fileExtension
    * @return boolean, true if exist, false if not
    */
-  async checkFileExistence(fileName, timeDelay = 5000, isPartialName = false, fileExtension = '') {
+  async doesFileExist(fileName, timeDelay = 5000, isPartialName = false, fileExtension = '') {
     let found = false;
     for (let i = 0; i <= timeDelay && !found; i += 100) {
-      await (new Promise(resolve => setTimeout(resolve, 10)));
+      await (new Promise(resolve => setTimeout(resolve, 100)));
       if (isPartialName) {
         found = (await fs
           .readdirSync(global.BO.DOWNLOAD_PATH)
@@ -53,7 +53,7 @@ module.exports = {
    * @param text
    * @return boolean, true if text exist, false if not
    */
-  async checkTextInPDF(fileName, text) {
+  async isTextInPDF(fileName, text) {
     const pdf = await PDFJS.getDocument(`${global.BO.DOWNLOAD_PATH}/${fileName}`).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
@@ -88,6 +88,26 @@ module.exports = {
     return imageNumber;
   },
   /**
+   * Generate report filename
+   * @return {Promise<string>}
+   */
+  async generateReportFilename() {
+    const curDate = new Date();
+    return `report-${
+      curDate.toJSON().slice(0, 10)}-${
+      curDate.getHours()}-${
+      curDate.getMinutes()}-${
+      curDate.getSeconds()}`;
+  },
+  /**
+   * Create directory if not exist
+   * @param path
+   * @return {Promise<void>}
+   */
+  async createDirectory(path) {
+    if (!fs.existsSync(path)) await fs.mkdirSync(path);
+  },
+  /**
    * Create file with content
    * @param path
    * @param filename
@@ -109,7 +129,7 @@ module.exports = {
    * @param ignoreTimeZone, true to delete timezone string added to some image url
    * @return {Promise<boolean>}
    */
-  async checkTextInFile(fileName, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
+  async isTextInFile(fileName, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
     let fileText = await fs.readFileSync(`${global.BO.DOWNLOAD_PATH}/${fileName}`, 'utf8');
     let text = textToCheckWith;
     if (ignoreSpaces) {

@@ -64,7 +64,6 @@ class DatabaseCreator
             'admin_password' => 'test',
             'admin_email' => 'test@prestashop.com',
             'configuration_agrement' => true,
-            'send_informations' => false,
         ));
         $install->installFixtures();
         $install->installTheme();

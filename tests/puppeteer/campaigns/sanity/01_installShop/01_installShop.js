@@ -6,7 +6,7 @@ const baseContext = 'sanity_installShop_installShop';
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
 // Importing pages
-const InstallPage = require('@pages/Install/install');
+const InstallPage = require('@pages/install');
 const HomePage = require('@pages/FO/home');
 
 let browser;

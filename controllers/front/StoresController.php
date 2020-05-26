@@ -233,4 +233,16 @@ class StoresControllerCore extends FrontController
 
         return $stores;
     }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('stores', true),
+        ];
+
+        return $breadcrumb;
+    }
 }

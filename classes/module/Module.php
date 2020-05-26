@@ -688,6 +688,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function uninstall()
     {
+        Hook::exec('actionModuleUninstallBefore', ['object' => $this]);
+
         // Check module installation id validation
         if (!Validate::isUnsignedId($this->id)) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('The module is not installed.', [], 'Admin.Modules.Notification');
@@ -741,6 +743,8 @@ abstract class ModuleCore implements ModuleInterface
         if (Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'module` WHERE `id_module` = ' . (int) $this->id)) {
             Cache::clean('Module::isInstalled' . $this->name);
             Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
+
+            Hook::exec('actionModuleUninstallAfter', ['object' => $this]);
 
             return true;
         }
@@ -1378,9 +1382,12 @@ abstract class ModuleCore implements ModuleInterface
                         $errors[] = Context::getContext()->getTranslator()->trans('%1$s (parse error in %2$s)', [$module, substr($file_path, strlen(_PS_ROOT_DIR_))], 'Admin.Modules.Notification');
                     }
 
-                    $ns = preg_replace('/\n[\s\t]*?namespace\s/', '', $file);
-                    $ns = rtrim($ns, ';');
-                    $module = $ns . '\\' . $module;
+                    preg_match('/\n[\s\t]*?namespace\s.*?;/', $file, $ns);
+                    if (!empty($ns)) {
+                        $ns = preg_replace('/\n[\s\t]*?namespace\s/', '', $ns[0]);
+                        $ns = rtrim($ns, ';');
+                        $module = $ns . '\\' . $module;
+                    }
                 }
 
                 // If class exists, we just instanciate it

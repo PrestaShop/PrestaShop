@@ -516,7 +516,12 @@
       <trans-unit id="65b7eaeb9ba4e9903f82297face9f7cd">
         <source>Cart Rules</source>
         <target>Cart Rules</target>
-        <note>Line: 703</note>
+        <note>Line: 711</note>
+      </trans-unit>
+      <trans-unit id="a0e8e26f6f9354192425b9a23227a5ba">
+        <source>Payment:</source>
+        <target>Payment:</target>
+        <note>Line: 711</note>
       </trans-unit>
     </body>
   </file>
@@ -813,17 +818,27 @@
       <trans-unit id="119ce51409ff0ec366e67df0c852ede7">
         <source>Message to: </source>
         <target>Message to:</target>
-        <note>Line: 191</note>
+        <note>Line: 782</note>
       </trans-unit>
       <trans-unit id="ed96f783e467cc984e4945063760e2c4">
         <source>Product: </source>
         <target>Product:</target>
-        <note>Line: 199</note>
+        <note>Line: 785</note>
       </trans-unit>
       <trans-unit id="24a23d787190f2c4812ff9ab11847a72">
         <source>Status:</source>
         <target>Status:</target>
         <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="0a62046a3c3ac8c3627e63d1e2aa3745">
+        <source>Message to:</source>
+        <target>Message to:</target>
+        <note>Line: 191</note>
+      </trans-unit>
+      <trans-unit id="465d60b936c982d7b57674f30ba022d0">
+        <source>Product:</source>
+        <target>Product:</target>
+        <note>Line: 199</note>
       </trans-unit>
     </body>
   </file>
@@ -868,7 +883,7 @@
       <trans-unit id="4e021cd834848e751e2d1bc66cee697d">
         <source>All combinations</source>
         <target>All combinations</target>
-        <note>Line: 465</note>
+        <note>Line: 470</note>
       </trans-unit>
     </body>
   </file>
@@ -990,7 +1005,7 @@
       <trans-unit id="990fc90e39367377c314f1d61522ae61">
         <source>Number of products</source>
         <target>Number of products</target>
-        <note>Line: 191</note>
+        <note>Line: 196</note>
       </trans-unit>
     </body>
   </file>
@@ -1089,22 +1104,22 @@
       <trans-unit id="0826c628f8c5f6895c8a1e27e99457fb">
         <source>Send me an email when the quantity is below or equals this level</source>
         <target>Send me an email when the quantity is below or equals this level</target>
-        <note>Line: 179</note>
+        <note>Line: 187</note>
       </trans-unit>
       <trans-unit id="5321a616e36742f66aa933956e839217">
         <source>Combination name</source>
         <target>Combination name</target>
-        <note>Line: 172</note>
+        <note>Line: 180</note>
       </trans-unit>
       <trans-unit id="a094699b1837834e13875a06773bcf28">
         <source>Physical quantity</source>
         <target>Physical quantity</target>
-        <note>Line: 175</note>
+        <note>Line: 183</note>
       </trans-unit>
       <trans-unit id="82325d4b818ad2b7f46dfe72e186d016">
         <source>Reserved quantity</source>
         <target>Reserved quantity</target>
-        <note>Line: 176</note>
+        <note>Line: 184</note>
       </trans-unit>
     </body>
   </file>
@@ -2536,11 +2551,6 @@
         <source>Qty:</source>
         <target>Qty:</target>
         <note>Line: 99</note>
-      </trans-unit>
-      <trans-unit id="294598238a4d88a9920c7e6fba9bb843">
-        <source>MPN</source>
-        <target>MPN</target>
-        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="eb2187ba47b5e09ca57e01222fbd71e8">
         <source>MPN:</source>

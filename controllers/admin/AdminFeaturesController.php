@@ -115,7 +115,7 @@ class AdminFeaturesControllerCore extends AdminController
 
     public function renderView()
     {
-        if (($id = Tools::getValue('id_feature'))) {
+        if (($id = (int) Tools::getValue('id_feature'))) {
             $this->setTypeValue();
             $this->list_id = 'feature_value';
             $this->lang = true;
@@ -299,7 +299,7 @@ class AdminFeaturesControllerCore extends AdminController
 
             case 'editFeatureValue':
                 if (Tools::getValue('id_feature_value')) {
-                    if (($id = Tools::getValue('id_feature'))) {
+                    if (($id = (int) Tools::getValue('id_feature'))) {
                         if (Validate::isLoadedObject($obj = new Feature((int) $id))) {
                             $bread_extended[] = '<a href="' . Context::getContext()->link->getAdminLink('AdminFeatures') . '&id_feature=' . $id . '&viewfeature">' . $obj->name[$this->context->employee->id_lang] . '</a>';
                         }

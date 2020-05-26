@@ -446,7 +446,7 @@ Comment: subtab</note>
       <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
         <source>Categories</source>
         <target>Categories</target>
-        <note>Line: 107</note>
+        <note>Line: 108</note>
       </trans-unit>
     </body>
   </file>
@@ -536,7 +536,7 @@ Comment: subtab</note>
       <trans-unit id="1814d65a76028fdfbadab64a5a8076df">
         <source>Suppliers</source>
         <target>Suppliers</target>
-        <note>Line: 70</note>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>
@@ -707,7 +707,7 @@ Comment: subtab</note>
       <trans-unit id="127458a6096e6f3224228922cfd45c49">
         <source>Order Messages</source>
         <target>Order Messages</target>
-        <note>Line: 68</note>
+        <note>Line: 66</note>
       </trans-unit>
     </body>
   </file>
@@ -725,7 +725,7 @@ Comment: subtab</note>
       <trans-unit id="0b8d92bc19b720bb1065649535463409">
         <source>Translations</source>
         <target>Translations</target>
-        <note>Line: 106</note>
+        <note>Line: 109</note>
       </trans-unit>
     </body>
   </file>

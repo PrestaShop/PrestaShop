@@ -28,7 +28,7 @@
 {% endset %}
 
 {% set documentsTitle %}
-  {{ 'Documents'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.documents.documents|length }})
+  {{ 'Documents'|trans({}, 'Admin.Orderscustomers.Feature') }} (<span class="count">{{ orderForViewing.documents.documents|length }}</span>)
 {% endset %}
 
 {% set carriersTitle %}

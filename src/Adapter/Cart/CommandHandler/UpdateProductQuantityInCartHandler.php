@@ -182,12 +182,15 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
      */
     private function findPreviousQuantityInCart(Cart $cart, UpdateProductQuantityInCartCommand $command): int
     {
-        $products = $cart->getProducts();
+        $products = $cart->getProductsWithSeparatedGifts();
 
         $isCombination = ($command->getCombinationId() !== null);
         $isCustomization = ($command->getCustomizationId() !== null);
 
         foreach ($products as $cartProduct) {
+            if (!empty($cartProduct['is_gift'])) {
+                continue;
+            }
             $equalProductId = (int) $cartProduct['id_product'] === $command->getProductId()->getValue();
             if ($isCombination) {
                 if ($equalProductId && (int) $cartProduct['id_product_attribute'] === $command->getCombinationId()->getValue()) {

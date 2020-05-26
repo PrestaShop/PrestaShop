@@ -47,7 +47,7 @@ Go to FO product page and check that the product availability is not displayed
 Update display remaining quantities to the default value
 Go to FO product page and check that the product availability is displayed
  */
-describe('Test display remaining quantities', async () => {
+describe('Display remaining quantities', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

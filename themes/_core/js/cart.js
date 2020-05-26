@@ -53,6 +53,7 @@ $(document).ready(() => {
         $('.cart-summary-subtotals-container').replaceWith(
           resp.cart_summary_subtotals_container,
         );
+        $('.cart-summary-products').replaceWith(resp.cart_summary_products);
         $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
         $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
         $('.cart-voucher').replaceWith(resp.cart_voucher);

@@ -36,7 +36,6 @@ export default {
   privateNoteInput: '#private_note_note',
   privateNoteSubmitBtn: '.js-private-note-btn',
   addCartRuleModal: '#addOrderDiscountModal',
-  addCartRuleApplyOnAllInvoicesCheckbox: '#add_order_cart_rule_apply_on_all_invoices',
   addCartRuleInvoiceIdSelect: '#add_order_cart_rule_invoice_id',
   addCartRuleTypeSelect: '#add_order_cart_rule_type',
   addCartRuleValueInput: '#add_order_cart_rule_value',
@@ -56,6 +55,8 @@ export default {
   orderMessagesContainer: '.js-order-messages-container',
   orderMessage: '#order_message_message',
   orderMessageChangeWarning: '.js-message-change-warning',
+  orderDocumentsTabCount: '#orderDocumentsTab .count',
+  orderDocumentsTabBody: '#orderDocumentsTabContent .card-body',
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
@@ -115,6 +116,10 @@ export default {
   productEditLocationText: '.editProductLocation',
   productEditAvailableText: '.editProductAvailable',
   productEditTotalPriceText: '.editProductTotalPrice',
+  // Product Discount List
+  productDiscountList: {
+    list: '.table.discountList',
+  },
   // Product Pack Modal
   productPackModal: {
     modal: '#product-pack-modal',
@@ -133,6 +138,7 @@ export default {
   },
   // Order price elements
   orderProductsTotal: '#orderProductsTotal',
+  orderDiscountsTotalContainer: '#order-discounts-total-container',
   orderDiscountsTotal: '#orderDiscountsTotal',
   orderWrappingTotal: '#orderWrappingTotal',
   orderShippingTotal: '#orderShippingTotal',

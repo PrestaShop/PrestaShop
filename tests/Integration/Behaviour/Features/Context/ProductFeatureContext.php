@@ -582,4 +582,19 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->products[$productName]->addToCategories([$category->id]);
         $this->products[$productName]->save();
     }
+
+    /**
+     * @Then The price of each product :productName after reduction should be :priceWithReduction
+     */
+    public function productPriceAfterReduction($productName, $priceWithReduction)
+    {
+        $this->checkProductWithNameExists($productName);
+        $productPricesList = $this->getCurrentCart()->getProducts(true);
+
+        foreach ($productPricesList as $productPrices) {
+            if ($this->products[$productName]->id == $productPrices['id_product'] && $productPrices['price_with_reduction'] != $priceWithReduction) {
+                throw new \RuntimeException(sprintf('Expects %s, got %s instead', $priceWithReduction, $productPrices['price_with_reduction']));
+            }
+        }
+    }
 }

@@ -277,6 +277,17 @@ admin_orders_delete_product:
   options:
     expose: true
 
+admin_orders_get_discounts:
+  path: /{orderId}/discounts
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getDiscounts
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
 admin_orders_get_prices:
   path: /{orderId}/prices
   methods: [GET]
@@ -293,6 +304,17 @@ admin_orders_get_invoices:
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:getInvoices
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_documents:
+  path: /{orderId}/documents
+  methods: [GET]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:getDocuments
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+

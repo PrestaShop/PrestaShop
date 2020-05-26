@@ -10,7 +10,7 @@
 
 table.grid-ordering-column tr {
   transition-timing-function: ease-out;
-  transition-duration: .2s;
+  transition-duration: 0.2s;
   transition-property: all;
   &.hover {
     background-color: $gray-soft;
@@ -25,7 +25,7 @@ table.grid-ordering-column tr {
 table.grid-ordering-column tr.position-row-while-drag {
   color: #fff;
   background: none;
-  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, .2);
+  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
   transform: translate(5px, 10px);
   td {
     background-color: $medium-gray;
@@ -172,28 +172,41 @@ table .column-filters td:last-child .grid-reset-button {
           &.choice-type {
             @mixin display-dropdown-arrow() {
               &::after {
+                width: 20px;
                 visibility: visible;
               }
             }
 
             .dropdown {
-              &.show {
-                .dropdown-toggle {
-                  @include display-dropdown-arrow();
-                }
-              }
-
               .dropdown-toggle {
                 padding: 0 5px;
+                margin-right: 20px;
+                @include transition(0.2s ease-out);
+
+                &:hover {
+                  margin-right: 0;
+                  @include display-dropdown-arrow();
+                }
                 &.coloured {
                   border: 0;
                 }
 
                 &::after {
+                  width: 0;
                   visibility: hidden;
+                  @include transition(0.2s ease-out);
                 }
+              }
 
-                &:hover {
+              &.show {
+                .dropdown-toggle {
+                  margin-right: 20px;
+                  @include transition(0.2s ease-out);
+
+                  &:hover {
+                    margin-right: 0;
+                  }
+
                   @include display-dropdown-arrow();
                 }
               }

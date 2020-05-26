@@ -41,11 +41,19 @@ abstract class AbstractPrestaShopFeatureContext implements BehatContext
 
     protected function checkFixtureExists(array $fixtures, $fixtureName, $fixtureIndex)
     {
+        $searchLength = 10;
+
         if (!isset($fixtures[$fixtureIndex])) {
             $fixtureNames = array_keys($fixtures);
-            $firstFixtureNames = array_splice($fixtureNames, 0, 5);
+            $firstFixtureNames = array_splice($fixtureNames, 0, $searchLength);
             $firstFixtureNamesStr = implode(',', $firstFixtureNames);
-            throw new \Exception($fixtureName . ' named "' . $fixtureIndex . '" was not added in fixtures. First 5 added are: ' . $firstFixtureNamesStr);
+            throw new \RuntimeException(sprintf(
+                '%s named "%s" was not added in fixtures. First %d added are: %s',
+                $fixtureName,
+                $fixtureIndex,
+                $searchLength,
+                $firstFixtureNamesStr
+            ));
         }
     }
 }

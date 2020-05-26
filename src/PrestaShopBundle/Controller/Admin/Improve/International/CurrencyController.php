@@ -307,13 +307,13 @@ class CurrencyController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse([
-                'isoCode' => $referenceCurrency->getIsoCode(),
-                'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
-                'precision' => $referenceCurrency->getPrecision(),
-                'names' => $referenceCurrency->getNames(),
-                'symbols' => $referenceCurrency->getSymbols(),
-                'patterns' => $referenceCurrency->getPatterns(),
-                'exchangeRate' => $exchangeRateValue,
+            'isoCode' => $referenceCurrency->getIsoCode(),
+            'numericIsoCode' => $referenceCurrency->getNumericIsoCode(),
+            'precision' => $referenceCurrency->getPrecision(),
+            'names' => $referenceCurrency->getNames(),
+            'symbols' => $referenceCurrency->getSymbols(),
+            'patterns' => $referenceCurrency->getPatterns(),
+            'exchangeRate' => $exchangeRateValue,
         ]);
     }
 
@@ -385,9 +385,9 @@ class CurrencyController extends FrameworkBundleAdminController
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
-                    'status' => false,
-                    'message' => $this->getDemoModeErrorMessage(),
-                ],
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -396,12 +396,12 @@ class CurrencyController extends FrameworkBundleAdminController
 
         if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
             return $this->json([
-                    'status' => false,
-                    'message' => $this->trans(
-                        'You need permission to edit this.',
-                        'Admin.Notifications.Error'
-                    ),
-                ],
+                'status' => false,
+                'message' => $this->trans(
+                    'You need permission to edit this.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -500,10 +500,6 @@ class CurrencyController extends FrameworkBundleAdminController
                     'This currency already exists.',
                     'Admin.International.Notification'
                 ),
-                CurrencyConstraintException::ISO_CODES_MISMATCH => $this->trans(
-                    'Cannot find a real currency matching this couple of ISO code and numeric ISO code',
-                    'Admin.International.Notification'
-                ),
             ],
             AutomateExchangeRatesUpdateException::class => [
                 AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
@@ -551,7 +547,13 @@ class CurrencyController extends FrameworkBundleAdminController
             InvalidUnofficialCurrencyException::class => $this->trans(
                 'Oops... it looks like this ISO code already exists. If you are: <ul><li>trying to create an alternative currency, you must type a different ISO code</li><li>trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box</li></ul>',
                 'Admin.International.Notification',
-                ['%isoCode%' => $isoCode]
+                [
+                    '%isoCode%' => $isoCode,
+                    '[1]' => '<ul>',
+                    '[/1]' => '</ul>',
+                    '[2]' => '<li>',
+                    '[/2]' => '</li>',
+                ]
             ),
         ];
     }

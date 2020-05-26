@@ -164,17 +164,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         foreach (Language::getLanguages() as $lang) {
             Language::updateMultilangTable($lang['iso_code']);
         }
-
-        if ($this->datas->newsletter) {
-            $params = http_build_query(array(
-                'email' => $this->datas->admin_email,
-                'method' => 'addMemberToNewsletter',
-                'language' => $this->datas->lang,
-                'visitorType' => 1,
-                'source' => 'installer',
-            ));
-            Tools::file_get_contents('https://www.prestashop.com/ajax/controller.php?'.$params);
-        }
     }
 
     /**
@@ -246,18 +235,18 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->initializeContext();
 
         return $this->model_install->configureShop(array(
-            'shop_name' =>                $this->datas->shop_name,
-            'shop_activity' =>            $this->datas->shop_activity,
-            'shop_country' =>            $this->datas->shop_country,
-            'shop_timezone' =>            $this->datas->timezone,
-            'use_smtp' =>                false,
-            'admin_firstname' =>        $this->datas->admin_firstname,
-            'admin_lastname' =>            $this->datas->admin_lastname,
-            'admin_password' =>            $this->datas->admin_password,
-            'admin_email' =>            $this->datas->admin_email,
-            'configuration_agrement' =>    true,
-            'send_informations' => true,
+            'shop_name' => $this->datas->shop_name,
+            'shop_activity' => $this->datas->shop_activity,
+            'shop_country' => $this->datas->shop_country,
+            'shop_timezone' => $this->datas->timezone,
+            'use_smtp' => false,
+            'admin_firstname' => $this->datas->admin_firstname,
+            'admin_lastname' => $this->datas->admin_lastname,
+            'admin_password' => $this->datas->admin_password,
+            'admin_email' => $this->datas->admin_email,
+            'configuration_agrement' => true,
             'enable_ssl' => $this->datas->enable_ssl,
+            'rewrite_engine' => $this->datas->rewrite_engine,
         ));
     }
 

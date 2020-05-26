@@ -217,11 +217,11 @@ class ModuleTabRegister
         }
 
         $moduleFolder = Finder::create()->files()
-                    ->in($modulePath)
-                    ->depth('== 0')
-                    ->name('*Controller.php')
-                    ->exclude(['index.php'])
-                    ->contains('/Controller\s+extends\s+/i');
+            ->in($modulePath)
+            ->depth('== 0')
+            ->name('*Controller.php')
+            ->exclude(['index.php'])
+            ->contains('/Controller\s+extends\s+/i');
 
         return iterator_to_array($moduleFolder);
     }

@@ -99,7 +99,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var CarrierByReferenceChoiceProvider $carrierChoiceProvider */
         $carrierChoiceProvider = $this->getContainer()
-                                      ->get('prestashop.core.form.choice_provider.carrier_by_reference_id');
+            ->get('prestashop.core.form.choice_provider.carrier_by_reference_id');
         $availableCarriers = $carrierChoiceProvider->getChoices();
 
         if (isset($availableCarriers[$carrier])) {

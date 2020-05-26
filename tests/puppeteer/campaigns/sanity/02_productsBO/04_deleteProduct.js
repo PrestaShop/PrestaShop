@@ -10,7 +10,6 @@ const baseContext = 'sanity_productsBO_deleteProduct';
 // importing pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
-const BOBasePage = require('@pages/BO/BObasePage');
 const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const ProductFaker = require('@data/faker/product');
@@ -24,7 +23,6 @@ const init = async function () {
   return {
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
-    boBasePage: new BOBasePage(page),
     productsPage: new ProductsPage(page),
     addProductPage: new AddProductPage(page),
   };
@@ -50,10 +48,12 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
 
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage1', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.productsLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.productsLink,
     );
+
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });
@@ -74,8 +74,12 @@ describe('Create Standard product in BO and Delete it with DropDown Menu', async
 
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.productsLink);
+
+    await this.pageObjects.addProductPage.goToSubMenu(
+      this.pageObjects.addProductPage.catalogParentLink,
+      this.pageObjects.addProductPage.productsLink,
+    );
+
     const pageTitle = await this.pageObjects.productsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
   });

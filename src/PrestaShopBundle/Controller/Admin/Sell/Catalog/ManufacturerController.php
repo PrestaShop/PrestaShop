@@ -679,7 +679,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
                     'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
                         $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                    ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'
@@ -771,14 +771,14 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         if ($this->configuration->get('PS_DISPLAY_MANUFACTURERS')) {
             return $this->trans(
-                'The display of your brands is enabled on your store. Go to %sShop Parameters > General to edit settings.%s',
+                'The display of your brands is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
                 'Admin.Catalog.Notification',
                 [$urlOpening, $urlEnding]
             );
         }
 
         return $this->trans(
-            'The display of your brands is disabled on your store. Go to %sShop Parameters > General to edit settings.%s',
+            'The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',
             'Admin.Catalog.Notification',
             [$urlOpening, $urlEnding]
         );

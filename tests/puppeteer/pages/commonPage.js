@@ -161,6 +161,8 @@ module.exports = class CommonPage {
   async setValue(selector, value) {
     await this.waitForSelectorAndClick(selector);
     await this.page.click(selector, {clickCount: 3});
+    // Delete text from input before typing
+    await this.page.keyboard.press('Delete');
     await this.page.type(selector, value);
   }
 

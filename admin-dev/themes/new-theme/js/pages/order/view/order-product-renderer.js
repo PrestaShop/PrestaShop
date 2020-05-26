@@ -151,7 +151,6 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddAvailableText).html('');
     $(OrderViewPageMap.productAddLocationText).html('');
     $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
-    $(OrderViewPageMap.productAddInvoiceSelect).val(0);
     $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
   }
 
@@ -190,11 +189,10 @@ export default class OrderProductRenderer {
 
     const startRow = (numPage - 1) * numRowsPerPage + 1;
     const endRow = numPage * numRowsPerPage;
-    $(OrderViewPageMap.productsTable)
-      .find(
-        `tr[id^="orderProduct_"]:nth-child(n+${startRow}):nth-child(-n+${endRow})`,
-      )
-      .removeClass('d-none');
+
+    for (let i = startRow - 1; i < Math.min(endRow, $rows.length); i += 1) {
+      $($rows[i]).removeClass('d-none');
+    }
 
     $customizationRows.each(function () {
       if (
@@ -274,7 +272,7 @@ export default class OrderProductRenderer {
   toggleProductAddNewInvoiceInfo() {
     $(OrderViewPageMap.productAddNewInvoiceInfo).toggleClass(
       'd-none',
-      $(OrderViewPageMap.productAddInvoiceSelect).val() === 0,
+      parseInt($(OrderViewPageMap.productAddInvoiceSelect).val(), 10) === 0,
     );
   }
 

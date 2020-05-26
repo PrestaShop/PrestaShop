@@ -2,9 +2,10 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
+const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
+
 // Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const DeliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
@@ -15,25 +16,26 @@ const FOBasePage = require('@pages/FO/FObasePage');
 const HomePage = require('@pages/FO/home');
 const CartPage = require('@pages/FO/cart');
 const CheckoutPage = require('@pages/FO/checkout');
-const OrderConfirmationPage = require('@pages/FO/orderConfirmation');
-const files = require('@utils/files');
+const OrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+
 // Importing data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultAccount} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
-// Test context imports
+
+// Importing test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_enableDisableProductImage';
 
 let browser;
 let page;
+
 let fileName;
 
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     deliverySlipsPage: new DeliverySlipsPage(page),
@@ -64,6 +66,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
     await helper.setDownloadBehavior(page);
+
     this.pageObjects = await init();
   });
 
@@ -89,17 +92,21 @@ describe('Test enable/disable product image in delivery slips', async () => {
             `goToDeliverySlipsPage_${test.args.action}`,
             baseContext,
           );
-          await this.pageObjects.boBasePage.goToSubMenu(
-            this.pageObjects.boBasePage.ordersParentLink,
-            this.pageObjects.boBasePage.deliverySlipslink,
+
+          await this.pageObjects.dashboardPage.goToSubMenu(
+            this.pageObjects.dashboardPage.ordersParentLink,
+            this.pageObjects.dashboardPage.deliverySlipslink,
           );
-          await this.pageObjects.boBasePage.closeSfToolBar();
+
+          await this.pageObjects.deliverySlipsPage.closeSfToolBar();
+
           const pageTitle = await this.pageObjects.deliverySlipsPage.getPageTitle();
           await expect(pageTitle).to.contains(this.pageObjects.deliverySlipsPage.pageTitle);
         });
 
         it(`should ${test.args.action} product image`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}ProductImage`, baseContext);
+
           await this.pageObjects.deliverySlipsPage.setEnableProductImage(test.args.enable);
           const textMessage = await this.pageObjects.deliverySlipsPage.saveDeliverySlipOptions();
           await expect(textMessage).to.contains(this.pageObjects.deliverySlipsPage.successfulUpdateMessage);
@@ -109,34 +116,48 @@ describe('Test enable/disable product image in delivery slips', async () => {
       describe('Create new order in FO', async () => {
         it('should go to FO and create an order', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createOrderInFO_${test.args.action}`, baseContext);
+
           // Click on view my shop
-          page = await this.pageObjects.boBasePage.viewMyShop();
+          page = await this.pageObjects.deliverySlipsPage.viewMyShop();
           this.pageObjects = await init();
+
+          // Change FO language
           await this.pageObjects.foBasePage.changeLanguage('en');
+
           // Go to the first product page
           await this.pageObjects.homePage.goToProductPage(1);
+
           // Add the created product to the cart
           await this.pageObjects.productPage.addProductToTheCart();
+
           // Proceed to checkout the shopping cart
           await this.pageObjects.cartPage.clickOnProceedToCheckout();
+
           // Checkout the order
+
           // Personal information step - Login
           await this.pageObjects.checkoutPage.clickOnSignIn();
           await this.pageObjects.checkoutPage.customerLogin(DefaultAccount);
+
           // Address step - Go to delivery step
           const isStepAddressComplete = await this.pageObjects.checkoutPage.goToDeliveryStep();
           await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+
           // Delivery step - Go to payment step
           const isStepDeliveryComplete = await this.pageObjects.checkoutPage.goToPaymentStep();
           await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+
           // Payment step - Choose payment step
           await this.pageObjects.checkoutPage.choosePaymentAndOrder(PaymentMethods.wirePayment.moduleName);
-          const cardTitle = await this.pageObjects.orderConfirmationPage
-            .getTextContent(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitleH3);
+
           // Check the confirmation message
+          const cardTitle = await this.pageObjects.orderConfirmationPage.getOrderConfirmationCardTitle();
           await expect(cardTitle).to.contains(this.pageObjects.orderConfirmationPage.orderConfirmationCardTitle);
+
           // Logout from FO
           await this.pageObjects.foBasePage.logout();
+
+          // Go back to BO
           page = await this.pageObjects.orderConfirmationPage.closePage(browser, 1);
           this.pageObjects = await init();
         });
@@ -145,10 +166,12 @@ describe('Test enable/disable product image in delivery slips', async () => {
       describe('Generate the delivery slip and check product image', async () => {
         it('should go to the orders page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage_${test.args.action}`, baseContext);
-          await this.pageObjects.boBasePage.goToSubMenu(
-            this.pageObjects.boBasePage.ordersParentLink,
-            this.pageObjects.boBasePage.ordersLink,
+
+          await this.pageObjects.deliverySlipsPage.goToSubMenu(
+            this.pageObjects.deliverySlipsPage.ordersParentLink,
+            this.pageObjects.deliverySlipsPage.ordersLink,
           );
+
           const pageTitle = await this.pageObjects.ordersPage.getPageTitle();
           await expect(pageTitle).to.contains(this.pageObjects.ordersPage.pageTitle);
         });
@@ -160,6 +183,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
             `goToCreatedOrderPage_${test.args.action}`,
             baseContext,
           );
+
           await this.pageObjects.ordersPage.goToOrder(1);
           const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
           await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
@@ -172,6 +196,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
             `updateOrderStatus_${test.args.action}`,
             baseContext,
           );
+
           const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
           await expect(result).to.equal(Statuses.shipped.status);
         });
@@ -183,9 +208,12 @@ describe('Test enable/disable product image in delivery slips', async () => {
             `downloadDeliverySlips_${test.args.action}`,
             baseContext,
           );
+
           fileName = await this.pageObjects.viewOrderPage.getFileName(3);
+
           await this.pageObjects.viewOrderPage.downloadDeliverySlip();
-          const exist = await files.checkFileExistence(`${fileName}.pdf`);
+
+          const exist = await files.doesFileExist(`${fileName}.pdf`);
           await expect(exist).to.be.true;
         });
 
@@ -196,10 +224,14 @@ describe('Test enable/disable product image in delivery slips', async () => {
             `checkProductImage_${test.args.action}`,
             baseContext,
           );
+
           const imageNumber = await files.getImageNumberInPDF(
             `${fileName}.pdf`,
           );
+
           await expect(imageNumber).to.be.equal(test.args.imageNumber);
+
+          // Delete file after check
           await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}.pdf`);
         });
       });

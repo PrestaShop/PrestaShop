@@ -54,7 +54,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     private $contextLocale;
 
-    /*
+    /**
      * @var ContextStateManager
      */
     private $contextStateManager;
@@ -114,7 +114,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
         if ($products) {
             foreach ($products as $product) {
                 $foundProduct = $this->createFoundProductFromLegacy(new Product($product['id_product']), $query);
-                $foundProducts[$foundProduct->getProductId()] = $foundProduct;
+                $foundProducts[] = $foundProduct;
             }
         }
 
@@ -131,7 +131,6 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
      */
     private function createFoundProductFromLegacy(Product $product, SearchProducts $query): FoundProduct
     {
-        //@todo: sort products alphabetically
         $priceTaxExcluded = Product::getPriceStatic($product->id, false);
         $priceTaxIncluded = Product::getPriceStatic($product->id, true);
 

@@ -236,8 +236,7 @@ module.exports = {
   plugins: [
     new FixStyleOnlyEntriesPlugin(),
     new CleanWebpackPlugin({
-      root: path.resolve(__dirname, '../'),
-      exclude: ['theme.rtlfix'],
+      cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
     new MiniCssExtractPlugin({filename: '[name].css'}),
     new webpack.ProvidePlugin({

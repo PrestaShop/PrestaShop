@@ -84,7 +84,7 @@ class FacetTest extends TestCase
             'filters' => [],
             'multipleSelectionAllowed' => true,
             'widgetType' => 'radio',
-            ],
+        ],
             $this->facet->toArray()
         );
     }

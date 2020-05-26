@@ -70,13 +70,13 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
     fi
   fi
 
-  if [ "$PS_DOMAIN" = "<to be defined>" ]; then
+  if [ "${PS_DOMAIN}" = "<to be defined>" ]; then
     export PS_DOMAIN=$(hostname -i)
   fi
 
   cd /var/www/html
   echo "\n* Install Dependencies...";
-  /usr/bin/composer install --no-suggest --ansi --prefer-dist --no-interaction --no-progress --quiet --no-dev
+  /usr/bin/composer install --ansi --prefer-dist --no-interaction --no-progress --quiet --no-dev
   /usr/bin/make assets
 
   echo "\n* Install PrestaShop...";

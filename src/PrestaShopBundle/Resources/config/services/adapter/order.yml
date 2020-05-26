@@ -23,6 +23,7 @@ services:
     arguments:
       - '@translator'
       - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand
@@ -155,6 +156,9 @@ services:
 
   prestashop.adapter.order.command_handler.delete_product_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.order.amount.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand
@@ -228,3 +232,6 @@ services:
 
   prestashop.adapter.order.order_sibling_provider:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderSiblingProvider
+
+  prestashop.adapter.order.amount.updater:
+    class: PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater

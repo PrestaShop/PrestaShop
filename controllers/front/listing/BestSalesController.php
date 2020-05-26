@@ -54,7 +54,7 @@ class BestSalesControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        $this->doProductSearch('catalog/listing/best-sales');
+        $this->doProductSearch('catalog/listing/best-sales', ['entity' => 'best-sales']);
     }
 
     protected function getProductSearchQuery()

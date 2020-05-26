@@ -200,7 +200,15 @@ class Calculator
     public function getDiscountTotal()
     {
         $amount = new AmountImmutable();
+        $isFreeShippingAppliedToAmount = false;
         foreach ($this->cartRules as $cartRule) {
+            if ((bool) $cartRule->getRuleData()['free_shipping']) {
+                if ($isFreeShippingAppliedToAmount) {
+                    $initialShippingFees = $this->getFees()->getInitialShippingFees();
+                    $amount = $amount->sub($initialShippingFees);
+                }
+                $isFreeShippingAppliedToAmount = true;
+            }
             $amount = $amount->add($cartRule->getDiscountApplied());
         }
 

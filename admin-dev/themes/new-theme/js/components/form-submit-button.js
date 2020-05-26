@@ -36,6 +36,8 @@ const {$} = window;
  *
  * <button class="js-form-submit-btn"
  *         data-form-submit-url="/my-custom-url"          // (required) URL to which form will be submitted
+ *         data-method="GET|POST|DELETE|PATCH"            // (optional) specify the verb to use for the request.
+ *                                                        // POST is taken by default if not value is set
  *         data-form-csrf-token="my-generated-csrf-token" // (optional) to increase security
  *         data-form-confirm-message="Are you sure?"      // (optional) to confirm action before submit
  *         type="button"                                  // make sure its simple button
@@ -60,10 +62,31 @@ export default class FormSubmitButton {
         return;
       }
 
+      let method = 'POST';
+      let addInput = null;
+
+      if ($btn.data('method')) {
+        const btnMethod = $btn.data('method');
+        const isGetOrPostMethod = ['GET', 'POST'].includes(btnMethod);
+        method = isGetOrPostMethod ? btnMethod : 'POST';
+
+        if (!isGetOrPostMethod) {
+          addInput = $('<input>', {
+            type: '_hidden',
+            name: '_method',
+            value: method,
+          });
+        }
+      }
+
       const $form = $('<form>', {
         action: $btn.data('form-submit-url'),
         method: 'POST',
       });
+
+      if (addInput) {
+        $form.append(addInput);
+      }
 
       if ($btn.data('form-csrf-token')) {
         $form.append($('<input>', {

@@ -1,4 +1,4 @@
-/*
+/**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE

@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Cache;
 use Context;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -59,16 +60,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      *
      * @return int
      */
-    private function getProductIdByName(string $productName)
+    private function getProductIdByName(string $productName): int
     {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        /** @var FoundProduct[] */
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
         }
 
-        return (int) $productId;
+        /** @var FoundProduct $product */
+        $product = reset($products);
+
+        return $product->getProductId();
     }
 }

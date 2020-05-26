@@ -103,61 +103,61 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('employee_bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_employee',
-                ])
+                    ->setOptions([
+                        'bulk_field' => 'id_employee',
+                    ])
             )
             ->add(
                 (new DataColumn('id_employee'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_employee',
-                ])
+                    ->setName($this->trans('ID', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'id_employee',
+                    ])
             )
             ->add(
                 (new DataColumn('firstname'))
-                ->setName($this->trans('First name', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'firstname',
-                ])
+                    ->setName($this->trans('First name', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'firstname',
+                    ])
             )
             ->add(
                 (new DataColumn('lastname'))
-                ->setName($this->trans('Last name', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'lastname',
-                ])
+                    ->setName($this->trans('Last name', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'lastname',
+                    ])
             )
             ->add(
                 (new DataColumn('email'))
-                ->setName($this->trans('Email address', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'email',
-                ])
+                    ->setName($this->trans('Email address', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'email',
+                    ])
             )
             ->add(
                 (new DataColumn('profile'))
-                ->setName($this->trans('Profile', [], 'Admin.Advparameters.Feature'))
-                ->setOptions([
-                    'field' => 'profile_name',
-                ])
+                    ->setName($this->trans('Profile', [], 'Admin.Advparameters.Feature'))
+                    ->setOptions([
+                        'field' => 'profile_name',
+                    ])
             )
             ->add(
                 (new ToggleColumn('active'))
-                ->setName($this->trans('Active', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'active',
-                    'primary_field' => 'id_employee',
-                    'route' => 'admin_employees_toggle_status',
-                    'route_param_name' => 'employeeId',
-                ])
+                    ->setName($this->trans('Active', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'active',
+                        'primary_field' => 'id_employee',
+                        'route' => 'admin_employees_toggle_status',
+                        'route_param_name' => 'employeeId',
+                    ])
             )
             ->add(
                 (new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('edit'))
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add((new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
@@ -166,15 +166,15 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'route_param_field' => 'id_employee',
                                 'clickable_row' => true,
                             ])
-                        )
-                        ->add(
-                            $this->buildDeleteAction(
-                                'admin_employees_delete',
-                                'employeeId',
-                                'id_employee'
                             )
-                        ),
-                ])
+                            ->add(
+                                $this->buildDeleteAction(
+                                    'admin_employees_delete',
+                                    'employeeId',
+                                    'id_employee'
+                                )
+                            ),
+                    ])
             );
     }
 
@@ -186,74 +186,74 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new FilterCollection())
             ->add(
                 (new Filter('id_employee', NumberType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_employee')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('id_employee')
             )
             ->add(
                 (new Filter('firstname', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('firstname')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search first name', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('firstname')
             )
             ->add(
                 (new Filter('lastname', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search last name', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('lastname')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search last name', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('lastname')
             )
             ->add(
                 (new Filter('email', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search email', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('email')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Search email', [], 'Admin.Actions'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('email')
             )
             ->add(
                 (new Filter('profile', ProfileChoiceType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('profile')
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('profile')
             )
             ->add(
                 (new Filter('active', ChoiceType::class))
-                ->setTypeOptions([
-                    'choices' => [
-                        $this->trans('Yes', [], 'Admin.Global') => 1,
-                        $this->trans('No', [], 'Admin.Global') => 0,
-                    ],
-                    'required' => false,
-                    'choice_translation_domain' => false,
-                ])
+                    ->setTypeOptions([
+                        'choices' => [
+                            $this->trans('Yes', [], 'Admin.Global') => 1,
+                            $this->trans('No', [], 'Admin.Global') => 0,
+                        ],
+                        'required' => false,
+                        'choice_translation_domain' => false,
+                    ])
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-                ->setAssociatedColumn('active')
+            ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'attr' => [
-                        'data-url' => $this->resetUrl,
-                        'data-redirect' => $this->redirectUrl,
-                    ],
-                ])
-                ->setAssociatedColumn('actions')
+                    ->setTypeOptions([
+                        'attr' => [
+                            'data-url' => $this->resetUrl,
+                            'data-redirect' => $this->redirectUrl,
+                        ],
+                    ])
+                    ->setAssociatedColumn('actions')
             );
     }
 
@@ -265,18 +265,18 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new GridActionCollection())
             ->add(
                 (new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-                ->setIcon('refresh')
+                    ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+                    ->setIcon('refresh')
             )
             ->add(
                 (new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-                ->setIcon('code')
+                    ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+                    ->setIcon('code')
             )
             ->add(
                 (new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-                ->setIcon('storage')
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+                    ->setIcon('storage')
             );
     }
 
@@ -288,29 +288,29 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_employees_bulk_enable_status',
-                ])
+                    ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_employees_bulk_enable_status',
+                    ])
             )
             ->add(
                 (new SubmitBulkAction('disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_employees_bulk_disable_status',
-                ])
+                    ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_employees_bulk_disable_status',
+                    ])
             )
             ->add(
                 (new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_employees_bulk_delete',
-                    'confirm_message' => $this->trans(
-                        'Delete selected item?',
-                        [],
-                        'Admin.Notifications.Warning'
-                    ),
-                ])
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_employees_bulk_delete',
+                        'confirm_message' => $this->trans(
+                            'Delete selected item?',
+                            [],
+                            'Admin.Notifications.Warning'
+                        ),
+                    ])
             );
     }
 }

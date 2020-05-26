@@ -4549,16 +4549,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v3.4.1",
+            "version": "v3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "b0e713d4cd503e7f92020a0c47b16f86fdf1fa83"
+                "reference": "6f7b97e77b0fca30c0acf74316996cfc82a263a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/b0e713d4cd503e7f92020a0c47b16f86fdf1fa83",
-                "reference": "b0e713d4cd503e7f92020a0c47b16f86fdf1fa83",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/6f7b97e77b0fca30c0acf74316996cfc82a263a9",
+                "reference": "6f7b97e77b0fca30c0acf74316996cfc82a263a9",
                 "shasum": ""
             },
             "require": {
@@ -4594,7 +4594,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2020-01-07T08:45:21+00:00"
+            "time": "2020-03-25T10:24:43+00:00"
         },
         {
             "name": "prestashop/ps_faviconnotificationbo",
@@ -4726,16 +4726,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "3.0.4",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "2b31859ea29fd92586892eb29f556f0023f207d2"
+                "reference": "8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/2b31859ea29fd92586892eb29f556f0023f207d2",
-                "reference": "2b31859ea29fd92586892eb29f556f0023f207d2",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a",
+                "reference": "8fd44ffe2626d92035e9a7ed02fb7de97c59fc0a",
                 "shasum": ""
             },
             "require": {
@@ -4763,7 +4763,7 @@
             ],
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
-            "time": "2019-06-20T08:09:30+00:00"
+            "time": "2020-04-15T14:45:38+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
@@ -4899,16 +4899,16 @@
         },
         {
             "name": "prestashop/ps_socialfollow",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_socialfollow.git",
-                "reference": "ffa1c3ad947cc045939f50d410f47793d1ca7793"
+                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/ffa1c3ad947cc045939f50d410f47793d1ca7793",
-                "reference": "ffa1c3ad947cc045939f50d410f47793d1ca7793",
+                "url": "https://api.github.com/repos/PrestaShop/ps_socialfollow/zipball/2a1bb73cbcdcf929b876b624f033d87c8b101133",
+                "reference": "2a1bb73cbcdcf929b876b624f033d87c8b101133",
                 "shasum": ""
             },
             "require": {
@@ -4917,7 +4917,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4927,20 +4927,20 @@
             ],
             "description": "PrestaShop module ps_socialfollow",
             "homepage": "https://github.com/PrestaShop/ps_socialfollow",
-            "time": "2017-02-01T13:17:47+00:00"
+            "time": "2020-04-15T15:03:48+00:00"
         },
         {
             "name": "prestashop/ps_themecusto",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_themecusto.git",
-                "reference": "6f25e80e1374549254cf1f703b971088a5e228c7"
+                "reference": "69482091a23a68caa19aedc89f04f01fa997db77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/6f25e80e1374549254cf1f703b971088a5e228c7",
-                "reference": "6f25e80e1374549254cf1f703b971088a5e228c7",
+                "url": "https://api.github.com/repos/PrestaShop/ps_themecusto/zipball/69482091a23a68caa19aedc89f04f01fa997db77",
+                "reference": "69482091a23a68caa19aedc89f04f01fa997db77",
                 "shasum": ""
             },
             "require": {
@@ -4969,7 +4969,7 @@
             ],
             "description": "PrestaShop module ps_themecusto",
             "homepage": "https://github.com/PrestaShop/ps_themecusto",
-            "time": "2019-11-22T11:44:15+00:00"
+            "time": "2020-04-29T06:18:04+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
@@ -6336,23 +6336,24 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.34",
+            "version": "v3.1.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "c9f0de05f41b9e52798b268ab1e625fac3b8578c"
+                "reference": "fd148f7ade295014fff77f89ee3d5b20d9d55451"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/c9f0de05f41b9e52798b268ab1e625fac3b8578c",
-                "reference": "c9f0de05f41b9e52798b268ab1e625fac3b8578c",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/fd148f7ade295014fff77f89ee3d5b20d9d55451",
+                "reference": "fd148f7ade295014fff77f89ee3d5b20d9d55451",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "6.4.1"
+                "phpunit/phpunit": "6.4.1",
+                "smarty/smarty-lexer": "^3.1"
             },
             "type": "library",
             "extra": {
@@ -6388,7 +6389,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-02-28T06:42:20+00:00"
+            "time": "2020-04-14T14:44:26+00:00"
         },
         {
             "name": "soundasleep/html2text",
@@ -9932,5 +9933,6 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.1.3"
-    }
+    },
+    "plugin-api-version": "1.1.0"
 }

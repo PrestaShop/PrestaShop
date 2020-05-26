@@ -499,8 +499,8 @@ class SupplierController extends FrameworkBundleAdminController
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
                     'Maximum image size: %s.', 'Admin.Global', [
-                    $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                        $iniConfig->getUploadMaxSizeInBytes(),
+                    ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'
@@ -532,14 +532,14 @@ class SupplierController extends FrameworkBundleAdminController
 
         if ($this->configuration->get('PS_DISPLAY_SUPPLIERS')) {
             return $this->trans(
-                'The display of your suppliers is enabled on your store. Go to %sShop Parameters > General to edit settings%s.',
+                'The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
                 'Admin.Catalog.Notification',
                 [$urlOpening, $urlEnding]
             );
         }
 
         return $this->trans(
-            'The display of your suppliers is disabled on your store. Go to %sShop Parameters > General to edit settings%s.',
+            'The display of your suppliers is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',
             'Admin.Catalog.Notification',
             [$urlOpening, $urlEnding]
         );

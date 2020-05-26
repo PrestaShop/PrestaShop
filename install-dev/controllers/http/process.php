@@ -91,8 +91,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processInstallDefaultData();
             } elseif (Tools::getValue('populateDatabase') && !empty($this->session->process_validated['installDatabase'])) {
                 $this->processPopulateDatabase();
-                // download and install language pack
-                Language::downloadAndInstallLanguagePack($this->session->lang);
             } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
                 Language::getRtlStylesheetProcessor()
                     ->setIsInstall(true)
@@ -208,7 +206,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             'admin_lastname' =>            $this->session->admin_lastname,
             'admin_password' =>            $this->session->admin_password,
             'admin_email' =>            $this->session->admin_email,
-            'send_informations' =>        $this->session->send_informations,
             'configuration_agrement' =>    $this->session->configuration_agrement,
             'rewrite_engine' =>            $this->session->rewrite_engine,
         ));
@@ -229,7 +226,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
 
-        $result = $this->model_install->installModules(Tools::getValue('module'));
+        $result = $this->model_install->installModules(Tools::getValue('module', null));
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }

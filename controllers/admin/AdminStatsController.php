@@ -629,6 +629,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
     public function displayAjaxGetKpi()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         $tooltip = null;
         switch (Tools::getValue('kpi')) {
@@ -1039,6 +1043,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
      */
     public function displayAjaxGraphDraw()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $module = Tools::getValue('module');
         $render = Tools::getValue('render');
         $type = Tools::getValue('type');
@@ -1071,6 +1079,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
      */
     public function displayAjaxGraphGrid()
     {
+        if (!$this->access('view')) {
+            return die(json_encode(['error' => 'You do not have the right permission']));
+        }
+
         $module = Tools::getValue('module');
         $render = Tools::getValue('render');
         $type = Tools::getValue('type');

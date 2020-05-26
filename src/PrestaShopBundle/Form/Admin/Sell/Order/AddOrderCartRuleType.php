@@ -31,9 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -104,11 +102,7 @@ class AddOrderCartRuleType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'choices' => $this->orderDiscountTypeChoiceProvider->getChoices(),
             ])
-            ->add('value', NumberType::class, [
-                'attr' => [
-                    'step' => 1,
-                    'class' => 'input-group-text',
-                ],
+            ->add('value', TextType::class, [
                 'constraints' => new Type([
                     'type' => 'numeric',
                     'message' => $this->trans('Discount value must be a number', [], 'Admin.Notifications.Error'),
@@ -118,10 +112,6 @@ class AddOrderCartRuleType extends AbstractType
                 'choices' => $invoices,
                 'required' => false,
                 'placeholder' => false,
-            ])
-            ->add('apply_on_all_invoices', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans('Apply on all invoices', [], 'Admin.Orderscustomers.Feature'),
             ])
         ;
     }

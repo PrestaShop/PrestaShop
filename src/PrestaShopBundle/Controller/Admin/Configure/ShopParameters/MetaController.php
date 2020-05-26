@@ -117,7 +117,7 @@ class MetaController extends FrameworkBundleAdminController
             'indexPageId' => $metaDataProvider->getIdByPage('index'),
             'metaShowcaseCardName' => ShowcaseCard::SEO_URLS_CARD,
             'showcaseCardIsClosed' => $showcaseCardIsClosed,
-            ]
+        ]
         );
     }
 
@@ -176,8 +176,8 @@ class MetaController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
-                'meta_form' => $metaForm->createView(),
-            ]
+            'meta_form' => $metaForm->createView(),
+        ]
         );
     }
 
@@ -211,8 +211,8 @@ class MetaController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/edit.html.twig', [
-                'meta_form' => $metaForm->createView(),
-            ]
+            'meta_form' => $metaForm->createView(),
+        ]
         );
     }
 

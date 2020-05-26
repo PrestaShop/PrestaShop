@@ -118,11 +118,11 @@ class ModuleZipManager
 
             // Inside of this folder, we MUST have a file called <module name>.php
             $moduleFolder = Finder::create()
-                    ->files()
-                    ->in($sandboxPath . $moduleName)
-                    ->depth('== 0')
-                    ->exclude(['__MACOSX'])
-                    ->ignoreVCS(true);
+                ->files()
+                ->in($sandboxPath . $moduleName)
+                ->depth('== 0')
+                ->exclude(['__MACOSX'])
+                ->ignoreVCS(true);
             foreach (iterator_to_array($moduleFolder) as $file) {
                 if ($file->getFileName() === $moduleName . '.php') {
                     $validModuleStructure = true;

@@ -25,30 +25,48 @@
  */
 class CheckoutSessionCore
 {
+    /** @var Context */
     protected $context;
+    /** @var DeliveryOptionsFinder */
     protected $deliveryOptionsFinder;
 
+    /**
+     * @param Context $context
+     * @param DeliveryOptionsFinder $deliveryOptionsFinder
+     */
     public function __construct(Context $context, DeliveryOptionsFinder $deliveryOptionsFinder)
     {
         $this->context = $context;
         $this->deliveryOptionsFinder = $deliveryOptionsFinder;
     }
 
+    /**
+     * @return bool
+     */
     public function customerHasLoggedIn()
     {
         return $this->context->customer->isLogged();
     }
 
+    /**
+     * @return Customer
+     */
     public function getCustomer()
     {
         return $this->context->customer;
     }
 
+    /**
+     * @return Cart
+     */
     public function getCart()
     {
         return $this->context->cart;
     }
 
+    /**
+     * @return int
+     */
     public function getCustomerAddressesCount()
     {
         return count($this->getCustomer()->getSimpleAddresses(

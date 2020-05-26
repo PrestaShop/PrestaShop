@@ -43,6 +43,7 @@ export default class OrderProductManager {
       return;
     }
 
+    $btn.pstooltip('dispose');
     $btn.prop('disabled', true);
     this.deleteProduct($btn.data('orderId'), $btn.data('orderDetailId'));
   }

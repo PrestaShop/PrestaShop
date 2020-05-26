@@ -81,7 +81,7 @@
       <trans-unit id="79f062391903591d68e514a400e136cf">
         <source>The status has been updated successfully.</source>
         <target>The status has been updated successfully.</target>
-        <note>Line: 688</note>
+        <note>Line: 712</note>
       </trans-unit>
     </body>
   </file>
@@ -94,12 +94,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_crossselling/ps_crossselling.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_featuredproducts/ps_featuredproducts.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="efc226b17e0532afff43be870bff0de7">
         <source>The settings have been updated.</source>
         <target>The settings have been updated.</target>
-        <note>Line: 99</note>
+        <note>Line: 152</note>
       </trans-unit>
     </body>
   </file>
@@ -117,7 +117,7 @@
       <trans-unit id="7173e38e8a10ed379625687638ddfe74">
         <source>Successful deletion</source>
         <target>Successful deletion</target>
-        <note>Line: 558</note>
+        <note>Line: 563</note>
       </trans-unit>
     </body>
   </file>
@@ -197,7 +197,16 @@
       <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
         <source>Comment successfully added.</source>
         <target>Comment successfully added.</target>
-        <note>Line: 1043</note>
+        <note>Line: 1101</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e27a3fee7c315373637c37dc3d62811d">
+        <source>Your symbol and format customizations have been successfully reset for this language.</source>
+        <target>Your symbol and format customizations have been successfully reset for this language.</target>
+        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>

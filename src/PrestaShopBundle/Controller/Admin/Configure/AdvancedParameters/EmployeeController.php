@@ -298,6 +298,7 @@ class EmployeeController extends FrameworkBundleAdminController
         $templateVars = [
             'employeeForm' => $employeeForm->createView(),
             'showAddonsConnectButton' => false,
+            'enableSidebar' => true,
         ];
 
         return $this->render(
@@ -310,7 +311,6 @@ class EmployeeController extends FrameworkBundleAdminController
      * Show Employee edit page.
      *
      * @DemoRestricted(redirectRoute="admin_employees_index")
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_employees_index")
      *
      * @param int $employeeId
      * @param Request $request

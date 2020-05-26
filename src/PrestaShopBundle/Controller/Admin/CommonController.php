@@ -33,10 +33,12 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -357,15 +359,29 @@ class CommonController extends FrameworkBundleAdminController
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
     ) {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
+
+        // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
+        if (!($definitionFactory instanceof FilterableGridDefinitionFactoryInterface)) {
+            /** @var ControllerResponseBuilder $responseBuilder */
+            $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
+
+            return $controllerResponseBuilder->buildSearchResponse(
+                $definitionFactory,
+                $request,
+                $redirectRoute,
+                $redirectQueryParamsToKeep
+            );
+        }
+
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
         return $responseBuilder->buildSearchResponse(
             $definitionFactory,
             $request,
-            $definitionFactory::GRID_ID,
+            $definitionFactory->getFilterId(),
             $redirectRoute,
             $redirectQueryParamsToKeep
         );

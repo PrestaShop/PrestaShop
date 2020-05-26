@@ -46,6 +46,8 @@ use OrderInvoice;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -68,11 +70,6 @@ use Validate;
 final class AddProductToOrderHandler extends AbstractOrderHandler implements AddProductToOrderHandlerInterface
 {
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var Context
      */
     private $context;
@@ -83,14 +80,28 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $contextStateManager;
 
     /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
      */
-    public function __construct(TranslatorInterface $translator, ContextStateManager $contextStateManager)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        ContextStateManager $contextStateManager,
+        OrderAmountUpdater $orderAmountUpdater
+    ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
         $this->contextStateManager = $contextStateManager;
+        $this->orderAmountUpdater = $orderAmountUpdater;
     }
 
     /**
@@ -117,11 +128,20 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $oldCartRules = $cart->getCartRules();
 
             $specificPrice = $this->createSpecificPriceIfNeeded(
-                $command,
+                new AmountImmutable(
+                    (float) (string) $command->getProductPriceTaxIncluded(),
+                    (float) (string) $command->getProductPriceTaxExcluded()
+                ),
                 $order,
                 $cart,
                 $product,
                 $combination
+            );
+
+            // Restore any specific prices for the products in the order
+            $restoredSpecificPrices = $this->restoreOrderProductsSpecificPrices(
+                $order,
+                $cart
             );
 
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
@@ -136,8 +156,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 [$productCart]
             );
 
-            $totalMethod = $command->getOrderInvoiceId() ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
-
             // Create Order detail information
             $orderDetail = $this->createOrderDetail(
                 $order,
@@ -145,33 +163,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $cart,
                 [$productCart]
             );
-
-            // update totals amount of order
-            // @todo: use https://github.com/PrestaShop/decimal for prices computations
-            $orderProducts = $order->getCartProducts();
-            $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts);
-            $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts);
-
-            $precision = $this->getPrecisionFromCart($cart);
-            $order->total_paid = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_paid_tax_excl = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_paid_tax_incl = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
-            $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts);
-            $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
-
-            $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
-            $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
-            $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
 
             StockAvailable::synchronize($product->id);
 
@@ -186,11 +177,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             // Update Tax lines
             $orderDetail->updateTaxAmount($order);
-
-            // Delete specific price if exists
-            if (null !== $specificPrice) {
-                $specificPrice->delete();
-            }
 
             $order = $order->refreshShippingCost();
 
@@ -225,22 +211,20 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $orderCartRule->add();
             }
 
-            // @todo: use https://github.com/PrestaShop/decimal
-            $order->total_paid = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_paid_tax_excl = Tools::ps_round(
-                (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_paid_tax_incl = Tools::ps_round(
-                (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-                $precision
-            );
-            $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-            $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
-            $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
+            // Update totals amount of order
+            $order = $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
+
+            // Delete specific price if exists
+            if (null !== $specificPrice) {
+                $specificPrice->delete();
+            }
+
+            // Delete restored specific prices
+            foreach ($restoredSpecificPrices as $restoredSpecificPrice) {
+                if (null !== $restoredSpecificPrice) {
+                    $restoredSpecificPrice->delete();
+                }
+            }
 
             $order->update();
         } catch (Exception $e) {
@@ -356,7 +340,35 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param AddProductToOrderCommand $command
+     * @param Order $order
+     * @param Cart $cart
+     *
+     * @return array
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function restoreOrderProductsSpecificPrices(Order $order, Cart $cart): array
+    {
+        $restoredSpecificPrices = [];
+        foreach ($order->getOrderDetailList() as $row) {
+            $orderDetail = new OrderDetail($row['id_order_detail']);
+            $product = new Product((int) $orderDetail->product_id);
+
+            $restoredSpecificPrices[] = $this->createSpecificPriceIfNeeded(
+                new AmountImmutable($orderDetail->unit_price_tax_incl, $orderDetail->unit_price_tax_excl),
+                $order,
+                $cart,
+                $product,
+                new Combination($orderDetail->product_attribute_id)
+            );
+        }
+
+        return $restoredSpecificPrices;
+    }
+
+    /**
+     * @param AmountImmutable $amount
      * @param Order $order
      * @param Cart $cart
      * @param Product $product
@@ -365,7 +377,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @return SpecificPrice|null
      */
     private function createSpecificPriceIfNeeded(
-        AddProductToOrderCommand $command,
+        AmountImmutable $amount,
         Order $order,
         Cart $cart,
         Product $product,
@@ -386,18 +398,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         );
 
-        if (!$command->getProductPriceTaxIncluded()->equals(new Number((string) $initialProductPriceTaxIncl))) {
+        if (!(new Number((string) $amount->getTaxIncluded()))->equals(new Number((string) $initialProductPriceTaxIncl))) {
             // @todo: use private method to create specific price object
             $specificPrice = new SpecificPrice();
             $specificPrice->id_shop = 0;
+            $specificPrice->id_cart = 0;
             $specificPrice->id_shop_group = 0;
-            $specificPrice->id_currency = 0;
+            $specificPrice->id_currency = $order->id_currency;
             $specificPrice->id_country = 0;
             $specificPrice->id_group = 0;
             $specificPrice->id_customer = $order->id_customer;
             $specificPrice->id_product = $product->id;
             $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-            $specificPrice->price = $command->getProductPriceTaxExcluded();
+            $specificPrice->price = new Number((string) $amount->getTaxExcluded());
             $specificPrice->from_quantity = 1;
             $specificPrice->reduction = 0;
             $specificPrice->reduction_type = 'amount';

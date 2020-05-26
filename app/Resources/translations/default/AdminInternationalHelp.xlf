@@ -241,7 +241,7 @@
       <trans-unit id="c7c838899b96b2b17ea954d2578cf541">
         <source>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</source>
         <target>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</target>
-        <note>Line: 45</note>
+        <note>Line: 88</note>
       </trans-unit>
       <trans-unit id="4ef5571f164a6a7fcc9f4625d14e260b">
         <source>ISO code (e.g. USD for Dollars, EUR for Euros, etc.).</source>
@@ -251,17 +251,17 @@
       <trans-unit id="3b3f9615aaf2ed5974c15881a08e0b8e">
         <source>By default, PrestaShop comes with a list of official currencies. If you want to use a local currency, you will have to add it manually. For example, to accept the Iranian Toman on your store, you need to create it before.</source>
         <target>By default, PrestaShop comes with a list of official currencies. If you want to use a local currency, you will have to add it manually. For example, to accept the Iranian Toman on your store, you need to create it before.</target>
-        <note>Line: 60</note>
+        <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="72d86566f89f1aa5a853fe2750bf96a5">
         <source>ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)</source>
         <target>ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)</target>
-        <note>Line: 84</note>
+        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="0ab7db7a10b7efc8270dd215c2a4ada7">
         <source><![CDATA[Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></source>
         <target><![CDATA[Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></target>
-        <note>Line: 88</note>
+        <note>Line: 93</note>
       </trans-unit>
     </body>
   </file>

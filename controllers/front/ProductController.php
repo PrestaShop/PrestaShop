@@ -55,18 +55,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function canonicalRedirection($canonical_url = '')
     {
         if (Validate::isLoadedObject($this->product)) {
-            if (!$this->product->hasCombinations() ||
-                !$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
+            $idProductAttribute = Tools::getValue('id_product_attribute', null);
+            if (!$this->product->hasCombinations() || !$this->isValidCombination($idProductAttribute, $this->product->id)) {
                 //Invalid combination we redirect to the canonical url (without attribute id)
                 unset($_GET['id_product_attribute']);
-            } else {
-                //Only redirect to canonical (parent product without combination) when the requested combination is not valid
-                //In this case we are in a valid combination url and we must display it without redirection for SEO purpose
-                return;
+                $idProductAttribute = null;
             }
 
-            //Note: we NEED these 6 arguments to have $ipa=null or else a parameter will be added
-            //id_product_attribute=0 and force the redirection
+            // If the attribute id is present in the url we use it to perform the redirection, this will fix any domain
+            // or rewriting error and redirect to the appropriate url
+            // If the attribute is not present or invalid, we set it to null so that the request is redirected to the
+            // real canonical url (without any attribute)
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -74,7 +73,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 null,
                 null,
                 null,
-                null
+                $idProductAttribute
             ));
         }
     }

@@ -35,13 +35,17 @@ use Order;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -51,10 +55,13 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
+use PrestaShopCollection;
 use Product;
 use RuntimeException;
 use stdClass;
+use Tax;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
@@ -171,6 +178,47 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (InvalidProductQuantityException $e) {
             $this->lastException = $e;
         } catch (ProductOutOfStockException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I remove product :productReference from order :orderReference
+     *
+     * @param string $productReference
+     * @param string $orderReference
+     */
+    public function removeProductsFromOrder(string $productReference, string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productId = $this->getProductIdByName($productReference);
+        $orderDetailId = null;
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        /** @var OrderProductForViewing[] $products */
+        $products = $orderForViewing->getProducts()->getProducts();
+        foreach ($products as $product) {
+            if ($product->getId() == $productId) {
+                $orderDetailId = $product->getOrderDetailId();
+                break;
+            }
+        }
+        if (empty($orderDetailId)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Product %s has not been found in order %s',
+                    $productReference,
+                    $orderReference
+                )
+            );
+        }
+
+        try {
+            $this->getCommandBus()->handle(
+                new DeleteProductFromOrderCommand($orderId, $orderDetailId)
+            );
+        } catch (OrderException | OrderNotFoundException $e) {
             $this->lastException = $e;
         }
     }
@@ -422,49 +470,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @deprecated
-     *
-     * @param TableNode $table
-     *
-     * @return array
-     *
-     * @throws RuntimeException
-     */
-    private function extractFirstRowFromProperties(TableNode $table): array
-    {
-        $hash = $table->getHash();
-        if (count($hash) != 1) {
-            throw new RuntimeException('Properties are invalid');
-        }
-        /** @var array $data */
-        $data = $hash[0];
-
-        return $data;
-    }
-
-    /**
-     * @param array $testCaseData
-     *
-     * @return array
-     */
-    private function mapAddOrderFromBackOfficeData(array $testCaseData)
-    {
-        $data = [];
-        $cartId = SharedStorage::getStorage()->get($testCaseData['cart']);
-        $data['cartId'] = $cartId;
-        $data['employeeId'] = Context::getContext()->employee->id;
-        $data['orderMessage'] = $testCaseData['message'];
-        $data['paymentModuleName'] = $testCaseData['payment module name'];
-
-        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
-        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
-        $availableOrderStates = $orderStateChoiceProvider->getChoices();
-        $data['orderStateId'] = (int) $availableOrderStates[$testCaseData['status']];
-
-        return $data;
-    }
-
-    /**
      * @Then order :reference should have :quantity products in total
      *
      * @param string $reference
@@ -660,32 +665,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param string $productName
-     * @param string $orderReference
-     *
-     * @return array
-     */
-    private function getOrderDetailFromOrder(string $productName, string $orderReference): array
-    {
-        $productId = (int) $this->getProductIdByName($productName);
-        $order = new Order(SharedStorage::getStorage()->get($orderReference));
-        $orderDetails = $order->getProducts();
-        $productOrderDetail = null;
-        foreach ($orderDetails as $orderDetail) {
-            if ((int) $orderDetail['product_id'] === $productId) {
-                $productOrderDetail = $orderDetail;
-                break;
-            }
-        }
-
-        if (null === $productOrderDetail) {
-            throw new RuntimeException(sprintf('Cannot find product details for product %s in order %s', $productName, $orderReference));
-        }
-
-        return $productOrderDetail;
-    }
-
-    /**
      * @Then /^I watch the stock of product "(.+)"$/
      *
      * This statement must be called to store an initial stock for a product which then
@@ -726,6 +705,31 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given Order :orderReference has following prices:
+     * @Then Order :orderReference should have following prices:
+     */
+    public function assertOrderPrices(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $totalProducts = $orderForViewing->getPrices()->getProductsPriceFormatted();
+        $totalDiscounts = $orderForViewing->getPrices()->getDiscountsAmountFormatted();
+        $totalShipping = $orderForViewing->getPrices()->getShippingPriceFormatted();
+        $totalTaxes = $orderForViewing->getPrices()->getTaxesAmountFormatted();
+        $totalPrice = $orderForViewing->getPrices()->getTotalAmountFormatted();
+
+        Assert::assertEquals($data['products'], $totalProducts);
+        Assert::assertEquals($data['discounts'], $totalDiscounts);
+        Assert::assertEquals($data['shipping'], $totalShipping);
+        Assert::assertEquals($data['taxes'], $totalTaxes);
+        Assert::assertEquals($data['total'], $totalPrice);
+    }
+
+    /**
      * @Then order :orderReference should have the following details:
      *
      * @param string $orderReference
@@ -738,21 +742,121 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I add discount to order :orderReference with following details:
+     *
+     * @param string $orderReference
+     * @param TableNode $data
+     */
+    public function addAmountTypeCartRuleToOrder(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
+            $orderId,
+            $data['name'],
+            $data['type'],
+            $data['value']
+        ));
+    }
+
+    /**
+     * @When I add discount to order :orderReference on last invoice and following details:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function addAmountTypeCartRuleAndUpdateSingleInvoice(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        $invoices = $this->getOrderInvoices($orderId);
+        Assert::assertGreaterThanOrEqual(1, $invoices->count());
+
+        $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
+            $orderId,
+            $data['name'],
+            $data['type'],
+            $data['value'],
+            (int) $invoices->getLast()->id
+        ));
+    }
+
+    /**
+     * @Then last invoice for order :orderReference should have following prices:
+     */
+    public function assertLastInvoicePrices(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $data = $table->getRowsHash();
+
+        $invoices = $this->getOrderInvoices($orderId);
+        Assert::assertGreaterThanOrEqual(1, $invoices->count());
+
+        $invoice = $invoices->getLast();
+        Assert::assertEquals((float) $data['products'], $invoice->total_products);
+        Assert::assertEquals((float) $data['discounts tax excluded'], $invoice->total_discount_tax_excl);
+        Assert::assertEquals((float) $data['discounts tax included'], $invoice->total_discount_tax_incl);
+        Assert::assertEquals((float) $data['shipping tax excluded'], $invoice->total_shipping_tax_excl);
+        Assert::assertEquals((float) $data['shipping tax included'], $invoice->total_shipping_tax_incl);
+        Assert::assertEquals((float) $data['total paid tax excluded'], $invoice->total_paid_tax_excl);
+        Assert::assertEquals((float) $data['total paid tax included'], $invoice->total_paid_tax_incl);
+    }
+
+    /**
+     * Sales-taxes US-FL 6%
+     *
+     * @Given tax :taxName is applied to order :ordeReference
+     */
+    public function assertTaxIsAppliedToOrder(string $taxName, string $orderReference)
+    {
+        $orderId = $this->getSharedStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $expectedTaxId = (int) Tax::getTaxIdByName($taxName);
+
+        if (!$expectedTaxId) {
+            throw new RuntimeException(sprintf(
+                'Tax "%s" does not exist',
+                $taxName
+            ));
+        }
+
+        $taxDetails = $order->getOrderDetailTaxes();
+
+        foreach ($taxDetails as $taxDetail) {
+            if (!empty($taxDetail['id_tax']) && (int) $taxDetail['id_tax'] === $expectedTaxId) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(sprintf(
+            'Tax "%s" is not applied to order "%s"',
+            $taxName,
+            $orderReference
+        ));
+    }
+
+    /**
      * @param string $productName
      *
      * @return int
      */
     private function getProductIdByName(string $productName)
     {
-        /** @var array $productsMap */
-        $productsMap = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
-        $productId = array_key_first($productsMap);
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
-        if (!$productId) {
-            throw new RuntimeException('Product with name "%s" does not exist', $productName);
+        if (empty($products)) {
+            throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
         }
 
-        return (int) $productId;
+        /** @var FoundProduct $product */
+        $product = reset($products);
+
+        return (int) $product->getProductId();
     }
 
     /**
@@ -803,5 +907,91 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 );
             }
         }
+    }
+
+    /**
+     * @deprecated
+     *
+     * @param TableNode $table
+     *
+     * @return array
+     *
+     * @throws RuntimeException
+     */
+    private function extractFirstRowFromProperties(TableNode $table): array
+    {
+        $hash = $table->getHash();
+        if (count($hash) != 1) {
+            throw new RuntimeException('Properties are invalid');
+        }
+        /** @var array $data */
+        $data = $hash[0];
+
+        return $data;
+    }
+
+    /**
+     * @param array $testCaseData
+     *
+     * @return array
+     */
+    private function mapAddOrderFromBackOfficeData(array $testCaseData)
+    {
+        $data = [];
+        $cartId = SharedStorage::getStorage()->get($testCaseData['cart']);
+        $data['cartId'] = $cartId;
+        $data['employeeId'] = Context::getContext()->employee->id;
+        $data['orderMessage'] = $testCaseData['message'];
+        $data['paymentModuleName'] = $testCaseData['payment module name'];
+
+        /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
+        $orderStateChoiceProvider = $this->getContainer()->get('prestashop.core.form.choice_provider.order_state_by_id');
+        $availableOrderStates = $orderStateChoiceProvider->getChoices();
+        $data['orderStateId'] = (int) $availableOrderStates[$testCaseData['status']];
+
+        return $data;
+    }
+
+    /**
+     * @param string $productName
+     * @param string $orderReference
+     *
+     * @return array
+     */
+    private function getOrderDetailFromOrder(string $productName, string $orderReference): array
+    {
+        $productId = (int) $this->getProductIdByName($productName);
+        $order = new Order(SharedStorage::getStorage()->get($orderReference));
+        $orderDetails = $order->getProducts();
+        $productOrderDetail = null;
+        foreach ($orderDetails as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === $productId) {
+                $productOrderDetail = $orderDetail;
+                break;
+            }
+        }
+
+        if (null === $productOrderDetail) {
+            throw new RuntimeException(sprintf('Cannot find product details for product %s in order %s', $productName, $orderReference));
+        }
+
+        return $productOrderDetail;
+    }
+
+    /**
+     * Gets order invoices collection
+     *
+     * @param int $orderId
+     *
+     * @return PrestaShopCollection
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function getOrderInvoices(int $orderId): PrestaShopCollection
+    {
+        $order = new \Order($orderId);
+
+        return $order->getInvoicesCollection();
     }
 }

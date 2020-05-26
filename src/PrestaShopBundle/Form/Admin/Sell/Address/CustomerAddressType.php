@@ -128,266 +128,266 @@ class CustomerAddressType extends AbstractType
                 ]),
             ],
         ])
-        ->add('dni', TextType::class, [
-            'required' => false,
-            'empty_data' => '',
-            'constraints' => [
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_DNI_LITE,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_DNI_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_DNI_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('alias', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotBlank([
-                    'message' => $this->translator->trans(
-                        'This field cannot be empty', [], 'Admin.Notifications.Error'
-                    ),
-                ]),
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_GENERIC_NAME,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_ALIAS_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_ALIAS_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('first_name', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotBlank([
-                    'message' => $this->translator->trans(
-                        'This field cannot be empty', [], 'Admin.Notifications.Error'
-                    ),
-                ]),
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_NAME,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_FIRST_NAME_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_FIRST_NAME_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('last_name', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotBlank([
-                    'message' => $this->translator->trans(
-                        'This field cannot be empty', [], 'Admin.Notifications.Error'
-                    ),
-                ]),
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_NAME,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_LAST_NAME_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_LAST_NAME_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('company', TextType::class, [
-            'required' => false,
-            'empty_data' => '',
-            'constraints' => [
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_GENERIC_NAME,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_COMPANY_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_COMPANY_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('vat_number', TextType::class, [
-            'required' => false,
-            'empty_data' => '',
-            'constraints' => [
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_GENERIC_NAME,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_VAT_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_VAT_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('address1', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotBlank([
-                    'message' => $this->translator->trans(
-                        'This field cannot be empty', [], 'Admin.Notifications.Error'
-                    ),
-                ]),
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_ADDRESS,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_ADDRESS_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_ADDRESS_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('address2', TextType::class, [
-            'required' => false,
-            'empty_data' => '',
-            'constraints' => [
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_ADDRESS,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_ADDRESS_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_ADDRESS_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('city', TextType::class, [
-            'required' => true,
-            'constraints' => [
-                new NotBlank([
-                    'message' => $this->translator->trans(
-                        'This field cannot be empty', [], 'Admin.Notifications.Error'
-                    ),
-                ]),
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_CITY_NAME,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_CITY_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_CITY_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('postcode', TextType::class, [
-            'required' => false,
-            'empty_data' => '',
-            'constraints' => [
-                new AddressZipCode([
-                    'id_country' => $countryId,
-                    'required' => false,
-                ]),
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_POST_CODE,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_POSTCODE_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_POSTCODE_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('id_country', CountryChoiceType::class, [
-            'required' => true,
-            'withDniAttr' => true,
-            'withPostcodeAttr' => true,
-            'constraints' => [
-                new NotBlank([
-                    'message' => $this->translator->trans(
-                        'This field cannot be empty', [], 'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('id_state', ChoiceType::class, [
-            'required' => true,
-            'choices' => $stateChoices,
-            'constraints' => [
-                new AddressStateRequired([
-                    'id_country' => $countryId,
-                ]),
-            ],
-        ])
-        ->add('phone', TextType::class, [
-            'required' => false,
-            'empty_data' => '',
-            'constraints' => [
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_PHONE_NUMBER,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_PHONE_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_PHONE_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ])
-        ->add('other', TextareaType::class, [
-            'required' => false,
-            'empty_data' => '',
-            'constraints' => [
-                new CleanHtml(),
-                new TypedRegex([
-                    'type' => TypedRegex::TYPE_MESSAGE,
-                ]),
-                new Length([
-                    'max' => AddressConstraint::MAX_OTHER_LENGTH,
-                    'maxMessage' => $this->translator->trans(
-                        'This field cannot be longer than %limit% characters',
-                        ['%limit%' => AddressConstraint::MAX_OTHER_LENGTH],
-                        'Admin.Notifications.Error'
-                    ),
-                ]),
-            ],
-        ]);
+            ->add('dni', TextType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_DNI_LITE,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_DNI_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_DNI_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('alias', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_GENERIC_NAME,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_ALIAS_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_ALIAS_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('first_name', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_NAME,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_FIRST_NAME_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_FIRST_NAME_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('last_name', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_NAME,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_LAST_NAME_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_LAST_NAME_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('company', TextType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_GENERIC_NAME,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_COMPANY_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_COMPANY_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('vat_number', TextType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_GENERIC_NAME,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_VAT_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_VAT_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('address1', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_ADDRESS,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_ADDRESS_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_ADDRESS_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('address2', TextType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_ADDRESS,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_ADDRESS_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_ADDRESS_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('city', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_CITY_NAME,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_CITY_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_CITY_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('postcode', TextType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new AddressZipCode([
+                        'id_country' => $countryId,
+                        'required' => false,
+                    ]),
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_POST_CODE,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_POSTCODE_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_POSTCODE_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('id_country', CountryChoiceType::class, [
+                'required' => true,
+                'withDniAttr' => true,
+                'withPostcodeAttr' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->translator->trans(
+                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('id_state', ChoiceType::class, [
+                'required' => true,
+                'choices' => $stateChoices,
+                'constraints' => [
+                    new AddressStateRequired([
+                        'id_country' => $countryId,
+                    ]),
+                ],
+            ])
+            ->add('phone', TextType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_PHONE_NUMBER,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_PHONE_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_PHONE_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ])
+            ->add('other', TextareaType::class, [
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => [
+                    new CleanHtml(),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_MESSAGE,
+                    ]),
+                    new Length([
+                        'max' => AddressConstraint::MAX_OTHER_LENGTH,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters',
+                            ['%limit%' => AddressConstraint::MAX_OTHER_LENGTH],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+            ]);
     }
 }

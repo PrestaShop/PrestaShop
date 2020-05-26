@@ -29,7 +29,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable enable stock management', async () => {
+describe('Enable stock management', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

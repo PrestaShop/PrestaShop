@@ -755,8 +755,7 @@ class CartCore extends ObjectModel
 
             $givenAwayProductsIds = [];
 
-            // Do not recalculate in case of refresh
-            if ($this->shouldSplitGiftProductsQuantity && !$refresh) {
+            if ($this->shouldSplitGiftProductsQuantity && $refresh) {
                 $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
                 if (count($gifts) > 0) {
                     foreach ($gifts as $gift) {
@@ -1406,7 +1405,6 @@ class CartCore extends ObjectModel
                     $id_customization
                 );
                 $updateQuantity = '- ' . $quantity;
-                $newProductQuantity = $productQuantity + $quantity;
 
                 if ($cartFirstLevelProductQuantity['quantity'] <= 1
                     || $cartProductQuantity['quantity'] - $quantity <= 0
@@ -3838,7 +3836,7 @@ class CartCore extends ObjectModel
 
             if ($cart_rule['gift_product']) {
                 foreach ($products as $key => &$product) {
-                    if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
+                    if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
                         // Update total products
                         $total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
                         $total_products = Tools::ps_round($total_products - $product['price'], (int) $context->currency->decimals * Context::getContext()->getComputingPrecision());
@@ -3867,7 +3865,7 @@ class CartCore extends ObjectModel
                         $gift_product['price_wt'] = 0;
                         $gift_product['total_wt'] = 0;
                         $gift_product['total'] = 0;
-                        $gift_product['gift'] = true;
+                        $gift_product['is_gift'] = true;
                         $gift_products[] = $gift_product;
 
                         break; // One gift product per cart rule

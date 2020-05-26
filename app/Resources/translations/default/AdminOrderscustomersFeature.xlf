@@ -988,7 +988,7 @@
       <trans-unit id="d68a1671669f7e55d73dd78c22d52dfa">
         <source>This order has been partially paid by voucher. Choose the amount you want to refund:</source>
         <target>This order has been partially paid by voucher. Choose the amount you want to refund:</target>
-        <note>Line: 1170</note>
+        <note>Line: 1218</note>
       </trans-unit>
       <trans-unit id="6188ffe19286d3bf694160609cf15e82">
         <source>Include amount of initial voucher: </source>
@@ -1044,6 +1044,31 @@
         <source>Order no. </source>
         <target>Order no. </target>
         <note>Line: 1288</note>
+      </trans-unit>
+      <trans-unit id="532c865e83cd29bf74e7b968c8216767">
+        <source>Product(s) price:</source>
+        <target>Product(s) price:</target>
+        <note>Line: 1222</note>
+      </trans-unit>
+      <trans-unit id="6e3a26f187c697d1d8c6668a55cd5561">
+        <source>Product(s) price, excluding amount of initial voucher:</source>
+        <target>Product(s) price, excluding amount of initial voucher:</target>
+        <note>Line: 1228</note>
+      </trans-unit>
+      <trans-unit id="9e95da88fdfc002080300ef14cfba583">
+        <source>Include amount of initial voucher:</source>
+        <target>Include amount of initial voucher:</target>
+        <note>Line: 1174</note>
+      </trans-unit>
+      <trans-unit id="ec7ef95eeedfb53da36578da83b77ca6">
+        <source>Exclude amount of initial voucher:</source>
+        <target>Exclude amount of initial voucher:</target>
+        <note>Line: 1180</note>
+      </trans-unit>
+      <trans-unit id="6b743762523778c559d152e58f15af70">
+        <source>Amount of your choice:</source>
+        <target>Amount of your choice:</target>
+        <note>Line: 1233</note>
       </trans-unit>
     </body>
   </file>
@@ -1289,22 +1314,22 @@ Best regards,</target>
       <trans-unit id="0f005bd8209a61e4fc96a69736eb9798">
         <source>Order %reference% from %firstname% %lastname%</source>
         <target>Order %reference% from %firstname% %lastname%</target>
-        <note>Line: 285</note>
+        <note>Line: 286</note>
       </trans-unit>
       <trans-unit id="bbee72681d2c075d95355d3d9ccefb4e">
         <source>Credit card slip for order #%d</source>
         <target>Credit card slip for order #%d</target>
-        <note>Line: 1078</note>
+        <note>Line: 1079</note>
       </trans-unit>
       <trans-unit id="52ec3221b595bb84def222e275d0152b">
         <source>Order #%id% (%ref%) - %firstname% %lastname%</source>
         <target>Order #%id% (%ref%) - %firstname% %lastname%</target>
-        <note>Line: 1741</note>
+        <note>Line: 1761</note>
       </trans-unit>
       <trans-unit id="95abd3be6297996994738f735a369d4a">
         <source>Shop: %shop_name%</source>
         <target>Shop: %shop_name%</target>
-        <note>Line: 1752</note>
+        <note>Line: 1772</note>
       </trans-unit>
     </body>
   </file>
@@ -1347,7 +1372,7 @@ Best regards,</target>
       <trans-unit id="4f3bf7771a1ecc368092d952d698c12c">
         <source>Order #%id% from %date%</source>
         <target>Order #%id% from %date%</target>
-        <note>Line: 175</note>
+        <note>Line: 178</note>
       </trans-unit>
     </body>
   </file>
@@ -1535,17 +1560,17 @@ Best regards,</target>
       <trans-unit id="e13004b81566bfc42daa48372c15111b">
         <source>Change Order Status</source>
         <target>Change Order Status</target>
-        <note>Line: 436</note>
+        <note>Line: 437</note>
       </trans-unit>
       <trans-unit id="9efa6b952ad382ca6a636523732c85cd">
         <source>Open in new tabs</source>
         <target>Open in new tabs</target>
-        <note>Line: 443</note>
+        <note>Line: 444</note>
       </trans-unit>
       <trans-unit id="b6df865141bb721c8c46d548b8e2846c">
         <source>It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.</source>
         <target>It looks like you have exceeded the number of tabs allowed. Check your browser settings to open multiple tabs.</target>
-        <note>Line: 450</note>
+        <note>Line: 451</note>
       </trans-unit>
     </body>
   </file>
@@ -1554,7 +1579,7 @@ Best regards,</target>
       <trans-unit id="bed08e8af70a98c1a8361f13ec477be0">
         <source>Add new address</source>
         <target>Add new address</target>
-        <note>Line: 213</note>
+        <note>Line: 189</note>
       </trans-unit>
     </body>
   </file>
@@ -1563,7 +1588,7 @@ Best regards,</target>
       <trans-unit id="80c05dda6b88c30a777e8777e23be8d7">
         <source>Add new order message</source>
         <target>Add new order message</target>
-        <note>Line: 72</note>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -1572,12 +1597,12 @@ Best regards,</target>
       <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
         <source>Add new order</source>
         <target>Add new order</target>
-        <note>Line: 139</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>Line: 442</note>
+        <note>Line: 464</note>
       </trans-unit>
     </body>
   </file>
@@ -1595,7 +1620,7 @@ Best regards,</target>
       <trans-unit id="29aa46cc3d2677c7e0f216910df600ff">
         <source>Free shipping</source>
         <target>Free shipping</target>
-        <note>Line: 132</note>
+        <note>Line: 133</note>
       </trans-unit>
     </body>
   </file>
@@ -1604,7 +1629,7 @@ Best regards,</target>
       <trans-unit id="282c7d15f714ec30b64b7db218f232f0">
         <source>The "shipping" field must be a valid number</source>
         <target>The "shipping" field must be a valid number</target>
-        <note>Line: 81</note>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -1627,22 +1652,22 @@ Best regards,</target>
       <trans-unit id="03361eda68f746619c2ae3341eaa2f07">
         <source>Customer email</source>
         <target>Customer email</target>
-        <note>Line: 60</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="baa31a65f29121c32b637bb845d41acf">
         <source>Address alias</source>
         <target>Address alias</target>
-        <note>Line: 71</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="7cb32e708d6b961d476baced73d362bb">
         <source>VAT number</source>
         <target>VAT number</target>
-        <note>Line: 91</note>
+        <note>Line: 90</note>
       </trans-unit>
       <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
         <source>Identification number</source>
         <target>Identification number</target>
-        <note>Line: 66</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -1827,7 +1852,7 @@ Best regards,</target>
       <trans-unit id="b70a3b711156c78fa558c596980b2e30">
         <source>Last emails</source>
         <target>Last emails</target>
-        <note>Line: 30</note>
+        <note>Line: 29</note>
       </trans-unit>
     </body>
   </file>
@@ -2131,7 +2156,7 @@ Best regards,</target>
       <trans-unit id="c6ba3f7beac8724d025d570d002b1579">
         <source>No voucher was found</source>
         <target>No voucher was found</target>
-        <note>Line: 79</note>
+        <note>Line: 83</note>
       </trans-unit>
     </body>
   </file>
@@ -2149,12 +2174,12 @@ Best regards,</target>
       <trans-unit id="1402e450396cb76b53b95f6e1746d700">
         <source>Account registered:</source>
         <target>Account registered:</target>
-        <note>Line: 73</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="73f60d0b9f47c606d71c17498266776e">
         <source>Validated orders placed:</source>
         <target>Validated orders placed:</target>
-        <note>Line: 79</note>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -2202,6 +2227,11 @@ Best regards,</target>
         <target>Cardholder name</target>
         <note>Line: 97</note>
       </trans-unit>
+      <trans-unit id="a44217022190f5734b2f72ba1e4f8a79">
+        <source>Card number</source>
+        <target>Card number</target>
+        <note>Line: 73</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -2209,7 +2239,7 @@ Best regards,</target>
       <trans-unit id="cc61945cbbf46721a053467c395c666f">
         <source>Refunded</source>
         <target>Refunded</target>
-        <note>Line: 68</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
@@ -2218,7 +2248,7 @@ Best regards,</target>
       <trans-unit id="d9c66f411da5faef9c46d5b679214ae1">
         <source>Add a discount</source>
         <target>Add a discount</target>
-        <note>Line: 140</note>
+        <note>Line: 145</note>
       </trans-unit>
     </body>
   </file>
@@ -2227,7 +2257,7 @@ Best regards,</target>
       <trans-unit id="858591a7d8647b4535c51a4ad506db9c">
         <source>Shipping does not apply to virtual orders</source>
         <target>Shipping does not apply to virtual orders</target>
-        <note>Line: 87</note>
+        <note>Line: 99</note>
       </trans-unit>
     </body>
   </file>

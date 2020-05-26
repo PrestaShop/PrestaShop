@@ -76,10 +76,10 @@ class TranslationControllerTest extends ApiTestCase
     {
         return [
             [
-                ['locale' => 'default', 'domain' => 'AdminGlobal'],
+                ['locale' => 'en-US', 'domain' => 'AdminGlobal'],
             ],
             [
-                ['locale' => 'default', 'domain' => 'AdminNavigationMenu'],
+                ['locale' => 'en-US', 'domain' => 'AdminNavigationMenu'],
             ],
         ];
     }

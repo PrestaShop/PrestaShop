@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -51,8 +50,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class is responsible for defining 'Sell > Customer > Addresses' grid.
  */
-final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'address';
 
     /**
@@ -132,35 +133,35 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add(
-                            (new LinkRowAction('edit'))
-                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                                ->setIcon('edit')
-                                ->setOptions([
-                                    'route' => 'admin_addresses_edit',
-                                    'route_param_name' => 'addressId',
-                                    'route_param_field' => 'id_address',
-                                ])
-                        )
-                        ->add(
-                            (new SubmitRowAction('delete'))
-                                ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                                ->setIcon('delete')
-                                ->setOptions([
-                                    'confirm_message' => $this->trans(
-                                        'Delete selected item?',
-                                        [],
-                                        'Admin.Notifications.Warning'
-                                    ),
-                                    'route' => 'admin_addresses_delete',
-                                    'route_param_name' => 'addressId',
-                                    'route_param_field' => 'id_address',
-                                ])
-                        ),
-                ])
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    ->add(
+                        (new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_addresses_edit',
+                                'route_param_name' => 'addressId',
+                                'route_param_field' => 'id_address',
+                            ])
+                    )
+                    ->add(
+                        (new SubmitRowAction('delete'))
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'confirm_message' => $this->trans(
+                                    'Delete selected item?',
+                                    [],
+                                    'Admin.Notifications.Warning'
+                                ),
+                                'route' => 'admin_addresses_delete',
+                                'route_param_name' => 'addressId',
+                                'route_param_field' => 'id_address',
+                            ])
+                    ),
+            ])
             )
         ;
 
@@ -285,12 +286,7 @@ final class AddressGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_addresses_delete_bulk',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildBulkDeleteAction('admin_addresses_delete_bulk')
             );
     }
 }

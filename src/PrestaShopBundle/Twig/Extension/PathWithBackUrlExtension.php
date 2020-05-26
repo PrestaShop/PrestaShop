@@ -75,8 +75,7 @@ class PathWithBackUrlExtension extends AbstractExtension
         return [
             new TwigFunction(
                 'pathWithBackUrl',
-                [$this, 'getPathWithBackUrl'],
-                ['is_safe_callback' => [$this->routingExtension, 'isUrlGenerationSafe']]
+                [$this, 'getPathWithBackUrl']
             ),
         ];
     }

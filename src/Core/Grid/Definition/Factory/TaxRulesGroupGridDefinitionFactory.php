@@ -47,7 +47,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Defines tax rules groups grid
  */
-final class TaxRulesGroupGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class TaxRulesGroupGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     public const GRID_ID = 'tax_rules_group';
 
@@ -94,13 +94,13 @@ final class TaxRulesGroupGridDefinitionFactory extends AbstractGridDefinitionFac
                     ])
             )
             ->add((new ToggleColumn('active'))
-                ->setName($this->trans('Enabled', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'active',
-                    'primary_field' => 'id_tax_rules_group',
-                    'route' => 'admin_tax_rules_groups_toggle_status',
-                    'route_param_name' => 'taxRulesGroupId',
-                ])
+            ->setName($this->trans('Enabled', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'active',
+                'primary_field' => 'id_tax_rules_group',
+                'route' => 'admin_tax_rules_groups_toggle_status',
+                'route_param_name' => 'taxRulesGroupId',
+            ])
             )
             ->add(
                 (new ActionColumn('actions'))
@@ -163,11 +163,11 @@ final class TaxRulesGroupGridDefinitionFactory extends AbstractGridDefinitionFac
                     ->setAssociatedColumn('name')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'choice_translation_domain' => false,
-                ])
-                ->setAssociatedColumn('active')
+            ->setTypeOptions([
+                'required' => false,
+                'choice_translation_domain' => false,
+            ])
+            ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

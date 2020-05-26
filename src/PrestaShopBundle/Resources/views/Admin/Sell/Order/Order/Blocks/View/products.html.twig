@@ -110,7 +110,7 @@
     </table>
 
     <div class="row mb-3">
-      <div class="col-md-6 text-left d-print-none">
+      <div class="col-md-4 text-left d-print-none">
         {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}
         <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">
           <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
@@ -133,7 +133,7 @@
           </ul>
         </nav>
       </div>
-      <div class="col-md-6 text-right discount-action">
+      <div class="col-xl-8 text-right discount-action">
         {% if not orderForViewing.delivered %}
           <button type="button" class="btn btn-outline-secondary js-product-action-btn mr-3" id="addProductBtn">
             <i class="material-icons">add_circle_outline</i>
@@ -147,33 +147,10 @@
       </div>
     </div>
 
-    {% if orderForViewing.discounts.discounts is not empty %}
-      <table class="table discountList">
-        <thead>
-        <tr>
-          <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
-          <th>{{ 'Value'|trans({}, 'Admin.Global') }}</th>
-          <th class="text-right d-print-none">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for discount in orderForViewing.discounts.discounts %}
-          <tr>
-            <td>{{ discount.name }}</td>
-            <td>
-              {% if discount.amountRaw.greaterThan(number(0)) %}-{% endif %}
-              {{ discount.amountFormatted }}
-            </td>
-            <td class="text-right d-print-none">
-              <a class="delete-cart-rule btn btn-text" href="{{ path('admin_orders_remove_cart_rule', {'orderId': orderForViewing.id, 'orderCartRuleId': discount.orderCartRuleId}) }}">
-                  <i class="material-icons">delete</i>
-              </a>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    {% endif %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig' with {
+      'discounts': orderForViewing.discounts.discounts,
+      'orderId': orderForViewing.id
+    } %}
 
     <div class="row">
       <div class="col-md-12">
@@ -184,12 +161,10 @@
               <strong id="orderProductsTotal">{{ orderForViewing.prices.productsPriceFormatted }}</strong>
             </div>
 
-            {% if orderForViewing.prices.discountsAmountRaw.greaterThan((number(0))) %}
-              <div class="col-sm text-center">
-                <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
-                <strong id="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
-              </div>
-            {% endif %}
+            <div id="order-discounts-total-container" class="col-sm text-center{% if not orderForViewing.prices.discountsAmountRaw.greaterThan((number(0))) %} d-none{% endif %}">
+              <p class="text-muted mb-0"><strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong></p>
+              <strong id="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+            </div>
 
             {% if orderForViewing.prices.wrappingPriceRaw.greaterThan(number(0)) %}
               <div class="col-sm text-center">

@@ -27,19 +27,23 @@ import OrderProductManager from '@pages/order/view/order-product-manager';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import {EventEmitter} from '@components/event-emitter';
+import OrderDiscountsRefresher from '@pages/order/view/order-discounts-refresher';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 import Router from '@components/router';
 import OrderInvoicesRefresher from './order-invoices-refresher';
 import OrderProductCancel from './order-product-cancel';
+import OrderDocumentsRefresher from './order-documents-refresher';
 
 const {$} = window;
 
 export default class OrderViewPage {
   constructor() {
+    this.orderDiscountsRefresher = new OrderDiscountsRefresher();
     this.orderProductManager = new OrderProductManager();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
+    this.orderDocumentsRefresher = new OrderDocumentsRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
     this.orderProductCancel = new OrderProductCancel();
     this.listenToEvents();
@@ -74,6 +78,8 @@ export default class OrderViewPage {
 
       this.orderProductRenderer.updateNumProducts(numProducts - 1);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderDiscountsRefresher.refresh(event.orderId);
+      this.orderDocumentsRefresher.refresh(event.orderId);
     });
 
     EventEmitter.on(OrderViewEventMap.productEditionCanceled, (event) => {
@@ -92,8 +98,12 @@ export default class OrderViewPage {
       );
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderDiscountsRefresher.refresh(event.orderId);
+      this.orderInvoicesRefresher.refresh(event.orderId);
+      this.orderDocumentsRefresher.refresh(event.orderId);
       this.listenForProductDelete();
       this.listenForProductEdit();
+      this.resetToolTips();
 
       const editRowsLeft = $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).length;
       if (editRowsLeft > 0) {
@@ -113,6 +123,7 @@ export default class OrderViewPage {
       );
       this.listenForProductDelete();
       this.listenForProductEdit();
+      this.resetToolTips();
 
       if ($(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').length >= numRowsPerPage) {
         // Update pagination
@@ -130,7 +141,9 @@ export default class OrderViewPage {
       this.orderProductRenderer.updateNumProducts(numProducts + 1);
       this.orderProductRenderer.resetAddRow();
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
+      this.orderDocumentsRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
     });
   }
@@ -139,6 +152,11 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productDeleteBtn)
       .off('click')
       .on('click', (event) => this.orderProductManager.handleDeleteProductEvent(event));
+  }
+
+  resetToolTips() {
+    $(OrderViewPageMap.productEditBtn).pstooltip();
+    $(OrderViewPageMap.productDeleteBtn).pstooltip();
   }
 
   listenForProductEdit() {
@@ -246,6 +264,7 @@ export default class OrderViewPage {
       this.orderProductRenderer.paginate(event.numPage);
       this.listenForProductDelete();
       this.listenForProductEdit();
+      this.resetToolTips();
     });
   }
 

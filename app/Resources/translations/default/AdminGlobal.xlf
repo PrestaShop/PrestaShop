@@ -1237,37 +1237,37 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="9c7f56d70e922a61254366964c01c64a">
         <source>All currencies</source>
         <target>All currencies</target>
-        <note>Line: 494</note>
+        <note>Line: 499</note>
       </trans-unit>
       <trans-unit id="c3987e4cac14a8456515f0d200da04ee">
         <source>All countries</source>
         <target>All countries</target>
-        <note>Line: 495</note>
+        <note>Line: 500</note>
       </trans-unit>
       <trans-unit id="e4c4c68c7515704a91d90207067dcbbe">
         <source>All groups</source>
         <target>All groups</target>
-        <note>Line: 496</note>
+        <note>Line: 501</note>
       </trans-unit>
       <trans-unit id="7e3a51a56ddd2846e21c33f05e0aea6f">
         <source>All customers</source>
         <target>All customers</target>
-        <note>Line: 497</note>
+        <note>Line: 502</note>
       </trans-unit>
       <trans-unit id="58ef6750a23ba432fc1377b7de085d9f">
         <source>Tax excl.</source>
         <target>Tax excl.</target>
-        <note>Line: 445</note>
+        <note>Line: 450</note>
       </trans-unit>
       <trans-unit id="94dfb2009644e42ef41f47aece4c0350">
         <source>Tax incl.</source>
         <target>Tax incl.</target>
-        <note>Line: 443</note>
+        <note>Line: 448</note>
       </trans-unit>
       <trans-unit id="545f6c2f382c04810103b3e5e6f7d841">
         <source>Unlimited</source>
         <target>Unlimited</target>
-        <note>Line: 452</note>
+        <note>Line: 457</note>
       </trans-unit>
     </body>
   </file>
@@ -1290,7 +1290,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="37be07209f53a5d636d5c904ca9ae64c">
         <source>Percentage</source>
         <target>Percentage</target>
-        <note>Line: 93</note>
+        <note>Line: 94</note>
       </trans-unit>
     </body>
   </file>
@@ -1418,7 +1418,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="b112d8dc41120e6d28639b7eb825f491">
         <source>Maximum image size: %s.</source>
         <target>Maximum image size: %s.</target>
-        <note>Line: 528</note>
+        <note>Line: 501</note>
       </trans-unit>
     </body>
   </file>
@@ -1447,15 +1447,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Ascending</source>
         <target>Ascending</target>
         <note>Line: 63</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Localization/ImportLocalizationPackType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dfcfc43722eef1eab1e4a12e50a068b1">
-        <source>Currencies</source>
-        <target>Currencies</target>
-        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>
@@ -1510,12 +1501,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="aa52110dbfce51cc1ec8a163264151e2">
         <source>Existing</source>
         <target>Existing</target>
-        <note>Line: 123</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
-        <note>Line: 124</note>
+        <note>Line: 125</note>
       </trans-unit>
     </body>
   </file>
@@ -1688,10 +1679,15 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="dfcfc43722eef1eab1e4a12e50a068b1">
+        <source>Currencies</source>
+        <target>Currencies</target>
+        <note>Line: 57</note>
+      </trans-unit>
       <trans-unit id="9d55fc80bbb875322aa67fd22fc98469">
         <source>Shop association</source>
         <target>Shop association</target>
-        <note>Line: 108</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="0a52730597fb4ffa01fc117d9e71e3a9">
         <source>Example</source>
@@ -1821,37 +1817,37 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="bcc254b55c4a1babdf1dcb82c207506b">
         <source>Phone</source>
         <target>Phone</target>
-        <note>Line: 126</note>
+        <note>Line: 122</note>
       </trans-unit>
       <trans-unit id="41c2fff4867cc204120f001e7af20f7a">
         <source>Mobile phone</source>
         <target>Mobile phone</target>
-        <note>Line: 131</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="783cb853aae6984e51583b3bb80c09d2">
         <source>Address (2)</source>
         <target>Address (2)</target>
-        <note>Line: 99</note>
+        <note>Line: 98</note>
       </trans-unit>
       <trans-unit id="c6e2a9b2d1979c244d18c7e9fbf9a86f">
         <source>Zip/postal code</source>
         <target>Zip/postal code</target>
-        <note>Line: 103</note>
+        <note>Line: 102</note>
       </trans-unit>
       <trans-unit id="57d056ed0984166336b7879c2af3657f">
         <source>City</source>
         <target>City</target>
-        <note>Line: 107</note>
+        <note>Line: 106</note>
       </trans-unit>
       <trans-unit id="46a2a41cc6e552044816a2d04634545d">
         <source>State</source>
         <target>State</target>
-        <note>Line: 120</note>
+        <note>Line: 117</note>
       </trans-unit>
       <trans-unit id="6311ae17c1ee52b36e68aaf4ad066387">
         <source>Other</source>
         <target>Other</target>
-        <note>Line: 136</note>
+        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>
@@ -1980,7 +1976,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="1063e38cb53d94d386f21227fcd84717">
         <source>Remove</source>
         <target>Remove</target>
-        <note>Line: 73</note>
+        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>
@@ -1989,7 +1985,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="a8875bbe4272c0bdd786cfaaedf77921">
         <source>Toggle</source>
         <target>Toggle</target>
-        <note>Line: 101</note>
+        <note>Line: 113</note>
       </trans-unit>
     </body>
   </file>
@@ -2019,9 +2015,9 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <target>Products in pack</target>
         <note>Line: 33</note>
       </trans-unit>
-      <trans-unit id="93c2353d95de6490c3e135b3dab78137">
-        <source>Package Item</source>
-        <target>Package Item</target>
+      <trans-unit id="ca70428d9ed105c07f40d3c21d130859">
+        <source>Package item</source>
+        <target>Package item</target>
         <note>Line: 56</note>
       </trans-unit>
     </body>
@@ -2031,7 +2027,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
         <source>Email:</source>
         <target>Email:</target>
-        <note>Line: 64</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
@@ -2063,16 +2059,16 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="318b2739ddc2c16c97b33c9b04b79f3e">
         <source>Me</source>
         <target>Me</target>
-        <note>Line: 50</note>
+        <note>Line: 51</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/payments.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a44217022190f5734b2f72ba1e4f8a79">
-        <source>Card number</source>
-        <target>Card number</target>
-        <note>Line: 73</note>
+      <trans-unit id="bb45670bfc1611e057b9569c1fdf8003">
+        <source>Gift message:</source>
+        <target>Gift message:</target>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>

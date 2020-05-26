@@ -13,9 +13,9 @@ module.exports = class AddTax extends BOBasePage {
     this.nameEnInput = '#tax_name_1';
     this.nameFrInput = '#tax_name_2';
     this.inputLangDropdownButton = 'button#tax_name';
-    this.inputLangChoiceSpan = 'div.dropdown-menu span[data-locale=\'%LANG\']';
+    this.inputLangChoiceSpan = lang => `div.dropdown-menu span[data-locale='${lang}']`;
     this.rateInput = '#tax_rate';
-    this.enabledSwitchlabel = 'label[for=\'tax_is_enabled_%ID\']';
+    this.enabledSwitchLabel = id => `label[for='tax_is_enabled_${id}']`;
     this.saveTaxButton = 'div.card-footer button';
   }
   /*
@@ -33,7 +33,7 @@ module.exports = class AddTax extends BOBasePage {
       this.waitForVisibleSelector(`${this.inputLangDropdownButton}[aria-expanded='true']`),
     ]);
     await Promise.all([
-      this.page.click(this.inputLangChoiceSpan.replace('%LANG', lang)),
+      this.page.click(this.inputLangChoiceSpan(lang)),
       this.waitForVisibleSelector(`${this.inputLangDropdownButton}[aria-expanded='false']`),
     ]);
   }
@@ -49,11 +49,7 @@ module.exports = class AddTax extends BOBasePage {
     await this.changeInputLanguage('fr');
     await this.setValue(this.nameFrInput, taxData.frName);
     await this.setValue(this.rateInput, taxData.rate);
-    if (taxData.enabled) {
-      await this.page.click(this.enabledSwitchlabel.replace('%ID', '1'));
-    } else {
-      await this.page.click(this.enabledSwitchlabel.replace('%ID', '0'));
-    }
+    await this.page.click(this.enabledSwitchLabel(taxData.enabled ? 1 : 0));
     // Save Tax
     await this.clickAndWaitForNavigation(this.saveTaxButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);

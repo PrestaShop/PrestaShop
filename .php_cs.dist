@@ -13,6 +13,7 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
+        'array_indentation' => true,
         'cast_spaces' => [
             'space' => 'single',
         ],
@@ -26,6 +27,7 @@ return PhpCsFixer\Config::create()
             'noise_remaining_usages_exclude' => [],
         ],
         'function_to_constant' => false,
+        'method_chaining_indentation' => true,
         'no_alias_functions' => false,
         'no_superfluous_phpdoc_tags' => false,
         'non_printable_character' => [

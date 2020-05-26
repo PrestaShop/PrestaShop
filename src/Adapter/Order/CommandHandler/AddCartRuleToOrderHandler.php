@@ -32,6 +32,7 @@ use Currency;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -65,12 +66,33 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
 
         $cartRules = [];
-        $discountValue = (float) str_replace(',', '.', $command->getDiscountValue());
+        $discountValue = (float) (string) $command->getDiscountValue();
         switch ($command->getCartRuleType()) {
             // Percent type
             case OrderDiscountType::DISCOUNT_PERCENT:
-                if ($discountValue < 100) {
-                    if (isset($orderInvoice)) {
+                if ($discountValue <= 0 || $discountValue > 100) {
+                    throw new InvalidCartRuleDiscountValueException();
+                }
+                if (isset($orderInvoice)) {
+                    $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round(
+                        $orderInvoice->total_paid_tax_incl * $discountValue / 100,
+                        $precision
+                    );
+                    $cartRules[$orderInvoice->id]['value_tax_excl'] = Tools::ps_round(
+                        $orderInvoice->total_paid_tax_excl * $discountValue / 100,
+                        $precision
+                    );
+
+                    // Update OrderInvoice
+                    $this->applyDiscountOnInvoice(
+                        $orderInvoice,
+                        $cartRules[$orderInvoice->id]['value_tax_incl'],
+                        $cartRules[$orderInvoice->id]['value_tax_excl']
+                    );
+                } elseif ($order->hasInvoice()) {
+                    $orderInvoices = $order->getInvoicesCollection();
+                    foreach ($orderInvoices as $orderInvoice) {
+                        /* @var OrderInvoice $orderInvoice */
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round(
                             $orderInvoice->total_paid_tax_incl * $discountValue / 100,
                             $precision
@@ -86,46 +108,27 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                             $cartRules[$orderInvoice->id]['value_tax_incl'],
                             $cartRules[$orderInvoice->id]['value_tax_excl']
                         );
-                    } elseif ($order->hasInvoice()) {
-                        $orderInvoices = $order->getInvoicesCollection();
-                        foreach ($orderInvoices as $orderInvoice) {
-                            /* @var OrderInvoice $orderInvoice */
-                            $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round(
-                                $orderInvoice->total_paid_tax_incl * $discountValue / 100,
-                                $precision
-                            );
-                            $cartRules[$orderInvoice->id]['value_tax_excl'] = Tools::ps_round(
-                                $orderInvoice->total_paid_tax_excl * $discountValue / 100,
-                                $precision
-                            );
-
-                            // Update OrderInvoice
-                            $this->applyDiscountOnInvoice(
-                                $orderInvoice,
-                                $cartRules[$orderInvoice->id]['value_tax_incl'],
-                                $cartRules[$orderInvoice->id]['value_tax_excl']
-                            );
-                        }
-                    } else {
-                        $cartRules[0]['value_tax_incl'] = Tools::ps_round(
-                            $order->total_paid_tax_incl * $discountValue / 100,
-                            $precision
-                        );
-                        $cartRules[0]['value_tax_excl'] = Tools::ps_round(
-                            $order->total_paid_tax_excl * $discountValue / 100,
-                            $precision
-                        );
                     }
                 } else {
-                    throw new OrderException('Percentage discount value cannot be higher than 100%.');
+                    $cartRules[0]['value_tax_incl'] = Tools::ps_round(
+                        $order->total_paid_tax_incl * $discountValue / 100,
+                        $precision
+                    );
+                    $cartRules[0]['value_tax_excl'] = Tools::ps_round(
+                        $order->total_paid_tax_excl * $discountValue / 100,
+                        $precision
+                    );
                 }
 
                 break;
             // Amount type
             case OrderDiscountType::DISCOUNT_AMOUNT:
+                if ($discountValue <= 0) {
+                    throw new InvalidCartRuleDiscountValueException();
+                }
                 if (isset($orderInvoice)) {
                     if ($discountValue > $orderInvoice->total_paid_tax_incl) {
-                        throw new OrderException('The discount value is greater than the order invoice total.');
+                        throw new InvalidCartRuleDiscountValueException();
                     }
 
                     $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round($discountValue, $precision);
@@ -145,7 +148,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                     foreach ($orderInvoices as $orderInvoice) {
                         /** @var OrderInvoice $orderInvoice */
                         if ($discountValue > $orderInvoice->total_paid_tax_incl) {
-                            throw new OrderException('The discount value is greater than the order invoice total.');
+                            throw new InvalidCartRuleDiscountValueException();
                         }
 
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = Tools::ps_round($discountValue, 2);
@@ -163,7 +166,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                     }
                 } else {
                     if ($discountValue > $order->total_paid_tax_incl) {
-                        throw new OrderException('The discount value is greater than the order total.');
+                        throw new InvalidCartRuleDiscountValueException();
                     }
 
                     $cartRules[0]['value_tax_incl'] = Tools::ps_round($discountValue, $precision);
@@ -177,23 +180,24 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             // Free shipping type
             case OrderDiscountType::FREE_SHIPPING:
                 if (isset($orderInvoice)) {
-                    if ($orderInvoice->total_shipping_tax_incl > 0) {
-                        $cartRules[$orderInvoice->id]['value_tax_incl'] = $orderInvoice->total_shipping_tax_incl;
-                        $cartRules[$orderInvoice->id]['value_tax_excl'] = $orderInvoice->total_shipping_tax_excl;
-
-                        // Update OrderInvoice
-                        $this->applyDiscountOnInvoice(
-                            $orderInvoice,
-                            $cartRules[$orderInvoice->id]['value_tax_incl'],
-                            $cartRules[$orderInvoice->id]['value_tax_excl']
-                        );
+                    if ($orderInvoice->total_paid_tax_incl - $orderInvoice->total_shipping_tax_incl <= 0) {
+                        throw new InvalidCartRuleDiscountValueException();
                     }
+                    $cartRules[$orderInvoice->id]['value_tax_incl'] = $orderInvoice->total_shipping_tax_incl;
+                    $cartRules[$orderInvoice->id]['value_tax_excl'] = $orderInvoice->total_shipping_tax_excl;
+
+                    // Update OrderInvoice
+                    $this->applyDiscountOnInvoice(
+                        $orderInvoice,
+                        $cartRules[$orderInvoice->id]['value_tax_incl'],
+                        $cartRules[$orderInvoice->id]['value_tax_excl']
+                    );
                 } elseif ($order->hasInvoice()) {
                     $orderInvoices = $order->getInvoicesCollection();
                     foreach ($orderInvoices as $orderInvoice) {
                         /** @var OrderInvoice $orderInvoice */
-                        if ($orderInvoice->total_shipping_tax_incl <= 0) {
-                            continue;
+                        if ($orderInvoice->total_paid_tax_incl - $orderInvoice->total_shipping_tax_incl <= 0) {
+                            throw new InvalidCartRuleDiscountValueException();
                         }
                         $cartRules[$orderInvoice->id]['value_tax_incl'] = $orderInvoice->total_shipping_tax_incl;
                         $cartRules[$orderInvoice->id]['value_tax_excl'] = $orderInvoice->total_shipping_tax_excl;
@@ -206,6 +210,9 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                         );
                     }
                 } else {
+                    if ($order->total_paid_tax_incl - $order->total_shipping_tax_incl <= 0) {
+                        throw new InvalidCartRuleDiscountValueException();
+                    }
                     $cartRules[0]['value_tax_incl'] = $order->total_shipping_tax_incl;
                     $cartRules[0]['value_tax_excl'] = $order->total_shipping_tax_excl;
                 }

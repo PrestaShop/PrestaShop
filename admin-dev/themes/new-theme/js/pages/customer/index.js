@@ -23,26 +23,27 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import Grid from '../../components/grid/grid';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import SubmitGridExtension from '../../components/grid/extension/submit-grid-action-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
-import LinkableItem from '../../components/linkable-item';
-import ChoiceTable from '../../components/choice-table';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
+import Grid from '@components/grid/grid';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import FormSubmitButton from '@components/form-submit-button';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import LinkableItem from '@components/linkable-item';
+import ChoiceTable from '@components/choice-table';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import DeleteCustomersBulkActionExtension
-  from '../../components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
+  from '@components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
 import DeleteCustomerRowActionExtension
-  from '../../components/grid/extension/action/row/customer/delete-customer-row-action-extension';
+  from '@components/grid/extension/action/row/customer/delete-customer-row-action-extension';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import ShowcaseCard from '../../components/showcase-card/showcase-card';
-import ShowcaseCardCloseExtension from '../../components/showcase-card/extension/showcase-card-close-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import ShowcaseCard from '@components/showcase-card/showcase-card';
+import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 
 const {$} = window;
 
@@ -73,4 +74,6 @@ $(() => {
   // where you click any row
   // and it redirects user to related page
   new LinkableItem();
+
+  new FormSubmitButton();
 });

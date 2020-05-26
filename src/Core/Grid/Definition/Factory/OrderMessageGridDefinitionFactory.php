@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -45,8 +44,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Creates definition for order message grid
  */
-final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'order_message';
 
     /**
@@ -78,52 +79,52 @@ final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFact
                     ])
             )
             ->add((new DataColumn('id_order_message'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_order_message',
-                ])
+            ->setName($this->trans('ID', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'id_order_message',
+            ])
             )
             ->add((new DataColumn('name'))
-                ->setName($this->trans('Name', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'name',
-                ])
+            ->setName($this->trans('Name', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'name',
+            ])
             )
             ->add((new DataColumn('message'))
-                ->setName($this->trans('Message', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'message',
-                ])
+            ->setName($this->trans('Message', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'message',
+            ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add(
-                            (new LinkRowAction('edit'))
-                                ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                                ->setIcon('edit')
-                                ->setOptions([
-                                    'route' => 'admin_order_messages_edit',
-                                    'route_param_name' => 'orderMessageId',
-                                    'route_param_field' => 'id_order_message',
-                                ])
-                        )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    ->add(
+                        (new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                            ->setIcon('edit')
                             ->setOptions([
-                                'route' => 'admin_order_messages_delete',
+                                'route' => 'admin_order_messages_edit',
                                 'route_param_name' => 'orderMessageId',
                                 'route_param_field' => 'id_order_message',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
                             ])
+                    )
+                    ->add((new SubmitRowAction('delete'))
+                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                    ->setIcon('delete')
+                    ->setOptions([
+                        'route' => 'admin_order_messages_delete',
+                        'route_param_name' => 'orderMessageId',
+                        'route_param_field' => 'id_order_message',
+                        'confirm_message' => $this->trans(
+                            'Delete selected item?',
+                            [],
+                            'Admin.Notifications.Warning'
                         ),
-                ])
+                    ])
+                    ),
+            ])
             )
         ;
     }
@@ -135,41 +136,41 @@ final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFact
     {
         return (new FilterCollection())
             ->add((new Filter('id_order_message', TextType::class))
-                ->setTypeOptions([
-                    'attr' => [
-                        'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                    ],
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('id_order_message')
+            ->setTypeOptions([
+                'attr' => [
+                    'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
+                ],
+                'required' => false,
+            ])
+            ->setAssociatedColumn('id_order_message')
             )
             ->add((new Filter('name', TextType::class))
-                ->setTypeOptions([
-                    'attr' => [
-                        'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                    ],
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('name')
+            ->setTypeOptions([
+                'attr' => [
+                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
+                ],
+                'required' => false,
+            ])
+            ->setAssociatedColumn('name')
             )
             ->add((new Filter('message', TextType::class))
-                ->setTypeOptions([
-                    'attr' => [
-                        'placeholder' => $this->trans('Search message', [], 'Admin.Actions'),
-                    ],
-                    'required' => false,
-                ])
-                ->setAssociatedColumn('message')
+            ->setTypeOptions([
+                'attr' => [
+                    'placeholder' => $this->trans('Search message', [], 'Admin.Actions'),
+                ],
+                'required' => false,
+            ])
+            ->setAssociatedColumn('message')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                    ],
-                    'redirect_route' => 'admin_order_messages_index',
-                ])
-                ->setAssociatedColumn('actions'))
+            ->setTypeOptions([
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
+                ],
+                'redirect_route' => 'admin_order_messages_index',
+            ])
+            ->setAssociatedColumn('actions'))
         ;
     }
 
@@ -180,12 +181,7 @@ final class OrderMessageGridDefinitionFactory extends AbstractGridDefinitionFact
     {
         return (new BulkActionCollection())
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_order_messages_bulk_delete',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildBulkDeleteAction('admin_order_messages_bulk_delete')
             );
     }
 

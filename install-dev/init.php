@@ -56,7 +56,24 @@ $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
 if (!defined('__PS_BASE_URI__')) {
-    define('__PS_BASE_URI__', substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/')) - strlen(substr(dirname($_SERVER['REQUEST_URI']), strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1))));
+    if (PHP_SAPI !== 'cli') {
+        define(
+            '__PS_BASE_URI__',
+            substr(
+                $_SERVER['REQUEST_URI'],
+                0,
+                -1 * (strlen($_SERVER['REQUEST_URI']) - strrpos($_SERVER['REQUEST_URI'], '/'))
+                - strlen(
+                    substr(
+                        dirname($_SERVER['REQUEST_URI']),
+                        strrpos(dirname($_SERVER['REQUEST_URI']), '/') + 1
+                    )
+                )
+            )
+        );
+    } else {
+        define('__PS_BASE_URI__', '/' . trim(Datas::getInstance()->base_uri, '/') . '/');
+    }
 }
 
 if (!defined('_PS_CORE_DIR_')) {

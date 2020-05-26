@@ -75,7 +75,7 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Save localization settings.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
      * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request

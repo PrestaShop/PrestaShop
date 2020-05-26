@@ -38,7 +38,7 @@ const init = async function () {
   };
 };
 
-describe('Enable/Disable Allow ordering of out-of-stock products ', async () => {
+describe('Allow ordering of out-of-stock products', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();

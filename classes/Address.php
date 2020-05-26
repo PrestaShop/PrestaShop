@@ -347,7 +347,7 @@ class AddressCore extends ObjectModel
         }
 
         // Special validation for dni, check if the country needs it
-        if (static::dniRequired((int) $this->id_country) && Tools::isEmpty($value)) {
+        if (!$this->deleted && static::dniRequired((int) $this->id_country) && Tools::isEmpty($value)) {
             if ($human_errors) {
                 return $this->trans(
                     'The %s field is required.',

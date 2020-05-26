@@ -101,7 +101,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
     public function renderView()
     {
-        if (($id = Tools::getValue('id_attribute_group'))) {
+        if (($id = (int) Tools::getValue('id_attribute_group'))) {
             $this->table = 'attribute';
             $this->className = 'Attribute';
             $this->identifier = 'id_attribute';
@@ -617,7 +617,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
             case 'view':
                 if (Tools::getIsset('viewattribute_group')) {
-                    if (($id = Tools::getValue('id_attribute_group'))) {
+                    if (($id = (int) Tools::getValue('id_attribute_group'))) {
                         if (Validate::isLoadedObject($obj = new AttributeGroup((int) $id))) {
                             $bread_extended[] = $obj->name[$this->context->employee->id_lang];
                         }
@@ -630,7 +630,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
             case 'editAttributes':
                 if ($this->id_attribute) {
-                    if (($id = Tools::getValue('id_attribute_group'))) {
+                    if (($id = (int) Tools::getValue('id_attribute_group'))) {
                         if (Validate::isLoadedObject($obj = new AttributeGroup((int) $id))) {
                             $bread_extended[] = '<a href="' . Context::getContext()->link->getAdminLink('AdminAttributesGroups') . '&id_attribute_group=' . $id . '&viewattribute_group">' . $obj->name[$this->context->employee->id_lang] . '</a>';
                         }
@@ -742,7 +742,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             return;
         }
 
-        if (!Tools::getValue($this->identifier) && Tools::getValue('id_attribute') && !Tools::getValue('attributeOrderby')) {
+        if (!Tools::getValue($this->identifier) && (int) Tools::getValue('id_attribute') && !Tools::getValue('attributeOrderby')) {
             // Override var of Controller
             $this->table = 'attribute';
             $this->className = 'Attribute';
@@ -751,7 +751,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         /* set location with current index */
         if (Tools::getIsset('id_attribute_group') && Tools::getIsset('viewattribute_group')) {
-            self::$currentIndex = self::$currentIndex . '&id_attribute_group=' . Tools::getValue('id_attribute_group', 0) . '&viewattribute_group';
+            self::$currentIndex = self::$currentIndex . '&id_attribute_group=' . (int) Tools::getValue('id_attribute_group', 0) . '&viewattribute_group';
         }
 
         // If it's an attribute, load object Attribute()

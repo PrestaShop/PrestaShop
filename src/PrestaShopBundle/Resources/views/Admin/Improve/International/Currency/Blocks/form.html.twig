@@ -52,7 +52,7 @@
     }
   }) }}
 
-  <div class="card">
+  <div class="card card-currency">
     <div class="card-header">
       {{ 'Currencies'|trans({}, 'Admin.Global') }}
     </div>
@@ -121,20 +121,20 @@
     </div>
 
     <div class="card-footer">
-      {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
-        <div class="d-inline-flex">
-          <button type="button" id="currency_reset_default_settings" class="btn btn-outline-primary">
+      <div class="card-footer-left">
+        <a href="{{ path('admin_currencies_index') }}" class="btn btn-outline-secondary">
+          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+        </a>
+
+        {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
+          <button type="button" id="currency_reset_default_settings" class="btn btn-outline-primary card-currency-reset">
             <i class="material-icons">refresh</i>
             {{ 'Restore default settings'|trans({}, 'Admin.International.Feature') }}
           </button>
-        </div>
-      {% endif %}
-      <div class="d-block float-right col-sm-3">
-          <a href="{{ path('admin_currencies_index') }}" class="btn btn-outline-secondary float-left">
-            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-          </a>
-          <button type="submit" class="btn btn-primary float-right">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        {% endif %}
       </div>
+      
+      <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
     </div>
 
   </div>

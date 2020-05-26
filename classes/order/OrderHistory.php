@@ -483,6 +483,12 @@ class OrderHistoryCore extends ObjectModel
         return true;
     }
 
+    /**
+     * @param Order $order
+     * @param array|false $template_vars
+     *
+     * @return bool
+     */
     public function sendEmail($order, $template_vars = false)
     {
         $result = Db::getInstance()->getRow('
@@ -527,6 +533,10 @@ class OrderHistoryCore extends ObjectModel
             if (Validate::isLoadedObject($order)) {
                 // Attach invoice and / or delivery-slip if they exists and status is set to attach them
                 if (($result['pdf_invoice'] || $result['pdf_delivery'])) {
+                    $currentLanguage = $context->language;
+                    $orderLanguage = new Language((int) $order->id_lang);
+                    $context->language = $orderLanguage;
+                    $context->getTranslator()->setLocale($orderLanguage->locale);
                     $invoice = $order->getInvoicesCollection();
                     $file_attachement = [];
 
@@ -540,9 +550,12 @@ class OrderHistoryCore extends ObjectModel
                     if ($result['pdf_delivery'] && $order->delivery_number) {
                         $pdf = new PDF($invoice, PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
                         $file_attachement['delivery']['content'] = $pdf->render(false);
-                        $file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $order->id_shop) . sprintf('%06d', $order->delivery_number) . '.pdf';
+                        $file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->delivery_number) . '.pdf';
                         $file_attachement['delivery']['mime'] = 'application/pdf';
                     }
+
+                    $context->language = $currentLanguage;
+                    $context->getTranslator()->setLocale($currentLanguage->locale);
                 } else {
                     $file_attachement = null;
                 }

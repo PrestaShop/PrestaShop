@@ -146,11 +146,6 @@ class Datas
             'default' => 0,
             'help' => 'show PrestaShop license',
         ),
-        'newsletter' => array(
-            'name' => 'newsletter',
-            'default' => 1,
-            'help' => 'get news from PrestaShop',
-        ),
         'theme' => array(
             'name' => 'theme',
             'default' => '',
@@ -159,6 +154,11 @@ class Datas
             'name' => 'ssl',
             'default' => 0,
             'help' => 'enable SSL for PrestaShop',
+        ),
+        'rewrite_engine' => array(
+            'name' => 'rewrite',
+            'default' => 1,
+            'help' => 'enable rewrite engine for PrestaShop',
         ),
     );
 
@@ -226,7 +226,7 @@ class Datas
                 } else {
                     $this->$key = $row['default'];
                 }
-            } elseif (isset($row['validate']) && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
+            } elseif (isset($row['validate']) && class_exists('Validate') && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
                 $errors[] = 'Field '.$key.' is not valid';
             } else {
                 $this->$key = $args_ok[$name];

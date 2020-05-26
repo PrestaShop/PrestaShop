@@ -293,337 +293,352 @@
       <trans-unit id="accfc34fe6c65228a926b524870161ab">
         <source>This cart does not exists</source>
         <target>This cart does not exists</target>
-        <note>Line: 231</note>
+        <note>Line: 232</note>
       </trans-unit>
       <trans-unit id="3d4d2d9627d3f1b1c0d22b9e85c687d1">
         <source>The cart must have a customer</source>
         <target>The cart must have a customer</target>
-        <note>Line: 234</note>
+        <note>Line: 235</note>
       </trans-unit>
       <trans-unit id="a42a075994b3ee0f6fe5956110d85889">
         <source>Order status #%id% cannot be loaded</source>
         <target>Order status #%id% cannot be loaded</target>
-        <note>Line: 388</note>
+        <note>Line: 389</note>
       </trans-unit>
       <trans-unit id="45d4b3afac71a54470a6cbf828e8cb0d">
         <source>The order carrier ID is invalid.</source>
         <target>The order carrier ID is invalid.</target>
-        <note>Line: 476</note>
+        <note>Line: 477</note>
       </trans-unit>
       <trans-unit id="e52d022f0fb2160ec1cf7b4122ab9589">
         <source>The tracking number is incorrect.</source>
         <target>The tracking number is incorrect.</target>
-        <note>Line: 478</note>
+        <note>Line: 479</note>
       </trans-unit>
       <trans-unit id="f465ea6c7866853ecc49286449720ac9">
         <source>The order carrier cannot be updated.</source>
         <target>The order carrier cannot be updated.</target>
-        <note>Line: 518</note>
+        <note>Line: 519</note>
       </trans-unit>
       <trans-unit id="c2572d1fee836c06c88e0bdc9fa7ffa1">
         <source>The new order status is invalid.</source>
         <target>The new order status is invalid.</target>
-        <note>Line: 530</note>
+        <note>Line: 531</note>
       </trans-unit>
       <trans-unit id="4f51deabdeba4ee61b998d3b0cf188b4">
         <source>An error occurred while changing order status, or we were unable to send an email to the customer.</source>
         <target>An error occurred while changing order status, or we were unable to send an email to the customer.</target>
-        <note>Line: 564</note>
+        <note>Line: 565</note>
       </trans-unit>
       <trans-unit id="c5e4a57d9572678ffbb124db39542928">
         <source>The order has already been assigned this status.</source>
         <target>The order has already been assigned this status.</target>
-        <note>Line: 566</note>
+        <note>Line: 567</note>
       </trans-unit>
       <trans-unit id="f61c60ff8d82ebd1012606e5bc3a2002">
         <source>The customer is invalid.</source>
         <target>The customer is invalid.</target>
-        <note>Line: 577</note>
+        <note>Line: 578</note>
       </trans-unit>
       <trans-unit id="3dc245110e1f3601860c20299d97c01d">
         <source>The message cannot be blank.</source>
         <target>The message cannot be blank.</target>
-        <note>Line: 579</note>
+        <note>Line: 580</note>
       </trans-unit>
       <trans-unit id="204c3558e41366f3d558ce8e01426a22">
         <source>field %s is required.</source>
         <target>field %s is required.</target>
-        <note>Line: 586</note>
+        <note>Line: 587</note>
       </trans-unit>
       <trans-unit id="c4d82e8095bb903683e0b0e73887aef0">
         <source>Please enter a quantity to proceed with your refund.</source>
         <target>Please enter a quantity to proceed with your refund.</target>
-        <note>Line: 880</note>
+        <note>Line: 881</note>
       </trans-unit>
       <trans-unit id="8a5f368eac3aab699cf8e6e1ec28b695">
         <source>Please enter an amount to proceed with your refund.</source>
         <target>Please enter an amount to proceed with your refund.</target>
-        <note>Line: 882</note>
+        <note>Line: 883</note>
       </trans-unit>
       <trans-unit id="598db0342f11f89d4268942b9491c455">
         <source>You cannot generate a partial credit slip.</source>
         <target>You cannot generate a partial credit slip.</target>
-        <note>Line: 768</note>
+        <note>Line: 769</note>
       </trans-unit>
       <trans-unit id="b1db8cec4ec0de83c3934a22bc758a3b">
         <source>You cannot generate a voucher.</source>
         <target>You cannot generate a voucher.</target>
-        <note>Line: 1126</note>
+        <note>Line: 1127</note>
       </trans-unit>
       <trans-unit id="bd4457c0f19f796f3d66726f9fadc041">
         <source>The partial refund data is incorrect.</source>
         <target>The partial refund data is incorrect.</target>
-        <note>Line: 891</note>
+        <note>Line: 892</note>
       </trans-unit>
       <trans-unit id="991bbcc5660531bc1a1c8f1c235794c0">
         <source>You must select a product.</source>
         <target>You must select a product.</target>
-        <note>Line: 900</note>
+        <note>Line: 901</note>
       </trans-unit>
       <trans-unit id="6d3fd0eb289900145d482634d6e86b90">
         <source>You must enter a quantity.</source>
         <target>You must enter a quantity.</target>
-        <note>Line: 902</note>
+        <note>Line: 903</note>
       </trans-unit>
       <trans-unit id="8001500c3284edd9c4dd07ae508e5a95">
         <source>No quantity has been selected for this product.</source>
         <target>No quantity has been selected for this product.</target>
-        <note>Line: 966</note>
+        <note>Line: 967</note>
       </trans-unit>
       <trans-unit id="38eaecfc1ef14b98b5d6e4eb77494369">
         <source>An invalid quantity was selected for this product.</source>
         <target>An invalid quantity was selected for this product.</target>
-        <note>Line: 970</note>
+        <note>Line: 971</note>
       </trans-unit>
       <trans-unit id="edeff0d68d3d20ce1f6189f6070cb2ba">
         <source>A credit slip cannot be generated.</source>
         <target>A credit slip cannot be generated.</target>
-        <note>Line: 1047</note>
+        <note>Line: 1048</note>
       </trans-unit>
       <trans-unit id="b81f0a0540938a2e7daa684f02866696">
         <source>No product or quantity has been selected.</source>
         <target>No product or quantity has been selected.</target>
-        <note>Line: 1156</note>
+        <note>Line: 1157</note>
       </trans-unit>
       <trans-unit id="fdb259bd3d5479c25f5d23af490b5ec3">
         <source>The order cannot be found</source>
         <target>The order cannot be found</target>
-        <note>Line: 1181</note>
+        <note>Line: 1182</note>
       </trans-unit>
       <trans-unit id="9391de9e24bd71839f6f72a1517de2d6">
         <source>The amount is invalid.</source>
         <target>The amount is invalid.</target>
-        <note>Line: 1183</note>
+        <note>Line: 1184</note>
       </trans-unit>
       <trans-unit id="6ab061ec12504fab2c41f0689579d623">
         <source>The selected payment method is invalid.</source>
         <target>The selected payment method is invalid.</target>
-        <note>Line: 1185</note>
+        <note>Line: 1186</note>
       </trans-unit>
       <trans-unit id="7d0d71a3e577be4c20799b52286191d6">
         <source>The transaction ID is invalid.</source>
         <target>The transaction ID is invalid.</target>
-        <note>Line: 1187</note>
+        <note>Line: 1188</note>
       </trans-unit>
       <trans-unit id="3b512b6c31ef4f46605159612691eb56">
         <source>The selected currency is invalid.</source>
         <target>The selected currency is invalid.</target>
-        <note>Line: 1189</note>
+        <note>Line: 1190</note>
       </trans-unit>
       <trans-unit id="06fc8d486e9f83c5810a21857da7b656">
         <source>The invoice is invalid.</source>
         <target>The invoice is invalid.</target>
-        <note>Line: 1191</note>
+        <note>Line: 1192</note>
       </trans-unit>
       <trans-unit id="f50c7cba4df874039d73ee480d678f5e">
         <source>The date is invalid</source>
         <target>The date is invalid</target>
-        <note>Line: 1193</note>
+        <note>Line: 1194</note>
       </trans-unit>
       <trans-unit id="04e3713831c71d70817d4a69eadbc53c">
         <source>An error occurred during payment.</source>
         <target>An error occurred during payment.</target>
-        <note>Line: 1196</note>
+        <note>Line: 1197</note>
       </trans-unit>
       <trans-unit id="0d906d12a6321e5f13e69dab92e39a4e">
         <source>The invoice note was not saved.</source>
         <target>The invoice note was not saved.</target>
-        <note>Line: 1213</note>
+        <note>Line: 1214</note>
       </trans-unit>
       <trans-unit id="7f5a75ac350db917dc60cfbd8299da5b">
         <source>Failed to upload the invoice and edit its note.</source>
         <target>Failed to upload the invoice and edit its note.</target>
-        <note>Line: 1219</note>
+        <note>Line: 1220</note>
       </trans-unit>
       <trans-unit id="68b7afe49451dbdab7cbeff4f66be369">
         <source>This delivery address country is not active.</source>
         <target>This delivery address country is not active.</target>
-        <note>Line: 1239</note>
+        <note>Line: 1240</note>
       </trans-unit>
       <trans-unit id="a9320eb7be798958cba0a93262521ede">
         <source>This invoice address country is not active.</source>
         <target>This invoice address country is not active.</target>
-        <note>Line: 1241</note>
+        <note>Line: 1242</note>
       </trans-unit>
       <trans-unit id="95aa605fa7f396d370b4c87afad9201c">
         <source>This address can't be loaded</source>
         <target>This address can't be loaded</target>
-        <note>Line: 1283</note>
+        <note>Line: 1284</note>
       </trans-unit>
       <trans-unit id="b0535e1868ad530e5faadf295516a724">
         <source>You cannot change the currency.</source>
         <target>You cannot change the currency.</target>
-        <note>Line: 1378</note>
+        <note>Line: 1398</note>
       </trans-unit>
       <trans-unit id="8dcb8970b8eeeac73c8d312d1db3d1f9">
         <source>Invoice management has been disabled.</source>
         <target>Invoice management has been disabled.</target>
-        <note>Line: 1385</note>
+        <note>Line: 1405</note>
       </trans-unit>
       <trans-unit id="f98321e34948f600959c5c4200c953c8">
         <source>This order already has an invoice.</source>
         <target>This order already has an invoice.</target>
-        <note>Line: 1387</note>
+        <note>Line: 1407</note>
       </trans-unit>
       <trans-unit id="0da1c0afe7d3d89a53a5d00998bb4295">
         <source>You cannot edit this cart rule.</source>
         <target>You cannot edit this cart rule.</target>
-        <note>Line: 1427</note>
+        <note>Line: 1447</note>
       </trans-unit>
       <trans-unit id="db7cb022c7b6058d0f1668faa22a54fa">
         <source>You must specify a name in order to create a new discount.</source>
         <target>You must specify a name in order to create a new discount.</target>
-        <note>Line: 1435</note>
+        <note>Line: 1455</note>
       </trans-unit>
       <trans-unit id="7b56734426bcdd50629f41c58cb1f241">
         <source>The discount value is invalid.</source>
         <target>The discount value is invalid.</target>
-        <note>Line: 1474</note>
+        <note>Line: 1494</note>
       </trans-unit>
       <trans-unit id="8dc19f50ae30ac7d61e67c795b32fd47">
         <source>The discount value is greater than the order invoice total.</source>
         <target>The discount value is greater than the order invoice total.</target>
-        <note>Line: 1495</note>
+        <note>Line: 1515</note>
       </trans-unit>
       <trans-unit id="574875d4553bada6682a07ae86298bc6">
         <source>The discount value is greater than the order total.</source>
         <target>The discount value is greater than the order total.</target>
-        <note>Line: 1506</note>
+        <note>Line: 1526</note>
       </trans-unit>
       <trans-unit id="9a9d54664b6ba23a9588f6b795dc03ab">
         <source>The discount type is invalid.</source>
         <target>The discount type is invalid.</target>
-        <note>Line: 1544</note>
+        <note>Line: 1564</note>
       </trans-unit>
       <trans-unit id="b046e96ee00ad2ef4ed135eab1c13df4">
         <source>An error occurred during the OrderCartRule creation</source>
         <target>An error occurred during the OrderCartRule creation</target>
-        <note>Line: 1597</note>
+        <note>Line: 1617</note>
       </trans-unit>
       <trans-unit id="0fa578512847280157dd62ae18e92979">
         <source>An error occurred while loading order status.</source>
         <target>An error occurred while loading order status.</target>
-        <note>Line: 1608</note>
+        <note>Line: 1628</note>
       </trans-unit>
       <trans-unit id="773b660773e6106c248814fa87b480f7">
         <source>Error in sending the email to your customer.</source>
         <target>Error in sending the email to your customer.</target>
-        <note>Line: 2077</note>
+        <note>Line: 2097</note>
       </trans-unit>
       <trans-unit id="4dc1c8fa2f766c5e201155ee3737ed3f">
         <source>The order object cannot be loaded.</source>
         <target>The order object cannot be loaded.</target>
-        <note>Line: 2849</note>
+        <note>Line: 2869</note>
       </trans-unit>
       <trans-unit id="7152cf69405fd47a8bd2f7b625ce324e">
         <source>You cannot add products to delivered orders.</source>
         <target>You cannot add products to delivered orders.</target>
-        <note>Line: 2097</note>
+        <note>Line: 2117</note>
       </trans-unit>
       <trans-unit id="9b7508b5ee1050d5c5efb9b1cf76fd36">
         <source>The product object cannot be loaded.</source>
         <target>The product object cannot be loaded.</target>
-        <note>Line: 2459</note>
+        <note>Line: 2479</note>
       </trans-unit>
       <trans-unit id="74bd055cec720c9f41563ff6a6a40b7b">
         <source>The combination object cannot be loaded.</source>
         <target>The combination object cannot be loaded.</target>
-        <note>Line: 2120</note>
+        <note>Line: 2140</note>
       </trans-unit>
       <trans-unit id="0d38c90d843c787c0be14f790998210c">
         <source>You must add %d minimum quantity</source>
         <target>You must add %d minimum quantity</target>
-        <note>Line: 2204</note>
+        <note>Line: 2224</note>
       </trans-unit>
       <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
         <source>You already have the maximum quantity available for this product.</source>
         <target>You already have the maximum quantity available for this product.</target>
-        <note>Line: 2206</note>
+        <note>Line: 2226</note>
       </trans-unit>
       <trans-unit id="4e670964e358534a827dc7e0359281b0">
         <source>The OrderDetail object cannot be loaded.</source>
         <target>The OrderDetail object cannot be loaded.</target>
-        <note>Line: 2451</note>
+        <note>Line: 2471</note>
       </trans-unit>
       <trans-unit id="0c8a625097a9b711bfca4724517eeb01">
         <source>The address object cannot be loaded.</source>
         <target>The address object cannot be loaded.</target>
-        <note>Line: 2467</note>
+        <note>Line: 2487</note>
       </trans-unit>
       <trans-unit id="7da127d075ca24fec224c1d497aac11f">
         <source>An error occurred while editing the product line.</source>
         <target>An error occurred while editing the product line.</target>
-        <note>Line: 2658</note>
+        <note>Line: 2678</note>
       </trans-unit>
       <trans-unit id="fde52aaef1e1e23770e40a458a1cac46">
         <source>An error occurred while attempting to delete the product line.</source>
         <target>An error occurred while attempting to delete the product line.</target>
-        <note>Line: 2727</note>
+        <note>Line: 2747</note>
       </trans-unit>
       <trans-unit id="e3a212006776535d5da7d11f7c62d727">
         <source>The Order Detail object could not be loaded.</source>
         <target>The Order Detail object could not be loaded.</target>
-        <note>Line: 2842</note>
+        <note>Line: 2862</note>
       </trans-unit>
       <trans-unit id="823eba6da615c2a384cf8e13cd70980b">
         <source>The invoice object cannot be loaded.</source>
         <target>The invoice object cannot be loaded.</target>
-        <note>Line: 2776</note>
+        <note>Line: 2796</note>
       </trans-unit>
       <trans-unit id="0af3cc300f35caff086e21bf2f865960">
         <source>You cannot edit the order detail for this order.</source>
         <target>You cannot edit the order detail for this order.</target>
-        <note>Line: 2790</note>
+        <note>Line: 2810</note>
       </trans-unit>
       <trans-unit id="7ea9212dcdaccc580b9e6b548609e7fd">
         <source>You cannot edit a delivered order.</source>
         <target>You cannot edit a delivered order.</target>
-        <note>Line: 2864</note>
+        <note>Line: 2884</note>
       </trans-unit>
       <trans-unit id="675b81dace2c99f5ef5eb6ac3f69dbe4">
         <source>You cannot use this invoice for the order</source>
         <target>You cannot use this invoice for the order</target>
-        <note>Line: 2805</note>
+        <note>Line: 2825</note>
       </trans-unit>
       <trans-unit id="2591b6d46f45d8f60e24c6c9c96a2a11">
         <source>Invalid price</source>
         <target>Invalid price</target>
-        <note>Line: 2816</note>
+        <note>Line: 2836</note>
       </trans-unit>
       <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
         <source>Invalid quantity</source>
         <target>Invalid quantity</target>
-        <note>Line: 2830</note>
+        <note>Line: 2850</note>
       </trans-unit>
       <trans-unit id="c181d4415ea3fd71c407da3697be421f">
         <source>You cannot delete the order detail.</source>
         <target>You cannot delete the order detail.</target>
-        <note>Line: 2856</note>
+        <note>Line: 2876</note>
       </trans-unit>
       <trans-unit id="671cd4e79283dd9931f0452000bf2744">
         <source>This product cannot be re-stocked.</source>
         <target>This product cannot be re-stocked.</target>
-        <note>Line: 3012</note>
+        <note>Line: 3032</note>
+      </trans-unit>
+      <trans-unit id="bf772d53e730d2e0169ed2f746044606">
+        <source>An error occurred while attempting to delete the product.</source>
+        <target>An error occurred while attempting to delete the product.</target>
+        <note>Line: 988</note>
+      </trans-unit>
+      <trans-unit id="77d97f5686dfef72ee577e779d5bb74f">
+        <source>An error occurred while attempting to delete product customization.</source>
+        <target>An error occurred while attempting to delete product customization.</target>
+        <note>Line: 1010</note>
+      </trans-unit>
+      <trans-unit id="4fe1644600a7dad640143da346a9211b">
+        <source>Order #%d cannot be loaded</source>
+        <target>Order #%d cannot be loaded</target>
+        <note>Line: 394</note>
       </trans-unit>
     </body>
   </file>
@@ -666,27 +681,27 @@
       <trans-unit id="7582ef2f5b5de8a479994d0412986bc2">
         <source>An error occurred while deleting the details of your order return.</source>
         <target>An error occurred while deleting the details of your order return.</target>
-        <note>Line: 227</note>
+        <note>Line: 230</note>
       </trans-unit>
       <trans-unit id="d4430672c8b3c123ae5f4c2f4b5b458d">
         <source>You need at least one product.</source>
         <target>You need at least one product.</target>
-        <note>Line: 230</note>
+        <note>Line: 233</note>
       </trans-unit>
       <trans-unit id="e7a58e52e848f513c3e9185d34d61a50">
         <source>The order return is invalid.</source>
         <target>The order return is invalid.</target>
-        <note>Line: 233</note>
+        <note>Line: 236</note>
       </trans-unit>
       <trans-unit id="5431bd88788ce2df4278c84f402e3cb6">
         <source>The order return content is invalid.</source>
         <target>The order return content is invalid.</target>
-        <note>Line: 236</note>
+        <note>Line: 239</note>
       </trans-unit>
       <trans-unit id="16f2adf6c4fd1317acba5871267a60f2">
         <source>No order return ID has been specified.</source>
         <target>No order return ID has been specified.</target>
-        <note>Line: 285</note>
+        <note>Line: 288</note>
       </trans-unit>
     </body>
   </file>
@@ -714,12 +729,12 @@
       <trans-unit id="35af021c4bdb02cad86c917022e053da">
         <source>An error has occurred: Can't save the current order's return status.</source>
         <target>An error has occurred: Can't save the current order's return status.</target>
-        <note>Line: 556</note>
+        <note>Line: 560</note>
       </trans-unit>
       <trans-unit id="ca215ff3d829e3a6a9c0c672987d5959">
         <source>An error has occurred: Can't delete the current order's return status.</source>
         <target>An error has occurred: Can't delete the current order's return status.</target>
-        <note>Line: 576</note>
+        <note>Line: 588</note>
       </trans-unit>
     </body>
   </file>
@@ -756,21 +771,7 @@
       <trans-unit id="6a94d8492279c2bfd3e81f3158658980">
         <source>[Generated] CartRule for Free Shipping</source>
         <target>[Generated] CartRule for Free Shipping</target>
-        <note>Line: 421</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Order/CommandHandler/CancelOrderProductHandler.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bf772d53e730d2e0169ed2f746044606">
-        <source>An error occurred while attempting to delete the product.</source>
-        <target>An error occurred while attempting to delete the product.</target>
-        <note>Line: 120</note>
-      </trans-unit>
-      <trans-unit id="77d97f5686dfef72ee577e779d5bb74f">
-        <source>An error occurred while attempting to delete product customization.</source>
-        <target>An error occurred while attempting to delete product customization.</target>
-        <note>Line: 142</note>
+        <note>Line: 514</note>
       </trans-unit>
     </body>
   </file>
@@ -780,6 +781,15 @@
         <source>No delivery slip was found for this period.</source>
         <target>No delivery slip was found for this period.</target>
         <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Order/Refund/OrderProductRemover.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1166740db50174894a068c0c51b94c66">
+        <source><![CDATA[Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.]]></source>
+        <target><![CDATA[Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.]]></target>
+        <note>Line: 224</note>
       </trans-unit>
     </body>
   </file>
@@ -811,7 +821,7 @@
       <trans-unit id="9e2dcf2660b82a0204f668565417010a">
         <source>An account already exists for this email address:</source>
         <target>An account already exists for this email address:</target>
-        <note>Line: 514</note>
+        <note>Line: 515</note>
       </trans-unit>
     </body>
   </file>
@@ -867,52 +877,47 @@
       <trans-unit id="1923e1e610686f1182bf54f573b86921">
         <source>A partial refund was successfully created.</source>
         <target>A partial refund was successfully created.</target>
-        <note>Line: 488</note>
+        <note>Line: 512</note>
       </trans-unit>
       <trans-unit id="aea807cc550550acd7b8d9a7bc469f6a">
         <source>You have to select a shop before creating new orders.</source>
         <target>You have to select a shop before creating new orders.</target>
-        <note>Line: 198</note>
-      </trans-unit>
-      <trans-unit id="4fe1644600a7dad640143da346a9211b">
-        <source>Order #%d cannot be loaded</source>
-        <target>Order #%d cannot be loaded</target>
-        <note>Line: 1511</note>
+        <note>Line: 204</note>
       </trans-unit>
       <trans-unit id="409f3dfd9f910287f86fd6c25c94c4d8">
         <source>Order #%d has already been assigned this status.</source>
         <target>Order #%d has already been assigned this status.</target>
-        <note>Line: 1498</note>
+        <note>Line: 1573</note>
       </trans-unit>
       <trans-unit id="18893a82469e2cd9492fc8d46fa8ac01">
         <source>An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.</source>
         <target>An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.</target>
-        <note>Line: 1487</note>
+        <note>Line: 1562</note>
       </trans-unit>
       <trans-unit id="561918c3c49ff748f543e28f5c405d3c">
         <source>An error occurred while sending an email to the customer.</source>
         <target>An error occurred while sending an email to the customer.</target>
-        <note>Line: 1049</note>
+        <note>Line: 1107</note>
       </trans-unit>
       <trans-unit id="fded441ef916f653d49abf142b535b52">
         <source>An error occurred while sending the e-mail to the customer.</source>
         <target>An error occurred while sending the e-mail to the customer.</target>
-        <note>Line: 1413</note>
+        <note>Line: 1463</note>
       </trans-unit>
       <trans-unit id="aeddc664f1e95691c69ea44a5c1c18f5">
         <source>This product is out of stock: </source>
         <target>This product is out of stock:</target>
-        <note>Line: 580</note>
+        <note>Line: 1814</note>
       </trans-unit>
       <trans-unit id="4174f012bc63b679f092acd1a933bf5c">
         <source>The email was sent to your customer.</source>
         <target>The email was sent to your customer.</target>
-        <note>Line: 1322</note>
+        <note>Line: 1372</note>
       </trans-unit>
       <trans-unit id="50c5ffd8dadba5bcc7b83cfe3d874f54">
         <source>A standard refund was successfully created.</source>
         <target>A standard refund was successfully created.</target>
-        <note>Line: 520</note>
+        <note>Line: 544</note>
       </trans-unit>
       <trans-unit id="676add5006e766a2f0bf5ba22e231e09">
         <source>A return product was successfully created.</source>
@@ -927,32 +932,81 @@
       <trans-unit id="918093e8ad4567f6b99e9851eab8bc69">
         <source>Order #%d cannot be loaded.</source>
         <target>Order #%d cannot be loaded.</target>
-        <note>Line: 1408</note>
-      </trans-unit>
-      <trans-unit id="3354cb02aba47cf9f44d703b25a0a777">
-        <source>Please enter a positive quantity.</source>
-        <target>Please enter a positive quantity.</target>
-        <note>Line: 1422</note>
+        <note>Line: 1586</note>
       </trans-unit>
       <trans-unit id="2a11327ffe3e46a9ffadddf38b4b9fff">
         <source>Please enter a maximum quantity of [1].</source>
         <target>Please enter a maximum quantity of [1].</target>
-        <note>Line: 1426</note>
+        <note>Line: 1487</note>
       </trans-unit>
       <trans-unit id="97f014aa339f5b37951f100fb1a086d8">
         <source>Please select at least one product.</source>
         <target>Please select at least one product.</target>
-        <note>Line: 1431</note>
+        <note>Line: 1492</note>
       </trans-unit>
       <trans-unit id="d31c479bcda04bd5b859f7cff371c3d0">
         <source>Please enter a positive amount.</source>
         <target>Please enter a positive amount.</target>
-        <note>Line: 1435</note>
+        <note>Line: 1496</note>
       </trans-unit>
       <trans-unit id="4b0c5f16b969b647ff0b63481af6c3e5">
         <source>Please generate at least one credit slip or voucher.</source>
         <target>Please generate at least one credit slip or voucher.</target>
-        <note>Line: 1439</note>
+        <note>Line: 1500</note>
+      </trans-unit>
+      <trans-unit id="282426403b9a14678d5dd35e024ec84c">
+        <source>This product is out of stock:</source>
+        <target>This product is out of stock:</target>
+        <note>Line: 604</note>
+      </trans-unit>
+      <trans-unit id="265b2b7a9f792e941faac362bc37f30b">
+        <source>The product was successfully returned.</source>
+        <target>The product was successfully returned.</target>
+        <note>Line: 576</note>
+      </trans-unit>
+      <trans-unit id="f77fd3f9865f0c725901d48dbc00619f">
+        <source>You cannot edit the cart once the order delivered.</source>
+        <target>You cannot edit the cart once the order delivered.</target>
+        <note>Line: 1455</note>
+      </trans-unit>
+      <trans-unit id="f131fb3c210a32ca24a4910b42b6e2ef">
+        <source>Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.</source>
+        <target>Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.</target>
+        <note>Line: 1471</note>
+      </trans-unit>
+      <trans-unit id="dfa3f525e479dd1038c7947c62b9341a">
+        <source>It looks like the value is invalid:</source>
+        <target>It looks like the value is invalid:</target>
+        <note>Line: 1476</note>
+      </trans-unit>
+      <trans-unit id="8ac6b197a0fd1d1395ba76121814e9fe">
+        <source>Percent or amount value must be greater than 0.</source>
+        <target>Percent or amount value must be greater than 0.</target>
+        <note>Line: 1477</note>
+      </trans-unit>
+      <trans-unit id="7f35d95de964c02a558f322bf683ff93">
+        <source>Percent value cannot exceed 100.</source>
+        <target>Percent value cannot exceed 100.</target>
+        <note>Line: 1478</note>
+      </trans-unit>
+      <trans-unit id="bd69d7116253ba1407fa8f2611ea6866">
+        <source>Discount value cannot exceed the total price of this order.</source>
+        <target>Discount value cannot exceed the total price of this order.</target>
+        <note>Line: 1479</note>
+      </trans-unit>
+      <trans-unit id="c3cb19afc3cf5cd7d07346dcd3504fe2">
+        <source>Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.</source>
+        <target>Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.</target>
+        <note>Line: 1541</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Currencies/CurrencyType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f569be19b537a76af7e287ace573cd3e">
+        <source>Please enter a positive value</source>
+        <target>Please enter a positive value</target>
+        <note>Line: 218</note>
       </trans-unit>
     </body>
   </file>
@@ -1040,6 +1094,24 @@
         <source>You have to select a shop if you want to create a customer.</source>
         <target>You have to select a shop if you want to create a customer.</target>
         <note>Line: 71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="088f451a8ce01d3cea0fa2a6e886d310">
+        <source>Searching for products</source>
+        <target>Searching for products</target>
+        <note>Line: 55</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/customer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a9b14221307d90ff672c5cbb61b4c500">
+        <source>Searching for customers</source>
+        <target>Searching for customers</target>
+        <note>Line: 66</note>
       </trans-unit>
     </body>
   </file>

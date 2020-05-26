@@ -276,14 +276,6 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that currency iso codes don't match
-     */
-    public function assertLastErrorIsMismatchingIsoCodes()
-    {
-        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::ISO_CODES_MISMATCH);
-    }
-
-    /**
      * @Then I should get error that currency was not found
      */
     public function assertLastErrorIsNotFound()
