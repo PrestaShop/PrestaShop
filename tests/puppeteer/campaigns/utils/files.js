@@ -57,11 +57,11 @@ module.exports = {
 
   /**
    * Get image number from PDF
-   * @param fileName
+   * @param filePath
    * @return imageNumber, number of images in PDF file
    */
-  async getImageNumberInPDF(fileName) {
-    const pdf = await PDFJS.getDocument(`${global.BO.DOWNLOAD_PATH}/${fileName}`).promise;
+  async getImageNumberInPDF(filePath) {
+    const pdf = await PDFJS.getDocument(filePath).promise;
     const nbrPages = pdf.numPages;
     let imageNumber = 0;
     for (let pageNo = 1; pageNo <= nbrPages; pageNo += 1) {

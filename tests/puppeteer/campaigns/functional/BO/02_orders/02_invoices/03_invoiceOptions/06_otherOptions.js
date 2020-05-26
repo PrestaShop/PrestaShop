@@ -36,6 +36,7 @@ let page;
 
 let invoiceData;
 let fileName;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -75,7 +76,6 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
   });
   after(async () => {
     // Delete the invoice file
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}.pdf`);
     await helper.closeBrowser(browser);
   });
 
@@ -219,13 +219,10 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
     it('should download the invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceUpdatedOptions', baseContext);
 
-      // Get invoice name
-      fileName = await this.pageObjects.viewOrderPage.getFileName();
-
       // Download invoice
-      await this.pageObjects.viewOrderPage.downloadInvoice();
+      filePath = await this.pageObjects.viewOrderPage.downloadInvoice();
 
-      const exist = await files.doesFileExist(`${fileName}.pdf`);
+      const exist = await files.doesFileExist(filePath);
       await expect(exist).to.be.true;
     });
 
@@ -241,7 +238,7 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedFooterText', baseContext);
 
       // Check the existence of the Footer text
-      const exist = await files.isTextInPDF(`${fileName}.pdf`, invoiceData.footerText);
+      const exist = await files.isTextInPDF(filePath, invoiceData.footerText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
     });
   });
