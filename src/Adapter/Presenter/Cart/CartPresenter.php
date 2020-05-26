@@ -30,6 +30,7 @@ use Cart;
 use CartRule;
 use Configuration;
 use Context;
+use Country;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
