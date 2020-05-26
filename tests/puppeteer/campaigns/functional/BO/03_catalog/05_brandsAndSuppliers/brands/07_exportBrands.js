@@ -21,7 +21,7 @@ let browser;
 let browserContext;
 let page;
 let numberOfBrands = 0;
-let fileName;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -49,7 +49,6 @@ describe('Export brands', async () => {
 
   after(async () => {
     await helper.closeBrowser(browser);
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
   });
 
   // Login into BO
@@ -79,8 +78,8 @@ describe('Export brands', async () => {
   it('should export brands to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportBrands', baseContext);
 
-    await this.pageObjects.brandsPage.exportBrandsDataToCsv();
-    const doesFileExist = await files.doesFileExist('manufacturer_', 5000, true, 'csv');
+    filePath = await this.pageObjects.brandsPage.exportBrandsDataToCsv();
+    const doesFileExist = await files.doesFileExist(filePath, 5000);
     await expect(doesFileExist, 'Export of data has failed').to.be.true;
   });
 
@@ -88,12 +87,11 @@ describe('Export brands', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAllBrandsInCsvFile', baseContext);
 
     const numberOfCategories = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
-    fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'manufacturer_', '.csv');
 
     for (let row = 1; row <= numberOfCategories; row++) {
       const brandInCsvFormat = await this.pageObjects.brandsPage.getBrandInCsvFormat(row);
 
-      const textExist = await files.isTextInFile(fileName, brandInCsvFormat, true, true);
+      const textExist = await files.isTextInFile(filePath, brandInCsvFormat, true, true);
       await expect(textExist, `${brandInCsvFormat} was not found in the file`).to.be.true;
     }
   });

@@ -274,11 +274,8 @@ module.exports = class Brands extends BOBasePage {
   async changeBrandsEnabledColumnBulkActions(enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel('manufacturer')),
-      this.page.waitForSelector(
-        `${this.bulkActionsToggleButton('manufacturer')}:not([disabled])`,
-        {visible: true},
-      ),
+      this.page.$eval(this.selectAllRowsLabel('manufacturer'), el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton('manufacturer')}:not([disabled])`, 40000),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
@@ -298,8 +295,8 @@ module.exports = class Brands extends BOBasePage {
   async deleteWithBulkActions(table) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel(table)),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel(table)}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel(table), el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton(table)}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
@@ -469,22 +466,25 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Click on lint to export categories to a csv file
    * @param table, which table to export
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
   async exportDataToCsv(table) {
     await Promise.all([
       this.page.click(this.gridActionButton(table)),
       this.waitForVisibleSelector(`${this.gridActionDropDownMenu(table)}.show`),
     ]);
-    await Promise.all([
+
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'), // wait for download to start
       this.page.click(this.gridActionExportLink(table)),
-      this.page.waitForSelector(`${this.gridActionDropDownMenu(table)}.show`, {state: 'hidden'}),
     ]);
+
+    return download.path();
   }
 
   /**
    * Export brands data to csv file
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
   async exportBrandsDataToCsv() {
     return this.exportDataToCsv('manufacturer');
@@ -492,7 +492,7 @@ module.exports = class Brands extends BOBasePage {
 
   /**
    * Export brand addresses data to csv file
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
   async exportAddressesDataToCsv() {
     return this.exportDataToCsv('manufacturer_address');
