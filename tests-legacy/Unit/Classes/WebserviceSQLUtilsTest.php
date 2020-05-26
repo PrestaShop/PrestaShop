@@ -27,24 +27,54 @@
 namespace LegacyTests\Unit\Classes;
 
 use PHPUnit\Framework\TestCase;
+use SQLUtils;
 
 class WebserviceSQLUtilsTest extends TestCase
 {
-    public function testGetSimpleFilterStatement1()
+    /**
+     * @dataProvider getDataForSQLRetrieveFilter
+     */
+    public function testSQLRetrieveFilter($input, $expected)
     {
-        $a = \SQLUtils::getSQLRetrieveFilter('name', 'a', 'main.');
-        $this->assertEquals(' AND `main`.`name` = "a"' . PHP_EOL, $a);
+        $a = SQLUtils::getSQLRetrieveFilter($input[0], $input[1], ($input[2] ?: $input[2]));
+        $this->assertEquals($expected, $a);
     }
 
-    public function testGetSimpleFilterStatement2()
+    public function getDataForSQLRetrieveFilter()
     {
-        $a = \SQLUtils::getSQLRetrieveFilter('price', '18.2', 'main.');
-        $this->assertEquals(' AND `main`.`price` LIKE "18.2"' . PHP_EOL, $a);
-    }
-
-    public function testGetSimpleFilterStatement3()
-    {
-        $a = \SQLUtils::getSQLRetrieveFilter('name', '[19.2, 19.8]', 'main.');
-        $this->assertEquals(' AND `main`.`name` BETWEEN "19.2" AND " 19.8"' . PHP_EOL, $a);
+        return [
+            [
+                ['name', 'a'],
+                ' AND `name` = "a"' . PHP_EOL,
+            ],
+            [
+                ['price', '18.2'],
+                ' AND `price` LIKE "18.2"' . PHP_EOL,
+            ],
+            [
+                ['name', '[19.2, 19.8]', 'test.'],
+                ' AND `test`.`name` BETWEEN "19.2" AND " 19.8"' . PHP_EOL,
+            ],
+            [
+                ['name', '%[19.2]'],
+                ' AND `name` LIKE "%19.2"' . PHP_EOL,
+            ],
+            [
+                ['name', '>[19.2]'],
+                ' AND `name` > "19.2"' . PHP_EOL,
+            ],
+            [
+                ['name', '<[19.2]'],
+                ' AND `name` < "19.2"' . PHP_EOL,
+            ],
+            [
+                ['name', '![19.2]'],
+                ' AND `name` != "19.2"' . PHP_EOL,
+            ],
+            [
+                ['name', '[19.2|20|25]'],
+                ' AND (`name` = "19.2" OR `name` = "20" OR `name` = "25")' . PHP_EOL,
+            ],
+        ];
     }
 }
