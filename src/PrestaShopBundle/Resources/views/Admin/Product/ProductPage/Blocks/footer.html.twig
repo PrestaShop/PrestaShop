@@ -106,6 +106,12 @@
       >
         {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
       </button>
+      <a
+        class="btn btn-outline-secondary ml-3"
+        href="{{ path('admin_products_v2_edit', {'productId': productId}) }}"
+      >
+        {{ 'Edit product V2'|trans({}, 'Admin.Catalog.Feature')|raw }}
+      </a>
 
       <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
       <div class="btn-group hide dropdown">
