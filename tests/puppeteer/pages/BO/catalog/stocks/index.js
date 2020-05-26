@@ -227,7 +227,7 @@ module.exports = class Stocks extends BOBasePage {
    */
   async bulkEditQuantityWithInput(value) {
     // Select All products
-    await this.page.click(this.selectAllCheckbox);
+    await this.page.$eval(this.selectAllCheckbox, el => el.click());
     // Set value in input
     await this.setValue(this.bulkEditQuantityInput, value.toString());
     // Wait for check button before click
