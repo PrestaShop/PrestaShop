@@ -239,19 +239,6 @@ class WebserviceRequestCore
         return self::$_instance;
     }
 
-    /*
-    protected function getOutputObject($type)
-    {
-        switch ($type)
-        {
-            case 'XML' :
-            default :
-                $obj_render = new WebserviceOutputXML();
-                break;
-        }
-        return $obj_render;
-    }
-    */
     protected function getOutputObject($type)
     {
         // set header param in header or as get param
@@ -367,9 +354,6 @@ class WebserviceRequestCore
         return $resources;
     }
 
-    /** @todo Check how get parameters */
-    /** @todo : set this method out */
-
     /**
      * This method is used for calculate the price for products on the output details.
      *
@@ -388,8 +372,6 @@ class WebserviceRequestCore
 
         return $field;
     }
-
-    /** @todo : set this method out */
 
     /**
      * This method is used for calculate the price for products on a virtual fields.
@@ -451,8 +433,6 @@ class WebserviceRequestCore
         return $arr_return;
     }
 
-    /** @todo : set this method out */
-
     /**
      * This method is used for calculate the price for products on a virtual fields.
      *
@@ -475,7 +455,7 @@ class WebserviceRequestCore
     /**
      * Start Webservice request
      * Check webservice activation
-     * Check autentication
+     * Check authentication
      * Check resource
      * Check HTTP Method
      * Execute the action
@@ -485,6 +465,7 @@ class WebserviceRequestCore
      * @param string $method
      * @param string $url
      * @param string $params
+     * @param string $bad_class_name
      * @param string $inputXml
      *
      * @return array Returns an array of results (headers, content, type of resource...)
@@ -499,13 +480,13 @@ class WebserviceRequestCore
         set_error_handler([$this, 'webserviceErrorHandler']);
         ini_set('html_errors', 'off');
 
-        // Two global vars, for compatibility with the PS core...
+        // Two global vars, for compatibility with the PS core
         global $webservice_call, $display_errors;
         $webservice_call = true;
         $display_errors = strtolower(ini_get('display_errors')) != 'off';
         // __PS_BASE_URI__ is from Shop::$current_base_uri
         $this->wsUrl = Tools::getHttpHost(true) . __PS_BASE_URI__ . 'api/';
-        // set the output object which manage the content and header structure and informations
+        // set the output object which manage the content and header structure and information
         $this->objOutput = new WebserviceOutputBuilder($this->wsUrl);
 
         $this->_key = trim($key);
@@ -863,6 +844,11 @@ class WebserviceRequestCore
         return true;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
     protected function shopHasRight($key)
     {
         $sql = 'SELECT 1
@@ -882,6 +868,11 @@ class WebserviceRequestCore
         return true;
     }
 
+    /**
+     * @param $params
+     *
+     * @return bool
+     */
     protected function shopExists($params)
     {
         if (is_countable(self::$shopIDs) && count(self::$shopIDs)) {
@@ -910,6 +901,11 @@ class WebserviceRequestCore
         return false;
     }
 
+    /**
+     * @param $params
+     *
+     * @return bool
+     */
     protected function groupShopExists($params)
     {
         if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop'])) {
@@ -1683,11 +1679,9 @@ class WebserviceRequestCore
     }
 
     /**
-     * get SQL retrieve Filter.
-     *
      * @param string $sqlId
      * @param string $filterValue
-     * @param string $tableAlias = 'main.'
+     * @param string $tableAlias default value is 'main.'
      *
      * @return string
      */
@@ -1879,7 +1873,7 @@ class WebserviceRequestCore
             $this->objOutput->setHeaderParams('Content-Sha1', sha1($return['content']));
         }
 
-        // if errors happends when creating returned xml,
+        // if errors happens when creating returned xml,
         // the usual xml content is replaced by the nice error handler content
         if ($this->hasErrors()) {
             $this->_outputEnabled = true;
@@ -1896,10 +1890,12 @@ class WebserviceRequestCore
         return $return;
     }
 
+    /**
+     * @return array
+     */
     public static function getallheaders()
     {
         $retarr = [];
-        $headers = [];
 
         if (function_exists('apache_request_headers')) {
             $headers = apache_request_headers();
