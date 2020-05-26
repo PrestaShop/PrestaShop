@@ -1845,7 +1845,7 @@ class AdminControllerCore extends Controller
 
         $template_dirs = $this->context->smarty->getTemplateDir();
 
-        // Check if header/footer have been overriden
+        // Check if header/footer have been overridden
         $dir = $this->context->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($this->override_folder, '\\/') . DIRECTORY_SEPARATOR;
         $module_list_dir = $this->context->smarty->getTemplateDir(0) . 'helpers' . DIRECTORY_SEPARATOR . 'modules_list' . DIRECTORY_SEPARATOR;
 
@@ -2366,8 +2366,6 @@ class AdminControllerCore extends Controller
             ]);
         }
 
-        // Iso needed to generate Addons login
-        $iso_code_caps = strtoupper($this->context->language->iso_code);
 
         $this->context->smarty->assign([
             'img_base_path' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
