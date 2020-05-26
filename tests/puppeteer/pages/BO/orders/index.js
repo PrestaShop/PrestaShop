@@ -195,10 +195,10 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadInvoice(row) {
-    const [ download ] = await Promise.all([
+    const [download] = await Promise.all([
       this.page.waitForEvent('download'),
       this.page.click(this.viewInvoiceRowLink(row)),
-      ]);
+    ]);
     return download.path();
   }
 
@@ -208,9 +208,9 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadDeliverySlip(row) {
-    const [ download ] = await Promise.all([
+    const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      this.page.click(this.viewDeliverySlipsRowLink(row))
+      this.page.click(this.viewDeliverySlipsRowLink(row)),
     ]);
     return download.path();
   }

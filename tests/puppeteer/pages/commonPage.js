@@ -109,7 +109,7 @@ module.exports = class CommonPage {
    */
   async elementNotVisible(selector, timeout = 10) {
     try {
-      await this.page.waitForSelector(selector, {state: 'hidden', timeout:timeout});
+      await this.page.waitForSelector(selector, {state: 'hidden', timeout});
       return true;
     } catch (error) {
       return false;

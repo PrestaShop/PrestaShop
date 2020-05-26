@@ -48,14 +48,13 @@ module.exports = class Invoice extends BOBasePage {
    *
    * @param dateFrom
    * @param dateTo
-   * @param waitingForDownload
    * @returns {Promise<null|*>}
    */
   async generatePDFByDateAndDownload(dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
-    const [ download ] = await Promise.all([
+    const [download] = await Promise.all([
       this.page.waitForEvent('download'),
-      this.page.click(this.generatePdfByDateButton)
+      this.page.click(this.generatePdfByDateButton),
     ]);
     return download.path();
   }
@@ -108,15 +107,15 @@ module.exports = class Invoice extends BOBasePage {
    * @return {Promise<void>}
    */
   async generatePDFByStatusAndDownload() {
-    const [ download ] = await Promise.all([
+    const [download] = await Promise.all([
       this.page.waitForEvent('download'), // wait for download to start
-      this.page.click(this.generatePdfByStatusButton)
+      this.page.click(this.generatePdfByStatusButton),
     ]);
     return download.path();
   }
 
   async generatePDFByStatusAndFail() {
-    await this.page.click(this.generatePdfByStatusButton)
+    await this.page.click(this.generatePdfByStatusButton);
     return this.getTextContent(this.alertTextBlock);
   }
 
