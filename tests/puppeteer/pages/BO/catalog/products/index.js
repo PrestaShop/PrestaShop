@@ -308,14 +308,19 @@ module.exports = class Product extends BOBasePage {
     // Click on expand button
     await this.page.click(this.filterByCategoriesExpandButton);
     // Choose category to filter with
-    const found = await this.page.evaluate(async (allCategoriesSelector, val) => {
-      const allCategories = [...await document.querySelectorAll(allCategoriesSelector)];
-      const category = await allCategories.find(el => el.textContent.includes(val));
-      if (category === undefined) return false;
+    const args = {allCategoriesSelector: this.filterByCategoriesCategoryLabel, val: value};
+    const found = await this.page.evaluate(async (args) => {
+      const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
+      const category = await allCategories.find(el => el.textContent.includes(args.val));
+      if (category === undefined) {
+        return false;
+      }
       await category.querySelector('input').click();
       return true;
-    }, this.filterByCategoriesCategoryLabel, value);
-    if (!found) throw new Error(`${value} not found as a category`);
+    }, args);
+    if (!found) {
+      throw new Error(`${value} not found as a category`);
+    }
     await this.page.waitForNavigation();
   }
 
