@@ -33,7 +33,6 @@ const today = new Date();
 today.setFullYear(today.getFullYear() + 1);
 const futureDate = today.toISOString().slice(0, 10);
 
-const fileName = 'deliveries.pdf';
 
 // Init objects needed
 const init = async function () {
@@ -57,14 +56,11 @@ describe('Generate Delivery slip file by date', async () => {
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();
   });
   after(async () => {
     await helper.closeBrowser(browser);
-    /* Delete the generated delivery slip */
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
   });
 
   // Login into BO
@@ -125,23 +121,17 @@ describe('Generate Delivery slip file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'generateDeliverySlips', baseContext);
 
       // Generate delivery slips
-      await this.pageObjects.deliverySlipsPage.generatePDFByDate();
+      const filePath = await this.pageObjects.deliverySlipsPage.generatePDFByDateAndDownload();
 
-      const exist = await files.doesFileExist(fileName);
+      const exist = await files.doesFileExist(filePath);
       await expect(exist).to.be.true;
     });
 
     it('should check the error message when there is no delivery slip in the entered date', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDeliverySlipsErrorMessage', baseContext);
 
-      // Generate delivery slips
-      await this.pageObjects.deliverySlipsPage.generatePDFByDate(futureDate, futureDate);
-
-      // Get error message
-      const textMessage = await this.pageObjects.deliverySlipsPage.getTextContent(
-        this.pageObjects.deliverySlipsPage.alertTextBlock,
-      );
-
+      // Generate delivery slips and get error message
+      const textMessage = await this.pageObjects.deliverySlipsPage.generatePDFByDateAndFail(futureDate, futureDate);
       await expect(textMessage).to.equal(this.pageObjects.deliverySlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });

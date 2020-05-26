@@ -220,22 +220,17 @@ describe('Generate Credit slip file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'generatePdfFileExistence', baseContext);
 
       // Generate credit slip
-      await this.pageObjects.creditSlipsPage.generatePDFByDate();
+      const filePath = await this.pageObjects.creditSlipsPage.generatePDFByDateAndDownload();
 
-      const exist = await files.doesFileExist(creditSlipsFileName);
+      const exist = await files.doesFileExist(filePath);
       await expect(exist).to.be.true;
     });
 
     it('should check the error message when there is no credit slip in the entered date', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentCreditSlip', baseContext);
 
-      // Generate credit slip
-      await this.pageObjects.creditSlipsPage.generatePDFByDate(futureDate, futureDate);
-
-      // Get Error message
-      const textMessage = await this.pageObjects.creditSlipsPage.getTextContent(
-        this.pageObjects.creditSlipsPage.alertTextBlock,
-      );
+      // Generate credit slip and get error message
+      const textMessage = await this.pageObjects.creditSlipsPage.generatePDFByDateAndFail(futureDate, futureDate);
 
       await expect(textMessage).to.equal(this.pageObjects.creditSlipsPage.errorMessageWhenGenerateFileByDate);
     });

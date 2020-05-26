@@ -60,7 +60,7 @@ module.exports = class Invoice extends BOBasePage {
   }
 
   /**
-   *
+   * Get message error after generate invoice by status fail
    * @param dateFrom
    * @param dateTo
    * @returns {Promise<string>}
@@ -75,7 +75,7 @@ module.exports = class Invoice extends BOBasePage {
   }
 
   /**
-   *
+   * Set values to generate pdf by date
    * @param dateFrom
    * @param dateTo
    * @returns {Promise<void>}
@@ -114,6 +114,10 @@ module.exports = class Invoice extends BOBasePage {
     return download.path();
   }
 
+  /**
+   * Get message error after generate invoice by status fail
+   * @return {Promise<string>}
+   */
   async generatePDFByStatusAndFail() {
     await this.page.click(this.generatePdfByStatusButton);
     return this.getTextContent(this.alertTextBlock);

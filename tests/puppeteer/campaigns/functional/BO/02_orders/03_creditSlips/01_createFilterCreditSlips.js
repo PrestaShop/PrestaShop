@@ -52,8 +52,6 @@ const dateToday = `${year}-${month}-${day}`;
 const dateTodayToCheck = `${month}/${day}/${year}`;
 
 let numberOfCreditSlips = 0;
-const firstCreditSlipFileName = '000001.pdf';
-const secondCreditSlipFileName = '000002.pdf';
 
 // Init objects needed
 const init = async function () {
@@ -89,9 +87,6 @@ describe('Create, filter and check credit slips file', async () => {
     this.pageObjects = await init();
   });
   after(async () => {
-    /* Delete the generated credit slips */
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${firstCreditSlipFileName}`);
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${secondCreditSlipFileName}`);
     await helper.closeBrowser(browser);
   });
 
@@ -327,8 +322,8 @@ describe('Create, filter and check credit slips file', async () => {
   });
 
   const creditSlips = [
-    {args: {number: 'first', id: 1, fileName: firstCreditSlipFileName}},
-    {args: {number: 'second', id: 2, fileName: secondCreditSlipFileName}},
+    {args: {number: 'first', id: 1}},
+    {args: {number: 'second', id: 2}},
   ];
 
   creditSlips.forEach((creditSlip) => {
@@ -359,8 +354,9 @@ describe('Create, filter and check credit slips file', async () => {
       it(`should download the ${creditSlip.args.number} credit slip and check the file existence`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `download${creditSlip.args.number}`, baseContext);
 
-        await this.pageObjects.creditSlipsPage.downloadCreditSlip();
-        const exist = await files.doesFileExist(creditSlip.args.fileName);
+        const filePath = await this.pageObjects.creditSlipsPage.downloadCreditSlip();
+
+        const exist = await files.doesFileExist(filePath);
         await expect(exist).to.be.true;
       });
     });

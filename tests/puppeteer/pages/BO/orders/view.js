@@ -86,11 +86,20 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getDocumentName(rowChild = 1) {
+    await this.goToDocumentsTab();
+
+    return this.getTextContent(this.documentName(rowChild));
+  }
+
+  /**
+   * Go to documents tab
+   * @return {Promise<void>}
+   */
+  async goToDocumentsTab() {
     await Promise.all([
       this.page.click(this.documentTab),
       this.waitForVisibleSelector(`${this.documentTab}.active`),
     ]);
-    return this.getTextContent(this.documentName(rowChild));
   }
 
   /**
@@ -99,12 +108,27 @@ module.exports = class Order extends BOBasePage {
    * @returns fileName
    */
   async getFileName(rowChild = 1) {
-    await Promise.all([
-      this.page.click(this.documentTab),
-      this.waitForVisibleSelector(`${this.documentTab}.active`),
-    ]);
+    await this.goToDocumentsTab();
+
     const fileName = await this.getTextContent(this.documentNumberLink(rowChild));
     return fileName.replace('#', '').trim();
+  }
+
+  /**
+   * Download a document in document tab
+   * @param row
+   * @return {Promise<*>}
+   */
+  async downloadDocument(row) {
+    // Delete the target because a new tab is opened when downloading the file
+    await this.page.$eval(this.documentNumberLink(row), el => el.target = '');
+
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'),
+      this.page.click(this.documentNumberLink(row)),
+    ]);
+
+    return download.path();
   }
 
   /**
@@ -112,15 +136,9 @@ module.exports = class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async downloadInvoice() {
-    await this.page.$eval(this.documentNumberLink(1), el => el.target = '');
+    await this.goToDocumentsTab();
 
-    // Delete the target because a new tab is opened when downloading the file
-    const [download] = await Promise.all([
-      this.page.waitForEvent('download'), // wait for download to start
-      this.page.click(this.documentNumberLink(1))
-    ]);
-
-    return download.path();
+    return this.downloadDocument(1);
   }
 
   /**
@@ -154,13 +172,14 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Download delivery slip
-   * @returns {Promise<void>}
+   * @returns {Promise<*>}
    */
   async downloadDeliverySlip() {
     /* eslint-disable no-return-assign, no-param-reassign */
+    await this.goToDocumentsTab();
+
     // Delete the target because a new tab is opened when downloading the file
-    await this.page.$eval(this.documentNumberLink(3), el => el.target = '');
-    await this.page.click(this.documentNumberLink(3));
+    return this.downloadDocument(3);
     /* eslint-enable no-return-assign, no-param-reassign */
   }
 };

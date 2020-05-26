@@ -32,7 +32,7 @@ let browser;
 let browserContext;
 let page;
 
-let fileName;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -67,7 +67,6 @@ describe('Test enable/disable product image in delivery slips', async () => {
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();
   });
@@ -211,11 +210,9 @@ describe('Test enable/disable product image in delivery slips', async () => {
             baseContext,
           );
 
-          fileName = await this.pageObjects.viewOrderPage.getFileName(3);
+          filePath = await this.pageObjects.viewOrderPage.downloadDeliverySlip();
 
-          await this.pageObjects.viewOrderPage.downloadDeliverySlip();
-
-          const exist = await files.doesFileExist(`${fileName}.pdf`);
+          const exist = await files.doesFileExist(filePath);
           await expect(exist).to.be.true;
         });
 
@@ -227,14 +224,8 @@ describe('Test enable/disable product image in delivery slips', async () => {
             baseContext,
           );
 
-          const imageNumber = await files.getImageNumberInPDF(
-            `${fileName}.pdf`,
-          );
-
+          const imageNumber = await files.getImageNumberInPDF(filePath);
           await expect(imageNumber).to.be.equal(test.args.imageNumber);
-
-          // Delete file after check
-          await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}.pdf`);
         });
       });
     });

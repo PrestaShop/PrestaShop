@@ -99,22 +99,58 @@ module.exports = class CreditSlips extends BOBasePage {
   /**
    * Download credit slip
    * @param lineNumber
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
   async downloadCreditSlip(lineNumber = 1) {
-    await this.page.click(this.creditSlipDownloadButton(lineNumber));
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'), // wait for download to start
+      this.page.click(this.creditSlipDownloadButton(lineNumber)),
+    ]);
+    return download.path();
   }
 
   /**
-   * Generate PDF by date
+   * Generate PDF by date and download
    * @param dateFrom
    * @param dateTo
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
-  async generatePDFByDate(dateFrom = '', dateTo = '') {
-    if (dateFrom) await this.setValue(this.dateFromInput, dateFrom);
-    if (dateTo) await this.setValue(this.dateToInput, dateTo);
+  async generatePDFByDateAndDownload(dateFrom = '', dateTo = '') {
+    await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
+
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'), // wait for download to start
+      this.page.click(this.generatePdfByDateButton),
+    ]);
+    return download.path();
+  }
+
+  /**
+   * Get message error after generate credit slip fail
+   * @param dateFrom
+   * @param dateTo
+   * @return {Promise<string>}
+   */
+  async generatePDFByDateAndFail(dateFrom = '', dateTo = '') {
+    await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
     await this.page.click(this.generatePdfByDateButton);
+    return this.getTextContent(this.alertTextBlock);
+  }
+
+  /**
+   * Set values to generate pdf by date
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<void>}
+   */
+  async setValuesForGeneratingPDFByDate(dateFrom = '', dateTo = '') {
+    if (dateFrom) {
+      await this.setValue(this.dateFromInput, dateFrom);
+    }
+
+    if (dateTo) {
+      await this.setValue(this.dateToInput, dateTo);
+    }
   }
 
   /** Edit credit slip Prefix
