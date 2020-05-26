@@ -32,7 +32,6 @@ use Configuration;
 use Context;
 use Country;
 use Hook;
-use PrestaShop\PrestaShop\Adapter\CartRule\LegacyDiscountApplicationType;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
@@ -551,58 +550,40 @@ class CartPresenter implements PresenterInterface
 
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_amount'] = $cartVoucher['reduction_amount'];
 
-            if (array_key_exists('gift_product', $cartVoucher) && $cartVoucher['gift_product']) {
+            if ($this->cartVoucherHasGiftProductReduction($cartVoucher)) {
                 $cartVoucher['reduction_amount'] = $cartVoucher['value_real'];
             }
 
-            $shippingReduction = $amountReduction = $percentageReduction = 0;
-            $freeShippingOnly = false;
+            $totalCartVoucherReduction = 0;
 
-            if ($this->cartVoucherHasFreeShipping($cartVoucher)) {
-                if (!$freeShippingAlreadySet) {
-                    $shippingReduction = $cart->getTotalShippingCost(null, $this->includeTaxes());
+            if (!$this->cartVoucherHasPercentReduction($cartVoucher)
+                && !$this->cartVoucherHasAmountReduction($cartVoucher)
+                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)) {
+                $freeShippingOnly = true;
+                if ($freeShippingAlreadySet) {
+                    unset($vouchers[$cartVoucher['id_cart_rule']]);
+                    continue;
+                } else {
                     $freeShippingAlreadySet = true;
                 }
-                $freeShippingOnly = true;
-            }
-            if ($this->cartVoucherHasPercentReduction($cartVoucher)) {
-                $products = $cart->getProducts();
-                if ($this->cartVoucherHasPercentReductionOnSelectedProducts($cartVoucher)) {
-                    $selected_products = $cartVoucher['obj']->checkProductRestrictionsFromCart($cart, true);
-                    if (is_array($selected_products)) {
-                        foreach ($products as $key => $product) {
-                            // Check if product is in selected product for applying the voucher
-                            // Check if voucher applies on already discounted products (and if it applies)
-                            if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
-                                    || in_array($product['id_product'] . '-0', $selected_products))
-                                && (($cartVoucher['reduction_exclude_special'] && !$product['reduction_applies'])
-                                    || !$cartVoucher['reduction_exclude_special'])) {
-                                continue;
-                            }
-                            unset($products[$key]);
-                        }
-                    }
-                }
-                $productsTotalExcludingTax = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS, $products);
-                $percentageReduction = ($productsTotalExcludingTax / 100) * $cartVoucher['reduction_percent'];
+            } else {
                 $freeShippingOnly = false;
-            } elseif ($this->cartVoucherHasAmountReduction($cartVoucher)) {
-                $amountReduction = $this->includeTaxes() ? $cartVoucher['reduction_amount'] : $cartVoucher['value_tax_exc'];
+                $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
                 $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
                 $currencyTo = new \Currency($cart->id_currency);
                 if ($currencyFrom->conversion_rate == 0) {
-                    $amountReduction = 0;
+                    $totalCartVoucherReduction = 0;
                 } else {
                     // convert to default currency
                     $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
-                    $amountReduction /= $currencyFrom->conversion_rate;
+                    $totalCartVoucherReduction /= $currencyFrom->conversion_rate;
                     if ($defaultCurrencyId == $currencyTo->id) {
                         // convert to destination currency
-                        $amountReduction *= $currencyTo->conversion_rate;
+                        $totalCartVoucherReduction *= $currencyTo->conversion_rate;
                     }
                 }
-                $freeShippingOnly = false;
             }
+
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
             if ($freeShippingOnly) {
                 $cartVoucher['reduction_formatted'] = $this->translator->trans(
@@ -611,11 +592,8 @@ class CartPresenter implements PresenterInterface
                     'Admin.Shipping.Feature'
                 );
             } else {
-                // In all other cases, the value displayed should be the total of applied reductions for the current voucher
-                $totalCartVoucherReduction = $shippingReduction + $amountReduction + $percentageReduction;
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
+                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
             }
-
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
                 'cart',
@@ -661,10 +639,9 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasPercentReductionOnSelectedProducts($cartVoucher)
+    private function cartVoucherHasAmountReduction($cartVoucher)
     {
-        return $this->cartVoucherHasPercentReduction($cartVoucher)
-            && (int) $cartVoucher['reduction_product'] == LegacyDiscountApplicationType::SELECTED_PRODUCTS;
+        return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
     }
 
     /**
@@ -672,9 +649,9 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasAmountReduction($cartVoucher)
+    private function cartVoucherHasGiftProductReduction($cartVoucher)
     {
-        return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
+        return !empty($cartVoucher['gift_product']);
     }
 
     /**
