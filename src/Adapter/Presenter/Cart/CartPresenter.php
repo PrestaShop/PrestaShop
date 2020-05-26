@@ -502,7 +502,7 @@ class CartPresenter implements PresenterInterface
         $shippingDisplayValue = '';
 
         // if one of the applied cart rules have free shipping, then the shipping display value is 'Free'
-        foreach ($cart->getCartRules() as $rule) {
+        foreach ($cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, true) as $rule) {
             if ($rule['free_shipping'] && !$rule['carrier_restriction']) {
                 return $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
             }
@@ -536,7 +536,7 @@ class CartPresenter implements PresenterInterface
 
     private function getTemplateVarVouchers(Cart $cart)
     {
-        $cartVouchers = $cart->getCartRules();
+        $cartVouchers = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, true);
         $vouchers = [];
 
         $cartHasTax = null === $cart->id ? false : $cart::getTaxesAverageUsed($cart);
