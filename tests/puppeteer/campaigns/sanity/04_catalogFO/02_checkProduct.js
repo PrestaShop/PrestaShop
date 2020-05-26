@@ -11,6 +11,7 @@ const ProductPage = require('@pages/FO/product');
 const ProductData = require('@data/FO/product');
 
 let browser;
+let browserContext;
 let page;
 
 // creating pages objects in a function
@@ -29,7 +30,8 @@ describe('Check the Product page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'en-GB',
     });

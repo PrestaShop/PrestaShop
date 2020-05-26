@@ -22,6 +22,7 @@ const CheckoutPage = require('@pages/FO/checkout');
 const {DefaultAccount} = require('@data/demo/customer');
 
 let browser;
+let browserContext;
 let page;
 
 const countryID = 74;
@@ -44,7 +45,8 @@ describe('Configure country restrictions', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

@@ -19,6 +19,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_shopParameters_general_maintenance_enableDisableShop';
 
 let browser;
+let browserContext;
 let page;
 
 const newMaintenanceText = 'Maintenance';
@@ -44,7 +45,8 @@ describe('Enable/Disable shop', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

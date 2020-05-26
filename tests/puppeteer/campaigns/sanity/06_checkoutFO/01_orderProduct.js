@@ -17,6 +17,7 @@ const CartData = require('@data/FO/cart');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 let browser;
+let browserContext;
 let page;
 
 // creating pages objects in a function
@@ -37,7 +38,8 @@ describe('Order a product and check order confirmation', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'en-GB',
     });

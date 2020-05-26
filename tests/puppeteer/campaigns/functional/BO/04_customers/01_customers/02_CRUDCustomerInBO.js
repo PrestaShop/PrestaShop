@@ -24,6 +24,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_customers_customers_CRUDCustomerInBO';
 
 let browser;
+let browserContext;
 let page;
 let numberOfCustomers = 0;
 
@@ -48,7 +49,8 @@ describe('Create, Read, Update and Delete Customer in BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     // Init page objects
     this.pageObjects = await init();

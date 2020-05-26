@@ -22,6 +22,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_design_pages_categoriesBulkActions';
 
 let browser;
+let browserContext;
 let page;
 let numberOfCategories = 0;
 
@@ -44,7 +45,8 @@ describe('Create Categories, Then disable / Enable and Delete with Bulk actions'
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

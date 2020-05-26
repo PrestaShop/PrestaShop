@@ -10,6 +10,7 @@ const InstallPage = require('@pages/install');
 const HomePage = require('@pages/FO/home');
 
 let browser;
+let browserContext;
 let page;
 
 // Init objects needed
@@ -24,7 +25,8 @@ describe('Install Prestashop', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     this.pageObjects = await init();
   });
   after(async () => {

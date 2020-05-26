@@ -24,6 +24,7 @@ const PsEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription')
 const baseContext = 'BO_customers_customers_subscribeToNewsletter';
 let numberOfCustomers = 0;
 let browser;
+let browserContext;
 let page;
 
 const init = async function () {
@@ -40,7 +41,8 @@ describe('Check customer subscription to newsletter from BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     this.pageObjects = await init();
   });
   after(async () => {

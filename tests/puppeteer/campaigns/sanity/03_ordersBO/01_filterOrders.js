@@ -15,6 +15,7 @@ const {Orders} = require('@data/demo/orders');
 
 let numberOfOrders;
 let browser;
+let browserContext;
 let page;
 // creating pages objects in a function
 const init = async function () {
@@ -34,7 +35,8 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     this.pageObjects = await init();
   });
   after(async () => {

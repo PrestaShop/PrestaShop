@@ -21,6 +21,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_design_pages_CRUDPageCategory';
 
 let browser;
+let browserContext;
 let page;
 let numberOfCategories = 0;
 let numberOfPages = 0;
@@ -49,7 +50,8 @@ describe('Create, Read, Update and Delete Page Category and Page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     this.pageObjects = await init();
     createCategoryData = await (new CategoryPageFaker());
     editCategoryData = await (new CategoryPageFaker({name: `update${createCategoryData.name}`}));

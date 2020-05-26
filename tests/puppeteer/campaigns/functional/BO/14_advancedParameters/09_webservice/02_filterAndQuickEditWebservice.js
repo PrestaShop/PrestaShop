@@ -21,6 +21,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_modules_advancedParameters_webservice_filterAndQuickEditWebservice';
 
 let browser;
+let browserContext;
 let page;
 
 let numberOfWebserviceKeys = 0;
@@ -42,7 +43,8 @@ describe('Filter and quick edit webservice', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

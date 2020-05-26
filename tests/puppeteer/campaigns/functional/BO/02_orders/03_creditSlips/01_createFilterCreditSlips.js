@@ -30,6 +30,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_orders_creditSlips_createFilterCreditSlips';
 
 let browser;
+let browserContext;
 let page;
 
 // Today date
@@ -81,7 +82,8 @@ describe('Create, filter and check credit slips file', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();

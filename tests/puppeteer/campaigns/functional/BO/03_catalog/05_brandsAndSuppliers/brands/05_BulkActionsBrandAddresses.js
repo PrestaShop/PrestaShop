@@ -21,6 +21,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_bulkActionsBrandAddresses';
 
 let browser;
+let browserContext;
 let page;
 let numberOfBrandAddresses = 0;
 const firstAddressData = new BrandAddressFaker({firstName: 'AddressToDelete'});
@@ -41,7 +42,8 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

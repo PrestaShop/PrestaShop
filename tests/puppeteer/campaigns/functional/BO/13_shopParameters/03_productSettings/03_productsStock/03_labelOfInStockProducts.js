@@ -19,6 +19,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_labelOfInStockProducts';
 
 let browser;
+let browserContext;
 let page;
 
 // Init objects needed
@@ -36,8 +37,9 @@ describe('Update label of in-stock products', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
-    page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
 

@@ -16,6 +16,7 @@ const HomePage = require('@pages/FO/home');
 const loginCommon = require('@commonTests/loginBO');
 
 let browser;
+let browserContext;
 let page;
 
 // creating pages objects in a function
@@ -38,7 +39,8 @@ describe('Upgrade Prestashop to last Stable', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'en-GB',
     });

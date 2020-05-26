@@ -11,6 +11,7 @@ const HomePage = require('@pages/FO/home');
 const {Categories} = require('@data/demo/categories');
 
 let browser;
+let browserContext;
 let page;
 let allProductsNumber = 0;
 
@@ -31,7 +32,8 @@ describe('Filter Products by categories in Home page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     this.pageObjects = await init();
   });
   after(async () => {

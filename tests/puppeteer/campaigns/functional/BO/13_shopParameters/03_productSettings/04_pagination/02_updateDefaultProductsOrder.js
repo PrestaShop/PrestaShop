@@ -18,6 +18,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_shopParameters_productSettings_pagination_updateDefaultProductsOrder';
 
 let browser;
+let browserContext;
 let page;
 
 // Init objects needed
@@ -40,7 +41,8 @@ describe('Update default product order', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

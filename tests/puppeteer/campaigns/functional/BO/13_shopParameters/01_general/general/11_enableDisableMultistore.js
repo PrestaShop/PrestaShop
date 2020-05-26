@@ -17,6 +17,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_shopParameters_general_general_enableDisableMultiStore';
 
 let browser;
+let browserContext;
 let page;
 
 // Init objects needed
@@ -32,7 +33,8 @@ describe('Enable/Disable multi store', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

@@ -23,6 +23,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_international_localization_importLocalizationPack';
 
 let browser;
+let browserContext;
 let page;
 const contentToImport = {
   importStates: false,
@@ -55,7 +56,8 @@ Delete 'Chilean Peso' currency
 describe('Import a localization pack including a language and a currency', async () => {
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

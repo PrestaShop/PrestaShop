@@ -23,6 +23,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_filterQuickEditAndBulkActionsSupplier';
 
 let browser;
+let browserContext;
 let page;
 
 const firstSupplierData = new SupplierFaker();
@@ -46,7 +47,8 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

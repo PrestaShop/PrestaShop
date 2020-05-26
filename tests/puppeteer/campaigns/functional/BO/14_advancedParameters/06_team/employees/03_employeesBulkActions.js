@@ -24,6 +24,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_advancedParams_team_employees_employeesBulkActions';
 
 let browser;
+let browserContext;
 let page;
 let numberOfEmployees = 0;
 
@@ -60,7 +61,8 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

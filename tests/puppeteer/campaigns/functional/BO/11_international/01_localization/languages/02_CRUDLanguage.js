@@ -22,6 +22,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_international_localization_languages_CRUDLanguages';
 
 let browser;
+let browserContext;
 let page;
 
 const createLanguageData = new LanguageFaker({isoCode: 'de'});
@@ -51,7 +52,8 @@ describe('CRUD language', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

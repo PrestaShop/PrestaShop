@@ -20,6 +20,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_filterBrandAddresses';
 
 let browser;
+let browserContext;
 let page;
 let numberOfBrandsAddresses = 0;
 
@@ -37,7 +38,8 @@ describe('Filter And Quick Edit Addresses', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

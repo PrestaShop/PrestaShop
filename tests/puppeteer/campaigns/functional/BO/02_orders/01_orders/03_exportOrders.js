@@ -14,6 +14,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_orders_orders_exportOrders';
 
 let browser;
+let browserContext;
 let page;
 let filePath;
 
@@ -30,7 +31,8 @@ describe('Export orders', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await helper.setDownloadBehavior(page);
     this.pageObjects = await init();
   });

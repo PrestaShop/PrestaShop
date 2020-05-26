@@ -16,6 +16,7 @@ const {Categories} = require('@data/demo/categories');
 const {DefaultFrTax} = require('@data/demo/tax');
 
 let browser;
+let browserContext;
 let page;
 let numberOfProducts = 0;
 
@@ -33,7 +34,8 @@ describe('Filter in Products Page', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     this.pageObjects = await init();
   });
   after(async () => {

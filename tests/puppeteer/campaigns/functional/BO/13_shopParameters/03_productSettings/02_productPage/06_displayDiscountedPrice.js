@@ -25,6 +25,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_shopParameters_productSettings_displayDiscountedPrice';
 
 let browser;
+let browserContext;
 let page;
 
 const priceRuleData = new PriceRuleFaker(
@@ -60,8 +61,9 @@ describe('Enable/Disable display discounted price', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
-    page = await helper.newTab(browser);
     this.pageObjects = await init();
   });
 

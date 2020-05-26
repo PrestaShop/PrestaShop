@@ -17,6 +17,7 @@ const ProductFaker = require('@data/faker/product');
 const {DefaultFrTax} = require('@data/demo/tax');
 
 let browser;
+let browserContext;
 let page;
 let productData;
 let editedProductData;
@@ -36,7 +37,8 @@ describe('Create, read, update and delete Standard product in BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     this.pageObjects = await init();
     const productToCreate = {
       type: 'Standard product',

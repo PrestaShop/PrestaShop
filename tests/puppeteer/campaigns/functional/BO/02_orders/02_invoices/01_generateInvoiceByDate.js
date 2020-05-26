@@ -4,7 +4,6 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const {Statuses} = require('@data/demo/orderStatuses');
-const {Invoices} = require('@data/demo/invoices');
 const files = require('@utils/files');
 // Importing pages
 const LoginPage = require('@pages/BO/login');
@@ -18,6 +17,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_orders_invoices_generateInvoiceByDate';
 
 let browser;
+let browserContext;
 let page;
 let filePath;
 
@@ -42,7 +42,8 @@ describe('Generate PDF file by date', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await helper.setDownloadBehavior(page);
     this.pageObjects = await init();
   });
@@ -113,7 +114,7 @@ describe('Generate PDF file by date', async () => {
       filePath = await this.pageObjects.invoicesPage.generatePDFByDateAndDownload();
 
       const exist = await files.doesFileExist(filePath);
-      await expect(exist, "File does not exist").to.be.true;
+      await expect(exist, 'File does not exist').to.be.true;
     });
 
     it('should check the error message when there is no invoice in the entered date', async function () {

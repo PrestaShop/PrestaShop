@@ -24,6 +24,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_advancedParams_team_employees_CRUDEmployee';
 
 let browser;
+let browserContext;
 let page;
 let numberOfEmployees = 0;
 
@@ -49,7 +50,8 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     // Init page objects
     this.pageObjects = await init();

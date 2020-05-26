@@ -21,6 +21,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_customerService_orderMessages_filterAndBulkDeleteOrderMessages';
 
 let browser;
+let browserContext;
 let page;
 
 const firstOrderMessageData = new OrderMessageFaker({name: 'todelete'});
@@ -47,7 +48,8 @@ describe('Create order messages, check filter results and delete them with bulk 
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

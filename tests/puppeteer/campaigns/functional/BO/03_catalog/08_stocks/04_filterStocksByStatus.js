@@ -22,6 +22,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_catalog_stocks_filterStocksByStatus';
 
 let browser;
+let browserContext;
 let page;
 
 let numberOfProducts = 0;
@@ -48,7 +49,8 @@ describe('Filter stocks by status', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

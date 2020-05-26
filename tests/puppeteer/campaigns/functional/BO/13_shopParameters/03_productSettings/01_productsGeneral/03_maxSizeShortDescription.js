@@ -22,6 +22,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_shopParameters_productSettings_maxSizeShortDescription';
 
 let browser;
+let browserContext;
 let page;
 
 const productData = new ProductFaker({type: 'Standard product', status: false});
@@ -50,7 +51,8 @@ describe('Update max size of short description', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

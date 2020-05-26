@@ -30,6 +30,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipByDate';
 
 let browser;
+let browserContext;
 let page;
 
 // Get today date
@@ -69,7 +70,8 @@ describe('Generate Credit slip file by date', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();

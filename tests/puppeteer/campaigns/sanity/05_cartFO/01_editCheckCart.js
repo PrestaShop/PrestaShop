@@ -13,6 +13,7 @@ const CartPage = require('@pages/FO/cart');
 const CartData = require('@data/FO/cart');
 
 let browser;
+let browserContext;
 let page;
 let totalTTC = 0;
 let itemsNumber = 0;
@@ -37,7 +38,8 @@ describe('Check Cart in FO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'en-GB',
     });

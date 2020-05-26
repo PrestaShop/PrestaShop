@@ -23,6 +23,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_orders_invoices_invoiceOptions_enableDisableCurrentYear';
 
 let browser;
+let browserContext;
 let page;
 let fileName;
 
@@ -54,7 +55,8 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();

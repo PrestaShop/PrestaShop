@@ -29,6 +29,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_deliverySlipNumber';
 
 let browser;
+let browserContext;
 let page;
 let fileName;
 
@@ -62,7 +63,8 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });

@@ -16,6 +16,7 @@ const FOProductPage = require('@pages/FO/product');
 const ProductFaker = require('@data/faker/product');
 
 let browser;
+let browserContext;
 let page;
 let productWithCombinations;
 let editedProductWithCombinations;
@@ -35,7 +36,8 @@ describe('Create, read, update and delete Standard product with combinations in 
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
     this.pageObjects = await init();
     const productToCreate = {
       type: 'Standard product',

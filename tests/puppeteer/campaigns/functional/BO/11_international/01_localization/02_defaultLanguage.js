@@ -20,6 +20,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_international_localization_defaultLanguage';
 
 let browser;
+let browserContext;
 let page;
 
 // Init objects needed
@@ -44,7 +45,8 @@ describe('Update default language', async () => {
       + ` '${test.args.defaultBrowserLanguage}'`, async () => {
       before(async function () {
         browser = await helper.createBrowser();
-        page = await helper.newTab(browser);
+        browserContext = await helper.createBrowserContext(browser);
+        page = await helper.newTab(browserContext);
 
         this.pageObjects = await init();
       });
@@ -83,7 +85,8 @@ describe('Update default language', async () => {
       describe(`Check if the FO language is '${test.args.languageToCheck}'`, async () => {
         before(async function () {
           browser = await helper.createBrowser();
-          page = await helper.newTab(browser);
+          browserContext = await helper.createBrowserContext(browser);
+          page = await helper.newTab(browserContext);
 
           this.pageObjects = await init();
         });
