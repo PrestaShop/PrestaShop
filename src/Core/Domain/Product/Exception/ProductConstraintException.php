@@ -42,4 +42,9 @@ class ProductConstraintException extends ProductException
      * When invalid product name in one or another language is supplied
      */
     const INVALID_NAME = 30;
+
+    /**
+     * When invalid product condition is supplied
+     */
+    const INVALID_CONDITION = 40;
 }

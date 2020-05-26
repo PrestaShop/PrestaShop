@@ -70,6 +70,7 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler
       arguments:
         - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+        - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand

@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopException;
@@ -45,11 +46,18 @@ final class AddProductHandler implements AddProductHandlerInterface
     private $defaultLangId;
 
     /**
-     * @param int $defaultLangId
+     * @var int
      */
-    public function __construct(int $defaultLangId)
+    private $defaultCategoryId;
+
+    /**
+     * @param int $defaultLangId
+     * @param int $defaultCategoryId
+     */
+    public function __construct(int $defaultLangId, int $defaultCategoryId)
     {
         $this->defaultLangId = $defaultLangId;
+        $this->defaultCategoryId = $defaultCategoryId;
     }
 
     /**
@@ -80,8 +88,16 @@ final class AddProductHandler implements AddProductHandlerInterface
         //@todo: multistore?
         $product = new Product();
         $product->name = $command->getLocalizedNames();
-        $product->is_virtual = $command->getType() === ProductType::TYPE_VIRTUAL;
         $product->active = false;
+        $product->category = $this->defaultCategoryId;
+        $product->id_category_default = $this->defaultCategoryId;
+
+        if ($command->getType() === ProductType::TYPE_VIRTUAL) {
+            $product->is_virtual = true;
+            $product->condition = ProductCondition::NEW;
+        } else {
+            $product->is_virtual = false;
+        }
 
         foreach ($product->name as $langId => $name) {
             if (true !== $product->validateField('name', $name, $langId)) {

@@ -30,69 +30,53 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
-class ProductType
+class ProductCondition
 {
-    /**
-     * Standard product
-     */
-    const TYPE_STANDARD = 0;
+    const NEW = 'new';
+    const USED = 'used';
+    const REFURBISHED = 'refurbished';
 
     /**
-     * A pack consists multiple units of product.
-     */
-    const TYPE_PACK = 1;
-
-    /**
-     * Items that are not in physical form and can be sold without requiring any shipping
-     * E.g. downloadable photos, videos, software, services etc.
-     */
-    const TYPE_VIRTUAL = 2;
-
-    /**
-     * @var int
+     * @var string
      */
     private $value;
 
     /**
-     * @param int $value
-     *
-     * @throws ProductConstraintException
+     * @param string $value
      */
-    public function __construct(int $value)
+    public function __construct(string $value)
     {
-        $this->assertProductType($value);
+        $this->assertValueIsAllowed($value);
         $this->value = $value;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getValue(): int
+    public function getValue(): string
     {
         return $this->value;
     }
 
     /**
-     * @param int $value
-     *
-     * @throws ProductConstraintException
+     * @param string $value
      */
-    private function assertProductType(int $value)
+    private function assertValueIsAllowed(string $value): void
     {
-        $allowedTypes = [
-            self::TYPE_STANDARD,
-            self::TYPE_PACK,
-            self::TYPE_VIRTUAL
+        $allowedConditions = [
+            self::NEW,
+            self::USED,
+            self::REFURBISHED,
         ];
 
-        if (!in_array($value, $allowedTypes, true)) {
+        if (!in_array($value, $allowedConditions, true)) {
             throw new ProductConstraintException(
                 sprintf(
-                    'Invalid product type %s. Valid types are: [%s]',
+                    'Invalid product condition "%s". Allowed conditions are: "%s"',
                     $value,
-                    implode(',', $allowedTypes)
+                    implode(',', $allowedConditions)
                 ),
-                ProductConstraintException::INVALID_PRODUCT_TYPE
+            ProductConstraintException::INVALID_CONDITION
             );
         }
     }
