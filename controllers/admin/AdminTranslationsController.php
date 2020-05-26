@@ -3309,6 +3309,7 @@ class AdminTranslationsControllerCore extends AdminController
             AdminTranslationsController::getEmailHTML($email)
         );
     }
+
     /**
      * @param $directory : name of directory
      *
