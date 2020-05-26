@@ -445,10 +445,11 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_GIFT
      *                    - FILTER_ACTION_ALL_NOCAP
      * @param bool $autoAdd automaticaly adds cart ruls without code to cart
+     * @param bool $active true if the cart ruls must be active
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Database result
      */
-    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
+    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true, $active = false)
     {
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
@@ -473,6 +474,7 @@ class CartCore extends ObjectModel
                     AND crl.id_lang = ' . (int) $this->id_lang . '
                 )
                 WHERE `id_cart` = ' . (int) $this->id . '
+                ' . ($active ? ' AND cr.active = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
