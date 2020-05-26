@@ -15,7 +15,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // top navbar
     this.headerLogoImage = '#header_logo';
-    this.userProfileIcon = '#employee_infos,#header_infos #header-employee-container';
+    this.userProfileIcon = '#employee_infos';
     this.userProfileLogoutLink = 'a#header_logout';
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
