@@ -78,7 +78,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             /** @var ProductId $productId */
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
                 [$defaultLangId => $data['name']],
-                $this->getProductTypeValueByName($table['type'])
+                $this->getProductTypeValueByName($data['type'])
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());
