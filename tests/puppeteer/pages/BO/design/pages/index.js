@@ -132,8 +132,8 @@ module.exports = class Pages extends BOBasePage {
     this.dialogListener();
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel(table)),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel(table)}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel(table), el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton(table)}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
@@ -196,8 +196,8 @@ module.exports = class Pages extends BOBasePage {
   async changeEnabledColumnBulkActions(table, enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel(table)),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel(table)}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel(table), el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton(table)}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
