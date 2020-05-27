@@ -221,21 +221,27 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     }
 
     /**
-     * @return HookEvent
+     * @return hookEvent
      *
      * Context parameters are injected into the new HookEvent
      *
-     * Note: _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture.
+     * Note: _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture
      */
     private function createHookEventWithContextParameters(): HookEvent
     {
         $globalParameters = ['_ps_version' => \AppKernel::VERSION];
 
-        if ($this->requestStack !== null) {
-            $request = $this->requestStack->getCurrentRequest();
-            $globalParameters['request'] = $request;
-            $globalParameters['route'] = $request->get('_route');
+        if (null === $this->requestStack) {
+            return new HookEvent($globalParameters);
         }
+
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return new HookEvent($globalParameters);
+        }
+
+        $globalParameters['request'] = $request;
+        $globalParameters['route'] = $request->get('_route');
 
         return new HookEvent($globalParameters);
     }
