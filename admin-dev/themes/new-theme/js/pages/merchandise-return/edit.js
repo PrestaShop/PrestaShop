@@ -23,95 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import MerchandiseReturnEditPageMap from '@pages/merchandise-return/MerchandiseReturnEditPageMap';
-import {EventEmitter} from '@components/event-emitter';
-import Router from '@components/router';
-import MerchandiseReturnProductRenderer from '@pages/merchandise-return/merchandise-return-product-renderer';
+import MerchandiseReturnEditPage from '@pages/merchandise-return/merchandise-return-edit-page';
 
 const {$} = window;
 
 $(() => {
-  listenForProductDelete();
-  listenForProductPagination();
-  const merchandiseReturnProductRenderer = new MerchandiseReturnProductRenderer();
+  const merchandiseReturnEditPage = new MerchandiseReturnEditPage();
 
-  function listenForProductDelete() {
-    $(MerchandiseReturnEditPageMap.productDeleteBtn)
-      .off('click')
-      .on('click', (event) => handleDeleteProductEvent(event));
-  }
-
-  function listenForProductPagination() {
-    $(MerchandiseReturnEditPageMap.productsTablePagination).on('click', MerchandiseReturnEditPageMap.productsTablePaginationLink, (event) => {
-      event.preventDefault();
-      const $btn = $(event.currentTarget);
-      EventEmitter.emit(MerchandiseReturnEditPageMap.productListPaginated, {
-        orderId: $btn.data('merchadiseReturnId'),
-        numPage: $btn.data('page'),
-      });
-    });
-    $(MerchandiseReturnEditPageMap.productsTablePaginationNext).on('click', (event) => {
-      event.preventDefault();
-      const $btn = $(event.currentTarget);
-      if ($btn.hasClass('disabled')) {
-        return;
-      }
-      const activePage = getActivePage();
-      EventEmitter.emit(MerchandiseReturnEditPageMap.productListPaginated, {
-        orderId: $(activePage).data('orderId'),
-        numPage: parseInt($(activePage).html(), 10) + 1,
-      });
-    });
-    $(MerchandiseReturnEditPageMap.productsTablePaginationPrev).on('click', (event) => {
-      event.preventDefault();
-      const $btn = $(event.currentTarget);
-      if ($btn.hasClass('disabled')) {
-        return;
-      }
-      const activePage = getActivePage();
-      EventEmitter.emit(MerchandiseReturnEditPageMap.productListPaginated, {
-        orderId: $(activePage).data('orderId'),
-        numPage: parseInt($(activePage).html(), 10) - 1,
-      });
-    });
-
-    EventEmitter.on(MerchandiseReturnEditPageMap.productListPaginated, (event) => {
-      merchandiseReturnProductRenderer.paginate(event.numPage);
-      listenForProductDelete();
-    });
-  }
-
-  function handleDeleteProductEvent(event) {
-    event.preventDefault();
-
-    const $btn = $(event.currentTarget);
-    const confirmed = window.confirm($btn.data('deleteMessage'));
-    if (!confirmed) {
-      return;
-    }
-
-    $btn.pstooltip('dispose');
-    $btn.prop('disabled', true);
-    deleteProduct($btn.data('merchandiseReturnId'), $btn.data('merchandiseReturnDetailId'));
-  }
-
-  function deleteProduct(merchandiseReturnId, merchandiseReturnDetailId) {
-    const router = new Router();
-    $.ajax(router.generate('admin_merchandise_returns_delete_product', {merchandiseReturnId, merchandiseReturnDetailId}), {
-      method: 'POST',
-    }).then(() => {
-      EventEmitter.emit(MerchandiseReturnEditPageMap.productDeletedFromMerchandiseReturn, {
-        oldOrderDetailId: merchandiseReturnDetailId,
-        merchandiseReturnId,
-      });
-    }, (response) => {
-      if (response.message) {
-        $.growl.error({message: response.message});
-      }
-    });
-  }
-
-  function getActivePage() {
-    return $(MerchandiseReturnEditPageMap.productsTablePagination).find('.active span').get(0);
-  }
+  merchandiseReturnEditPage.listenForProductDelete();
+  merchandiseReturnEditPage.listenForProductPagination();
 });
