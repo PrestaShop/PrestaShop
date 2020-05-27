@@ -35,7 +35,6 @@ use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Product;
 use RuntimeException;
@@ -149,6 +148,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertProductAssignedToDefaultCategory(string $productReference)
     {
+        //@todo: take default category from context.
         $defaultCategoryId = (int) Configuration::get('PS_HOME_CATEGORY');
         $product = $this->getProductByReference($productReference);
         $productCategories = $product->getCategories();
