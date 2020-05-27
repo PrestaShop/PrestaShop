@@ -69,7 +69,7 @@ module.exports = class AddLinkWidget extends BOBasePage {
         default:
           // Do nothing
       }
-      await this.page.click(selector);
+      await this.page.$eval(selector, el => el.click());
     }
     /* eslint-enable no-restricted-syntax */
   }
@@ -96,7 +96,7 @@ module.exports = class AddLinkWidget extends BOBasePage {
         default:
         // Do nothing
       }
-      await this.page.click(selector);
+      await this.page.$eval(selector, el => el.click());
     }
     /* eslint-enable no-restricted-syntax */
   }
@@ -129,7 +129,7 @@ module.exports = class AddLinkWidget extends BOBasePage {
         default:
         // Do nothing
       }
-      await this.page.click(selector);
+      await this.page.$eval(selector, el => el.click());
     }
     /* eslint-enable no-restricted-syntax */
   }
