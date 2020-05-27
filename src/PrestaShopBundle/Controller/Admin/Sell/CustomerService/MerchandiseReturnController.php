@@ -24,14 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -57,6 +59,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param MerchandiseReturnFilters $filters
      *
      * @return Response
+     *
      * @throws Exception
      */
     public function indexAction(Request $request, MerchandiseReturnFilters $filters): Response
@@ -139,7 +142,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Actions')),
             'merchandiseReturnForm' => $form->createView(),
             'editableMerchandiseReturn' => $editableMerchandiseReturn,
-            'merchandiseReturnProductsForViewing' => $productsForViewing
+            'merchandiseReturnProductsForViewing' => $productsForViewing,
         ]);
     }
 
@@ -187,7 +190,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 MerchandiseReturnConstraintException::INVALID_ID => $this->trans(
                     'The object cannot be loaded (the identifier is missing or invalid)',
                     'Admin.Notifications.Error'
-                )
+                ),
             ],
         ];
     }

@@ -39,7 +39,7 @@ class MerchandiseReturnProductForViewing
     private $productId;
 
     /**
-     * @var null|int
+     * @var int|null
      */
     private $orderDetailId;
 
@@ -70,8 +70,7 @@ class MerchandiseReturnProductForViewing
         string $name,
         int $quantity,
         ?OrderProductCustomizationsForViewing $customizations = null
-    )
-    {
+    ) {
         $this->productId = $productId;
         $this->orderDetailId = $orderDetailId;
         $this->reference = $reference;
@@ -89,7 +88,7 @@ class MerchandiseReturnProductForViewing
     }
 
     /**
-     * @return null|int
+     * @return int|null
      */
     public function getOrderDetailId(): ?int
     {

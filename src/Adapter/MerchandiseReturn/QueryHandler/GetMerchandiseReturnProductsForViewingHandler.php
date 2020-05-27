@@ -32,7 +32,6 @@ use Order;
 use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryHandler\GetMerchandiseReturnProductsForViewingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\MerchandiseReturnProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\MerchandiseReturnProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
