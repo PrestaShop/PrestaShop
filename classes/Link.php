@@ -241,7 +241,7 @@ class LinkCore
         
         $anchor = '';
         if ($addAnchor) {
-             $anchor = $ipa ? $product->getAnchor((int) $ipa, (bool) $withIdInAnchor) : '';
+            $anchor = $ipa ? $product->getAnchor((int) $ipa, (bool) $withIdInAnchor) : '';
         }
 
         return $url . $dispatcher->createUrl('product_rule', $idLang, array_merge($params, $extraParams), $force_routes, $anchor, $idShop);
