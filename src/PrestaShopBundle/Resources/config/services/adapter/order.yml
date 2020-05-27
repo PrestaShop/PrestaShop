@@ -159,6 +159,7 @@ services:
     arguments:
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.product.remover'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand

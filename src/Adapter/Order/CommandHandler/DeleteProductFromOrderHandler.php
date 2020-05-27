@@ -40,6 +40,7 @@ use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
@@ -63,12 +64,23 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     private $orderAmountUpdater;
 
     /**
-     * @param ContextStateManager $contextStateManager
+     * @var OrderProductRemover
      */
-    public function __construct(ContextStateManager $contextStateManager, OrderAmountUpdater $orderAmountUpdater)
-    {
+    private $orderProductRemover;
+
+    /**
+     * @param ContextStateManager $contextStateManager
+     * @param OrderAmountUpdater $orderAmountUpdater
+     * @param OrderProductRemover $orderProductRemover
+     */
+    public function __construct(
+        ContextStateManager $contextStateManager,
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderProductRemover $orderProductRemover
+    ) {
         $this->contextStateManager = $contextStateManager;
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderProductRemover = $orderProductRemover;
     }
 
     /**
@@ -78,20 +90,19 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     {
         $orderDetail = new OrderDetail($command->getOrderDetailId());
         $order = new Order($command->getOrderId()->getValue());
-
-        $this->assertProductCanBeDeleted($order, $orderDetail);
-
         $cart = new Cart($order->id_cart);
-
         $this->contextStateManager
-            ->setCart($cart)
-            ->setCurrency(new Currency($order->id_currency))
-            ->setCustomer(new Customer($order->id_customer));
+           ->setCart($cart)
+           ->setCurrency(new Currency($order->id_currency))
+           ->setCustomer(new Customer($order->id_customer));
 
         try {
             $result = true;
+            $this->assertProductCanBeDeleted($order, $orderDetail);
+            $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $orderDetail->product_quantity);
             $oldCartRules = $cart->getCartRules();
-            $result &= $this->updateCart($orderDetail, $cart);
+            CartRule::autoRemoveFromCart();
+            CartRule::autoAddToCart();
             $result &= $this->updateCartRules($order, $oldCartRules, $cart->getCartRules());
             $result &= $this->updateOrderInvoice($orderDetail);
 
@@ -114,29 +125,6 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         }
 
         $this->contextStateManager->restoreContext();
-    }
-
-    /**
-     * @param OrderDetail $orderDetail
-     * @param Cart $cart
-     *
-     * @return bool
-     */
-    private function updateCart(OrderDetail $orderDetail, Cart &$cart)
-    {
-        // Update Product Quantity in the cart
-        $cart->updateQty(
-            $orderDetail->product_quantity,
-            $orderDetail->product_id,
-            $orderDetail->product_attribute_id,
-            false,
-            'down'
-        );
-        // Remove & Add CartRules applied to cart
-        CartRule::autoRemoveFromCart();
-        CartRule::autoAddToCart();
-
-        return $cart->update();
     }
 
     /**
