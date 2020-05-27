@@ -65,6 +65,7 @@ npm-debug.log.*
 
 # Upload
 /upload/*
+!/upload/index.php
 !/upload/.htaccess
 
 /vendor/*
