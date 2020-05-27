@@ -238,7 +238,6 @@ class LinkCore
         if ($ipa) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
-        
         $anchor = '';
         if ($addAnchor) {
             $anchor = $ipa ? $product->getAnchor((int) $ipa, (bool) $withIdInAnchor) : '';
