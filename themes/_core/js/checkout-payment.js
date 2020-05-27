@@ -22,7 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery'
+import $ from 'jquery';
+import prestashop from 'prestashop';
 
 class Payment {
   constructor() {
@@ -70,6 +71,10 @@ class Payment {
       }
     });
 
+    prestashop.emit('termsUpdated', {
+      isChecked: show
+    });
+
     this.collapseOptions();
 
     var selectedOption = this.getSelectedOption();
@@ -81,6 +86,7 @@ class Payment {
     $('#pay-with-' + selectedOption + '-form').show();
 
     $('.js-payment-binary').hide();
+
     if ($('#' + selectedOption).hasClass('binary')) {
       var paymentOption = this.getPaymentOptionSelector(selectedOption);
       this.hideConfirmation();
@@ -118,7 +124,7 @@ class Payment {
   }
 }
 
-export default function () {
+export default function() {
   let payment = new Payment();
   payment.init();
 
