@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class MerchandiseReturnProductForViewing
@@ -38,7 +39,7 @@ class MerchandiseReturnProductForViewing
     private $productId;
 
     /**
-     * @var int
+     * @var null|int
      */
     private $orderDetailId;
 
@@ -57,12 +58,18 @@ class MerchandiseReturnProductForViewing
      */
     private $quantity;
 
+    /**
+     * @var OrderProductCustomizationsForViewing|null
+     */
+    private $customizations;
+
     public function __construct(
         ProductId $productId,
-        int $orderDetailId,
+        ?int $orderDetailId,
         string $reference,
         string $name,
-        int $quantity
+        int $quantity,
+        ?OrderProductCustomizationsForViewing $customizations = null
     )
     {
         $this->productId = $productId;
@@ -70,6 +77,7 @@ class MerchandiseReturnProductForViewing
         $this->reference = $reference;
         $this->name = $name;
         $this->quantity = $quantity;
+        $this->customizations = $customizations;
     }
 
     /**
@@ -81,9 +89,9 @@ class MerchandiseReturnProductForViewing
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getOrderDetailId(): int
+    public function getOrderDetailId(): ?int
     {
         return $this->orderDetailId;
     }
@@ -110,5 +118,13 @@ class MerchandiseReturnProductForViewing
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    /**
+     * @return OrderProductCustomizationsForViewing|null
+     */
+    public function getCustomizations(): ?OrderProductCustomizationsForViewing
+    {
+        return $this->customizations;
     }
 }
