@@ -164,8 +164,8 @@ module.exports = class Addresses extends BOBasePage {
   async deleteAddressesBulkActions() {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
