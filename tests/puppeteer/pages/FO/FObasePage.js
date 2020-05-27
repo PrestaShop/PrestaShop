@@ -116,10 +116,12 @@ module.exports = class Home extends CommonPage {
 
   /**
    * Change currency in FO
-   * @param currency
+   * @param isoCode
+   * @param symbol
    * @return {Promise<void>}
    */
-  async changeCurrency(currency = 'EUR €') {
+  async changeCurrency(isoCode = 'EUR', symbol = '€') {
+    const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
     await Promise.all([
       this.selectByVisibleText(this.currencySelect, currency),
       this.page.waitForNavigation({waitUntil: 'networkidle0'}),

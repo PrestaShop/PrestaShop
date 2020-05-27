@@ -22,6 +22,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_international_localization_currencies_CreateUnofficialCurrency';
 
 let browser;
+let browserContext;
 let page;
 let numberOfCurrencies = 0;
 
@@ -47,7 +48,8 @@ describe('Create unofficial currency and check it in FO', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
-    page = await helper.newTab(browser);
+    browserContext = await helper.createBrowserContext(browser);
+    page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });
@@ -140,10 +142,10 @@ describe('Create unofficial currency and check it in FO', async () => {
       this.pageObjects = await init();
 
       // Check currency in FO
-      await this.pageObjects.foBasePage.changeCurrency(`${Currencies.toman.isoCode} ${Currencies.toman.symbol}`);
+      await this.pageObjects.foBasePage.changeCurrency(Currencies.toman.isoCode, Currencies.toman.symbol);
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 1);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
 
@@ -200,7 +202,7 @@ describe('Create unofficial currency and check it in FO', async () => {
       let textError = '';
 
       try {
-        await this.pageObjects.foBasePage.changeCurrency(`${Currencies.toman.isoCode} ${Currencies.toman.symbol}`);
+        await this.pageObjects.foBasePage.changeCurrency(Currencies.toman.isoCode, Currencies.toman.symbol);
       } catch (e) {
         textError = e.toString();
       }
@@ -210,7 +212,7 @@ describe('Create unofficial currency and check it in FO', async () => {
       );
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browser, 1);
+      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
       this.pageObjects = await init();
     });
 
