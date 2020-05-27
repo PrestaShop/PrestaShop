@@ -136,10 +136,11 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Creates a HookEvent, sets its parameters, and dispatches it.
      *
-     * Wrapper to: @see HookDispatcher::dispatchWithParameters()
+     * Wrapper to: @param string $hookName The hook name
      *
-     * @param string $hookName The hook name
      * @param array $parameters The hook parameters
+     *
+     * @see HookDispatcher::dispatchWithParameters()
      */
     protected function dispatchHook($hookName, array $parameters)
     {
@@ -149,14 +150,15 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Creates a RenderingHookEvent, sets its parameters, and dispatches it. Returns the event with the response(s).
      *
-     * Wrapper to: @see HookDispatcher::renderForParameters()
+     * Wrapper to: @param string $hookName The hook name
      *
-     * @param string $hookName The hook name
      * @param array $parameters The hook parameters
      *
      * @return array The responses of hooks
      *
      * @throws Exception
+     *
+     * @see HookDispatcher::renderForParameters()
      */
     protected function renderHook($hookName, array $parameters)
     {
@@ -530,6 +532,10 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Adds a new stylesheet(s) to the page header.
      *
+     * Warning: this implementation will be broken when layout is migrated
+     * from legacy to Symfony as it relies on the layout being managed
+     * by a legacy controller
+     *
      * @param string|array $cssUri Path to CSS file, or list of css files like this : array(array(uri => media_type), ...)
      * @param string $cssMediaType
      * @param int|null $offset
@@ -541,6 +547,10 @@ class FrameworkBundleAdminController extends Controller
         $offset = null,
         $checkPath = true): void
     {
+        if (null === $this->getContext()->controller) {
+            throw new \RuntimeException('No context controller available');
+        }
+
         $this->getContext()->controller->addCSS(
             $cssUri, $cssMediaType, $offset, $checkPath
         );
@@ -549,11 +559,19 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Adds a new JavaScript file(s) to the page header.
      *
+     * Warning: this implementation will be broken when layout is migrated
+     * from legacy to Symfony as it relies on the layout being managed
+     * by a legacy controller
+     *
      * @param string|array $jsUri Path to JS file or an array like: array(uri, ...)
      * @param bool $checkPath
      */
     public function addJS($jsUri, $checkPath = true): void
     {
+        if (null === $this->getContext()->controller) {
+            throw new \RuntimeException('No context controller available');
+        }
+
         $this->getContext()->controller->addJS(
             $jsUri, $checkPath
         );
@@ -562,12 +580,20 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Removes CSS stylesheet(s) from the queued stylesheet list.
      *
+     * Warning: this implementation will be broken when layout is migrated
+     * from legacy to Symfony as it relies on the layout being managed
+     * by a legacy controller
+     *
      * @param string|array $cssUri Path to CSS file or an array like: array(array(uri => media_type), ...)
      * @param string $cssMediaType
      * @param bool $checkPath
      */
     public function removeCSS($cssUri, $cssMediaType = 'all', bool $checkPath = true): void
     {
+        if (null === $this->getContext()->controller) {
+            throw new \RuntimeException('No context controller available');
+        }
+
         $this->getContext()->controller->removeCSS(
             $cssUri, $cssMediaType, $checkPath
         );
@@ -576,11 +602,19 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Removes JS file(s) from the queued JS file list.
      *
+     * Warning: this implementation will be broken when layout is migrated
+     * from legacy to Symfony as it relies on the layout being managed
+     * by a legacy controller
+     *
      * @param string|array $jsUri Path to JS file or an array like: array(uri, ...)
      * @param bool $checkPath
      */
     public function removeJS($jsUri, $checkPath = true): void
     {
+        if (null === $this->getContext()->controller) {
+            throw new \RuntimeException('No context controller available');
+        }
+
         $this->getContext()->controller->removeJS($jsUri, $checkPath);
     }
 }
