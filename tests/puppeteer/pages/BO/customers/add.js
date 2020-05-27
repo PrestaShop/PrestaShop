@@ -87,7 +87,7 @@ module.exports = class AddCustomer extends BOBasePage {
   async changeCheckboxValue(checkboxSelector, valueWanted = true) {
     if (valueWanted !== (await this.isCheckboxSelected(checkboxSelector))) {
       // The selector is not visible, that why '+ i' is required here
-      await this.page.click(`${checkboxSelector} + i`);
+      await this.page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
   }
 };

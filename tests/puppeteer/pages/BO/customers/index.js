@@ -151,7 +151,7 @@ module.exports = class Customers extends BOBasePage {
    */
   async updateToggleColumnValue(row, column, valueWanted = true) {
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      await this.clickAndWaitForNavigation(this.customersListTableColumn(row, column));
+      await this.clickAndWaitForNavigation(`${this.customersListTableColumn(row, column)} i`);
       return true;
     }
     return false;
@@ -260,8 +260,8 @@ module.exports = class Customers extends BOBasePage {
   async deleteCustomersBulkActions(allowRegistrationAfterDelete = true) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
@@ -299,8 +299,8 @@ module.exports = class Customers extends BOBasePage {
   async changeCustomersEnabledColumnBulkActions(enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
@@ -340,7 +340,7 @@ module.exports = class Customers extends BOBasePage {
     await this.waitForSelectorAndClick(this.setRequiredFieldsButton);
     const isCheckboxSelected = await this.isCheckboxSelected(this.requiredFieldCheckBox(id));
     if (valueWanted !== isCheckboxSelected) {
-      await this.page.click(`${this.requiredFieldCheckBox(id)}+ i`);
+      await this.page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
     }
     await this.waitForSelectorAndClick(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
@@ -349,17 +349,20 @@ module.exports = class Customers extends BOBasePage {
   // Export methods
   /**
    * Click on link to export customers to a csv file
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
   async exportDataToCsv() {
     await Promise.all([
       this.page.click(this.customerGridActionsButton),
       this.waitForVisibleSelector(`${this.gridActionDropDownMenu}.show`),
     ]);
-    await Promise.all([
+
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'),
       this.page.click(this.gridActionExportLink),
       this.page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
     ]);
+    return download.path();
   }
 
   /**

@@ -21,6 +21,7 @@ let browser;
 let browserContext;
 let page;
 let numberOfCustomers = 0;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -42,7 +43,6 @@ describe('Export customers', async () => {
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();
   });
@@ -76,8 +76,8 @@ describe('Export customers', async () => {
   it('should export customers to a csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'exportCustomers', baseContext);
 
-    await this.pageObjects.customersPage.exportDataToCsv();
-    const doesFileExist = await files.doesFileExist('customer_', 5000, true, 'csv');
+    filePath = await this.pageObjects.customersPage.exportDataToCsv();
+    const doesFileExist = await files.doesFileExist(filePath, 5000);
     await expect(doesFileExist, 'Export of data has failed').to.be.true;
   });
 
@@ -86,14 +86,10 @@ describe('Export customers', async () => {
 
     numberOfCustomers = await this.pageObjects.customersPage.getNumberOfElementInGrid();
 
-    const fileName = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'customer_', '.csv');
-
     for (let row = 1; row <= numberOfCustomers; row++) {
       const customerInCsvFormat = await this.pageObjects.customersPage.getCustomerInCsvFormat(row);
-      const textExist = await files.isTextInFile(fileName, customerInCsvFormat, true);
+      const textExist = await files.isTextInFile(filePath, customerInCsvFormat, true);
       await expect(textExist, `${customerInCsvFormat} was not found in the file`).to.be.true;
     }
-
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${fileName}`);
   });
 });
