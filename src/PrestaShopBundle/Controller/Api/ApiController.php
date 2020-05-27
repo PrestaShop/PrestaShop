@@ -29,13 +29,14 @@ namespace PrestaShopBundle\Controller\Api;
 use Exception;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-abstract class ApiController
+abstract class ApiController extends Controller
 {
     /**
      * @var LoggerInterface
@@ -55,7 +56,7 @@ abstract class ApiController
      */
     protected $container;
 
-    public function setContainer(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
@@ -197,16 +198,16 @@ abstract class ApiController
     /**
      * Checks if access is granted.
      *
-     * @param array $accessLevel
-     * @param string $controller name of the controller
+     * @param array $attributes
+     * @param string $subject name of the controller
      *
      * @return bool
      */
-    protected function isGranted(array $accessLevel, $controller)
+    protected function isGranted($attributes, $subject = null)
     {
         return $this->container->get('security.authorization_checker')->isGranted(
-            $accessLevel,
-            $controller . '_'
+            $attributes,
+            $subject . '_'
         );
     }
 }

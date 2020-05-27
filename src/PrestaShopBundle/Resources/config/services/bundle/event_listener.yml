@@ -101,3 +101,10 @@ services:
           - '@logger'
         tags:
           - { name: kernel.event_subscriber }
+
+    prestashop.bundle.controller_stack:
+        class: PrestaShopBundle\EventListener\ControllerListener
+        arguments:
+          - '@prestashop.bundle.routing.controller_stack'
+        tags:
+          - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

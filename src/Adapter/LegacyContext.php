@@ -244,7 +244,7 @@ class LegacyContext
         );
 
         if (null !== $previousContextController) {
-            $this->preserveCssAndJSAssets($previousContextController, $originCtrl);
+            $this->transferCssAndJSAssets($previousContextController, $originCtrl);
         }
 
         $originCtrl->run();
@@ -362,7 +362,7 @@ class LegacyContext
      * @param Controller $previousContextController
      * @param AdminLegacyLayoutControllerCore $originCtrl
      */
-    private function preserveCssAndJSAssets($previousContextController, AdminLegacyLayoutControllerCore $originCtrl): void
+    private function transferCssAndJSAssets($previousContextController, AdminLegacyLayoutControllerCore $originCtrl): void
     {
         if (!empty($previousContextController->js_files)) {
             array_map(function ($jsAsset) use ($originCtrl) {
