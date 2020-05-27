@@ -30,9 +30,9 @@ namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Entity\OrderReturn;
 use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\DeleteProductFromMerchandiseReturnHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnDetailException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 
 class DeleteProductFromMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler implements DeleteProductFromMerchandiseReturnHandlerInterface
 {

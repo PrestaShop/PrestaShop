@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\MerchandiseReturnProductForViewing;
-
 class MerchandiseReturnProductsForViewing
 {
     /**
