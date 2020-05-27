@@ -32,12 +32,12 @@ use Language;
 use Link;
 use PrestaShop\Decimal\Number;
 use PrestaShop\Decimal\Operation\Rounding;
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use Product;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -585,26 +585,33 @@ class ProductLazyArray extends AbstractLazyArray
         array $product,
         Language $language
     ) {
+        // Get filtered product images matching the specified id_product_attribute
         $this->product['images'] = $this->imageRetriever->getProductImages(
             $product,
             $language
         );
 
-        if (isset($product['id_product_attribute'])) {
+        if (isset($product['cover_image_id'])) {
+            $coverImage = $this->imageRetriever->getImage(new Product($product['id_product']), $product['cover_image_id']);
+            $this->product['cover'] = array_merge($coverImage, [
+                'legend' => $coverImage['legend'][$language->getId()],
+            ]);
+        }
+
+        if (!isset($this->product['cover'])) {
+            $this->product['cover'] = null;
             foreach ($this->product['images'] as $image) {
+                // At least select the first product image
+                if (null === $this->product['cover']) {
+                    $this->product['cover'] = $image;
+                }
+
+                // If one of the image is a cover it is used as such
                 if (isset($image['cover']) && null !== $image['cover']) {
                     $this->product['cover'] = $image;
 
                     break;
                 }
-            }
-        }
-
-        if (!isset($this->product['cover'])) {
-            if (count($this->product['images']) > 0) {
-                $this->product['cover'] = array_values($this->product['images'])[0];
-            } else {
-                $this->product['cover'] = null;
             }
         }
     }

@@ -199,6 +199,7 @@ class ImageRetriever
             'medium' => $medium,
             'large' => $large,
             'legend' => isset($object->meta_title) ? $object->meta_title : $object->name,
+            'id_image' => $id_image,
         ];
     }
 
