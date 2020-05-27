@@ -576,7 +576,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
         /** @var $cartRule EditableCartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
-        if (!$cartRule->isEnabled() === true) {
+        if (!$cartRule->getInformation()->isEnabled() === true) {
             throw new RuntimeException(sprintf('Cart rule %s is not disabled', $cartRuleReference));
         }
     }
@@ -594,7 +594,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
         /** @var $cartRule EditableCartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
-        if (!$cartRule->isEnabled() === false) {
+        if (!$cartRule->getInformation()->isEnabled() === false) {
             throw new RuntimeException(sprintf('Cart rule %s is not enabled', $cartRuleReference));
         }
     }
