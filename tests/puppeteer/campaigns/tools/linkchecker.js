@@ -61,7 +61,6 @@ describe('Crawl every page for defects and issues', async () => {
         response.request().url(),
         response.status().toString(),
       );
-
     });
 
     // Intercepts JS errors
@@ -72,9 +71,7 @@ describe('Crawl every page for defects and issues', async () => {
       outputEntry.jsError.push({
         error: javascriptTextError,
       });
-
     });
-
   });
 
 
@@ -144,9 +141,7 @@ async function checkResponseStatus(url, status) {
     requestTextError = `Request error : ${url} (${status}`;
 
     outputEntry.failed.push({url, status});
-
   } else if (JSON.parse(LOG_PASSED) === true) {
     outputEntry.passed.push({url, status});
   }
-
 }

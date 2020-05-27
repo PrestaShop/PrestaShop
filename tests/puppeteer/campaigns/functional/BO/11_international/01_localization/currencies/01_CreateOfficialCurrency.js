@@ -142,7 +142,7 @@ describe('Create official currency and check it in FO', async () => {
       this.pageObjects = await init();
 
       // Check currency
-      await this.pageObjects.foBasePage.changeCurrency(`${Currencies.mad.isoCode} ${Currencies.mad.symbol}`);
+      await this.pageObjects.foBasePage.changeCurrency(Currencies.mad.isoCode, Currencies.mad.symbol);
 
       // Go back to BO
       page = await this.pageObjects.foBasePage.closePage(browser, 1);
@@ -203,13 +203,13 @@ describe('Create official currency and check it in FO', async () => {
       let textError = '';
 
       try {
-        await this.pageObjects.foBasePage.changeCurrency(`${Currencies.mad.isoCode} ${Currencies.mad.symbol}`);
+        await this.pageObjects.foBasePage.changeCurrency(Currencies.mad.isoCode, Currencies.mad.symbol);
       } catch (e) {
         textError = e.toString();
       }
 
       await expect(textError).to.contains(
-        `${Currencies.mad.isoCode} ${Currencies.mad.symbol} was not found as option of select`,
+        `${Currencies.mad.isoCode} was not found as option of select`,
       );
 
       // Go back to BO
