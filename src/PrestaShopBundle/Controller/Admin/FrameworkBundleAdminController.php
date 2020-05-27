@@ -535,7 +535,7 @@ class FrameworkBundleAdminController extends Controller
      * @param int|null $offset
      * @param bool $checkPath
      */
-    protected function addCSS(
+    public function addCSS(
         $cssUri,
         $cssMediaType = 'all',
         $offset = null,
@@ -552,7 +552,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string|array $jsUri Path to JS file or an array like: array(uri, ...)
      * @param bool $checkPath
      */
-    protected function addJS($jsUri, $checkPath = true): void
+    public function addJS($jsUri, $checkPath = true): void
     {
         $this->getContext()->controller->addJS(
             $jsUri, $checkPath
@@ -566,7 +566,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string $cssMediaType
      * @param bool $checkPath
      */
-    protected function removeCSS($cssUri, $cssMediaType = 'all', bool $checkPath = true): void
+    public function removeCSS($cssUri, $cssMediaType = 'all', bool $checkPath = true): void
     {
         $this->getContext()->controller->removeCSS(
             $cssUri, $cssMediaType, $checkPath
@@ -579,7 +579,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string|array $jsUri Path to JS file or an array like: array(uri, ...)
      * @param bool $checkPath
      */
-    protected function removeJS($jsUri, $checkPath = true): void
+    public function removeJS($jsUri, $checkPath = true): void
     {
         $this->getContext()->controller->removeJS($jsUri, $checkPath);
     }

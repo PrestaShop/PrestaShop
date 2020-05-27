@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.routing.controller_stack:
+    class: 'PrestaShop\PrestaShop\Core\Routing\ControllerStack'
