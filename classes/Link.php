@@ -127,8 +127,9 @@ class LinkCore
      * @param int|null $ipa ID product attribute
      * @param bool $force_routes
      * @param bool $relativeProtocol
-     * @param bool $addAnchor
+     * @param bool $addAnchor Either add or not # with combination informations after an URL
      * @param array $extraParams
+     * @param bool $withIdInAnchor Add or not id_attribute in combination anchor
      *
      * @return string
      */
