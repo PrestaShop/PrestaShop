@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult;
 
+use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnStateId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use DateTime;
 
 class EditableMerchandiseReturn
 {
@@ -21,7 +21,6 @@ class EditableMerchandiseReturn
      * @var CustomerId
      */
     private $customerId;
-
 
     /**
      * @var string
@@ -62,8 +61,7 @@ class EditableMerchandiseReturn
         DateTime $orderDate,
         MerchandiseReturnStateId $merchandiseReturnStateId,
         string $question
-    )
-    {
+    ) {
         $this->merchandiseReturnId = $merchandiseReturnId;
         $this->customerId = $customerId;
         $this->customerFirstName = $customerFirstName;
