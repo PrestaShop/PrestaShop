@@ -94,4 +94,18 @@ export default class MerchandiseReturnProductRenderer {
       totalPage <= 1,
     );
   }
+
+  paginationRemovePage(numPage) {
+    const $tablePagination = $(MerchandiseReturnEditPageMap.productsTablePagination);
+    const numPages = $tablePagination.data('numPages');
+    $tablePagination.data('numPages', numPages - 1);
+    $(MerchandiseReturnEditPageMap.productsTablePagination)
+      .find(`li:has(> [data-page="${numPage}"])`)
+      .remove();
+    this.togglePaginationControls();
+  }
+
+  updateNumProducts(numProducts) {
+    $(MerchandiseReturnEditPageMap.productsCount).html(numProducts);
+  }
 }
