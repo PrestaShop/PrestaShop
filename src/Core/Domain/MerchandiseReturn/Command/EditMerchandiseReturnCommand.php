@@ -79,6 +79,7 @@ class EditMerchandiseReturnCommand
     public function setMerchandiseReturnStateId(MerchandiseReturnStateId $merchandiseReturnStateId): EditMerchandiseReturnCommand
     {
         $this->merchandiseReturnStateId = $merchandiseReturnStateId;
+
         return $this;
     }
 }

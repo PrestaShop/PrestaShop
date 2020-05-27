@@ -41,7 +41,6 @@ use PrestaShopException;
  */
 abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandler
 {
-
     /**
      * @param MerchandiseReturnId $merchandiseReturnId
      * @param OrderReturn $orderReturn
