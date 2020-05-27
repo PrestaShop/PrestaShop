@@ -68,13 +68,14 @@ final class MerchandiseReturnFormDataHandler implements FormDataHandlerInterface
      * @param array $data
      *
      * @return EditMerchandiseReturnCommand
+     *
      * @throws \PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnOrderStateConstraintException
      */
     private function buildMerchandiseReturnEditCommand(MerchandiseReturnId $merchandiseReturnId, array $data): EditMerchandiseReturnCommand
     {
         $merchandiseReturnStateId = new MerchandiseReturnStateId((int) $data['merchandise_return_order_state']);
         $command = (new EditMerchandiseReturnCommand($merchandiseReturnId))
-          ->setMerchandiseReturnStateId($merchandiseReturnStateId)
+            ->setMerchandiseReturnStateId($merchandiseReturnStateId)
         ;
 
         return $command;
