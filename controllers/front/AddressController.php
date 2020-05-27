@@ -76,8 +76,6 @@ class AddressControllerCore extends FrontController
 
                 $this->should_redirect = true;
             }
-
-            return;
         }
 
         // There is no id_adress, no need to continue
