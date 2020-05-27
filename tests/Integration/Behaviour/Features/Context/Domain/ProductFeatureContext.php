@@ -148,9 +148,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertProductAssignedToDefaultCategory(string $productReference)
     {
-        //@todo: take default category from context.
         $context = $this->getContainer()->get('prestashop.adapter.legacy.context')->getContext();
-        $defaultCategoryId = $context->shop->id_category;
+        $defaultCategoryId = (int) $context->shop->id_category;
         $product = $this->getProductByReference($productReference);
         $productCategories = $product->getCategories();
 
