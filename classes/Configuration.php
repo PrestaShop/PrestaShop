@@ -255,7 +255,7 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
-     * @deprecated use Configuration::getConfigInMultipleLangs() instead.
+     * @deprecated use Configuration::getConfigInMultipleLangs() instead
      */
     public static function getInt($key, $idShopGroup = null, $idShop = null)
     {
