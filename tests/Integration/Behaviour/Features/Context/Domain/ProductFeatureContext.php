@@ -75,7 +75,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
 
         try {
-            /** @var ProductId $productId */
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
                 [$defaultLangId => $data['name']],
                 $this->getProductTypeValueByName($data['type'])
@@ -93,12 +92,12 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param string $productReference
      * @param string $name
      */
-    private function assertProductNameInDefaultLang(string $productReference, string $name)
+    public function assertProductNameInDefaultLang(string $productReference, string $name)
     {
         $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
         $product = $this->getProductByReference($productReference);
 
-        if ($product->name[$defaultLangId] !== $name) {
+        if ($product->name[$defaultLangId] === $name) {
             return;
         }
 
@@ -126,7 +125,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $status = PrimitiveUtils::castStringBooleanIntoBoolean($data['active']);
             $statusInWords = $status ? 'enabled' : 'disabled';
 
-            if ($product->active !== $status) {
+            if ((bool) $product->active !== $status) {
                 throw new RuntimeException(sprintf('Product expected to be %s', $statusInWords));
             }
         }
@@ -152,9 +151,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $defaultCategoryId = (int) Configuration::get('PS_HOME_CATEGORY');
         $product = $this->getProductByReference($productReference);
+        $productCategories = $product->getCategories();
 
-        if ($product->category !== $defaultCategoryId || $product->id_category_default !== $defaultCategoryId) {
-            throw new RuntimeException('Product is not assigned to default category');
+        foreach ($productCategories as $categoryId) {
+            if ((int) $categoryId === $defaultCategoryId) {
+                break;
+            }
+
+            throw new RuntimeException('Product categories relation does not contain default category');
+        }
+
+        if ((int) $product->id_category_default !== $defaultCategoryId) {
+            throw new RuntimeException('Default category is not assigned to product');
         }
     }
 
@@ -246,7 +254,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     private function getProductById(int $productId): Product
     {
-        $product = new Product($productId->getValue());
+        $product = new Product($productId);
 
         if (!$product->id) {
             throw new RuntimeException('Product with id "%s" was not found');
