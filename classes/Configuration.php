@@ -277,7 +277,7 @@ class ConfigurationCore extends ObjectModel
         foreach (Language::getIDs() as $idLang) {
             $resultsArray[$idLang] = Configuration::get($key, $idLang, $idShopGroup, $idShop);
         }
-        
+
         return $resultsArray;
     }
 
