@@ -255,6 +255,14 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
+     * @deprecated use Configuration::getConfigInMultipleLangs() instead.
+     */
+    public static function getInt($key, $idShopGroup = null, $idShop = null)
+    {
+        return self::getConfigInMultipleLangs($key, $idShopGroup, $idShop);
+    }
+
+    /**
      * Get a single configuration value (in multiple languages).
      *
      * @param string $key Configuration Key
@@ -263,13 +271,13 @@ class ConfigurationCore extends ObjectModel
      *
      * @return array Values in multiple languages
      */
-    public static function getInt($key, $idShopGroup = null, $idShop = null)
+    public static function getConfigInMultipleLangs($key, $idShopGroup = null, $idShop = null)
     {
         $resultsArray = [];
         foreach (Language::getIDs() as $idLang) {
             $resultsArray[$idLang] = Configuration::get($key, $idLang, $idShopGroup, $idShop);
         }
-
+        
         return $resultsArray;
     }
 
