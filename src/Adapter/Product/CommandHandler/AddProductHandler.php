@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use Category;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -90,7 +91,7 @@ final class AddProductHandler implements AddProductHandlerInterface
         $product = new Product();
         $product->name = $command->getLocalizedNames();
         $product->active = false;
-        $product->category = $this->defaultCategoryId;
+        $product->category = Category::getLinkRewrite($this->defaultCategoryId, $this->defaultLangId);
         $product->id_category_default = $this->defaultCategoryId;
 
         if ($command->getType() === ProductType::TYPE_VIRTUAL) {
