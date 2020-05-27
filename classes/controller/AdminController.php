@@ -2366,7 +2366,6 @@ class AdminControllerCore extends Controller
             ]);
         }
 
-
         $this->context->smarty->assign([
             'img_base_path' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
             'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
