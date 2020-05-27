@@ -339,31 +339,11 @@ export default class ProductManager {
    * @private
    */
   updateStockOnProductAdd() {
-    const wantedQty = Number($(createOrderMap.quantityInput).val());
-    const productKeys = Object.keys(this.products);
-    const productValues = Object.values(this.products);
+    const {productId} = this.selectedProduct;
+    const attributeId = this.selectedCombinationId;
+    const qty = -Number($(createOrderMap.quantityInput).val());
 
-    for (let i = 0; i < productKeys.length; i += 1) {
-      if (productValues[i].productId === this.selectedProduct.productId) {
-        // Update the stock value of "the added product" in products object
-        productValues[i].stock = Number(productValues[i].stock) - wantedQty;
-
-        if (this.selectedProduct.combinations.length !== 0) {
-          const combinationId = this.selectedCombinationId;
-
-          // Update the stock also for combination
-          const combinationValue = Number(productValues[i].combinations[combinationId].stock) - wantedQty;
-          productValues[i].combinations[combinationId].stock = combinationValue;
-
-          // Update the stock counter
-          this.productRenderer.renderStock(productValues[i].combinations[combinationId].stock);
-        } else {
-          // Update the stock counter
-          this.productRenderer.renderStock(productValues[i].stock);
-        }
-        break;
-      }
-    }
+    this.updateStock(productId, attributeId, qty);
   }
 
   /**
@@ -373,30 +353,9 @@ export default class ProductManager {
    */
   updateStockOnProductRemove(product) {
     const {productId, attributeId, qtyToRemove} = product;
-    const productKeys = Object.keys(this.products);
-    const productValues = Object.values(this.products);
+    const qty = qtyToRemove;
 
-    for (let i = 0; i < productKeys.length; i += 1) {
-      if (productValues[i].productId === productId) {
-        // Update the stock value of "the removed product" in products object
-        productValues[i].stock = Number(productValues[i].stock) + qtyToRemove;
-        if (attributeId && attributeId > 0) {
-          // Update the stock also for combination */
-          const combinationValue = Number(productValues[i].combinations[attributeId].stock) + qtyToRemove;
-          productValues[i].combinations[attributeId].stock = combinationValue;
-        }
-        // Update the stock counter if "the updated product" is the selected product
-        if (this.selectedProduct.productId === productId) {
-          // Update the stock counter if "the updated product combination" is the selected combination
-          if (attributeId && Number(this.selectedCombinationId) === attributeId) {
-            this.productRenderer.renderStock(productValues[i].combinations[attributeId].stock);
-          } else {
-            this.productRenderer.renderStock(productValues[i].stock);
-          }
-        }
-        break;
-      }
-    }
+    this.updateStock(productId, attributeId, qty);
   }
 
   /**
@@ -408,25 +367,36 @@ export default class ProductManager {
     const {
       productId, attributeId, prevQty, newQty,
     } = product;
+    const qty = prevQty - newQty;
+
+    this.updateStock(productId, attributeId, qty);
+  }
+
+  /**
+   * Updates the stock in products object and renders the new stock
+   *
+   * @private
+   */
+  updateStock(productId, attributeId, qty) {
     const productKeys = Object.keys(this.products);
     const productValues = Object.values(this.products);
 
     for (let i = 0; i < productKeys.length; i += 1) {
       if (productValues[i].productId === productId) {
-        // Update the stock value of "the updated product" in products object
-        productValues[i].stock = Number(productValues[i].stock) - newQty + prevQty;
+        // Update the stock value  in products object
+        productValues[i].stock += qty;
+
+        // Update the stock also for combination */
         if (attributeId && attributeId > 0) {
-          // Update the stock also for combination */
-          const combinationValue = Number(productValues[i].combinations[attributeId].stock) - newQty + prevQty;
-          productValues[i].combinations[attributeId].stock = combinationValue;
+          productValues[i].combinations[attributeId].stock += qty;
         }
-        // Update the stock counter if "the updated product" is the selected product
+
+        // Render the new stock value
         if (this.selectedProduct.productId === productId) {
-          // Update the stock counter if "the updated product combination" is the selected combination
-          if (attributeId && Number(this.selectedCombinationId) === attributeId) {
-            this.productRenderer.renderStock(productValues[i].combinations[attributeId].stock);
-          } else {
+          if (this.selectedProduct.combinations.length === 0) {
             this.productRenderer.renderStock(productValues[i].stock);
+          } else if (attributeId && Number(this.selectedCombinationId) === Number(attributeId)) {
+            this.productRenderer.renderStock(productValues[i].combinations[attributeId].stock);
           }
         }
         break;
