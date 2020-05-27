@@ -107,7 +107,7 @@ final class AddProductHandler implements AddProductHandlerInterface
                         'Invalid localized product name for language with id "%s"',
                         $langId
                     ),
-                    ProductConstraintException::INVALID_NAME,
+                    ProductConstraintException::INVALID_NAME
                 );
             }
         }
