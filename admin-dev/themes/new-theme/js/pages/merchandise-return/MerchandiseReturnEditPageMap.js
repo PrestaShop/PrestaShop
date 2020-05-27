@@ -23,6 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/* eslint-disable max-len */
+
 export default {
   productsTable: '#merchandiseReturnProductsTable',
   productDeleteBtn: '.js-merchandise-return-product-delete-btn',
@@ -35,5 +37,5 @@ export default {
   productsTablePaginationActive: '#merchandiseReturnProductsTablePagination .page-item.active span',
   productsTablePaginationTemplate: '#merchandiseReturnProductsTablePagination .page-item.d-none',
   productsTableCustomizationRows: '#merchandiseReturnProductsTable .merchandise-return-product-customization',
-
+  productsTableRow: (productId) => `#merchandiseReturnProduct_${productId}`,
 };
