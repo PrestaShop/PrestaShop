@@ -219,6 +219,10 @@ class ModuleDataProvider
         }
 
         $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+        $log_context_data = [
+            'object_type' => 'Module',
+            'object_id' => LegacyModule::getModuleIdByName($name),
+        ];
 
         try {
             $parser->parse(file_get_contents($file_path));
@@ -231,7 +235,7 @@ class ModuleDataProvider
                         '%parse_error%' => $exception->getMessage(),
                     ],
                     'Admin.Modules.Notification'
-                )
+                ), $log_context_data
             );
 
             return false;
@@ -254,7 +258,7 @@ class ModuleDataProvider
                             '%module%' => $name,
                             '%error_message%' => $e->getMessage(), ],
                         'Admin.Modules.Notification'
-                    )
+                    ), $log_context_data
                 );
 
                 return false;

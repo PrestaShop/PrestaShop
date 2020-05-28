@@ -1,14 +1,17 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const CategoriesPage = require('@pages/BO/catalog/categories');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_categories_sortCategories';
@@ -20,7 +23,6 @@ let numberOfCategories = 0;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     categoriesPage: new CategoriesPage(page),
@@ -33,8 +35,10 @@ describe('Sort Categories', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
@@ -44,17 +48,21 @@ describe('Sort Categories', async () => {
 
   it('should go to categories page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.categoriesLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.categoriesLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.categoriesPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
     numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
     await expect(numberOfCategories).to.be.above(0);
   });
@@ -101,14 +109,20 @@ describe('Sort Categories', async () => {
   tests.forEach((test) => {
     it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
       let nonSortedTable = await this.pageObjects.categoriesPage.getAllRowsColumnContent(test.args.sortBy);
+
       await this.pageObjects.categoriesPage.sortTable(test.args.sortBy, test.args.sortDirection);
+
       let sortedTable = await this.pageObjects.categoriesPage.getAllRowsColumnContent(test.args.sortBy);
+
       if (test.args.isFloat) {
         nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
         sortedTable = await sortedTable.map(text => parseFloat(text));
       }
+
       const expectedResult = await this.pageObjects.categoriesPage.sortArray(nonSortedTable, test.args.isFloat);
+
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);
       } else {

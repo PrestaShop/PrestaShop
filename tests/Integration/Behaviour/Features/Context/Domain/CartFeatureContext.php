@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
+use State;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Transform\StringToBooleanTransform;
 
@@ -86,6 +87,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I create an empty cart :cartReference for customer :customerReference
+     * @Given customer :customerReference has an empty cart :cartReference
      *
      * @param string $cartReference
      * @param string $customerReference
@@ -192,6 +194,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
+     * @Given cart :cartReference delivery and invoice address country for customer :customeReferenceis is :countryIsoCode
      *
      * @param string $countryIsoCode
      * @param string $customerReference
@@ -213,6 +216,52 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             }
 
             throw new Exception(sprintf('Customer does not have address in "%s" country.', $isoCode));
+        };
+
+        $addressId = $getAddressByCountryIsoCode($countryIsoCode);
+
+        $this->getCommandBus()->handle(
+            new UpdateCartAddressesCommand(
+                (int) SharedStorage::getStorage()->get($cartReference),
+                $addressId,
+                $addressId
+            )
+        );
+    }
+
+    /**
+     * @Given cart :cartReference delivery and invoice address for customer :customeReferenceis is in :stateName state of :countryIsoCode country
+     *
+     * @param string $cartReference
+     * @param string $customerReference
+     * @param string $countryIsoCode
+     * @param string $stateName
+     */
+    public function selectDeliveryAndInvoiceAddressWithState(
+        string $cartReference,
+        string $customerReference,
+        string $countryIsoCode,
+        string $stateName
+    ) {
+        $customer = SharedStorage::getStorage()->get($customerReference);
+
+        $getAddressByCountryIsoCode = static function ($isoCode) use ($customer, $stateName) {
+            $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
+
+            foreach ($customerAddresses as $address) {
+                $country = new Country($address['id_country']);
+                $state = new State($address['id_state']);
+
+                if ($country->iso_code === $isoCode && $state->name === $stateName) {
+                    return (int) $address['id_address'];
+                }
+            }
+
+            throw new RuntimeException(sprintf(
+                'Customer does not have address in "%s" state of "%s" country.',
+                $stateName,
+                $isoCode
+            ));
         };
 
         $addressId = $getAddressByCountryIsoCode($countryIsoCode);

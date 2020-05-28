@@ -1,14 +1,18 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
+
+
+// Import pages
+const LoginPage = require('@pages/BO/login/index');
+const DashboardPage = require('@pages/BO/dashboard/index');
 const PagesPage = require('@pages/BO/design/pages/index');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_design_pages_helperCard';
@@ -20,7 +24,6 @@ let numberOfPages = 0;
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     pagesPage: new PagesPage(page),
@@ -35,8 +38,10 @@ describe('Sort pages', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
   });
@@ -46,17 +51,21 @@ describe('Sort pages', async () => {
 
   it('should go to \'Design > Pages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCmsPagesPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.designParentLink,
-      this.pageObjects.boBasePage.pagesLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.designParentLink,
+      this.pageObjects.dashboardPage.pagesLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.pagesPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.pagesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.pagesPage.pageTitle);
   });
 
   it('should reset filter and get number of pages in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+
     numberOfPages = await this.pageObjects.pagesPage.resetAndGetNumberOfLines('cms_page');
     await expect(numberOfPages).to.be.above(0);
   });
@@ -115,14 +124,20 @@ describe('Sort pages', async () => {
   tests.forEach((test) => {
     it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
       let nonSortedTable = await this.pageObjects.pagesPage.getAllRowsColumnContentTableCmsPage(test.args.sortBy);
+
       await this.pageObjects.pagesPage.sortTableCmsPage(test.args.sortBy, test.args.sortDirection);
+
       let sortedTable = await this.pageObjects.pagesPage.getAllRowsColumnContentTableCmsPage(test.args.sortBy);
+
       if (test.args.isFloat) {
         nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
         sortedTable = await sortedTable.map(text => parseFloat(text));
       }
+
       const expectedResult = await this.pageObjects.pagesPage.sortArray(nonSortedTable, test.args.isFloat);
+
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);
       } else {

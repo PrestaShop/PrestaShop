@@ -1825,10 +1825,6 @@ class ToolsCore
 
     public static function stripslashes($string)
     {
-        if (_PS_MAGIC_QUOTES_GPC_) {
-            $string = stripslashes($string);
-        }
-
         return $string;
     }
 
@@ -4219,15 +4215,8 @@ exit;
 
                 $purifier = new HTMLPurifier($config);
             }
-            if (_PS_MAGIC_QUOTES_GPC_) {
-                $html = stripslashes($html);
-            }
 
             $html = $purifier->purify($html);
-
-            if (_PS_MAGIC_QUOTES_GPC_) {
-                $html = addslashes($html);
-            }
         }
 
         return $html;

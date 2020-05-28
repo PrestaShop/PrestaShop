@@ -334,8 +334,8 @@ class CustomerAddressType extends AbstractType
             ])
             ->add('id_country', CountryChoiceType::class, [
                 'required' => true,
-                'withDniAttr' => true,
-                'withPostcodeAttr' => true,
+                'with_dni_attr' => true,
+                'with_postcode_attr' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(

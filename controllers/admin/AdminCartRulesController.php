@@ -609,6 +609,11 @@ class AdminCartRulesControllerCore extends AdminController
     public function renderForm()
     {
         $limit = 40;
+        $this->toolbar_btn['save'] = [
+            'href' => '#',
+            'desc' => $this->trans('Save', [], 'Admin.Actions'),
+        ];
+
         $this->toolbar_btn['save-and-stay'] = [
             'href' => '#',
             'desc' => $this->trans('Save and stay', [], 'Admin.Actions'),
