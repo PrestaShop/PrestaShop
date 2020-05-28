@@ -32,6 +32,7 @@ use Context;
 use Exception;
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
@@ -189,6 +190,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         throw new RuntimeException(sprintf('Product type is not as expected. Expected %s', $productTypeName));
     }
+
+    /**
+     * @Then I should get error that product name is invalid
+     */
+    public function assertLastErrorIsReturnProductDisabled()
+    {
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_NAME
+        );
+    }
+
 
     /**
      * @param string $typeName

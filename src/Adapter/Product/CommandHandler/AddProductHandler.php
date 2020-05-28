@@ -89,11 +89,13 @@ final class AddProductHandler implements AddProductHandlerInterface
     {
         //@todo: multistore?
         $product = new Product();
+
+        //@todo: product name is not required. Fix that? issue: #19441 for discussion
         $product->name = $command->getLocalizedNames();
+
         $product->active = false;
         $product->category = Category::getLinkRewrite($this->defaultCategoryId, $this->defaultLangId);
         $product->id_category_default = $this->defaultCategoryId;
-
         $product->is_virtual = $command->getType() === ProductType::TYPE_VIRTUAL;
 
         foreach ($product->name as $langId => $name) {

@@ -15,3 +15,14 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" type should be standard
     And product "product1" "name" should be "en-US:bottle of beer"
     And product "product1" should be assigned to default category
+
+# @todo; add if we make product name required. #19441
+#  @add
+#  Scenario: I add a product without providing name in default language
+#    Given language with iso code "en" is the default one
+#    Given language "french" with locale "fr-FR" exists
+#    When I add product "product2" with following basic information:
+#      | name | fr-FR: glass of wine |
+#      | type | standard             |
+#    Then I should get error that product name is invalid
+
