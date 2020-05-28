@@ -485,7 +485,6 @@ class CartPresenter implements PresenterInterface
             ['presentedCart' => &$result]
         );
 
-
         return $result;
     }
 
