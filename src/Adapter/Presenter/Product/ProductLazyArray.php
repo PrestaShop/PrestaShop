@@ -585,17 +585,31 @@ class ProductLazyArray extends AbstractLazyArray
         array $product,
         Language $language
     ) {
-        // Get filtered product images matching the specified id_product_attribute
-        $this->product['images'] = $this->imageRetriever->getProductImages(
+        // Get all product images, including potential cover
+        $productImages = $this->imageRetriever->getProductImages(
             $product,
             $language
         );
 
+        // Get filtered product images matching the specified id_product_attribute
+        $this->product['images'] = $this->filterImagesForCombination($productImages, $product['id_product_attribute']);
+
         if (isset($product['cover_image_id'])) {
-            $coverImage = $this->imageRetriever->getImage(new Product($product['id_product']), $product['cover_image_id']);
-            $this->product['cover'] = array_merge($coverImage, [
-                'legend' => $coverImage['legend'][$language->getId()],
-            ]);
+            // First try to find cover in product images
+            foreach ($productImages as $productImage) {
+                if ($productImage['id_image'] == $product['cover_image_id']) {
+                    $this->product['cover'] = $productImage;
+                    break;
+                }
+            }
+
+            // If the cover is not associated to the product images it is fetched manually
+            if (!isset($this->product['cover'])) {
+                $coverImage = $this->imageRetriever->getImage(new Product($product['id_product']), $product['cover_image_id']);
+                $this->product['cover'] = array_merge($coverImage, [
+                    'legend' => $coverImage['legend'][$language->getId()],
+                ]);
+            }
         }
 
         if (!isset($this->product['cover'])) {
@@ -614,6 +628,25 @@ class ProductLazyArray extends AbstractLazyArray
                 }
             }
         }
+    }
+
+    /**
+     * @param array $images
+     * @param int $productAttributeId
+     *
+     * @return array
+     */
+    private function filterImagesForCombination(array $images, int $productAttributeId)
+    {
+        $filteredImages = [];
+
+        foreach ($images as $image) {
+            if (in_array($productAttributeId, $image['associatedVariants'])) {
+                $filteredImages[] = $image;
+            }
+        }
+
+        return (0 === count($filteredImages)) ? $images : $filteredImages;
     }
 
     private function addPriceInformation(
