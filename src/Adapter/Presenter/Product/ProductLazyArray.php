@@ -586,7 +586,7 @@ class ProductLazyArray extends AbstractLazyArray
         Language $language
     ) {
         // Get all product images, including potential cover
-        $productImages = $this->imageRetriever->getProductImages(
+        $productImages = $this->imageRetriever->getAllProductImages(
             $product,
             $language
         );
@@ -605,9 +605,9 @@ class ProductLazyArray extends AbstractLazyArray
 
             // If the cover is not associated to the product images it is fetched manually
             if (!isset($this->product['cover'])) {
-                $coverImage = $this->imageRetriever->getImage(new Product($product['id_product']), $product['cover_image_id']);
+                $coverImage = $this->imageRetriever->getImage(new Product($product['id_product'], false, $language->getId()), $product['cover_image_id']);
                 $this->product['cover'] = array_merge($coverImage, [
-                    'legend' => $coverImage['legend'][$language->getId()],
+                    'legend' => $coverImage['legend'],
                 ]);
             }
         }
