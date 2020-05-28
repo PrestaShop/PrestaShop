@@ -21,6 +21,10 @@ module.exports = class Import extends BOBasePage {
    * @return {Promise<void>}
    */
   async downloadSampleFile(type) {
-    await this.page.click(this.downloadSampleFileLink(type));
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'),
+      await this.page.click(this.downloadSampleFileLink(type)),
+    ]);
+    return download.path();
   }
 };

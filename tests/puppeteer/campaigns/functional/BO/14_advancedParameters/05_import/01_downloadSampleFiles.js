@@ -20,6 +20,7 @@ const baseContext = 'functional_BO_advancedParameters_import_downloadSampleFiles
 let browser;
 let browserContext;
 let page;
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -146,16 +147,16 @@ describe('Download import sample csv files', async () => {
       it(`should download ${sampleFile.args.type} sample file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}DownloadFile`, baseContext);
 
-        await this.pageObjects.importPage.downloadSampleFile(sampleFile.args.type);
+        filePath = await this.pageObjects.importPage.downloadSampleFile(sampleFile.args.type);
 
-        const doesFileExist = await files.doesFileExist(`${sampleFile.args.type}.csv`);
+        const doesFileExist = await files.doesFileExist(filePath);
         await expect(doesFileExist, `${sampleFile.args.type} sample file was not downloaded`).to.be.true;
       });
 
       it(`should check ${sampleFile.args.type} sample text file`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${sampleFile.args.type}checkTextFile`, baseContext);
 
-        const textExist = await files.isTextInFile(`${sampleFile.args.type}.csv`, sampleFile.args.textToCheck);
+        const textExist = await files.isTextInFile(filePath, sampleFile.args.textToCheck);
         await expect(textExist, `Text was not found in ${sampleFile.args.type} sample file`).to.be.true;
       });
     });
