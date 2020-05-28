@@ -94,12 +94,7 @@ final class AddProductHandler implements AddProductHandlerInterface
         $product->category = Category::getLinkRewrite($this->defaultCategoryId, $this->defaultLangId);
         $product->id_category_default = $this->defaultCategoryId;
 
-        if ($command->getType() === ProductType::TYPE_VIRTUAL) {
-            $product->is_virtual = true;
-            $product->condition = ProductCondition::NEW;
-        } else {
-            $product->is_virtual = false;
-        }
+        $product->is_virtual = $command->getType() === ProductType::TYPE_VIRTUAL;
 
         foreach ($product->name as $langId => $name) {
             if (true !== $product->validateField('name', $name, $langId)) {
