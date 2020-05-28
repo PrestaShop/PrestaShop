@@ -10,7 +10,7 @@ module.exports = class AddCurrency extends BOBasePage {
     // Selectors
     this.currencySelect = '#currency_selected_iso_code';
     this.selectResultOption = id => `li.select2-results__option:nth-child(${id})`;
-    this.alternativeCurrencyCheckBox = '#currency_unofficial + i';
+    this.alternativeCurrencyCheckBox = '#currency_unofficial';
     this.currencyNameInput = id => `#currency_names_${id}`;
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
@@ -58,7 +58,9 @@ module.exports = class AddCurrency extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async createUnOfficialCurrency(currencyData) {
-    await this.changeCheckboxValue(this.alternativeCurrencyCheckBox, true);
+    if (!(await this.isCheckboxSelected(this.alternativeCurrencyCheckBox))) {
+      await this.page.$eval(`${this.alternativeCurrencyCheckBox} + i`, el => el.click());
+    }
     await this.setValue(this.currencyNameInput(1), currencyData.name);
     await this.setValue(this.isoCodeInput, currencyData.isoCode);
     await this.setValue(this.exchangeRateInput, currencyData.exchangeRate.toString());

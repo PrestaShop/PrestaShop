@@ -192,8 +192,8 @@ module.exports = class Languages extends LocalizationBasePage {
   async bulkEditEnabledColumn(toEnable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
@@ -210,11 +210,10 @@ module.exports = class Languages extends LocalizationBasePage {
    * @return {Promise<textContent>}
    */
   async deleteWithBulkActions() {
-    this.dialogListener(true);
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
