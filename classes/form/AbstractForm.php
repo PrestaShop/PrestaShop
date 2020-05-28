@@ -133,10 +133,20 @@ abstract class AbstractFormCore implements FormInterface
     public function validate()
     {
         foreach ($this->formFields as $field) {
-            if ($field->isRequired() && !$field->getValue()) {
-                $field->addError(
-                    $this->constraintTranslator->translate('required')
-                );
+            if ($field->isRequired()) {
+                if(!$field->getValue()){
+					$field->addError(
+						$this->constraintTranslator->translate('required')
+					);
+				} elseif ($field->getMaxLength() != null && strlen($field->getValue()) > $field->getMaxLength()){
+					$field->addError(
+						$this->translator->trans(
+							'The %1$s field is too long (%2$d chars max).',
+							[$field->getLabel(), $field->getMaxLength()],
+							'Shop.Notifications.Error'
+						)
+					);
+				}
 
                 continue;
             } elseif (!$field->isRequired() && !$field->getValue()) {
