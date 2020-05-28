@@ -168,16 +168,17 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToSubMenu(parentSelector, linkSelector) {
-    if (!(await this.elementNotVisible(`${parentSelector}.open`, 1000))) {
-      await this.clickAndWaitForNavigation(linkSelector);
-    } else {
+    if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
       // open the block
+      await this.scrollTo(parentSelector);
+
       await Promise.all([
         this.page.click(parentSelector),
         this.waitForVisibleSelector(`${parentSelector}.open`),
       ]);
-      await this.clickAndWaitForNavigation(linkSelector);
     }
+    await this.scrollTo(linkSelector);
+    await this.clickAndWaitForNavigation(linkSelector);
     await this.waitForVisibleSelector(`${linkSelector}.-active`);
   }
 
@@ -298,7 +299,14 @@ module.exports = class BOBasePage extends CommonPage {
    */
   async isSubmenuVisible(parentSelector, linkSelector) {
     if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
-      await this.page.click(parentSelector);
+      // Scroll before opening menu
+      await this.scrollTo(parentSelector);
+
+      await Promise.all([
+        this.page.click(parentSelector),
+        this.waitForVisibleSelector(`${parentSelector}.open`),
+      ]);
+
       await this.waitForVisibleSelector(`${parentSelector}.open`);
     }
     return this.elementVisible(linkSelector, 1000);
