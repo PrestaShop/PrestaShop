@@ -445,7 +445,14 @@ class CartPresenter implements PresenterInterface
             $vouchers['added']
         ));
 
-        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds) {
+        $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds, $cart) {
+            $voucherCustomerId = (int) $discount['id_customer'];
+            $voucherIsRestrictedToASingleCustomer = ($voucherCustomerId !== 0);
+            $voucherIsEmptyCode = empty($discount['code']);
+            if ($voucherIsRestrictedToASingleCustomer && $cart->id_customer !== $voucherCustomerId && $voucherIsEmptyCode) {
+                return false;
+            }
+
             return !array_key_exists($discount['id_cart_rule'], $cartRulesIds);
         });
 
@@ -477,6 +484,7 @@ class CartPresenter implements PresenterInterface
         Hook::exec('actionPresentCart',
             ['presentedCart' => &$result]
         );
+
 
         return $result;
     }
