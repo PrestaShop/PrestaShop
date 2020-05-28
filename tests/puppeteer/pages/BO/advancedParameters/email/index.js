@@ -143,13 +143,13 @@ module.exports = class Email extends BOBasePage {
     this.dialogListener(true);
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
@@ -174,7 +174,8 @@ module.exports = class Email extends BOBasePage {
    */
   async setLogEmails(toEnable) {
     await this.waitForSelectorAndClick(this.logEmailsLabel(toEnable ? 1 : 0));
-    await this.clickAndWaitForNavigation(this.saveEmailFormButton);
+    await this.page.$eval(this.saveEmailFormButton, el => el.click());
+    await this.page.waitForNavigation();
     return this.getTextContent(this.alertSuccessBlock);
   }
 
