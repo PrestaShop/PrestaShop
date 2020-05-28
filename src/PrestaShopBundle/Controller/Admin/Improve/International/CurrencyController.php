@@ -566,12 +566,12 @@ class CurrencyController extends FrameworkBundleAdminController
                     'Admin.International.Notification'
                 ),
                 CurrencyConstraintException::EMPTY_BULK_TOGGLE => $this->trans(
-                    'Currencies must be provided in order to toggle their status',
-                    'Admin.International.Notification'
+                    'You must select at least one element to perform a bulk action.',
+                    'Admin.Notifications.Error'
                 ),
                 CurrencyConstraintException::EMPTY_BULK_DELETE => $this->trans(
-                    'At least one currency must be provided for deleting',
-                    'Admin.International.Notification'
+                    'You must select at least one element to perform a bulk action.',
+                    'Admin.Notifications.Error'
                 ),
             ],
             AutomateExchangeRatesUpdateException::class => [
