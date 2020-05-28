@@ -152,15 +152,16 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $product = $this->getProductByReference($productReference);
         $productCategories = $product->getCategories();
 
+        $belongsToDefaultCategory = false;
         foreach ($productCategories as $categoryId) {
             if ((int) $categoryId === $defaultCategoryId) {
+                $belongsToDefaultCategory = true;
+
                 break;
             }
-
-            throw new RuntimeException('Product categories relation does not contain default category');
         }
 
-        if ((int) $product->id_category_default !== $defaultCategoryId) {
+        if ((int) $product->id_category_default !== $defaultCategoryId || !$belongsToDefaultCategory) {
             throw new RuntimeException('Default category is not assigned to product');
         }
     }
