@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
-use Configuration;
 use Context;
 use Exception;
 use Pack;
@@ -63,7 +62,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add product :productReference with following basic information in default language:
+     * @When I add product :productReference with following basic information:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -71,11 +70,10 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function addProduct(string $productReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
-        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
 
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
-                [$defaultLangId => $data['name']],
+                $this->parseLocalizedArray($data['name']),
                 $this->getProductTypeValueByName($data['type'])
             ));
 
@@ -86,27 +84,27 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^product "(.+)" name should be "(.+)" in default language$/
+     * @Then /^product "(.+)" "(.+)" should be "(.+)"$/
      *
      * @param string $productReference
-     * @param string $name
+     * @param string $fieldName
+     * @param string $localizedValues
      */
-    public function assertProductNameInDefaultLang(string $productReference, string $name)
+    public function assertLocalizedProperty(string $productReference, string $fieldName, string $localizedValues)
     {
-        $defaultLangId = (int) Configuration::get('PS_LANG_DEFAULT');
         $product = $this->getProductByReference($productReference);
+        $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
-        if ($product->name[$defaultLangId] === $name) {
-            return;
+        if (!empty(array_diff($product->{$fieldName}, $expectedLocalizedValues))) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected localized %s: "%s", but got: "%s"',
+                    $fieldName,
+                    implode(',', $expectedLocalizedValues),
+                    implode(',', $product->{$fieldName})
+                )
+            );
         }
-
-        throw new RuntimeException(
-            sprintf(
-                'Expected product name to be "%s" in default language, but it is "%s"',
-                $name,
-                $product->name[$defaultLangId]
-            )
-        );
     }
 
     /**

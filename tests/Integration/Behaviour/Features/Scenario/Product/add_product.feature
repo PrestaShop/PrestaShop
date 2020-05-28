@@ -6,12 +6,12 @@ Feature: Add basic product from Back Office (BO)
 
   @add
   Scenario: I add a product with basic information
-    When I add product "product1" with following basic information in default language:
-      | name | bottle of beer |
-      | type | standard       |
+    When I add product "product1" with following basic information:
+      | name | en-US:bottle of beer |
+      | type | standard             |
     Then product "product1" should have following values:
       | active           | false          |
       | condition        | new            |
     And product "product1" type should be standard
-    And product "product1" name should be "bottle of beer" in default language
+    And product "product1" "name" should be "en-US:bottle of beer"
     And product "product1" should be assigned to default category
