@@ -5028,9 +5028,11 @@ class ProductCore extends ObjectModel
 
         $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-        $cover = static::getCover($row['id_product']);
-        if (isset($cover['id_image'])) {
-            $row['cover_image_id'] = $cover['id_image'];
+        if (!isset($row['cover_image_id'])) {
+            $cover = static::getCover($row['id_product']);
+            if (isset($cover['id_image'])) {
+                $row['cover_image_id'] = $cover['id_image'];
+            }
         }
 
         Hook::exec('actionGetProductPropertiesAfter', [
