@@ -206,8 +206,8 @@ module.exports = class Taxes extends BOBasePage {
   async changeTaxesEnabledColumnBulkActions(enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllLabel),
-      this.waitForVisibleSelector(`${this.selectAllLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
@@ -226,8 +226,8 @@ module.exports = class Taxes extends BOBasePage {
   async deleteTaxesBulkActions() {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllLabel),
-      this.waitForVisibleSelector(`${this.selectAllLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
