@@ -41,7 +41,6 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\DependencyInjection\ContainerBuilder as SfContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -85,7 +84,7 @@ class ContainerBuilder
      * @param string $containerName
      * @param bool $isDebug
      *
-     * @return SfContainerBuilder
+     * @return LegacyContainerBuilder
      *
      * @throws Exception
      */
@@ -110,7 +109,7 @@ class ContainerBuilder
     /**
      * @param string $containerName
      *
-     * @return ContainerInterface|SfContainerBuilder
+     * @return ContainerInterface|LegacyContainerBuilder
      *
      * @throws Exception
      */
@@ -149,7 +148,7 @@ class ContainerBuilder
     }
 
     /**
-     * @return SfContainerBuilder
+     * @return LegacyContainerBuilder
      *
      * @throws Exception
      */
@@ -201,11 +200,11 @@ class ContainerBuilder
     }
 
     /**
-     * @param SfContainerBuilder $container
+     * @param LegacyContainerBuilder $container
      *
      * @throws Exception
      */
-    private function loadServicesFromConfig(SfContainerBuilder $container)
+    private function loadServicesFromConfig(LegacyContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $servicesPath = sprintf(
