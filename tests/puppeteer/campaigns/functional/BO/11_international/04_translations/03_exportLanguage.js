@@ -64,13 +64,13 @@ describe('Export languages in translations page', async () => {
     {
       args:
         {
-          testIdentifier: 'sortByIdDesc', language: Languages.english, theme: 'classic', filename: 'classic.en-US.zip',
+          testIdentifier: 'sortByIdDesc', language: Languages.english, theme: 'classic',
         },
     },
     {
       args:
         {
-          testIdentifier: 'sortByIdDesc', language: Languages.french, theme: 'classic', filename: 'classic.fr-FR.zip',
+          testIdentifier: 'sortByIdDesc', language: Languages.french, theme: 'classic',
         },
     },
   ];
@@ -84,12 +84,10 @@ describe('Export languages in translations page', async () => {
         baseContext,
       );
 
-      await this.pageObjects.translationsPage.exportLanguage(test.args.language.name, test.args.theme);
+      const filePath = await this.pageObjects.translationsPage.exportLanguage(test.args.language.name, test.args.theme);
 
-      const doesFileExist = await files.doesFileExist(test.args.filename);
-      await expect(doesFileExist, `File ${test.args.filename} was not downloaded`).to.be.true;
-
-      await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${test.args.filename}`);
+      const doesFileExist = await files.doesFileExist(filePath);
+      await expect(doesFileExist, `File '${filePath}' was not downloaded`).to.be.true;
     });
   });
 });

@@ -23,11 +23,17 @@ module.exports = class Translations extends BOBasePage {
    * Export language
    * @param language
    * @param theme
-   * @return {Promise<void>}
+   * @return {Promise<*>}
    */
   async exportLanguage(language, theme) {
     await this.selectByVisibleText(this.exportLanguageSelect, language);
     await this.selectByVisibleText(this.exportLanguageThemeSelect, theme);
-    await this.page.click(this.exportLanguageButton);
+
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'),
+      this.page.click(this.exportLanguageButton),
+    ]);
+
+    return download.path();
   }
 };
