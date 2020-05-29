@@ -33,6 +33,7 @@ use PrestaShopBundle\Translation\DomainNormalizer;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
 use PrestaShopBundle\Translation\Exception\UnsupportedModuleException;
 use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -67,9 +68,14 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
      */
     private $defaultCatalogueCache;
 
+    /**
+     * @var string[]
+     */
+    private $filenameFilters;
+
     public function __construct(
-        LoaderInterface $databaseLoader,
-        $resourceDirectory,
+        DatabaseTranslationLoader $databaseLoader,
+        string $resourceDirectory,
         LoaderInterface $legacyFileLoader,
         LegacyModuleExtractorInterface $legacyModuleExtractor,
         ModuleProvider $moduleProvider
@@ -78,37 +84,35 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
         $this->legacyFileLoader = $legacyFileLoader;
         $this->legacyModuleExtractor = $legacyModuleExtractor;
 
-        parent::__construct($databaseLoader, $resourceDirectory);
+        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
+
+        $this->filenameFilters = ['#^' . preg_quote($this->domain) . '([A-Z]|$)#'];
+
+        $defaultResourceDirectory = implode(DIRECTORY_SEPARATOR, [$resourceDirectory, $this->moduleName, 'translations']) . DIRECTORY_SEPARATOR;
+
+        parent::__construct(
+            $databaseLoader,
+            $resourceDirectory,
+            $translationDomains,
+            $this->filenameFilters,
+            $defaultResourceDirectory
+        );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
-    {
-        return ['#^' . preg_quote($this->domain) . '([A-Z]|$)#'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslationDomains()
-    {
-        return ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return 'external_legacy_module';
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $moduleName
+     *
+     * @return $this
      */
-    public function setModuleName($moduleName)
+    public function setModuleName(string $moduleName): self
     {
         if (null === $this->moduleName || empty($this->moduleName)) {
             UnsupportedModuleException::moduleNotProvided(self::getIdentifier());
@@ -123,11 +127,9 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
     }
 
     /**
-     * @param string $domain
-     *
-     * @return AbstractProvider|SearchProviderInterface|void
+     * {@inheritdoc}
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): AbstractProvider
     {
         throw new InvalidArgumentException(__CLASS__ . ' does not allow calls to setDomain()');
     }
@@ -135,70 +137,60 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
     /**
      * {@inheritdoc}
      */
-    public function getDefaultCatalogue($empty = true)
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
     {
-        $defaultCatalogue = $this->getCachedDefaultCatalogue();
+        try {
+            $defaultCatalogue = parent::getDefaultCatalogue($empty);
+        } catch (FileNotFoundException $e) {
+            $defaultCatalogue = $this->getCachedDefaultCatalogue();
 
-        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
-            return $this->emptyCatalogue(clone $defaultCatalogue);
+            if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
+                return $this->emptyCatalogue(clone $defaultCatalogue);
+            }
         }
-
         return $defaultCatalogue;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getXliffCatalogue()
+    public function getFilesystemCatalogue(): MessageCatalogueInterface
     {
         try {
             $translationCatalogue = $this->moduleProvider
                 ->setModuleName($this->moduleName)
-                ->setLocale($this->locale)
-                ->getXliffCatalogue()
+                ->getFilesystemCatalogue()
             ;
         } catch (FileNotFoundException $exception) {
-            $translationCatalogue = $this->buildTranslationCatalogueFromLegacyFiles();
+            $translationCatalogue = $this->buildTranslationCatalogueFromLegacyFiles($this->locale);
         }
 
         return $translationCatalogue;
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getDefaultResourceDirectory()
-    {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getResourceDirectory()
-    {
-        return $this->getDefaultResourceDirectory();
-    }
-
-    /**
      * Builds the catalogue including the translated wordings ONLY
      *
+     * @param string $locale
+     *
      * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
      */
-    private function buildTranslationCatalogueFromLegacyFiles()
+    private function buildTranslationCatalogueFromLegacyFiles(string $locale)
     {
         // the message catalogue needs to be indexed by original wording, but legacy files are indexed by hash
         // therefore, we need to build the default catalogue (by analyzing source code)
         // then cross reference the wordings found in the default catalogue
         // with the hashes found in the module's legacy translation file.
 
-        $legacyFilesCatalogue = new MessageCatalogue($this->locale);
+        $legacyFilesCatalogue = new MessageCatalogue($locale);
         $catalogueFromPhpAndSmartyFiles = $this->getDefaultCatalogue(false);
 
         try {
             $catalogueFromLegacyTranslationFiles = $this->legacyFileLoader->load(
                 $this->getDefaultResourceDirectory(),
-                $this->locale
+                $locale
             );
         } catch (UnsupportedLocaleException $exception) {
             // this happens when there no translation file is found for the desired locale
@@ -226,14 +218,14 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
     /**
      * {@inheritdoc}
      */
-    public function getMessageCatalogue()
+    public function getMessageCatalogue(): MessageCatalogueInterface
     {
         $messageCatalogue = $this->getDefaultCatalogue();
 
-        $translatedCatalogue = $this->buildTranslationCatalogueFromLegacyFiles();
+        $translatedCatalogue = $this->buildTranslationCatalogueFromLegacyFiles($this->locale);
         $messageCatalogue->addCatalogue($translatedCatalogue);
 
-        $databaseCatalogue = $this->getDatabaseCatalogue();
+        $databaseCatalogue = $this->getUserTranslatedCatalogue();
         $messageCatalogue->addCatalogue($databaseCatalogue);
 
         return $messageCatalogue;
@@ -245,22 +237,20 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
      *
      * @param MessageCatalogueInterface $catalogue
      *
-     * @return MessageCatalogue
+     * @return MessageCatalogueInterface
      */
-    private function filterDomains(MessageCatalogueInterface $catalogue)
+    private function filterDomains(MessageCatalogueInterface $catalogue): MessageCatalogueInterface
     {
         $normalizer = new DomainNormalizer();
         $newCatalogue = new MessageCatalogue($catalogue->getLocale());
-
-        // add delimiter to
-        $validTranslationDomains = $this->getFilters();
 
         foreach ($catalogue->getDomains() as $domain) {
             // remove dots
             $newDomain = $normalizer->normalize($domain);
 
+            // add delimiters
             // only add if the domain is relevant to this module
-            foreach ($validTranslationDomains as $pattern) {
+            foreach ($this->filenameFilters as $pattern) {
                 if (preg_match($pattern, $newDomain)) {
                     $newCatalogue->add(
                         $catalogue->all($domain),
@@ -277,25 +267,27 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
     /**
      * Builds the default catalogue
      *
+     * @param string $locale
+     *
      * @return MessageCatalogue
      */
-    private function buildFreshDefaultCatalogue()
+    private function buildFreshDefaultCatalogue(string $locale): MessageCatalogueInterface
     {
-        $defaultCatalogue = new MessageCatalogue($this->locale);
+        $defaultCatalogue = new MessageCatalogue($locale);
 
         try {
+            $this->moduleProvider->setLocale($locale);
             // look up files in the core translations
             $defaultCatalogue = $this->moduleProvider
                 ->setModuleName($this->moduleName)
-                ->setLocale($this->locale)
-                ->getDefaultCatalogue();
+                ->getDefaultCatalogue($locale);
         } catch (FileNotFoundException $exception) {
             // there are no xliff files for this module in the core
         }
 
         try {
             // analyze files and extract wordings
-            $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $this->locale);
+            $additionalDefaultCatalogue = $this->legacyModuleExtractor->extract($this->moduleName, $locale);
             $defaultCatalogue = $this->filterDomains($additionalDefaultCatalogue);
         } catch (UnsupportedLocaleException $exception) {
             // Do nothing as support of legacy files is deprecated
@@ -307,14 +299,14 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
     /**
      * Returns the cached default catalogue
      *
-     * @return MessageCatalogue
+     * @return MessageCatalogueInterface
      */
-    private function getCachedDefaultCatalogue()
+    private function getCachedDefaultCatalogue(): MessageCatalogueInterface
     {
         $catalogueCacheKey = $this->moduleName . '|' . $this->locale;
 
         if (!isset($this->defaultCatalogueCache[$catalogueCacheKey])) {
-            $this->defaultCatalogueCache[$catalogueCacheKey] = $this->buildFreshDefaultCatalogue();
+            $this->defaultCatalogueCache[$catalogueCacheKey] = $this->buildFreshDefaultCatalogue($this->locale);
         }
 
         return $this->defaultCatalogueCache[$catalogueCacheKey];

@@ -62,7 +62,7 @@ class TranslationsFactoryTest extends TestCase
         $this->providerMock->method('getDefaultCatalogue')
             ->willReturn(new MessageCatalogue('en-US'));
 
-        $this->providerMock->method('getDatabaseCatalogue')
+        $this->providerMock->method('getUserTranslatedCatalogue')
             ->willReturn(new MessageCatalogue('en-US'));
 
         $this->factory = new TranslationsFactory();
@@ -96,13 +96,14 @@ class TranslationsFactoryTest extends TestCase
 
     public function testCreateTranslationsArrayWithProvider()
     {
-        $this->providerMock->method('getXliffCatalogue')
+        $this->providerMock->method('getFilesystemCatalogue')
             ->willReturn(new MessageCatalogue('en-US'));
 
         $this->factory->addProvider($this->providerMock);
 
         // should throw exception
-        $this->factory->createTranslationsArray($this->providerMock->getIdentifier());
-        $this->assertInternalType('array', $expected);
+        $this->assertIsArray(
+            $this->factory->createTranslationsArray($this->providerMock->getIdentifier())
+        );
     }
 }
