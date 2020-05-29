@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PHPUnit\Framework\TestCase;
@@ -43,13 +45,11 @@ class BackOfficeProviderTest extends TestCase
 
     protected function setUp()
     {
-        $loader = $this->getMockBuilder(LoaderInterface::class)
-            ->getMock();
+        $loader = $this->createMock(LoaderInterface::class);
 
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
 
         $this->provider = new BackOfficeProvider($loader, $resourcesDir);
-        $this->provider->setLocale('fr-FR');
     }
 
     /**
@@ -59,7 +59,7 @@ class BackOfficeProviderTest extends TestCase
     public function testItExtractsCatalogueFromXliffFiles()
     {
         // The xliff file contains 38 keys
-        $catalogue = $this->provider->getMessageCatalogue();
+        $catalogue = $this->provider->getMessageCatalogue('fr-FR');
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
         $messages = $catalogue->all();

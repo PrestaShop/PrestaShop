@@ -43,8 +43,7 @@ class FrontOfficeProviderTest extends TestCase
 
     protected function setUp()
     {
-        $loader = $this->getMockBuilder(LoaderInterface::class)
-            ->getMock();
+        $loader = $this->createMock(LoaderInterface::class);
 
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
 

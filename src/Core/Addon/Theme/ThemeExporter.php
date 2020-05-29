@@ -33,6 +33,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use ZipArchive;
 
+/**
+ * Exports a full theme into a zip file
+ */
 class ThemeExporter
 {
     /**
@@ -65,9 +68,11 @@ class ThemeExporter
     }
 
     /**
+     * Exports a theme into a zip file
+     *
      * @param Theme $theme
      *
-     * @return false|string
+     * @return string Path to the exported zip file
      */
     public function export(Theme $theme)
     {
