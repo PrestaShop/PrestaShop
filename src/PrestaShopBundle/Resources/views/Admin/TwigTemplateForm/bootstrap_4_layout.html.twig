@@ -38,7 +38,6 @@
 {% block textarea_widget -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
     {{- parent() -}}
-
 {%- endblock textarea_widget %}
 
 {% block button_widget -%}
