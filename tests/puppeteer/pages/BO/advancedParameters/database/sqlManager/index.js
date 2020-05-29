@@ -150,6 +150,10 @@ module.exports = class SqlManager extends BOBasePage {
    * @returns {Promise<void>}
    */
   async exportSqlResultDataToCsv(row = 1) {
-    await this.waitForSelectorAndClick(this.sqlQueryListTableExportLink(row));
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'),
+      await this.page.click(this.sqlQueryListTableExportLink(row)),
+    ]);
+    return download.path();
   }
 };
