@@ -1,4 +1,5 @@
 <?php
+
 namespace PrestaShopBundle\Translation\Provider;
 
 use Symfony\Component\Translation\MessageCatalogueInterface;
