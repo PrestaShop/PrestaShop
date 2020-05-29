@@ -1,8 +1,6 @@
 <?php
 
-
 namespace PrestaShopBundle\Translation\Provider;
-
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -27,6 +25,7 @@ class DefaultCatalogueExtractor implements ExtractorInterface
 
     /**
      * @param string $locale
+     *
      * @return DefaultCatalogueExtractor
      */
     public function setLocale(string $locale)
@@ -38,29 +37,33 @@ class DefaultCatalogueExtractor implements ExtractorInterface
 
     /**
      * @param array $filenameFilters
+     *
      * @return DefaultCatalogueExtractor
      */
     public function setFilenameFilters(array $filenameFilters): DefaultCatalogueExtractor
     {
         $this->filenameFilters = $filenameFilters;
+
         return $this;
     }
 
     /**
      * @param string $defaultResourceDirectory
+     *
      * @return DefaultCatalogueExtractor
      */
     public function setDefaultResourceDirectory(string $defaultResourceDirectory): DefaultCatalogueExtractor
     {
         $this->defaultResourceDirectory = $defaultResourceDirectory;
+
         return $this;
     }
 
-
-
     /**
      * @param bool $empty
+     *
      * @return MessageCatalogueInterface
+     *
      * @throws FileNotFoundException
      */
     public function extract(bool $empty = true): MessageCatalogueInterface
