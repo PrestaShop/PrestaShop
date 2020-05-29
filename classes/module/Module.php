@@ -3471,11 +3471,11 @@ abstract class ModuleCore implements ModuleInterface
      * If you need to detect which kind of container you are using you can check if it is an instance of LegacyContainerInterface,
      * which means it's a legacy/light container.
      *
-     * @return LegacyContainerInterface|ContainerInterface
+     * @return ContainerInterface
      *
      * @throws ContainerNotFoundException
      */
-    public function getContainer()
+    public function getContainer(): ContainerInterface
     {
         if (null === $this->container) {
             $finder = new ContainerFinder($this->context);
