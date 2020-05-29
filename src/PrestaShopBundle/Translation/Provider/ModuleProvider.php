@@ -43,8 +43,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
-    )
-    {
+    ) {
         $translationDomains = ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
 
         $filenameFilters = ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
@@ -71,7 +70,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdentifier()
     {
