@@ -60,8 +60,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
         string $locale = self::DEFAULT_LOCALE,
         ?string $theme = null,
         ?string $search = null
-    ): array
-    {
+    ): array {
         $provider = $this->getProviderByIdentifier($domainIdentifier);
 
         return $this->makeTranslationArray($provider, $locale, $theme, $search);
@@ -125,8 +124,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
         string $locale,
         ?string $theme,
         ?string $search = null
-    ): array
-    {
+    ): array {
         $provider->setLocale($locale);
 
         $defaultCatalogue = $provider->getDefaultCatalogue();
@@ -139,7 +137,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
             $missingTranslations = 0;
 
             foreach ($messages as $translationKey => $translationValue) {
-                $data = array(
+                $data = [
                     'default' => $translationKey,
                     'xlf' => $xliffCatalogue->defines($translationKey, $domain)
                         ? $xliffCatalogue->get($translationKey, $domain)
@@ -147,7 +145,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
                     'db' => $databaseCatalogue->defines($translationKey, $domain)
                         ? $databaseCatalogue->get($translationKey, $domain)
                         : null,
-                );
+                ];
 
                 // if search is empty or is in catalog default|xlf|database
                 if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
@@ -159,10 +157,10 @@ class TranslationsFactory implements TranslationsFactoryInterface
                 }
             }
 
-            $translations[$domain]['__metadata'] = array(
+            $translations[$domain]['__metadata'] = [
                 'count' => count($translations[$domain]),
-                'missing_translations' => $missingTranslations
-            );
+                'missing_translations' => $missingTranslations,
+            ];
         }
 
         ksort($translations);

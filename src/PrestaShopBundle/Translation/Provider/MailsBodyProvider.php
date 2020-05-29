@@ -36,8 +36,7 @@ class MailsBodyProvider extends AbstractProvider implements UseDefaultCatalogueI
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
-    )
-    {
+    ) {
         $translationDomains = ['EmailsBody*'];
 
         $filenameFilters = ['#EmailsBody*#'];
@@ -54,7 +53,7 @@ class MailsBodyProvider extends AbstractProvider implements UseDefaultCatalogueI
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdentifier()
     {

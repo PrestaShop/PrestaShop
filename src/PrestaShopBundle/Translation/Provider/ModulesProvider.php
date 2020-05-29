@@ -37,8 +37,7 @@ class ModulesProvider extends AbstractProvider
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
-    )
-    {
+    ) {
         $translationDomains = ['^Modules[A-Z]'];
 
         $filenameFilters = ['#^Modules[A-Z]#'];
@@ -55,7 +54,7 @@ class ModulesProvider extends AbstractProvider
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdentifier()
     {
