@@ -36,8 +36,7 @@ class MailsProvider extends AbstractProvider
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
-    )
-    {
+    ) {
         $translationDomains = ['EmailsSubject*'];
 
         $filenameFilters = ['#EmailsSubject*#'];
@@ -54,7 +53,7 @@ class MailsProvider extends AbstractProvider
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdentifier()
     {

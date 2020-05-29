@@ -33,7 +33,6 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TranslationApiTreeBuilderTest extends TestCase
 {
-
     /**
      * @param array[] $translationsArray
      * @param array[] $expectedTree
@@ -59,7 +58,7 @@ class TranslationApiTreeBuilderTest extends TestCase
                         'someotherMessage' => [],
                         '__metadata' => [
                             'count' => 2,
-                            'missing_translations' => 1
+                            'missing_translations' => 1,
                         ],
                     ],
                     'AdminFooBaz' => [
@@ -67,7 +66,7 @@ class TranslationApiTreeBuilderTest extends TestCase
                         'someotherMessage' => [],
                         '__metadata' => [
                             'count' => 2,
-                            'missing_translations' => 2
+                            'missing_translations' => 2,
                         ],
                     ],
                     'AdminPlop' => [
@@ -75,7 +74,7 @@ class TranslationApiTreeBuilderTest extends TestCase
                         'someotherMessage' => [],
                         '__metadata' => [
                             'count' => 2,
-                            'missing_translations' => 1
+                            'missing_translations' => 1,
                         ],
                     ],
                     'AdminPlopFoo' => [
@@ -83,7 +82,7 @@ class TranslationApiTreeBuilderTest extends TestCase
                         'someotherMessage' => [],
                         '__metadata' => [
                             'count' => 2,
-                            'missing_translations' => 0
+                            'missing_translations' => 0,
                         ],
                     ],
                     'AdminPlopBar' => [
@@ -92,7 +91,7 @@ class TranslationApiTreeBuilderTest extends TestCase
                         'someAnotherMessage' => [],
                         '__metadata' => [
                             'count' => 3,
-                            'missing_translations' => 1
+                            'missing_translations' => 1,
                         ],
                     ],
                 ],
@@ -152,9 +151,9 @@ class TranslationApiTreeBuilderTest extends TestCase
                                                 'domain_catalog_link' => '/fake-route/en-US/AdminPlopBar',
                                                 'total_translations' => 3,
                                                 'total_missing_translations' => 1,
-                                            ]
+                                            ],
                                         ],
-                                    ]
+                                    ],
                                 ],
                             ],
                         ],

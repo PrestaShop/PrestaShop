@@ -156,7 +156,7 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdentifier()
     {

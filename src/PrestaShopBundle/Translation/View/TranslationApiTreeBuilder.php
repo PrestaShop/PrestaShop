@@ -34,7 +34,6 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
  */
 class TranslationApiTreeBuilder
 {
-
     /**
      * @var Router
      */
@@ -109,7 +108,8 @@ class TranslationApiTreeBuilder
      *
      * @return array API subtree
      */
-    private function recursivelyBuildApiTree($metadataSubtree, $subtreeName = null, $fullSubtreeName = null) {
+    private function recursivelyBuildApiTree($metadataSubtree, $subtreeName = null, $fullSubtreeName = null)
+    {
         $current = [];
         if ($subtreeName !== null) {
             $current['name'] = $subtreeName;
@@ -144,12 +144,12 @@ class TranslationApiTreeBuilder
      */
     private function getRoute($fullName)
     {
-        $routeParams = array(
+        $routeParams = [
             'locale' => $this->locale,
             'domain' => $fullName,
             'theme' => $this->theme,
             'module' => $this->module,
-        );
+        ];
 
         if (!empty($this->search)) {
             $routeParams['search'] = $this->search;
@@ -165,8 +165,8 @@ class TranslationApiTreeBuilder
      *
      * @return array[] Metadata tree
      */
-    private function buildDomainMetadataTree(array $translationsArray) {
+    private function buildDomainMetadataTree(array $translationsArray)
+    {
         return $this->treeBuilder->buildDomainMetadataTree($translationsArray);
     }
-
 }
