@@ -135,37 +135,33 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
+            if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others'])) {
+                throw new Exception("The 'type' parameter is not valid");
+            }
+
             if (in_array($type, ['modules', 'themes']) && empty($selected)) {
                 throw new Exception('The parameter \'selected\' is not valid.');
             }
 
-            switch ($type) {
-                case 'themes':
-                    $tree = $this->getNormalTree($lang, $type, $selected, $search);
-                    break;
+            $treeType = $type;
+            $selectedTheme = null;
 
-                case 'modules':
-                    $tree = $this->getModulesTree($lang, $selected, $search);
-                    break;
-
-                case 'mails':
-                    $tree = $this->getMailsSubjectTree($lang, $search);
-                    break;
-
-                case 'mails_body':
-                    $tree = $this->getMailsBodyTree($lang, $search);
-                    break;
-
-                case 'back':
-                case 'others':
-                    $tree = $this->getNormalTree($lang, $type, null, $search);
-                    break;
-
-                default:
-                    throw new Exception("The 'type' parameter is not valid");
+            if ('themes' === $type) {
+                $selectedTheme = $selected;
             }
 
-            return $this->jsonResponse($tree, $request);
+            if ('modules' === $type) {
+                $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
+
+                // this will magically update the module provider inside the factory (yes, this is horrible)
+                $moduleProvider->setModuleName($selected);
+                $treeType = $moduleProvider->getIdentifier();
+            }
+
+            return $this->jsonResponse(
+                $this->getTree($lang, $treeType, $selectedTheme, $search),
+                $request
+            );
         } catch (Exception $exception) {
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
@@ -331,72 +327,17 @@ class TranslationController extends ApiController
      * Returns a translation domain tree
      *
      * @param string $lang
-     * @param string $type "themes", "back" or "others"
-     * @param string $theme Selected theme name
+     * @param string $type "themes", "modules", "mails", "mails_body", "back" or "others"
+     * @param string|null $theme Selected theme name. Set only if type = "themes"
      * @param string|null $search Search string
      *
      * @return array
      */
-    private function getNormalTree($lang, $type, $theme, $search = null)
+    private function getTree(string $lang, string $type, ?string $theme, ?string $search)
     {
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $theme, $search);
 
         $locale = $this->translationService->langToLocale($lang);
-
-        return $this->getCleanTree($locale, $catalogue, $theme, $search);
-    }
-
-    /**
-     * @param string $lang Two-letter iso code
-     * @param string $selectedModuleName Selected module name
-     * @param string|null $search
-     *
-     * @return array[]
-     */
-    private function getModulesTree($lang, $selectedModuleName, $search = null)
-    {
-        $theme = null;
-        $locale = $this->translationService->langToLocale($lang);
-
-        $factory = $this->container->get('prestashop.translation.translations_factory');
-        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
-
-        // this will magically update the module provider inside the factory (yes, this is horrible)
-        $moduleProvider->setModuleName($selectedModuleName);
-
-        $catalogue = $factory->createTranslationsArray($moduleProvider->getIdentifier(), $locale, $theme, $search);
-
-        return $this->getCleanTree($locale, $catalogue, $theme, $search, $selectedModuleName);
-    }
-
-    /**
-     * @param string $lang Two-letter iso code
-     * @param null $search
-     *
-     * @return array[]
-     */
-    private function getMailsSubjectTree($lang, $search = null)
-    {
-        $theme = null;
-        $locale = $this->translationService->langToLocale($lang);
-
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails', $theme, $search);
-
-        return $this->getCleanTree($locale, $catalogue, $theme, $search);
-    }
-
-    /**
-     * @param string $lang Two-letter iso code
-     * @param null $search
-     *
-     * @return array
-     */
-    private function getMailsBodyTree($lang, $search = null)
-    {
-        $theme = null;
-        $locale = $this->translationService->langToLocale($lang);
-
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails_body', $theme, $search);
 
         return $this->getCleanTree($locale, $catalogue, $theme, $search);
     }
@@ -415,6 +356,7 @@ class TranslationController extends ApiController
     private function getCleanTree($locale, array $catalogue, $theme, $search = null, $module = null)
     {
         $apiBuilder = new TranslationApiTreeBuilder($this->container->get('router'), new TreeBuilder());
+
         return $apiBuilder->buildDomainTreeForApi($catalogue, $locale, $theme, $search, $module);
     }
 }
