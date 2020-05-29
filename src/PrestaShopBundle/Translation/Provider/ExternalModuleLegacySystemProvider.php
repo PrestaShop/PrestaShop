@@ -148,6 +148,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Sea
                 return $this->emptyCatalogue(clone $defaultCatalogue);
             }
         }
+
         return $defaultCatalogue;
     }
 
