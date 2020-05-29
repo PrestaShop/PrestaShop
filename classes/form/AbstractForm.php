@@ -138,7 +138,7 @@ abstract class AbstractFormCore implements FormInterface
                     $field->addError(
                         $this->constraintTranslator->translate('required')
                     );
-                } elseif (!$this->validateFieldLength($field)) {
+                } elseif (!$this->checkFieldLength($field)) {
                     $field->addError(
                         $this->translator->trans(
                             'The %1$s field is too long (%2$d chars max).',
@@ -152,7 +152,7 @@ abstract class AbstractFormCore implements FormInterface
             } elseif (!$field->isRequired()) {
                 if (!$field->getValue()) {
                     continue;
-                } elseif (!$this->validateFieldLength($field)) {
+                } elseif (!$this->checkFieldLength($field)) {
                     $field->addError(
                         $this->translator->trans(
                             'The %1$s field is too long (%2$d chars max).',
@@ -232,7 +232,7 @@ abstract class AbstractFormCore implements FormInterface
      *
      * @return bool
      */
-    protected function validateFieldLength($field)
+    protected function checkFieldLength($field)
     {
         $error = $field->getMaxLength() != null && strlen($field->getValue()) > (int) $field->getMaxLength();
 
