@@ -23,7 +23,7 @@ let browserContext;
 let page;
 
 let numberOfBackups = 0;
-let dbBackupFilename = '';
+let filePath;
 
 // Init objects needed
 const init = async function () {
@@ -58,7 +58,7 @@ describe('Generate db backup and download it', async () => {
   loginCommon.loginBO();
 
   // Go db backup page
-  it('should go to database > sql manager page', async function () {
+  it('should go to \'database > sql manager\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
     await this.pageObjects.dashboardPage.goToSubMenu(
@@ -103,11 +103,9 @@ describe('Generate db backup and download it', async () => {
     it('should download db backup created and check file existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'DownloadDbBackup', baseContext);
 
-      dbBackupFilename = await this.pageObjects.dbBackupPage.getBackupFilename(1);
+      filePath = await this.pageObjects.dbBackupPage.downloadDbBackup();
 
-      await this.pageObjects.dbBackupPage.downloadDbBackup();
-
-      const found = await files.doesFileExist(dbBackupFilename);
+      const found = await files.doesFileExist(filePath);
       await expect(found, 'Download backup file failed').to.be.true;
     });
   });

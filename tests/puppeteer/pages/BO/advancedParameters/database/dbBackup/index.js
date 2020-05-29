@@ -68,20 +68,15 @@ module.exports = class DbBackup extends BOBasePage {
   }
 
   /**
-   * Get db backup filename
-   * @param row
-   * @return {Promise<textContent>}
-   */
-  async getBackupFilename(row) {
-    return this.getTextContent(this.tableColumn(row, 'file_name'));
-  }
-
-  /**
    * Download backup
    * @return {Promise<void>}
    */
   async downloadDbBackup() {
-    await this.page.click(this.downloadBackupButton);
+    const [download] = await Promise.all([
+      this.page.waitForEvent('download'),
+      await this.page.click(this.downloadBackupButton),
+    ]);
+    return download.path();
   }
 
   /**
@@ -116,13 +111,13 @@ module.exports = class DbBackup extends BOBasePage {
     this.dialogListener(true);
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.page.waitForSelector(`${this.selectAllRowsLabel}:not([disabled])`, {state: 'visible'}),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.page.waitForSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`, {state: 'visible'}),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);
