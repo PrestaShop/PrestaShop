@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * This class returns a collection of translations, using locale and identifier.
@@ -53,7 +54,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * {@inheritdoc}
      */
-    public function createCatalogue($themeName, $locale = ThemeProvider::DEFAULT_LOCALE)
+    public function createCatalogue(string $themeName, string $locale = ThemeProvider::DEFAULT_LOCALE): MessageCatalogueInterface
     {
         return $this->themeProvider
             ->setThemeName($themeName)
@@ -65,11 +66,12 @@ class ThemeTranslationsFactory extends TranslationsFactory
      * {@inheritdoc}
      */
     public function createTranslationsArray(
-        $themeName,
-        $locale = ThemeProvider::DEFAULT_LOCALE,
-        $theme = null,
-        $search = null
-    ) {
+        string $themeName,
+        string $locale = ThemeProvider::DEFAULT_LOCALE,
+        ?string $theme = null,
+        ?string $search = null
+    ): array
+    {
         // refresh theme translations cache
         $this->themeProvider
             ->setThemeName($themeName)
