@@ -26,41 +26,39 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+
 /**
  * Translation provider for native modules (maintained by the core team)
  * Translations are provided by Crowdin.
  */
 class ModulesProvider extends AbstractProvider
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslationDomains()
+    public function __construct(
+        DatabaseTranslationLoader $databaseLoader,
+        string $resourceDirectory
+    )
     {
-        return ['^Modules[A-Z]'];
+        $translationDomains = ['^Modules[A-Z]'];
+
+        $filenameFilters = ['#^Modules[A-Z]#'];
+
+        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+
+        parent::__construct(
+            $databaseLoader,
+            $resourceDirectory,
+            $translationDomains,
+            $filenameFilters,
+            $defaultResourceDirectory
+        );
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFilters()
-    {
-        return ['#^Modules[A-Z]#'];
-    }
-
-    /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getIdentifier()
     {
         return 'modules';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultResourceDirectory()
-    {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 }
