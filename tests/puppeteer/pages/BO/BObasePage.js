@@ -15,7 +15,8 @@ module.exports = class BOBasePage extends CommonPage {
 
     // top navbar
     this.headerLogoImage = '#header_logo';
-    this.userProfileIcon = '#employee_infos';
+    this.userProfileIconNonMigratedPages = '#employee_infos';
+    this.userProfileIcon = '#header_infos #header-employee-container';
     this.userProfileLogoutLink = 'a#header_logout';
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
@@ -170,12 +171,23 @@ module.exports = class BOBasePage extends CommonPage {
   async goToSubMenu(parentSelector, linkSelector) {
     if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
       // open the block
+<<<<<<< HEAD
       await this.scrollTo(parentSelector);
 
       await Promise.all([
         this.page.click(parentSelector),
         this.waitForVisibleSelector(`${parentSelector}.open`),
       ]);
+||||||| merged common ancestors
+      await Promise.all([this.page.click(parentSelector), this.waitForVisibleSelector(`${parentSelector}.open`)]);
+      await this.clickAndWaitForNavigation(linkSelector);
+=======
+      await this.scrollTo(parentSelector);
+      await Promise.all([
+        this.page.click(parentSelector),
+        this.waitForVisibleSelector(`${parentSelector}.open`),
+      ]);
+>>>>>>> Fix employee tests
     }
     await this.scrollTo(linkSelector);
     await this.clickAndWaitForNavigation(linkSelector);
@@ -187,9 +199,8 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async logoutBO() {
-    await this.clickAndWaitForNavigation(this.headerLogoImage);
-    await this.waitForVisibleSelector(this.userProfileIcon);
-    await this.page.click(this.userProfileIcon);
+    if (this.elementVisible(this.userProfileIcon, 1000)) await this.page.click(this.userProfileIcon);
+    else await this.page.$eval(this.userProfileIconNonMigratedPages, el => el.click());
     await this.waitForVisibleSelector(this.userProfileLogoutLink);
     await this.clickAndWaitForNavigation(this.userProfileLogoutLink);
   }

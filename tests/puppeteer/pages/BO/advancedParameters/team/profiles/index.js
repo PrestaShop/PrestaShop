@@ -139,13 +139,13 @@ module.exports = class Profiles extends BOBasePage {
     this.dialogListener();
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsLabel),
-      this.waitForVisibleSelector(`${this.selectAllRowsLabel}:not([disabled])`),
+      this.page.$eval(this.selectAllRowsLabel, el => el.click()),
+      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
       this.page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}`),
+      this.waitForVisibleSelector(this.bulkActionsToggleButton),
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(this.bulkActionsDeleteButton);

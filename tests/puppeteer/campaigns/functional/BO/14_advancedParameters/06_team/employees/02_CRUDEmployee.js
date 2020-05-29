@@ -28,9 +28,25 @@ let browserContext;
 let page;
 let numberOfEmployees = 0;
 
-let createEmployeeData;
-let firstEditEmployeeData;
-let secondEditEmployeeData;
+const createEmployeeData = new EmployeeFaker({
+  defaultPage: 'Products',
+  language: 'English (English)',
+  permissionProfile: 'Salesman',
+});
+
+const firstEditEmployeeData = new EmployeeFaker({
+  password: '123456789',
+  defaultPage: 'Orders',
+  language: 'English (English)',
+  permissionProfile: 'Salesman',
+});
+
+const secondEditEmployeeData = new EmployeeFaker({
+  defaultPage: 'Orders',
+  language: 'English (English)',
+  permissionProfile: 'Salesman',
+  active: false,
+});
 
 // Init objects needed
 const init = async function () {
@@ -55,33 +71,6 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
 
     // Init page objects
     this.pageObjects = await init();
-
-    // Init data
-    createEmployeeData = await (
-      new EmployeeFaker({
-        defaultPage: 'Products',
-        language: 'English (English)',
-        permissionProfile: 'Salesman',
-      })
-    );
-
-    firstEditEmployeeData = await (
-      new EmployeeFaker({
-        password: '123456789',
-        defaultPage: 'Orders',
-        language: 'English (English)',
-        permissionProfile: 'Salesman',
-      })
-    );
-
-    secondEditEmployeeData = await (
-      new EmployeeFaker({
-        defaultPage: 'Orders',
-        language: 'English (English)',
-        permissionProfile: 'Salesman',
-        active: false,
-      })
-    );
   });
 
   after(async () => {
