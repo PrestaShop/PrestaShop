@@ -59,9 +59,7 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
-            'general' => $this->generalDataConfiguration->getConfiguration(),
-        ];
+        return $this->generalDataConfiguration->getConfiguration();
     }
 
     /**
@@ -73,7 +71,7 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
             return $errors;
         }
 
-        return $this->generalDataConfiguration->updateConfiguration($data['general']);
+        return $this->generalDataConfiguration->updateConfiguration($data);
     }
 
     /**
