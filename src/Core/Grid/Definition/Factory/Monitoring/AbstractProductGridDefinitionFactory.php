@@ -195,7 +195,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     'admin_product_unit_action',
                     'id',
                     'id_product',
-                    Request::METHOD_DELETE,
+                    Request::METHOD_POST,
                     ['action' => 'delete']
                 )
             );
