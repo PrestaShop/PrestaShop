@@ -43,24 +43,27 @@ interface TranslationsFactoryInterface
      *
      * @return MessageCatalogueInterface
      */
-    public function createCatalogue($identifier, $locale = self::DEFAULT_LOCALE);
+    public function createCatalogue(
+        string $identifier,
+        string $locale = self::DEFAULT_LOCALE
+    ): MessageCatalogueInterface;
 
     /**
      * Generates a list of translations by domain.
      *
      * @param string $domainIdentifier Domain identifier
      * @param string $locale Locale identifier
-     * @param null $theme
-     * @param null $search
+     * @param string|null $theme
+     * @param string|null $search
      *
      * @throws ProviderNotFoundException
      *
      * @return array Translation tree structure
      */
     public function createTranslationsArray(
-        $domainIdentifier,
-        $locale = self::DEFAULT_LOCALE,
-        $theme = null,
-        $search = null
-    );
+        string $domainIdentifier,
+        string $locale = self::DEFAULT_LOCALE,
+        ?string $theme = null,
+        ?string $search = null
+    ): array;
 }

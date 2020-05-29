@@ -26,40 +26,38 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+
 /**
  * Translation provider specific to email subjects.
  */
 class MailsBodyProvider extends AbstractProvider implements UseDefaultCatalogueInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslationDomains()
+    public function __construct(
+        DatabaseTranslationLoader $databaseLoader,
+        string $resourceDirectory
+    )
     {
-        return ['EmailsBody*'];
+        $translationDomains = ['EmailsBody*'];
+
+        $filenameFilters = ['#EmailsBody*#'];
+
+        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+
+        parent::__construct(
+            $databaseLoader,
+            $resourceDirectory,
+            $translationDomains,
+            $filenameFilters,
+            $defaultResourceDirectory
+        );
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFilters()
-    {
-        return ['#EmailsBody*#'];
-    }
-
-    /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getIdentifier()
     {
         return 'mails_body';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultResourceDirectory()
-    {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 }
