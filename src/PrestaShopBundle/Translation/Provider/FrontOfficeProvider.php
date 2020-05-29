@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
@@ -40,8 +39,7 @@ class FrontOfficeProvider extends AbstractProvider
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
-    )
-    {
+    ) {
         $translationDomains = [
             '^Shop*',
             '^Modules(.*)Shop',
