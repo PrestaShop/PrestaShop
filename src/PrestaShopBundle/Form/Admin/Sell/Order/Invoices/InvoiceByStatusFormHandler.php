@@ -83,7 +83,7 @@ final class InvoiceByStatusFormHandler extends Handler
 
         $invoiceCollection = [];
 
-        foreach ($data['generate_by_status']['order_states'] as $orderStateId) {
+        foreach ($data['order_states'] as $orderStateId) {
             // Put invoices for each selected status into one collection
             $invoiceCollection = array_merge(
                 $invoiceCollection,
