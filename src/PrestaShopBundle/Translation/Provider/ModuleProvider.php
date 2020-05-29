@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 
 /**
  * Translation provider for a specific native module (maintained by the core team)
@@ -39,28 +40,24 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
      */
     private $moduleName;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslationDomains()
+    public function __construct(
+        DatabaseTranslationLoader $databaseLoader,
+        string $resourceDirectory
+    )
     {
-        return ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
-    }
+        $translationDomains = ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilters()
-    {
-        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
-    }
+        $filenameFilters = ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return 'module';
+        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+
+        parent::__construct(
+            $databaseLoader,
+            $resourceDirectory,
+            $translationDomains,
+            $filenameFilters,
+            $defaultResourceDirectory
+        );
     }
 
     /**
@@ -74,10 +71,10 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function getDefaultResourceDirectory()
+    public function getIdentifier()
     {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+        return 'module';
     }
 }

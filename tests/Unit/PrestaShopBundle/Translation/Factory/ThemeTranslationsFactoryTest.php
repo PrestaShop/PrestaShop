@@ -119,13 +119,13 @@ class ThemeTranslationsFactoryTest extends TestCase
 
         $this->translations = $this->factory->createTranslationsArray($theme, $locale);
 
-        $this->assertPropertiesTranslations($locale);
+        $this->assertPropertiesTranslations();
 
-        $this->assertTranslationsContainThemeMessages($locale);
+        $this->assertTranslationsContainThemeMessages();
 
-        $this->assertTranslationsContainCatalogueMessages($locale);
+        $this->assertTranslationsContainCatalogueMessages();
 
-        $this->assertTranslationsContainDefaultAndDatabaseMessages($locale);
+        $this->assertTranslationsContainDefaultAndDatabaseMessages();
     }
 
     private function getDefaultCatalogue()
@@ -150,7 +150,7 @@ class ThemeTranslationsFactoryTest extends TestCase
         );
     }
 
-    private function getXliffCatalogue()
+    private function getFilesystemCatalogue()
     {
         return new MessageCatalogue(
             self::TEST_LOCALE,
@@ -169,7 +169,7 @@ class ThemeTranslationsFactoryTest extends TestCase
         );
     }
 
-    private function getDatabaseCatalogue()
+    private function getUserTranslatedCatalogue()
     {
         return new MessageCatalogue(
             self::TEST_LOCALE,
@@ -221,13 +221,13 @@ class ThemeTranslationsFactoryTest extends TestCase
 
         $providerMock
             ->expects($this->any())
-            ->method('getXliffCatalogue')
-            ->willReturn($this->getXliffCatalogue());
+            ->method('getFilesystemCatalogue')
+            ->willReturn($this->getFilesystemCatalogue());
 
         $providerMock
             ->expects($this->any())
-            ->method('getDatabaseCatalogue')
-            ->willReturn($this->getDatabaseCatalogue());
+            ->method('getUserTranslatedCatalogue')
+            ->willReturn($this->getUserTranslatedCatalogue());
 
         $providerMock
             ->expects($this->any())
@@ -237,7 +237,7 @@ class ThemeTranslationsFactoryTest extends TestCase
         return $providerMock;
     }
 
-    protected function assertPropertiesTranslations($locale)
+    protected function assertPropertiesTranslations()
     {
         $this->assertInternalType('array', $this->translations);
 
@@ -248,13 +248,11 @@ class ThemeTranslationsFactoryTest extends TestCase
         $this->assertArrayHasKey('DefaultDomain', $this->translations);
     }
 
-    /**
-     * @param $locale
-     */
-    protected function assertTranslationsContainThemeMessages($locale)
+    protected function assertTranslationsContainThemeMessages()
     {
         $this->assertSame(
             array(
+                'default' => 'Default message bis',
                 'xlf' => null,
                 'db' => null,
             ),
@@ -264,6 +262,7 @@ class ThemeTranslationsFactoryTest extends TestCase
 
         $this->assertSame(
             array(
+                'default' => 'foo',
                 'xlf' => null,
                 'db' => null,
             ),
@@ -272,13 +271,11 @@ class ThemeTranslationsFactoryTest extends TestCase
         );
     }
 
-    /**
-     * @param $locale
-     */
-    protected function assertTranslationsContainCatalogueMessages($locale)
+    protected function assertTranslationsContainCatalogueMessages()
     {
         $this->assertSame(
             array(
+                'default' => 'Add to Cart',
                 'xlf' => 'Add to Cart override xliff',
                 'db' => null,
             ),
@@ -288,6 +285,7 @@ class ThemeTranslationsFactoryTest extends TestCase
 
         $this->assertSame(
             array(
+                'default' => 'bar',
                 'xlf' => 'Bar override xlif',
                 'db' => null,
             ),
@@ -296,13 +294,11 @@ class ThemeTranslationsFactoryTest extends TestCase
         );
     }
 
-    /**
-     * @param $locale
-     */
-    protected function assertTranslationsContainDefaultAndDatabaseMessages($locale)
+    protected function assertTranslationsContainDefaultAndDatabaseMessages()
     {
         $this->assertSame(
             array(
+                'default' => 'Default message',
                 'xlf' => 'Default MESSAGE override xliff',
                 'db' => 'Default override database',
             ),
@@ -312,6 +308,7 @@ class ThemeTranslationsFactoryTest extends TestCase
 
         $this->assertSame(
             array(
+                'default' => 'baz',
                 'xlf' => 'Baz override xliff',
                 'db' => 'Baz is updated from database!',
             ),

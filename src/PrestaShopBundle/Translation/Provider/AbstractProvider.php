@@ -24,12 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
-use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 abstract class AbstractProvider implements ProviderInterface
@@ -37,19 +38,9 @@ abstract class AbstractProvider implements ProviderInterface
     const DEFAULT_LOCALE = 'en-US';
 
     /**
-     * @var LoaderInterface Loader for database translations
-     */
-    private $databaseLoader;
-
-    /**
      * @var string Path where translation files are found
      */
     protected $resourceDirectory;
-
-    /**
-     * @var string Locale to load the catalogue in
-     */
-    protected $locale;
 
     /**
      * @var string Catalogue domain
@@ -57,63 +48,48 @@ abstract class AbstractProvider implements ProviderInterface
     protected $domain;
 
     /**
-     * @param LoaderInterface $databaseLoader
+     * @var string locale
+     */
+    protected $locale;
+
+    /**
+     * @var ExtractorInterface
+     */
+    protected $defaultCatalogueExtractor;
+    /**
+     * @var ExtractorInterface
+     */
+    protected $filesystemCatalogueExtractor;
+    /**
+     * @var UserTranslatedCatalogueExtractor
+     */
+    protected $userTranslatedCatalogueExtractor;
+
+    /**
+     * @param DatabaseTranslationLoader $databaseLoader
      * @param string $resourceDirectory Path where translations are found
+     * @param array $translationDomains
+     * @param array $filenameFilters
+     * @param string $defaultResourceDirectory
      */
-    public function __construct(LoaderInterface $databaseLoader, $resourceDirectory)
+    public function __construct(
+        DatabaseTranslationLoader $databaseLoader,
+        string $resourceDirectory,
+        array $translationDomains = [''],
+        array $filenameFilters = [],
+        string $defaultResourceDirectory = ''
+    )
     {
-        $this->databaseLoader = $databaseLoader;
         $this->resourceDirectory = $resourceDirectory;
-        $this->locale = self::DEFAULT_LOCALE;
-    }
+        $this->defaultCatalogueExtractor = (new DefaultCatalogueExtractor())
+            ->setFilenameFilters($filenameFilters)
+            ->setDefaultResourceDirectory($defaultResourceDirectory);
 
-    /**
-     * Returns a list of directories to crawl for Xliff files
-     *
-     * @return string[]
-     */
-    protected function getDirectories()
-    {
-        return [$this->getResourceDirectory()];
-    }
+        $this->filesystemCatalogueExtractor = (new FilesystemCatalogueExtractor())
+            ->setFilenameFilters($filenameFilters);
 
-    /**
-     * Returns a list of patterns used to filter a catalogue (including XLF file lookup) by translation domain.
-     *
-     * Only matching domains will be loaded by this provider.
-     * Multiple filters are computed using OR.
-     *
-     * @return string[]
-     */
-    protected function getFilters()
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslationDomains()
-    {
-        return [''];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
+        $this->userTranslatedCatalogueExtractor = (new UserTranslatedCatalogueExtractor($databaseLoader))
+            ->setTranslationDomains($translationDomains);
     }
 
     /**
@@ -121,7 +97,7 @@ abstract class AbstractProvider implements ProviderInterface
      *
      * @return static
      */
-    public function setDomain($domain)
+    public function setDomain(string $domain): self
     {
         $this->domain = $domain;
 
@@ -129,36 +105,39 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Get the PrestaShop locale from real locale.
+     * @param string $locale
      *
-     * @return string The PrestaShop locale
-     *
-     * @deprecated since 1.7.6, to be removed in the next major
+     * @return static
      */
-    public function getPrestaShopLocale()
+    public function setLocale(string $locale): self
     {
-        @trigger_error(
-            '`AbstractProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
-            E_USER_DEPRECATED
-        );
+        $this->locale = $locale;
 
-        return Converter::toPrestaShopLocale($this->locale);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale(): string
+    {
+        return $this->locale;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getMessageCatalogue()
+    public function getMessageCatalogue(): MessageCatalogueInterface
     {
         $messageCatalogue = $this->getDefaultCatalogue();
 
         // Merge catalogues
 
-        $xlfCatalogue = $this->getXliffCatalogue();
+        $xlfCatalogue = $this->getFilesystemCatalogue();
         $messageCatalogue->addCatalogue($xlfCatalogue);
         unset($xlfCatalogue);
 
-        $databaseCatalogue = $this->getDatabaseCatalogue();
+        $databaseCatalogue = $this->getUserTranslatedCatalogue();
         $messageCatalogue->addCatalogue($databaseCatalogue);
         unset($databaseCatalogue);
 
@@ -170,68 +149,33 @@ abstract class AbstractProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue($empty = true)
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
     {
-        $defaultCatalogue = new MessageCatalogue($this->locale);
-
-        foreach ($this->getFilters() as $filter) {
-            $filteredCatalogue = $this->getCatalogueFromPaths(
-                [$this->getDefaultResourceDirectory()],
-                $this->locale,
-                $filter
-            );
-            $defaultCatalogue->addCatalogue($filteredCatalogue);
-        }
-
-        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
-            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
+        return $this->defaultCatalogueExtractor
+            ->setLocale($this->getLocale())
+            ->extract($empty);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getXliffCatalogue()
+    public function getFilesystemCatalogue(): MessageCatalogueInterface
     {
-        $xlfCatalogue = new MessageCatalogue($this->locale);
-
-        foreach ($this->getFilters() as $filter) {
-            try {
-                $filteredCatalogue = $this->getCatalogueFromPaths(
-                    $this->getDirectories(),
-                    $this->locale,
-                    $filter
-                );
-                $xlfCatalogue->addCatalogue($filteredCatalogue);
-            } catch (FileNotFoundException $e) {
-                // there are no translation files, ignore them
-            }
-        }
-
-        return $xlfCatalogue;
+        return $this->filesystemCatalogueExtractor
+            ->setLocale($this->getLocale())
+            ->setResourceDirectory($this->resourceDirectory)
+            ->extract();
     }
 
     /**
-     * {@intheritdoc}
+     * {@inheritdoc}
      */
-    public function getDatabaseCatalogue($theme = null)
+    public function getUserTranslatedCatalogue(string $theme = null): MessageCatalogueInterface
     {
-        $databaseCatalogue = new MessageCatalogue($this->locale);
-
-        foreach ($this->getTranslationDomains() as $translationDomain) {
-            if (!($this->getDatabaseLoader() instanceof DatabaseTranslationLoader)) {
-                continue;
-            }
-            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
-
-            if ($domainCatalogue instanceof MessageCatalogue) {
-                $databaseCatalogue->addCatalogue($domainCatalogue);
-            }
-        }
-
-        return $databaseCatalogue;
+        return $this->userTranslatedCatalogueExtractor
+            ->setLocale($this->getLocale())
+            ->setTheme($theme)
+            ->extract();
     }
 
     /**
@@ -239,19 +183,9 @@ abstract class AbstractProvider implements ProviderInterface
      *
      * @return string
      */
-    public function getResourceDirectory()
+    protected function xgetResourceDirectory(): string
     {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->locale;
-    }
-
-    /**
-     * Returns the loader for database translations
-     *
-     * @return LoaderInterface
-     */
-    public function getDatabaseLoader()
-    {
-        return $this->databaseLoader;
+        return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->getLocale();
     }
 
     /**
@@ -261,7 +195,7 @@ abstract class AbstractProvider implements ProviderInterface
      *
      * @return MessageCatalogueInterface Empty the catalogue
      */
-    public function emptyCatalogue(MessageCatalogueInterface $messageCatalogue)
+    protected function emptyCatalogue(MessageCatalogueInterface $messageCatalogue): MessageCatalogueInterface
     {
         foreach ($messageCatalogue->all() as $domain => $messages) {
             foreach (array_keys($messages) as $translationKey) {
@@ -273,25 +207,11 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Loads the catalogue from the provided paths
-     *
-     * @param string|string[] $paths a list of paths when we can look for translations
-     * @param string $locale the Symfony (not the PrestaShop one) locale
-     * @param string|null $pattern a regular expression
-     *
-     * @return MessageCatalogue
-     *
-     * @throws FileNotFoundException
-     */
-    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
-    {
-        return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
-    }
-
-    /**
      * Returns the path to the directory where the default (aka not translated) catalogue is
+     *
+     * Most of the time, it's `app/Resources/translations/default/{locale}`
      *
      * @return string
      */
-    abstract public function getDefaultResourceDirectory();
+//    abstract protected function getDefaultResourceDirectory(): string;
 }
