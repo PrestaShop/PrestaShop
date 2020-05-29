@@ -33,6 +33,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use ZipArchive;
 
+/**
+ * Exports a full theme into a zip file
+ */
 class ThemeExporter
 {
     protected $configuration;
@@ -52,6 +55,13 @@ class ThemeExporter
         $this->translationsExporter = $translationsExporter;
     }
 
+    /**
+     * Exports a theme into a zip file
+     *
+     * @param Theme $theme
+     *
+     * @return string Path to the exported zip file
+     */
     public function export(Theme $theme)
     {
         $cacheDir = $this->configuration->get('_PS_CACHE_DIR_') . 'export-' . $theme->getName() . '-' . time() . DIRECTORY_SEPARATOR;

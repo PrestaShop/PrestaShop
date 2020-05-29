@@ -26,46 +26,44 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+
 /**
  * Main translation provider of the Back Office
  */
 class BackOfficeProvider extends AbstractProvider
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslationDomains()
+    public function __construct(
+        DatabaseTranslationLoader $databaseLoader,
+        string $resourceDirectory
+    )
     {
-        return [
+        $translationDomains = [
             '^Admin[A-Z]',
             '^Modules[A-Z](.*)Admin',
         ];
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilters()
-    {
-        return [
+        $filenameFilters =[
             '#^Admin[A-Z]#',
             '#^Modules[A-Z](.*)Admin#',
         ];
+
+        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+
+        parent::__construct(
+            $databaseLoader,
+            $resourceDirectory,
+            $translationDomains,
+            $filenameFilters,
+            $defaultResourceDirectory
+        );
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getIdentifier()
     {
         return 'back';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultResourceDirectory()
-    {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
     }
 }
