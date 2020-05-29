@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Validation;
 class TranslationService
 {
     /**
-     * @deprecated Since 1.7.6.5
+     * @deprecated Since 1.7.7.0
      */
     const DEFAULT_THEME = 'classic';
 
@@ -117,15 +117,27 @@ class TranslationService
         return $this->container->getParameter('kernel.root_dir') . '/Resources';
     }
 
+    public function getModulesTranslationsCatalogue(string $lang, string $type, string $theme, ?string $search)
+    {
+        $factory = $this->container->get('prestashop.translation.translations_factory');
+
+        return $factory->createTranslationsArray(
+            $type,
+            $this->langToLocale($lang),
+            $theme,
+            $search
+        );
+    }
+
     /**
-     * Returns the translation tree
+     * Returns list translations by domain
      *
      * @param string $lang
      * @param string $type
      * @param string $theme
      * @param string|null $search
      *
-     * @return array|mixed
+     * @return array
      */
     public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
     {
@@ -140,9 +152,7 @@ class TranslationService
             }
         }
 
-        $locale = $this->langToLocale($lang);
-
-        return $factory->createTranslationsArray($type, $locale, $theme, $search);
+        return $factory->createTranslationsArray($type, $this->langToLocale($lang), $theme, $search);
     }
 
     /**
@@ -191,8 +201,8 @@ class TranslationService
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
         $defaultCatalog = $translationProvider->getDefaultCatalogue()->all($domain);
-        $xliffCatalog = $translationProvider->getXliffCatalogue()->all($domain);
-        $dbCatalog = $translationProvider->getDatabaseCatalogue($theme)->all($domain);
+        $xliffCatalog = $translationProvider->getFilesystemCatalogue()->all($domain);
+        $dbCatalog = $translationProvider->getUserTranslatedCatalogue($theme)->all($domain);
 
         $domainData = [];
         foreach ($defaultCatalog as $key => $message) {
