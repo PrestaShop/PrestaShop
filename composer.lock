@@ -9924,6 +9924,7 @@
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-intl": "*",
+        "ext-mbstring": "*",
         "ext-zip": "*",
         "ext-iconv": "*",
         "ext-json": "*",
