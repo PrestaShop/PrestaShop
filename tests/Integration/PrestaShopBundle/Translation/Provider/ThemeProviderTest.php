@@ -103,7 +103,7 @@ class ThemeProviderTest extends KernelTestCase
         $provider->setThemeName($this->themeName);
 
         // load catalogue from Xliff files within the theme
-        $catalogue = $provider->getXliffCatalogue();
+        $catalogue = $provider->getFilesystemCatalogue();
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 

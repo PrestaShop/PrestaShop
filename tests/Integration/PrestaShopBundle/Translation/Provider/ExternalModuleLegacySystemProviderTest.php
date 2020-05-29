@@ -98,7 +98,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         array $expected
     ) {
         $this->provider->setLocale($locale);
-        $legacyCatalogue = $this->provider->getXliffCatalogue();
+        $legacyCatalogue = $this->provider->getFilesystemCatalogue();
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 
