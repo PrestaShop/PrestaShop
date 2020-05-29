@@ -36,14 +36,13 @@ class BackOfficeProvider extends AbstractProvider
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
-    )
-    {
+    ) {
         $translationDomains = [
             '^Admin[A-Z]',
             '^Modules[A-Z](.*)Admin',
         ];
 
-        $filenameFilters =[
+        $filenameFilters = [
             '#^Admin[A-Z]#',
             '#^Modules[A-Z](.*)Admin#',
         ];
@@ -60,7 +59,7 @@ class BackOfficeProvider extends AbstractProvider
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdentifier()
     {

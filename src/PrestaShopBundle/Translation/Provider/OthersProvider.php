@@ -37,8 +37,7 @@ class OthersProvider extends AbstractProvider
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
-    )
-    {
+    ) {
         $translationDomains = ['^messages*'];
 
         $filenameFilters = ['#^messages*#'];
@@ -55,7 +54,7 @@ class OthersProvider extends AbstractProvider
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getIdentifier()
     {

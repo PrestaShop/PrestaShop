@@ -70,8 +70,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
         string $locale = ThemeProvider::DEFAULT_LOCALE,
         ?string $theme = null,
         ?string $search = null
-    ): array
-    {
+    ): array {
         // refresh theme translations cache
         $this->themeProvider
             ->setThemeName($themeName)

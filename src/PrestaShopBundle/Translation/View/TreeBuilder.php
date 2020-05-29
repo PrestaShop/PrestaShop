@@ -30,7 +30,6 @@ use Doctrine\Common\Util\Inflector;
 
 class TreeBuilder
 {
-
     /**
      * Builds a domain metadata tree.
      *
@@ -108,7 +107,7 @@ class TreeBuilder
             $parts = $this->splitDomain($domain);
 
             // start at the root
-            $subtree =& $tree;
+            $subtree = &$tree;
             $currentSubdomainName = '';
 
             foreach ($parts as $partNumber => $part) {
@@ -126,7 +125,7 @@ class TreeBuilder
                 }
 
                 // move pointer to said branch
-                $subtree =& $subtree[$subdomainPartName];
+                $subtree = &$subtree[$subdomainPartName];
             }
         }
 
@@ -170,7 +169,8 @@ class TreeBuilder
      *
      * @return string[]
      */
-    private function splitDomain($domain) {
+    private function splitDomain($domain)
+    {
         $tableizedDomain = Inflector::tableize($domain);
         // the third component of the domain may have underscores, so we need to limit pieces to 3
         return explode('_', $tableizedDomain, 3);

@@ -31,7 +31,6 @@ use PrestaShopBundle\Translation\View\TreeBuilder;
 
 class TreeBuilderTest extends TestCase
 {
-
     /**
      * @param array[] $translationsArray
      * @param array[] $expectedTree
@@ -57,7 +56,7 @@ class TreeBuilderTest extends TestCase
                         'someotherMessage' => [],
                         '__metadata' => [
                             'count' => 2,
-                            'missing_translations' => 1
+                            'missing_translations' => 1,
                         ],
                     ],
                     'AdminFooBaz' => [
@@ -65,7 +64,7 @@ class TreeBuilderTest extends TestCase
                         'someotherMessage' => [],
                         '__metadata' => [
                             'count' => 2,
-                            'missing_translations' => 2
+                            'missing_translations' => 2,
                         ],
                     ],
                     'AdminPlop' => [
@@ -73,7 +72,7 @@ class TreeBuilderTest extends TestCase
                         'someotherMessage' => [],
                         '__metadata' => [
                             'count' => 2,
-                            'missing_translations' => 1
+                            'missing_translations' => 1,
                         ],
                     ],
                     'AdminPlopFoo' => [
@@ -81,7 +80,7 @@ class TreeBuilderTest extends TestCase
                         'someotherMessage' => [],
                         '__metadata' => [
                             'count' => 2,
-                            'missing_translations' => 0
+                            'missing_translations' => 0,
                         ],
                     ],
                     'AdminPlopBar' => [
@@ -90,7 +89,7 @@ class TreeBuilderTest extends TestCase
                         'someAnotherMessage' => [],
                         '__metadata' => [
                             'count' => 3,
-                            'missing_translations' => 1
+                            'missing_translations' => 1,
                         ],
                     ],
                 ],
@@ -98,46 +97,46 @@ class TreeBuilderTest extends TestCase
                 'expectedTree' => [
                     '__metadata' => [
                         'count' => 11,
-                        'missing_translations' => 5
+                        'missing_translations' => 5,
                     ],
                     'Admin' => [
                         '__metadata' => [
                             'count' => 11,
-                            'missing_translations' => 5
+                            'missing_translations' => 5,
                         ],
                         'Foo' => [
                             '__metadata' => [
                                 'count' => 4,
-                                'missing_translations' => 3
+                                'missing_translations' => 3,
                             ],
                             'Bar' => [
                                 '__metadata' => [
                                     'count' => 2,
-                                    'missing_translations' => 1
+                                    'missing_translations' => 1,
                                 ],
                             ],
                             'Baz' => [
                                 '__metadata' => [
                                     'count' => 2,
-                                    'missing_translations' => 2
+                                    'missing_translations' => 2,
                                 ],
                             ],
                         ],
                         'Plop' => [
                             '__metadata' => [
                                 'count' => 7,
-                                'missing_translations' => 2
+                                'missing_translations' => 2,
                             ],
                             'Foo' => [
                                 '__metadata' => [
                                     'count' => 2,
-                                    'missing_translations' => 0
+                                    'missing_translations' => 0,
                                 ],
                             ],
                             'Bar' => [
                                 '__metadata' => [
                                     'count' => 3,
-                                    'missing_translations' => 1
+                                    'missing_translations' => 1,
                                 ],
                             ],
                         ],

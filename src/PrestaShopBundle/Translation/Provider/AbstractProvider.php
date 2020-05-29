@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 abstract class AbstractProvider implements ProviderInterface
@@ -78,8 +77,7 @@ abstract class AbstractProvider implements ProviderInterface
         array $translationDomains = [''],
         array $filenameFilters = [],
         string $defaultResourceDirectory = ''
-    )
-    {
+    ) {
         $this->resourceDirectory = $resourceDirectory;
         $this->defaultCatalogueExtractor = (new DefaultCatalogueExtractor())
             ->setFilenameFilters($filenameFilters)
@@ -206,7 +204,7 @@ abstract class AbstractProvider implements ProviderInterface
         return $messageCatalogue;
     }
 
-    /**
+    /*
      * Returns the path to the directory where the default (aka not translated) catalogue is
      *
      * Most of the time, it's `app/Resources/translations/default/{locale}`
