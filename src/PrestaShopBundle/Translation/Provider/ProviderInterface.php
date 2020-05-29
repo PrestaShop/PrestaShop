@@ -47,7 +47,7 @@ interface ProviderInterface
     /**
      * Returns the default (aka not translated) catalogue
      *
-     * @param bool $empty [default=true] If true, keeps the keys but empties translations.
+     * @param bool $empty [default=true] If true, keeps the keys but empties translations
      *
      * @return MessageCatalogueInterface
      */

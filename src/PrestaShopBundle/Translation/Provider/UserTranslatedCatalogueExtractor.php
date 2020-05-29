@@ -1,8 +1,6 @@
 <?php
 
-
 namespace PrestaShopBundle\Translation\Provider;
-
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
@@ -38,6 +36,7 @@ class UserTranslatedCatalogueExtractor implements ExtractorInterface
 
     /**
      * @param string $locale
+     *
      * @return UserTranslatedCatalogueExtractor
      */
     public function setLocale(string $locale)
@@ -49,6 +48,7 @@ class UserTranslatedCatalogueExtractor implements ExtractorInterface
 
     /**
      * @param string|null $theme
+     *
      * @return UserTranslatedCatalogueExtractor
      */
     public function setTheme(?string $theme)
@@ -71,6 +71,7 @@ class UserTranslatedCatalogueExtractor implements ExtractorInterface
 
     /**
      * @param array $translationDomains
+     *
      * @return UserTranslatedCatalogueExtractor
      */
     public function setTranslationDomains(array $translationDomains): UserTranslatedCatalogueExtractor
@@ -80,10 +81,11 @@ class UserTranslatedCatalogueExtractor implements ExtractorInterface
         return $this;
     }
 
-
     /**
      * @param bool $empty
+     *
      * @return MessageCatalogueInterface
+     *
      * @throws FileNotFoundException
      */
     public function extract(bool $empty = true): MessageCatalogueInterface

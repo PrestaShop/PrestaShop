@@ -224,13 +224,13 @@ class TranslationService
 
         $router = $this->container->get('router');
 
-        return array(
-            'info' => array(
+        return [
+            'info' => [
                 'edit_url' => $router->generate('api_translation_value_edit'),
                 'reset_url' => $router->generate('api_translation_value_reset'),
-            ),
+            ],
             'data' => $domainData,
-        );
+        ];
     }
 
     /**
