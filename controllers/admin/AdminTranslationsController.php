@@ -3330,7 +3330,7 @@ class AdminTranslationsControllerCore extends AdminController
                 $subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
             }
         } else {
-            $this->errors[] = sprintf($this->l('Email subject translation file not found in "%s".'), $directory);
+            $this->errors[] = $this->trans('Email subject translation file not found in %path%', ['%path%' => $directory], 'Admin.International.Notification');
         }
 
         return $subject_mail_content;
