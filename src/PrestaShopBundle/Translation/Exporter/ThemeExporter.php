@@ -30,17 +30,21 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
-use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
+use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopBundle\Utils\ZipManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * Exports a theme's translations
+ */
 class ThemeExporter
 {
     /**
-     * @var ThemeExtractor the theme extractor
+     * @var ThemeExtractorInterface the theme extractor
      */
     private $themeExtractor;
 
@@ -80,7 +84,7 @@ class ThemeExporter
     public $exportDir;
 
     public function __construct(
-        ThemeExtractor $themeExtractor,
+        ThemeExtractorInterface $themeExtractor,
         ThemeProvider $themeProvider,
         ThemeRepository $themeRepository,
         XliffFileDumper $dumper,
@@ -99,11 +103,11 @@ class ThemeExporter
     }
 
     /**
-     * Extracts the theme's translations and bundles them in a zip file
+     * Extracts the theme's translations in a particular locale and bundles them in a zip file
      *
-     * @param string $themeName
-     * @param string $locale
-     * @param bool $rootDir
+     * @param string $themeName Theme name
+     * @param string $locale Locale for the exported catalogue
+     * @param string|false $rootDir Path to use as root for the translation metadata
      *
      * @return string Full path to the zip file
      */
@@ -117,12 +121,11 @@ class ThemeExporter
     }
 
     /**
-     * Extracts the theme's default catalogue by analyzing its files, applies all translations,
-     * then exports it as XLIFF files in a temporary directory
+     * Extracts the theme's translations in a particular locale as XLIFF files in a temporary directory
      *
-     * @param string $themeName
-     * @param string $locale
-     * @param bool $rootDir
+     * @param string $themeName Theme name
+     * @param string $locale Locale for the exported catalogue
+     * @param string|false $rootDir Path to use as root for the translation metadata
      *
      * @return string The directory where the files have been exported
      */
@@ -139,7 +142,7 @@ class ThemeExporter
             // if the theme doesn't have translation files (eg. the default theme)
             $themeCatalogue = new MessageCatalogue($locale);
         }
-        $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue($themeName);
+        $databaseCatalogue = $this->themeProvider->getUserTranslatedCatalogue($themeName);
 
         $mergedTranslations->addCatalogue($themeCatalogue);
         $mergedTranslations->addCatalogue($databaseCatalogue);
@@ -199,7 +202,7 @@ class ThemeExporter
     /**
      * @param string $themeName
      * @param string $locale
-     * @param bool $rootDir
+     * @param string|false $rootDir
      *
      * @return MessageCatalogue
      */
@@ -221,7 +224,7 @@ class ThemeExporter
 
         Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
 
-        return $this->themeProvider->getCatalogueFromPaths($folderPath, $locale, '*');
+        return (new TranslationFinder())->getCatalogueFromPaths($folderPath, $locale, '*');
     }
 
     /**
