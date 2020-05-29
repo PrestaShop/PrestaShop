@@ -27,6 +27,11 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
+use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkCore
@@ -131,6 +136,8 @@ class LinkCore
      * @param array $extraParams
      *
      * @return string
+     *
+     * @throws PrestaShopException
      */
     public function getProductLink(
         $product,
@@ -381,6 +388,8 @@ class LinkCore
      * @param int $idLang
      *
      * @return Category
+     *
+     * @throws PrestaShopException
      */
     public function getCategoryObject($category, $idLang)
     {
@@ -702,14 +711,17 @@ class LinkCore
     /**
      * Use controller name to create a link.
      *
+     * Warning on fallback to Symfony Router, this exceptions can be thrown
+     * - RouteNotFoundException If the named route doesn't exist
+     * - MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * - InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
+     *
      * @param string $controller
      * @param bool $withToken include or not the token in the url
      * @param array $sfRouteParams (Since 1.7.0.0) Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
      * @param array $params (Since 1.7.0.3) Optional
      *
      * @return string url
-     *
-     * @throws PrestaShopException
      */
     public function getAdminLink($controller, $withToken = true, $sfRouteParams = [], $params = [])
     {
@@ -732,7 +744,9 @@ class LinkCore
         $sfRouter = null;
         $legacyUrlConverter = null;
         if (null !== $sfContainer) {
+            /** @var UrlGeneratorInterface $sfRouter */
             $sfRouter = $sfContainer->get('router');
+            /** @var LegacyUrlConverter $legacyUrlConverter */
             $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.converter.legacy_url_converter');
         }
 
@@ -747,6 +761,7 @@ class LinkCore
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
+                /** @var AdminPagePreferenceInterface $pagePreference */
                 $pagePreference = $sfContainer->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
@@ -840,17 +855,21 @@ class LinkCore
     }
 
     /**
+     * Warning on fallback to Symfony Router, this exceptions can be thrown
+     * - RouteNotFoundException If the named route doesn't exist
+     * - MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * - InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
+     *
      * @param array $tab
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getTabLink(array $tab)
     {
         if (!empty($tab['route_name'])) {
             $sfContainer = SymfonyContainer::getInstance();
             if (null !== $sfContainer) {
+                /** @var UrlGeneratorInterface $sfRouter */
                 $sfRouter = $sfContainer->get('router');
 
                 return $sfRouter->generate($tab['route_name']);
@@ -887,8 +906,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopDatabaseException
      */
     public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
@@ -1180,8 +1197,6 @@ class LinkCore
      * @param Context|null $context the context if needed
      *
      * @return string link
-     *
-     * @throws PrestaShopException
      */
     public function getLanguageLink($idLang, Context $context = null)
     {
@@ -1441,6 +1456,8 @@ class LinkCore
      * @param array $params
      *
      * @return string
+     *
+     * @throws \InvalidArgumentException
      */
     public static function getUrlSmarty($params)
     {
@@ -1542,6 +1559,7 @@ class LinkCore
 
                 $sfContainer = SymfonyContainer::getInstance();
                 if (null !== $sfContainer) {
+                    /** @var UrlGeneratorInterface $sfRouter */
                     $sfRouter = $sfContainer->get('router');
 
                     if (array_key_exists('sf-params', $params)) {
