@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use Symfony\Component\Translation\Loader\LoaderInterface;
+use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
@@ -36,6 +36,11 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class SearchProvider extends AbstractProvider implements UseModuleInterface
 {
+    /**
+     * @var string[]
+     */
+    private $filenameFilters;
+
     /**
      * @var string the "modules" directory path
      */
@@ -47,15 +52,27 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
     private $externalModuleLegacySystemProvider;
 
     public function __construct(
-        LoaderInterface $databaseLoader,
         ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider,
+        DatabaseTranslationLoader $databaseLoader,
         $resourceDirectory,
         $modulesDirectory
     ) {
         $this->modulesDirectory = $modulesDirectory;
         $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
 
-        parent::__construct($databaseLoader, $resourceDirectory);
+        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
+
+        $this->filenameFilters = ['#^' . preg_quote($this->domain, '#') . '([A-Z]|\.|$)#'];
+
+        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
+
+        parent::__construct(
+            $databaseLoader,
+            $resourceDirectory,
+            $translationDomains,
+            $this->filenameFilters,
+            $defaultResourceDirectory
+        );
     }
 
     /**
@@ -75,39 +92,7 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
         return $this->domain;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslationDomains()
-    {
-        return ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilters()
-    {
-        return ['#^' . preg_quote($this->domain, '#') . '([A-Z]|\.|$)#'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return 'search';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultResourceDirectory()
-    {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-    }
-
-    public function getDefaultCatalogue($empty = true)
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
     {
         try {
             $defaultCatalogue = parent::getDefaultCatalogue($empty);
@@ -124,41 +109,16 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
      *
      * @throws FileNotFoundException
      */
-    public function getXliffCatalogue()
+    public function getFilesystemCatalogue(): MessageCatalogueInterface
     {
         try {
-            $xliffCatalogue = parent::getXliffCatalogue();
+            $xliffCatalogue = parent::getFilesystemCatalogue();
         } catch (\Exception $e) {
-            $xliffCatalogue = $this->externalModuleLegacySystemProvider->getXliffCatalogue();
+            $xliffCatalogue = $this->externalModuleLegacySystemProvider->getFilesystemCatalogue();
             $xliffCatalogue = $this->filterCatalogue($xliffCatalogue);
         }
 
         return $xliffCatalogue;
-    }
-
-    /**
-     * @deprecated since 1.7.6, to be removed in the next major
-     *
-     * @return string
-     */
-    public function getModuleDirectory()
-    {
-        @trigger_error(
-            __METHOD__ . ' function is deprecated and will be removed in the next major',
-            E_USER_DEPRECATED
-        );
-
-        return $this->modulesDirectory;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLocale($locale)
-    {
-        $this->externalModuleLegacySystemProvider->setLocale($locale);
-
-        return parent::setLocale($locale);
     }
 
     /**
@@ -178,12 +138,11 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
      */
     private function filterCatalogue(MessageCatalogueInterface $defaultCatalogue)
     {
-        // return only elements whose domain matches the filters
-        $filters = $this->getFilters();
         $allowedDomains = [];
 
+        // return only elements whose domain matches the filters
         foreach ($defaultCatalogue->all() as $domain => $messages) {
-            foreach ($filters as $filter) {
+            foreach ($this->filenameFilters as $filter) {
                 if (preg_match($filter, $domain)) {
                     $allowedDomains[$domain] = $messages;
                     break;
@@ -194,5 +153,13 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
         $defaultCatalogue = new MessageCatalogue($this->getLocale(), $allowedDomains);
 
         return $defaultCatalogue;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIdentifier()
+    {
+        return 'search';
     }
 }
