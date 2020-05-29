@@ -139,7 +139,13 @@ abstract class AbstractFormCore implements FormInterface
                         $this->constraintTranslator->translate('required')
                     );
                 } elseif (!$this->validateFieldLength($field)) {
-                    $field->addError($this->validateFieldLength($field, true));
+                    $field->addError(
+                        $this->translator->trans(
+                            'The %1$s field is too long (%2$d chars max).',
+                            [$field->getLabel(), $field->getMaxLength()],
+                            'Shop.Notifications.Error'
+                        )
+                    );
                 }
 
                 continue;
@@ -147,7 +153,13 @@ abstract class AbstractFormCore implements FormInterface
                 if (!$field->getValue()) {
                     continue;
                 } elseif (!$this->validateFieldLength($field)) {
-                    $field->addError($this->validateFieldLength($field, true));
+                    $field->addError(
+                        $this->translator->trans(
+                            'The %1$s field is too long (%2$d chars max).',
+                            [$field->getLabel(), $field->getMaxLength()],
+                            'Shop.Notifications.Error'
+                        )
+                    );
                 }
             }
 
@@ -217,22 +229,13 @@ abstract class AbstractFormCore implements FormInterface
      * Validate field length
      *
      * @param $field the field to check
-     * @param $return_message if true and the field is not validated will return the error message
      *
-     * @return bool|string
+     * @return bool
      */
-    protected function validateFieldLength($field, bool $return_message = false)
+    protected function validateFieldLength($field)
     {
         $error = $field->getMaxLength() != null && strlen($field->getValue()) > (int) $field->getMaxLength();
 
-        if ($error && $return_message) {
-            return $this->translator->trans(
-                'The %1$s field is too long (%2$d chars max).',
-                [$field->getLabel(), $field->getMaxLength()],
-                'Shop.Notifications.Error'
-            );
-        } else {
-            return !$error;
-        }
+        return  !$error;
     }
 }
