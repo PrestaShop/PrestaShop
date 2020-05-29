@@ -175,6 +175,6 @@ class HookExtension extends \Twig_Extension
      */
     public function hookCount($hookName)
     {
-        return count($this->hookDispatcher->getListeners($hookName));
+        return count($this->hookDispatcher->getListeners(strtolower($hookName)));
     }
 }
