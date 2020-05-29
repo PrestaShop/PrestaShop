@@ -61,6 +61,25 @@ module.exports = class AddProduct extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * @override
+   * Set value on tinyMce textarea
+   * @param selector
+   * @param value
+   * @return {Promise<void>}
+   */
+  async setValueOnTinymceInput(selector, value) {
+    // Select all
+    await this.page.click(`${selector} .mce-edit-area`, {clickCount: 3});
+
+    // Delete all text
+    await this.page.keyboard.press('Backspace');
+
+    // Fill the text
+    await this.page.keyboard.type(value);
+  }
+
   /**
    * Set Name, type of product, Reference, price ttc, description and short description
    * @param productData
