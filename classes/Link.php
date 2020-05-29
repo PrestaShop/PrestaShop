@@ -86,8 +86,6 @@ class LinkCore
      * @param int $idPicture ID of the picture to delete
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getProductDeletePictureLink($product, $idPicture)
     {
@@ -259,8 +257,6 @@ class LinkCore
      * @param int|null $idCustomization
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getRemoveFromCartURL(
         $idProduct,
@@ -294,8 +290,6 @@ class LinkCore
      * @param int|null $idCustomization
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getUpQuantityCartURL(
         $idProduct,
@@ -313,8 +307,6 @@ class LinkCore
      * @param int|null $idCustomization
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getDownQuantityCartURL(
         $idProduct,
@@ -333,8 +325,6 @@ class LinkCore
      * @param string|null $op
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getUpdateQuantityCartURL(
         $idProduct,
@@ -373,8 +363,6 @@ class LinkCore
      * @param int $idProductAttribute
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getAddToCartURL($idProduct, $idProductAttribute)
     {
@@ -429,8 +417,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getCategoryLink(
         $category,
@@ -493,9 +479,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
      */
     public function getCMSCategoryLink(
         $cmsCategory,
@@ -548,9 +531,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
      */
     public function getCMSLink(
         $cms,
@@ -602,8 +582,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getSupplierLink(
         $supplier,
@@ -656,8 +634,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getManufacturerLink(
         $manufacturer,
@@ -704,8 +680,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getModuleLink(
         $module,
@@ -737,18 +711,17 @@ class LinkCore
     /**
      * Use controller name to create a link.
      *
+     * Warning on fallback to Symfony Router, this exceptions can be thrown
+     * - RouteNotFoundException If the named route doesn't exist
+     * - MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * - InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
+     *
      * @param string $controller
      * @param bool $withToken include or not the token in the url
      * @param array $sfRouteParams (Since 1.7.0.0) Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
      * @param array $params (Since 1.7.0.3) Optional
      *
      * @return string url
-     *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     * @throws RouteNotFoundException If the named route doesn't exist
-     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
-     * @throws InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
      */
     public function getAdminLink($controller, $withToken = true, $sfRouteParams = [], $params = [])
     {
@@ -882,14 +855,14 @@ class LinkCore
     }
 
     /**
+     * Warning on fallback to Symfony Router, this exceptions can be thrown
+     * - RouteNotFoundException If the named route doesn't exist
+     * - MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * - InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
+     *
      * @param array $tab
      *
      * @return string
-     *
-     * @throws PrestaShopException
-     * @throws RouteNotFoundException If the named route doesn't exist
-     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
-     * @throws InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
      */
     public function getTabLink(array $tab)
     {
@@ -933,8 +906,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopDatabaseException
      */
     public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
@@ -1159,8 +1130,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string Page link
-     *
-     * @throws PrestaShopException
      */
     public function getPageLink($controller, $ssl = null, $idLang = null, $request = null, $requestUrlEncode = false, $idShop = null, $relativeProtocol = false)
     {
@@ -1228,8 +1197,6 @@ class LinkCore
      * @param Context|null $context the context if needed
      *
      * @return string link
-     *
-     * @throws PrestaShopException
      */
     public function getLanguageLink($idLang, Context $context = null)
     {
@@ -1300,8 +1267,6 @@ class LinkCore
      * @param bool $array If false return an url, if true return an array
      *
      * @return string|array
-     *
-     * @throws PrestaShopException
      */
     public function getPaginationLink($type, $idObject, $nb = false, $sort = false, $pagination = false, $array = false)
     {
@@ -1492,11 +1457,7 @@ class LinkCore
      *
      * @return string
      *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     * @throws RouteNotFoundException If the named route doesn't exist
-     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
-     * @throws InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
+     * @throws \InvalidArgumentException
      */
     public static function getUrlSmarty($params)
     {
