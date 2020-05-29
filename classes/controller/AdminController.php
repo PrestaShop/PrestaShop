@@ -2205,7 +2205,7 @@ class AdminControllerCore extends Controller
      */
     protected function initTabModuleList()
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
     /**
@@ -2213,7 +2213,7 @@ class AdminControllerCore extends Controller
      */
     protected function addPageHeaderToolBarModulesListButton()
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
     /**
@@ -2221,7 +2221,7 @@ class AdminControllerCore extends Controller
      */
     protected function addToolBarModulesListButton()
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
     protected function getAdminModulesUrl()
@@ -2234,7 +2234,7 @@ class AdminControllerCore extends Controller
      */
     protected function filterTabModuleList()
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
     /**
