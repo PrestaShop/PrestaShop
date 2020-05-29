@@ -35,5 +35,4 @@ interface SearchProviderInterface extends ProviderInterface
      * @return self
      */
     public function setDomain(string $domain);
-
 }
