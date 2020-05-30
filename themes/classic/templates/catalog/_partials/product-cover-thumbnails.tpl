@@ -25,8 +25,8 @@
 <div class="images-container">
   {block name='product_cover'}
     <div class="product-cover">
-      {if $product.cover}
-        <img class="js-qv-product-cover" src="{$product.cover.bySize.large_default.url}" alt="{$product.cover.legend}" title="{$product.cover.legend}" style="width:100%;" itemprop="image">
+      {if $product.default_image}
+        <img class="js-qv-product-cover" src="{$product.default_image.bySize.large_default.url}" alt="{$product.default_image.legend}" title="{$product.default_image.legend}" style="width:100%;" itemprop="image">
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
           <i class="material-icons zoom-in">search</i>
         </div>
@@ -42,7 +42,7 @@
         {foreach from=$product.images item=image}
           <li class="thumb-container">
             <img
-              class="thumb js-thumb {if $image.id_image == $product.cover.id_image} selected {/if}"
+              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected {/if}"
               data-image-medium-src="{$image.bySize.medium_default.url}"
               data-image-large-src="{$image.bySize.large_default.url}"
               src="{$image.bySize.home_default.url}"

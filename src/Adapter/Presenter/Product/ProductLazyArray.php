@@ -594,6 +594,18 @@ class ProductLazyArray extends AbstractLazyArray
         // Get filtered product images matching the specified id_product_attribute
         $this->product['images'] = $this->filterImagesForCombination($productImages, $product['id_product_attribute']);
 
+        // Get default image for selected combination (used for product page, cart details, ...)
+        $this->product['default_image'] = reset($this->product['images']);
+        foreach ($this->product['images'] as $image) {
+            // If one of the image is a cover it is used as such
+            if (isset($image['cover']) && null !== $image['cover']) {
+                $this->product['default_image'] = $image;
+
+                break;
+            }
+        }
+
+        // Get generic product image, used for product listing
         if (isset($product['cover_image_id'])) {
             // First try to find cover in product images
             foreach ($productImages as $productImage) {
@@ -612,21 +624,9 @@ class ProductLazyArray extends AbstractLazyArray
             }
         }
 
+        // If no cover fallback on default image
         if (!isset($this->product['cover'])) {
-            $this->product['cover'] = null;
-            foreach ($this->product['images'] as $image) {
-                // At least select the first product image
-                if (null === $this->product['cover']) {
-                    $this->product['cover'] = $image;
-                }
-
-                // If one of the image is a cover it is used as such
-                if (isset($image['cover']) && null !== $image['cover']) {
-                    $this->product['cover'] = $image;
-
-                    break;
-                }
-            }
+            $this->product['cover'] = $this->product['default_image'];
         }
     }
 
