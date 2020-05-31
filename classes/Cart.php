@@ -2130,11 +2130,11 @@ class CartCore extends ObjectModel
     protected function getTotalCalculationCartRules($type, $withShipping)
     {
         if ($withShipping || $type == Cart::ONLY_DISCOUNTS) {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL, true, true);
         } else {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false, true);
             // Cart Rules array are merged manually in order to avoid doubles
-            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cartRuleCandidate) {
+            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT, false, true) as $cartRuleCandidate) {
                 $alreadyAddedCartRule = false;
                 foreach ($cartRules as $cartRule) {
                     if ($cartRuleCandidate['id_cart_rule'] == $cartRule['id_cart_rule']) {
