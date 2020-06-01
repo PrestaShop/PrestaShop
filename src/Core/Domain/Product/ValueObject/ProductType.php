@@ -82,7 +82,7 @@ class ProductType
      *
      * @throws ProductConstraintException
      */
-    private function assertProductType(int $value)
+    private function assertProductType(int $value): void
     {
         $allowedTypes = [
             self::TYPE_STANDARD,
