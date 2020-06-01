@@ -75,7 +75,7 @@ class SQLUtils
                 }
             }
         } else {
-            $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` ' . (Validate::isFloat(pSQL($filterValue)) ? 'LIKE' : '=') . ' "' . pSQL($filterValue) . "\"\n";
+            $ret .= ' AND ' . $tableAlias . '`' . bqSQL($sqlId) . '` = "' . pSQL($filterValue) . "\"\n";
         }
 
         return $ret;
