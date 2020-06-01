@@ -31,7 +31,7 @@ module.exports = class Addresses extends BOBasePage {
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
     // Modal Dialog
-    this.deleteAddressModal = '#address_grid_confirm_modal.show';
+    this.deleteAddressModal = '#address-grid-confirm-modal.show';
     this.deleteCustomerModalDeleteButton = `${this.deleteAddressModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.addressesListForm} thead`;
