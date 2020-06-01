@@ -23,13 +23,10 @@ Feature: Add basic product from Back Office (BO)
     | type | undefined       |
   Then I should get error that product type is invalid
 
-# @todo; add if we make product name required. #19441
-#  @add
-#  Scenario: I add a product without providing name in default language
-#    Given language with iso code "en" is the default one
-#    Given language "french" with locale "fr-FR" exists
-#    When I add product "product2" with following basic information:
-#      | name | fr-FR: glass of wine |
-#      | type | standard             |
-#    Then I should get error that product name is invalid
+  @add
+  Scenario: I add a product with invalid characters in name
+    When I add product "product2" with following basic information:
+      | name | en-US: T-shirt #1    |
+      | type | standard             |
+    Then I should get error that product name is invalid
 
