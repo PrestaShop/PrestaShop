@@ -13,7 +13,7 @@ Feature: Add basic product from Back Office (BO)
       | active           | false          |
       | condition        | new            |
     And product "product1" type should be standard
-    And product "product1" "name" should be "en-US:bottle of beer"
+    And product "product1" localized "name" should be "en-US:bottle of beer"
     And product "product1" should be assigned to default category
 
   @add

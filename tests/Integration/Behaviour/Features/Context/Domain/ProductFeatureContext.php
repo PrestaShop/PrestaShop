@@ -85,7 +85,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^product "(.+)" "(.+)" should be "(.+)"$/
+     * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
      *
      * @param string $productReference
      * @param string $fieldName
