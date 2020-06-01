@@ -448,7 +448,8 @@ class CartPresenter implements PresenterInterface
         $discounts = array_filter($discounts, function ($discount) use ($cartRulesIds, $cart) {
             $voucherCustomerId = (int) $discount['id_customer'];
             $voucherIsRestrictedToASingleCustomer = ($voucherCustomerId !== 0);
-            if ($voucherIsRestrictedToASingleCustomer && $cart->id_customer !== $voucherCustomerId) {
+            $voucherIsEmptyCode = empty($discount['code']);
+            if ($voucherIsRestrictedToASingleCustomer && $cart->id_customer !== $voucherCustomerId && $voucherIsEmptyCode) {
                 return false;
             }
 
