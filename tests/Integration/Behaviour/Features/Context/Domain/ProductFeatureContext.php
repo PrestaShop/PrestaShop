@@ -76,7 +76,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
                 $this->parseLocalizedArray($data['name']),
-                $this->getProductTypeValueByName($data['type'])
+                $this->getProductTypeValueByName($data['type']) ?? -1
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());
@@ -181,7 +181,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function assertProductType(string $productReference, string $productTypeName)
     {
         $product = $this->getProductByReference($productReference);
-        $productTypeValue = $this->getProductTypeValueByName($productTypeName);
+        $productTypeValue = $this->getProductTypeValueByName($productTypeName) ?? -1;
 
         $isVirtual = $product->is_virtual;
         $isPack = Pack::isPack($product->id);
@@ -234,18 +234,20 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      *
      * @return int
      */
-    private function getProductTypeValueByName(string $typeName): int
+    private function getProductTypeValueByName(string $typeName): ?int
     {
         $typeValueByName = [
             'standard' => ProductType::TYPE_STANDARD,
             'pack' => ProductType::TYPE_PACK,
             'virtual' => ProductType::TYPE_VIRTUAL,
             'combination' => ProductType::TYPE_COMBINATION,
-            // undefined value to check the real behavior when type is wrong
-            'undefined' => 500,
         ];
 
-        return $typeValueByName[$typeName];
+        if (array_key_exists($typeName, $typeValueByName)) {
+            return $typeValueByName[$typeName];
+        }
+
+        return null;
     }
 
     /**
