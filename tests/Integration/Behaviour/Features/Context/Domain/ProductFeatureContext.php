@@ -29,13 +29,13 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
-use Exception;
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -79,7 +79,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());
-        } catch (Exception $e) {
+        } catch (ProductException $e) {
             $this->lastException = $e;
         }
     }
@@ -207,6 +207,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that product type is invalid
+     */
+    public function assertLastErrorIsInvalidTypeConstraint()
+    {
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_PRODUCT_TYPE
+        );
+    }
+
+    /**
      * @param string $typeName
      *
      * @return int
@@ -217,14 +228,10 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'standard' => ProductType::TYPE_STANDARD,
             'pack' => ProductType::TYPE_PACK,
             'virtual' => ProductType::TYPE_VIRTUAL,
+            'combination' => ProductType::TYPE_COMBINATION,
+            // undefined value to check the real behavior when type is wrong
+            'undefined' => 500,
         ];
-
-        if (!array_key_exists($typeName, $typeValueByName)) {
-            throw new RuntimeException(sprintf(
-                'Product type "%s" does not exist',
-                $typeName
-            ));
-        }
 
         return $typeValueByName[$typeName];
     }

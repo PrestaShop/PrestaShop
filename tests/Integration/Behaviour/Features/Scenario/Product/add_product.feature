@@ -16,6 +16,13 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" "name" should be "en-US:bottle of beer"
     And product "product1" should be assigned to default category
 
+  @add
+  Scenario: I add a product with invalid type
+    When I add product "product2" with following basic information:
+    | name | en-US:empty box |
+    | type | undefined       |
+  Then I should get error that product type is invalid
+
 # @todo; add if we make product name required. #19441
 #  @add
 #  Scenario: I add a product without providing name in default language
