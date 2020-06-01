@@ -76,7 +76,7 @@ class ProductCondition
                     $value,
                     implode(',', $allowedConditions)
                 ),
-            ProductConstraintException::INVALID_CONDITION
+                ProductConstraintException::INVALID_CONDITION
             );
         }
     }
