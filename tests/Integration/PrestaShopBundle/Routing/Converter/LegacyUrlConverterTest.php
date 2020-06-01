@@ -120,7 +120,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_order_preferences_general_save' => ['/configure/shop/order-preferences/general', 'AdminOrderPreferences', 'update'],
 
             'admin_product_preferences' => ['/configure/shop/product-preferences/', 'AdminPPreferences'],
-            'admin_product_preferences_process' => ['/configure/shop/product-preferences/', 'AdminPPreferences', 'update'],
+            'admin_product_preferences_general_save' => ['/configure/shop/product-preferences/general', 'AdminPPreferences', 'update'],
 
             'admin_performance' => ['/configure/advanced/performance/', 'AdminPerformance'],
             'admin_performance_smarty_save' => ['/configure/advanced/performance/smarty', 'AdminPerformance', 'update'],
