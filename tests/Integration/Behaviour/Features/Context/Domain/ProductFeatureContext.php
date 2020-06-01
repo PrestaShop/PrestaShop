@@ -31,6 +31,7 @@ use Cache;
 use Context;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDescriptionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
@@ -94,11 +95,16 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLocalizedProperty(string $productReference, string $fieldName, string $localizedValues)
     {
+        $propertyName = $this->getPropertyByFieldName($fieldName);
         $product = $this->getProductByReference($productReference);
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
         foreach ($expectedLocalizedValues as $langId => $value) {
-            if ($value !== $product->{$fieldName}[$langId]) {
+            if ('empty' === $value) {
+                $value = '';
+            }
+
+            if ($value !== $product->{$propertyName}[$langId]) {
                 $langIso = Language::getIsoById($langId);
 
                 throw new RuntimeException(
@@ -107,10 +113,39 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                         $fieldName,
                         $langIso,
                         $value,
-                        $product->{$fieldName}[$langId]
+                        $product->{$propertyName}[$langId]
                     )
                 );
             }
+        }
+    }
+
+    /**
+     * @Then I update product :productReference descriptions with following information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateLocalizedDescriptions(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $descriptions = isset($data['description']) ? $this->parseLocalizedArray($data['description']) : null;
+        $shortDescriptions = isset($data['short description']) ? $this->parseLocalizedArray($data['short description']) : null;
+
+        $command = new UpdateProductDescriptionCommand($this->getSharedStorage()->get($productReference));
+
+        if ($descriptions) {
+            $command->setLocalizedDescriptions($descriptions);
+        }
+
+        if ($shortDescriptions) {
+            $command->setLocalizedShortDescriptions($shortDescriptions);
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
         }
     }
 
@@ -212,6 +247,26 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ProductConstraintException::class,
             ProductConstraintException::INVALID_PRODUCT_TYPE
         );
+    }
+
+    /**
+     * Map a technical property name with a more user oriented name from scenario.
+     *
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    private function getPropertyByFieldName(string $fieldName): string
+    {
+        $map = [
+            'short description' => 'description_short',
+        ];
+
+        if (array_key_exists($fieldName, $map)) {
+            return $map[$fieldName];
+        }
+
+        return $fieldName;
     }
 
     /**
