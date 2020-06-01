@@ -49,7 +49,7 @@ class WebserviceSQLUtilsTest extends TestCase
             ],
             [
                 ['price', '18.2'],
-                ' AND `price` LIKE "18.2"' . PHP_EOL,
+                ' AND `price` = "18.2"' . PHP_EOL,
             ],
             [
                 ['name', '[19.2, 19.8]', 'test.'],
