@@ -31,7 +31,7 @@ const priceRuleData = new PriceRuleFaker({
   reduction: 20,
 });
 const unitDiscountToCheck = '€20.00';
-const unitPriceToCheck = '€2.94';
+const unitPriceToCheck = '€8.68';
 
 // Init objects needed
 const init = async function () {
