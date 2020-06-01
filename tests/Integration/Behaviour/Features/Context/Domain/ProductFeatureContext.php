@@ -96,7 +96,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $product = $this->getProductByReference($productReference);
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
-        if (!empty(array_diff($product->{$fieldName}, $expectedLocalizedValues))) {
+        if (!empty(array_diff_assoc($product->{$fieldName}, $expectedLocalizedValues))) {
             throw new RuntimeException(
                 sprintf(
                     'Expected localized %s: "%s", but got: "%s"',
