@@ -117,8 +117,6 @@ describe('Export SQL query', async () => {
 
       const numberOfQuery = await this.pageObjects.sqlManagerPage.getNumberOfElementInGrid();
 
-      //filePath = await files.getFileNameFromDir(global.BO.DOWNLOAD_PATH, 'request_', '.csv');
-
       for (let row = 1; row <= numberOfQuery; row++) {
         const textExist = await files.isTextInFile(filePath, fileContent, true, true);
         await expect(textExist, `${fileContent} was not found in the file`).to.be.true;
