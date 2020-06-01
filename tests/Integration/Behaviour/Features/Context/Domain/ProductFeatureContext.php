@@ -210,7 +210,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then I should get error that product name is invalid
      */
-    public function assertLastErrorIsReturnProductDisabled()
+    public function assertLastErrorIsInvalidNameConstraint()
     {
         $this->assertLastErrorIs(
             ProductConstraintException::class,
