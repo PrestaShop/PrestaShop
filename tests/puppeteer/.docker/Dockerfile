@@ -1,27 +1,52 @@
-# A minimal Docker image with Node and Puppeteer
+# A minimal Docker image with Node and playwright
 #
 # Based upon:
-# https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
+# https://github.com/microsoft/playwright/blob/master/docs/docker/Dockerfile.bionic
 
-FROM node:10-stretch
+FROM ubuntu:bionic
 
-# Install latest chrome dev package and fonts
-RUN  wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-     && apt-get update \
-     && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst \
-     ttf-freefont --no-install-recommends \
-     && rm -rf /var/lib/apt/lists/*
+# 1. Install node12
+RUN apt-get update && apt-get install -y curl && \
+    curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
+    apt-get install -y nodejs
 
-# Copy scripts wait-for-it and run-tests
+# 2. Install WebKit dependencies
+RUN apt-get install -y libwoff1 \
+                       libopus0 \
+                       libwebp6 \
+                       libwebpdemux2 \
+                       libenchant1c2a \
+                       libgudev-1.0-0 \
+                       libsecret-1-0 \
+                       libhyphen0 \
+                       libgdk-pixbuf2.0-0 \
+                       libegl1 \
+                       libnotify4 \
+                       libxslt1.1 \
+                       libevent-2.1-6 \
+                       libgles2 \
+                       libvpx5
+
+# 3. Install Chromium dependencies
+
+RUN apt-get install -y libnss3 \
+                       libxss1 \
+                       libasound2
+
+# 4. Install Firefox dependencies
+
+RUN apt-get install -y libdbus-glib-1-2 \
+                       libxt6
+
+
+# 5. Copy scripts wait-for-it and run-tests
 COPY ["./.docker/prestashop/wait-for-it.sh", "./.docker/run-tests.sh", "/tmp/"]
 
-# Create folder for tests and another for downloaded files
-RUN mkdir -p /tests/reports \
-    && mkdir -p /downloads
-
+# 6. Create folder for tests and copy component
+RUN mkdir -p /tests/reports
 WORKDIR /tests/
 COPY ["./", "./"]
 
-# Install dependencies
-RUN npm install
+# 7. Install dependencies and force install playwright to download browsers
+RUN npm install \
+    && npm i playwright@1.0.2
