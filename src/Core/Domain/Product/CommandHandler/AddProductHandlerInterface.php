@@ -24,30 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Is thrown when product constraints are violated
+ * Defines contract for AddProductHandler
  */
-class ProductConstraintException extends ProductException
+interface AddProductHandlerInterface
 {
     /**
-     * Code is used when invalid id is supplied.
+     * @param AddProductCommand $command
+     *
+     * @return ProductId
      */
-    const INVALID_ID = 10;
-
-    /**
-     * When invalid product type is supplied.
-     */
-    const INVALID_PRODUCT_TYPE = 20;
-
-    /**
-     * When invalid product name in one or another language is supplied
-     */
-    const INVALID_NAME = 30;
-
-    /**
-     * When invalid product condition is supplied
-     */
-    const INVALID_CONDITION = 40;
+    public function handle(AddProductCommand $command): ProductId;
 }
