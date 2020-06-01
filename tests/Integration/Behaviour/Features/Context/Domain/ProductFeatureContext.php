@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
+use Language;
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -98,7 +99,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($expectedLocalizedValues as $langId => $value) {
             if ($value !== $product->{$fieldName}[$langId]) {
-                $langIso = \Language::getIsoById($langId);
+                $langIso = Language::getIsoById($langId);
 
                 throw new RuntimeException(
                     sprintf(
