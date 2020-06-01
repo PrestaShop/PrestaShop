@@ -30,6 +30,10 @@ use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
+ * @deprecated
+ * I suggest using only LanguageChoiceProvider for future as they are the same @see LanguageChoiceProvider
+ * Then in PrestaShop 1.8 to delete this class and leave only LanguageChoiceProvider
+ *
  * Class LanguageByIdChoiceProvider provides active language choices with ID values.
  */
 final class LanguageByIdChoiceProvider implements FormChoiceProviderInterface
