@@ -49,6 +49,11 @@ class ProductType
     const TYPE_VIRTUAL = 2;
 
     /**
+     * Product containing combinations of different attributes
+     */
+    const TYPE_COMBINATION = 3;
+
+    /**
      * @var int
      */
     private $value;
@@ -83,6 +88,7 @@ class ProductType
             self::TYPE_STANDARD,
             self::TYPE_PACK,
             self::TYPE_VIRTUAL,
+            self::TYPE_COMBINATION,
         ];
 
         if (!in_array($value, $allowedTypes, true)) {
