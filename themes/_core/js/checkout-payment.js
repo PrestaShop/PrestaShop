@@ -85,7 +85,7 @@ class Payment {
       var paymentOption = this.getPaymentOptionSelector(selectedOption);
       this.hideConfirmation();
       $(paymentOption).show();
-      console.log(show);
+
       document.querySelectorAll(`${paymentOption} button, ${paymentOption} input`).forEach(element => {
         if (show) {
           element.removeAttribute('disabled');
