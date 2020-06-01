@@ -98,11 +98,13 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($expectedLocalizedValues as $langId => $value) {
             if ($value !== $product->{$fieldName}[$langId]) {
+                $langIso = \Language::getIsoById($langId);
+
                 throw new RuntimeException(
                     sprintf(
-                        'Expected %s in language #%s was "%s", but got "%s"',
+                        'Expected %s in "%s" language was "%s", but got "%s"',
                         $fieldName,
-                        $langId,
+                        $langIso,
                         $value,
                         $product->{$fieldName}[$langId]
                     )
