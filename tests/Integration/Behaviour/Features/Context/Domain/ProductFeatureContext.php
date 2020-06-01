@@ -180,15 +180,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $isVirtual = $product->is_virtual;
         $isPack = Pack::isPack($product->id);
         $isStandard = !Pack::isPack($product->id) && !$product->is_virtual;
-        $isCombination = $product->getAttributeCombinations() ? true : false;
+        $isCombination = !empty($product->getAttributeCombinations());
 
         if ($isVirtual && $productTypeValue === ProductType::TYPE_VIRTUAL) {
             return;
-        } elseif ($isPack && $productTypeValue === ProductType::TYPE_PACK) {
+        }
+
+        if ($isPack && $productTypeValue === ProductType::TYPE_PACK) {
             return;
-        } elseif ($isStandard && $productTypeValue === ProductType::TYPE_STANDARD) {
+        }
+
+        if ($isStandard && $productTypeValue === ProductType::TYPE_STANDARD) {
             return;
-        } elseif ($isCombination && $productTypeValue === ProductType::TYPE_COMBINATION) {
+        }
+
+        if ($isCombination && $productTypeValue === ProductType::TYPE_COMBINATION) {
             return;
         }
 
