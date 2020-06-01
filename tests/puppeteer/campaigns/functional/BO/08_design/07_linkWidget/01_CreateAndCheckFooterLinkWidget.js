@@ -15,6 +15,7 @@ const FOBasePage = require('@pages/FO/FObasePage');
 
 // Import data
 const {LinkWidgets} = require('@data/demo/linkWidgets');
+const {hooks} = require('@data/demo/hooks');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -45,7 +46,6 @@ describe('Create footer link widget and check it in FO', async () => {
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
-
     this.pageObjects = await init();
   });
 
@@ -85,7 +85,9 @@ describe('Create footer link widget and check it in FO', async () => {
       const textResult = await this.pageObjects.addLinkWidgetPage.addLinkWidget(LinkWidgets.demo_1);
       await expect(textResult).to.equal(this.pageObjects.linkWidgetsPage.successfulCreationMessage);
 
-      numberOfLinkWidgetInFooter = await this.pageObjects.linkWidgetsPage.getNumberOfElementInGrid(35);
+      numberOfLinkWidgetInFooter = await this.pageObjects.linkWidgetsPage.getNumberOfElementInGrid(
+        hooks.displayFooter.id,
+      );
       await expect(numberOfLinkWidgetInFooter).to.be.above(0);
     });
   });
@@ -122,10 +124,17 @@ describe('Create footer link widget and check it in FO', async () => {
     it('should delete link widget created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLinkWidget', baseContext);
 
-      const textResult = await this.pageObjects.linkWidgetsPage.deleteLinkWidget(35, numberOfLinkWidgetInFooter);
+      const textResult = await this.pageObjects.linkWidgetsPage.deleteLinkWidget(
+        hooks.displayFooter.id,
+        numberOfLinkWidgetInFooter,
+      );
+
       await expect(textResult).to.equal(this.pageObjects.linkWidgetsPage.successfulDeleteMessage);
 
-      const numberOfLinkWidgetAfterDelete = await this.pageObjects.linkWidgetsPage.getNumberOfElementInGrid(35);
+      const numberOfLinkWidgetAfterDelete = await this.pageObjects.linkWidgetsPage.getNumberOfElementInGrid(
+        hooks.displayFooter.id,
+      );
+
       await expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter - 1);
     });
   });

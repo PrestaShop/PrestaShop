@@ -24,6 +24,7 @@ const baseContext = 'functional_BO_international_localization_importLocalization
 
 let browser;
 let page;
+
 const contentToImport = {
   importStates: false,
   importTaxes: true,
@@ -97,7 +98,8 @@ describe('Import a localization pack including a language and a currency', async
       this.pageObjects = await init();
 
       await this.pageObjects.foBasePage.changeCurrency(
-        `${Currencies.chileanPeso.isoCode} ${Currencies.chileanPeso.symbol}`,
+        Currencies.chileanPeso.isoCode,
+        Currencies.chileanPeso.symbol,
       );
 
       await this.pageObjects.foBasePage.changeLanguage(Languages.spanish.isoCode);

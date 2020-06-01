@@ -6,7 +6,7 @@
     "test": "test"
   },
   "scripts": {
-    "linkchecker": "./node_modules/mocha/bin/mocha tools/linkchecker.js",
+    "linkchecker": "./node_modules/mocha/bin/mocha campaigns/tools/linkchecker.js",
     "lint": "eslint  --fix --ignore-path .gitignore .",
     "specific-test": "./node_modules/mocha/bin/mocha campaigns/$TEST_PATH",
     "sanity-tests": "./node_modules/mocha/bin/mocha campaigns/sanity/*",
@@ -17,7 +17,8 @@
     "@pages": "pages",
     "@commonTests": "campaigns/commonTests",
     "@data": "campaigns/data",
-    "@utils": "campaigns/utils"
+    "@utils": "campaigns/utils",
+    "@tools": "campaigns/tools"
   },
   "repository": {
     "type": "git",
