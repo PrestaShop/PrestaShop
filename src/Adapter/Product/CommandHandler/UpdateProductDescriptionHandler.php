@@ -31,13 +31,15 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDescriptionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductDescriptionHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShopException;
 use Product;
 
 final class UpdateProductDescriptionHandler extends AbstractProductHandler implements UpdateProductDescriptionHandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(UpdateProductDescriptionCommand $command): void
     {
@@ -55,6 +57,24 @@ final class UpdateProductDescriptionHandler extends AbstractProductHandler imple
         if (null !== $localizedShortDescriptions) {
             $this->validateDescriptions($product, $localizedShortDescriptions, true);
             $product->description_short = $localizedShortDescriptions;
+        }
+
+        try {
+            if (false === $product->update()) {
+                throw new CannotUpdateProductException(sprintf(
+                    'Error occurred when trying to update product #%s description',
+                    $product->id
+                ));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CannotUpdateProductException(
+                sprintf(
+                    'Error occurred when trying to update product #%s description',
+                    $product->id
+                ),
+                0,
+                $e
+            );
         }
     }
 

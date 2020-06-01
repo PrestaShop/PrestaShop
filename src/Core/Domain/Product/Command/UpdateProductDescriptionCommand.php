@@ -38,12 +38,12 @@ class UpdateProductDescriptionCommand
     private $productId;
 
     /**
-     * @var null|string[] key value pairs where key is the id of language
+     * @var string[]|null key value pairs where key is the id of language
      */
     private $localizedDescriptions;
 
     /**
-     * @var null|string[] key value pairs where key is the id of language
+     * @var string[]|null key value pairs where key is the id of language
      */
     private $localizedShortDescriptions;
 
