@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
+/**
+ * Is thrown when product constraints are violated
+ */
 class ProductConstraintException extends ProductException
 {
     /**

@@ -30,11 +30,23 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
+/**
+ * Holds product condition value
+ */
 class ProductCondition
 {
     const NEW = 'new';
     const USED = 'used';
     const REFURBISHED = 'refurbished';
+
+    /**
+     * A list of available values
+     */
+    const AVAILABLE_CONDITIONS = [
+        self::NEW,
+        self::USED,
+        self::REFURBISHED,
+    ];
 
     /**
      * @var string
@@ -60,21 +72,17 @@ class ProductCondition
 
     /**
      * @param string $value
+     *
+     * @throws ProductConstraintException
      */
     private function assertValueIsAllowed(string $value): void
     {
-        $allowedConditions = [
-            self::NEW,
-            self::USED,
-            self::REFURBISHED,
-        ];
-
-        if (!in_array($value, $allowedConditions, true)) {
+        if (!in_array($value, self::AVAILABLE_CONDITIONS, true)) {
             throw new ProductConstraintException(
                 sprintf(
                     'Invalid product condition "%s". Allowed conditions are: "%s"',
                     $value,
-                    implode(',', $allowedConditions)
+                    implode(',', self::AVAILABLE_CONDITIONS)
                 ),
                 ProductConstraintException::INVALID_CONDITION
             );

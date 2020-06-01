@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
+/**
+ * Holds product type value
+ */
 class ProductType
 {
     /**
@@ -52,6 +55,16 @@ class ProductType
      * Product containing combinations of different attributes
      */
     const TYPE_COMBINATION = 3;
+
+    /**
+     * A list of available types
+     */
+    const AVAILABLE_TYPES = [
+        self::TYPE_STANDARD,
+        self::TYPE_PACK,
+        self::TYPE_VIRTUAL,
+        self::TYPE_COMBINATION,
+    ];
 
     /**
      * @var int
@@ -84,19 +97,12 @@ class ProductType
      */
     private function assertProductType(int $value): void
     {
-        $allowedTypes = [
-            self::TYPE_STANDARD,
-            self::TYPE_PACK,
-            self::TYPE_VIRTUAL,
-            self::TYPE_COMBINATION,
-        ];
-
-        if (!in_array($value, $allowedTypes, true)) {
+        if (!in_array($value, self::AVAILABLE_TYPES, true)) {
             throw new ProductConstraintException(
                 sprintf(
                     'Invalid product type %s. Valid types are: [%s]',
                     $value,
-                    implode(',', $allowedTypes)
+                    implode(',', self::AVAILABLE_TYPES)
                 ),
                 ProductConstraintException::INVALID_PRODUCT_TYPE
             );

@@ -38,6 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopException;
 use Product;
 
+/**
+ * Handles AddProductCommand using legacy object model
+ */
 final class AddProductHandler implements AddProductHandlerInterface
 {
     /**
