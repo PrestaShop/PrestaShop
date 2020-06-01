@@ -32,7 +32,9 @@
     {/block}
 
     {block name='subcategory_list'}
-      {include file='catalog/_partials/subcategories.tpl' subcategories=$subcategories}
+      {if isset($subcategories) && $subcategories|@count > 0}
+        {include file='catalog/_partials/subcategories.tpl' subcategories=$subcategories}
+      {/if}
     {/block}
 
     <section id="products">
