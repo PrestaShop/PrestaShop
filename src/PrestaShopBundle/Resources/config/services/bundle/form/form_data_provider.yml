@@ -47,12 +47,27 @@ services:
             - '@translator'
             - '@prestashop.adapter.data_provider.cms'
 
-    prestashop.admin.product_preferences.data_provider:
-        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormDataProvider'
+    prestashop.admin.product_preferences.general.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralFormDataProvider'
         arguments:
             - '@prestashop.adapter.product_general.configuration'
+            - '@translator'
+
+    prestashop.admin.product_preferences.pagination.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PaginationFormDataProvider'
+        arguments:
             - '@prestashop.adapter.product_pagination.configuration'
+            - '@translator'
+
+    prestashop.admin.product_preferences.page.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageFormDataProvider'
+        arguments:
             - '@prestashop.adapter.product_page.configuration'
+            - '@translator'
+
+    prestashop.admin.product_preferences.stock.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockFormDataProvider'
+        arguments:
             - '@prestashop.adapter.product_stock.configuration'
             - '@translator'
 

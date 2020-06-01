@@ -24,22 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms
- * in "Configure > Shop Parameters > Customer Settings" page.
+ * in "Configure > Shop Parameters > Product Settings" page.
  */
-final class CustomerPreferencesDataProvider implements FormDataProviderInterface
+class GeneralFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var DataConfigurationInterface
+     * @var GeneralConfiguration
      */
-    private $generalDataConfiguration;
+    private $configuration;
 
     /**
      * @var TranslatorInterface
@@ -47,10 +47,10 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
     private $translator;
 
     public function __construct(
-        DataConfigurationInterface $generalDataConfiguration,
+        GeneralConfiguration $configuration,
         TranslatorInterface $translator
     ) {
-        $this->generalDataConfiguration = $generalDataConfiguration;
+        $this->configuration = $configuration;
         $this->translator = $translator;
     }
 
@@ -59,7 +59,7 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return $this->generalDataConfiguration->getConfiguration();
+        return $this->configuration->getConfiguration();
     }
 
     /**
@@ -71,28 +71,44 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
             return $errors;
         }
 
-        return $this->generalDataConfiguration->updateConfiguration($data);
+        return $this->configuration->updateConfiguration($data);
     }
 
     /**
-     * Perform validations on form data.
+     * Perform validation on form data before saving it.
      *
      * @param array $data
      *
-     * @return array Array of errors if any
+     * @return array Returns array of errors
      */
-    private function validate(array $data)
+    protected function validate(array $data)
     {
+        $invalidFields = [];
+
+        $newDaysNumber = $data['new_days_number'];
+        if (!is_numeric($newDaysNumber) || 0 > $newDaysNumber) {
+            $invalidFields[] = $this->translator->trans(
+                'Number of days for which the product is considered \'new\'',
+                [],
+                'Admin.Shopparameters.Feature'
+            );
+        }
+
+        $shortDescriptionLimit = $data['short_description_limit'];
+        if (!is_numeric($shortDescriptionLimit) || 0 >= $shortDescriptionLimit) {
+            $invalidFields[] = $this->translator->trans(
+                'Max size of product summary',
+                [],
+                'Admin.Shopparameters.Feature'
+            );
+        }
+
         $errors = [];
-
-        $passwordResetDelay = $data['password_reset_delay'];
-        if (!is_numeric($passwordResetDelay) || $passwordResetDelay < 0) {
-            $fieldName = $this->translator->trans('Password reset delay', [], 'Admin.Shopparameters.Feature');
-
+        foreach ($invalidFields as $field) {
             $errors[] = [
                 'key' => 'The %s field is invalid.',
                 'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$fieldName],
+                'parameters' => [$field],
             ];
         }
 

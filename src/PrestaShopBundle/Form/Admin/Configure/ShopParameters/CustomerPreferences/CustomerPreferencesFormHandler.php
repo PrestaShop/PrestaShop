@@ -48,7 +48,7 @@ final class CustomerPreferencesFormHandler extends Handler
         $errors = parent::save($data);
 
         if (empty($errors)) {
-            $this->handleB2bUpdate($data['general']['enable_b2b_mode']);
+            $this->handleB2bUpdate($data['enable_b2b_mode']);
         }
 
         return $errors;

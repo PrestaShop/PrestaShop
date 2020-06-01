@@ -26,46 +26,39 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
-use PrestaShop\PrestaShop\Core\Form\Handler;
+use PrestaShop\PrestaShop\Adapter\Product\StockConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Class manages the data manipulated using forms
+ * Class is responsible of managing the data manipulated using forms
  * in "Configure > Shop Parameters > Product Settings" page.
  */
-class ProductPreferencesFormHandler extends Handler
+class StockFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var CacheClearer
+     * @var StockConfiguration
      */
-    private $cacheClearer;
+    private $configuration;
+
+    public function __construct(
+        StockConfiguration $configuration
+    ) {
+        $this->configuration = $configuration;
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function save(array $data)
+    public function getData()
     {
-        $errors = $this->formDataProvider->setData($data);
-
-        if (empty($errors)) {
-            $this->cacheClearer->clearSmartyCache();
-            $this->cacheClearer->clearMediaCache();
-
-            if (isset($data['stock_management']) && !$data['stock_management']) {
-                $data['allow_ordering_oos'] = 1;
-            }
-        }
-
-        return parent::save($data);
+        return $this->configuration->getConfiguration();
     }
 
     /**
-     * Inject the cache clearer if needed.
-     *
-     * @param CacheClearer $cacheClearer the Cache clearer
+     * {@inheritdoc}
      */
-    public function setCacheClearer(CacheClearer $cacheClearer)
+    public function setData(array $data)
     {
-        $this->cacheClearer = $cacheClearer;
+        return $this->configuration->updateConfiguration($data);
     }
 }

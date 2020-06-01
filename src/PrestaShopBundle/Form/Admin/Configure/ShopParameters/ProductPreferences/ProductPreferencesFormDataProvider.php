@@ -36,6 +36,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class is responsible of managing the data manipulated using forms
  * in "Configure > Shop Parameters > Product Settings" page.
+ *
+ * @deprecated since 1.7.8, will be removed in the next major version
  */
 class ProductPreferencesFormDataProvider implements FormDataProviderInterface
 {
