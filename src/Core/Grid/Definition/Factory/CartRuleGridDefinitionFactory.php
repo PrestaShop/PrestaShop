@@ -49,12 +49,12 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class responsible for providing columns, filters, actions for cart price rule list.
  */
-final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory implements FilterableGridDefinitionFactoryInterface
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'cart_rule';
+    public const GRID_ID = 'cart_rule';
 
     /**
      * @var string
@@ -67,6 +67,14 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
     ) {
         parent::__construct($hookDispatcher);
         $this->contextDateFormat = $contextDateFormat;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilterId(): string
+    {
+        return self::GRID_ID;
     }
 
     /**
