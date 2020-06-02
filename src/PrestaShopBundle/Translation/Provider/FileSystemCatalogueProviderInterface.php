@@ -24,40 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-
-/**
- * Translations provider for keys not yet put in the right domain.
- * Equivalent to so-called main "messages" domain in the Symfony ecosystem.
- */
-class OthersProvider extends AbstractProvider
+interface FileSystemCatalogueProviderInterface
 {
-    public function __construct(
-        DatabaseTranslationLoader $databaseLoader,
-        string $resourceDirectory
-    ) {
-        $translationDomains = ['^messages*'];
+    public function setDirectory(string $directory): FileSystemCatalogueProviderInterface;
 
-        $filenameFilters = ['#^messages*#'];
-
-        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-
-        parent::__construct(
-            $databaseLoader,
-            $resourceDirectory,
-            $translationDomains,
-            $filenameFilters,
-            $defaultResourceDirectory
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return 'others';
-    }
+    public function setLocale(string $locale): FileSystemCatalogueProviderInterface;
 }

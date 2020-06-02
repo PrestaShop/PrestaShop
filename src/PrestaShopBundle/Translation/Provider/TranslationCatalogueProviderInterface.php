@@ -24,40 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
-/**
- * Translation provider for native modules (maintained by the core team)
- * Translations are provided by Crowdin.
- */
-class ModulesProvider extends AbstractProvider
+interface TranslationCatalogueProviderInterface
 {
-    public function __construct(
-        DatabaseTranslationLoader $databaseLoader,
-        string $resourceDirectory
-    ) {
-        $translationDomains = ['^Modules[A-Z]'];
-
-        $filenameFilters = ['#^Modules[A-Z]#'];
-
-        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-
-        parent::__construct(
-            $databaseLoader,
-            $resourceDirectory,
-            $translationDomains,
-            $filenameFilters,
-            $defaultResourceDirectory
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return 'modules';
-    }
+    public function getCatalogue(): MessageCatalogueInterface;
 }

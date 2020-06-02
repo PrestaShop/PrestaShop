@@ -177,16 +177,6 @@ abstract class AbstractProvider implements ProviderInterface
     }
 
     /**
-     * Returns the directory where translation files for the current locale are
-     *
-     * @return string
-     */
-    protected function xgetResourceDirectory(): string
-    {
-        return $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->getLocale();
-    }
-
-    /**
      * Empties out the catalogue by removing translations but leaving keys
      *
      * @param MessageCatalogueInterface $messageCatalogue
@@ -203,13 +193,4 @@ abstract class AbstractProvider implements ProviderInterface
 
         return $messageCatalogue;
     }
-
-    /*
-     * Returns the path to the directory where the default (aka not translated) catalogue is
-     *
-     * Most of the time, it's `app/Resources/translations/default/{locale}`
-     *
-     * @return string
-     */
-//    abstract protected function getDefaultResourceDirectory(): string;
 }

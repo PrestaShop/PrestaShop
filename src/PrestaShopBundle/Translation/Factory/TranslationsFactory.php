@@ -151,7 +151,7 @@ class TranslationsFactory implements TranslationsFactoryInterface
                 if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
                     $translations[$domain][$translationKey] = $data;
 
-                    if (null === $data['xlf'] && null === $data['db']) {
+                    if (null === $data['xliff'] && null === $data['database']) {
                         ++$missingTranslations;
                     }
                 }
@@ -182,8 +182,8 @@ class TranslationsFactory implements TranslationsFactoryInterface
             $search = strtolower($search);
 
             return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xlf']), $search) ||
-                false !== strpos(strtolower($data['db']), $search);
+                false !== strpos(strtolower($data['xliff']), $search) ||
+                false !== strpos(strtolower($data['database']), $search);
         }
 
         if (is_array($search)) {
@@ -191,8 +191,8 @@ class TranslationsFactory implements TranslationsFactoryInterface
             foreach ($search as $s) {
                 $s = strtolower($s);
                 $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xlf']), $s) ||
-                    false !== strpos(strtolower($data['db']), $s);
+                    false !== strpos(strtolower($data['xliff']), $s) ||
+                    false !== strpos(strtolower($data['database']), $s);
             }
 
             return $contains;
