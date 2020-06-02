@@ -88,6 +88,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
+     * @Then /^product "(.+)" localized "(.+)" is "(.+)"$/
      *
      * @param string $productReference
      * @param string $fieldName
@@ -242,6 +243,28 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             ProductConstraintException::class,
             ProductConstraintException::INVALID_PRODUCT_TYPE
+        );
+    }
+
+    /**
+     * @Then I should get error that product description is invalid
+     */
+    public function assertLastErrorIsInvalidDescriptionConstraint()
+    {
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_DESCRIPTION
+        );
+    }
+
+    /**
+     * @Then I should get error that product short description is invalid
+     */
+    public function assertLastErrorIsInvalidShortDescriptionConstraint()
+    {
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_SHORT_DESCRIPTION
         );
     }
 
