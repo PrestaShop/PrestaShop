@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery'
+import $ from 'jquery';
 
 class Payment {
   constructor() {
@@ -86,6 +86,14 @@ class Payment {
       this.hideConfirmation();
       $(paymentOption).show();
 
+      document.querySelectorAll(`${paymentOption} button, ${paymentOption} input`).forEach(element => {
+        if (show) {
+          element.removeAttribute('disabled');
+        } else {
+          element.setAttribute('disabled', !show);
+        }
+      });
+
       if (show) {
         $(paymentOption).removeClass('disabled');
       } else {
@@ -118,7 +126,7 @@ class Payment {
   }
 }
 
-export default function () {
+export default function() {
   let payment = new Payment();
   payment.init();
 
