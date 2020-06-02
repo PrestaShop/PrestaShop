@@ -223,6 +223,7 @@ module.exports = class BOBasePage extends CommonPage {
   async setValueOnTinymceInput(iFrameSelector, value) {
     const args = {selector: iFrameSelector, vl: value};
     await this.page.evaluate(async (args) => {
+      /* eslint-env browser */
       const iFrameElement = await document.querySelector(args.selector);
       const iFrameHtml = iFrameElement.contentDocument.documentElement;
       const textElement = await iFrameHtml.querySelector('body p');

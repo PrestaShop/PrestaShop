@@ -40,6 +40,7 @@ module.exports = class AddCurrency extends BOBasePage {
     // To check if modal still exist
     let displayed = false;
     for (let i = 0; i < 50 && !displayed; i++) {
+      /* eslint-env browser */
       displayed = await this.page.evaluate(
         selector => window.getComputedStyle(document.querySelector(selector))
           .getPropertyValue('display') === 'none',
@@ -47,6 +48,7 @@ module.exports = class AddCurrency extends BOBasePage {
       );
       await this.page.waitForTimeout(200);
     }
+
     await this.page.click(this.statusSwitch(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
