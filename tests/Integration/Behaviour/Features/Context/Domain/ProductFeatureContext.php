@@ -30,13 +30,13 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
 use Language;
-use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\EditableProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -180,31 +180,16 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertProductType(string $productReference, string $productTypeName)
     {
-        $product = $this->getProductByReference($productReference);
-        $productTypeValue = $this->getProductTypeValueByName($productTypeName) ?? -1;
-
-        $isVirtual = $product->is_virtual;
-        $isPack = Pack::isPack($product->id);
-        $isStandard = !Pack::isPack($product->id) && !$product->is_virtual;
-        $isCombination = !empty($product->getAttributeCombinations());
-
-        if ($isVirtual && $productTypeValue === ProductType::TYPE_VIRTUAL) {
-            return;
+        $editableProduct = $this->getEditableProductByReference($productReference);
+        if ($productTypeName !== $editableProduct->getType()->getValue()) {
+            throw new RuntimeException(
+                sprintf(
+                    'Product type is not as expected. Expected %s but go %s instead',
+                    $productTypeName,
+                    $editableProduct->getType()->getValue()
+                )
+            );
         }
-
-        if ($isPack && $productTypeValue === ProductType::TYPE_PACK) {
-            return;
-        }
-
-        if ($isStandard && $productTypeValue === ProductType::TYPE_STANDARD) {
-            return;
-        }
-
-        if ($isCombination && $productTypeValue === ProductType::TYPE_COMBINATION) {
-            return;
-        }
-
-        throw new RuntimeException(sprintf('Product type is not as expected. Expected %s', $productTypeName));
     }
 
     /**
@@ -227,27 +212,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ProductConstraintException::class,
             ProductConstraintException::INVALID_PRODUCT_TYPE
         );
-    }
-
-    /**
-     * @param string $typeName
-     *
-     * @return int
-     */
-    private function getProductTypeValueByName(string $typeName): ?int
-    {
-        $typeValueByName = [
-            'standard' => ProductType::TYPE_STANDARD,
-            'pack' => ProductType::TYPE_PACK,
-            'virtual' => ProductType::TYPE_VIRTUAL,
-            'combination' => ProductType::TYPE_COMBINATION,
-        ];
-
-        if (array_key_exists($typeName, $typeValueByName)) {
-            return $typeValueByName[$typeName];
-        }
-
-        return null;
     }
 
     /**
@@ -280,6 +244,20 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productId = $this->getSharedStorage()->get($reference);
 
         return $this->getProductById($productId);
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return EditableProduct
+     */
+    private function getEditableProductByReference(string $reference): EditableProduct
+    {
+        $productId = $this->getSharedStorage()->get($reference);
+
+        return $this->getQueryBus()->handle(new GetEditableProduct(
+            $productId
+        ));
     }
 
     /**
