@@ -58,6 +58,8 @@ describe('Update label of in-stock products', async () => {
       this.pageObjects.dashboardPage.productSettingsLink,
     );
 
+    await this.pageObjects.dashboardPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.productSettingsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
   });

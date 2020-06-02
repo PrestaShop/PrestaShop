@@ -162,7 +162,7 @@ module.exports = class Product extends FOBasePage {
    * @returns {Promise<string>}
    */
   getProductAvailabilityLabel() {
-    return this.getTextContent(this.productAvailability, 1000);
+    return this.getTextContent(this.productAvailability, false);
   }
 
   /**

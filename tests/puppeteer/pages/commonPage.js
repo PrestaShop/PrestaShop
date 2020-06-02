@@ -59,7 +59,7 @@ module.exports = class CommonPage {
    * @returns {Promise<string>}
    */
   async getAttributeContent(selector, attribute) {
-    await this.page.waitForSelector(selector);
+    await this.page.waitForSelector(selector, {state: 'attached'});
     return this.page.$eval(selector, (el, attr) => el
       .getAttribute(attr), attribute);
   }
