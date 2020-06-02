@@ -32,29 +32,31 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class FilesystemCatalogueExtractor implements ExtractorInterface
+class FileTranslatedCatalogueProvider implements FileSystemCatalogueProviderInterface, TranslationCatalogueProviderInterface
 {
+    /**
+     * @var string
+     */
+    private $directory;
+
     /**
      * @var array
      */
-    private $filenameFilters;
+    private $filenameFilters = [];
 
     /**
      * @var string
      */
     private $locale;
 
-    /**
-     * @var string
-     */
-    private $resourceDirectory;
+    public function setDirectory(string $directory): FileSystemCatalogueProviderInterface
+    {
+        $this->directory = $directory;
 
-    /**
-     * @param string $locale
-     *
-     * @return FilesystemCatalogueExtractor
-     */
-    public function setLocale(string $locale)
+        return $this;
+    }
+
+    public function setLocale(string $locale): FileSystemCatalogueProviderInterface
     {
         $this->locale = $locale;
 
@@ -64,39 +66,20 @@ class FilesystemCatalogueExtractor implements ExtractorInterface
     /**
      * @param array $filenameFilters
      *
-     * @return FilesystemCatalogueExtractor
+     * @return DefaultCatalogueProvider
      */
-    public function setFilenameFilters(array $filenameFilters): FilesystemCatalogueExtractor
+    public function setFilenameFilters(array $filenameFilters): FileSystemCatalogueProviderInterface
     {
         $this->filenameFilters = $filenameFilters;
 
         return $this;
     }
 
-    /**
-     * @param string $resourceDirectory
-     *
-     * @return FilesystemCatalogueExtractor
-     */
-    public function setResourceDirectory(string $resourceDirectory): FilesystemCatalogueExtractor
-    {
-        $this->resourceDirectory = $resourceDirectory;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $empty
-     *
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
-     */
-    public function extract(): MessageCatalogueInterface
+    public function getCatalogue(): MessageCatalogueInterface
     {
         $catalogue = new MessageCatalogue($this->locale);
         $translationFinder = new TranslationFinder();
-        $localeResourceDirectory = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->locale;
+        $localeResourceDirectory = $this->directory . DIRECTORY_SEPARATOR . $this->locale;
 
         foreach ($this->filenameFilters as $filter) {
             try {
