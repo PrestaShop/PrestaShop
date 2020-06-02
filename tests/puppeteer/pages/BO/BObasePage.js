@@ -171,23 +171,12 @@ module.exports = class BOBasePage extends CommonPage {
   async goToSubMenu(parentSelector, linkSelector) {
     if (await this.elementNotVisible(`${parentSelector}.open`, 1000)) {
       // open the block
-<<<<<<< HEAD
       await this.scrollTo(parentSelector);
 
       await Promise.all([
         this.page.click(parentSelector),
         this.waitForVisibleSelector(`${parentSelector}.open`),
       ]);
-||||||| merged common ancestors
-      await Promise.all([this.page.click(parentSelector), this.waitForVisibleSelector(`${parentSelector}.open`)]);
-      await this.clickAndWaitForNavigation(linkSelector);
-=======
-      await this.scrollTo(parentSelector);
-      await Promise.all([
-        this.page.click(parentSelector),
-        this.waitForVisibleSelector(`${parentSelector}.open`),
-      ]);
->>>>>>> Fix employee tests
     }
     await this.scrollTo(linkSelector);
     await this.clickAndWaitForNavigation(linkSelector);
