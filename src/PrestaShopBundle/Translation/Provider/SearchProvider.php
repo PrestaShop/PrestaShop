@@ -60,9 +60,9 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
         $this->modulesDirectory = $modulesDirectory;
         $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
 
-        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
+        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Za-z]|$)'];
 
-        $this->filenameFilters = ['#^' . preg_quote($this->domain, '#') . '([A-Z]|\.|$)#'];
+        $this->filenameFilters = ['#^' . preg_quote($this->domain, '#') . '([A-Za-z]|\.|$)#'];
 
         $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
 
@@ -122,9 +122,11 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setModuleName($moduleName)
+    public function setModuleName($moduleName): SearchProvider
     {
         $this->externalModuleLegacySystemProvider->setModuleName($moduleName);
+
+        return $this;
     }
 
     /**

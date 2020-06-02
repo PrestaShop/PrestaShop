@@ -95,7 +95,7 @@ class TranslationController extends ApiController
             );
 
             foreach ($catalog['data'] as $message) {
-                if (empty($message['xliff']) && empty($message['database'])) {
+                if (empty($message['xlf']) && empty($message['db'])) {
                     ++$catalog['info']['total_missing_translations'];
                 }
             }
@@ -329,11 +329,11 @@ class TranslationController extends ApiController
      * @param string $lang
      * @param string $type "themes", "modules", "mails", "mails_body", "back" or "others"
      * @param string|null $theme Selected theme name. Set only if type = "themes"
-     * @param string|null $search Search string
+     * @param string|array|null $search Search string
      *
      * @return array
      */
-    private function getTree(string $lang, string $type, ?string $theme, ?string $search)
+    private function getTree(string $lang, string $type, ?string $theme = null, $search = null)
     {
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $theme, $search);
 
