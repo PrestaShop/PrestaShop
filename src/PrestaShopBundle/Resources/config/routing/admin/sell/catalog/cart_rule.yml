@@ -20,7 +20,9 @@ admin_cart_rules_search_grid:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:searchGrid'
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.cart_rule
+    redirectRoute: admin_cart_rules_index
     _legacy_controller: AdminCartRules
 
 admin_cart_rule_toggle_status:

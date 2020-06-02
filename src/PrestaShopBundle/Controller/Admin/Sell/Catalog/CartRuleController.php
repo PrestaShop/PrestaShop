@@ -110,35 +110,6 @@ class CartRuleController extends FrameworkBundleAdminController
     }
 
     /**
-     * Provides filters functionality
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchGridAction(Request $request): RedirectResponse
-    {
-        $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cart_rule';
-        $filterId = CartRuleGridDefinitionFactory::GRID_ID;
-        if ($request->request->has(CartRuleGridDefinitionFactory::GRID_ID)) {
-            $gridDefinitionFactory = 'prestashop.core.grid.definition.factory.cart_rule';
-            $filterId = CartRuleGridDefinitionFactory::GRID_ID;
-        }
-
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get($gridDefinitionFactory),
-            $request,
-            $filterId,
-            'admin_cart_rules_index'
-        );
-    }
-
-    /**
      * Deletes cart rule
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_cart_rules_index")
