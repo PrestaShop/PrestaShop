@@ -52,8 +52,7 @@ final class UpdateProductDescriptionHandler extends AbstractProductHandler imple
      */
     public function handle(UpdateProductDescriptionCommand $command): void
     {
-        $productId = $command->getProductId();
-        $product = $this->getProduct($productId);
+        $product = $this->getProduct($command->getProductId());
 
         $localizedDescriptions = $command->getLocalizedDescriptions();
         $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
