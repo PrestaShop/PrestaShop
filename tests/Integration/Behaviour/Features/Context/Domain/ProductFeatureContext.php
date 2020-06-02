@@ -76,7 +76,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
                 $this->parseLocalizedArray($data['name']),
-                $this->getProductTypeValueByName($data['type']) ?? -1
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual'])
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());

@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-
 /**
  * Command for creating product with basic information
  */
@@ -41,20 +39,20 @@ class AddProductCommand
     private $localizedNames;
 
     /**
-     * @var ProductType
+     * @var bool
      */
-    private $type;
+    private $isVirtual;
 
     /**
      * @param array $localizedNames
-     * @param int $type
+     * @param bool $isVirtual
      */
     public function __construct(
         array $localizedNames,
-        int $type
+        bool $isVirtual
     ) {
         $this->localizedNames = $localizedNames;
-        $this->type = new ProductType($type);
+        $this->isVirtual = $isVirtual;
     }
 
     /**
@@ -66,10 +64,10 @@ class AddProductCommand
     }
 
     /**
-     * @return ProductType
+     * @return bool
      */
-    public function getType(): ProductType
+    public function isVirtual(): bool
     {
-        return $this->type;
+        return $this->isVirtual;
     }
 }

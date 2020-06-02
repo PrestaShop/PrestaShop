@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerIn
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopException;
 use Product;
 
@@ -98,7 +97,7 @@ final class AddProductHandler implements AddProductHandlerInterface
         $product->active = false;
         $product->category = Category::getLinkRewrite($this->defaultCategoryId, $this->defaultLangId);
         $product->id_category_default = $this->defaultCategoryId;
-        $product->is_virtual = $command->getType() === ProductType::TYPE_VIRTUAL;
+        $product->is_virtual = $command->isVirtual();
 
         foreach ($product->name as $langId => $name) {
             if (true !== $product->validateField('name', $name, $langId)) {
