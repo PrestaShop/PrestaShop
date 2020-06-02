@@ -46,7 +46,13 @@ final class ToggleCartRuleStatusHandler extends AbstractCartRuleHandler implemen
         $cartRule = $this->getCartRule($command->getCartRuleId());
 
         if (!$this->toggleCartRuleStatus($cartRule, $command->getExpectedStatus())) {
-            throw new UpdateCartRuleException(sprintf('Unable to toggle cart rule status with id "%s"', $cartRule->id), UpdateCartRuleException::FAILED_UPDATE_STATUS);
+            throw new UpdateCartRuleException(
+                sprintf(
+                    'Unable to toggle cart rule status with id "%s"',
+                    $cartRule->id
+                ),
+                UpdateCartRuleException::FAILED_UPDATE_STATUS
+            );
         }
     }
 }

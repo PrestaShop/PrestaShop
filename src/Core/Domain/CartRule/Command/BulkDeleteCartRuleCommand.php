@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleId;
 
 /**
- * Deletes cart rules in bulk acton
+ * Deletes cart rules in bulk action
  */
 class BulkDeleteCartRuleCommand
 {
