@@ -32,17 +32,12 @@ use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class UserTranslatedCatalogueExtractor implements ExtractorInterface
+class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
 {
     /**
      * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
-
-    /**
-     * @var string
-     */
-    private $locale;
 
     /**
      * @var string
@@ -54,31 +49,36 @@ class UserTranslatedCatalogueExtractor implements ExtractorInterface
      */
     private $translationDomains = [''];
 
+    /**
+     * @var string
+     */
+    private $locale;
+
     public function __construct(DatabaseTranslationLoader $databaseLoader)
     {
         $this->databaseLoader = $databaseLoader;
     }
 
     /**
-     * @param string $locale
+     * @param string|null $theme
      *
-     * @return UserTranslatedCatalogueExtractor
+     * @return $this
      */
-    public function setLocale(string $locale)
+    public function setTheme(?string $theme): UserTranslatedCatalogueProvider
     {
-        $this->locale = $locale;
+        $this->theme = $theme;
 
         return $this;
     }
 
     /**
-     * @param string|null $theme
+     * @param string|null $locale
      *
-     * @return UserTranslatedCatalogueExtractor
+     * @return $this
      */
-    public function setTheme(?string $theme)
+    public function setLocale(?string $locale): UserTranslatedCatalogueProvider
     {
-        $this->theme = $theme;
+        $this->locale = $locale;
 
         return $this;
     }
@@ -97,9 +97,9 @@ class UserTranslatedCatalogueExtractor implements ExtractorInterface
     /**
      * @param array $translationDomains
      *
-     * @return UserTranslatedCatalogueExtractor
+     * @return UserTranslatedCatalogueProvider
      */
-    public function setTranslationDomains(array $translationDomains): UserTranslatedCatalogueExtractor
+    public function setTranslationDomains(array $translationDomains): UserTranslatedCatalogueProvider
     {
         $this->translationDomains = $translationDomains;
 
@@ -107,13 +107,11 @@ class UserTranslatedCatalogueExtractor implements ExtractorInterface
     }
 
     /**
-     * @param bool $empty
-     *
      * @return MessageCatalogueInterface
      */
-    public function extract(bool $empty = true): MessageCatalogueInterface
+    public function getCatalogue(): MessageCatalogueInterface
     {
-        $databaseCatalogue = new MessageCatalogue($this->locale);
+        $catalogue = new MessageCatalogue($this->locale);
 
         foreach ($this->getTranslationDomains() as $translationDomain) {
             $domainCatalogue = $this->databaseLoader->load(
@@ -124,10 +122,10 @@ class UserTranslatedCatalogueExtractor implements ExtractorInterface
             );
 
             if ($domainCatalogue instanceof MessageCatalogue) {
-                $databaseCatalogue->addCatalogue($domainCatalogue);
+                $catalogue->addCatalogue($domainCatalogue);
             }
         }
 
-        return $databaseCatalogue;
+        return $catalogue;
     }
 }

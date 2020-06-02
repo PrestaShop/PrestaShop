@@ -24,33 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\DependencyInjection\Compiler;
+declare(strict_types=1);
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
+namespace PrestaShopBundle\Translation\Provider;
 
-/**
- * Load every flagged Translation providers.
- */
-class PopulateTranslationProvidersPass implements CompilerPassInterface
+use Symfony\Component\Translation\MessageCatalogueInterface;
+
+interface TranslationCatalogueProviderInterface
 {
-    const DEFINITION = 'prestashop.translation.translations_factory';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ContainerBuilder $container)
-    {
-        if (!$container->has(self::DEFINITION)) {
-            return;
-        }
-
-        $definition = $container->findDefinition(self::DEFINITION);
-        $taggedServices = $container->findTaggedServiceIds('ps.translation_provider');
-
-        foreach ($taggedServices as $id => $tags) {
-            $definition->addMethodCall('addProvider', [new Reference($id)]);
-        }
-    }
+    public function getCatalogue(): MessageCatalogueInterface;
 }
