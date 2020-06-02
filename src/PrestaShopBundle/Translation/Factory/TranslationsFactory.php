@@ -139,10 +139,10 @@ class TranslationsFactory implements TranslationsFactoryInterface
             foreach ($messages as $translationKey => $translationValue) {
                 $data = [
                     'default' => $translationKey,
-                    'xlf' => $xliffCatalogue->defines($translationKey, $domain)
+                    'xliff' => $xliffCatalogue->defines($translationKey, $domain)
                         ? $xliffCatalogue->get($translationKey, $domain)
                         : null,
-                    'db' => $databaseCatalogue->defines($translationKey, $domain)
+                    'database' => $databaseCatalogue->defines($translationKey, $domain)
                         ? $databaseCatalogue->get($translationKey, $domain)
                         : null,
                 ];
