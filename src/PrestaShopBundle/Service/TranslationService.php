@@ -30,7 +30,7 @@ use Exception;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
-use PrestaShopBundle\Translation\Provider\UseModuleInterface;
+use PrestaShopBundle\Translation\ISProvider\TranslationsCatalogueProvider;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
@@ -116,18 +116,6 @@ class TranslationService
         return $this->container->getParameter('kernel.root_dir') . '/Resources';
     }
 
-    public function getModulesTranslationsCatalogue(string $lang, string $type, string $theme, ?string $search)
-    {
-        $factory = $this->container->get('prestashop.translation.translations_factory');
-
-        return $factory->createTranslationsArray(
-            $type,
-            $this->langToLocale($lang),
-            $theme,
-            $search
-        );
-    }
-
     /**
      * Returns list translations by domain
      *
@@ -140,18 +128,31 @@ class TranslationService
      */
     public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
     {
-        $factory = $this->container->get('prestashop.translation.translations_factory');
+        /**
+         * @var TranslationsCatalogueProvider
+         */
+        $provider = $this->container->get('prestashop.translation.translations_provider');
 
-        if ($this->requiresThemeTranslationsFactory($theme, $type)) {
-            if ($this->isDefaultTheme($theme)) {
-                $type = 'front';
-            } else {
-                $type = $theme;
-                $factory = $this->container->get('prestashop.translation.theme_translations_factory');
-            }
-        }
+        $provider
+            ->setLocale($this->langToLocale($lang))
+            ->setType($type)
+            ->setTheme($theme)
+        ;
 
-        return $factory->createTranslationsArray($type, $this->langToLocale($lang), $theme, $search);
+        return $provider->getCatalogue($search);
+
+//        $factory = $this->container->get('prestashop.translation.translations_factory');
+//
+//        if ($this->requiresThemeTranslationsFactory($theme, $type)) {
+//            if ($this->isDefaultTheme($theme)) {
+//                $type = 'front';
+//            } else {
+//                $type = $theme;
+//                $factory = $this->container->get('prestashop.translation.theme_translations_factory');
+//            }
+//        }
+//
+//        return $factory->createTranslationsArray($type, $this->langToLocale($lang), $theme, $search);
     }
 
     /**
@@ -174,52 +175,27 @@ class TranslationService
      * @param string $locale
      * @param string $domain
      * @param string|null $theme
-     * @param string|null $search
+     * @param string|array|null $search
      * @param string|null $module
      *
      * @return array
      */
-    public function listDomainTranslation($locale, $domain, $theme = null, $search = null, $module = null)
-    {
-        if (!empty($theme) && !$this->isDefaultTheme($theme)) {
-            $translationProvider = $this->container->get('prestashop.translation.theme_provider');
-            $translationProvider->setThemeName($theme);
-        } else {
-            $translationProvider = $this->container->get('prestashop.translation.search_provider');
-            if ($module !== null && $translationProvider instanceof UseModuleInterface) {
-                $translationProvider->setModuleName($module);
-            }
-        }
-        if ('Messages' === $domain) {
-            $domain = 'messages';
-        }
+    public function listDomainTranslation(
+        string $locale,
+        string $domain,
+        ?string $theme = null,
+        $search = null,
+        ?string $module = null
+    ): array {
+        /**
+         * @var TranslationsCatalogueProvider
+         */
+        $provider = $this->container->get('prestashop.translation.translations_provider');
 
-        $translationProvider->setDomain($domain);
-        $translationProvider->setLocale($locale);
-
-        $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
-
-        $defaultCatalog = $translationProvider->getDefaultCatalogue()->all($domain);
-        $xliffCatalog = $translationProvider->getFilesystemCatalogue()->all($domain);
-        $dbCatalog = $translationProvider->getUserTranslatedCatalogue($theme)->all($domain);
-
-        $domainData = [];
-        foreach ($defaultCatalog as $key => $message) {
-            $messageData = [
-                'default' => $key,
-                'xliff' => (array_key_exists($key, $xliffCatalog) ? $xliffCatalog[$key] : null),
-                'database' => (array_key_exists($key, $dbCatalog) ? $dbCatalog[$key] : null),
-                'tree_domain' => $treeDomain,
-            ];
-            // if search is empty or is in catalog default|xlf|database
-            if (empty($search) || $this->dataContainsSearchWord($search, $messageData)) {
-                if (empty($messageData['xliff']) && empty($messageData['database'])) {
-                    array_unshift($domainData, $messageData);
-                } else {
-                    $domainData[] = $messageData;
-                }
-            }
-        }
+        $provider
+            ->setLocale($locale)
+            ->setTheme($theme)
+        ;
 
         $router = $this->container->get('router');
 
@@ -228,41 +204,8 @@ class TranslationService
                 'edit_url' => $router->generate('api_translation_value_edit'),
                 'reset_url' => $router->generate('api_translation_value_reset'),
             ],
-            'data' => $domainData,
+            'data' => $provider->getDomainCatalogue($domain, $search, $module),
         ];
-    }
-
-    /**
-     * Check if data contains search word.
-     *
-     * @param $search
-     * @param $data
-     *
-     * @return bool
-     */
-    private function dataContainsSearchWord($search, $data)
-    {
-        if (is_string($search)) {
-            $search = strtolower($search);
-
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xliff']), $search) ||
-                false !== strpos(strtolower($data['database']), $search);
-        }
-
-        if (is_array($search)) {
-            $contains = true;
-            foreach ($search as $s) {
-                $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xliff']), $s) ||
-                    false !== strpos(strtolower($data['database']), $s);
-            }
-
-            return $contains;
-        }
-
-        return false;
     }
 
     /**
@@ -376,15 +319,5 @@ class TranslationService
         }
 
         return $resetTranslationSuccessfully;
-    }
-
-    /**
-     * @param string $theme
-     *
-     * @return bool
-     */
-    private function isDefaultTheme($theme)
-    {
-        return $this->defaultTheme === $theme;
     }
 }
