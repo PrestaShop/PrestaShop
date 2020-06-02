@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use Product;
 
 /**
  * Handles command for product basic information update using legacy object model
@@ -38,9 +40,48 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
 {
     /**
      * {@inheritdoc}
+     *
+     * Null values are not updated, because it is considered as unchanged
      */
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
-        // TODO: Implement handle() method.
+        //@todo: get product from abstractHandler in another PR
+        $productId = $command->getProductId();
+        $product = new Product($productId->getValue());
+
+        if (null !== $command->getLocalizedNames()) {
+            $product->name = $command->getLocalizedNames();
+            $this->validateLocalizedNames($product);
+        }
+
+        if (null !== $command->isVirtual()) {
+            $product->is_virtual = $command->isVirtual();
+        }
+
+        //@todo: wrap in try catch
+        $product->update();
+    }
+
+    /**
+     * @todo: move to abstract? AddProductCommand uses the same
+     *
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     * @throws \PrestaShopException
+     */
+    private function validateLocalizedNames(Product $product): void
+    {
+        foreach ($product->name as $langId => $name) {
+            if (true !== $product->validateField('name', $name, $langId)) {
+                throw new ProductConstraintException(
+                    sprintf(
+                        'Invalid localized product name for language with id "%s"',
+                        $langId
+                    ),
+                    ProductConstraintException::INVALID_NAME
+                );
+            }
+        }
     }
 }
