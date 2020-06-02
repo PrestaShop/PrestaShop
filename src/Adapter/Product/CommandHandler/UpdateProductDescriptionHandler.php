@@ -70,10 +70,13 @@ final class UpdateProductDescriptionHandler extends AbstractProductHandler imple
 
         try {
             if (false === $product->update()) {
-                throw new CannotUpdateProductException(sprintf(
-                    'Error occurred when trying to update product #%s description',
-                    $product->id
-                ));
+                throw new CannotUpdateProductException(
+                    sprintf(
+                        'Error occurred when trying to update product #%s description',
+                        $product->id
+                    ),
+                    CannotUpdateProductException::FAILED_UPDATE_DESCRIPTIONS
+                );
             }
         } catch (PrestaShopException $e) {
             throw new CannotUpdateProductException(
@@ -81,7 +84,7 @@ final class UpdateProductDescriptionHandler extends AbstractProductHandler imple
                     'Error occurred when trying to update product #%s description',
                     $product->id
                 ),
-                0,
+                CannotUpdateProductException::FAILED_UPDATE_DESCRIPTIONS,
                 $e
             );
         }

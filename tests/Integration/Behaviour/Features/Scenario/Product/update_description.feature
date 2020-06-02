@@ -6,8 +6,8 @@ Feature: Update product descriptions from Back Office
   @update-description
   Scenario: Update product descriptions
     Given I add product "product1" with following basic information:
-      | name | en-US:potato |
-      | type | standard     |
+      | name       | en-US:potato |
+      | is_virtual | false        |
     And product "product1" localized "description" should be "en-US:"
     And product "product1" localized "description_short" should be "en-US:"
     When I update product "product1" descriptions with following information:
