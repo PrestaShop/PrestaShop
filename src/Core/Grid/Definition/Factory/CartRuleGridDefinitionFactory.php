@@ -215,7 +215,7 @@ final class CartRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'attr' => [
                     'placeholder' => $this->trans('Expiration date', [], 'Admin.Catalog.Feature'),
                 ],
-                'date_format' => 'YYYY-MM-DD HH:mm:ss',
+                'date_format' => 'YYYY/MM/DD',
             ])
             ->setAssociatedColumn('date_to')
             )
