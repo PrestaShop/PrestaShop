@@ -24,45 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Provider;
 
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
-
-/**
- * Main translation provider of the Back Office
- */
-class BackOfficeProvider extends AbstractProvider
+interface FileSystemCatalogueProviderInterface
 {
-    public function __construct(
-        DatabaseTranslationLoader $databaseLoader,
-        string $resourceDirectory
-    ) {
-        $translationDomains = [
-            '^Admin[A-Z]',
-            '^Modules[A-Z](.*)Admin',
-        ];
+    public function setDirectory(string $directory): FileSystemCatalogueProviderInterface;
 
-        $filenameFilters = [
-            '#^Admin[A-Z]#',
-            '#^Modules[A-Z](.*)Admin#',
-        ];
-
-        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-
-        parent::__construct(
-            $databaseLoader,
-            $resourceDirectory,
-            $translationDomains,
-            $filenameFilters,
-            $defaultResourceDirectory
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return 'back';
-    }
+    public function setLocale(string $locale): FileSystemCatalogueProviderInterface;
 }
