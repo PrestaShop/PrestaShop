@@ -36,6 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShopException;
 use Product;
 
+/**
+ * Handles UpdateProductDescriptionCommand using legacy object model
+ */
 final class UpdateProductDescriptionHandler extends AbstractProductHandler implements UpdateProductDescriptionHandlerInterface
 {
     /**
