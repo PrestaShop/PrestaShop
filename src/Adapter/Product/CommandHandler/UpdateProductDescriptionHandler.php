@@ -41,6 +41,12 @@ use Product;
  */
 final class UpdateProductDescriptionHandler extends AbstractProductHandler implements UpdateProductDescriptionHandlerInterface
 {
+    /** @var string Product description property name */
+    private const DESCRIPTION = 'description';
+
+    /** @var string Product short description property name */
+    private const DESCRIPTION_SHORT = 'description_short';
+
     /**
      * {@inheritdoc}
      */
@@ -53,12 +59,12 @@ final class UpdateProductDescriptionHandler extends AbstractProductHandler imple
         $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
 
         if (null !== $localizedDescriptions) {
-            $this->validateDescriptions($product, $localizedDescriptions, false);
+            $this->validate($product, $localizedDescriptions, self::DESCRIPTION);
             $product->description = $localizedDescriptions;
         }
 
         if (null !== $localizedShortDescriptions) {
-            $this->validateDescriptions($product, $localizedShortDescriptions, true);
+            $this->validate($product, $localizedShortDescriptions, self::DESCRIPTION_SHORT);
             $product->description_short = $localizedShortDescriptions;
         }
 
@@ -83,29 +89,27 @@ final class UpdateProductDescriptionHandler extends AbstractProductHandler imple
 
     /**
      * @param Product $product
-     * @param array $localizedDescriptions
-     * @param bool $forShortDescription
+     * @param array $localizedValues
+     * @param string $propertyName
      *
      * @throws ProductConstraintException
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
-    private function validateDescriptions(Product $product, array $localizedDescriptions, bool $forShortDescription): void
+    private function validate(Product $product, array $localizedValues, string $propertyName): void
     {
-        $descriptionType = 'description';
-        $errorCode = ProductConstraintException::INVALID_DESCRIPTION;
-
-        if ($forShortDescription) {
-            $descriptionType = 'short description';
+        if (self::DESCRIPTION === $propertyName) {
+            $errorCode = ProductConstraintException::INVALID_DESCRIPTION;
+        } else {
             $errorCode = ProductConstraintException::INVALID_SHORT_DESCRIPTION;
         }
 
-        foreach ($localizedDescriptions as $langId => $localizedDescription) {
-            if (true !== $product->validateField('description', $localizedDescription, $langId)) {
+        foreach ($localizedValues as $langId => $localizedValue) {
+            if (true !== $product->validateField($propertyName, $localizedValue, $langId)) {
                 throw new ProductConstraintException(
                     sprintf(
                         'Invalid %s "%s" in language with id "%s"',
-                        $descriptionType,
-                        $localizedDescription,
+                        $propertyName,
+                        $localizedValue,
                         $langId
                     ),
                     $errorCode
