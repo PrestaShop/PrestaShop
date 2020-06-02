@@ -11,7 +11,19 @@ module.exports = {
    */
   async createBrowser(attempt = 1) {
     try {
-      return (await playwright[global.BROWSER].launch(global.BROWSER_CONFIG));
+      const browserConfig = global.BROWSER.config;
+
+      // Add argument for chromium (window size for heedful debug and sandbox)
+      if (global.BROWSER.name === 'chromium') {
+        browserConfig.args = [
+          `--window-size=${global.BROWSER.width}, ${global.BROWSER.height}`,
+          `--lang=${global.BROWSER.lang}`,
+        ];
+
+        browserConfig.args = await (browserConfig.args).concat(global.BROWSER.sandboxArgs);
+      }
+
+      return (await playwright[global.BROWSER.name].launch(browserConfig));
     } catch (e) {
       if (attempt <= 3) {
         await (new Promise(resolve => setTimeout(resolve, 5000)));
@@ -29,12 +41,12 @@ module.exports = {
   async createBrowserContext(browser) {
     return browser.newContext(
       {
-        acceptDownloads: true,
-        locale: 'en-GB',
+        acceptDownloads: global.BROWSER.acceptDownloads,
+        locale: global.BROWSER.lang,
         viewport:
           {
-            width: 1680,
-            height: 900,
+            width: global.BROWSER.width,
+            height: global.BROWSER.height,
           },
       },
     );

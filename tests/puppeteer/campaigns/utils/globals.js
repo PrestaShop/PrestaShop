@@ -1,8 +1,10 @@
 const {DefaultAccount} = require('@data/demo/employees');
 
+
 global.FO = {
   URL: process.env.URL_FO || 'http://localhost/prestashop/',
 };
+
 global.BO = {
   URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
   EMAIL: process.env.LOGIN || DefaultAccount.email,
@@ -10,6 +12,7 @@ global.BO = {
   FIRSTNAME: process.env.FIRSTNAME || DefaultAccount.firstName,
   LASTNAME: process.env.LASTNAME || DefaultAccount.lastName,
 };
+
 global.INSTALL = {
   URL: process.env.URL_INSTALL || `${global.FO.URL}install-dev/`,
   LANGUAGE: process.env.INSTALL_LANGUAGE || 'en',
@@ -20,10 +23,17 @@ global.INSTALL = {
   SHOPNAME: process.env.SHOPNAME || 'Prestashop',
   PS_VERSION: process.env.PS_VERSION || '1.7.6.0',
 };
-global.BROWSER_CONFIG = {
-  headless: JSON.parse(process.env.HEADLESS || true),
-  timeout: 0,
-  slowMo: parseInt(process.env.SLOWMO, 10) || 5,
-  args: ['--window-size=1680,900', '--start-maximized', '--no-sandbox', '--lang=en-GB'],
+
+global.BROWSER = {
+  name: process.env.BROWSER || 'chromium',
+  lang: 'en-GB',
+  width: 1680,
+  height: 900,
+  sandboxArgs: ['--no-sandbox', '--disable-setuid-sandbox'],
+  acceptDownloads: true,
+  config: {
+    headless: JSON.parse(process.env.HEADLESS || true),
+    timeout: 0,
+    slowMo: parseInt(process.env.SLOWMO, 10) || 5,
+  },
 };
-global.BROWSER = process.env.BROWSER || 'chromium';
