@@ -42,13 +42,13 @@ class UpdateProductDescriptionCommand
 
     /**
      * @var string[]|null key value pairs where key is the id of language.
-     * If its null then it will not be updated
+     *                    If its null then it will not be updated
      */
     private $localizedDescriptions;
 
     /**
      * @var string[]|null key value pairs where key is the id of language
-     * If its null then it will not be updated
+     *                    If its null then it will not be updated
      */
     private $localizedShortDescriptions;
 
