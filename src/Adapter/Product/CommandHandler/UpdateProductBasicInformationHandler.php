@@ -28,15 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShopException;
 use Product;
 
 /**
  * Handles command for product basic information update using legacy object model
  */
-final class UpdateProductBasicInformationHandler implements UpdateProductBasicInformationHandlerInterface
+final class UpdateProductBasicInformationHandler extends AbstractProductHandler implements UpdateProductBasicInformationHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -45,9 +47,7 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
      */
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
-        //@todo: get product from abstractHandler in another PR
-        $productId = $command->getProductId();
-        $product = new Product($productId->getValue());
+        $product = $this->getProduct($command->getProductId());
 
         if (null !== $command->getLocalizedNames()) {
             $product->name = $command->getLocalizedNames();
@@ -58,30 +58,19 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
             $product->is_virtual = $command->isVirtual();
         }
 
-        //@todo: wrap in try catch
-        $product->update();
-    }
-
-    /**
-     * @todo: move to abstract? AddProductCommand uses the same
-     *
-     * @param Product $product
-     *
-     * @throws ProductConstraintException
-     * @throws \PrestaShopException
-     */
-    private function validateLocalizedNames(Product $product): void
-    {
-        foreach ($product->name as $langId => $name) {
-            if (true !== $product->validateField('name', $name, $langId)) {
-                throw new ProductConstraintException(
-                    sprintf(
-                        'Invalid localized product name for language with id "%s"',
-                        $langId
-                    ),
-                    ProductConstraintException::INVALID_NAME
+        try {
+            if (false === $product->update()) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to update product #%s basic information', $product->id),
+                    CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO
                 );
             }
+        } catch (PrestaShopException $e) {
+            throw new CannotUpdateProductException(
+                sprintf('Error occurred when trying to update product #%s basic information', $product->id),
+                CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO,
+                $e
+            );
         }
     }
 }

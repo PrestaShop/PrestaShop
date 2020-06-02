@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -69,5 +70,28 @@ abstract class AbstractProductHandler
         }
 
         return $product;
+    }
+
+    /**
+     * @todo: product name is not required. Fix that? issue: #19441 for discussion
+     *
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     * @throws \PrestaShopException
+     */
+    protected function validateLocalizedNames(Product $product): void
+    {
+        foreach ($product->name as $langId => $name) {
+            if (true !== $product->validateField('name', $name, $langId)) {
+                throw new ProductConstraintException(
+                    sprintf(
+                        'Invalid localized product name for language with id "%s"',
+                        $langId
+                    ),
+                    ProductConstraintException::INVALID_NAME
+                );
+            }
+        }
     }
 }

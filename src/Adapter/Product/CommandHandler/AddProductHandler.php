@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
@@ -40,7 +40,7 @@ use Product;
 /**
  * Handles AddProductCommand using legacy object model
  */
-final class AddProductHandler implements AddProductHandlerInterface
+final class AddProductHandler extends AbstractProductHandler implements AddProductHandlerInterface
 {
     /**
      * @var int
@@ -91,25 +91,13 @@ final class AddProductHandler implements AddProductHandlerInterface
         //@todo: multistore?
         $product = new Product();
 
-        //@todo: product name is not required. Fix that? issue: #19441 for discussion
         $product->name = $command->getLocalizedNames();
-
         $product->active = false;
         $product->category = Category::getLinkRewrite($this->defaultCategoryId, $this->defaultLangId);
         $product->id_category_default = $this->defaultCategoryId;
         $product->is_virtual = $command->isVirtual();
 
-        foreach ($product->name as $langId => $name) {
-            if (true !== $product->validateField('name', $name, $langId)) {
-                throw new ProductConstraintException(
-                    sprintf(
-                        'Invalid localized product name for language with id "%s"',
-                        $langId
-                    ),
-                    ProductConstraintException::INVALID_NAME
-                );
-            }
-        }
+        $this->validateLocalizedNames($product);
 
         return $product;
     }

@@ -35,4 +35,9 @@ class CannotUpdateProductException extends ProductException
      * When updating product description or description_short fails
      */
     const FAILED_UPDATE_DESCRIPTIONS = 10;
+
+    /**
+     * When basic information update fails
+     */
+    const FAILED_UPDATE_BASIC_INFO = 20;
 }
