@@ -13,7 +13,7 @@ module.exports = {
     try {
       const browserConfig = global.BROWSER.config;
 
-      // Add argument for chromium (window size for heedful debug and sandbox)
+      // Add argument for chromium (window size for headful debug and sandbox)
       if (global.BROWSER.name === 'chromium') {
         browserConfig.args = [
           `--window-size=${global.BROWSER.width}, ${global.BROWSER.height}`,
