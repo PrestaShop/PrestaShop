@@ -31,4 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
  */
 class CannotUpdateProductException extends ProductException
 {
+    /**
+     * When updating product description or description_short fails
+     */
+    const FAILED_UPDATE_DESCRIPTIONS = 1;
 }
