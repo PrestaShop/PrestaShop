@@ -359,15 +359,14 @@ class CommonController extends FrameworkBundleAdminController
         $gridDefinitionFactoryServiceId,
         $redirectRoute,
         array $redirectQueryParamsToKeep = []
-    )
-    {
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
+    ) {
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
 
         if ($definitionFactory instanceof FilterableGridDefinitionFactoryInterface) {
+            /** @var ResponseBuilder $responseBuilder */
+            $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
             return $responseBuilder->buildSearchResponse(
                 $definitionFactory,
                 $request,
@@ -376,9 +375,13 @@ class CommonController extends FrameworkBundleAdminController
                 $redirectQueryParamsToKeep
             );
         }
+
         // for backward compatibility with AbstractGridDefinitionFactory
         // replaced by AbstractFilterableGridDefinitionFactory
         if ($definitionFactory instanceof AbstractGridDefinitionFactory) {
+            /** @var ResponseBuilder $responseBuilder */
+            $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
             return $responseBuilder->buildSearchResponse(
                 $definitionFactory,
                 $request,
