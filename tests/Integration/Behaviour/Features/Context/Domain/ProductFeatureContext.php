@@ -96,12 +96,11 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLocalizedProperty(string $productReference, string $fieldName, string $localizedValues)
     {
-        $propertyName = $this->getPropertyByFieldName($fieldName);
         $product = $this->getProductByReference($productReference);
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
         foreach ($expectedLocalizedValues as $langId => $value) {
-            if ($value !== $product->{$propertyName}[$langId]) {
+            if ($value !== $product->{$fieldName}[$langId]) {
                 $langIso = Language::getIsoById($langId);
 
                 throw new RuntimeException(
@@ -110,7 +109,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                         $fieldName,
                         $langIso,
                         $value,
-                        $product->{$propertyName}[$langId]
+                        $product->{$fieldName}[$langId]
                     )
                 );
             }
@@ -127,7 +126,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
         $descriptions = isset($data['description']) ? $this->parseLocalizedArray($data['description']) : null;
-        $shortDescriptions = isset($data['short description']) ? $this->parseLocalizedArray($data['short description']) : null;
+        $shortDescriptions = isset($data['description_short']) ? $this->parseLocalizedArray($data['description_short']) : null;
 
         $command = new UpdateProductDescriptionCommand($this->getSharedStorage()->get($productReference));
 
@@ -266,26 +265,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SHORT_DESCRIPTION
         );
-    }
-
-    /**
-     * Map a technical property name with a more user oriented name from scenario.
-     *
-     * @param string $fieldName
-     *
-     * @return string
-     */
-    private function getPropertyByFieldName(string $fieldName): string
-    {
-        $map = [
-            'short description' => 'description_short',
-        ];
-
-        if (array_key_exists($fieldName, $map)) {
-            return $map[$fieldName];
-        }
-
-        return $fieldName;
     }
 
     /**
