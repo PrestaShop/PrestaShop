@@ -253,8 +253,8 @@ class ThemeTranslationsFactoryTest extends TestCase
         $this->assertSame(
             [
                 'default' => 'Default message bis',
-                'xlf' => null,
-                'db' => null,
+                'xliff' => null,
+                'database' => null,
             ],
             $this->translations['DefaultDomain']['Default message bis'],
             'It should provide with default translations.'
@@ -263,8 +263,8 @@ class ThemeTranslationsFactoryTest extends TestCase
         $this->assertSame(
             [
                 'default' => 'foo',
-                'xlf' => null,
-                'db' => null,
+                'xliff' => null,
+                'database' => null,
             ],
             $this->translations['messages']['foo'],
             'It should provide with default translations.'
@@ -276,8 +276,8 @@ class ThemeTranslationsFactoryTest extends TestCase
         $this->assertSame(
             [
                 'default' => 'Add to Cart',
-                'xlf' => 'Add to Cart override xliff',
-                'db' => null,
+                'xliff' => 'Add to Cart override xliff',
+                'database' => null,
             ],
             $this->translations['ShopFront']['Add to Cart'],
             'It should provide with translations from XLIFF catalogue overriding the defaults.'
@@ -286,8 +286,8 @@ class ThemeTranslationsFactoryTest extends TestCase
         $this->assertSame(
             [
                 'default' => 'bar',
-                'xlf' => 'Bar override xlif',
-                'db' => null,
+                'xliff' => 'Bar override xlif',
+                'database' => null,
             ],
             $this->translations['messages']['bar'],
             'It should provide with translations from XLIFF catalogue overriding the defaults.'
@@ -299,8 +299,8 @@ class ThemeTranslationsFactoryTest extends TestCase
         $this->assertSame(
             [
                 'default' => 'Default message',
-                'xlf' => 'Default MESSAGE override xliff',
-                'db' => 'Default override database',
+                'xliff' => 'Default MESSAGE override xliff',
+                'database' => 'Default override database',
             ],
             $this->translations['DefaultDomain']['Default message'],
             'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
@@ -309,8 +309,8 @@ class ThemeTranslationsFactoryTest extends TestCase
         $this->assertSame(
             [
                 'default' => 'baz',
-                'xlf' => 'Baz override xliff',
-                'db' => 'Baz is updated from database!',
+                'xliff' => 'Baz override xliff',
+                'database' => 'Baz is updated from database!',
             ],
             $this->translations['messages']['baz'],
             'It should provide with translations from XLIFF catalogue overriding the defaults and database overrides.'
