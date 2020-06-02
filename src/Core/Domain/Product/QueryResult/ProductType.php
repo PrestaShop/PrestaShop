@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
@@ -38,23 +38,23 @@ class ProductType
     /**
      * Standard product
      */
-    const TYPE_STANDARD = 0;
+    const TYPE_STANDARD = 'standard';
 
     /**
      * A pack consists multiple units of product.
      */
-    const TYPE_PACK = 1;
+    const TYPE_PACK = 'pack';
 
     /**
      * Items that are not in physical form and can be sold without requiring any shipping
      * E.g. downloadable photos, videos, software, services etc.
      */
-    const TYPE_VIRTUAL = 2;
+    const TYPE_VIRTUAL = 'virtual';
 
     /**
      * Product containing combinations of different attributes
      */
-    const TYPE_COMBINATION = 3;
+    const TYPE_COMBINATION = 'combination';
 
     /**
      * A list of available types
@@ -67,35 +67,35 @@ class ProductType
     ];
 
     /**
-     * @var int
+     * @var string
      */
     private $value;
 
     /**
-     * @param int $value
+     * @param string $value
      *
      * @throws ProductConstraintException
      */
-    public function __construct(int $value)
+    public function __construct(string $value)
     {
         $this->assertProductType($value);
         $this->value = $value;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getValue(): int
+    public function getValue(): string
     {
         return $this->value;
     }
 
     /**
-     * @param int $value
+     * @param string $value
      *
      * @throws ProductConstraintException
      */
-    private function assertProductType(int $value): void
+    private function assertProductType(string $value): void
     {
         if (!in_array($value, self::AVAILABLE_TYPES, true)) {
             throw new ProductConstraintException(

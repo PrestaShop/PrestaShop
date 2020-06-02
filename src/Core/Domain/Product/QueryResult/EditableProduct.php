@@ -24,35 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
- * Command for creating product with basic information
+ * DTO for product that needs to be edited
  */
-class AddProductCommand
+class EditableProduct
 {
+    /**
+     * @var int
+     */
+    private $productId;
+
     /**
      * @var string[]
      */
     private $localizedNames;
 
     /**
-     * @var bool
+     * @var ProductType
      */
-    private $isVirtual;
+    private $type;
+
+    public function __construct(
+        int $productId,
+        array $localizedNames,
+        ProductType $type
+    ) {
+        $this->productId = $productId;
+        $this->localizedNames = $localizedNames;
+        $this->type = $type;
+    }
 
     /**
-     * @param array $localizedNames
-     * @param bool $isVirtual
+     * @return int
      */
-    public function __construct(
-        array $localizedNames,
-        bool $isVirtual
-    ) {
-        $this->localizedNames = $localizedNames;
-        $this->isVirtual = $isVirtual;
+    public function getProductId(): int
+    {
+        return $this->productId;
     }
 
     /**
@@ -64,10 +73,10 @@ class AddProductCommand
     }
 
     /**
-     * @return bool
+     * @return ProductType
      */
-    public function isVirtual(): bool
+    public function getType(): ProductType
     {
-        return $this->isVirtual;
+        return $this->type;
     }
 }

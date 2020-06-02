@@ -24,50 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Command for creating product with basic information
+ * Get Product data necessary for edition
  */
-class AddProductCommand
+class GetEditableProduct
 {
     /**
-     * @var string[]
+     * @var ProductId
      */
-    private $localizedNames;
+    private $productId;
 
     /**
-     * @var bool
+     * GetEditableProduct constructor.
+     *
+     * @param int $productId
      */
-    private $isVirtual;
-
-    /**
-     * @param array $localizedNames
-     * @param bool $isVirtual
-     */
-    public function __construct(
-        array $localizedNames,
-        bool $isVirtual
-    ) {
-        $this->localizedNames = $localizedNames;
-        $this->isVirtual = $isVirtual;
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
     }
 
     /**
-     * @return string[]
+     * @return ProductId
      */
-    public function getLocalizedNames(): array
+    public function getProductId(): ProductId
     {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVirtual(): bool
-    {
-        return $this->isVirtual;
+        return $this->productId;
     }
 }

@@ -24,50 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\EditableProduct;
 
-/**
- * Command for creating product with basic information
- */
-class AddProductCommand
+interface GetEditableProductHandlerInterface
 {
     /**
-     * @var string[]
+     * @param GetEditableProduct $query
+     *
+     * @return EditableProduct
      */
-    private $localizedNames;
-
-    /**
-     * @var bool
-     */
-    private $isVirtual;
-
-    /**
-     * @param array $localizedNames
-     * @param bool $isVirtual
-     */
-    public function __construct(
-        array $localizedNames,
-        bool $isVirtual
-    ) {
-        $this->localizedNames = $localizedNames;
-        $this->isVirtual = $isVirtual;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
-    {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVirtual(): bool
-    {
-        return $this->isVirtual;
-    }
+    public function handle(GetEditableProduct $query): EditableProduct;
 }
