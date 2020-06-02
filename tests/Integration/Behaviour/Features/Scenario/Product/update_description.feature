@@ -8,8 +8,8 @@ Feature: Update product descriptions from Back Office
     Given I add product "product1" with following basic information:
       | name | en-US:potato |
       | type | standard     |
-    And product "product1" localized "description" should be "en-US:empty"
-    And product "product1" localized "short description" should be "en-US:empty"
+    And product "product1" localized "description" should be "en-US:"
+    And product "product1" localized "short description" should be "en-US:"
     When I update product "product1" descriptions with following information:
       | description | en-US:sweet potato |
       | short description | en-US:Just a sweet potato |

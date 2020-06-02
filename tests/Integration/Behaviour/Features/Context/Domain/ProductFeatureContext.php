@@ -100,10 +100,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
         foreach ($expectedLocalizedValues as $langId => $value) {
-            if ('empty' === $value) {
-                $value = '';
-            }
-
             if ($value !== $product->{$propertyName}[$langId]) {
                 $langIso = Language::getIsoById($langId);
 
