@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShopException;
 use Product;
 
 /**
@@ -59,7 +60,7 @@ abstract class AbstractProductHandler
                     $productIdValue
                 ));
             }
-        } catch (\PrestaShopException $e) {
+        } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf('Error occurred when trying to get product #%s', $productId),
                 0,
