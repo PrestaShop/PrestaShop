@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDescriptionCommand;
 
+/**
+ * Defines contract for UpdateProductDescriptionHandler
+ */
 interface UpdateProductDescriptionHandlerInterface
 {
     /**

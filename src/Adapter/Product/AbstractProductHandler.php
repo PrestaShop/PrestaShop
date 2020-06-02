@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
+/**
+ * Provides reusable methods for product handlers
+ */
 abstract class AbstractProductHandler
 {
     /**

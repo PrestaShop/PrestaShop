@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Updates product descriptions
+ */
 class UpdateProductDescriptionCommand
 {
     /**
@@ -72,11 +75,11 @@ class UpdateProductDescriptionCommand
     }
 
     /**
-     * @param string[]|null $localizedDescriptions
+     * @param string[] $localizedDescriptions
      *
      * @return UpdateProductDescriptionCommand
      */
-    public function setLocalizedDescriptions(?array $localizedDescriptions): UpdateProductDescriptionCommand
+    public function setLocalizedDescriptions(array $localizedDescriptions): UpdateProductDescriptionCommand
     {
         $this->localizedDescriptions = $localizedDescriptions;
 
@@ -92,11 +95,11 @@ class UpdateProductDescriptionCommand
     }
 
     /**
-     * @param string[]|null $localizedShortDescriptions
+     * @param string[] $localizedShortDescriptions
      *
      * @return UpdateProductDescriptionCommand
      */
-    public function setLocalizedShortDescriptions(?array $localizedShortDescriptions): UpdateProductDescriptionCommand
+    public function setLocalizedShortDescriptions(array $localizedShortDescriptions): UpdateProductDescriptionCommand
     {
         $this->localizedShortDescriptions = $localizedShortDescriptions;
 
