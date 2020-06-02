@@ -40,7 +40,6 @@ const today = new Date();
 today.setFullYear(today.getFullYear() + 1);
 const futureDate = today.toISOString().slice(0, 10);
 
-const creditSlipsFileName = 'order-slips.pdf';
 const creditSlipDocumentName = 'Credit slip';
 
 // Init objects needed
@@ -72,14 +71,11 @@ describe('Generate Credit slip file by date', async () => {
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();
   });
   after(async () => {
     await helper.closeBrowser(browser);
-    /* Delete the generated credit slip */
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${creditSlipsFileName}`);
   });
 
   describe('Create order in FO', async () => {

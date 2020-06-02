@@ -46,14 +46,12 @@ describe('Generate db backup and download it', async () => {
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowser(browser);
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${dbBackupFilename}`);
   });
 
   // Login into BO

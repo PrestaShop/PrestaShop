@@ -79,7 +79,6 @@ describe('Enable tax breakdown', async () => {
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();
 
@@ -115,8 +114,6 @@ describe('Enable tax breakdown', async () => {
     productData = await (new ProductFaker(productToCreate));
   });
   after(async () => {
-    /* Delete the generated invoice */
-    await files.deleteFile(`${global.BO.DOWNLOAD_PATH}/${secondInvoiceFileName}.pdf`);
     await helper.closeBrowser(browser);
   });
 

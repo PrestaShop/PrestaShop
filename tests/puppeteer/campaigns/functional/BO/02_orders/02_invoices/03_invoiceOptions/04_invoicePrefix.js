@@ -48,7 +48,6 @@ describe('Edit invoice prefix and check the generated invoice file name', async 
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();
   });

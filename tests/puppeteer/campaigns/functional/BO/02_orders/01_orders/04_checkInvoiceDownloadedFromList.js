@@ -57,7 +57,6 @@ describe('Check invoice downloaded from list', async () => {
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
     this.pageObjects = await init();
   });
   after(async () => {

@@ -4,7 +4,8 @@ const playwright = require('playwright');
 
 module.exports = {
   /**
-   * Create puppeteer browser
+   * Create playwright browser
+   *
    * @param attempt, number of attempts to restart browser creation if function throw error
    * @return {Promise<browser>}
    */
@@ -19,6 +20,12 @@ module.exports = {
       throw new Error(e);
     }
   },
+  /**
+   * Create a browser context
+   *
+   * @param browser
+   * @return {Promise<*>}
+   */
   async createBrowserContext(browser) {
     return browser.newContext(
       {
@@ -32,16 +39,24 @@ module.exports = {
       },
     );
   },
+
+  /**
+   * Create new tab in browser
+   *
+   * @param context
+   * @return {Promise<*>}
+   */
   async newTab(context) {
     return context.newPage();
   },
+
+  /**
+   * Destroy browser instance, that delete as well all files downloaded
+   *
+   * @param browser
+   * @return {Promise<*>}
+   */
   async closeBrowser(browser) {
     return browser.close();
-  },
-  async setDownloadBehavior(page) {
-    /* await page._client.send('Page.setDownloadBehavior', {
-      behavior: 'allow',
-      downloadPath: global.BO.DOWNLOAD_PATH,
-    }); */
   },
 };

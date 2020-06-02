@@ -68,7 +68,6 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
     browser = await helper.createBrowser();
     browserContext = await helper.createBrowserContext(browser);
     page = await helper.newTab(browserContext);
-    await helper.setDownloadBehavior(page);
 
     this.pageObjects = await init();
 
