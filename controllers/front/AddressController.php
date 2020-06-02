@@ -76,8 +76,6 @@ class AddressControllerCore extends FrontController
 
                 $this->should_redirect = true;
             }
-
-            return;
         }
 
         // There is no id_adress, no need to continue
@@ -136,6 +134,16 @@ class AddressControllerCore extends FrontController
         $breadcrumb['links'][] = [
             'title' => $this->trans('Addresses', [], 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('addresses'),
+        ];
+
+        $id_address = Tools::getValue('id_address');
+        $title = $id_address
+            ? $this->trans('Update your address', [], 'Shop.Theme.Customeraccount')
+            : $this->trans('New address', [], 'Shop.Theme.Customeraccount');
+
+        $breadcrumb['links'][] = [
+            'title' => $title,
+            'url' => '#',
         ];
 
         return $breadcrumb;

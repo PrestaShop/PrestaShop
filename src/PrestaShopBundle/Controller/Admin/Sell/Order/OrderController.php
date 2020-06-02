@@ -77,7 +77,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\CommonController;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddOrderCartRuleType;
 use PrestaShopBundle\Form\Admin\Sell\Order\AddProductRowType;
@@ -101,7 +101,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Manages "Sell > Orders" page
  */
-class OrderController extends CommonController
+class OrderController extends FrameworkBundleAdminController
 {
     /**
      * Shows list of orders

@@ -15,7 +15,9 @@ module.exports = class moduleManager extends BOBasePage {
     this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
     this.moduleBlock = moduleName => `${this.allModulesBlock}[data-name='${moduleName}']`;
     this.disableModuleButton = moduleName => `${this.moduleBlock(moduleName)} button.module_action_menu_disable`;
-    this.configureModuleButton = moduleName => `${this.moduleBlock(moduleName)} div.module-actions>a`;
+    this.configureModuleButton = moduleName => `${this.moduleBlock(moduleName)}`
+      + ' div.module-actions a[href*=\'/action/configure\']';
+    this.actionsDropdownButton = moduleName => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
     // Status dropdown selectors
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
@@ -48,6 +50,12 @@ module.exports = class moduleManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToConfigurationPage(moduleName) {
+    if (await this.elementNotVisible(this.configureModuleButton(moduleName), 1000)) {
+      await Promise.all([
+        this.page.click(this.actionsDropdownButton(moduleName)),
+        this.waitForVisibleSelector(`${this.actionsDropdownButton(moduleName)}[aria-expanded='true']`),
+      ]);
+    }
     await this.page.click(this.configureModuleButton(moduleName));
   }
 

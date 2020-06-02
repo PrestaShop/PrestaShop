@@ -31,7 +31,7 @@ const {$} = window;
 class SmtpConfigurationToggler {
   constructor() {
     $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
-      const mailMethod = $(event.currentTarget).val();
+      const mailMethod = Number($(event.currentTarget).val());
 
       if (this.getSmtpMailMethodOption() === mailMethod) {
         this.showSmtpConfiguration();
@@ -64,7 +64,7 @@ class SmtpConfigurationToggler {
    *
    * @private
    *
-   * @returns {String}
+   * @returns {Number}
    */
   getSmtpMailMethodOption() {
     return $('.js-email-method').data('smtp-mail-method');

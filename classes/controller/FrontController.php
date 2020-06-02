@@ -434,14 +434,10 @@ class FrontControllerCore extends Controller
 
         Product::initPricesComputation();
 
-        $display_tax_label = $this->context->country->display_tax_label;
         if (isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
             $infos = Address::getCountryAndState((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
             $country = new Country((int) $infos['id_country']);
             $this->context->country = $country;
-            if (Validate::isLoadedObject($country)) {
-                $display_tax_label = $country->display_tax_label;
-            }
         }
 
         /*

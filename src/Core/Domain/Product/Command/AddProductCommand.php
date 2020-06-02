@@ -24,12 +24,50 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+declare(strict_types=1);
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
-header('Location: ../../../../../../../');
-exit;
+/**
+ * Command for creating product with basic information
+ */
+class AddProductCommand
+{
+    /**
+     * @var string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @var bool
+     */
+    private $isVirtual;
+
+    /**
+     * @param array $localizedNames
+     * @param bool $isVirtual
+     */
+    public function __construct(
+        array $localizedNames,
+        bool $isVirtual
+    ) {
+        $this->localizedNames = $localizedNames;
+        $this->isVirtual = $isVirtual;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVirtual(): bool
+    {
+        return $this->isVirtual;
+    }
+}

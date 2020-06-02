@@ -68,6 +68,9 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
   });
+
+  $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
+  form.switchLanguage($('#form_switch_language').val());
 });
 
 /**
@@ -751,11 +754,11 @@ var form = (function() {
     });
   }
 
-  function switchLanguage(iso_code) {
-    $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
+  function switchLanguage(isoCode) {
+    $(`div.translations.tabbable > div > div.translation-field:not(.translation-label-${isoCode})`)
+      .removeClass('show active');
 
-    const langueTabSelector = 'div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code;
-    $(langueTabSelector).addClass('show active');
+    $(`div.translations.tabbable > div > div.translation-field.translation-label-${isoCode}`).addClass('show active');
     resetEditor();
   }
 
@@ -927,7 +930,7 @@ var form = (function() {
           if (e.handleObj.origType !== 'tokenfield:createtoken') {
             return false;
           }
-          
+
           const orgLabel = e.attrs.label;
           if (e.attrs.label === e.attrs.value) {
             engine.search(e.attrs.label, function(result) {

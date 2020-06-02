@@ -22,11 +22,16 @@ module.exports = class SqlManager extends BOBasePage {
     } a[data-toggle='dropdown']`;
     this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/view']`;
     this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/edit']`;
-    this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/delete']`;
+    this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a[data-method='DELETE']`;
+    this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
     // Filters
     this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
     this.filterSearchButton = `${this.sqlQueryListForm} button[name='sql_request[actions][search]']`;
     this.filterResetButton = `${this.sqlQueryListForm} button[name='sql_request[actions][reset]']`;
+
+    // Delete modal
+    this.confirmDeleteModal = '#sql_request-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
   }
 
   /* Header Methods */
@@ -130,7 +135,6 @@ module.exports = class SqlManager extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteSQLQuery(row = 1) {
-    this.dialogListener();
     // Click on dropDown
     await Promise.all([
       this.page.click(this.sqlQueryListTableToggleDropDown(row)),
@@ -138,8 +142,29 @@ module.exports = class SqlManager extends BOBasePage {
         `${this.sqlQueryListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(this.sqlQueryListTableDeleteLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.sqlQueryListTableDeleteLink(row)),
+      this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteSQLQuery();
     return this.getTextContent(this.alertSuccessBlockParagraph);
+  }
+
+  /**
+   * Export sql result to csv
+   * @param row
+   * @returns {Promise<void>}
+   */
+  async exportSqlResultDataToCsv(row = 1) {
+    await this.waitForSelectorAndClick(this.sqlQueryListTableExportLink(row));
+  }
+
+  /**
+   * Confirm delete with modal
+   * @return {Promise<void>}
+   */
+  async confirmDeleteSQLQuery() {
+    await this.clickAndWaitForNavigation(this.confirmDeleteButton);
   }
 };

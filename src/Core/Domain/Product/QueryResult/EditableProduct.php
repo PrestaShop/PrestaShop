@@ -24,12 +24,59 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * DTO for product that needs to be edited
+ */
+class EditableProduct
+{
+    /**
+     * @var int
+     */
+    private $productId;
 
-header('Location: ../../../../../../../');
-exit;
+    /**
+     * @var string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @var ProductType
+     */
+    private $type;
+
+    public function __construct(
+        int $productId,
+        array $localizedNames,
+        ProductType $type
+    ) {
+        $this->productId = $productId;
+        $this->localizedNames = $localizedNames;
+        $this->type = $type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return ProductType
+     */
+    public function getType(): ProductType
+    {
+        return $this->type;
+    }
+}

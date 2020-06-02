@@ -24,12 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Get Product data necessary for edition
+ */
+class GetEditableProduct
+{
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * GetEditableProduct constructor.
+     *
+     * @param int $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+}

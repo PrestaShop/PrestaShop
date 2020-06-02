@@ -72,6 +72,30 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * This hook can be used to flag a feature for kernel reboot, this is useful
+     * to force recreation of services (e.g: when you add some currencies in the
+     * database, you may need to reset the CLDR related services to use the new ones)
+     *
+     * @BeforeFeature @reboot-kernel-before-feature
+     */
+    public static function rebootKernelPrepareFeature()
+    {
+        $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
+        $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
+        self::$kernel->reboot($warmupDir);
+    }
+
+    /**
+     * Return PrestaShop Symfony services container
+     *
+     * @return ContainerInterface
+     */
+    public static function getContainer()
+    {
+        return static::$kernel->getContainer();
+    }
+
+    /**
      * This hook can be used to flag a scenario for database hard reset
      *
      * @BeforeScenario @database-scenario
@@ -90,15 +114,5 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function clearEntityManager()
     {
         $this::getContainer()->get('doctrine.orm.entity_manager')->clear();
-    }
-
-    /**
-     * Return PrestaShop Symfony services container
-     *
-     * @return ContainerInterface
-     */
-    public static function getContainer()
-    {
-        return static::$kernel->getContainer();
     }
 }

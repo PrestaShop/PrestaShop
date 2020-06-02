@@ -920,7 +920,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     /**
      * Return array (id_lang, iso_code).
      *
-     * @param string $iso_code Iso code
+     * @param bool $active Select only active languages
      *
      * @return array Language (id_lang, iso_code)
      */

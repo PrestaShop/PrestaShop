@@ -117,7 +117,7 @@ class CategoryCore extends ObjectModel
                 'type' => self::TYPE_STRING,
                 'lang' => true,
                 'validate' => 'isLinkRewrite',
-                'required' => false,
+                'required' => true,
                 'size' => 128,
                 'ws_modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST,

@@ -1,33 +1,39 @@
 require('module-alias/register');
+
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
-// Importing data
+
+// Import data
 const SupplierFaker = require('@data/faker/supplier');
-// Importing pages
-const BOBasePage = require('@pages/BO/BObasePage');
+
+// Import pages
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BrandsPage = require('@pages/BO/catalog/brands');
 const SuppliersPage = require('@pages/BO/catalog/suppliers');
 const AddSupplierPage = require('@pages/BO/catalog/suppliers/add');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_sortSuppliers';
 
 let browser;
 let page;
+
 const firstSupplierData = new SupplierFaker();
 const secondSupplierData = new SupplierFaker();
 const thirdSupplierData = new SupplierFaker({enabled: false});
+
 let numberOfSuppliers = 0;
 
 // Init objects needed
 const init = async function () {
   return {
-    boBasePage: new BOBasePage(page),
     loginPage: new LoginPage(page),
     dashboardPage: new DashboardPage(page),
     brandsPage: new BrandsPage(page),
@@ -37,15 +43,18 @@ const init = async function () {
 };
 
 // Sort suppliers table
-describe('Create, update and delete supplier', async () => {
+describe('Sort suppliers', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
     page = await helper.newTab(browser);
+
     this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowser(browser);
+
     await Promise.all([
       files.deleteFile(firstSupplierData.logo),
       files.deleteFile(secondSupplierData.logo),
@@ -59,11 +68,14 @@ describe('Create, update and delete supplier', async () => {
   // Go to brands page
   it('should go to brands page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
-    await this.pageObjects.boBasePage.goToSubMenu(
-      this.pageObjects.boBasePage.catalogParentLink,
-      this.pageObjects.boBasePage.brandsAndSuppliersLink,
+
+    await this.pageObjects.dashboardPage.goToSubMenu(
+      this.pageObjects.dashboardPage.catalogParentLink,
+      this.pageObjects.dashboardPage.brandsAndSuppliersLink,
     );
-    await this.pageObjects.boBasePage.closeSfToolBar();
+
+    await this.pageObjects.brandsPage.closeSfToolBar();
+
     const pageTitle = await this.pageObjects.brandsPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.brandsPage.pageTitle);
   });
@@ -71,10 +83,12 @@ describe('Create, update and delete supplier', async () => {
   // Go to suppliers page
   it('should go to suppliers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSuppliersPage', baseContext);
+
     await this.pageObjects.brandsPage.goToSubTabSuppliers();
     const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
   });
+
   // 1: Create 3 suppliers
   describe('Create 3 suppliers', async () => {
     const tests = [
@@ -86,6 +100,7 @@ describe('Create, update and delete supplier', async () => {
     tests.forEach((test, index) => {
       it('should go to new supplier page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddSupplierPage${index + 1}`, baseContext);
+
         await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
         const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitle);
@@ -93,6 +108,7 @@ describe('Create, update and delete supplier', async () => {
 
       it('should create supplier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createSupplier${index + 1}`, baseContext);
+
         const result = await this.pageObjects.addSupplierPage.createEditSupplier(test.args.supplierToCreate);
         await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
       });
@@ -100,10 +116,12 @@ describe('Create, update and delete supplier', async () => {
 
     it('should reset filter and get number of suppliers after creation', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterCreation', baseContext);
+
       numberOfSuppliers = await this.pageObjects.suppliersPage.resetAndGetNumberOfLines();
       await expect(numberOfSuppliers).to.be.at.least(2);
     });
   });
+
   // 2 : Sort suppliers
   describe('Sort suppliers', async () => {
     const brandsTests = [
@@ -124,19 +142,26 @@ describe('Create, update and delete supplier', async () => {
         },
       },
     ];
+
     brandsTests.forEach((test) => {
       it(
         `should sort suppliers by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`,
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
           let nonSortedTable = await this.pageObjects.suppliersPage.getAllRowsColumnContent(test.args.sortBy);
+
           await this.pageObjects.suppliersPage.sortTable(test.args.sortBy, test.args.sortDirection);
+
           let sortedTable = await this.pageObjects.suppliersPage.getAllRowsColumnContent(test.args.sortBy);
+
           if (test.args.isFloat) {
             nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
             sortedTable = await sortedTable.map(text => parseFloat(text));
           }
+
           const expectedResult = await this.pageObjects.suppliersPage.sortArray(nonSortedTable, test.args.isFloat);
+
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
           } else {
@@ -146,6 +171,7 @@ describe('Create, update and delete supplier', async () => {
       );
     });
   });
+
   // 3 : Delete the 3 created suppliers
   describe('Delete the 3 created suppliers', async () => {
     const tests = [
@@ -153,17 +179,21 @@ describe('Create, update and delete supplier', async () => {
       {args: {supplierData: secondSupplierData}},
       {args: {supplierData: thirdSupplierData}},
     ];
+
     tests.forEach((test, index) => {
       it('should filter supplier by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index + 1}`, baseContext);
+
         await this.pageObjects.suppliersPage.filterTable(
           'input',
           'name',
           test.args.supplierData.name,
         );
+
         // Check number of suppliers
         const numberOfSuppliersAfterFilter = await this.pageObjects.suppliersPage.getNumberOfElementInGrid();
         await expect(numberOfSuppliersAfterFilter).to.be.at.most(numberOfSuppliers);
+
         // check text column of first row after filter
         const textColumn = await this.pageObjects.suppliersPage.getTextColumnFromTableSupplier(1, 'name');
         await expect(textColumn).to.contains(test.args.supplierData.name);
@@ -171,6 +201,7 @@ describe('Create, update and delete supplier', async () => {
 
       it('should delete supplier', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteSupplier${index + 1}`, baseContext);
+
         // delete supplier in first row
         const result = await this.pageObjects.suppliersPage.deleteSupplier(1);
         await expect(result).to.be.equal(this.pageObjects.suppliersPage.successfulDeleteMessage);

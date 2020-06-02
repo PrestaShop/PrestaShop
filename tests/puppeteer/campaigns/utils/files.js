@@ -22,7 +22,7 @@ module.exports = {
   async doesFileExist(fileName, timeDelay = 5000, isPartialName = false, fileExtension = '') {
     let found = false;
     for (let i = 0; i <= timeDelay && !found; i += 100) {
-      await (new Promise(resolve => setTimeout(resolve, 10)));
+      await (new Promise(resolve => setTimeout(resolve, 100)));
       if (isPartialName) {
         found = (await fs
           .readdirSync(global.BO.DOWNLOAD_PATH)
@@ -86,6 +86,26 @@ module.exports = {
       /* eslint-enable no-loop-func */
     }
     return imageNumber;
+  },
+  /**
+   * Generate report filename
+   * @return {Promise<string>}
+   */
+  async generateReportFilename() {
+    const curDate = new Date();
+    return `report-${
+      curDate.toJSON().slice(0, 10)}-${
+      curDate.getHours()}-${
+      curDate.getMinutes()}-${
+      curDate.getSeconds()}`;
+  },
+  /**
+   * Create directory if not exist
+   * @param path
+   * @return {Promise<void>}
+   */
+  async createDirectory(path) {
+    if (!fs.existsSync(path)) await fs.mkdirSync(path);
   },
   /**
    * Create file with content

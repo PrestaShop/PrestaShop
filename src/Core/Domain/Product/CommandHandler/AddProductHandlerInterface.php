@@ -24,12 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-header('Location: ../../../../../../../../');
-exit;
+/**
+ * Defines contract for AddProductHandler
+ */
+interface AddProductHandlerInterface
+{
+    /**
+     * @param AddProductCommand $command
+     *
+     * @return ProductId
+     */
+    public function handle(AddProductCommand $command): ProductId;
+}
