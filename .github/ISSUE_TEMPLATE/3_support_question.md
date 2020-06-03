@@ -4,8 +4,8 @@ about: See https://www.prestashop.com/support for questions about using PrestaSh
 
 ---
 
-We use GitHub issues only to discuss about PrestaShop bugs and new features. For
-this kind of questions about using PrestaShop or third-party modules, please use
-any of the support alternatives shown in https://www.prestashop.com/support
+We use GitHub issues only to discuss about bugs in the PrestaShop project and new features.
+If you have questions about using PrestaShop or third-party modules, or if you need help
+with your shop, please refer to one of our support plans: https://www.prestashop.com/support
 
 Thanks!
