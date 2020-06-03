@@ -31,6 +31,7 @@ use Cache;
 use Context;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDescriptionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -81,6 +82,34 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I update product :productReference basic information with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductBasicInfo(string $productReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+        $command = new UpdateProductBasicInformationCommand($productId);
+
+        if (isset($data['name'])) {
+            $localizedNames = $this->parseLocalizedArray($data['name']);
+            $command->setLocalizedNames($localizedNames);
+        }
+
+        if (isset($data['is_virtual'])) {
+            $command->setVirtual(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual']));
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->lastException = $e;
         }

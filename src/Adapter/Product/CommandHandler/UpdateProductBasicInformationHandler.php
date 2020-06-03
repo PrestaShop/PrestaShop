@@ -43,7 +43,7 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
     /**
      * {@inheritdoc}
      *
-     * Null values are not updated, because it is considered as unchanged
+     * Null values are not updated, because are considered as unchanged
      */
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
