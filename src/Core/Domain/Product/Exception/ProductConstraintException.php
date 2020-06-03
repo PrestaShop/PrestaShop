@@ -50,4 +50,14 @@ class ProductConstraintException extends ProductException
      * When invalid product condition is supplied
      */
     const INVALID_CONDITION = 40;
+
+    /**
+     * When invalid product description is supplied
+     */
+    const INVALID_DESCRIPTION = 50;
+
+    /**
+     * When invalid product short description is supplied
+     */
+    const INVALID_SHORT_DESCRIPTION = 60;
 }
