@@ -25,16 +25,15 @@ RUN apt-get install -y libwoff1 \
                        libxslt1.1 \
                        libevent-2.1-6 \
                        libgles2 \
-                       libvpx5
+                       libvpx5 \
+                       libglu1
 
 # 3. Install Chromium dependencies
-
 RUN apt-get install -y libnss3 \
                        libxss1 \
                        libasound2
 
 # 4. Install Firefox dependencies
-
 RUN apt-get install -y libdbus-glib-1-2 \
                        libxt6
 
