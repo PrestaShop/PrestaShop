@@ -20,3 +20,23 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Country\CountryRequiredFieldsProvider'
     arguments:
       - '@prestashop.adapter.data_provider.country'
+
+  prestashop.adapter.country.command_handler.bulk_delete_countries_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\BulkDeleteCountriesHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkDeleteCountriesCommand' }
+
+  prestashop.adapter.country.command_handler.bulk_toggle_countries_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\BulkToggleCountriesStatusHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\BulkToggleCountriesStatusCommand' }
+
+  prestashop.adapter.country.query_handler.get_country_status:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryStatusHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryStatus' }
+
+  prestashop.adapter.country.command_handler.toggle_country_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\ToggleCountryStatusHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\ToggleCountryStatusCommand' }

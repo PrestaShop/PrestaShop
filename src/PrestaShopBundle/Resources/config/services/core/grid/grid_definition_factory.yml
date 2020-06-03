@@ -251,3 +251,11 @@ services:
         arguments:
             - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_lite'
         public: true
+
+    prestashop.core.grid.definition.factory.country:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - "@=service('router').generate('admin_common_reset_search', {'controller': 'country', 'action': 'index'})"
+        - "@=service('router').generate('admin_countries_index')"
+      public: true

@@ -192,3 +192,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsFormDataProvider'
         arguments:
             - '@prestashop.core.credit_slip.credit_slip_options.configuration'
+
+    prestashop.admin.country_options.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\Country\CountryOptionsFormDataProvider'
+        arguments:
+            - '@prestashop.core.country.country_options_configuration'

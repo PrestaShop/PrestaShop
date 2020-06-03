@@ -294,3 +294,11 @@ services:
             - '@prestashop.core.grid.data.factory.credit_slip_decorator'
             - '@prestashop.core.grid.filter.credit_slip_form_factory'
             - '@prestashop.core.hook.dispatcher'
+
+    prestashop.core.grid.grid_factory.country:
+      class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+      arguments:
+        - '@prestashop.core.grid.definition.factory.country'
+        - '@prestashop.core.grid.data.factory.country'
+        - '@prestashop.core.grid.filter.form_factory'
+        - '@prestashop.core.hook.dispatcher'
