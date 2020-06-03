@@ -32,12 +32,12 @@ use Language;
 use Link;
 use PrestaShop\Decimal\Number;
 use PrestaShop\Decimal\Operation\Rounding;
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
+use Product;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -585,28 +585,68 @@ class ProductLazyArray extends AbstractLazyArray
         array $product,
         Language $language
     ) {
-        $this->product['images'] = $this->imageRetriever->getProductImages(
+        // Get all product images, including potential cover
+        $productImages = $this->imageRetriever->getAllProductImages(
             $product,
             $language
         );
 
-        if (isset($product['id_product_attribute'])) {
-            foreach ($this->product['images'] as $image) {
-                if (isset($image['cover']) && null !== $image['cover']) {
-                    $this->product['cover'] = $image;
+        // Get filtered product images matching the specified id_product_attribute
+        $this->product['images'] = $this->filterImagesForCombination($productImages, $product['id_product_attribute']);
 
+        // Get default image for selected combination (used for product page, cart details, ...)
+        $this->product['default_image'] = reset($this->product['images']);
+        foreach ($this->product['images'] as $image) {
+            // If one of the image is a cover it is used as such
+            if (isset($image['cover']) && null !== $image['cover']) {
+                $this->product['default_image'] = $image;
+
+                break;
+            }
+        }
+
+        // Get generic product image, used for product listing
+        if (isset($product['cover_image_id'])) {
+            // First try to find cover in product images
+            foreach ($productImages as $productImage) {
+                if ($productImage['id_image'] == $product['cover_image_id']) {
+                    $this->product['cover'] = $productImage;
                     break;
                 }
             }
-        }
 
-        if (!isset($this->product['cover'])) {
-            if (count($this->product['images']) > 0) {
-                $this->product['cover'] = array_values($this->product['images'])[0];
-            } else {
-                $this->product['cover'] = null;
+            // If the cover is not associated to the product images it is fetched manually
+            if (!isset($this->product['cover'])) {
+                $coverImage = $this->imageRetriever->getImage(new Product($product['id_product'], false, $language->getId()), $product['cover_image_id']);
+                $this->product['cover'] = array_merge($coverImage, [
+                    'legend' => $coverImage['legend'],
+                ]);
             }
         }
+
+        // If no cover fallback on default image
+        if (!isset($this->product['cover'])) {
+            $this->product['cover'] = $this->product['default_image'];
+        }
+    }
+
+    /**
+     * @param array $images
+     * @param int $productAttributeId
+     *
+     * @return array
+     */
+    private function filterImagesForCombination(array $images, int $productAttributeId)
+    {
+        $filteredImages = [];
+
+        foreach ($images as $image) {
+            if (in_array($productAttributeId, $image['associatedVariants'])) {
+                $filteredImages[] = $image;
+            }
+        }
+
+        return (0 === count($filteredImages)) ? $images : $filteredImages;
     }
 
     private function addPriceInformation(
