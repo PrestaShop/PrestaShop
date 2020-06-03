@@ -16,3 +16,19 @@ Feature: Update product basic information from Back Office (BO)
       | is_virtual | true                     |
     Then product "product1" type should be virtual
     And product "product1" localized "name" should be "en-US:photo of funny mug"
+
+  @update-basic-information
+  Scenario: I update product basic information providing invalid product name
+    Given product "product1" localized "name" is "en-US:photo of funny mug"
+    When I update product "product1" basic information with following values:
+      | name       | en-US:#hashtagmug        |
+    Then I should get error that product name is invalid
+    And product "product1" localized "name" should be "en-US:photo of funny mug"
+
+  @update-basic-information
+  Scenario: I only change product virtual property and leave other properties unchanged
+    Given product "product1" localized "name" is "en-US:photo of funny mug"
+    When I update product "product1" basic information with following values:
+      | is_virtual       | false        |
+    Then product "product1" type should be standard
+    And product "product1" localized "name" should be "en-US:photo of funny mug"
