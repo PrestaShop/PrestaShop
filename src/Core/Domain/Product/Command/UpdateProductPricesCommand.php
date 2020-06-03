@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Responsible for updating information associated with product price
+ */
 class UpdateProductPricesCommand
 {
     /**
