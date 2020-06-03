@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use PrestaShop\Decimal\Number;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -849,6 +851,8 @@ class ToolsCore
     /**
      * Return price converted.
      *
+     * @deprecated since 1.7.4 use convertPriceToCurrency()
+     *
      * @param float $price Product price
      * @param object|array $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
@@ -870,8 +874,9 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance($currency);
         }
 
-        if (gettype($price) === 'string' && is_numeric($price)) {
-            $price = (float) $price;
+        if (gettype($price) === "string") {
+            $price = (new Number($price))
+                ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
         }
 
         if (!is_numeric($price)) {
