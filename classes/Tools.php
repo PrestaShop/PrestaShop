@@ -647,12 +647,12 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        $reqIdCountry = Tools::getValue('id_country');
-        if (Validate::isInt($reqIdCountry)
-            && (int) $reqIdCountry > 0
-            && !empty(Country::getIsoById((int) $reqIdCountry))
+        $countryId = Tools::getValue('id_country');
+        if (Validate::isInt($countryId)
+            && (int) $countryId > 0
+            && !empty(Country::getIsoById((int) $countryId))
         ) {
-            return (int) $reqIdCountry;
+            return (int) $countryId;
         }
 
         if (!empty($address->id_country) && (int) $address->id_country > 0) {
