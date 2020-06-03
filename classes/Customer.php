@@ -1192,7 +1192,7 @@ class CustomerCore extends ObjectModel
             && $this->id
             && Validate::isUnsignedId($this->id)
             && Customer::checkPassword($this->id, $this->passwd)
-            && Context::getContext()->cookie->isSessionAlived()
+            && Context::getContext()->cookie->isSessionAlive()
         ;
     }
 

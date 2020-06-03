@@ -465,18 +465,18 @@ class CookieCore
     public function registerSession(SessionInterface $session)
     {
         if (isset($this->id_employee)) {
-            $session->id_employee = $this->id_employee;
+            $session->setUserId($this->id_employee);
         } elseif (isset($this->id_customer)) {
-            $session->id_customer = $this->id_customer;
+            $session->setUserId($this->id_customer);
         } else {
             throw new CoreException('Invalid user id');
         }
 
-        $session->token = sha1(time() . uniqid());
+        $session->setToken(sha1(time() . uniqid()));
         $session->add();
 
-        $this->session_id = $session->id;
-        $this->session_token = $session->token;
+        $this->session_id = $session->getId();
+        $this->session_token = $session->getToken();
     }
 
     /**
@@ -484,7 +484,7 @@ class CookieCore
      *
      * @return bool
      */
-    public function deleteSession(): bool
+    public function deleteSession()
     {
         if (!isset($this->session_id)) {
             return false;
@@ -505,7 +505,7 @@ class CookieCore
      *
      * @return bool
      */
-    public function isSessionAlived(): bool
+    public function isSessionAlive()
     {
         if (!isset($this->session_id, $this->session_token)) {
             return false;
@@ -515,10 +515,10 @@ class CookieCore
 
         return
             $session !== null
-            && $session->token === $this->session_token
+            && $session->getToken() === $this->session_token
             && (
-                (isset($session->id_employee) && $this->id_employee === $session->id_employee)
-                || (isset($session->id_customer) && $this->id_customer === $session->id_customer)
+                $this->id_employee === $session->getUserId()
+                || $this->id_customer === $session->getUserId()
             )
         ;
     }
@@ -529,7 +529,7 @@ class CookieCore
      *
      * @return SessionInterface|null
      */
-    public function getSession(int $sessionId): ?SessionInterface
+    public function getSession($sessionId)
     {
         if (isset($this->id_employee)) {
             $session = new EmployeeSession($sessionId);

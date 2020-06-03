@@ -483,7 +483,7 @@ class EmployeeCore extends ObjectModel
                 $this->id
                 && Validate::isUnsignedId($this->id)
                 && Context::getContext()->cookie
-                && Context::getContext()->cookie->isSessionAlived()
+                && Context::getContext()->cookie->isSessionAlive()
                 && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
                 && (
                     !isset(Context::getContext()->cookie->remote_addr)

@@ -29,8 +29,11 @@ class EmployeeSessionCore extends ObjectModel implements SessionInterface
 {
     public $id;
 
-    /** @var string Name */
+    /** @var int Id Employee */
     public $id_employee;
+
+    /** @var string Token */
+    public $token;
 
     /**
      * @see ObjectModel::$definition
@@ -43,4 +46,44 @@ class EmployeeSessionCore extends ObjectModel implements SessionInterface
             'token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
         ],
     ];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUserId($idEmployee)
+    {
+        $this->id_employee = (int) $idEmployee;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUserId()
+    {
+        return $this->id_employee;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setToken($token)
+    {
+        $this->token = (string) $token;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
 }
