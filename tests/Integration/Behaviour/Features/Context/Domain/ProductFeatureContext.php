@@ -125,17 +125,14 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function updateLocalizedDescriptions(string $productReference, TableNode $table)
     {
         $data = $table->getRowsHash();
-        $descriptions = isset($data['description']) ? $this->parseLocalizedArray($data['description']) : null;
-        $shortDescriptions = isset($data['description_short']) ? $this->parseLocalizedArray($data['description_short']) : null;
-
         $command = new UpdateProductDescriptionCommand($this->getSharedStorage()->get($productReference));
 
-        if ($descriptions) {
-            $command->setLocalizedDescriptions($descriptions);
+        if (isset($data['description'])) {
+            $command->setLocalizedDescriptions($this->parseLocalizedArray($data['description']));
         }
 
-        if ($shortDescriptions) {
-            $command->setLocalizedShortDescriptions($shortDescriptions);
+        if (isset($data['description_short'])) {
+            $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
         }
 
         try {
