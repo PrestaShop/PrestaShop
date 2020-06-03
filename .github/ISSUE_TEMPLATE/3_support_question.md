@@ -1,5 +1,5 @@
 ---
-name: ⛔ Support Question
+name: ⛔ I need help
 about: See https://www.prestashop.com/support for questions about using PrestaShop
 
 ---
