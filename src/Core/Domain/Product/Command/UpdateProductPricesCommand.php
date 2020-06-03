@@ -49,11 +49,6 @@ class UpdateProductPricesCommand
     /**
      * @var Number|null
      */
-    private $priceTtc;
-
-    /**
-     * @var Number|null
-     */
     private $ecotax;
 
     /**
@@ -120,26 +115,6 @@ class UpdateProductPricesCommand
     /**
      * @return Number|null
      */
-    public function getPriceTtc(): ?Number
-    {
-        return $this->priceTtc;
-    }
-
-    /**
-     * @param string $priceTtc
-     *
-     * @return UpdateProductPricesCommand
-     */
-    public function setPriceTtc(string $priceTtc): self
-    {
-        $this->priceTtc = $priceTtc;
-
-        return $this;
-    }
-
-    /**
-     * @return Number|null
-     */
     public function getEcotax(): ?Number
     {
         return $this->ecotax;
@@ -180,7 +155,7 @@ class UpdateProductPricesCommand
     /**
      * @return bool|null
      */
-    public function getOnSale(): ?bool
+    public function isOnSale(): ?bool
     {
         return $this->onSale;
     }

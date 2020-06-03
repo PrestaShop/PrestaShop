@@ -60,4 +60,29 @@ class ProductConstraintException extends ProductException
      * When invalid product short description is supplied
      */
     const INVALID_SHORT_DESCRIPTION = 60;
+
+    /**
+     * When invalid product price is supplied
+     */
+    const INVALID_PRICE = 70;
+
+    /**
+     * When invalid product ecotax is supplied
+     */
+    const INVALID_ECOTAX = 80;
+
+    /**
+     * When invalid product tax rules group id is supplied
+     */
+    const INVALID_TAX_RULES_GROUP_ID = 90;
+
+    /**
+     * When invalid product unit price is supplied
+     */
+    const INVALID_UNIT_PRICE = 100;
+
+    /**
+     * When invalid product wholesale_price is supplied
+     */
+    const INVALID_WHOLESALE_PRICE = 110;
 }
