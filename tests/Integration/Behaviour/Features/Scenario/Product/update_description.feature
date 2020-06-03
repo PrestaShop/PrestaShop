@@ -30,11 +30,10 @@ Feature: Update product descriptions from Back Office
     And product "product1" localized "description_short" should be "en-US:Just a sweet potato"
 
   @update-description
-  Scenario: Update product description to empty value
+  Scenario: Commit partial update. Set product description to empty value and leave short description unchanged
     Given product "product1" localized "description" is "en-US:sweet potato"
     And product "product1" localized "description_short" is "en-US:Just a sweet potato"
     When I update product "product1" descriptions with following information:
       | description       | en-US:            |
-      | description_short | en-US:            |
     And product "product1" localized "description" should be "en-US:"
-    And product "product1" localized "description_short" should be "en-US:"
+    And product "product1" localized "description_short" should be "en-US:Just a sweet potato"
