@@ -908,17 +908,17 @@ class WebserviceRequestCore
      */
     protected function groupShopExists($params)
     {
-        if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop'])) {
-            Shop::setContext(Shop::CONTEXT_GROUP, (int) $params['id_group_shop']);
-            self::$shopIDs = Shop::getShops(true, (int) $params['id_group_shop'], true);
+        if (isset($params['id_shop_group']) && is_numeric($params['id_shop_group'])) {
+            Shop::setContext(Shop::CONTEXT_GROUP, (int) $params['id_shop_group']);
+            self::$shopIDs = Shop::getShops(true, (int) $params['id_shop_group'], true);
             if (!is_countable(self::$shopIDs) || count(self::$shopIDs) == 0) {
                 // @FIXME Set ErrorCode !
-                $this->setError(500, 'This group shop doesn\'t have shops', 999);
+                $this->setError(500, 'This shop group doesn\'t have shops', 999);
 
                 return false;
             }
         }
-        // id_group_shop isn't mandatory
+        // id_shop_group isn't mandatory
         return true;
     }
 
