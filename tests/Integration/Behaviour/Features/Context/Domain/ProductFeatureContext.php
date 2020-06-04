@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
 use Language;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -173,6 +174,39 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 throw new RuntimeException(sprintf('Product expected to be %s', $statusInWords));
             }
         }
+
+        if (isset($data['price'])) {
+            //@todo: implement prices in productForediting
+            $price = (string) $product->price;
+
+            if ($this->assertEqualNumbers($data['price'], $price)) {
+                return;
+            }
+
+            throw new RuntimeException(
+                sprintf('Product price expected to be "%s", but is "%s"', $data['price'], $price)
+            );
+        }
+    }
+
+    /**
+     * @param string $expected
+     * @param string $actual
+     *
+     * @return bool
+     */
+    private function assertEqualNumbers(
+        string $expected,
+        string $actual
+    ): bool {
+        $expected = new Number($expected);
+        $actual = new Number($actual);
+
+        if ($expected->equals($actual)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
