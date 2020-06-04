@@ -26,39 +26,49 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Main translation provider for the Front Office
  */
-class FrontOfficeProvider extends AbstractProvider
+class FrontOfficeProvider implements ProviderInterface
 {
     const DEFAULT_THEME_NAME = 'classic';
+
+    /**
+     * @var string Path where translation files are found
+     */
+    protected $resourceDirectory;
+
+    /**
+     * @var string locale
+     */
+    protected $locale;
+    /**
+     * @var DatabaseTranslationLoader
+     */
+    private $databaseLoader;
 
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
     ) {
-        $translationDomains = [
-            '^Shop*',
-            '^Modules(.*)Shop',
-        ];
+        $this->databaseLoader = $databaseLoader;
+        $this->resourceDirectory = $resourceDirectory;
+    }
 
-        $filenameFilters = [
-            '#^Shop*#',
-            '#^Modules(.*)Shop#',
-        ];
+    /**
+     * @param string $locale
+     *
+     * @return FrontOfficeProvider
+     */
+    public function setLocale(string $locale): FrontOfficeProvider
+    {
+        $this->locale = $locale;
 
-        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-
-        parent::__construct(
-            $databaseLoader,
-            $resourceDirectory,
-            $translationDomains,
-            $filenameFilters,
-            $defaultResourceDirectory
-        );
+        return $this;
     }
 
     /**
@@ -67,6 +77,62 @@ class FrontOfficeProvider extends AbstractProvider
     public function getIdentifier()
     {
         return 'front';
+    }
+
+    /**
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
+    public function getMessageCatalogue(): MessageCatalogueInterface
+    {
+        if (null === $this->locale) {
+            throw new \LogicException('Locale cannot be null. Call setLocale first');
+        }
+
+        $messageCatalogue = $this->getDefaultCatalogue();
+
+        // Merge catalogues
+
+        $xlfCatalogue = $this->getFilesystemCatalogue();
+        $messageCatalogue->addCatalogue($xlfCatalogue);
+        unset($xlfCatalogue);
+
+        $databaseCatalogue = $this->getUserTranslatedCatalogue();
+        $messageCatalogue->addCatalogue($databaseCatalogue);
+        unset($databaseCatalogue);
+
+        return $messageCatalogue;
+    }
+
+    /**
+     * @param bool $empty
+     *
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
+    {
+        return (new DefaultCatalogueProvider())
+            ->setFilenameFilters($this->getFilenameFilters())
+            ->setDirectory($this->resourceDirectory . DIRECTORY_SEPARATOR . 'default')
+            ->setLocale($this->locale)
+            ->getCatalogue($empty);
+    }
+
+    /**
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
+    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    {
+        return (new FileTranslatedCatalogueProvider())
+            ->setDirectory($this->resourceDirectory)
+            ->setFilenameFilters($this->getFilenameFilters())
+            ->setLocale($this->locale)
+            ->getCatalogue();
     }
 
     /**
@@ -80,6 +146,26 @@ class FrontOfficeProvider extends AbstractProvider
             $themeName = self::DEFAULT_THEME_NAME;
         }
 
-        return parent::getUserTranslatedCatalogue($themeName);
+        $translationDomains = [
+            '^Shop*',
+            '^Modules(.*)Shop',
+        ];
+
+        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
+            ->setTranslationDomains($translationDomains)
+            ->setLocale($this->locale)
+            ->setTheme($themeName)
+            ->getCatalogue();
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFilenameFilters()
+    {
+        return [
+            '#^Shop*#',
+            '#^Modules(.*)Shop#',
+        ];
     }
 }
