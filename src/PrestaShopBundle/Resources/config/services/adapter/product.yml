@@ -66,11 +66,11 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled
 
-    prestashop.adapter.product.command_handler.get_editable_product_handler:
-      class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetEditableProductHandler
+    prestashop.adapter.product.command_handler.get_product_for_editing_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
 
     prestashop.adapter.product.command_handler.add_product_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler

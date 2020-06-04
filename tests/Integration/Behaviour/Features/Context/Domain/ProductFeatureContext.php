@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\EditableProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use Product;
 use RuntimeException;
@@ -309,13 +309,13 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $reference
      *
-     * @return EditableProduct
+     * @return ProductForEditing
      */
-    private function getEditableProductByReference(string $reference): EditableProduct
+    private function getEditableProductByReference(string $reference): ProductForEditing
     {
         $productId = $this->getSharedStorage()->get($reference);
 
-        return $this->getQueryBus()->handle(new GetEditableProduct(
+        return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId
         ));
     }

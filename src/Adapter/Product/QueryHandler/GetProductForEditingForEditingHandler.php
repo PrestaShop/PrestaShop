@@ -31,16 +31,16 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetEditableProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\EditableProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use Product;
 
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-class GetEditableProductHandler extends AbstractProductHandler implements GetEditableProductHandlerInterface
+class GetProductForEditingForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -49,11 +49,11 @@ class GetEditableProductHandler extends AbstractProductHandler implements GetEdi
      * @throws ProductException
      * @throws ProductNotFoundException
      */
-    public function handle(GetEditableProduct $query): EditableProduct
+    public function handle(GetProductForEditing $query): ProductForEditing
     {
         $product = $this->getProduct($query->getProductId());
 
-        return new EditableProduct(
+        return new ProductForEditing(
             $product->id,
             $product->name,
             $this->getProductType($product)

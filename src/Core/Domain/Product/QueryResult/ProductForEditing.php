@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 /**
  * DTO for product that needs to be edited
  */
-class EditableProduct
+class ProductForEditing
 {
     /**
      * @var int

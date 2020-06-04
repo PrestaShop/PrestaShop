@@ -24,17 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\EditableProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-interface GetEditableProductHandlerInterface
+/**
+ * Get Product data necessary for editing
+ */
+class GetProductForEditing
 {
     /**
-     * @param GetEditableProduct $query
-     *
-     * @return EditableProduct
+     * @var ProductId
      */
-    public function handle(GetEditableProduct $query): EditableProduct;
+    private $productId;
+
+    /**
+     * GetEditableProduct constructor.
+     *
+     * @param int $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
 }
