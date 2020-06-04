@@ -148,7 +148,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                         $fieldName,
                         $langIso,
                         $expectedValue,
-                        $productForEditing->{$fieldName}[$langId]
+                        $actualValue
                     )
                 );
             }
