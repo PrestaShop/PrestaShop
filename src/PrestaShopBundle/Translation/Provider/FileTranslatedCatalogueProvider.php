@@ -77,6 +77,10 @@ class FileTranslatedCatalogueProvider implements FileSystemCatalogueProviderInte
 
     public function getCatalogue(): MessageCatalogueInterface
     {
+        if (null === $this->locale) {
+            throw new \LogicException('Locale cannot be null. Call setLocale first');
+        }
+
         $catalogue = new MessageCatalogue($this->locale);
         $translationFinder = new TranslationFinder();
         $localeResourceDirectory = $this->directory . DIRECTORY_SEPARATOR . $this->locale;
