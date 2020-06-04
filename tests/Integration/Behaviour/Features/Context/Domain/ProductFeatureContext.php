@@ -309,18 +309,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $reference
      *
-     * @return Product
-     */
-    private function getProductByReference(string $reference): Product
-    {
-        $productId = $this->getSharedStorage()->get($reference);
-
-        return $this->getProductById($productId);
-    }
-
-    /**
-     * @param string $reference
-     *
      * @return ProductForEditing
      */
     private function getProductForEditing(string $reference): ProductForEditing
@@ -330,21 +318,5 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId
         ));
-    }
-
-    /**
-     * @param int $productId
-     *
-     * @return Product
-     */
-    private function getProductById(int $productId): Product
-    {
-        $product = new Product($productId);
-
-        if (!$product->id) {
-            throw new RuntimeException('Product with id "%s" was not found');
-        }
-
-        return $product;
     }
 }
