@@ -483,6 +483,7 @@ class OrderController extends FrameworkBundleAdminController
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
             'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
+            'paginationNum' => (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', 8),
         ]);
     }
 
@@ -1413,6 +1414,32 @@ class OrderController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function configureProductPaginationAction(Request $request): JsonResponse
+    {
+        $numPerPage = (int) $request->request->get('numPerPage');
+        if ($numPerPage < 1) {
+            $numPerPage = 10;
+        }
+
+        try {
+            $this->configuration->set('PS_ORDER_PRODUCTS_NB_PER_PAGE', $numPerPage);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
