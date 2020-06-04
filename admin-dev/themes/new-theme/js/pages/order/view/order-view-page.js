@@ -72,7 +72,6 @@ export default class OrderViewPage {
         currentPage -= 1;
       }
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        orderId: event.orderId,
         numPage: currentPage
       });
 
@@ -134,7 +133,6 @@ export default class OrderViewPage {
         }
         // Move to last page
         EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-          orderId: event.orderId,
           numPage: numPages
         });
       }
@@ -232,7 +230,6 @@ export default class OrderViewPage {
       event.preventDefault();
       const $btn = $(event.currentTarget);
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        orderId: $btn.data('orderId'),
         numPage: $btn.data('page')
       });
     });
@@ -244,7 +241,6 @@ export default class OrderViewPage {
       }
       const activePage = this.getActivePage();
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        orderId: $(activePage).data('orderId'),
         numPage: parseInt($(activePage).html(), 10) + 1
       });
     });
@@ -256,8 +252,15 @@ export default class OrderViewPage {
       }
       const activePage = this.getActivePage();
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        orderId: $(activePage).data('orderId'),
         numPage: parseInt($(activePage).html(), 10) - 1
+      });
+    });
+    $(OrderViewPageMap.productsTablePaginationNumberSelector).on('change', (event) => {
+      event.preventDefault();
+      const $select = $(event.currentTarget);
+      const numPerPage = parseInt($select.val(), 10);
+      EventEmitter.emit(OrderViewEventMap.productListNumberPerPage, {
+        numPerPage: numPerPage
       });
     });
 
@@ -266,6 +269,14 @@ export default class OrderViewPage {
       this.listenForProductDelete();
       this.listenForProductEdit();
       this.resetToolTips();
+    });
+
+    EventEmitter.on(OrderViewEventMap.productListNumberPerPage, (event) => {
+      this.orderProductRenderer.updateNumPerPage(event.numPerPage);
+      // Paginate to page 1
+      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+        numPage: 1
+      });
     });
   }
 

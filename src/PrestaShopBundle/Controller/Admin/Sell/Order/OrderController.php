@@ -458,6 +458,13 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderSiblingProviderInterface $orderSiblingProvider */
         $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
+        $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', 8);
+        $paginationNumOptions = [8, 20, 50, 100];
+        if (!in_array($paginationNum, $paginationNumOptions)) {
+            $paginationNumOptions[] = $paginationNum;
+        }
+        sort($paginationNumOptions);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -483,7 +490,8 @@ class OrderController extends FrameworkBundleAdminController
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
             'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
-            'paginationNum' => (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', 8),
+            'paginationNum' => $paginationNum,
+            'paginationNumOptions' => $paginationNumOptions,
         ]);
     }
 
