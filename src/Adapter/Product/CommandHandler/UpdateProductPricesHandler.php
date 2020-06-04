@@ -31,8 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use PrestaShopException;
 use Product;
 
 /**
@@ -46,7 +47,18 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
     public function handle(UpdateProductPricesCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
+        $this->fillProductWithCommandData($product, $command);
+        $this->performUpdate($product);
+    }
 
+    /**
+     * @param Product $product
+     * @param UpdateProductPricesCommand $command
+     *
+     * @throws ProductConstraintException
+     */
+    private function fillProductWithCommandData(Product $product, UpdateProductPricesCommand $command): void
+    {
         if (null !== $command->getPrice()) {
             $product->price = (float) (string) $command->getPrice();
             $this->validateField($product, 'price', ProductConstraintException::INVALID_PRICE);
@@ -71,19 +83,41 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
         }
 
-        //@todo: join unit and unity for better design? because:
-        //    it depends from domain rules, it might be that unity must be set always together with unit price
         if (null !== $command->getUnitPrice()) {
             $product->unit_price = (float) (string) $command->getUnitPrice();
             $this->validateField($product, 'unit_price', ProductConstraintException::INVALID_UNIT_PRICE);
         }
 
         if (null !== $command->getUnity()) {
-            //@todo: unity default value is null. How to identify if its been resetted? use empty string?
             $product->unity = $command->getUnity();
         }
+    }
 
-        //@todo: wrap try-catch
-        $product->update();
+    /**
+     * @param Product $product
+     * @throws CannotUpdateProductException
+     */
+    private function performUpdate(Product $product): void
+    {
+        try {
+            if (false === $product->update()) {
+                throw new CannotUpdateProductException(
+                    sprintf(
+                        'Failed to update product #%s prices',
+                        $product->id
+                    ),
+                    CannotUpdateProductException::FAILED_UPDATE_PRICES
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CannotUpdateProductException(
+                sprintf(
+                    'Error occurred when trying to update product #%s prices',
+                    $product->id
+                ),
+                CannotUpdateProductException::FAILED_UPDATE_PRICES,
+                $e
+            );
+        }
     }
 }
