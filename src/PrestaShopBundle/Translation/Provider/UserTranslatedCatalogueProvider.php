@@ -111,6 +111,10 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
      */
     public function getCatalogue(): MessageCatalogueInterface
     {
+        if (null === $this->locale) {
+            throw new \LogicException('Locale cannot be null. Call setLocale first');
+        }
+
         $catalogue = new MessageCatalogue($this->locale);
 
         foreach ($this->getTranslationDomains() as $translationDomain) {

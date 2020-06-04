@@ -28,11 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class DefaultCatalogueProvider implements FileSystemCatalogueProviderInterface, TranslationCatalogueProviderInterface
 {
+    const DEFAULT_LOCALE = 'en-US';
+
     /**
      * @var string
      */
@@ -74,8 +77,19 @@ class DefaultCatalogueProvider implements FileSystemCatalogueProviderInterface, 
         return $this;
     }
 
+    /**
+     * @param bool $empty
+     *
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
     public function getCatalogue(bool $empty = true): MessageCatalogueInterface
     {
+        if (null === $this->locale) {
+            throw new \LogicException('Locale cannot be null. Call setLocale first');
+        }
+
         $defaultCatalogue = new MessageCatalogue($this->locale);
         $translationFinder = new TranslationFinder();
 
@@ -88,7 +102,7 @@ class DefaultCatalogueProvider implements FileSystemCatalogueProviderInterface, 
             $defaultCatalogue->addCatalogue($filteredCatalogue);
         }
 
-        if ($empty && $this->locale !== AbstractProvider::DEFAULT_LOCALE) {
+        if ($empty && $this->locale !== self::DEFAULT_LOCALE) {
             $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
         }
 

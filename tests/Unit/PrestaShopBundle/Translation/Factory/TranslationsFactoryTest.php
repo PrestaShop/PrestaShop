@@ -29,7 +29,7 @@ namespace Tests\Unit\PrestaShopBundle\Translation\Factory;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Factory\ProviderNotFoundException;
 use PrestaShopBundle\Translation\Factory\TranslationsFactory;
-use PrestaShopBundle\Translation\Provider\AbstractProvider;
+use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class TranslationsFactoryTest extends TestCase
@@ -40,13 +40,13 @@ class TranslationsFactoryTest extends TestCase
     private $factory;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|AbstractProvider
+     * @var \PHPUnit_Framework_MockObject_MockObject|DefaultCatalogueProvider
      */
     private $providerMock;
 
     protected function setUp()
     {
-        $this->providerMock = $this->getMockBuilder(AbstractProvider::class)
+        $this->providerMock = $this->getMockBuilder(DefaultCatalogueProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 
