@@ -287,25 +287,31 @@ class TranslationsCatalogueProvider
     private function dataContainsSearchWord(array $data, $search = null): bool
     {
         if (is_string($search)) {
-            $search = strtolower($search);
-
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xliff']), $search) ||
-                false !== strpos(strtolower($data['database']), $search);
+            return $this->elementContainsSearchWord($data, strtolower($search));
         }
 
         if (is_array($search)) {
             $contains = true;
             foreach ($search as $s) {
-                $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xliff']), $s) ||
-                    false !== strpos(strtolower($data['database']), $s);
+                $contains &= $this->elementContainsSearchWord($data, strtolower($s));
             }
 
-            return $contains;
+            return (bool) $contains;
         }
 
         return false;
+    }
+
+    private function elementContainsSearchWord(array $data, string $search): bool
+    {
+        return (false !== strpos(strtolower((string) $data['default']), $search)) ||
+        (
+            (null !== $data['xliff']) &&
+            (false !== strpos(strtolower((string) $data['xliff']), $search))
+        ) ||
+        (
+            (null !== $data['database']) &&
+            (false !== strpos(strtolower((string) $data['database']), $search))
+        );
     }
 }
