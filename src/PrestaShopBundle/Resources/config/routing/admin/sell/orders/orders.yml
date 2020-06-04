@@ -333,7 +333,7 @@ admin_orders_cancellation:
     expose: true
 
 admin_orders_configure_product_pagination:
-  path: /change-orders-status
+  path: /configure-product-pagination
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:configureProductPagination
