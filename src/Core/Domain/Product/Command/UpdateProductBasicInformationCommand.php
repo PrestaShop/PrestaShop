@@ -31,9 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Updates product descriptions
+ * Command to update some basic properties of product
  */
-class UpdateProductDescriptionCommand
+class UpdateProductBasicInformationCommand
 {
     /**
      * @var ProductId
@@ -41,14 +41,22 @@ class UpdateProductDescriptionCommand
     private $productId;
 
     /**
-     * @var string[]|null key value pairs where key is the id of language.
-     *                    If its null then it will not be updated
+     * @var string[]|null
+     */
+    private $localizedNames;
+
+    /**
+     * @var bool|null
+     */
+    private $virtual;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
      */
     private $localizedDescriptions;
 
     /**
      * @var string[]|null key value pairs where key is the id of language
-     *                    If its null then it will not be updated
      */
     private $localizedShortDescriptions;
 
@@ -71,6 +79,46 @@ class UpdateProductDescriptionCommand
     /**
      * @return string[]|null
      */
+    public function getLocalizedNames(): ?array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     *
+     * @return UpdateProductBasicInformationCommand
+     */
+    public function setLocalizedNames(array $localizedNames): self
+    {
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isVirtual(): ?bool
+    {
+        return $this->virtual;
+    }
+
+    /**
+     * @param bool $virtual
+     *
+     * @return UpdateProductBasicInformationCommand
+     */
+    public function setVirtual(bool $virtual): self
+    {
+        $this->virtual = $virtual;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
     public function getLocalizedDescriptions(): ?array
     {
         return $this->localizedDescriptions;
@@ -79,9 +127,9 @@ class UpdateProductDescriptionCommand
     /**
      * @param string[] $localizedDescriptions
      *
-     * @return UpdateProductDescriptionCommand
+     * @return UpdateProductBasicInformationCommand
      */
-    public function setLocalizedDescriptions(array $localizedDescriptions): UpdateProductDescriptionCommand
+    public function setLocalizedDescriptions(array $localizedDescriptions): UpdateProductBasicInformationCommand
     {
         $this->localizedDescriptions = $localizedDescriptions;
 
@@ -99,9 +147,9 @@ class UpdateProductDescriptionCommand
     /**
      * @param string[] $localizedShortDescriptions
      *
-     * @return UpdateProductDescriptionCommand
+     * @return UpdateProductBasicInformationCommand
      */
-    public function setLocalizedShortDescriptions(array $localizedShortDescriptions): UpdateProductDescriptionCommand
+    public function setLocalizedShortDescriptions(array $localizedShortDescriptions): UpdateProductBasicInformationCommand
     {
         $this->localizedShortDescriptions = $localizedShortDescriptions;
 

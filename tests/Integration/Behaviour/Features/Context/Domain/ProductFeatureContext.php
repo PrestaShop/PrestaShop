@@ -31,7 +31,7 @@ use Cache;
 use Context;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDescriptionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
@@ -65,7 +65,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add product :productReference with following basic information:
+     * @When I add product :productReference with following information:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -87,8 +87,44 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update product :productReference basic information with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductBasicInfo(string $productReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+        $command = new UpdateProductBasicInformationCommand($productId);
+
+        if (isset($data['name'])) {
+            $localizedNames = $this->parseLocalizedArray($data['name']);
+            $command->setLocalizedNames($localizedNames);
+        }
+
+        if (isset($data['is_virtual'])) {
+            $command->setVirtual(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual']));
+        }
+
+        if (isset($data['description'])) {
+            $command->setLocalizedDescriptions($this->parseLocalizedArray($data['description']));
+        }
+
+        if (isset($data['description_short'])) {
+            $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
-     * @Then /^product "(.+)" localized "(.+)" is "(.+)"$/
+     * @Given /^product "(.+)" localized "(.+)" is "(.+)"$/
      *
      * @param string $productReference
      * @param string $fieldName
@@ -113,32 +149,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                     )
                 );
             }
-        }
-    }
-
-    /**
-     * @Then I update product :productReference descriptions with following information:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function updateLocalizedDescriptions(string $productReference, TableNode $table)
-    {
-        $data = $table->getRowsHash();
-        $command = new UpdateProductDescriptionCommand($this->getSharedStorage()->get($productReference));
-
-        if (isset($data['description'])) {
-            $command->setLocalizedDescriptions($this->parseLocalizedArray($data['description']));
-        }
-
-        if (isset($data['description_short'])) {
-            $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
-        }
-
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->lastException = $e;
         }
     }
 

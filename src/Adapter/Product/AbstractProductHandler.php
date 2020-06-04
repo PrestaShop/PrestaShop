@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -69,5 +70,55 @@ abstract class AbstractProductHandler
         }
 
         return $product;
+    }
+
+    /**
+     * @todo: product name is not required. Fix that? issue: #19441 for discussion
+     *
+     * Validates Product object model multilingual property using legacy validation
+     *
+     * @param Product $product
+     * @param string $field
+     * @param int $errorCode
+     *
+     * @throws ProductConstraintException
+     */
+    protected function validateLocalizedField(Product $product, string $field, int $errorCode): void
+    {
+        foreach ($product->{$field} as $langId => $value) {
+            if (true !== $product->validateField($field, $value, $langId)) {
+                throw new ProductConstraintException(
+                    sprintf(
+                        'Invalid localized product %s for language with id "%s"',
+                        $field,
+                        $langId
+                    ),
+                    $errorCode
+                );
+            }
+        }
+    }
+
+    /**
+     * Validates Product object model property using legacy validation
+     *
+     * @param Product $product
+     * @param string $field
+     * @param int $errorCode
+     *
+     * @throws ProductConstraintException
+     */
+    protected function validateField(Product $product, string $field, int $errorCode): void
+    {
+        if (true !== $product->validateField($field, $product->{$field})) {
+            throw new ProductConstraintException(
+                sprintf(
+                    'Invalid product %s. Got "%s"',
+                    $field,
+                    $product->{$field}
+                ),
+                $errorCode
+            );
+        }
     }
 }

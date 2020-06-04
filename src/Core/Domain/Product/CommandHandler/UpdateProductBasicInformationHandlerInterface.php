@@ -24,15 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 
 /**
- * Is thrown when updating a product failed
+ * Defines contract for UpdateProductBasicInformationHandler
  */
-class CannotUpdateProductException extends ProductException
+interface UpdateProductBasicInformationHandlerInterface
 {
     /**
-     * When basic information update fails
+     * @param UpdateProductBasicInformationCommand $command
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
+    public function handle(UpdateProductBasicInformationCommand $command): void;
 }
