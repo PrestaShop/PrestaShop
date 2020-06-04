@@ -3,7 +3,10 @@ SET NAMES 'utf8';
 
 ALTER DATABASE `DB_NAME` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
-INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_DISPLAY_MANUFACTURERS', '1', NOW(), NOW());
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
+    ('PS_DISPLAY_MANUFACTURERS', '1', NOW(), NOW()),
+    ('PS_ORDER_PRODUCTS_NB_PER_PAGE', '8', NOW(), NOW())
+;
 
 /* Add field MPN to tables */
 ALTER TABLE `PREFIX_order_detail` ADD `product_mpn` VARCHAR(40) NULL AFTER `product_upc`;

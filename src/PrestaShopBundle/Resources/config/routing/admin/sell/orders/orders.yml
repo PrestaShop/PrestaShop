@@ -331,3 +331,12 @@ admin_orders_cancellation:
     orderId: \d+
   options:
     expose: true
+
+admin_orders_configure_product_pagination:
+  path: /change-orders-status
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:configureProductPagination
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
