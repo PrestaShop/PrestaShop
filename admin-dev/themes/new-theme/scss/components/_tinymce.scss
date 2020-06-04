@@ -1522,6 +1522,7 @@ i.mce-i-backcolor {
   .mce-tinymce {
     /* stylelint-disable-next-line declaration-no-important */
     border: 1px solid #dfdfdf !important;
+    box-sizing: border-box;
   }
   .mce-container-body .mce-flow-layout {
     padding-top: 5px;
