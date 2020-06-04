@@ -12,7 +12,7 @@ module.exports = {
   },
 
   /**
-   *
+   * Check if file was download in path
    * @param filePath
    * @param timeDelay
    * @returns {Promise<boolean>}
