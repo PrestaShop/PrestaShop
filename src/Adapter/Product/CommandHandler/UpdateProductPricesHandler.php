@@ -95,6 +95,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
 
     /**
      * @param Product $product
+     *
      * @throws CannotUpdateProductException
      */
     private function performUpdate(Product $product): void
