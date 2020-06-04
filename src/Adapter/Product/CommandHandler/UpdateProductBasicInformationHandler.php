@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShopException;
 use Product;
 
@@ -49,13 +50,23 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
     {
         $product = $this->getProduct($command->getProductId());
 
-        if (null !== $command->getLocalizedNames()) {
-            $product->name = $command->getLocalizedNames();
-            $this->validateLocalizedNames($product);
-        }
-
         if (null !== $command->isVirtual()) {
             $product->is_virtual = $command->isVirtual();
+        }
+
+        if (null !== $command->getLocalizedNames()) {
+            $product->name = $command->getLocalizedNames();
+            $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
+        }
+
+        if (null !== $command->getLocalizedDescriptions()) {
+            $product->description = $command->getLocalizedDescriptions();
+            $this->validateLocalizedField($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
+        }
+
+        if (null !== $command->getLocalizedShortDescriptions()) {
+            $product->description_short = $command->getLocalizedShortDescriptions();
+            $this->validateLocalizedField($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
         }
 
         try {

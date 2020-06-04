@@ -32,6 +32,7 @@ use Category;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
@@ -97,7 +98,7 @@ final class AddProductHandler extends AbstractProductHandler implements AddProdu
         $product->id_category_default = $this->defaultCategoryId;
         $product->is_virtual = $command->isVirtual();
 
-        $this->validateLocalizedNames($product);
+        $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
 
         return $product;
     }

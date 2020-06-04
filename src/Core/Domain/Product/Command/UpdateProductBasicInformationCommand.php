@@ -51,6 +51,16 @@ class UpdateProductBasicInformationCommand
     private $virtual;
 
     /**
+     * @var string[]|null key value pairs where key is the id of language.
+     */
+    private $localizedDescriptions;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedShortDescriptions;
+
+    /**
      * @param int $productId
      */
     public function __construct(int $productId)
@@ -102,6 +112,46 @@ class UpdateProductBasicInformationCommand
     public function setVirtual(bool $virtual): self
     {
         $this->virtual = $virtual;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedDescriptions(): ?array
+    {
+        return $this->localizedDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedDescriptions
+     *
+     * @return UpdateProductBasicInformationCommand
+     */
+    public function setLocalizedDescriptions(array $localizedDescriptions): UpdateProductBasicInformationCommand
+    {
+        $this->localizedDescriptions = $localizedDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedShortDescriptions(): ?array
+    {
+        return $this->localizedShortDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedShortDescriptions
+     *
+     * @return UpdateProductBasicInformationCommand
+     */
+    public function setLocalizedShortDescriptions(array $localizedShortDescriptions): UpdateProductBasicInformationCommand
+    {
+        $this->localizedShortDescriptions = $localizedShortDescriptions;
 
         return $this;
     }

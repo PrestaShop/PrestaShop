@@ -75,23 +75,51 @@ abstract class AbstractProductHandler
     /**
      * @todo: product name is not required. Fix that? issue: #19441 for discussion
      *
+     * Validates Product object model multilingual property using legacy validation
+     *
      * @param Product $product
      *
+     * @param string $field
+     * @param int $errorCode
+     *
      * @throws ProductConstraintException
-     * @throws \PrestaShopException
      */
-    protected function validateLocalizedNames(Product $product): void
+    protected function validateLocalizedField(Product $product, string $field, int $errorCode): void
     {
-        foreach ($product->name as $langId => $name) {
-            if (true !== $product->validateField('name', $name, $langId)) {
+        foreach ($product->{$field} as $langId => $value) {
+            if (true !== $product->validateField($field, $value, $langId)) {
                 throw new ProductConstraintException(
                     sprintf(
-                        'Invalid localized product name for language with id "%s"',
+                        'Invalid localized product %s for language with id "%s"',
+                        $field,
                         $langId
                     ),
-                    ProductConstraintException::INVALID_NAME
+                    $errorCode
                 );
             }
+        }
+    }
+
+    /**
+     * Validates Product object model property using legacy validation
+     *
+     * @param Product $product
+     * @param string $field
+     * @param int $errorCode
+     *
+     * @throws ProductConstraintException
+     */
+    protected function validateField(Product $product, string $field, int $errorCode): void
+    {
+        if (true !== $product->validateField($field, $product->{$field})) {
+            throw new ProductConstraintException(
+                sprintf(
+                    'Invalid product %s. Got "%s"',
+                    $field,
+                    $product->{$field}
+                ),
+                $errorCode
+            );
         }
     }
 }
