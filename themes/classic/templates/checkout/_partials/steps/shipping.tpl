@@ -54,7 +54,7 @@
                           <div class="row carrier{if $carrier.logo} carrier-hasLogo{/if}">
                             {if $carrier.logo}
                             <div class="col-xs-12 col-md-4 carrier-logo">
-                                <img src="{$carrier.logo}" alt="{$carrier.name}" />
+                                <img src="{$carrier.logo}" alt="{$carrier.name}" loading="lazy" />
                             </div>
                             {/if}
                             <div class="col-xs-12 carriere-name-container{if $carrier.logo} col-md-8{/if}">

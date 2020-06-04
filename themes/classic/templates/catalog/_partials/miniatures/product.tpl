@@ -35,12 +35,13 @@
             <img
               src="{$link->getImageLink($product.link_rewrite, $coverImageId)}"
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
+              loading="lazy"
               data-full-size-image-url="{$product.cover.large.url}"
               />
           </a>
         {else}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
-            <img src="{$urls.no_picture_image.bySize.home_default.url}" />
+            <img src="{$urls.no_picture_image.bySize.home_default.url}" loading="lazy" />
           </a>
         {/if}
       {/block}

@@ -40,9 +40,9 @@
           <div class="col-sm-2 col-xs-3">
             <span class="image">
               {if $product.cover}
-                <img src="{$product.cover.medium.url}" />
+                <img src="{$product.cover.medium.url}" loading="lazy" />
               {else}
-                <img src="{$urls.no_picture_image.bySize.medium_default.url}" />
+                <img src="{$urls.no_picture_image.bySize.medium_default.url}" loading="lazy" />
               {/if}
             </span>
           </div>
@@ -78,7 +78,7 @@
                                   {$field.text}
                                 {/if}
                               {elseif $field.type == 'image'}
-                                <img src="{$field.image.small.url}">
+                                <img src="{$field.image.small.url}" loading="lazy">
                               {/if}
                             </div>
                           </div>

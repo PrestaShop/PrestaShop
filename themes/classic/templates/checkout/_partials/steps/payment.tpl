@@ -48,7 +48,7 @@
             <label for="{$option.id}">
               <span>{$option.call_to_action_text}</span>
               {if $option.logo}
-                <img src="{$option.logo}">
+                <img src="{$option.logo}" loading="lazy">
               {/if}
             </label>
 

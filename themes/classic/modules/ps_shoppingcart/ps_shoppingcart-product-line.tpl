@@ -47,7 +47,7 @@
                                 {if $field.type == 'text'}
                                     <span>{$field.text nofilter}</span>
                                 {elseif $field.type == 'image'}
-                                    <img src="{$field.image.small.url}">
+                                    <img src="{$field.image.small.url}" loading="lazy">
                                 {/if}
                             </li>
                         {/foreach}

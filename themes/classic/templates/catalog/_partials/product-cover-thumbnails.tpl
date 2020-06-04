@@ -37,12 +37,13 @@
           {/if}
           style="width:100%;"
           itemprop="image"
+          loading="lazy"
         >
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
           <i class="material-icons zoom-in">search</i>
         </div>
       {else}
-        <img src="{$urls.no_picture_image.bySize.large_default.url}" style="width:100%;">
+        <img src="{$urls.no_picture_image.bySize.large_default.url}" style="width:100%;" loading="lazy">
       {/if}
     </div>
   {/block}
@@ -65,6 +66,7 @@
               {/if}
               width="100"
               itemprop="image"
+              loading="lazy"
             >
           </li>
         {/foreach}
