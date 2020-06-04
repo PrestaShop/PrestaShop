@@ -58,7 +58,7 @@ class EditOrderStateCommand
     /**
      * @var bool|null
      */
-    private $logable;
+    private $loggable;
 
     /**
      * @var bool|null
@@ -162,17 +162,17 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
-    public function isLogable()
+    public function isLoggable()
     {
-        return $this->logable;
+        return $this->loggable;
     }
 
     /**
      * @return self
      */
-    public function setLogable(?bool $logable)
+    public function setLoggable(?bool $loggable)
     {
-        $this->logable = $logable;
+        $this->loggable = $loggable;
 
         return $this;
     }

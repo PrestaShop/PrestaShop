@@ -63,7 +63,7 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
     {
         $orderState->name = $command->getLocalizedNames();
         $orderState->color = $command->getColor();
-        $orderState->logable = $command->isLogable();
+        $orderState->logable = $command->isLoggable();
         $orderState->invoice = $command->isInvoice();
         $orderState->hidden = $command->isHidden();
         $orderState->send_email = $command->isSendEmail();
