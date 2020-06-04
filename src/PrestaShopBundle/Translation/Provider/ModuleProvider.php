@@ -26,37 +26,42 @@
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Translation provider for a specific native module (maintained by the core team)
  * Used mainly for the display in the Translations Manager of the Back Office.
  */
-class ModuleProvider extends AbstractProvider implements SearchProviderInterface
+class ModuleProvider implements ProviderInterface
 {
+    /**
+     * @var string Path where translation files are found
+     */
+    protected $resourceDirectory;
+
+    /**
+     * @var string locale
+     */
+    protected $locale;
+
     /**
      * @var string the module name
      */
     private $moduleName;
+    /**
+     * @var DatabaseTranslationLoader
+     */
+    private $databaseLoader;
 
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
         string $resourceDirectory
     ) {
-        $translationDomains = ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
-
-        $filenameFilters = ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
-
-        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-
-        parent::__construct(
-            $databaseLoader,
-            $resourceDirectory,
-            $translationDomains,
-            $filenameFilters,
-            $defaultResourceDirectory
-        );
+        $this->databaseLoader = $databaseLoader;
+        $this->resourceDirectory = $resourceDirectory;
     }
 
     /**
@@ -75,5 +80,97 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
     public function getIdentifier()
     {
         return 'module';
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return ModuleProvider
+     */
+    public function setLocale(string $locale): ModuleProvider
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
+    public function getMessageCatalogue(): MessageCatalogueInterface
+    {
+        if (null === $this->locale) {
+            throw new \LogicException('Locale cannot be null. Call setLocale first');
+        }
+
+        $messageCatalogue = $this->getDefaultCatalogue();
+
+        // Merge catalogues
+
+        $xlfCatalogue = $this->getFilesystemCatalogue();
+        $messageCatalogue->addCatalogue($xlfCatalogue);
+        unset($xlfCatalogue);
+
+        $databaseCatalogue = $this->getUserTranslatedCatalogue();
+        $messageCatalogue->addCatalogue($databaseCatalogue);
+        unset($databaseCatalogue);
+
+        return $messageCatalogue;
+    }
+
+    /**
+     * @param bool $empty
+     *
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
+    {
+        return (new DefaultCatalogueProvider())
+            ->setFilenameFilters($this->getFilenameFilters())
+            ->setDirectory($this->resourceDirectory . DIRECTORY_SEPARATOR . 'default')
+            ->setLocale($this->locale)
+            ->getCatalogue($empty);
+    }
+
+    /**
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
+    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    {
+        return (new FileTranslatedCatalogueProvider())
+            ->setDirectory($this->resourceDirectory)
+            ->setFilenameFilters($this->getFilenameFilters())
+            ->setLocale($this->locale)
+            ->getCatalogue();
+    }
+
+    /**
+     * @param string|null $theme
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getUserTranslatedCatalogue(string $theme = null): MessageCatalogueInterface
+    {
+        $translationDomains = ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
+
+        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
+            ->setTranslationDomains($translationDomains)
+            ->setLocale($this->locale)
+            ->setTheme($theme)
+            ->getCatalogue();
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFilenameFilters()
+    {
+        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
     }
 }
