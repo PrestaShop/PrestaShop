@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
- * DTO for product that needs to be edited
+ * Product information for editing
  */
 class ProductForEditing
 {
@@ -37,23 +37,28 @@ class ProductForEditing
     private $productId;
 
     /**
-     * @var string[]
+     * @var bool
      */
-    private $localizedNames;
+    private $active;
 
     /**
-     * @var ProductType
+     * @var ProductBasicInformation
      */
-    private $type;
+    private $basicInformation;
 
+    /**
+     * @param int $productId
+     * @param bool $active
+     * @param ProductBasicInformation $basicInformation
+     */
     public function __construct(
         int $productId,
-        array $localizedNames,
-        ProductType $type
+        bool $active,
+        ProductBasicInformation $basicInformation
     ) {
         $this->productId = $productId;
-        $this->localizedNames = $localizedNames;
-        $this->type = $type;
+        $this->active = $active;
+        $this->basicInformation = $basicInformation;
     }
 
     /**
@@ -65,18 +70,18 @@ class ProductForEditing
     }
 
     /**
-     * @return string[]
+     * @return bool
      */
-    public function getLocalizedNames(): array
+    public function isActive(): bool
     {
-        return $this->localizedNames;
+        return $this->active;
     }
 
     /**
-     * @return ProductType
+     * @return ProductBasicInformation
      */
-    public function getType(): ProductType
+    public function getBasicInformation(): ProductBasicInformation
     {
-        return $this->type;
+        return $this->basicInformation;
     }
 }

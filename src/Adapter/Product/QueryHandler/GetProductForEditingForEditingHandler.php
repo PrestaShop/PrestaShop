@@ -29,10 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use Product;
@@ -44,19 +43,30 @@ class GetProductForEditingForEditingHandler extends AbstractProductHandler imple
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws ProductConstraintException
-     * @throws ProductException
-     * @throws ProductNotFoundException
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
         $product = $this->getProduct($query->getProductId());
 
         return new ProductForEditing(
-            $product->id,
+            (int) $product->id,
+            (bool) $product->active,
+            $this->getBasicInformation($product)
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductBasicInformation
+     */
+    private function getBasicInformation(Product $product): ProductBasicInformation
+    {
+        return new ProductBasicInformation(
+            $this->getProductType($product),
             $product->name,
-            $this->getProductType($product)
+            $product->description,
+            $product->description_short
         );
     }
 
