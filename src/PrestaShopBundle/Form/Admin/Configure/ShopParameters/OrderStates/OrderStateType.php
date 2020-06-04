@@ -77,8 +77,7 @@ class OrderStateType extends TranslatorAwareType
 
         foreach ($locales as $locale) {
             $languageId = $locale['id_lang'];
-            $this->templates[$languageId] = [];
-            $this->templateAttributes[$languageId] = [];
+            $this->templates[$languageId] = $this->templateAttributes[$languageId] = [];
 
             /** @var Layout $mailLayout */
             foreach ($mailLayouts as $mailLayout) {

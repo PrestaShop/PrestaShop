@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class OrderReturnStatesFilters extends Filters
 {
+    const LIST_LIMIT = 50;
+
     /** @var string */
     protected $filterId = OrderReturnStatesGridDefinitionFactory::GRID_ID;
 
@@ -44,7 +46,7 @@ final class OrderReturnStatesFilters extends Filters
     public static function getDefaults()
     {
         return [
-            'limit' => 50,
+            'limit' => self::LIST_LIMIT,
             'offset' => 0,
             'orderBy' => 'id_order_return_state',
             'sortOrder' => 'ASC',
