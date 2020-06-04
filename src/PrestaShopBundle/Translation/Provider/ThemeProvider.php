@@ -28,17 +28,37 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
-use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
  * Provides translations from a theme to the translation interface
  */
-class ThemeProvider extends AbstractProvider
+class ThemeProvider implements ProviderInterface
 {
+    /**
+     * @var string Path where translation files are found
+     */
+    protected $resourceDirectory;
+
+    /**
+     * @var string Catalogue domain
+     */
+    protected $domain;
+
+    /**
+     * @var string locale
+     */
+    protected $locale;
+
+    /**
+     * @var Theme
+     */
+    private $theme;
+
     /**
      * @var string the theme name
      */
@@ -65,14 +85,13 @@ class ThemeProvider extends AbstractProvider
     private $themeExtractor;
 
     /**
-     * @var Theme
-     */
-    private $theme;
-
-    /**
      * @var ProviderInterface
      */
     private $frontOfficeProvider;
+    /**
+     * @var DatabaseTranslationLoader
+     */
+    private $databaseLoader;
 
     /**
      * @param ProviderInterface $frontOfficeProvider Provider for core front office translations
@@ -81,9 +100,6 @@ class ThemeProvider extends AbstractProvider
      * @param ThemeRepository $themeRepository
      * @param Filesystem $filesystem
      * @param string $themeResourcesDir Path to the themes folder
-     * @param DefaultCatalogueExtractor $defaultCatalogueExtractor
-     * @param FilesystemCatalogueExtractor $filesystemCatalogueExtractor
-     * @param UserTranslatedCatalogueExtractor $userTranslatedCatalogueExtractor
      */
     public function __construct(
         ProviderInterface $frontOfficeProvider,
@@ -93,23 +109,12 @@ class ThemeProvider extends AbstractProvider
         Filesystem $filesystem,
         $themeResourcesDir
     ) {
-        $translationDomains = ['*'];
-        $filenameFilters = ['*'];
-        $defaultResourceDirectory = '';
-
-        parent::__construct(
-            $databaseLoader,
-            '',
-            $translationDomains,
-            $filenameFilters,
-            $defaultResourceDirectory
-        );
-
         $this->frontOfficeProvider = $frontOfficeProvider;
         $this->themeExtractor = $themeExtractor;
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
         $this->themeResourcesDirectory = $themeResourcesDir;
+        $this->databaseLoader = $databaseLoader;
     }
 
     /**
@@ -130,30 +135,11 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * Returns the path to translations directory for the current theme in the current locale
-     *
-     * @param string|null $locale Base directory for the path. If not provided, it defaults to $this->resourceDirectory
-     *
-     * @return string Path to $baseDir/{themeName}/translations/{locale}
-     */
-    protected function getResourceDirectory($locale = null): string
-    {
-        if (null === $locale) {
-            $locale = $this->themeResourcesDirectory;
-        }
-
-        return implode(
-            DIRECTORY_SEPARATOR,
-            [$locale, $this->getThemeName(), 'translations', $this->getLocale()]
-        );
-    }
-
-    /**
      * @param string $themeName The theme name
      *
-     * @return self
+     * @return ThemeProvider
      */
-    public function setThemeName($themeName)
+    public function setThemeName($themeName): ThemeProvider
     {
         // make sure the theme exists and store it cache
         $this->theme = $this->themeRepository->getInstanceByName($themeName);
@@ -164,20 +150,51 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $locale
+     *
+     * @return ThemeProvider
      */
-    public function setLocale(string $locale): AbstractProvider
+    public function setLocale(string $locale): ThemeProvider
     {
-        parent::setLocale($locale);
+        $this->locale = $locale;
 
         $this->frontOfficeProvider->setLocale($locale);
 
         return $this;
     }
 
-    public function setDomain(string $domain): AbstractProvider
+    /**
+     * @param string $domain
+     *
+     * @return ThemeProvider
+     */
+    public function setDomain(string $domain): ThemeProvider
     {
-        return parent::setDomain($domain);
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * Returns the fully translated message catalogue
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getMessageCatalogue(): MessageCatalogueInterface
+    {
+        $messageCatalogue = $this->getDefaultCatalogue();
+
+        // Merge catalogues
+
+        $xlfCatalogue = $this->getFilesystemCatalogue();
+        $messageCatalogue->addCatalogue($xlfCatalogue);
+        unset($xlfCatalogue);
+
+        $databaseCatalogue = $this->getUserTranslatedCatalogue();
+        $messageCatalogue->addCatalogue($databaseCatalogue);
+        unset($databaseCatalogue);
+
+        return $messageCatalogue;
     }
 
     /**
@@ -195,7 +212,7 @@ class ThemeProvider extends AbstractProvider
         $defaultCatalogue->addCatalogue(
             $this->extractDefaultCatalogueFromTheme(
                 $this->getTheme(),
-                $this->getLocale(),
+                $this->locale,
                 $refreshCache
             )
         );
@@ -208,21 +225,46 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    {
+        // load front office catalogue
+        $catalogue = $this->frontOfficeProvider->getFilesystemCatalogue();
+
+        $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider())
+            ->setDirectory($this->resourceDirectory)
+            ->setFilenameFilters(['*'])
+            ->setLocale($this->locale)
+            ->getCatalogue();
+
+        // overwrite with the theme's own catalogue
+        $catalogue->addCatalogue($fileTranslatedCatalogue);
+
+        return $catalogue;
+    }
+
+    /**
      * @param string|null $themeName
      *
      * @return MessageCatalogueInterface
      */
     public function getUserTranslatedCatalogue(string $themeName = null): MessageCatalogueInterface
     {
+        $translationDomains = ['*'];
         if (!empty($this->domain)) {
-            $this->userTranslatedCatalogueExtractor->setTranslationDomains(['^' . $this->domain]);
+            $translationDomains = ['^' . $this->domain];
         }
 
         if (null === $themeName) {
             $themeName = $this->getThemeName();
         }
 
-        return parent::getUserTranslatedCatalogue($themeName);
+        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
+            ->setTranslationDomains($translationDomains)
+            ->setLocale($this->locale)
+            ->setTheme($themeName)
+            ->getCatalogue();
     }
 
     /**
@@ -230,7 +272,7 @@ class ThemeProvider extends AbstractProvider
      */
     public function synchronizeTheme()
     {
-        $this->extractDefaultCatalogueFromTheme($this->getTheme(), $this->getLocale(), true);
+        $this->extractDefaultCatalogueFromTheme($this->getTheme(), $this->locale, true);
     }
 
     /**
@@ -248,39 +290,11 @@ class ThemeProvider extends AbstractProvider
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface
-    {
-        // load front office catalogue
-        $xliffCatalogue = $this->frontOfficeProvider->getFilesystemCatalogue();
-
-        // overwrite with the theme's own catalogue
-        $xliffCatalogue->addCatalogue(parent::getFilesystemCatalogue());
-
-        return $xliffCatalogue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return 'theme';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function xgetDefaultResourceDirectory(): string
-    {
-        if (!$this->themeExtractor instanceof ThemeExtractorCache) {
-            throw new \LogicException(
-                'This theme provider has not been configured with a cache extractor, so there is no directory for default resources'
-            );
-        }
-
-        return $this->themeExtractor->getCachedFilesPath($this->getTheme());
     }
 
     /**
@@ -288,7 +302,7 @@ class ThemeProvider extends AbstractProvider
      *
      * @throws \RuntimeException
      */
-    private function getThemeName()
+    private function getThemeName(): string
     {
         if (empty($this->themeName)) {
             throw new \RuntimeException('Theme has not been defined yet for this provider');
@@ -302,7 +316,7 @@ class ThemeProvider extends AbstractProvider
      *
      * @throws \RuntimeException
      */
-    private function getTheme()
+    private function getTheme(): Theme
     {
         if (empty($this->theme)) {
             throw new \RuntimeException('Theme has not been defined yet for this provider');
@@ -318,10 +332,28 @@ class ThemeProvider extends AbstractProvider
      * @param string $locale
      * @param bool $refreshCache Indicates if extraction cache should be refreshed
      *
-     * @return \Symfony\Component\Translation\MessageCatalogue
+     * @return MessageCatalogue
      */
-    private function extractDefaultCatalogueFromTheme(Theme $theme, $locale, $refreshCache)
+    private function extractDefaultCatalogueFromTheme(Theme $theme, $locale, $refreshCache): MessageCatalogue
     {
         return $this->themeExtractor->extract($theme, $locale, $refreshCache);
+    }
+
+    /**
+     * Empties out the catalogue by removing translations but leaving keys
+     *
+     * @param MessageCatalogueInterface $messageCatalogue
+     *
+     * @return MessageCatalogueInterface Empty the catalogue
+     */
+    private function emptyCatalogue(MessageCatalogueInterface $messageCatalogue): MessageCatalogueInterface
+    {
+        foreach ($messageCatalogue->all() as $domain => $messages) {
+            foreach (array_keys($messages) as $translationKey) {
+                $messageCatalogue->set($translationKey, '', $domain);
+            }
+        }
+
+        return $messageCatalogue;
     }
 }
