@@ -24,12 +24,24 @@
  */
 
 import MerchandiseReturnEditPage from '@pages/merchandise-return/merchandise-return-edit-page';
+import Grid from '../../components/grid/grid';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
+import TranslatableInput from '../../components/translatable-input';
+import ReloadListExtension from '../../components/grid/extension/reload-list-extension';
 
 const {$} = window;
 
 $(() => {
-  const merchandiseReturnEditPage = new MerchandiseReturnEditPage();
+  const grid = new Grid('merchandise_return_products');
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new SortingExtension());
+  grid.addExtension(new ReloadListExtension());
+  grid.addExtension(new SubmitRowActionExtension());
+  new TranslatableInput();
 
+  const merchandiseReturnEditPage = new MerchandiseReturnEditPage();
   merchandiseReturnEditPage.listenForProductDelete();
   merchandiseReturnEditPage.listenForProductPagination();
 });
