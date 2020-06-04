@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,21 +22,32 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
+ */
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/form.html.twig' %}
-    </div>
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnProductsGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
-{% block javascripts %}
-  {{ parent() }}
+/**
+ * Provides default filters for merchandise returns grid.
+ */
+final class MerchandiseReturnProductsFilters extends Filters
+{
+    protected $filterId = MerchandiseReturnProductsGridDefinitionFactory::GRID_ID;
 
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/merchandise_return_edit.bundle.js') }}"></script>
-{% endblock %}
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 50,
+            'offset' => 0,
+            'orderBy' => 'ord.id_order_detail',
+            'sortOrder' => 'ASC',
+            'filters' => [],
+        ];
+    }
+}

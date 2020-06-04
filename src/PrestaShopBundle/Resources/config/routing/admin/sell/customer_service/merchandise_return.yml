@@ -24,6 +24,18 @@ admin_merchandise_returns_filter:
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn:submitFilterorder_return
 
+admin_merchandise_returns_products_filter:
+  path: /{merchandiseReturnId}/edit
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.merchandise_return_products
+    redirectRoute: admin_merchandise_returns_edit
+    _legacy_controller: AdminReturn
+#    _legacy_link: AdminReturn:submitFilterorder_return
+  requirements:
+    merchandiseReturnId: \d+
+
 admin_merchandise_returns_edit:
   path: /{merchandiseReturnId}/edit
   methods: [GET, POST]
@@ -49,5 +61,4 @@ admin_merchandise_returns_delete_product:
   requirements:
     merchandiseReturnId: \d+
     merchandiseReturnDetailId: \d+
-  options:
-    expose: true
+
