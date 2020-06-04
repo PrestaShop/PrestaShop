@@ -39,7 +39,7 @@ use Product;
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-class GetProductForEditingForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
+class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}

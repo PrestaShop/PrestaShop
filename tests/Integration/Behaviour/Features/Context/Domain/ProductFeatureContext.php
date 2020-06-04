@@ -219,12 +219,12 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function assertProductType(string $productReference, string $productTypeName)
     {
         $editableProduct = $this->getEditableProductByReference($productReference);
-        if ($productTypeName !== $editableProduct->getType()->getValue()) {
+        if ($productTypeName !== $editableProduct->getBasicInformation()->getType()->getValue()) {
             throw new RuntimeException(
                 sprintf(
                     'Product type is not as expected. Expected %s but go %s instead',
                     $productTypeName,
-                    $editableProduct->getType()->getValue()
+                    $editableProduct->getBasicInformation()->getType()->getValue()
                 )
             );
         }
