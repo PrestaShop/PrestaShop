@@ -79,7 +79,7 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
         $command = new AddOrderStateCommand(
             $data['name'],
             $data['color'],
-            $data['logable'],
+            $data['loggable'],
             $data['invoice'],
             $data['hidden'],
             $data['send_email'],
@@ -104,7 +104,7 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
         $command = (new EditOrderStateCommand($orderStateId))
             ->setName($data['name'])
             ->setColor($data['color'])
-            ->setLogable($data['logable'])
+            ->setLoggable($data['loggable'])
             ->setInvoice($data['invoice'])
             ->setHidden($data['hidden'])
             ->setSendEmail($data['send_email'])

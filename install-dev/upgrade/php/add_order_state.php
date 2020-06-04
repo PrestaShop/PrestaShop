@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unremovable, $logable, $delivery, $template = null)
+function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unremovable, $loggable, $delivery, $template = null)
 {
     $res = true;
     $name_lang = array();
@@ -43,7 +43,7 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
 
     $res &= Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'order_state` (`invoice`, `send_email`, `color`, `unremovable`, `logable`, `delivery`)
-		VALUES ('.(int)$invoice.', '.(int)$send_email.', "'.$color.'", '.(int)$unremovable.', '.(int)$logable.', '.(int)$delivery.')');
+		VALUES ('.(int)$invoice.', '.(int)$send_email.', "'.$color.'", '.(int)$unremovable.', '.(int)$loggable.', '.(int)$delivery.')');
 
     $id_order_state = Db::getInstance()->getValue('
 		SELECT MAX(`id_order_state`)

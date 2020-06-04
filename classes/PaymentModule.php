@@ -320,7 +320,7 @@ abstract class PaymentModuleCore extends Module
             // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
             // if ($order->total_paid != $order->total_paid_real)
             // We use number_format in order to compare two string
-            if ($order_status->logable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
+            if ($order_status->loggable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
                 $id_order_state = Configuration::get('PS_OS_ERROR');
             }
 
@@ -367,7 +367,7 @@ abstract class PaymentModuleCore extends Module
             }
 
             // Register Payment only if the order status validate the order
-            if ($order_status->logable) {
+            if ($order_status->loggable) {
                 // $order is the last order loop in the foreach
                 // The method addOrderPayment of the class Order make a create a paymentOrder
                 // linked to the order reference and not to the order id
@@ -548,7 +548,7 @@ abstract class PaymentModuleCore extends Module
                     ]);
 
                     foreach ($this->context->cart->getProducts() as $product) {
-                        if ($order_status->logable) {
+                        if ($order_status->loggable) {
                             ProductSale::addProductSale((int) $product['id_product'], (int) $product['cart_quantity']);
                         }
                     }
@@ -1036,7 +1036,7 @@ abstract class PaymentModuleCore extends Module
         // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
         // if ($order->total_paid != $order->total_paid_real)
         // We use number_format in order to compare two string
-        if ($order_status->logable
+        if ($order_status->loggable
             && number_format(
                 $cart_total_paid,
                 Context::getContext()->getComputingPrecision()

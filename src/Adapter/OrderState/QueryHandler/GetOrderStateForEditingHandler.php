@@ -56,7 +56,7 @@ final class GetOrderStateForEditingHandler implements GetOrderStateForEditingHan
             $orderStateId,
             $orderState->name,
             $orderState->color,
-            $orderState->logable,
+            $orderState->loggable,
             $orderState->invoice,
             $orderState->hidden,
             $orderState->send_email,

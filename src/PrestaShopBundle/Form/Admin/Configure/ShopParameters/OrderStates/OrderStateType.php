@@ -123,7 +123,7 @@ class OrderStateType extends TranslatorAwareType
             ->add('color', ColorPickerType::class, [
                 'required' => false,
             ])
-            ->add('logable', CheckboxType::class, [
+            ->add('loggable', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans('Consider the associated order as validated.', 'Admin.Shopparameters.Feature'),
                 'attr' => [

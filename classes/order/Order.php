@@ -149,7 +149,7 @@ class OrderCore extends ObjectModel
     /** @var string Delivery creation date */
     public $delivery_date;
 
-    /** @var bool Order validity: current order status is logable (usually paid and not canceled) */
+    /** @var bool Order validity: current order status is loggable (usually paid and not canceled) */
     public $valid;
 
     /** @var string Object creation date */
@@ -510,7 +510,7 @@ class OrderCore extends ObjectModel
             $id_order_state = 0;
         }
 
-        $logable = false;
+        $loggable = false;
         $delivery = false;
         $paid = false;
         $shipped = false;
@@ -521,8 +521,8 @@ class OrderCore extends ObjectModel
             if ($filters & OrderState::FLAG_DELIVERY) {
                 $delivery = true;
             }
-            if ($filters & OrderState::FLAG_LOGABLE) {
-                $logable = true;
+            if ($filters & OrderState::FLAG_LOGGABLE) {
+                $loggable = true;
             }
             if ($filters & OrderState::FLAG_PAID) {
                 $paid = true;
@@ -543,7 +543,7 @@ class OrderCore extends ObjectModel
             LEFT JOIN `' . _DB_PREFIX_ . 'employee` e ON e.`id_employee` = oh.`id_employee`
             WHERE oh.id_order = ' . (int) $this->id . '
             ' . ($no_hidden ? ' AND os.hidden = 0' : '') . '
-            ' . ($logable ? ' AND os.logable = 1' : '') . '
+            ' . ($loggable ? ' AND os.logable = 1' : '') . '
             ' . ($delivery ? ' AND os.delivery = 1' : '') . '
             ' . ($paid ? ' AND os.paid = 1' : '') . '
             ' . ($shipped ? ' AND os.shipped = 1' : '') . '

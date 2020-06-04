@@ -49,7 +49,7 @@ class EditableOrderState
     /**
      * @var bool
      */
-    private $logable;
+    private $loggable;
     /**
      * @var bool
      */
@@ -91,7 +91,7 @@ class EditableOrderState
         OrderStateId $orderStateId,
         array $name,
         string $color,
-        bool $logable,
+        bool $loggable,
         bool $invoice,
         bool $hidden,
         bool $sendEmail,
@@ -105,7 +105,7 @@ class EditableOrderState
         $this->orderStateId = $orderStateId;
         $this->localizedNames = $name;
         $this->color = $color;
-        $this->logable = $logable;
+        $this->loggable = $loggable;
         $this->invoice = $invoice;
         $this->hidden = $hidden;
         $this->sendEmail = $sendEmail;
@@ -144,9 +144,9 @@ class EditableOrderState
     /**
      * @return bool
      */
-    public function isLogable()
+    public function isLoggable()
     {
-        return $this->logable;
+        return $this->loggable;
     }
 
     /**

@@ -112,7 +112,7 @@ class OrderHistoryCore extends ObjectModel
 
             // An email is sent the first time a virtual item is validated
             $virtual_products = $order->getVirtualProducts();
-            if ($virtual_products && (!$old_os || !$old_os->logable) && $new_os && $new_os->logable) {
+            if ($virtual_products && (!$old_os || !$old_os->loggable) && $new_os && $new_os->loggable) {
                 $assign = [];
                 foreach ($virtual_products as $key => $virtual_product) {
                     $id_product_download = ProductDownload::getIdFromIdProduct($virtual_product['product_id']);
@@ -215,8 +215,8 @@ class OrderHistoryCore extends ObjectModel
             // foreach products of the order
             foreach ($order->getProductsDetail() as $product) {
                 if (Validate::isLoadedObject($old_os)) {
-                    // if becoming logable => adds sale
-                    if ($new_os->logable && !$old_os->logable) {
+                    // if becoming loggable => adds sale
+                    if ($new_os->loggable && !$old_os->loggable) {
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         // @since 1.5.0 - Stock Management
                         if (!Pack::isPack($product['product_id']) &&
@@ -224,8 +224,8 @@ class OrderHistoryCore extends ObjectModel
                             !StockAvailable::dependsOnStock($product['id_product'], (int) $order->id_shop)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
                         }
-                    } elseif (!$new_os->logable && $old_os->logable) {
-                        // if becoming unlogable => removes sale
+                    } elseif (!$new_os->loggable && $old_os->loggable) {
+                        // if becoming unloggable => removes sale
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
                         // @since 1.5.0 - Stock Management
@@ -234,7 +234,7 @@ class OrderHistoryCore extends ObjectModel
                             !StockAvailable::dependsOnStock($product['id_product'])) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
                         }
-                    } elseif (!$new_os->logable && !$old_os->logable &&
+                    } elseif (!$new_os->loggable && !$old_os->loggable &&
                         in_array($new_os->id, $error_or_canceled_statuses) &&
                         !in_array($old_os->id, $error_or_canceled_statuses) &&
                         !StockAvailable::dependsOnStock($product['id_product'])
@@ -364,7 +364,7 @@ class OrderHistoryCore extends ObjectModel
 
         // the order is valid if and only if the invoice is available and the order is not cancelled
         $order->current_state = $this->id_order_state;
-        $order->valid = $new_os->logable;
+        $order->valid = $new_os->loggable;
         $order->update();
 
         if ($new_os->invoice && !$order->invoice_number) {

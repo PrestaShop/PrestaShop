@@ -296,7 +296,7 @@ class AdminStatusesControllerCore extends AdminController
                 ],
                 [
                     'type' => 'checkbox',
-                    'name' => 'logable',
+                    'name' => 'loggable',
                     'values' => [
                         'query' => [
                             ['id' => 'on', 'name' => $this->trans('Consider the associated order as validated.', [], 'Admin.Shopparameters.Feature'), 'val' => '1'],
@@ -431,7 +431,7 @@ class AdminStatusesControllerCore extends AdminController
         }
 
         $this->fields_value = [
-            'logable_on' => $this->getFieldValue($obj, 'logable'),
+            'loggable_on' => $this->getFieldValue($obj, 'loggable'),
             'invoice_on' => $this->getFieldValue($obj, 'invoice'),
             'hidden_on' => $this->getFieldValue($obj, 'hidden'),
             'send_email_on' => $this->getFieldValue($obj, 'send_email'),
@@ -598,7 +598,7 @@ class AdminStatusesControllerCore extends AdminController
 
             $this->deleted = false; // Disabling saving historisation
             $_POST['invoice'] = (int) Tools::getValue('invoice_on');
-            $_POST['logable'] = (int) Tools::getValue('logable_on');
+            $_POST['loggable'] = (int) Tools::getValue('loggable_on');
             $_POST['send_email'] = (int) Tools::getValue('send_email_on');
             $_POST['hidden'] = (int) Tools::getValue('hidden_on');
             $_POST['shipped'] = (int) Tools::getValue('shipped_on');
