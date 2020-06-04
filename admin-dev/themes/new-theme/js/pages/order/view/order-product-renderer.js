@@ -99,7 +99,7 @@ export default class OrderProductRenderer {
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
     $rows.removeClass('d-none');
-    $(OrderViewPageMap.productsNavPagination).addClass('d-none');
+    $(OrderViewPageMap.productsPagination).addClass('d-none');
 
     const scrollValue = $(scrollTarget).offset().top - $('.header-toolbar').height() - 100;
     $('html,body').animate({scrollTop: scrollValue}, 'slow');
@@ -111,6 +111,7 @@ export default class OrderProductRenderer {
 
     $(OrderViewPageMap.productsPanel).detach().appendTo(OrderViewPageMap.productOriginalPosition);
 
+    $(OrderViewPageMap.productsPagination).removeClass('d-none');
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).addClass('d-none');
 
