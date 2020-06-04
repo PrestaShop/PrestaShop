@@ -1,17 +1,16 @@
 .product-page {
-
   padding-bottom: 80px;
 
   .widget-radio-inline {
     div.radio {
-      display:inline;
+      display: inline;
     }
     label {
-      display:inline-block;
+      display: inline-block;
     }
     a.btn {
       height: 29px;
-      display:inline;
+      display: inline;
     }
   }
 
@@ -21,10 +20,10 @@
 
   .widget-checkbox-inline {
     div.checkbox {
-      display:inline;
+      display: inline;
     }
     label {
-      display:inline;
+      display: inline;
     }
   }
 
@@ -59,7 +58,7 @@
   }
 
   &::before {
-    content: '';
+    content: "";
     display: block;
     position: fixed;
     top: $size-header-height - 0.0625rem;
@@ -191,7 +190,7 @@
 
     .tab-content {
       &.bordered {
-        border: 1px solid $gray-light;
+        border-top: 1px solid $gray-light;
       }
     }
   }
@@ -273,7 +272,8 @@
         width: 130px;
         height: 130px;
         border: 1px solid $gray-light;
-        &.active, &:hover {
+        &.active,
+        &:hover {
           border: 3px solid $brand-primary;
           border-radius: 3px;
         }
@@ -359,7 +359,7 @@
         }
         &:hover .dz-image img {
           transform: none;
-          filter:none;
+          filter: none;
         }
       }
       &.dz-clickable * {
@@ -377,7 +377,7 @@
         font-size: 60px;
         color: $gray-light;
         opacity: 0.5;
-        filter:alpha(opacity=50);
+        filter: alpha(opacity=50);
       }
       small {
         font-size: 12px;
@@ -482,7 +482,8 @@
         visibility: visible;
       }
     }
-    h4,.ref {
+    h4,
+    .ref {
       padding: 0.625rem;
     }
     h4 {
@@ -532,9 +533,9 @@
     ul.category-tree {
       display: inline-block;
       min-width: 100%;
-      padding-top: .625rem;
+      padding-top: 0.625rem;
       .main-category {
-        font-size: .625rem;
+        font-size: 0.625rem;
         font-weight: 600;
       }
       label {
@@ -565,7 +566,7 @@
       text-transform: uppercase;
       font-size: 0.625rem;
       font-weight: 600;
-      border-bottom: .063rem solid $gray-light;
+      border-bottom: 0.063rem solid $gray-light;
 
       [data-action="expand"],
       [data-action="reduce"] {
@@ -584,7 +585,8 @@
       #categories-tree-expand {
         display: none;
       }
-      #categories-tree-expand, #categories-tree-reduce {
+      #categories-tree-expand,
+      #categories-tree-reduce {
         cursor: pointer;
       }
     }
@@ -603,7 +605,8 @@
 
   .btn-action {
     text-transform: none;
-    &.focus, &:focus {
+    &.focus,
+    &:focus {
       color: $brand-primary;
     }
   }
@@ -735,7 +738,7 @@
     }
 
     .module-item-wrapper-grid {
-      box-shadow: 0 1px 4px 0 rgba(0,0,0,.25);
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
     }
 
     .module-render-container {
@@ -804,7 +807,7 @@
       }
     }
     &.ui-state-focus {
-      background-color: #DDD;
+      background-color: #ddd;
     }
   }
   a {
@@ -847,7 +850,7 @@
       .attribute {
         .js-attribute-checkbox {
           display: none;
-          +.attribute-label {
+          + .attribute-label {
             display: inline-block;
             font-size: $font-size-base;
             color: $gray-light;
@@ -868,7 +871,7 @@
             }
           }
           &:checked {
-            +.attribute-label {
+            + .attribute-label {
               font-weight: $font-weight-semibold;
               color: $gray-medium;
               .pretty-checkbox {
@@ -1048,7 +1051,7 @@
       button.save {
         background: $brand-primary;
       }
-      .spinner{
+      .spinner {
         margin-top: -0.3125rem;
       }
       .dropdown {
@@ -1063,7 +1066,7 @@
 }
 
 @media (min-width: 1300px) and (max-width: 1750px) {
-  #bulk-combinations-container{
+  #bulk-combinations-container {
     .custom-width {
       width: 33%;
     }
