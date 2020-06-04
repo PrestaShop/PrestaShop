@@ -165,7 +165,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
 
-        if (!empty($data['active'])) {
+        if (isset($data['active'])) {
             $status = PrimitiveUtils::castStringBooleanIntoBoolean($data['active']);
             $statusInWords = $status ? 'enabled' : 'disabled';
 
