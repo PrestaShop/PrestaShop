@@ -996,7 +996,7 @@ services:
     form.type.order.update_order_status:
       class: 'PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderStatusType'
       arguments:
-        - '@=service("prestashop.core.form.choice_provider.order_state_by_id").getChoices()'
+        - '@prestashop.core.form.choice_provider.order_state_by_id'
         - '@=service("prestashop.core.form.choice_provider.order_state_by_id").getChoicesAttributes()'
       tags:
         - { name: form.type }

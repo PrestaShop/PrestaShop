@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -59,7 +59,7 @@ final class ChoiceColumn extends AbstractColumn
                 'color_field' => '',
                 'record_route_params' => [],
             ])
-            ->setAllowedTypes('choice_provider', FormChoiceProviderInterface::class)
+            ->setAllowedTypes('choice_provider', ConfigurableFormChoiceProviderInterface::class)
             ->setAllowedTypes('field', ['string', 'int', 'bool'])
             ->setAllowedTypes('color_field', 'string')
             ->setAllowedTypes('route', 'string')
