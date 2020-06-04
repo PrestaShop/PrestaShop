@@ -23,182 +23,195 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 abstract class Controller extends ControllerCore
 {
+    const COLOR_WARNING = '#EF8B00';
+    const COLOR_SUCCESS = 'green';
+    const COLOR_ERROR = 'red';
+
     protected $total_filesize = 0;
     protected $total_query_time = 0;
     protected $total_global_var_size = 0;
     protected $total_modules_time = 0;
     protected $total_modules_memory = 0;
-    protected $global_var_size = array();
+    protected $global_var_size = [];
 
-    protected $modules_perfs = array();
-    protected $hooks_perfs = array();
+    protected $modules_perfs = [];
+    protected $hooks_perfs = [];
 
-    protected $array_queries = array();
+    protected $array_queries = [];
 
-    protected $profiler = array();
+    protected $profiler = [];
 
     private function getMemoryColor($n)
     {
         $n /= 1048576;
         if ($n > 3) {
-            return '<span style="color:red">'.sprintf('%0.2f', $n).'</span>';
-        } elseif ($n > 1) {
-            return '<span style="color:#EF8B00">'.sprintf('%0.2f', $n).'</span>';
-        } elseif (round($n, 2) > 0) {
-            return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
+            return '<span style="color:' . static::COLOR_ERROR . '">' . sprintf('%0.2f', $n) . '</span>';
         }
 
-        return '<span style="color:green">-</span>';
+        if ($n > 1) {
+            return '<span style="color:' . static::COLOR_WARNING . '">' . sprintf('%0.2f', $n) . '</span>';
+        }
+
+        if (round($n, 2) > 0) {
+            return '<span style="color:' . static::COLOR_SUCCESS . '">' . sprintf('%0.2f', $n) . '</span>';
+        }
+
+        return '<span style="color:' . static::COLOR_SUCCESS . '">-</span>';
     }
 
     private function getPeakMemoryColor($n)
     {
         $n /= 1048576;
         if ($n > 16) {
-            return '<span style="color:red">'.sprintf('%0.1f', $n).'</span>';
-        }
-        if ($n > 12) {
-            return '<span style="color:#EF8B00">'.sprintf('%0.1f', $n).'</span>';
+            return '<span style="color:' . static::COLOR_ERROR . '">' . sprintf('%0.1f', $n) . '</span>';
         }
 
-        return '<span style="color:green">'.sprintf('%0.1f', $n).'</span>';
+        if ($n > 12) {
+            return '<span style="color:' . static::COLOR_WARNING . '">' . sprintf('%0.1f', $n) . '</span>';
+        }
+
+        return '<span style="color:' . static::COLOR_SUCCESS . '">' . sprintf('%0.1f', $n) . '</span>';
     }
 
     private function displaySQLQueries($n)
     {
         if ($n > 150) {
-            return '<span style="color:red">'.$n.' queries</span>';
+            return '<span style="color:' . static::COLOR_ERROR . '">' . $n . ' queries</span>';
         }
         if ($n > 100) {
-            return '<span style="color:#EF8B00">'.$n.' queries</span>';
+            return '<span style="color:' . static::COLOR_WARNING . '">' . $n . ' queries</span>';
         }
 
-        return '<span style="color:green">'.$n.' quer'.($n == 1 ? 'y' : 'ies').'</span>';
+        return '<span style="color:' . static::COLOR_SUCCESS . '">' . $n . ' quer' . ($n == 1 ? 'y' : 'ies') . '</span>';
     }
 
     private function displayRowsBrowsed($n)
     {
         if ($n > 400) {
-            return '<span style="color:red">'.$n.' rows browsed</span>';
+            return '<span style="color:' . static::COLOR_ERROR . '">' . $n . ' rows browsed</span>';
         }
         if ($n > 100) {
-            return '<span style="color:#EF8B00">'.$n.'  rows browsed</span>';
+            return '<span style="color:' . static::COLOR_WARNING . '">' . $n . '  rows browsed</span>';
         }
 
-        return '<span style="color:green">'.$n.' row'.($n == 1 ? '' : 's').' browsed</span>';
+        return '<span style="color:' . static::COLOR_SUCCESS . '">' . $n . ' row' . ($n == 1 ? '' : 's') . ' browsed</span>';
     }
 
     private function getPhpVersionColor($version)
     {
         if (version_compare($version, '5.6') < 0) {
-            return '<span style="color:red">'.$version.' (Upgrade strongly recommended)</span>';
+            return '<span style="color:' . static::COLOR_ERROR . '">' . $version . ' (Upgrade strongly recommended)</span>';
         } elseif (version_compare($version, '7.1') < 0) {
-            return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
+            return '<span style="color:' . static::COLOR_WARNING . '">' . $version . ' (Consider upgrading)</span>';
         }
 
-        return '<span style="color:green">'.$version.' (OK)</span>';
+        return '<span style="color:' . static::COLOR_SUCCESS . '">' . $version . ' (OK)</span>';
     }
 
     private function getMySQLVersionColor($version)
     {
         if (version_compare($version, '5.5') < 0) {
-            return '<span style="color:red">'.$version.' (Upgrade strongly recommended)</span>';
+            return '<span style="color:' . static::COLOR_ERROR . '">' . $version . ' (Upgrade strongly recommended)</span>';
         } elseif (version_compare($version, '5.6') < 0) {
-            return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
+            return '<span style="color:' . static::COLOR_WARNING . '">' . $version . ' (Consider upgrading)</span>';
         }
 
-        return '<span style="color:green">'.$version.' (OK)</span>';
+        return '<span style="color:' . static::COLOR_SUCCESS . '">' . $version . ' (OK)</span>';
     }
 
     private function getLoadTimeColor($n, $kikoo = false)
     {
         if ($n > 1.6) {
-            return '<span style="color:red">'.round($n * 1000).'</span>'.($kikoo ? ' ms - You\'d better run your shop on a toaster' : '');
+            return '<span style="color:' . static::COLOR_ERROR . '">' . round($n * 1000) . '</span>' . ($kikoo ? ' ms - You\'d better run your shop on a toaster' : '');
         } elseif ($n > 0.8) {
-            return '<span style="color:#EF8B00">'.round($n * 1000).'</span>'.($kikoo ? ' ms - OK... for a shared hosting' : '');
+            return '<span style="color:' . static::COLOR_WARNING . '">' . round($n * 1000) . '</span>' . ($kikoo ? ' ms - OK... for a shared hosting' : '');
         } elseif ($n > 0) {
-            return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms - Unicorn powered webserver!' : '');
+            return '<span style="color:' . static::COLOR_SUCCESS . '">' . round($n * 1000) . '</span>' . ($kikoo ? ' ms - Unicorn powered webserver!' : '');
         }
 
-        return '<span style="color:green">-</span>'.($kikoo ? ' ms - Faster than light' : '');
+        return '<span style="color:' . static::COLOR_SUCCESS . '">-</span>' . ($kikoo ? ' ms - Faster than light' : '');
     }
 
     private function getTotalQueriyingTimeColor($n)
     {
         if ($n >= 100) {
-            return '<span style="color:red">'.$n.'</span>';
+            return '<span style="color:' . static::COLOR_ERROR . '">' . $n . '</span>';
         } elseif ($n >= 50) {
-            return '<span style="color:#EF8B00">'.$n.'</span>';
+            return '<span style="color:' . static::COLOR_WARNING . '">' . $n . '</span>';
         }
 
-        return '<span style="color:green">'.$n.'</span>';
+        return '<span style="color:' . static::COLOR_SUCCESS . '">' . $n . '</span>';
     }
 
     private function getNbQueriesColor($n)
     {
         if ($n >= 100) {
-            return '<span style="color:red">'.$n.'</span>';
+            return '<span style="color:' . static::COLOR_ERROR . '">' . $n . '</span>';
         } elseif ($n >= 50) {
-            return '<span style="color:#EF8B00">'.$n.'</span>';
+            return '<span style="color:' . static::COLOR_WARNING . '">' . $n . '</span>';
         }
 
-        return '<span style="color:green">'.$n.'</span>';
+        return '<span style="color:' . static::COLOR_SUCCESS . '">' . $n . '</span>';
     }
 
     private function getTimeColor($n)
     {
         if ($n > 4) {
-            return 'style="color:red"';
+            return 'style="color:' . static::COLOR_ERROR . '"';
         }
         if ($n > 2) {
-            return 'style="color:#EF8B00"';
+            return 'style="color:' . static::COLOR_WARNING . '"';
         }
 
-        return 'style="color:green"';
+        return 'style="color:' . static::COLOR_SUCCESS . '"';
     }
 
     private function getQueryColor($n)
     {
         if ($n > 5) {
-            return 'style="color:red"';
+            return 'style="color:' . static::COLOR_ERROR . '"';
         }
         if ($n > 2) {
-            return 'style="color:#EF8B00"';
+            return 'style="color:' . static::COLOR_WARNING . '"';
         }
 
-        return 'style="color:green"';
+        return 'style="color:' . static::COLOR_SUCCESS . '"';
     }
 
     private function getTableColor($n)
     {
         if ($n > 30) {
-            return 'style="color:red"';
+            return 'style="color:' . static::COLOR_ERROR . '"';
         }
         if ($n > 20) {
-            return 'style="color:#EF8B00"';
+            return 'style="color:' . static::COLOR_WARNING . '"';
         }
 
-        return 'style="color:green"';
+        return 'style="color:' . static::COLOR_SUCCESS . '"';
     }
 
     private function getObjectModelColor($n)
     {
         if ($n > 50) {
-            return 'style="color:red"';
+            return 'style="color:' . static::COLOR_ERROR . '"';
         }
         if ($n > 10) {
-            return 'style="color:#EF8B00"';
+            return 'style="color:' . static::COLOR_WARNING . '"';
         }
 
-        return 'style="color:green"';
+        return 'style="color:' . static::COLOR_SUCCESS . '"';
     }
 
     protected function stamp($block)
     {
-        return array('block' => $block, 'memory_usage' => memory_get_usage(), 'peak_memory_usage' => memory_get_peak_usage(), 'time' => microtime(true));
+        return [
+            'block' => $block,
+            'memory_usage' => memory_get_usage(),
+            'peak_memory_usage' => memory_get_peak_usage(),
+            'time' => microtime(true)
+        ];
     }
 
     public function __construct()
@@ -240,8 +253,8 @@ abstract class Controller extends ControllerCore
 
             if ($this->ajax) {
                 $action = Tools::toCamelCase(Tools::getValue('action'), true);
-                if (!empty($action) && method_exists($this, 'displayAjax'.$action)) {
-                    $this->{'displayAjax'.$action}();
+                if (!empty($action) && method_exists($this, 'displayAjax' . $action)) {
+                    $this->{'displayAjax' . $action}();
                 } elseif (method_exists($this, 'displayAjax')) {
                     $this->displayAjax();
                 }
@@ -275,7 +288,7 @@ abstract class Controller extends ControllerCore
             return $var;
         }
 
-        return (string)$var;
+        return (string) $var;
     }
 
     protected function processProfilingData()
@@ -308,17 +321,17 @@ abstract class Controller extends ControllerCore
         $queries = Db::getInstance()->queries;
         uasort($queries, 'prestashop_querytime_sort');
         foreach ($queries as $data) {
-            $query_row = array(
+            $query_row = [
                 'time' => $data['time'],
                 'query' => $data['query'],
-                'location' => str_replace('\\', '/', substr($data['stack'][0]['file'], strlen(_PS_ROOT_DIR_))).':'.$data['stack'][0]['line'],
+                'location' => str_replace('\\', '/', substr($data['stack'][0]['file'], strlen(_PS_ROOT_DIR_))) . ':' . $data['stack'][0]['line'],
                 'filesort' => false,
                 'rows' => 1,
                 'group_by' => false,
-                'stack' => array(),
-            );
+                'stack' => [],
+            ];
             if (preg_match('/^\s*select\s+/i', $data['query'])) {
-                $explain = Db::getInstance()->executeS('explain '.$data['query']);
+                $explain = Db::getInstance()->executeS('explain ' . $data['query']);
                 if (stristr($explain[0]['Extra'], 'filesort')) {
                     $query_row['filesort'] = true;
                 }
@@ -332,7 +345,7 @@ abstract class Controller extends ControllerCore
 
             array_shift($data['stack']);
             foreach ($data['stack'] as $call) {
-                $query_row['stack'][] = str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))).':'.$call['line'];
+                $query_row['stack'][] = str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))) . ':' . $call['line'];
             }
 
             $this->array_queries[] = $query_row;
@@ -351,7 +364,7 @@ abstract class Controller extends ControllerCore
 				<li><a href="#stopwatch">Stopwatch SQL</a></li>
 				<li><a href="#doubles">Doubles</a></li>
 				<li><a href="#tables">Tables stress</a></li>
-				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">ObjectModel instances</a></li>' : '').'
+				' . (isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">ObjectModel instances</a></li>' : '') . '
 				<li><a href="#includedFiles">Included Files</a></li>
 			</ol>
 		</div>';
@@ -432,15 +445,15 @@ abstract class Controller extends ControllerCore
         echo '
 		<div class="col-4">
 			<table class="table table-condensed">
-				<tr><td>Load Time</td><td>'.$this->getLoadTimeColor($this->profiler[count($this->profiler) - 1]['time'] - $start_time, true).'</td></tr>
-				<tr><td>Querying Time</td><td>'.$this->getTotalQueriyingTimeColor(round(1000 * $this->total_query_time)).' ms</span>
-				<tr><td>Queries</td><td>'.$this->getNbQueriesColor(count($this->array_queries)).'</td></tr>
-				<tr><td>Memory Peak Usage</td><td>'.$this->getPeakMemoryColor($this->profiler[count($this->profiler) - 1]['peak_memory_usage']).' Mb</td></tr>
-				<tr><td>Included Files</td><td>'.count(get_included_files()).' files - '.$this->getMemoryColor($this->total_filesize).' Mb</td></tr>
-				<tr><td>PrestaShop Cache</td><td>'.$this->getMemoryColor($this->total_cache_size).' Mb</td></tr>
-				<tr><td><a href="javascript:void(0);" onclick="$(\'.global_vars_detail\').toggle();">Global vars</a></td><td>'.$this->getMemoryColor($this->total_global_var_size).' Mb</td></tr>';
+				<tr><td>Load Time</td><td>' . $this->getLoadTimeColor($this->profiler[count($this->profiler) - 1]['time'] - $start_time, true) . '</td></tr>
+				<tr><td>Querying Time</td><td>' . $this->getTotalQueriyingTimeColor(round(1000 * $this->total_query_time)) . ' ms</span>
+				<tr><td>Queries</td><td>' . $this->getNbQueriesColor(count($this->array_queries)) . '</td></tr>
+				<tr><td>Memory Peak Usage</td><td>' . $this->getPeakMemoryColor($this->profiler[count($this->profiler) - 1]['peak_memory_usage']) . ' Mb</td></tr>
+				<tr><td>Included Files</td><td>' . count(get_included_files()) . ' files - ' . $this->getMemoryColor($this->total_filesize) . ' Mb</td></tr>
+				<tr><td>PrestaShop Cache</td><td>' . $this->getMemoryColor($this->total_cache_size) . ' Mb</td></tr>
+				<tr><td><a href="javascript:void(0);" onclick="$(\'.global_vars_detail\').toggle();">Global vars</a></td><td>' . $this->getMemoryColor($this->total_global_var_size) . ' Mb</td></tr>';
         foreach ($this->global_var_size as $global => $size) {
-            echo '<tr class="global_vars_detail" style="display:none"><td>- global $'.$global.'</td><td>'.$size.'k</td></tr>';
+            echo '<tr class="global_vars_detail" style="display:none"><td>- global $' . $global . '</td><td>' . $size . 'k</td></tr>';
         }
         echo '
 			</table>
@@ -452,13 +465,13 @@ abstract class Controller extends ControllerCore
         echo '
 		<div class="col-4">
 			<table class="table table-condensed">
-				<tr><td>PrestaShop Version</td><td>'._PS_VERSION_.'</td></tr>
-				<tr><td>PHP Version</td><td>'.$this->getPhpVersionColor(PHP_VERSION).'</td></tr>
-				<tr><td>MySQL Version</td><td>'.$this->getMySQLVersionColor(Db::getInstance()->getVersion()).'</td></tr>
-				<tr><td>Memory Limit</td><td>'.ini_get('memory_limit').'</td></tr>
-				<tr><td>Max Execution Time</td><td>'.ini_get('max_execution_time').'s</td></tr>
-				<tr><td>Smarty Cache</td><td><span style="color:'.(Configuration::get('PS_SMARTY_CACHE') ? 'green">enabled' : 'red">disabled').'</td></tr>
-				<tr><td>Smarty Compilation</td><td><span style="color:'.(Configuration::get('PS_SMARTY_FORCE_COMPILE') == 0 ? 'green">never recompile' : (Configuration::get('PS_SMARTY_FORCE_COMPILE') == 1 ? '#EF8B00">auto' : 'red">force compile')).'</td></tr>
+				<tr><td>PrestaShop Version</td><td>' . _PS_VERSION_ . '</td></tr>
+				<tr><td>PHP Version</td><td>' . $this->getPhpVersionColor(PHP_VERSION) . '</td></tr>
+				<tr><td>MySQL Version</td><td>' . $this->getMySQLVersionColor(Db::getInstance()->getVersion()) . '</td></tr>
+				<tr><td>Memory Limit</td><td>' . ini_get('memory_limit') . '</td></tr>
+				<tr><td>Max Execution Time</td><td>' . ini_get('max_execution_time') . 's</td></tr>
+				<tr><td>Smarty Cache</td><td><span style="color:' . (Configuration::get('PS_SMARTY_CACHE') ? 'green">enabled' : 'red">disabled') . '</td></tr>
+				<tr><td>Smarty Compilation</td><td><span style="color:' . (Configuration::get('PS_SMARTY_FORCE_COMPILE') == 0 ? 'green">never recompile' : (Configuration::get('PS_SMARTY_FORCE_COMPILE') == 1 ? '#EF8B00">auto' : 'red">force compile')) . '</td></tr>
 			</table>
 		</div>';
     }
@@ -471,17 +484,17 @@ abstract class Controller extends ControllerCore
 		<div class="col-4">
 			<table class="table table-condensed">
 				<tr><th>&nbsp;</th><th>Time</th><th>Cumulated Time</th><th>Memory Usage</th><th>Memory Peak Usage</th></tr>';
-        $last = array('time' => $start_time, 'memory_usage' => 0);
+        $last = ['time' => $start_time, 'memory_usage' => 0];
         foreach ($this->profiler as $row) {
             if ($row['block'] == 'checkAccess' && $row['time'] == $last['time']) {
                 continue;
             }
             echo '<tr>
-				<td>'.$row['block'].'</td>
-				<td>'.$this->getLoadTimeColor($row['time'] - $last['time']).' ms</td>
-				<td>'.$this->getLoadTimeColor($row['time'] - $start_time).' ms</td>
-				<td>'.$this->getMemoryColor($row['memory_usage'] - $last['memory_usage']).' Mb</td>
-				<td>'.$this->getMemoryColor($row['peak_memory_usage']).' Mb</td>
+				<td>' . $row['block'] . '</td>
+				<td>' . $this->getLoadTimeColor($row['time'] - $last['time']) . ' ms</td>
+				<td>' . $this->getLoadTimeColor($row['time'] - $start_time) . ' ms</td>
+				<td>' . $this->getMemoryColor($row['memory_usage'] - $last['memory_usage']) . ' Mb</td>
+				<td>' . $this->getMemoryColor($row['peak_memory_usage']) . ' Mb</td>
 			</tr>';
             $last = $row;
         }
@@ -506,34 +519,34 @@ abstract class Controller extends ControllerCore
             echo '
 				<tr>
 					<td>
-						<a href="javascript:void(0);" onclick="$(\'.'.$hook.'_modules_details\').toggle();">'.$hook.'</a>
+						<a href="javascript:void(0);" onclick="$(\'.' . $hook . '_modules_details\').toggle();">' . $hook . '</a>
 					</td>
 					<td>
-						'.$this->getLoadTimeColor($hooks_perfs['time']).' ms
+						' . $this->getLoadTimeColor($hooks_perfs['time']) . ' ms
 					</td>
 					<td>
-						'.$this->getMemoryColor($hooks_perfs['memory']).' Mb
+						' . $this->getMemoryColor($hooks_perfs['memory']) . ' Mb
 					</td>
 				</tr>';
             foreach ($hooks_perfs['modules'] as $module => $perfs) {
                 echo '
-				<tr class="'.$hook.'_modules_details" style="background-color:#EFEFEF;display:none">
+				<tr class="' . $hook . '_modules_details" style="background-color:#EFEFEF;display:none">
 					<td>
-						=&gt; '.$module.'
+						=&gt; ' . $module . '
 					</td>
 					<td>
-						'.$this->getLoadTimeColor($perfs['time']).' ms
+						' . $this->getLoadTimeColor($perfs['time']) . ' ms
 					</td>
 					<td>
-						'.$this->getMemoryColor($perfs['memory']).' Mb
+						' . $this->getMemoryColor($perfs['memory']) . ' Mb
 					</td>
 				</tr>';
             }
         }
         echo '	<tr>
-					<th><b>'.($count_hooks == 1 ? '1 hook' : (int)$count_hooks.' hooks').'</b></th>
-					<th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
-					<th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
+					<th><b>' . ($count_hooks == 1 ? '1 hook' : (int) $count_hooks . ' hooks') . '</b></th>
+					<th>' . $this->getLoadTimeColor($this->total_modules_time) . ' ms</th>
+					<th>' . $this->getMemoryColor($this->total_modules_memory) . ' Mb</th>
 				</tr>
 			</table>
 		</div>';
@@ -555,34 +568,34 @@ abstract class Controller extends ControllerCore
             echo '
 				<tr>
 					<td>
-						<a href="javascript:void(0);" onclick="$(\'.'.$module.'_hooks_details\').toggle();">'.$module.'</a>
+						<a href="javascript:void(0);" onclick="$(\'.' . $module . '_hooks_details\').toggle();">' . $module . '</a>
 					</td>
 					<td>
-						'.$this->getLoadTimeColor($modules_perfs['time']).' ms
+						' . $this->getLoadTimeColor($modules_perfs['time']) . ' ms
 					</td>
 					<td>
-						'.$this->getMemoryColor($modules_perfs['memory']).' Mb
+						' . $this->getMemoryColor($modules_perfs['memory']) . ' Mb
 					</td>
 				</tr>';
             foreach ($modules_perfs['methods'] as $hook => $perfs) {
                 echo '
-				<tr class="'.$module.'_hooks_details" style="background-color:#EFEFEF;display:none">
+				<tr class="' . $module . '_hooks_details" style="background-color:#EFEFEF;display:none">
 					<td>
-						=&gt; '.$hook.'
+						=&gt; ' . $hook . '
 					</td>
 					<td>
-						'.$this->getLoadTimeColor($perfs['time']).' ms
+						' . $this->getLoadTimeColor($perfs['time']) . ' ms
 					</td>
 					<td>
-						'.$this->getMemoryColor($perfs['memory']).' Mb
+						' . $this->getMemoryColor($perfs['memory']) . ' Mb
 					</td>
 				</tr>';
             }
         }
         echo '	<tr>
-					<th><b>'.($count_modules == 1 ? '1 module' : (int)$count_modules.' modules').'</b></th>
-					<th>'.$this->getLoadTimeColor($this->total_modules_time).' ms</th>
-					<th>'.$this->getMemoryColor($this->total_modules_memory).' Mb</th>
+					<th><b>' . ($count_modules == 1 ? '1 module' : (int) $count_modules . ' modules') . '</b></th>
+					<th>' . $this->getLoadTimeColor($this->total_modules_time) . ' ms</th>
+					<th>' . $this->getMemoryColor($this->total_modules_memory) . ' Mb</th>
 				</tr>
 			</table>
 		</div>';
@@ -592,7 +605,7 @@ abstract class Controller extends ControllerCore
     {
         echo '
 		<div class="row">
-			<h2><a name="stopwatch">Stopwatch SQL - '.count($this->array_queries).' queries</a></h2>
+			<h2><a name="stopwatch">Stopwatch SQL - ' . count($this->array_queries) . ' queries</a></h2>
 			<table class="table table-condensed table-bordered sortable">
 				<thead>
 					<tr>
@@ -611,14 +624,14 @@ abstract class Controller extends ControllerCore
 
             echo '
 				<tr>
-					<td class="pre"><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
-					<td data-value="'.$data['time'].'"><span '.$this->getTimeColor($data['time'] * 1000).'>'.(round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)).'</span></td>
-					<td>'.(int)$data['rows'].'</td>
-					<td data-value="'.$data['filesort'].'">'.($data['filesort'] ? '<span style="color:red">Yes</span>' : '').'</td>
-					<td data-value="'.$data['group_by'].'">'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
-					<td data-value="'.$data['location'].'">
-						<a href="javascript:void(0);" onclick="$(\'#callstack_'.$callstack_md5.'\').toggle();">'.$data['location'].'</a>
-						<div id="callstack_'.$callstack_md5.'" style="display:none">'.implode('<br>', $data['stack']).'</div>
+					<td class="pre"><pre>' . preg_replace("/(^[\s]*)/m", '', htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)) . '</pre></td>
+					<td data-value="' . $data['time'] . '"><span ' . $this->getTimeColor($data['time'] * 1000) . '>' . (round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)) . '</span></td>
+					<td>' . (int) $data['rows'] . '</td>
+					<td data-value="' . $data['filesort'] . '">' . ($data['filesort'] ? '<span style="color:' . static::COLOR_ERROR . '">Yes</span>' : '') . '</td>
+					<td data-value="' . $data['group_by'] . '">' . ($data['group_by'] ? '<span style="color:' . static::COLOR_ERROR . '">Yes</span>' : '') . '</td>
+					<td data-value="' . $data['location'] . '">
+						<a href="javascript:void(0);" onclick="$(\'#callstack_' . $callstack_md5 . '\').toggle();">' . $data['location'] . '</a>
+						<div id="callstack_' . $callstack_md5 . '" style="display:none">' . implode('<br>', $data['stack']) . '</div>
 					</td>
 				</tr>';
         }
@@ -633,7 +646,7 @@ abstract class Controller extends ControllerCore
 			<table class="table table-condensed">';
         foreach (Db::getInstance()->uniqQueries as $q => $nb) {
             if ($nb > 1) {
-                echo '<tr><td><span '.$this->getQueryColor($nb).'>'.$nb.'</span></td><td class="pre"><pre>'.$q.'</pre></td></tr>';
+                echo '<tr><td><span ' . $this->getQueryColor($nb) . '>' . $nb . '</span></td><td class="pre"><pre>' . $q . '</pre></td></tr>';
             }
         }
         echo '</table>
@@ -646,7 +659,7 @@ abstract class Controller extends ControllerCore
 		<h2><a name="tables">Tables stress</a></h2>
 		<table class="table table-condensed">';
         foreach (Db::getInstance()->tables as $table => $nb) {
-            echo '<tr><td><span '.$this->getTableColor($nb).'>'.$nb.'</span> '.$table.'</td></tr>';
+            echo '<tr><td><span ' . $this->getTableColor($nb) . '>' . $nb . '</span> ' . $table . '</td></tr>';
         }
         echo '</table>
 		</div>';
@@ -661,11 +674,11 @@ abstract class Controller extends ControllerCore
 				<tr><th>Name</th><th>Instances</th><th>Source</th></tr>';
         foreach (ObjectModel::$debug_list as $class => $info) {
             echo '<tr>
-					<td>'.$class.'</td>
-					<td><span '.$this->getObjectModelColor(count($info)).'>'.count($info).'</span></td>
+					<td>' . $class . '</td>
+					<td><span ' . $this->getObjectModelColor(count($info)) . '>' . count($info) . '</span></td>
 					<td>';
             foreach ($info as $trace) {
-                echo str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']).' ['.$trace['line'].']<br />';
+                echo str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $trace['file']) . ' [' . $trace['line'] . ']<br />';
             }
             echo '	</td>
 				</tr>';
@@ -687,7 +700,7 @@ abstract class Controller extends ControllerCore
             if (strpos($file, '/tools/profiling/') === 0) {
                 continue;
             }
-            echo '<tr><td>'.(++$i).'</td><td>'.$file.'</td></tr>';
+            echo '<tr><td>' . (++$i) . '</td><td>' . $file . '</td></tr>';
         }
         echo '</table>
 		</div>';
@@ -708,7 +721,7 @@ abstract class Controller extends ControllerCore
 					<div class="container" style="width:100%">
 						<div class="row">
 							<div class="col-lg-12">
-								<h2>Caught redirection to <a href="'.htmlspecialchars($this->redirect_after).'"> '.htmlspecialchars($this->redirect_after).' </a></h2>
+								<h2>Caught redirection to <a href="' . htmlspecialchars($this->redirect_after) . '"> ' . htmlspecialchars($this->redirect_after) . ' </a></h2>
 							</div>
 						</div>';
         } else {
