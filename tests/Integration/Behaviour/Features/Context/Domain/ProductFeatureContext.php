@@ -100,8 +100,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $command = new UpdateProductBasicInformationCommand($productId);
 
         if (isset($data['name'])) {
-            $localizedNames = $this->parseLocalizedArray($data['name']);
-            $command->setLocalizedNames($localizedNames);
+            $command->setLocalizedNames($this->parseLocalizedArray($data['name']));
         }
 
         if (isset($data['is_virtual'])) {
@@ -268,6 +267,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * Extracts corresponding field value from ProductForEditing DTO
+     *
      * @param ProductForEditing $productForEditing
      * @param string $propertyName
      *
