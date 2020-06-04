@@ -65,8 +65,7 @@ Check the invoice file name
 describe('Edit \'Invoice number, Footer text\' and check the generated invoice file', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
@@ -75,7 +74,7 @@ describe('Edit \'Invoice number, Footer text\' and check the generated invoice f
   });
   after(async () => {
     // Delete the invoice file
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
   });
 
   // Login into BO

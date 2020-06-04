@@ -48,14 +48,13 @@ Check the credit slip file name
 describe('Edit credit slip prefix and check the generated file name', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
   });
 
   // Login into BO

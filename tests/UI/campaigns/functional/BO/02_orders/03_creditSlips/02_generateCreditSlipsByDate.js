@@ -68,14 +68,13 @@ Generate credit slip file by date
 describe('Generate Credit slip file by date', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
   });
 
   describe('Create order in FO', async () => {

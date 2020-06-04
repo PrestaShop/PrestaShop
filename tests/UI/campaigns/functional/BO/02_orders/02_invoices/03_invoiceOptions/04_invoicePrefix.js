@@ -45,14 +45,13 @@ Check the invoice file name
 describe('Edit invoice prefix and check the generated invoice file name', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
   });
 
   // Login into BO

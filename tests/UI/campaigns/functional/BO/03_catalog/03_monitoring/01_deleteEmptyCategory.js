@@ -48,15 +48,14 @@ Delete category and check deletion in categories page
 describe('Create empty category and delete it from monitoring page', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });
 
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
 
     /* Delete the generated image */
     await files.deleteFile(`${createCategoryData.name}.jpg`);

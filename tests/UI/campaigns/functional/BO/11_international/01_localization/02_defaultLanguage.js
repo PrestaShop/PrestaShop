@@ -44,15 +44,14 @@ describe('Update default language', async () => {
     describe(`Set default language to '${test.args.language}' and default language from browser to`
       + ` '${test.args.defaultBrowserLanguage}'`, async () => {
       before(async function () {
-        browser = await helper.createBrowser();
-        browserContext = await helper.createBrowserContext(browser);
+        browserContext = await helper.createBrowserContext(this.browser);
         page = await helper.newTab(browserContext);
 
         this.pageObjects = await init();
       });
 
       after(async () => {
-        await helper.closeBrowser(browser);
+        await helper.closeBrowserContext(browserContext);
       });
       loginCommon.loginBO();
 
@@ -84,15 +83,14 @@ describe('Update default language', async () => {
     if (index !== 2) {
       describe(`Check if the FO language is '${test.args.languageToCheck}'`, async () => {
         before(async function () {
-          browser = await helper.createBrowser();
-          browserContext = await helper.createBrowserContext(browser);
+          browserContext = await helper.createBrowserContext(this.browser);
           page = await helper.newTab(browserContext);
 
           this.pageObjects = await init();
         });
 
         after(async () => {
-          await helper.closeBrowser(browser);
+          await helper.closeBrowserContext(browserContext);
         });
 
         it('should open the shop page', async function () {

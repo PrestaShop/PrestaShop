@@ -37,8 +37,7 @@ const init = async function () {
 describe('Create, Update and Delete Tax in BO', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
@@ -47,7 +46,7 @@ describe('Create, Update and Delete Tax in BO', async () => {
     editTaxData = await (new TaxFaker({enabled: 'No'}));
   });
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
   });
   // Login into BO and go to Taxes page
   loginCommon.loginBO();

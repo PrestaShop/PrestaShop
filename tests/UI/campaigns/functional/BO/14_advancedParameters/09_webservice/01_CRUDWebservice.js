@@ -43,15 +43,14 @@ const init = async function () {
 describe('Create, Read, Update and Delete webservice key in BO', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });
 
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
   });
 
   // Login from BO and go to "Advanced parameters > Webservice" page

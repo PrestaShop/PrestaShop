@@ -43,15 +43,14 @@ const init = async function () {
 describe('Create 2 brands, Enable, disable and delete with bulk actions', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
 
     this.pageObjects = await init();
   });
 
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
 
     await Promise.all([
       files.deleteFile(firstBrandData.logo),

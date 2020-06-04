@@ -118,18 +118,19 @@ module.exports = class CommonPage {
 
   /**
    * Open link in new Tab and get opened Page
-   * @param currentPage, current page where to click on selector
    * @param selector, where to click
-   * @param waitForNavigation, if we should wait for navigation or not
    * @return newPage, what was opened by the browser
    */
-  async openLinkWithTargetBlank(currentPage, selector, waitForNavigation = true) {
+  async openLinkWithTargetBlank(selector) {
     const [newPage] = await Promise.all([
-      new Promise(resolve => this.page.once('popup', resolve)),
-      currentPage.click(selector),
+      this.page.waitForEvent('popup'),
+      this.page.click(selector),
     ]);
-    if (waitForNavigation) await newPage.waitForNavigation();
-    await newPage.waitForSelector('body', {state: 'visible'});
+
+    await newPage.waitForLoadState('networkidle');
+
+    await newPage.waitForSelector('body a', {state: 'visible'});
+    await newPage.screenshot({path: 'screenshot.png'});
     return newPage;
   }
 

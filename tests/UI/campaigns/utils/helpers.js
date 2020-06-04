@@ -65,6 +65,16 @@ module.exports = {
   /**
    * Destroy browser instance, that delete as well all files downloaded
    *
+   * @param browserContext
+   * @return {Promise<*>}
+   */
+  async closeBrowserContext(browserContext) {
+    return browserContext.close();
+  },
+
+  /**
+   * Destroy browser instance, that delete as well all files downloaded
+   *
    * @param browser
    * @return {Promise<*>}
    */

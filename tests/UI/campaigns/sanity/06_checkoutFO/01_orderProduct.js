@@ -37,8 +37,7 @@ const init = async function () {
 describe('Order a product and check order confirmation', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     await page.setExtraHTTPHeaders({
       'Accept-Language': 'en-GB',
@@ -46,7 +45,7 @@ describe('Order a product and check order confirmation', async () => {
     this.pageObjects = await init();
   });
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
   });
 
   // Steps

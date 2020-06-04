@@ -36,8 +36,7 @@ const init = async function () {
 describe('Create, read, update and delete Standard product in BO', async () => {
   // before and after functions
   before(async function () {
-    browser = await helper.createBrowser();
-    browserContext = await helper.createBrowserContext(browser);
+    browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     this.pageObjects = await init();
     const productToCreate = {
@@ -48,7 +47,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     editedProductData = await (new ProductFaker(productToCreate));
   });
   after(async () => {
-    await helper.closeBrowser(browser);
+    await helper.closeBrowserContext(browserContext);
   });
   // Steps
   loginCommon.loginBO();

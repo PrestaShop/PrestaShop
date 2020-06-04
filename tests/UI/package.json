@@ -1,17 +1,17 @@
 {
-  "name": "puppeteer",
+  "name": "ui-tests",
   "version": "1.0.0",
-  "description": "Tests based on puppeteer",
+  "description": "User interface tests",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "linkchecker": "./node_modules/mocha/bin/mocha tools/linkchecker.js",
     "lint": "eslint  --fix --ignore-path .gitignore .",
-    "specific-test": "./node_modules/mocha/bin/mocha campaigns/$TEST_PATH",
-    "sanity-tests": "./node_modules/mocha/bin/mocha campaigns/sanity/*",
-    "sanity-travis": "./node_modules/mocha/bin/mocha --bail campaigns/sanity/*",
-    "functional-tests": "./node_modules/mocha/bin/mocha --recursive campaigns/functional/*"
+    "specific-test": "./node_modules/mocha/bin/mocha --file campaigns/utils/setup.js campaigns/$TEST_PATH",
+    "sanity-tests": "./node_modules/mocha/bin/mocha --file campaigns/utils/setup.js campaigns/sanity/*",
+    "sanity-travis": "./node_modules/mocha/bin/mocha --bail --file campaigns/utils/setup.js campaigns/sanity/*",
+    "functional-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/*"
   },
   "_moduleAliases": {
     "@pages": "pages",
@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/PrestaShop/PrestaShop/issues"
   },
-  "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/puppeteer#readme",
+  "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
