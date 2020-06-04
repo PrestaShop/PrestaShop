@@ -32,7 +32,6 @@ use Context;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDescriptionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
@@ -66,7 +65,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add product :productReference with following basic information:
+     * @When I add product :productReference with following information:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -108,6 +107,14 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $command->setVirtual(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual']));
         }
 
+        if (isset($data['description'])) {
+            $command->setLocalizedDescriptions($this->parseLocalizedArray($data['description']));
+        }
+
+        if (isset($data['description_short'])) {
+            $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
+        }
+
         try {
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
@@ -142,32 +149,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                     )
                 );
             }
-        }
-    }
-
-    /**
-     * @Then I update product :productReference descriptions with following information:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function updateLocalizedDescriptions(string $productReference, TableNode $table)
-    {
-        $data = $table->getRowsHash();
-        $command = new UpdateProductDescriptionCommand($this->getSharedStorage()->get($productReference));
-
-        if (isset($data['description'])) {
-            $command->setLocalizedDescriptions($this->parseLocalizedArray($data['description']));
-        }
-
-        if (isset($data['description_short'])) {
-            $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
-        }
-
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->lastException = $e;
         }
     }
 

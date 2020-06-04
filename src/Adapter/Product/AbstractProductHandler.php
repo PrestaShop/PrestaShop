@@ -78,7 +78,6 @@ abstract class AbstractProductHandler
      * Validates Product object model multilingual property using legacy validation
      *
      * @param Product $product
-     *
      * @param string $field
      * @param int $errorCode
      *

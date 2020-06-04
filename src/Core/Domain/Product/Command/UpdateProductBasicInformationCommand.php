@@ -51,7 +51,7 @@ class UpdateProductBasicInformationCommand
     private $virtual;
 
     /**
-     * @var string[]|null key value pairs where key is the id of language.
+     * @var string[]|null key value pairs where key is the id of language
      */
     private $localizedDescriptions;
 
