@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const ModuleManagerPage = require('@pages/BO/modules/moduleManager');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategory';
 
 let browser;
 let page;
@@ -37,6 +41,7 @@ describe('Filter modules by Categories', async () => {
   loginCommon.loginBO();
 
   it('should go to module manager page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.modulesParentLink,
       this.pageObjects.boBasePage.moduleManagerLink,
@@ -49,6 +54,7 @@ describe('Filter modules by Categories', async () => {
   describe('Filter modules by categories', async () => {
     moduleCategories.forEach((category) => {
       it(`should filter by category : '${category}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
         await this.pageObjects.moduleManagerPage.filterByCategory(category);
         const firstBlockTitle = await this.pageObjects.moduleManagerPage.getBlockModuleTitle(1);
         await expect(firstBlockTitle).to.equal(category);

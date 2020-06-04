@@ -132,7 +132,7 @@ class MonitoringController extends FrameworkBundleAdminController
             $gridIdentifiers['grid_definition'],
             $request,
             $gridIdentifiers['grid_id'],
-            'admin_monitoring_index'
+            'admin_monitorings_index'
         );
     }
 

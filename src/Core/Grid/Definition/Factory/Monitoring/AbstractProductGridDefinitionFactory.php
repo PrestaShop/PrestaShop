@@ -149,7 +149,7 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                         'reset_route_params' => [
                             'filterId' => $this::GRID_ID,
                         ],
-                        'redirect_route' => 'admin_monitoring_index',
+                        'redirect_route' => 'admin_monitorings_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

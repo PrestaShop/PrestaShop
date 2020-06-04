@@ -13,15 +13,17 @@ const DashboardPage = require('@pages/BO/dashboard');
 const InvoicesPage = require('@pages/BO/orders/invoices/index');
 const OrdersPage = require('@pages/BO/orders/index');
 const ViewOrderPage = require('@pages/BO/orders/view');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_invoices_generateInvoiceByDate';
 
 let browser;
 let page;
 const today = new Date();
 // Create a future date that there is no invoices (yyy-mm-dd)
-const day = (`0${today.getDate()}`).slice(-2); // Current day
-const month = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const year = today.getFullYear() + 1; // Next year
-const futureDate = `${year}-${month}-${day}`;
+today.setFullYear(today.getFullYear() + 1);
+const futureDate = today.toISOString().slice(0, 10);
 
 // Init objects needed
 const init = async function () {
@@ -58,8 +60,9 @@ describe('Generate PDF file by date', async () => {
       {args: {orderRow: 1, status: Statuses.shipped.status}},
       {args: {orderRow: 2, status: Statuses.paymentAccepted.status}},
     ];
-    tests.forEach((orderToEdit) => {
+    tests.forEach((orderToEdit, index) => {
       it('should go to the orders page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index + 1}`, baseContext);
         await this.pageObjects.boBasePage.goToSubMenu(
           this.pageObjects.boBasePage.ordersParentLink,
           this.pageObjects.boBasePage.ordersLink,
@@ -69,12 +72,14 @@ describe('Generate PDF file by date', async () => {
       });
 
       it(`should go to the order page number '${orderToEdit.args.orderRow}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index + 1}`, baseContext);
         await this.pageObjects.ordersPage.goToOrder(orderToEdit.args.orderRow);
         const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
       });
 
       it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index + 1}`, baseContext);
         const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(orderToEdit.args.status);
         await expect(result).to.be.true;
       });
@@ -83,6 +88,7 @@ describe('Generate PDF file by date', async () => {
 
   describe('Generate invoice by date', async () => {
     it('should go to invoices page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.invoicesLink,
@@ -92,12 +98,14 @@ describe('Generate PDF file by date', async () => {
     });
 
     it('should generate PDF file by date and check the file existence', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGeneratedInvoicesPdfFile', baseContext);
       await this.pageObjects.invoicesPage.generatePDFByDate();
       const exist = await files.checkFileExistence(Invoices.moreThanAnInvoice.fileName);
       await expect(exist).to.be.true;
     });
 
     it('should check the error message when there is no invoice in the entered date', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentInvoice', baseContext);
       await this.pageObjects.invoicesPage.generatePDFByDate(futureDate, futureDate);
       const textMessage = await this.pageObjects.invoicesPage.getTextContent(
         this.pageObjects.invoicesPage.alertTextBlock,

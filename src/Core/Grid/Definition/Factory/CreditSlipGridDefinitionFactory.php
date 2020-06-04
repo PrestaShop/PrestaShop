@@ -109,7 +109,7 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
                     ->setOptions([
                         'sortable' => false,
                         'field' => 'link_value',
-                        'route' => 'admin_credit_slips_pdf',
+                        'route' => 'admin_credit_slips_generate_pdf',
                         'route_param_name' => 'creditSlipId',
                         'route_param_field' => 'id_order_slip',
                         'icon' => 'insert_drive_file',

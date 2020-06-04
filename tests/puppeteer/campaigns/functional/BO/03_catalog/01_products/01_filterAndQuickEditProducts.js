@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const ProductsPage = require('@pages/BO/catalog/products/index');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_products_filterAndQuickEitProducts';
 
 let browser;
 let page;
@@ -41,6 +45,7 @@ describe('Filter Products', async () => {
   loginCommon.loginBO();
 
   it('should go to "Catalog>products" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.productsLink,
@@ -51,6 +56,7 @@ describe('Filter Products', async () => {
   });
 
   it('should reset all filters and get number of products', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
     numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
     await expect(numberOfProducts).to.be.above(0);
   });
@@ -58,17 +64,44 @@ describe('Filter Products', async () => {
   describe('Filter products', async () => {
     const tests = [
       {
-        args: {
-          filterType: 'input',
-          filterBy: 'product_id',
-          filterValue: {min: Products.demo_1.id, max: Products.demo_6.id},
-        },
+        args:
+          {
+            testIdentifier: 'filterId',
+            filterType: 'input',
+            filterBy: 'id_product',
+            filterValue: {min: Products.demo_1.id, max: Products.demo_6.id},
+          },
       },
-      {args: {filterType: 'input', filterBy: 'name', filterValue: Products.demo_14.name}},
-      {args: {filterType: 'input', filterBy: 'reference', filterValue: Products.demo_3.reference}},
-      {args: {filterType: 'input', filterBy: 'name_category', filterValue: Products.demo_5.category}},
+      {
+        args:
+          {
+            testIdentifier: 'filterName',
+            filterType: 'input',
+            filterBy: 'name',
+            filterValue: Products.demo_14.name,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterReference',
+            filterType: 'input',
+            filterBy: 'reference',
+            filterValue: Products.demo_3.reference,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterCategoryName',
+            filterType: 'input',
+            filterBy: 'name_category',
+            filterValue: Products.demo_5.category,
+          },
+      },
       {
         args: {
+          testIdentifier: 'filterPrice',
           filterType: 'input',
           filterBy: 'price',
           filterValue: {min: Products.demo_1.price, max: Products.demo_3.price},
@@ -76,19 +109,29 @@ describe('Filter Products', async () => {
       },
       {
         args: {
+          testIdentifier: 'filterQuantity',
           filterType: 'input',
-          filterBy: 'quantity',
+          filterBy: 'sav_quantity',
           filterValue: {min: Products.demo_6.quantity, max: Products.demo_1.quantity},
         },
       },
 
-      {args: {filterType: 'select', filterBy: 'active', filterValue: Products.demo_1.status}, expected: 'check'},
+      {
+        args:
+          {
+            testIdentifier: 'filterActive',
+            filterType: 'select',
+            filterBy: 'active',
+            filterValue: Products.demo_1.status,
+          },
+        expected: 'check',
+      },
     ];
     tests.forEach((test) => {
-      if (test.args.filterValue.min !== undefined) {
-        filterValue = `'${test.args.filterValue.min}-${test.args.filterValue.max}'`;
-      } else filterValue = `'${test.args.filterValue}`;
+      filterValue = test.args.filterValue.min === undefined ? `'${test.args.filterValue}`
+        : `'${test.args.filterValue.min}-${test.args.filterValue.max}'`;
       it(`should filter by ${test.args.filterBy} ${filterValue}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         await this.pageObjects.productsPage.filterProducts(
           test.args.filterBy,
           test.args.filterValue,
@@ -109,6 +152,7 @@ describe('Filter Products', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfProductsAfterReset = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
@@ -118,6 +162,7 @@ describe('Filter Products', async () => {
   // 2 : Editing products from table
   describe('Quick Edit products', async () => {
     it('should filter by Name \'Hummingbird printed sweater\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
       await this.pageObjects.productsPage.filterProducts('name', Products.demo_3.name);
       const numberOfProductsAfterFilter = await this.pageObjects.productsPage.getNumberOfProductsFromList();
       await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
@@ -133,6 +178,7 @@ describe('Filter Products', async () => {
     ];
     statuses.forEach((productStatus) => {
       it(`should ${productStatus.args.status} the product`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${productStatus.args.status}Product`, baseContext);
         const isActionPerformed = await this.pageObjects.productsPage.updateToggleColumnValue(
           1,
           productStatus.args.enable,

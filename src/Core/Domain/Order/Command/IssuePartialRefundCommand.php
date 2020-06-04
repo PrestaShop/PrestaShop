@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
@@ -61,7 +61,7 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
      * @param int $voucherRefundType
      * @param float|null $voucherRefundAmount
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     public function __construct(

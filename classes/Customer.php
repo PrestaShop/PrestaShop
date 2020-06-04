@@ -103,7 +103,7 @@ class CustomerCore extends ObjectModel
     /** @var int Max payment day */
     public $max_payment_days = 0;
 
-    /** @var int Password */
+    /** @var string Password */
     public $passwd;
 
     /** @var string Datetime Password */

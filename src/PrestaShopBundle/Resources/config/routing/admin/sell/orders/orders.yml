@@ -140,7 +140,7 @@ admin_orders_update_product:
 
 admin_orders_remove_cart_rule:
   path: /{orderId}/cart-rules/{orderCartRuleId}/delete
-  methods: [POST]
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:removeCartRule
   requirements:
@@ -298,6 +298,17 @@ admin_orders_get_invoices:
   methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Order/Order:getInvoices
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_cancellation:
+  path: /{orderId}/cancellation
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:cancellation
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+

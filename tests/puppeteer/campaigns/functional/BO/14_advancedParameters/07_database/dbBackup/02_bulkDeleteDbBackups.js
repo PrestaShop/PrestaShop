@@ -8,6 +8,10 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const SqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
 const DbBackupPage = require('@pages/BO/advancedParameters/database/dbBackup');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_advancedParams_database_dbBackup';
 
 let browser;
 let page;
@@ -45,6 +49,7 @@ describe('Generate 2 db backup and bulk delete them', async () => {
 
   // Go db backup page
   it('should go to database > sql manager page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.advancedParametersLink,
       this.pageObjects.boBasePage.databaseLink,
@@ -55,12 +60,14 @@ describe('Generate 2 db backup and bulk delete them', async () => {
   });
 
   it('should go to db backup page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToDbBackupPage', baseContext);
     await this.pageObjects.sqlManagerPage.goToDbBackupPage();
     const pageTitle = await this.pageObjects.dbBackupPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.dbBackupPage.pageTitle);
   });
 
   it('should check number of db backups', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfDbBackups', baseContext);
     numberOfBackups = await this.pageObjects.dbBackupPage.getNumberOfElementInGrid();
     await expect(numberOfBackups).to.equal(0);
   });
@@ -68,6 +75,7 @@ describe('Generate 2 db backup and bulk delete them', async () => {
   describe('Generate 2 db backups', async () => {
     ['first', 'second'].forEach((test, index) => {
       it(`should generate ${test} db backup`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `generateNewDbBackup${index + 1}`, baseContext);
         const result = await this.pageObjects.dbBackupPage.createDbDbBackup();
         await expect(result).to.equal(this.pageObjects.dbBackupPage.successfulBackupCreationMessage);
         const numberOfBackupsAfterCreation = await this.pageObjects.dbBackupPage.getNumberOfElementInGrid();
@@ -78,6 +86,7 @@ describe('Generate 2 db backup and bulk delete them', async () => {
 
   describe('Bulk delete db backups', async () => {
     it('should delete db backups created', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteDbBackups', baseContext);
       const result = await this.pageObjects.dbBackupPage.deleteWithBulkActions();
       await expect(result).to.be.equal(this.pageObjects.dbBackupPage.successfulMultiDeleteMessage);
       const numberOfBackupsAfterDelete = await this.pageObjects.dbBackupPage.getNumberOfElementInGrid();

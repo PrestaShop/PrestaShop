@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const StocksPage = require('@pages/BO/catalog/stocks');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_stocks_simpleFilterStocks';
 
 let browser;
 let page;
@@ -39,6 +43,7 @@ describe('Simple filter stocks', async () => {
   loginCommon.loginBO();
 
   it('should go to "Catalog>Stocks" page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.stocksLink,
@@ -49,6 +54,7 @@ describe('Simple filter stocks', async () => {
   });
 
   it('should get number of products in list', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'getNumberOfProductsInList', baseContext);
     numberOfProducts = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
     await expect(numberOfProducts).to.be.above(0);
   });
@@ -56,12 +62,13 @@ describe('Simple filter stocks', async () => {
   // Filter products with name, reference, supplier
   describe('Filter products with name, reference, supplier', async () => {
     const tests = [
-      {args: {filterBy: 'name', filterValue: Products.demo_1.name}},
-      {args: {filterBy: 'reference', filterValue: Products.demo_1.reference}},
-      {args: {filterBy: 'supplier', filterValue: 'N/A'}},
+      {args: {testIdentifier: 'filterName', filterBy: 'name', filterValue: Products.demo_1.name}},
+      {args: {testIdentifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
+      {args: {testIdentifier: 'filterSupplier', filterBy: 'supplier', filterValue: 'N/A'}},
     ];
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         await this.pageObjects.stocksPage.simpleFilter(test.args.filterValue);
         const numberOfProductsAfterFilter = await this.pageObjects.stocksPage.getNumberOfProductsFromList();
         await expect(numberOfProductsAfterFilter).to.be.at.most(numberOfProducts);
@@ -72,6 +79,7 @@ describe('Simple filter stocks', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfProductsAfterReset = await this.pageObjects.stocksPage.resetFilter();
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });

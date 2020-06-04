@@ -134,7 +134,7 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         $address = new Address(
-            $this->getValue('id_address'),
+            Tools::getValue('id_address'),
             $this->language->id
         );
 

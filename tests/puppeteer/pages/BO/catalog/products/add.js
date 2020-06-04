@@ -8,6 +8,8 @@ module.exports = class AddProduct extends BOBasePage {
     this.pageTitle = 'Product •';
     // Text Message
     this.settingUpdatedMessage = 'Settings updated.';
+    this.errorMessage = 'Unable to update settings.';
+    this.errorMessageWhenSummaryTooLong = 'This value is too long. It should have %NUMBER characters or less.';
     // Selectors
     this.productNameInput = '#form_step1_name_1';
     this.productTypeSelect = '#form_step1_type_product';
@@ -19,15 +21,23 @@ module.exports = class AddProduct extends BOBasePage {
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
-    this.productDescriotionTab = '#tab_description a';
+    this.productOnlineTitle = 'h2.for-switch.online-title';
+    this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
     this.productDescriptionIframe = '#form_step1_description_1_ifr';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
+    this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
 
     // Form nav
     this.formNavList = '#form-nav';
     this.forNavlistItemLink = `${this.formNavList} #tab_step%ID a`;
-
+    // Selectors of Step 2 : Pricing
+    this.addSpecificPriceButton = '#js-open-create-specific-price-form';
+    this.combinationSelect = '#form_step2_specific_price_sp_id_product_attribute';
+    this.startingAtInput = '#form_step2_specific_price_sp_from_quantity';
+    this.applyDiscountOfInput = '#form_step2_specific_price_sp_reduction';
+    this.reductionType = '#form_step2_specific_price_sp_reduction_type';
+    this.applyButton = '#form_step2_specific_price_save';
     // Selector of Step 3 : Combinations
     this.addCombinationsInput = '#form_step3_attributes-tokenfield';
     this.generateCombinationsButton = '#create-combinations';
@@ -40,6 +50,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
     // Selector of Step 5 : SEO
     this.resetUrlButton = '#seo-url-regenerate';
+    this.friendlyUrlInput = '#form_step5_link_rewrite_1';
     // Growls : override value from BObasePage
     this.growlDefaultDiv = '#growls-default';
     this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
@@ -63,19 +74,26 @@ module.exports = class AddProduct extends BOBasePage {
     await this.page.click(this.productReferenceInput, {clickCount: 3});
     await this.page.type(this.productReferenceInput, productData.reference);
     await this.page.click(this.productPriceTtcInput, {clickCount: 3});
-    await this.page.type(this.productPriceTtcInput, productData.price);
+    await this.page.type(this.productPriceTtcInput, productData.price.toString());
     // Set description value
-    await this.page.click(this.productDescriotionTab);
     await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
+    // Set short description value
+    await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
     // Add combinations if exists
     if (productData.withCombination) {
       await this.page.click(this.productWithCombinationsInput);
       await this.setCombinationsInProduct(productData);
     } else {
       await this.page.click(this.productQuantityInput, {clickCount: 3});
-      await this.page.type(this.productQuantityInput, productData.quantity);
+      await this.page.type(this.productQuantityInput, productData.quantity.toString());
     }
     await this.selectByVisibleText(this.productTaxRuleSelect, productData.taxRule);
+    if (productData.withSpecificPrice) {
+      await this.reloadPage();
+      // Go to pricing tab : id = 2
+      await this.goToFormStep(2);
+      await this.addSpecificPrices(productData.specificPrice);
+    }
     // Switch product online before save
     if (switchProductOnline) {
       await Promise.all([
@@ -162,10 +180,9 @@ module.exports = class AddProduct extends BOBasePage {
     // Edit quantity
     await this.page.waitForSelector(this.applyOnCombinationsButton, {visible: true});
     await this.scrollTo(this.productCombinationBulkQuantityInput);
-    await this.page.type(this.productCombinationBulkQuantityInput, quantity);
+    await this.page.type(this.productCombinationBulkQuantityInput, quantity.toString());
     await this.scrollTo(this.applyOnCombinationsButton);
     await this.page.click(this.applyOnCombinationsButton);
-    await this.closeCombinationsForm();
   }
 
   /**
@@ -267,5 +284,51 @@ module.exports = class AddProduct extends BOBasePage {
     await this.page.waitForSelector(this.resetUrlButton, {visible: true});
     await this.scrollTo(this.resetUrlButton);
     await this.page.click(this.resetUrlButton);
+  }
+
+  /**
+   * Get the error message when short description is too long
+   * @returns {Promise<string|*>}
+   */
+  async getErrorMessageWhenSummaryIsTooLong() {
+    return this.getTextContent(this.dangerMessageShortDescription);
+  }
+
+  /**
+   * Get friendly URL
+   * @returns {Promise<string|*>}
+   */
+  async getFriendlyURL() {
+    await this.reloadPage();
+    await this.goToFormStep(5);
+    return this.getAttributeContent(this.friendlyUrlInput, 'value');
+  }
+
+  async addSpecificPrices(specificPriceData) {
+    await this.waitForSelectorAndClick(this.addSpecificPriceButton);
+    // Choose combinations if exist
+    if (specificPriceData.combinations) {
+      await this.page.waitFor(2000);
+      await this.page.waitForSelector(this.combinationSelect, {visible: true});
+      await this.scrollTo(this.combinationSelect);
+      await this.selectByVisibleText(this.combinationSelect, specificPriceData.combinations);
+    }
+    await this.setValue(this.startingAtInput, specificPriceData.startingAt.toString());
+    await this.setValue(this.applyDiscountOfInput, specificPriceData.discount.toString());
+    await this.selectByVisibleText(this.reductionType, specificPriceData.reductionType);
+    // Apply specific price
+    await Promise.all([
+      this.page.waitForSelector(this.growlMessageBlock, {visible: true}),
+      this.scrollTo(this.applyButton),
+      this.page.click(this.applyButton),
+    ]);
+  }
+
+  /**
+   * Get online product status
+   * @returns {Promise<boolean>}
+   */
+  getOnlineButtonStatus() {
+    return this.elementVisible(this.productOnlineTitle, 1000);
   }
 };

@@ -12,6 +12,10 @@ const BrandsPage = require('@pages/BO/catalog/brands');
 const SuppliersPage = require('@pages/BO/catalog/suppliers');
 const AddSupplierPage = require('@pages/BO/catalog/suppliers/add');
 const ViewSupplierPage = require('@pages/BO/catalog/suppliers/view');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_CRUDSupplier';
 
 let browser;
 let page;
@@ -54,6 +58,7 @@ describe('Create, update and delete supplier', async () => {
 
   // Go to brands page
   it('should go to brands page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
@@ -65,6 +70,7 @@ describe('Create, update and delete supplier', async () => {
 
   // Go to suppliers page
   it('should go to suppliers page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToSuppliersPage', baseContext);
     await this.pageObjects.brandsPage.goToSubTabSuppliers();
     const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
@@ -72,12 +78,14 @@ describe('Create, update and delete supplier', async () => {
   // 1: Create supplier
   describe('Create supplier', async () => {
     it('should go to new supplier page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddSupplierPage', baseContext);
       await this.pageObjects.suppliersPage.goToAddNewSupplierPage();
       const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitle);
     });
 
     it('should create supplier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createSupplier', baseContext);
       const result = await this.pageObjects.addSupplierPage.createEditSupplier(createSupplierData);
       await expect(result).to.equal(this.pageObjects.suppliersPage.successfulCreationMessage);
     });
@@ -85,13 +93,15 @@ describe('Create, update and delete supplier', async () => {
   // 2: View supplier
   describe('View supplier', async () => {
     it('should view supplier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedSupplier', baseContext);
       // view supplier first row
       await this.pageObjects.suppliersPage.viewSupplier(1);
       const pageTitle = await this.pageObjects.viewSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(createSupplierData.name);
     });
 
-    it('should return supplier page', async function () {
+    it('should return suppliers page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToSuppliersPageAfterCreation', baseContext);
       await this.pageObjects.viewSupplierPage.goToPreviousPage();
       const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
@@ -100,12 +110,14 @@ describe('Create, update and delete supplier', async () => {
   // 3: Update supplier
   describe('Update supplier', async () => {
     it('should go to edit first supplier page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditSupplierPage', baseContext);
       await this.pageObjects.suppliersPage.goToEditSupplierPage(1);
       const pageTitle = await this.pageObjects.addSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addSupplierPage.pageTitleEdit);
     });
 
     it('should edit supplier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateSupplier', baseContext);
       const result = await this.pageObjects.addSupplierPage.createEditSupplier(editSupplierData);
       await expect(result).to.equal(this.pageObjects.suppliersPage.successfulUpdateMessage);
     });
@@ -113,13 +125,15 @@ describe('Create, update and delete supplier', async () => {
   // 4: View supplier
   describe('View edited supplier', async () => {
     it('should view supplier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedSupplier', baseContext);
       // view supplier first row
       await this.pageObjects.suppliersPage.viewSupplier(1);
       const pageTitle = await this.pageObjects.viewSupplierPage.getPageTitle();
       await expect(pageTitle).to.contains(editSupplierData.name);
     });
 
-    it('should return to supplier page', async function () {
+    it('should return to suppliers page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'returnToSuppliersPageAfterUpdate', baseContext);
       await this.pageObjects.viewSupplierPage.goToPreviousPage();
       const pageTitle = await this.pageObjects.suppliersPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.suppliersPage.pageTitle);
@@ -128,6 +142,7 @@ describe('Create, update and delete supplier', async () => {
   // 5: Delete supplier
   describe('Delete supplier', async () => {
     it('should delete supplier', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteSupplier', baseContext);
       // delete supplier in first row
       const result = await this.pageObjects.suppliersPage.deleteSupplier(1);
       await expect(result).to.be.equal(this.pageObjects.suppliersPage.successfulDeleteMessage);

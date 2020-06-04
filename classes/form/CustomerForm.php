@@ -76,7 +76,6 @@ class CustomerFormCore extends AbstractForm
     public function fillFromCustomer(Customer $customer)
     {
         $params = get_object_vars($customer);
-        $params['id_customer'] = $customer->id;
         $params['birthday'] = $customer->birthday === '0000-00-00' ? null : Tools::displayDate($customer->birthday);
 
         return $this->fillWith($params);
@@ -87,13 +86,10 @@ class CustomerFormCore extends AbstractForm
      */
     public function getCustomer()
     {
-        $customer = new Customer($this->getValue('id_customer'));
+        $customer = new Customer($this->context->customer->id);
 
         foreach ($this->formFields as $field) {
             $customerField = $field->getName();
-            if ($customerField === 'id_customer') {
-                $customerField = 'id';
-            }
             if (property_exists($customer, $customerField)) {
                 $customer->$customerField = $field->getValue();
             }
@@ -119,10 +115,10 @@ class CustomerFormCore extends AbstractForm
         $birthdayField = $this->getField('birthday');
         if (!empty($birthdayField) &&
             !empty($birthdayField->getValue()) &&
-            Validate::isBirthDate($birthdayField->getValue(), Context::getContext()->language->date_format_lite)
+            Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
-                Context::getContext()->language->date_format_lite,
+                $this->context->language->date_format_lite,
                 $birthdayField->getValue()
             );
             $birthdayField->setValue($dateBuilt->format('Y-m-d'));

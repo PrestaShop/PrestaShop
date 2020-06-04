@@ -11,6 +11,10 @@ const LocalizationPage = require('@pages/BO/international/localization');
 const LanguagesPage = require('@pages/BO/international/languages');
 // Importing data
 const {Languages} = require('@data/demo/languages');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_international_localization_languages_filterLanguages';
 
 let browser;
 let page;
@@ -42,6 +46,7 @@ describe('Filter Languages', async () => {
   loginCommon.loginBO();
 
   it('should go to localization page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
       this.pageObjects.boBasePage.localizationLink,
@@ -52,12 +57,14 @@ describe('Filter Languages', async () => {
   });
 
   it('should go to languages page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
     await this.pageObjects.localizationPage.goToSubTabLanguages();
     const pageTitle = await this.pageObjects.languagesPage.getPageTitle();
     await expect(pageTitle).to.contains(this.pageObjects.languagesPage.pageTitle);
   });
 
   it('should reset all filters and get number of languages in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfLanguages = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
     await expect(numberOfLanguages).to.be.above(0);
   });
@@ -65,17 +72,75 @@ describe('Filter Languages', async () => {
   // 1 : Filter languages with all inputs and selects in grid table
   describe('Filter languages', async () => {
     const tests = [
-      {args: {filterType: 'input', filterBy: 'id_lang', filterValue: Languages.english.id}},
-      {args: {filterType: 'input', filterBy: 'name', filterValue: Languages.english.name}},
-      {args: {filterType: 'input', filterBy: 'iso_code', filterValue: Languages.english.isoCode}},
-      {args: {filterType: 'input', filterBy: 'language_code', filterValue: Languages.english.languageCode}},
-      {args: {filterType: 'input', filterBy: 'date_format_lite', filterValue: Languages.english.dateFormat}},
-      {args: {filterType: 'input', filterBy: 'date_format_full', filterValue: Languages.english.fullDateFormat}},
-      {args: {filterType: 'select', filterBy: 'active', filterValue: Languages.english.enabled}, expected: 'check'},
+      {
+        args:
+          {
+            testIdentifier: 'filterId',
+            filterType: 'input',
+            filterBy: 'id_lang',
+            filterValue: Languages.english.id,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterName',
+            filterType: 'input',
+            filterBy: 'name',
+            filterValue: Languages.english.name,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterIsoCode',
+            filterType: 'input',
+            filterBy: 'iso_code',
+            filterValue: Languages.english.isoCode,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterLanguageCode',
+            filterType: 'input',
+            filterBy: 'language_code',
+            filterValue: Languages.english.languageCode,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterDateFormatLite',
+            filterType: 'input',
+            filterBy: 'date_format_lite',
+            filterValue: Languages.english.dateFormat,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterDateFormatFull',
+            filterType: 'input',
+            filterBy: 'date_format_full',
+            filterValue: Languages.english.fullDateFormat,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterActive',
+            filterType: 'select',
+            filterBy: 'active',
+            filterValue: Languages.english.enabled,
+          },
+        expected: 'check',
+      },
     ];
 
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         await this.pageObjects.languagesPage.filterTable(
           test.args.filterType,
           test.args.filterBy,
@@ -98,6 +163,7 @@ describe('Filter Languages', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfLanguagesAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
         await expect(numberOfLanguagesAfterReset).to.equal(numberOfLanguages);
       });

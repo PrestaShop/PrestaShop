@@ -39,7 +39,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   async changeShopStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchShopLabel.replace('%TOGGLE', toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -52,7 +52,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
     await this.page.click(this.customMaintenanceFrTab);
     await this.setValueOnTinymceInput(this.maintenanceTextInputFR, text);
     await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -62,7 +62,7 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   async addMyIpAddress() {
     await this.page.click(this.addMyIPAddressButton);
     await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 
   /**
@@ -73,6 +73,6 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   async addMaintenanceIPAddress(ipAddress) {
     await this.setValue(this.maintenanceIpInput, ipAddress);
     await this.page.click(this.saveFormButton);
-    return this.getTextContent(this.alertSuccessBloc);
+    return this.getTextContent(this.alertSuccessBlock);
   }
 };

@@ -100,6 +100,7 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
             ->addSelect('o.id_order, o.reference, o.total_paid_tax_incl, os.paid, osl.name AS osname')
             ->addSelect('o.current_state, o.id_customer')
             ->addSelect('CONCAT(LEFT(cu.`firstname`, 1), \'. \', cu.`lastname`) AS `customer`')
+            ->addSelect('cu.`id_customer` IS NULL as `deleted_customer`')
             ->addSelect('os.color, o.payment, s.name AS shop_name')
             ->addSelect('o.date_add, cu.company, cl.name AS country_name, o.invoice_number, o.delivery_number')
             ->addSelect('IF ((' . $newCustomerSubSelect->getSQL() . ') > 0, 0, 1) AS new')
@@ -121,10 +122,8 @@ final class OrderQueryBuilder implements DoctrineQueryBuilderInterface
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        return $this->connection
-            ->createQueryBuilder()
-            ->select('FOUND_ROWS()')
-        ;
+        return $this->getBaseQueryBuilder($searchCriteria->getFilters())
+            ->select('COUNT(o.id_order)');
     }
 
     /**

@@ -868,20 +868,6 @@ abstract class DbCore
     }
 
     /**
-     * Checks if auto increment value and offset is 1.
-     *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     *
-     * @return bool
-     */
-    public static function checkAutoIncrement($server, $user, $pwd)
-    {
-        return call_user_func_array([Db::getClass(), 'checkAutoIncrement'], [$server, $user, $pwd]);
-    }
-
-    /**
      * Get used link instance.
      *
      * @return PDO|mysqli|resource Resource

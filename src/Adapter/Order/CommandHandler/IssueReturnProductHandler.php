@@ -104,7 +104,10 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
         /** @var Order $order */
         $order = $this->getOrderObject($command->getOrderId());
         if (!$order->hasBeenDelivered()) {
-            throw new InvalidOrderStateException('Can not perform return product on order with not delivered yet');
+            throw new InvalidOrderStateException(
+                InvalidOrderStateException::DELIVERY_NOT_FOUND,
+                'Can not perform return product on order with not delivered yet'
+            );
         }
 
         $shippingRefundAmount = $command->refundShippingCost() ? $order->total_shipping_tax_incl : 0;
@@ -140,7 +143,12 @@ class IssueReturnProductHandler extends AbstractOrderCommandHandler implements I
         }
 
         // Update refund details (by definition it returns products)
-        $this->refundUpdater->updateRefundData($order, $orderRefundSummary, true);
+        $this->refundUpdater->updateRefundData(
+            $order,
+            $orderRefundSummary,
+            true,
+            $command->restockRefundedProducts()
+        );
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {

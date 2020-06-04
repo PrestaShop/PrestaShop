@@ -12,6 +12,10 @@ const AddSeoAndUrlPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndU
 // Importing data
 const {orderReturn, pdfOrderReturn} = require('@data/demo/seoPages');
 const SeoPageFaker = require('@data/faker/seoPage');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_shopParams_TrafficAndSeo_seoAndUrls_CRUDSeoPage';
 
 let browser;
 let page;
@@ -45,6 +49,7 @@ describe('Create, update and delete seo page', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.trafficAndSeoLink,
@@ -55,18 +60,21 @@ describe('Create, update and delete seo page', async () => {
   });
 
   it('should reset all filters and get number of SEO pages in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfSeoPages = await this.pageObjects.seoAndUrlsPage.resetAndGetNumberOfLines();
     await expect(numberOfSeoPages).to.be.above(0);
   });
 
   describe('Create seo page', async () => {
     it('should go to new seo page page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewSeoPage', baseContext);
       await this.pageObjects.seoAndUrlsPage.goToNewSeoUrlPage();
       const pageTitle = await this.pageObjects.addSeoAndUrlPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addSeoAndUrlPage.pageTitle);
     });
 
     it('should create seo page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createSeoPage', baseContext);
       const result = await this.pageObjects.addSeoAndUrlPage.createEditSeoPage(createSeoPageData);
       await expect(result).to.equal(this.pageObjects.seoAndUrlsPage.successfulCreationMessage);
       const numberOfSeoPagesAfterCreation = await this.pageObjects.seoAndUrlsPage.getNumberOfElementInGrid();
@@ -76,6 +84,7 @@ describe('Create, update and delete seo page', async () => {
 
   describe('Update seo page', async () => {
     it('should filter by seo page name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
       await this.pageObjects.seoAndUrlsPage.filterTable('page', createSeoPageData.page);
       const numberOfSeoPagesAfterFilter = await this.pageObjects.seoAndUrlsPage.getNumberOfElementInGrid();
       await expect(numberOfSeoPagesAfterFilter).to.be.at.least(1);
@@ -84,17 +93,20 @@ describe('Create, update and delete seo page', async () => {
     });
 
     it('should go to edit first seo page page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditSeoPage', baseContext);
       await this.pageObjects.seoAndUrlsPage.goToEditSeoUrlPage(1);
       const pageTitle = await this.pageObjects.addSeoAndUrlPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addSeoAndUrlPage.pageTitle);
     });
 
     it('should edit seo page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editSeoPage', baseContext);
       const result = await this.pageObjects.addSeoAndUrlPage.createEditSeoPage(editSeoPageData);
       await expect(result).to.equal(this.pageObjects.seoAndUrlsPage.successfulUpdateMessage);
     });
 
     it('should reset filter and check number of seo pages', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterUpdate', baseContext);
       const numberOfSeoPagesAfterCreation = await this.pageObjects.seoAndUrlsPage.resetAndGetNumberOfLines();
       await expect(numberOfSeoPagesAfterCreation).to.equal(numberOfSeoPages + 1);
     });
@@ -102,6 +114,7 @@ describe('Create, update and delete seo page', async () => {
 
   describe('Delete seo page', async () => {
     it('should filter by seo page name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
       await this.pageObjects.seoAndUrlsPage.filterTable('page', editSeoPageData.page);
       const numberOfSeoPagesAfterFilter = await this.pageObjects.seoAndUrlsPage.getNumberOfElementInGrid();
       await expect(numberOfSeoPagesAfterFilter).to.be.at.least(1);
@@ -110,12 +123,14 @@ describe('Create, update and delete seo page', async () => {
     });
 
     it('should delete seo page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteSeoPage', baseContext);
       // delete seo page in first row
       const result = await this.pageObjects.seoAndUrlsPage.deleteSeoUrlPage(1);
       await expect(result).to.be.equal(this.pageObjects.seoAndUrlsPage.successfulDeleteMessage);
     });
 
     it('should reset filter and check number of seo pages', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
       const numberOfSeoPagesAfterCreation = await this.pageObjects.seoAndUrlsPage.resetAndGetNumberOfLines();
       await expect(numberOfSeoPagesAfterCreation).to.equal(numberOfSeoPages);
     });

@@ -10,6 +10,10 @@ const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BrandsPage = require('@pages/BO/catalog/brands');
 const AddBrandPage = require('@pages/BO/catalog/brands/add');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_bulkActionsBrands';
 
 let browser;
 let page;
@@ -48,6 +52,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
 
   // GO to Brands Page
   it('should go to brands page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
@@ -58,6 +63,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   });
 
   it('should reset all Brands filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfBrands = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
     await expect(numberOfBrands).to.be.above(0);
   });
@@ -66,12 +72,14 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     const brandsToCreate = [firstBrandData, secondBrandData];
     brandsToCreate.forEach((brandToCreate, index) => {
       it('should go to new brand page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddBrandPage${index + 1}`, baseContext);
         await this.pageObjects.brandsPage.goToAddNewBrandPage();
         const pageTitle = await this.pageObjects.addBrandPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addBrandPage.pageTitle);
       });
 
       it('should create new brand', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createBrand${index + 1}`, baseContext);
         const result = await this.pageObjects.addBrandPage.createEditBrand(brandToCreate);
         await expect(result).to.equal(this.pageObjects.brandsPage.successfulCreationMessage);
         const numberOfBrandsAfterCreation = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
@@ -82,6 +90,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   // 2 : Disable, enable Brands
   describe('Disable, enable created Brands', async () => {
     it('should filter Brand list by name of brand created', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
       await this.pageObjects.brandsPage.filterBrands('input', 'name', 'BrandToDelete');
       const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
@@ -97,6 +106,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     ];
     tests.forEach((test) => {
       it(`should ${test.args.action} brands`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Brand`, baseContext);
         const textResult = await this.pageObjects.brandsPage.changeBrandsEnabledColumnBulkActions(
           test.args.enabledValue,
         );
@@ -111,6 +121,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     });
 
     it('should reset Brand filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkEdit', baseContext);
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 2);
     });
@@ -118,6 +129,7 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
   // 3 : Delete Brands created with bulk actions
   describe('Delete Brands with Bulk Actions', async () => {
     it('should filter Brand list by name of brand created', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
       await this.pageObjects.brandsPage.filterBrands('input', 'name', 'BrandToDelete');
       const numberOfBrandsAfterFilter = await this.pageObjects.brandsPage.getNumberOfElementInGrid('manufacturer');
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
@@ -128,11 +140,13 @@ describe('Create 2 brands, Enable, disable and delete with bulk actions', async 
     });
 
     it('should delete Brands with Bulk Actions and check Result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteBrands', baseContext);
       const deleteTextResult = await this.pageObjects.brandsPage.deleteWithBulkActions('manufacturer');
       await expect(deleteTextResult).to.be.equal(this.pageObjects.brandsPage.successfulDeleteMessage);
     });
 
     it('should reset Brand filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
       const numberOfBrandsAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer');
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
     });

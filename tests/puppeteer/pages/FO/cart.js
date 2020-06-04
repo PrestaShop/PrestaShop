@@ -62,4 +62,12 @@ module.exports = class Cart extends FOBasePage {
     const number = Number(text.replace(/[^0-9.-]+/g, ''));
     return parseFloat(number);
   }
+
+  /**
+   * Get price TTC
+   * @returns {Promise<integer>}
+   */
+  async getTTCPrice() {
+    return this.getPriceFromText(this.cartTotalTTC);
+  }
 };

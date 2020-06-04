@@ -106,6 +106,7 @@ class ManufacturerAddressType extends AbstractType
     {
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
+        $stateChoices = $this->statesChoiceProvider->getChoices(['id_country' => $countryId]);
 
         $builder
             ->add('id_manufacturer', ChoiceType::class, [
@@ -236,7 +237,7 @@ class ManufacturerAddressType extends AbstractType
             ])
             ->add('id_state', ChoiceType::class, [
                 'required' => true,
-                'choices' => $this->statesChoiceProvider->getChoices(['id_country' => $countryId]),
+                'choices' => $stateChoices,
                 'constraints' => [
                     new AddressStateRequired([
                         'id_country' => $countryId,

@@ -58,25 +58,26 @@ final class NamingConventionLinterCommand extends ContainerAwareCommand
         $namingConventionLinter = $this->getContainer()
             ->get('prestashop.bundle.routing.linter.naming_convention_linter');
 
-        $invalidRoutes = [];
-
+        $ioTableheaders = ['Invalid routes', 'Valid routes suggestions'];
+        $ioTableRows = [];
         /** @var Route $route */
         foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
                 $namingConventionLinter->lint($routeName, $route);
             } catch (LinterException $e) {
-                $invalidRoutes[] = $routeName;
+                $ioTableRows[] = [$routeName, $e->getExpectedRouteName()];
             }
         }
 
         $io = new SymfonyStyle($input, $output);
 
-        if (!empty($invalidRoutes)) {
+        if (!empty($ioTableRows)) {
+            $io->title('PrestaShop routes follow admin_{resources}_{action} naming convention structure');
             $io->warning(sprintf(
                 '%s routes are not following naming conventions:',
-                count($invalidRoutes)
+                count($ioTableRows)
             ));
-            $io->listing($invalidRoutes);
+            $io->table($ioTableheaders, $ioTableRows);
 
             return 1;
         }

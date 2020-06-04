@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 
 /**
@@ -56,13 +56,13 @@ class OrderDetailRefund
      *
      * @return self
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws OrderException
      */
     public static function createPartialRefund(int $orderDetailId, int $productQuantity, float $refundedAmount): self
     {
         if (0 >= $refundedAmount) {
-            throw new InvalidRefundException(InvalidRefundException::INVALID_AMOUNT);
+            throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
         }
 
         return new self($orderDetailId, $productQuantity, $refundedAmount);
@@ -92,7 +92,7 @@ class OrderDetailRefund
     {
         $this->assertOrderDetailIdIsGreaterThanZero($orderDetailId);
         if (0 >= $productQuantity) {
-            throw new InvalidRefundException(InvalidRefundException::INVALID_QUANTITY);
+            throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_QUANTITY);
         }
         $this->orderDetailId = $orderDetailId;
         $this->productQuantity = $productQuantity;

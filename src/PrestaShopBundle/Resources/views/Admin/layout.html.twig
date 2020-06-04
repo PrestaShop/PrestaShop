@@ -55,7 +55,7 @@
 
 {% block content_header %}
   {% macro alert(type, flashbagContent) %}
-    <div class="alert alert-{{ type }}" role="alert">
+    <div class="alert alert-{{ type }} d-print-none" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true"><i class="material-icons">close</i></span>
       </button>

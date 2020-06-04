@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const TaxesPage = require('@pages/BO/international/taxes');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_international_localization_taxes_taxesBulkActions';
 
 let browser;
 let page;
@@ -37,6 +41,7 @@ describe('Edit Tax options with all EcoTax values', async () => {
   // Login into BO and go to taxes page
   loginCommon.loginBO();
   it('should go to Taxes page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.internationalParentLink,
       this.pageObjects.boBasePage.taxesLink,
@@ -47,13 +52,14 @@ describe('Edit Tax options with all EcoTax values', async () => {
   });
   // Testing all options of EcoTax
   describe('Edit tax options', async () => {
-    taxOptions.forEach((taxOption) => {
+    taxOptions.forEach((taxOption, index) => {
       it(`should edit Tax Option,
       \tEnable Tax:${taxOption.enabled},
       \tDisplay tax in the shopping cart: '${taxOption.displayInShoppingCart}',
       \tBased on: '${taxOption.basedOn}',
       \tUse ecotax: '${taxOption.useEcoTax}',
       \tEcotax: '${taxOption.ecoTax}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `updateForm${index + 1}`, baseContext);
         const textResult = await this.pageObjects.taxesPage.updateTaxOption(taxOption);
         await expect(textResult).to.be.equal('Update successful');
       });

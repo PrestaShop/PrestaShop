@@ -133,7 +133,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->postcode,
             $stateName,
             $country->name[$order->id_lang],
-            $customer->email,
+            $customer ? $customer->email : null,
             $address->phone
         );
     }

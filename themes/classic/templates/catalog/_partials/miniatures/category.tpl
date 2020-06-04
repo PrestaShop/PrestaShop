@@ -25,7 +25,10 @@
 {block name='category_miniature_item'}
   <section class="category-miniature">
     <a href="{$category.url}">
-      <img src="{$category.image.medium.url}" alt="{$category.image.legend}">
+      <img
+        src="{$category.image.medium.url}"
+        alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}"
+      >
     </a>
 
     <h1 class="h2">

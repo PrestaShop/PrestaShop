@@ -473,27 +473,4 @@ class DbPDOCore extends Db
 
         return ($result === false) ? false : true;
     }
-
-    /**
-     * Checks if auto increment value and offset is 1.
-     *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     *
-     * @return bool
-     */
-    public static function checkAutoIncrement($server, $user, $pwd)
-    {
-        try {
-            $link = DbPDO::getPDO($server, $user, $pwd, false, 5);
-        } catch (PDOException $e) {
-            return false;
-        }
-        $ret = (bool) (($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch()) && $row['aii'] == 1);
-        $ret &= (bool) (($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch()) && $row['aio'] == 1);
-        unset($link);
-
-        return $ret;
-    }
 }

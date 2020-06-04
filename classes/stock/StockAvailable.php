@@ -577,7 +577,7 @@ class StockAvailableCore extends ObjectModel
             if ($id_stock_available) {
                 $stock_available = new StockAvailable($id_stock_available);
 
-                $deltaQuantity = -1 * ((int) $stock_available->quantity - (int) $quantity);
+                $deltaQuantity = (int) $quantity - (int) $stock_available->quantity;
 
                 $stock_available->quantity = (int) $quantity;
                 $stock_available->update();

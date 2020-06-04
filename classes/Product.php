@@ -1213,7 +1213,7 @@ class ProductCore extends ObjectModel
         $return = Db::getInstance()->delete('category_product', 'id_product = ' . (int) $this->id . ' AND id_category = ' . (int) $id_category);
         if ($clean_positions === true) {
             foreach ($result as $row) {
-                self::cleanPositions((int) $row['id_category'], (int) $row['position']);
+                static::cleanPositions((int) $row['id_category'], (int) $row['position']);
             }
         }
 
@@ -1244,7 +1244,7 @@ class ProductCore extends ObjectModel
         $return = Db::getInstance()->delete('category_product', 'id_product = ' . (int) $this->id);
         if ($clean_positions === true && is_array($result)) {
             foreach ($result as $row) {
-                $return &= self::cleanPositions((int) $row['id_category'], (int) $row['position']);
+                $return &= static::cleanPositions((int) $row['id_category'], (int) $row['position']);
             }
         }
 
@@ -1646,7 +1646,7 @@ class ProductCore extends ObjectModel
         Tools::displayAsDeprecated();
         $return = [];
         $default_value = 1;
-        foreach ($attributes as &$attribute) {
+        foreach ($attributes as $attribute) {
             $obj = new Combination();
             foreach ($attribute as $key => $value) {
                 $obj->$key = $value;

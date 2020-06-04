@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 
 /**
- * Provides data for category add/edit category forms
+ * Provides data for product cancellation form in order page
  */
 final class CancelProductFormDataProvider implements FormDataProviderInterface
 {

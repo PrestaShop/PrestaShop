@@ -33,7 +33,7 @@ Check that there is no new products in FO
 Go back to the default value
 Check that all products are new in FO
  */
-describe('Test new days number', async () => {
+describe('Number of days for which the product is considered \'new\'', async () => {
   // before and after functions
   before(async function () {
     browser = await helper.createBrowser();
@@ -58,35 +58,25 @@ describe('Test new days number', async () => {
     await expect(pageTitle).to.contains(this.pageObjects.productSettingsPage.pageTitle);
   });
 
-  it('should update Number of days to 0', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'updateNumberOfDays', baseContext);
-    const result = await this.pageObjects.productSettingsPage.updateNumberOfDays(0);
-    await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
-  });
+  const tests = [
+    {args: {value: 0, exist: false, state: 'NotVisible'}},
+    {args: {value: 20, exist: true, state: 'Visible'}},
+  ];
+  tests.forEach((test) => {
+    it(`should update Number of days to ${test.args.value}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `updateNumberOfDaysTo${test.args.value}`, baseContext);
+      const result = await this.pageObjects.productSettingsPage.updateNumberOfDays(test.args.value);
+      await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
+    });
 
-  it('should check that there is no new flag in the product miniature in FO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'firstCheckOfNewFlagInFO', baseContext);
-    page = await this.pageObjects.boBasePage.viewMyShop();
-    this.pageObjects = await init();
-    const isNewFlagVisible = await this.pageObjects.homePage.isNewFlagVisible(1);
-    await expect(isNewFlagVisible).to.be.false;
-    page = await this.pageObjects.homePage.closePage(browser, 1);
-    this.pageObjects = await init();
-  });
-
-  it('should go back to the default Number of days value', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goBackToDefaultNumberOfDays', baseContext);
-    const result = await this.pageObjects.productSettingsPage.updateNumberOfDays(20);
-    await expect(result).to.contains(this.pageObjects.productSettingsPage.successfulUpdateMessage);
-  });
-
-  it('should check that there is a new flag in the product miniature in FO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'secondCheckOfNewFlagInFO', baseContext);
-    page = await this.pageObjects.boBasePage.viewMyShop();
-    this.pageObjects = await init();
-    const isNewFlagVisible = await this.pageObjects.homePage.isNewFlagVisible(1);
-    await expect(isNewFlagVisible).to.be.true;
-    page = await this.pageObjects.homePage.closePage(browser, 1);
-    this.pageObjects = await init();
+    it('should check the new flag in the product miniature in FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkIfNewFlagIs${test.args.state}`, baseContext);
+      page = await this.pageObjects.boBasePage.viewMyShop();
+      this.pageObjects = await init();
+      const isNewFlagVisible = await this.pageObjects.homePage.isNewFlagVisible(1);
+      await expect(isNewFlagVisible).to.be.equal(test.args.exist);
+      page = await this.pageObjects.homePage.closePage(browser, 1);
+      this.pageObjects = await init();
+    });
   });
 });

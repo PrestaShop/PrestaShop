@@ -35,7 +35,7 @@ use Group;
 use Order;
 use OrderDetail;
 use OrderSlip;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidRefundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
@@ -59,7 +59,7 @@ class OrderRefundCalculator
      *
      * @return OrderRefundSummary
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -115,7 +115,7 @@ class OrderRefundCalculator
 
         // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
         if (count($productRefunds) <= 0 && $shippingCostAmount <= 0) {
-            throw new InvalidRefundException(InvalidRefundException::NO_REFUNDS);
+            throw new InvalidCancelProductException(InvalidCancelProductException::NO_REFUNDS);
         }
 
         return new OrderRefundSummary(
@@ -158,7 +158,7 @@ class OrderRefundCalculator
      *
      * @return array
      *
-     * @throws InvalidRefundException
+     * @throws InvalidCancelProductException
      */
     private function flattenCheckedProductRefunds(
         array $orderDetailRefunds,
@@ -181,7 +181,7 @@ class OrderRefundCalculator
                 $quantityLeft = (int) $orderDetail->product_quantity - (int) $orderDetail->product_quantity_refunded - (int) $orderDetail->product_quantity_return;
             }
             if ($quantity > $quantityLeft) {
-                throw new InvalidRefundException(InvalidRefundException::QUANTITY_TOO_HIGH, $quantityLeft);
+                throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $quantityLeft);
             }
 
             $productRefunds[$orderDetailId] = [

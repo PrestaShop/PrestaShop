@@ -104,7 +104,7 @@ class OrderPreviewInvoiceDetails
      * @param string $postalCode
      * @param string|null $stateName
      * @param string $country
-     * @param string $email
+     * @param string|null $email
      * @param string $phone
      */
     public function __construct(
@@ -118,7 +118,7 @@ class OrderPreviewInvoiceDetails
         string $postalCode,
         ?string $stateName,
         string $country,
-        string $email,
+        ?string $email,
         string $phone
     ) {
         $this->firstName = $firstName;
@@ -176,9 +176,9 @@ class OrderPreviewInvoiceDetails
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/PaymentModule.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="44aa13304026bb46ad79f4151f16634a">
+        <source>(waiting for validation)</source>
+        <target>(waiting for validation)</target>
+        <note>Line: 630</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="mails/themes/classic/components/footer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="96dad7f0d711c3408786ba1ee05402b3">
@@ -1125,6 +1134,16 @@
         <source>Thank you for shopping on [1]{shop_name}[/1]!</source>
         <target>Thank you for shopping on [1]{shop_name}[/1]!</target>
         <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ff2fa78f07ffe4ac52c0d0b5ff7f0baa">
+        <source>Thank you for your order on [1]{shop_name}[/1]!</source>
+        <target>Thank you for your order on [1]{shop_name}[/1]!</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Line: 382</note>
       </trans-unit>
     </body>
   </file>

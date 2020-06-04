@@ -86,6 +86,7 @@ class AddOrderCartRuleType extends AbstractType
             $this->orderInvoiceByIdChoiceProvider->getChoices([
                 'id_order' => $options['order_id'],
                 'id_lang' => $this->contextLangId,
+                'display_total' => true,
             ]) : [];
 
         $builder

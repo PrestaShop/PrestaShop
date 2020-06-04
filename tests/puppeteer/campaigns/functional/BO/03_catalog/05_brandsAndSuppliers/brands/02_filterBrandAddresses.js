@@ -9,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const LoginPage = require('@pages/BO/login');
 const DashboardPage = require('@pages/BO/dashboard');
 const BrandsPage = require('@pages/BO/catalog/brands');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_filterBrandAddresses';
 
 let browser;
 let page;
@@ -40,6 +44,7 @@ describe('Filter And Quick Edit Addresses', async () => {
 
   // Go to brands page
   it('should go to brands page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.catalogParentLink,
       this.pageObjects.boBasePage.brandsAndSuppliersLink,
@@ -50,22 +55,80 @@ describe('Filter And Quick Edit Addresses', async () => {
   });
 
   it('should reset all filters and get Number of brands in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
     numberOfBrandsAddresses = await this.pageObjects.brandsPage.resetAndGetNumberOfLines('manufacturer_address');
     await expect(numberOfBrandsAddresses).to.be.above(0);
   });
   // 1 : Filter brands
   describe('Filter brands addresses', async () => {
     const tests = [
-      {args: {filterType: 'input', filterBy: 'id_address', filterValue: demoAddresses.first.id}},
-      {args: {filterType: 'input', filterBy: 'name', filterValue: demoAddresses.first.brand}},
-      {args: {filterType: 'input', filterBy: 'firstname', filterValue: demoAddresses.first.firstName}},
-      {args: {filterType: 'input', filterBy: 'lastname', filterValue: demoAddresses.first.lastName}},
-      {args: {filterType: 'input', filterBy: 'postcode', filterValue: demoAddresses.first.postalCode}},
-      {args: {filterType: 'input', filterBy: 'city', filterValue: demoAddresses.first.city}},
-      {args: {filterType: 'select', filterBy: 'country', filterValue: demoAddresses.first.country}},
+      {
+        args:
+          {
+            testIdentifier: 'filterId',
+            filterType: 'input',
+            filterBy: 'id_address',
+            filterValue: demoAddresses.first.id,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterName',
+            filterType: 'input',
+            filterBy: 'name',
+            filterValue: demoAddresses.first.brand,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterFirstName',
+            filterType: 'input',
+            filterBy: 'firstname',
+            filterValue: demoAddresses.first.firstName,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterLastName',
+            filterType: 'input',
+            filterBy: 'lastname',
+            filterValue: demoAddresses.first.lastName,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterPostCode',
+            filterType: 'input',
+            filterBy: 'postcode',
+            filterValue: demoAddresses.first.postalCode,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterCity',
+            filterType: 'input',
+            filterBy: 'city',
+            filterValue: demoAddresses.first.city,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterCountry',
+            filterType: 'select',
+            filterBy: 'country',
+            filterValue: demoAddresses.first.country,
+          },
+      },
     ];
     tests.forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
         await this.pageObjects.brandsPage.filterAddresses(
           test.args.filterType,
           test.args.filterBy,
@@ -82,6 +145,7 @@ describe('Filter And Quick Edit Addresses', async () => {
       });
 
       it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
         const numberOfBrandsAddressesAfterReset = await this.pageObjects.brandsPage.resetAndGetNumberOfLines(
           'manufacturer_address',
         );

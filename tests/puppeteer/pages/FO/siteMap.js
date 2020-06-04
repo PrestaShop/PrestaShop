@@ -10,6 +10,8 @@ module.exports = class SiteMap extends FOBasePage {
     // Selectors
     this.categoryNameSelect = '#category-page-%ID';
     this.categoryPageNameSelect = '#cms-category-%ID';
+    this.suppliersPageLink = '#supplier-page';
+    this.brandsPageLink = '#manufacturer-page';
   }
 
   /*
@@ -40,5 +42,21 @@ module.exports = class SiteMap extends FOBasePage {
    */
   async getPageCategoryName(pageCategoryID) {
     return this.getTextContent(this.categoryPageNameSelect.replace('%ID', pageCategoryID));
+  }
+
+  /**
+   * Is suppliers link visible
+   * @returns {boolean}
+   */
+  isSuppliersLinkVisible() {
+    return this.elementVisible(this.suppliersPageLink, 2000);
+  }
+
+  /**
+   * Is brands link visible
+   * @returns {boolean}
+   */
+  isBrandsLinkVisible() {
+    return this.elementVisible(this.brandsPageLink, 2000);
   }
 };

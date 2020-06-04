@@ -26,6 +26,7 @@
 /* eslint-disable max-len */
 
 export default {
+  mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',
   orderPaymentFormAmountInput: '#order_payment_amount',
   orderPaymentInvoiceSelect: '#order_payment_id_invoice',
@@ -144,6 +145,7 @@ export default {
       partialRefund: 'button.partial-refund-display',
       standardRefund: 'button.standard-refund-display',
       returnProduct: 'button.return-product-display',
+      cancelProducts: 'button.cancel-product-display',
     },
     inputs: {
       quantity: '.cancel-product-quantity input',
@@ -171,6 +173,8 @@ export default {
       partialRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund), .cancel-product-amount',
       standardRefund: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.restock-products), .cancel-product-selector',
       returnProduct: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount), .cancel-product-selector',
+      cancelProducts: '.cancel-product-element:not(.hidden):not(.shipping-refund-amount):not(.shipping-refund):not(.restock-products):not(.refund-credit-slip):not(.refund-voucher), .cancel-product-selector',
     },
   },
+  printOrderViewPageButton: '.js-print-order-view-page',
 };

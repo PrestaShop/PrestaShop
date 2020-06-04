@@ -91,10 +91,6 @@ class CustomerFormatterCore implements FormFormatterInterface
     {
         $format = [];
 
-        $format['id_customer'] = (new FormField())
-            ->setName('id_customer')
-            ->setType('hidden');
-
         $genders = Gender::getGenders($this->language->id);
         if ($genders->count() > 0) {
             $genderField = (new FormField())

@@ -11,6 +11,10 @@ const ContactsPage = require('@pages/BO/shopParameters/contact');
 const AddContactPage = require('@pages/BO/shopParameters/contact/add');
 // Importing data
 const ContactFaker = require('@data/faker/contact');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_shopParams_contact_CRUDContact';
 
 let browser;
 let page;
@@ -44,6 +48,7 @@ describe('Create, Update and Delete contact in BO', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Shop parameters>Contact\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.contactLink,
@@ -55,18 +60,21 @@ describe('Create, Update and Delete contact in BO', async () => {
   });
 
   it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfContacts = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();
     await expect(numberOfContacts).to.be.above(0);
   });
   // 1 : Create contact in BO
   describe('Create contact in BO', async () => {
     it('should go to add new contact page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewContact', baseContext);
       await this.pageObjects.contactsPage.goToAddNewContactPage();
       const pageTitle = await this.pageObjects.addContactPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addContactPage.pageTitleCreate);
     });
 
     it('should create contact and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createContact', baseContext);
       const textResult = await this.pageObjects.addContactPage.createEditContact(createContactData);
       await expect(textResult).to.equal(this.pageObjects.contactsPage.successfulCreationMessage);
       const numberOfContactsAfterCreation = await this.pageObjects.contactsPage.getNumberOfElementInGrid();
@@ -77,17 +85,17 @@ describe('Create, Update and Delete contact in BO', async () => {
   // 2 : Update contact
   describe('Update contact created', async () => {
     it('should go to \'Shop parameters>Contact\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPageForUpdate', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.shopParametersParentLink,
         this.pageObjects.boBasePage.contactLink,
       );
-
-      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.contactsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.contactsPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
       await this.pageObjects.contactsPage.resetFilter();
       await this.pageObjects.contactsPage.filterContacts(
         'email',
@@ -98,12 +106,14 @@ describe('Create, Update and Delete contact in BO', async () => {
     });
 
     it('should go to edit contact page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToEditContactPage', baseContext);
       await this.pageObjects.contactsPage.goToEditContactPage(1);
       const pageTitle = await this.pageObjects.addContactPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.addContactPage.pageTitleEdit);
     });
 
     it('should update contact', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateContact', baseContext);
       const textResult = await this.pageObjects.addContactPage.createEditContact(editContactData);
       await expect(textResult).to.equal(this.pageObjects.contactsPage.successfulUpdateMessage);
       const numberOfContactsAfterUpdate = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();
@@ -114,17 +124,17 @@ describe('Create, Update and Delete contact in BO', async () => {
   // 3 : Delete contact from BO
   describe('Delete contact', async () => {
     it('should go to \'Shop parameters>Contact\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPageForDelete', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.shopParametersParentLink,
         this.pageObjects.boBasePage.contactLink,
       );
-
-      await this.pageObjects.boBasePage.closeSfToolBar();
       const pageTitle = await this.pageObjects.contactsPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.contactsPage.pageTitle);
     });
 
     it('should filter list by email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
       await this.pageObjects.contactsPage.resetFilter();
       await this.pageObjects.contactsPage.filterContacts(
         'email',
@@ -135,6 +145,7 @@ describe('Create, Update and Delete contact in BO', async () => {
     });
 
     it('should delete contact', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteContact', baseContext);
       const textResult = await this.pageObjects.contactsPage.deleteContact(1);
       await expect(textResult).to.equal(this.pageObjects.contactsPage.successfulDeleteMessage);
       const numberOfContactsAfterDelete = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();

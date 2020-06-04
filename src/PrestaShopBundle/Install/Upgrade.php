@@ -470,6 +470,7 @@ namespace PrestaShopBundle\Install {
                                 foreach ($parameters as &$parameter) {
                                     $parameter = str_replace('\'', '', $parameter);
                                 }
+                                unset($parameter);
                             }
 
                             $phpRes = null;

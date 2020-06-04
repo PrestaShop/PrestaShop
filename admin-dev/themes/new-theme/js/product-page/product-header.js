@@ -49,11 +49,6 @@ export default function () {
     if (!$(e.target).hasClass('active')) {
       $('#form_content > .form-contenttab').removeClass('active');
     }
-    if ($(e.target).attr('href') === '#step1') {
-      setTimeout(() => {
-        $('#description_short, #tab_description_short .description-tab').addClass('active');
-      }, 100);
-    }
   });
 
   $arrow.on('click', (e) => {

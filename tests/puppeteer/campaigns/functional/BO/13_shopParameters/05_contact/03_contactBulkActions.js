@@ -11,6 +11,10 @@ const ContactsPage = require('@pages/BO/shopParameters/contact');
 const AddContactPage = require('@pages/BO/shopParameters/contact/add');
 // Importing data
 const ContactFaker = require('@data/faker/contact');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_shopParams_contact_CRUDContact';
 
 let browser;
 let page;
@@ -44,6 +48,7 @@ describe('Create contacts then delete with Bulk actions', async () => {
   loginCommon.loginBO();
 
   it('should go to \'Shop parameters>Contact\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
     await this.pageObjects.boBasePage.goToSubMenu(
       this.pageObjects.boBasePage.shopParametersParentLink,
       this.pageObjects.boBasePage.contactLink,
@@ -54,6 +59,7 @@ describe('Create contacts then delete with Bulk actions', async () => {
   });
 
   it('should reset all filters and get number of contacts in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
     numberOfContacts = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();
     await expect(numberOfContacts).to.be.above(0);
   });
@@ -66,12 +72,14 @@ describe('Create contacts then delete with Bulk actions', async () => {
 
     tests.forEach((test, index) => {
       it('should go to add new contact page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToNewContactPage${index + 1}`, baseContext);
         await this.pageObjects.contactsPage.goToAddNewContactPage();
         const pageTitle = await this.pageObjects.addContactPage.getPageTitle();
         await expect(pageTitle).to.contains(this.pageObjects.addContactPage.pageTitleCreate);
       });
 
       it('should create contact and check result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `CreateContact${index + 1}`, baseContext);
         const textResult = await this.pageObjects.addContactPage.createEditContact(test.args.contactToCreate);
         await expect(textResult).to.equal(this.pageObjects.contactsPage.successfulCreationMessage);
         const numberOfContactsAfterCreation = await this.pageObjects.contactsPage.getNumberOfElementInGrid();
@@ -83,6 +91,7 @@ describe('Create contacts then delete with Bulk actions', async () => {
   // 2 : Delete Contacts created with bulk actions
   describe('Delete contacts with Bulk Actions', async () => {
     it('should filter list by title', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
       await this.pageObjects.contactsPage.filterContacts(
         'name',
         'todelete',
@@ -99,11 +108,13 @@ describe('Create contacts then delete with Bulk actions', async () => {
     });
 
     it('should delete contacts with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteContacts', baseContext);
       const deleteTextResult = await this.pageObjects.contactsPage.deleteContactsBulkActions();
       await expect(deleteTextResult).to.be.equal(this.pageObjects.contactsPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
       const numberOfContactsAfterReset = await this.pageObjects.contactsPage.resetAndGetNumberOfLines();
       await expect(numberOfContactsAfterReset).to.be.equal(numberOfContacts);
     });

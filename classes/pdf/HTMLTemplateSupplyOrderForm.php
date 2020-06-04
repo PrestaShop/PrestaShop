@@ -153,8 +153,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
             $result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);
             $result['total_tax_value'] = Tools::ps_round($result['total_tax_value'], 2);
         }
-
-        unset($result); // remove reference
+        unset($result);
 
         return $results;
     }

@@ -110,6 +110,18 @@ class Hashing
                     return password_hash($passwd, PASSWORD_BCRYPT);
                 },
                 'verify' => function ($passwd, $hash, $staticSalt) {
+                    /*
+                     * Prevent enumeration because nothing happens
+                     * when there is no, or an invalid hash.
+                     * Also, change the password to be sure it's not maching
+                     * the new hash.
+                     * The new hash is equal to 'test' in BCRYPT context.
+                     */
+                    if (empty($hash)) {
+                        $hash = '$2y$10$azRqq.pN0OlWjeVfVMZXOOwqYAx1hMfme6ZnDV.27grGOEZvG.uAO';
+                        $passwd = 'wrongPassword';
+                    }
+
                     return password_verify($passwd, $hash);
                 },
             ],

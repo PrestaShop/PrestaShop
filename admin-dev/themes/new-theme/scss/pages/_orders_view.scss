@@ -1,0 +1,92 @@
+#order-view-page {
+  @media not print {
+    .card-details {
+      border: none;
+      box-shadow: none;
+      .card-body {
+        padding: 0;
+      }
+    }
+  }
+
+  > .row:not(.d-print-none) {
+    @media print {
+      display: block !important;
+    }
+  }
+
+  @media print {
+    button,
+    select {
+      display: none;
+    }
+
+    a {
+      text-decoration: none;
+      color: #000000;
+    }
+
+    .left-column,
+    .right-column {
+      flex: 0 0 100%;
+      max-width: 100%;
+      width: 100%;
+
+      .card,
+      .tab-pane {
+        page-break-inside: avoid;
+      }
+    }
+
+    .tab-content {
+      padding: 0;
+      background-color: inherit;
+      .tab-pane {
+        opacity: 1;
+      }
+    }
+
+    .print-title {
+      .print-title-id {
+        color: #8a8a8a;
+      }
+    }
+
+    .badge-dark,
+    .badge-secondary {
+      color: black;
+      background-color: white;
+    }
+
+    .badge-print-light {
+      color: black !important;
+      background-color: white !important;
+      font-weight: normal;
+    }
+  }
+}
+
+.adminorders {
+  @media print {
+    display: block;
+
+    .header-toolbar {
+      position: initial;
+    }
+
+    #main-div .content-div {
+      // Forced to use an important there to override inline-style added with JS
+      /* stylelint-disable declaration-no-important */
+      padding-top: 0 !important;
+      /* stylelint-enable */
+    }
+
+    .toolbar-icons {
+      display: none;
+    }
+
+    .content-div > .row {
+      display: block;
+    }
+  }
+}

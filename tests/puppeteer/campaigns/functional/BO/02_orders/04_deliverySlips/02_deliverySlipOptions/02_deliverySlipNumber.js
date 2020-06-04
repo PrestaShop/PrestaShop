@@ -21,6 +21,10 @@ const {PaymentMethods} = require('@data/demo/orders');
 const {DefaultAccount} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orders');
 const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
+// Test context imports
+const testContext = require('@utils/testContext');
+
+const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_deliverySlipNumber';
 
 let browser;
 let page;
@@ -68,6 +72,7 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
 
   describe('Edit the Delivery slip number', async () => {
     it('should go to delivery slips page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPageToUpdateNumber', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.deliverySlipslink,
@@ -79,6 +84,7 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
     });
 
     it('should change the Delivery slip number', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateDeliverySlipsNumber', baseContext);
       await this.pageObjects.deliverySlipsPage.changeNumber(deliverySlipData.number);
       const textMessage = await this.pageObjects.deliverySlipsPage.saveDeliverySlipOptions();
       await expect(textMessage).to.contains(this.pageObjects.deliverySlipsPage.successfulUpdateMessage);
@@ -87,6 +93,7 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
 
   describe('Create new order in FO', async () => {
     it('should go to FO and create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
       // Click on view my shop
       page = await this.pageObjects.boBasePage.viewMyShop();
       this.pageObjects = await init();
@@ -122,6 +129,7 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
 
   describe('Create a delivery slip and check the edited data', async () => {
     it('should go to the orders page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
       await this.pageObjects.boBasePage.goToSubMenu(
         this.pageObjects.boBasePage.ordersParentLink,
         this.pageObjects.boBasePage.ordersLink,
@@ -132,17 +140,20 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
     });
 
     it('should go to the first order page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
       await this.pageObjects.ordersPage.goToOrder(1);
       const pageTitle = await this.pageObjects.viewOrderPage.getPageTitle();
       await expect(pageTitle).to.contains(this.pageObjects.viewOrderPage.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
       const result = await this.pageObjects.viewOrderPage.modifyOrderStatus(Statuses.shipped.status);
       await expect(result).to.be.true;
     });
 
     it('should check that the delivery slip file name contain the \'Delivery slip number\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlipsDocumentName', baseContext);
       fileName = await this.pageObjects.viewOrderPage.getFileName(3);
       expect(fileName).to.contains(deliverySlipData.number);
     });

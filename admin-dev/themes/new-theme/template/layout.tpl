@@ -11,7 +11,7 @@
 >
 
 {if $display_header}
-  <header id="header">
+  <header id="header" class="d-print-none">
 
     <nav id="header_infos" class="main-header">
       <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
