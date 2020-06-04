@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Colombia" version="1.0">
 	<currencies>
-		<currency name="Peso" iso_code="COP" iso_code_num="170" sign="$" blank="1" conversion_rate="2923.98" format="2" decimals="1" />
+		<currency name="Peso" iso_code="COP" iso_code_num="170" sign="$" blank="1" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="cb" />
@@ -19,7 +19,7 @@
 		<taxRulesGroup name="CO Reduced Rate (5%)">
 			<taxRule iso_code_country="co" id_tax="2" />
 		</taxRulesGroup>
-    
+
 		<taxRulesGroup name="CO Zero Rate (0%)">
 			<taxRule iso_code_country="co" id_tax="3" />
 		</taxRulesGroup>
