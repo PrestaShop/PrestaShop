@@ -17,7 +17,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategory';
 
-let browser;
+
 let browserContext;
 let page;
 

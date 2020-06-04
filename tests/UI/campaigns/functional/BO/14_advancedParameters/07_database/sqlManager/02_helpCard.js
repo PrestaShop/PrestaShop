@@ -16,7 +16,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_database_sqlManager_helpCard';
 
-let browser;
+
 let browserContext;
 let page;
 

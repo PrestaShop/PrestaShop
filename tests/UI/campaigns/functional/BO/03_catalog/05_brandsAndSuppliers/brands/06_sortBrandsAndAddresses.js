@@ -16,7 +16,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_sortBrandsAndAddresses';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfBrands = 0;

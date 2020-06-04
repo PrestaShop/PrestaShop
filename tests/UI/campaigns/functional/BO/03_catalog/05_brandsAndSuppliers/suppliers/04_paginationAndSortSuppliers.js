@@ -22,7 +22,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_paginationAndSortSuppliers';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfSuppliers = 0;

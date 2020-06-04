@@ -9,7 +9,7 @@ const helper = require('@utils/helpers');
 const InstallPage = require('@pages/install');
 const HomePage = require('@pages/FO/home');
 
-let browser;
+
 let browserContext;
 let page;
 

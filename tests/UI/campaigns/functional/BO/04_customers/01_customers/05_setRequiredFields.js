@@ -19,7 +19,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_customers_setRequiredFields';
 
-let browser;
+
 let browserContext;
 let page;
 

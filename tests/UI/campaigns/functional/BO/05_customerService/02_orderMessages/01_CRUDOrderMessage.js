@@ -20,7 +20,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customerService_orderMessages_CRUDOrderMessage';
 
-let browser;
+
 let browserContext;
 let page;
 let createOrderMessageData;

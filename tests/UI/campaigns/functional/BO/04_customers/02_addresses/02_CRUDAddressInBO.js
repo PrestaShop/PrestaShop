@@ -20,7 +20,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_addresses_CRUDAddressesInBO';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfAddresses = 0;

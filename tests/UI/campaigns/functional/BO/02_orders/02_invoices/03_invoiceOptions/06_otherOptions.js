@@ -30,7 +30,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_invoices_invoiceOptions_otherOptions';
 
-let browser;
+
 let browserContext;
 let page;
 

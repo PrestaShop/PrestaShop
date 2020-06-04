@@ -16,7 +16,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_invoices_generateInvoiceByStatus';
 
-let browser;
+
 let browserContext;
 let page;
 let filePath;

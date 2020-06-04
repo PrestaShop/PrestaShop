@@ -15,7 +15,7 @@ const {Products} = require('@data/demo/products');
 const {Categories} = require('@data/demo/categories');
 const {DefaultFrTax} = require('@data/demo/tax');
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfProducts = 0;

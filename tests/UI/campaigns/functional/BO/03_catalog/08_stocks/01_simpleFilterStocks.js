@@ -19,7 +19,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_stocks_simpleFilterStocks';
 
-let browser;
+
 let browserContext;
 let page;
 

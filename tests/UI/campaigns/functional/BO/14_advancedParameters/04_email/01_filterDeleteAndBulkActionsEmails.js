@@ -27,7 +27,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_email_filterDeleteAndBulkActionsEmails';
 
-let browser;
+
 let browserContext;
 let page;
 

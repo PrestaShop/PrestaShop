@@ -13,7 +13,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_exportOrders';
 
-let browser;
+
 let browserContext;
 let page;
 let filePath;

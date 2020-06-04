@@ -29,7 +29,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipByDate';
 
-let browser;
+
 let browserContext;
 let page;
 

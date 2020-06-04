@@ -16,7 +16,7 @@ const {DefaultAccount} = require('@data/demo/customer');
 const CartData = require('@data/FO/cart');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
-let browser;
+
 let browserContext;
 let page;
 

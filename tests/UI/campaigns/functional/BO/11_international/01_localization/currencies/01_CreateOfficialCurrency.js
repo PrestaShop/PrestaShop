@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_currencies_CreateOfficialCurrency';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfCurrencies = 0;

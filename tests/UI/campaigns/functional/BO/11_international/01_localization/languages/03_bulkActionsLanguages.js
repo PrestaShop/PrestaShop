@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_languages_bulkActionsLanguages';
 
-let browser;
+
 let browserContext;
 let page;
 const firstLanguageData = new LanguageFaker({name: 'languageToDelete1', isoCode: 'fi'});

@@ -19,7 +19,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_monitoring_sortProductsWithoutImage';
 
-let browser;
+
 let browserContext;
 let page;
 

@@ -15,7 +15,7 @@ const AddProductPage = require('@pages/BO/catalog/products/add');
 const FOProductPage = require('@pages/FO/product');
 const ProductFaker = require('@data/faker/product');
 
-let browser;
+
 let browserContext;
 let page;
 let productWithCombinations;

@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_design_pages_pagesBulkAction';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfPages = 0;

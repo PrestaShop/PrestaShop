@@ -22,7 +22,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_separatorOfAttributeAnchor';
 
-let browser;
+
 let browserContext;
 let page;
 

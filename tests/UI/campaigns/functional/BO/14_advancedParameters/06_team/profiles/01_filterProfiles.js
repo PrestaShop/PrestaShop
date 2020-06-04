@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_profiles_filterProfiles';
 
-let browser;
+
 let browserContext;
 let page;
 

@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_categories_editHomeCategory';
 
-let browser;
+
 let browserContext;
 let page;
 const editCategoryData = new CategoryFaker({name: 'Home'});

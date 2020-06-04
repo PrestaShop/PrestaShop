@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_languages_CRUDLanguages';
 
-let browser;
+
 let browserContext;
 let page;
 

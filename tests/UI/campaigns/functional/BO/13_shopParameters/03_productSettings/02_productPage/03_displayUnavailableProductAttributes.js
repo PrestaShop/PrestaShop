@@ -24,7 +24,7 @@ const baseContext = 'functional_BO_shopParameters_productSettings_displayUnavail
 // Import data
 const ProductFaker = require('@data/faker/product');
 
-let browser;
+
 let browserContext;
 let page;
 

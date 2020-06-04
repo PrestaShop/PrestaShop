@@ -15,7 +15,7 @@ const AutoUpgradePage = require('@pages/BO/modules/autoUpgrade');
 const HomePage = require('@pages/FO/home');
 const loginCommon = require('@commonTests/loginBO');
 
-let browser;
+
 let browserContext;
 let page;
 

@@ -20,7 +20,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_design_pages_CRUDPageCategory';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfCategories = 0;

@@ -14,7 +14,7 @@ const ProductsPage = require('@pages/BO/catalog/products');
 const AddProductPage = require('@pages/BO/catalog/products/add');
 const ProductFaker = require('@data/faker/product');
 
-let browser;
+
 let browserContext;
 let page;
 let productData;

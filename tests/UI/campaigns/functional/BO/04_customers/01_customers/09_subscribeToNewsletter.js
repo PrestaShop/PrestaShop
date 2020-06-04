@@ -23,7 +23,7 @@ const PsEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription')
 
 const baseContext = 'BO_customers_customers_subscribeToNewsletter';
 let numberOfCustomers = 0;
-let browser;
+
 let browserContext;
 let page;
 

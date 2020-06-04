@@ -23,7 +23,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_database_sqlManager_exportSqlQuery';
 
-let browser;
+
 let browserContext;
 let page;
 let filePath;

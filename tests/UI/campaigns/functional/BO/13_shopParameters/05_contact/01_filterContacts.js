@@ -19,7 +19,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_contact_filterContacts';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfContacts = 0;

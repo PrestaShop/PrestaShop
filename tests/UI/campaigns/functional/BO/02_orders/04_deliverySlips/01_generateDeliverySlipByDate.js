@@ -22,7 +22,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_deliverSlips_generateDeliverySlipByDate';
 
-let browser;
+
 let browserContext;
 let page;
 

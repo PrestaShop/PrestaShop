@@ -45,7 +45,7 @@ let requestError = false;
 let javascriptError = false;
 
 let page;
-let browser;
+
 let pagesToCrawl;
 
 /**

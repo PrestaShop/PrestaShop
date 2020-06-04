@@ -10,7 +10,7 @@ const HomePage = require('@pages/FO/home');
 const ProductPage = require('@pages/FO/product');
 const ProductData = require('@data/FO/product');
 
-let browser;
+
 let browserContext;
 let page;
 

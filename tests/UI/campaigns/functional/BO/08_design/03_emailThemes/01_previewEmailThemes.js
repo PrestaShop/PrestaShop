@@ -17,7 +17,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_design_emailThemes_previewEmailThemes';
 
-let browser;
+
 let browserContext;
 let page;
 

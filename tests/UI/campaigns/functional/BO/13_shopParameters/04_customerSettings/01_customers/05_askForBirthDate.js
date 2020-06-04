@@ -19,7 +19,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_customerSettings_customers_askForBirthDate';
 
-let browser;
+
 let browserContext;
 let page;
 

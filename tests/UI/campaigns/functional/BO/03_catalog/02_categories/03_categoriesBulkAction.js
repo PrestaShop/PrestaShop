@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_categories_categoriesBulkActions';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfCategories = 0;

@@ -16,7 +16,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_currencies_helpCard';
 
-let browser;
+
 let browserContext;
 let page;
 

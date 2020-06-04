@@ -22,7 +22,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_quantityDiscountsBasedOn';
 
-let browser;
+
 let browserContext;
 let page;
 const productWithCombinations = new ProductFaker(

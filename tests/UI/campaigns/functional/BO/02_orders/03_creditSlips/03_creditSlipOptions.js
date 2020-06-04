@@ -19,7 +19,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_creditSlips_creditSlipOptions';
 
-let browser;
+
 let browserContext;
 let page;
 

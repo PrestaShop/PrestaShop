@@ -21,7 +21,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_design_linkWidget_createAndCheckFooterLInkWidget';
 
-let browser;
+
 let browserContext;
 let page;
 let numberOfLinkWidgetInFooter = 0;

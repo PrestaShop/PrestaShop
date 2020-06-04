@@ -22,7 +22,7 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_enableDisableAccentedUrl';
 
-let browser;
+
 let browserContext;
 let page;
 

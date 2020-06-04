@@ -16,7 +16,7 @@ const FOProductPage = require('@pages/FO/product');
 const ProductFaker = require('@data/faker/product');
 const {DefaultFrTax} = require('@data/demo/tax');
 
-let browser;
+
 let browserContext;
 let page;
 let productData;
