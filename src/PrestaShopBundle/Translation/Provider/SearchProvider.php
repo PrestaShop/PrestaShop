@@ -34,8 +34,23 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Able to search translations for a specific translation domains across multiple sources
  */
-class SearchProvider extends AbstractProvider implements UseModuleInterface
+class SearchProvider implements SearchProviderInterface
 {
+    /**
+     * @var string Path where translation files are found
+     */
+    protected $resourceDirectory;
+
+    /**
+     * @var string Catalogue domain
+     */
+    protected $domain;
+
+    /**
+     * @var string locale
+     */
+    protected $locale;
+
     /**
      * @var string[]
      */
@@ -50,77 +65,51 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
      * @var ExternalModuleLegacySystemProvider
      */
     private $externalModuleLegacySystemProvider;
+    /**
+     * @var DatabaseTranslationLoader
+     */
+    private $databaseLoader;
 
     public function __construct(
         ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider,
         DatabaseTranslationLoader $databaseLoader,
-        $resourceDirectory,
-        $modulesDirectory
+        string $resourceDirectory,
+        string $modulesDirectory
     ) {
         $this->modulesDirectory = $modulesDirectory;
         $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
-
-        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Za-z]|$)'];
-
-        $this->filenameFilters = ['#^' . preg_quote($this->domain, '#') . '([A-Za-z]|\.|$)#'];
-
-        $defaultResourceDirectory = $resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-
-        parent::__construct(
-            $databaseLoader,
-            $resourceDirectory,
-            $translationDomains,
-            $this->filenameFilters,
-            $defaultResourceDirectory
-        );
+        $this->resourceDirectory = $resourceDirectory;
+        $this->databaseLoader = $databaseLoader;
     }
 
     /**
-     * Get domain.
+     * @param string $locale
      *
-     * @deprecated since 1.7.6, to be removed in the next major
+     * @return SearchProvider
+     */
+    public function setLocale(string $locale): SearchProvider
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @param string $domain
      *
-     * @return mixed
+     * @return SearchProvider
      */
-    public function getDomain()
+    public function setDomain(string $domain): SearchProvider
     {
-        @trigger_error(
-            __METHOD__ . ' function is deprecated and will be removed in the next major',
-            E_USER_DEPRECATED
-        );
+        $this->domain = $domain;
 
-        return $this->domain;
-    }
-
-    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
-    {
-        try {
-            $defaultCatalogue = parent::getDefaultCatalogue($empty);
-        } catch (FileNotFoundException $e) {
-            $defaultCatalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty);
-            $defaultCatalogue = $this->filterCatalogue($defaultCatalogue);
-        }
-
-        return $defaultCatalogue;
+        return $this;
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface
-    {
-        try {
-            $xliffCatalogue = parent::getFilesystemCatalogue();
-        } catch (\Exception $e) {
-            $xliffCatalogue = $this->externalModuleLegacySystemProvider->getFilesystemCatalogue();
-            $xliffCatalogue = $this->filterCatalogue($xliffCatalogue);
-        }
-
-        return $xliffCatalogue;
-    }
-
-    /**
-     * {@inheritdoc}
+     * @param string $moduleName
+     *
+     * @return SearchProvider
      */
     public function setModuleName($moduleName): SearchProvider
     {
@@ -130,18 +119,119 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
     }
 
     /**
-     * Filters the catalogue so that only domains matching the filters are kept
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return 'search';
+    }
+
+    /**
+     * @return MessageCatalogueInterface
      *
-     * @param MessageCatalogueInterface $defaultCatalogue
+     * @throws FileNotFoundException
+     */
+    public function getMessageCatalogue(): MessageCatalogueInterface
+    {
+        if (null === $this->locale) {
+            throw new \LogicException('Locale cannot be null. Call setLocale first');
+        }
+        if (null === $this->domain) {
+            throw new \LogicException('Domain cannot be null. Call setDomain first');
+        }
+
+        $messageCatalogue = $this->getDefaultCatalogue();
+
+        // Merge catalogues
+
+        $xlfCatalogue = $this->getFilesystemCatalogue();
+        $messageCatalogue->addCatalogue($xlfCatalogue);
+        unset($xlfCatalogue);
+
+        $databaseCatalogue = $this->getUserTranslatedCatalogue();
+        $messageCatalogue->addCatalogue($databaseCatalogue);
+        unset($databaseCatalogue);
+
+        return $messageCatalogue;
+    }
+
+    /**
+     * @param bool $empty
+     *
+     * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
+     */
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
+    {
+        try {
+            return (new DefaultCatalogueProvider())
+                ->setFilenameFilters($this->getFilenameFilters())
+                ->setDirectory($this->resourceDirectory . DIRECTORY_SEPARATOR . 'default')
+                ->setLocale($this->locale)
+                ->getCatalogue($empty);
+        } catch (FileNotFoundException $e) {
+            return $this->filterCatalogue(
+                $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty)
+            );
+        }
+    }
+
+    /**
+     * @return MessageCatalogueInterface
+     */
+    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    {
+        try {
+            return (new FileTranslatedCatalogueProvider())
+                ->setDirectory($this->resourceDirectory)
+                ->setFilenameFilters($this->getFilenameFilters())
+                ->setLocale($this->locale)
+                ->getCatalogue();
+        } catch (FileNotFoundException $e) {
+            return $this->filterCatalogue(
+                $this->externalModuleLegacySystemProvider->getFilesystemCatalogue()
+            );
+        }
+    }
+
+    /**
+     * @param string|null $theme
      *
      * @return MessageCatalogueInterface
      */
-    private function filterCatalogue(MessageCatalogueInterface $defaultCatalogue)
+    public function getUserTranslatedCatalogue(string $theme = null): MessageCatalogueInterface
+    {
+        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Za-z]|$)'];
+
+        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
+            ->setTranslationDomains($translationDomains)
+            ->setLocale($this->locale)
+            ->setTheme($theme)
+            ->getCatalogue();
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFilenameFilters()
+    {
+        return ['#^' . preg_quote($this->domain, '#') . '([A-Za-z]|\.|$)#'];
+    }
+
+    /**
+     * Filters the catalogue so that only domains matching the filters are kept
+     *
+     * @param MessageCatalogueInterface $catalogue
+     *
+     * @return MessageCatalogueInterface
+     */
+    private function filterCatalogue(MessageCatalogueInterface $catalogue)
     {
         $allowedDomains = [];
 
         // return only elements whose domain matches the filters
-        foreach ($defaultCatalogue->all() as $domain => $messages) {
+        foreach ($catalogue->all() as $domain => $messages) {
             foreach ($this->filenameFilters as $filter) {
                 if (preg_match($filter, $domain)) {
                     $allowedDomains[$domain] = $messages;
@@ -150,16 +240,8 @@ class SearchProvider extends AbstractProvider implements UseModuleInterface
             }
         }
 
-        $defaultCatalogue = new MessageCatalogue($this->getLocale(), $allowedDomains);
+        $catalogue = new MessageCatalogue($this->locale, $allowedDomains);
 
-        return $defaultCatalogue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier()
-    {
-        return 'search';
+        return $catalogue;
     }
 }
