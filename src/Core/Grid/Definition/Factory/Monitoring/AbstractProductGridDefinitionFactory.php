@@ -36,17 +36,21 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines reusable grids for product listing in monitoring page
  */
 abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -187,16 +191,13 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ])
             )
             ->add(
-                (new LinkRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'route' => 'admin_product_unit_action',
-                        'route_param_name' => 'id',
-                        'route_param_field' => 'id_product',
-                        'extra_route_params' => ['action' => 'delete'],
-                        'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildDeleteAction(
+                    'admin_product_unit_action',
+                    'id',
+                    'id_product',
+                    Request::METHOD_POST,
+                    ['action' => 'delete']
+                )
             );
     }
 }
