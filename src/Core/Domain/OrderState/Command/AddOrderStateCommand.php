@@ -45,7 +45,7 @@ class AddOrderStateCommand
     /**
      * @var bool
      */
-    private $logable;
+    private $loggable;
     /**
      * @var bool
      */
@@ -90,7 +90,7 @@ class AddOrderStateCommand
     public function __construct(
         array $localizedNames,
         string $color,
-        bool $logable,
+        bool $loggable,
         bool $invoice,
         bool $hidden,
         bool $sendEmail,
@@ -103,7 +103,7 @@ class AddOrderStateCommand
     ) {
         $this->setLocalizedNames($localizedNames);
         $this->color = $color;
-        $this->logable = $logable;
+        $this->loggable = $loggable;
         $this->invoice = $invoice;
         $this->hidden = $hidden;
         $this->sendEmail = $sendEmail;
@@ -152,9 +152,9 @@ class AddOrderStateCommand
     /**
      * @return bool
      */
-    public function isLogable()
+    public function isLoggable()
     {
-        return $this->logable;
+        return $this->loggable;
     }
 
     /**

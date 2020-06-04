@@ -91,8 +91,8 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
             $orderState->color = $command->getColor();
         }
 
-        if (null !== $command->isLogable()) {
-            $orderState->logable = $command->isLogable();
+        if (null !== $command->isLoggable()) {
+            $orderState->logable = $command->isLoggable();
         }
 
         if (null !== $command->isHidden()) {

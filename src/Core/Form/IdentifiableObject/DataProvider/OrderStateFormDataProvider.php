@@ -58,7 +58,7 @@ final class OrderStateFormDataProvider implements FormDataProviderInterface
         return [
             'name' => $editableOrderState->getLocalizedNames(),
             'color' => $editableOrderState->getColor(),
-            'logable' => $editableOrderState->isLogable(),
+            'loggable' => $editableOrderState->isLoggable(),
             'invoice' => $editableOrderState->isInvoice(),
             'hidden' => $editableOrderState->isHidden(),
             'send_email' => $editableOrderState->isSendEmail(),

@@ -77,8 +77,7 @@ class OrderStateType extends TranslatorAwareType
 
         foreach ($locales as $locale) {
             $languageId = $locale['id_lang'];
-            $this->templates[$languageId] = [];
-            $this->templateAttributes[$languageId] = [];
+            $this->templates[$languageId] = $this->templateAttributes[$languageId] = [];
 
             /** @var Layout $mailLayout */
             foreach ($mailLayouts as $mailLayout) {
@@ -123,7 +122,7 @@ class OrderStateType extends TranslatorAwareType
             ->add('color', ColorPickerType::class, [
                 'required' => false,
             ])
-            ->add('logable', CheckboxType::class, [
+            ->add('loggable', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans('Consider the associated order as validated.', 'Admin.Shopparameters.Feature'),
                 'attr' => [
