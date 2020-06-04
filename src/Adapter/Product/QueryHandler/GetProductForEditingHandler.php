@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use Product;
@@ -51,7 +52,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         return new ProductForEditing(
             (int) $product->id,
             (bool) $product->active,
-            $this->getBasicInformation($product)
+            $this->getBasicInformation($product),
+            $this->getCategoriesInformation($product)
         );
     }
 
@@ -68,6 +70,19 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $product->description,
             $product->description_short
         );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductCategoriesInformation
+     */
+    private function getCategoriesInformation(Product $product): ProductCategoriesInformation
+    {
+        $categoryIds = array_map('intval', $product->getCategories());
+        $defaultCategoryId = (int) $product->id_category_default;
+
+        return new ProductCategoriesInformation($categoryIds, $defaultCategoryId);
     }
 
     /**

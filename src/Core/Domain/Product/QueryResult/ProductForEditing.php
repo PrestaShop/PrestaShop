@@ -47,18 +47,26 @@ class ProductForEditing
     private $basicInformation;
 
     /**
+     * @var ProductCategoriesInformation
+     */
+    private $categoriesInformation;
+
+    /**
      * @param int $productId
      * @param bool $active
      * @param ProductBasicInformation $basicInformation
+     * @param ProductCategoriesInformation $categoriesInformation
      */
     public function __construct(
         int $productId,
         bool $active,
-        ProductBasicInformation $basicInformation
+        ProductBasicInformation $basicInformation,
+        ProductCategoriesInformation $categoriesInformation
     ) {
         $this->productId = $productId;
         $this->active = $active;
         $this->basicInformation = $basicInformation;
+        $this->categoriesInformation = $categoriesInformation;
     }
 
     /**
@@ -83,5 +91,13 @@ class ProductForEditing
     public function getBasicInformation(): ProductBasicInformation
     {
         return $this->basicInformation;
+    }
+
+    /**
+     * @return ProductCategoriesInformation
+     */
+    public function getCategoriesInformation(): ProductCategoriesInformation
+    {
+        return $this->categoriesInformation;
     }
 }
