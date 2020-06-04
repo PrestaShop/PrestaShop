@@ -72,6 +72,7 @@ export default {
   productsTablePaginationLink: '.page-item:not(.d-none):not(#orderProductsTablePaginationNext):not(#orderProductsTablePaginationPrev) .page-link',
   productsTablePaginationActive: '#orderProductsTablePagination .page-item.active span',
   productsTablePaginationTemplate: '#orderProductsTablePagination .page-item.d-none',
+  productsTablePaginationNumberSelector: '#orderProductsTablePaginationNumberSelector',
   productsTableRow: (productId) => `#orderProduct_${productId}`,
   productsTableRowEdited: (productId) => `#editOrderProduct_${productId}`,
   productsCellLocation: 'tr .cellProductLocation',
