@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set choices = column.options.choice_provider.getChoices() %}
+{% set choices = column.options.choice_provider.getChoices(record) %}
 {% set selectedChoice = record[column.options.field] %}
 {% set selectedChoiceName = '' %}
 {% set routeParams = record|array_pluck(column.options.record_route_params) %}
