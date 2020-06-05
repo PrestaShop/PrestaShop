@@ -242,7 +242,7 @@ class ProductCore extends ObjectModel
     /**
      * @var int TaxRulesGroup identifier
      */
-    public $id_tax_rules_group = 1;
+    public $id_tax_rules_group;
 
     /**
      * @var int
