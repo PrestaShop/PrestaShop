@@ -181,10 +181,11 @@ class ExternalModuleLegacySystemProvider implements SearchProviderInterface
     public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
     {
         try {
-            $defaultCatalogue = (new DefaultCatalogueProvider())
-                ->setFilenameFilters($this->getFilenameFilters())
-                ->setDirectory($this->getDefaultResourceDirectory())
-                ->setLocale($this->locale)
+            $defaultCatalogue = (new DefaultCatalogueProvider(
+                $this->locale,
+                $this->getDefaultResourceDirectory(),
+                $this->getFilenameFilters()
+            ))
                 ->getCatalogue($empty);
         } catch (FileNotFoundException $e) {
             $defaultCatalogue = $this->getCachedDefaultCatalogue();
@@ -225,11 +226,12 @@ class ExternalModuleLegacySystemProvider implements SearchProviderInterface
     {
         $translationDomains = ['^' . preg_quote($this->domain) . '([A-Z]|$)'];
 
-        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
-            ->setTranslationDomains($translationDomains)
-            ->setLocale($this->locale)
-            ->setTheme($theme)
-            ->getCatalogue();
+        return (new UserTranslatedCatalogueProvider(
+            $this->databaseLoader,
+            $this->locale,
+            $translationDomains
+        ))
+            ->getCatalogue($theme);
     }
 
     /**
