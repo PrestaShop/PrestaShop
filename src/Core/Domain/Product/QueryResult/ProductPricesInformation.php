@@ -71,6 +71,11 @@ class ProductPricesInformation
     private $unity;
 
     /**
+     * @var Number
+     */
+    private $unitPriceRatio;
+
+    /**
      * @param Number $price
      * @param Number $ecotax
      * @param int $taxRulesGroupId
@@ -78,6 +83,7 @@ class ProductPricesInformation
      * @param Number $wholesalePrice
      * @param Number $unitPrice
      * @param string $unity
+     * @param Number $unitPriceRatio
      */
     public function __construct(
         Number $price,
@@ -86,7 +92,8 @@ class ProductPricesInformation
         bool $onSale,
         Number $wholesalePrice,
         Number $unitPrice,
-        string $unity
+        string $unity,
+        Number $unitPriceRatio
     ) {
         $this->price = $price;
         $this->ecotax = $ecotax;
@@ -95,6 +102,7 @@ class ProductPricesInformation
         $this->wholesalePrice = $wholesalePrice;
         $this->unitPrice = $unitPrice;
         $this->unity = $unity;
+        $this->unitPriceRatio = $unitPriceRatio;
     }
 
     /**
@@ -151,5 +159,13 @@ class ProductPricesInformation
     public function getUnity(): string
     {
         return $this->unity;
+    }
+
+    /**
+     * @return Number
+     */
+    public function getUnitPriceRatio(): Number
+    {
+        return $this->unitPriceRatio;
     }
 }
