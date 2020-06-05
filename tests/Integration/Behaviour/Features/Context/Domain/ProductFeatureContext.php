@@ -260,32 +260,36 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
-        $this->assertNumberPriceField('price', $pricesInfo);
-        $this->assertNumberPriceField('ecotax', $pricesInfo);
-        $this->assertNumberPriceField('wholesale_price', $pricesInfo);
-        $this->assertNumberPriceField('unit_price', $pricesInfo);
-        $this->assertNumberPriceField('unit_price_ratio', $pricesInfo);
+        $this->assertNumberPriceFields($data, $pricesInfo);
     }
 
     /**
-     * @param string $fieldName
+     * @param array $expectedPrices
      * @param ProductPricesInformation $actualPrices
      */
-    private function assertNumberPriceField(string $fieldName, ProductPricesInformation $actualPrices)
+    private function assertNumberPriceFields(array $expectedPrices, ProductPricesInformation $actualPrices)
     {
+        $numberPriceFields = [
+            'price',
+            'ecotax',
+            'wholesale_price',
+            'unit_price',
+            'unit_price_ratio',
+        ];
+
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
-        if (isset($data[$fieldName])) {
-            $expectedNumber = new Number((string) $data[$fieldName]);
-            $actualNumber = $propertyAccessor->getValue($actualPrices, $fieldName);
+        foreach ($numberPriceFields as $field) {
+            if (isset($expectedPrices[$field])) {
+                $expectedNumber = new Number((string) $expectedPrices[$field]);
+                $actualNumber = $propertyAccessor->getValue($actualPrices, $field);
 
-            if ($expectedNumber->equals($actualNumber)) {
-                return;
+                if (!$expectedNumber->equals($actualNumber)) {
+                    throw new RuntimeException(
+                        sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
+                    );
+                }
             }
-
-            throw new RuntimeException(
-                sprintf('Product %s expected to be "%s", but is "%s"', $fieldName, $expectedNumber, $actualNumber)
-            );
         }
     }
 
