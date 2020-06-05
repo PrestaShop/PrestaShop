@@ -114,10 +114,11 @@ class FrontOfficeProvider implements ProviderInterface
      */
     public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
     {
-        return (new DefaultCatalogueProvider())
-            ->setFilenameFilters($this->getFilenameFilters())
-            ->setDirectory($this->resourceDirectory . DIRECTORY_SEPARATOR . 'default')
-            ->setLocale($this->locale)
+        return (new DefaultCatalogueProvider(
+            $this->locale,
+            $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
+            $this->getFilenameFilters()
+        ))
             ->getCatalogue($empty);
     }
 
@@ -128,10 +129,11 @@ class FrontOfficeProvider implements ProviderInterface
      */
     public function getFilesystemCatalogue(): MessageCatalogueInterface
     {
-        return (new FileTranslatedCatalogueProvider())
-            ->setDirectory($this->resourceDirectory)
-            ->setFilenameFilters($this->getFilenameFilters())
-            ->setLocale($this->locale)
+        return (new FileTranslatedCatalogueProvider(
+            $this->locale,
+            $this->resourceDirectory,
+            $this->getFilenameFilters()
+        ))
             ->getCatalogue();
     }
 
@@ -151,11 +153,12 @@ class FrontOfficeProvider implements ProviderInterface
             '^Modules(.*)Shop',
         ];
 
-        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
-            ->setTranslationDomains($translationDomains)
-            ->setLocale($this->locale)
-            ->setTheme($themeName)
-            ->getCatalogue();
+        return (new UserTranslatedCatalogueProvider(
+            $this->databaseLoader,
+            $this->locale,
+            $translationDomains
+        ))
+            ->getCatalogue($themeName);
     }
 
     /**

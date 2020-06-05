@@ -28,9 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-interface FileSystemCatalogueProviderInterface
-{
-    public function setDirectory(string $directory): FileSystemCatalogueProviderInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
-    public function setLocale(string $locale): FileSystemCatalogueProviderInterface;
+/**
+ * Define contract to retrieve FileTranslatedCatalogue.
+ */
+interface FileTranslatedCatalogueProviderInterface
+{
+    /**
+     * Returns the catalogue from files.
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getFilesystemCatalogue(): MessageCatalogueInterface;
 }
