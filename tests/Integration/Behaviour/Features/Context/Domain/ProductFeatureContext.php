@@ -235,15 +235,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         if (isset($data[$fieldName])) {
-            $expectedPrice = new Number((string) $data[$fieldName]);
-            $actualPrice = $propertyAccessor->getValue($actualPrices, $fieldName);
+            $expectedNumber = new Number((string) $data[$fieldName]);
+            $actualNumber = $propertyAccessor->getValue($actualPrices, $fieldName);
 
-            if ($expectedPrice->equals($actualPrice)) {
+            if ($expectedNumber->equals($actualNumber)) {
                 return;
             }
 
             throw new RuntimeException(
-                sprintf('Product %s expected to be "%s", but is "%s"', $fieldName, $expectedPrice, $actualPrice)
+                sprintf('Product %s expected to be "%s", but is "%s"', $fieldName, $expectedNumber, $actualNumber)
             );
         }
     }
