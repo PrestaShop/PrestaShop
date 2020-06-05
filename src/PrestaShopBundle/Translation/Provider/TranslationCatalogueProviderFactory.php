@@ -88,31 +88,32 @@ class TranslationCatalogueProviderFactory
 
     /**
      * @param string $type
-     * @param string|null $locale
+     * @param string $locale
+     * @param string|null $theme
      *
-     * @return TranslationCatalogueProviderInterface
+     * @return DefaultCatalogueProviderInterface
      */
     public function getDefaultCatalogueProvider(
         string $type,
-        ?string $locale
-    ): TranslationCatalogueProviderInterface {
+        string $locale,
+        ?string $theme
+    ): DefaultCatalogueProviderInterface {
         if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others', 'external_legacy_module'])) {
             throw new LogicException("The 'type' parameter is not valid. $type given");
         }
 
-        if (null === $locale && 'themes' !== $type) {
-            throw new LogicException("'locale' parameter cannot be null except for themes type");
+        if ('external_legacy_module' === $type) {
+            return $this->getExternalLegacyModuleProvider();
+        }
+        if ('themes' === $type) {
+            return $this->getThemeCatalogueProvider($locale, $theme);
         }
 
-        return (new DefaultCatalogueProvider())
-            ->setLocale($locale)
-            ->setDirectory(
-                $this->getDefaultDirectory($type)
-            )
-            ->setFilenameFilters(
-                $this->getFilenameFilters($type)
-            )
-        ;
+        return new DefaultCatalogueProvider(
+            $locale,
+            $this->getDefaultDirectory($type),
+            $this->getFilenameFilters($type)
+        );
     }
 
     /**
@@ -120,34 +121,28 @@ class TranslationCatalogueProviderFactory
      * @param string|null $locale
      * @param string|null $theme
      *
-     * @return TranslationCatalogueProviderInterface
+     * @return FileTranslatedCatalogueProviderInterface
      */
     public function getFileTranslatedCatalogueProvider(
         string $type,
-        ?string $locale,
+        string $locale,
         ?string $theme
-    ): TranslationCatalogueProviderInterface {
+    ): FileTranslatedCatalogueProviderInterface {
         if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others', 'external_legacy_module'])) {
             throw new LogicException("The 'type' parameter is not valid. $type given2");
         }
-
-        if (null === $locale && 'themes' !== $type) {
-            throw new LogicException("'locale' parameter cannot be null except for themes type");
+        if ('external_legacy_module' === $type) {
+            return $this->getExternalLegacyModuleProvider();
+        }
+        if ('themes' === $type) {
+            return $this->getThemeCatalogueProvider($locale, $theme);
         }
 
-        $provider = new FileTranslatedCatalogueProvider();
-
-        $provider
-            ->setLocale($locale)
-            ->setDirectory(
-                $this->getDirectory($type, $locale, $theme)
-            )
-            ->setFilenameFilters(
-                $this->getFilenameFilters($type)
-            )
-        ;
-
-        return $provider;
+        return new FileTranslatedCatalogueProvider(
+            $locale,
+            $this->getDirectory($type, $locale, $theme),
+            $this->getFilenameFilters($type)
+        );
     }
 
     /**
@@ -155,32 +150,29 @@ class TranslationCatalogueProviderFactory
      * @param string|null $locale
      * @param string|null $theme
      *
-     * @return TranslationCatalogueProviderInterface
+     * @return UserTranslatedCatalogueProviderInterface
      */
     public function getUserTranslatedCatalogueProvider(
         string $type,
-        ?string $locale,
+        string $locale,
         ?string $theme
-    ): TranslationCatalogueProviderInterface {
+    ): UserTranslatedCatalogueProviderInterface {
         if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others', 'external_legacy_module'])) {
             throw new LogicException("The 'type' parameter is not valid. $type given3");
         }
 
-        if (null === $locale && 'themes' !== $type) {
-            throw new LogicException("'locale' parameter cannot be null except for themes type");
+        if ('external_legacy_module' === $type) {
+            return $this->getExternalLegacyModuleProvider();
+        }
+        if ('themes' === $type) {
+            return $this->getThemeCatalogueProvider($locale, $theme);
         }
 
-        $provider = new UserTranslatedCatalogueProvider($this->databaseLoader);
-
-        $provider
-            ->setLocale($locale)
-            ->setTheme($theme)
-            ->setTranslationDomains(
-                $this->getTranslationDomains($type)
-            )
-        ;
-
-        return $provider;
+        return new UserTranslatedCatalogueProvider(
+            $this->databaseLoader,
+            $locale,
+            $this->getTranslationDomains($type)
+        );
     }
 
     /**
