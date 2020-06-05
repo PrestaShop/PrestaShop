@@ -40,11 +40,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class ThemeProvider implements ProviderInterface
 {
     /**
-     * @var string Path where translation files are found
-     */
-    protected $resourceDirectory;
-
-    /**
      * @var string Catalogue domain
      */
     protected $domain;
@@ -232,10 +227,11 @@ class ThemeProvider implements ProviderInterface
         // load front office catalogue
         $catalogue = $this->frontOfficeProvider->getFilesystemCatalogue();
 
-        $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider())
-            ->setDirectory($this->resourceDirectory)
-            ->setFilenameFilters(['*'])
-            ->setLocale($this->locale)
+        $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider(
+            $this->locale,
+            $this->themeResourcesDirectory,
+            ['*']
+        ))
             ->getCatalogue();
 
         // overwrite with the theme's own catalogue
@@ -260,11 +256,12 @@ class ThemeProvider implements ProviderInterface
             $themeName = $this->getThemeName();
         }
 
-        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
-            ->setTranslationDomains($translationDomains)
-            ->setLocale($this->locale)
-            ->setTheme($themeName)
-            ->getCatalogue();
+        return (new UserTranslatedCatalogueProvider(
+            $this->databaseLoader,
+            $this->locale,
+            $translationDomains
+        ))
+            ->getCatalogue($themeName);
     }
 
     /**

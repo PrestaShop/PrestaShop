@@ -165,10 +165,11 @@ class SearchProvider implements SearchProviderInterface
     public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
     {
         try {
-            return (new DefaultCatalogueProvider())
-                ->setFilenameFilters($this->getFilenameFilters())
-                ->setDirectory($this->resourceDirectory . DIRECTORY_SEPARATOR . 'default')
-                ->setLocale($this->locale)
+            return (new DefaultCatalogueProvider(
+                $this->locale,
+                $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
+                $this->getFilenameFilters()
+            ))
                 ->getCatalogue($empty);
         } catch (FileNotFoundException $e) {
             return $this->filterCatalogue(
@@ -183,10 +184,11 @@ class SearchProvider implements SearchProviderInterface
     public function getFilesystemCatalogue(): MessageCatalogueInterface
     {
         try {
-            return (new FileTranslatedCatalogueProvider())
-                ->setDirectory($this->resourceDirectory)
-                ->setFilenameFilters($this->getFilenameFilters())
-                ->setLocale($this->locale)
+            return (new FileTranslatedCatalogueProvider(
+                $this->locale,
+                $this->resourceDirectory,
+                $this->getFilenameFilters()
+            ))
                 ->getCatalogue();
         } catch (FileNotFoundException $e) {
             return $this->filterCatalogue(
@@ -204,11 +206,12 @@ class SearchProvider implements SearchProviderInterface
     {
         $translationDomains = ['^' . preg_quote($this->domain) . '([A-Za-z]|$)'];
 
-        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
-            ->setTranslationDomains($translationDomains)
-            ->setLocale($this->locale)
-            ->setTheme($theme)
-            ->getCatalogue();
+        return (new UserTranslatedCatalogueProvider(
+            $this->databaseLoader,
+            $this->locale,
+            $translationDomains
+        ))
+            ->getCatalogue($theme);
     }
 
     /**
