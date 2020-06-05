@@ -15,7 +15,7 @@ You can also discuss with other PrestaShop users on
 - community Slack channel (https://github.com/PrestaShop/open-source/blob/master/slack/readme.md)
 
 
-If you have questions about a PrestaShop you have downloaded or bought on PrestaShop Addons marketplace, you can contact the module developer through the link provided on Addons module page.
+If you have questions about a PrestaShop's module/theme you have downloaded or bought on PrestaShop Addons marketplace, you can contact the module developer through the link provided on Addons module page.
 
 
 If you need help with your shop or third-party modules, you can also refer to one of our support plans: https://www.prestashop.com/support
