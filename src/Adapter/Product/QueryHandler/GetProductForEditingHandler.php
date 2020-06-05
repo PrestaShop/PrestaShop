@@ -119,7 +119,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             new Number((string) $product->wholesale_price),
             new Number((string) $product->unit_price),
             (string) $product->unity,
-            new Number((string) $product->unit_price_ratio),
+            new Number((string) $product->unit_price_ratio)
         );
     }
 
