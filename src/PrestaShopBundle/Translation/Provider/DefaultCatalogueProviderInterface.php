@@ -28,9 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-interface FileSystemCatalogueProviderInterface
-{
-    public function setDirectory(string $directory): FileSystemCatalogueProviderInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
-    public function setLocale(string $locale): FileSystemCatalogueProviderInterface;
+/**
+ * Define contract to retrieve default catalogue.
+ */
+interface DefaultCatalogueProviderInterface
+{
+    /**
+     * Returns the default (aka not translated) catalogue
+     *
+     * @param bool $empty [default=true] If true, keeps the keys but empties translations
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface;
 }
