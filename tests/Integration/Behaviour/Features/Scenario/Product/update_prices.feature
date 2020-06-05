@@ -11,7 +11,7 @@ Feature: Update product price fields from Back Office (BO).
     And product "product1" should have following values:
       | price              | 0           |
       | ecotax             | 0           |
-      # @todo; although it doesnt make sense, the legacy obj model has "1" tax rule group id by default.
+      # @todo; although it doesnt make sense, the legacy obj model has "1" tax rule group id by default. #19598
       # @todo: remake to a more user friendly name instead of using "id"?
       | tax_rules_group_id | 1           |
       | on_sale            | false       |
@@ -19,3 +19,13 @@ Feature: Update product price fields from Back Office (BO).
       | unit_price         | 0           |
       | unity              |             |
       | unit_price_ratio   | 0           |
+    When I update product "product1" prices with following information:
+      | price              | 100.99      |
+      # @todo; can we change ecotax somewhere in ui?
+      | ecotax             | 0           |
+      | tax_rules_group_id | 0           |
+      | on_sale            | true        |
+      | wholesale_price    | 70          |
+      | unit_price         | 900         |
+      | unity              | bag of ten  |
+    #@todo: unit price ratio assertion

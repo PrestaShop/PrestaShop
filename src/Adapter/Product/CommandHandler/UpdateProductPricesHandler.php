@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
@@ -83,13 +84,34 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
         }
 
-        if (null !== $command->getUnitPrice()) {
-            $product->unit_price = (float) (string) $command->getUnitPrice();
-            $this->validateField($product, 'unit_price', ProductConstraintException::INVALID_UNIT_PRICE);
+        $unitPrice = $command->getUnitPrice();
+        if (null !== $unitPrice) {
+            $this->validateUnitPrice($unitPrice);
+            $product->unit_price = (float) (string) $unitPrice;
         }
 
         if (null !== $command->getUnity()) {
             $product->unity = $command->getUnity();
+        }
+    }
+
+    /**
+     * Unit price validation is not involved in legacy validation, so it is checked manually to have unsigned int value
+     *
+     * @param Number $unitPrice
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateUnitPrice(Number $unitPrice): void
+    {
+        if ($unitPrice->isLowerThan(new Number('0'))) {
+            throw new ProductConstraintException(
+                sprintf(
+                    'Invalid product unit_price. Got "%s"',
+                    $unitPrice
+                ),
+                ProductConstraintException::INVALID_UNIT_PRICE
+            );
         }
     }
 

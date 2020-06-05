@@ -34,6 +34,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -178,6 +179,48 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
+    }
+
+    /**
+     * @When I update product :productReference prices with following information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductPrices(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        $command = new UpdateProductPricesCommand($this->getProductIdByName($productId));
+
+        if (isset($data['price'])) {
+            $command->setPrice($data['price']);
+        }
+        if (isset($data['ecotax'])) {
+            $command->setEcotax($data['ecotax']);
+        }
+        if (isset($data['tax_rules_group_id'])) {
+            $command->setTaxRulesGroupId($data['tax_rules_group_id']);
+        }
+        if (isset($data['on_sale'])) {
+            $command->setOnSale(PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']));
+        }
+        if (isset($data['wholesale_price'])) {
+            $command->setWholesalePrice($data['wholesale_price']);
+        }
+        if (isset($data['unit_price'])) {
+            $command->setUnitPrice($data['unit_price']);
+        }
+        if (isset($data['unity'])) {
+            $command->setUnity($data['unity']);
+        }
+
+        try {
+            $this->getQueryBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
