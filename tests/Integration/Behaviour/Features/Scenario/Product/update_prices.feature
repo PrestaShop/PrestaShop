@@ -8,6 +8,12 @@ Feature: Update product price fields from Back Office (BO).
     Given I add product "product1" with following information:
       | name       | en-US:magic staff |
       | is_virtual | false             |
-    Then product "product1" should have following values:
-      | price            | 0           |
-
+    And product "product1" should have following values:
+      | price              | 0           |
+      | ecotax             | 0           |
+      | tax_rules_group_id | 0           |
+      | on_sale            | false       |
+      | wholesale_price    | 0           |
+      | unit_price         | 0           |
+      | unity              |             |
+      | unit_price_ratio   | 0           |

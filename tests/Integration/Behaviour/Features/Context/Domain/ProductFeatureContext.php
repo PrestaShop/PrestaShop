@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
 use Language;
+use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -175,38 +177,75 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
-        if (isset($data['price'])) {
-            $expectedPrice = new Number((string) $data['price']);
-            $actualPrice = $productForEditing->getPricesInformation()->getPrice();
+        $this->assertPriceFields($data, $productForEditing->getPricesInformation());
+    }
+
+    /**
+     * @param array $data
+     * @param ProductPricesInformation $pricesInfo
+     */
+    private function assertPriceFields(array $data, ProductPricesInformation $pricesInfo): void
+    {
+        if (isset($data['on_sale'])) {
+            $expectedOnSale = PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']);
+            $onSaleInWords = $expectedOnSale ? 'to be on sale' : 'to be not on sale';
+
+            Assert::assertEquals(
+                $expectedOnSale,
+                $pricesInfo->isOnSale(),
+                sprintf('Expected product %s', $onSaleInWords)
+            );
+        }
+
+        if (isset($data['tax_rules_group_id'])) {
+            $expectedGroup = (int) $data['tax_rules_group_id'];
+            $actualGroup = $pricesInfo->getTaxRulesGroupId();
+
+            Assert::assertEquals(
+                $expectedGroup,
+                $actualGroup,
+                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedGroup, $actualGroup)
+            );
+        }
+
+        if (isset($data['unity'])) {
+            $expectedUnity = $data['unity'];
+            $actualUnity = $pricesInfo->getUnity();
+
+            Assert::assertEquals(
+                $expectedUnity,
+                $actualUnity,
+                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedUnity, $actualUnity)
+            );
+        }
+
+        $this->assertNumberPriceField('price', $pricesInfo);
+        $this->assertNumberPriceField('ecotax', $pricesInfo);
+        $this->assertNumberPriceField('wholesale_price', $pricesInfo);
+        $this->assertNumberPriceField('unit_price', $pricesInfo);
+        $this->assertNumberPriceField('unit_price_ratio', $pricesInfo);
+    }
+
+    /**
+     * @param string $fieldName
+     * @param ProductPricesInformation $actualPrices
+     */
+    private function assertNumberPriceField(string $fieldName, ProductPricesInformation $actualPrices)
+    {
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        if (isset($data[$fieldName])) {
+            $expectedPrice = new Number((string) $data[$fieldName]);
+            $actualPrice = $propertyAccessor->getValue($actualPrices, $fieldName);
 
             if ($expectedPrice->equals($actualPrice)) {
                 return;
             }
 
             throw new RuntimeException(
-                sprintf('Product price expected to be "%s", but is "%s"', $expectedPrice, $actualPrice)
+                sprintf('Product %s expected to be "%s", but is "%s"', $fieldName, $expectedPrice, $actualPrice)
             );
         }
-    }
-
-    /**
-     * @param string $expected
-     * @param string $actual
-     *
-     * @return bool
-     */
-    private function assertEqualNumbers(
-        string $expected,
-        string $actual
-    ): bool {
-        $expected = new Number($expected);
-        $actual = new Number($actual);
-
-        if ($expected->equals($actual)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
