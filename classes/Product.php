@@ -112,7 +112,7 @@ class ProductCore extends ObjectModel
     public $unity = null;
 
     /** @var float price for product's unity */
-    public $unit_price;
+    public $unit_price = 0;
 
     /** @var float price for product's unity ratio */
     public $unit_price_ratio = 0;
