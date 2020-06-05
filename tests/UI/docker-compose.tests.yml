@@ -19,5 +19,6 @@ services:
       - .docker:/tmp/docker
       - ./reports:/tests/reports
       - ./mochawesome-report:/tests/mochawesome-report
+      - /dev/shm:/dev/shm
     networks:
       - default
