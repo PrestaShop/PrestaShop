@@ -60,9 +60,20 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      */
     private function fillProductWithCommandData(Product $product, UpdateProductPricesCommand $command): void
     {
-        if (null !== $command->getPrice()) {
-            $product->price = (float) (string) $command->getPrice();
+        $price = $command->getPrice();
+        $unitPrice = $command->getUnitPrice();
+
+        if (null !== $price) {
+            $product->price = (float) (string) $price;
             $this->validateField($product, 'price', ProductConstraintException::INVALID_PRICE);
+        }
+
+        if (null !== $unitPrice) {
+            $this->setUnitPriceInfo($product, $unitPrice, $price);
+        }
+
+        if (null !== $command->getUnity()) {
+            $product->unity = $command->getUnity();
         }
 
         if (null !== $command->getEcotax()) {
@@ -83,16 +94,26 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             $product->wholesale_price = (float) (string) $command->getWholesalePrice();
             $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
         }
+    }
 
-        $unitPrice = $command->getUnitPrice();
-        if (null !== $unitPrice) {
-            $this->validateUnitPrice($unitPrice);
-            $product->unit_price = (float) (string) $unitPrice;
+    /**
+     * @param Product $product
+     * @param Number $unitPrice
+     * @param Number $price
+     *
+     * @throws ProductConstraintException
+     */
+    private function setUnitPriceInfo(Product $product, Number $unitPrice, Number $price): void
+    {
+        $this->validateUnitPrice($unitPrice);
+
+        if ($unitPrice->equals(new Number('0'))) {
+            return;
         }
 
-        if (null !== $command->getUnity()) {
-            $product->unity = $command->getUnity();
-        }
+        $ratio = $price->dividedBy($unitPrice);
+        $product->unit_price_ratio = (float) (string) $ratio;
+        $product->unit_price = (float) (string) $unitPrice;
     }
 
     /**

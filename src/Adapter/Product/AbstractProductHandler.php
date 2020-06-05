@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -61,6 +62,8 @@ abstract class AbstractProductHandler
                     $productIdValue
                 ));
             }
+
+            $this->setUnitPrice($product);
         } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf('Error occurred when trying to get product #%s', $productId),
@@ -119,6 +122,19 @@ abstract class AbstractProductHandler
                 ),
                 $errorCode
             );
+        }
+    }
+
+    /**
+     * @param Product $product
+     */
+    private function setUnitPrice(Product $product)
+    {
+        $price = new Number((string) $product->price);
+        $unitPriceRatio = new Number((string) $product->unit_price_ratio);
+
+        if (!$unitPriceRatio->equals(new Number('0'))) {
+            $product->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
         }
     }
 }
