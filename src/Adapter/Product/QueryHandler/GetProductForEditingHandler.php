@@ -29,35 +29,60 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetEditableProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\EditableProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use Product;
 
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-class GetEditableProductHandler extends AbstractProductHandler implements GetEditableProductHandlerInterface
+class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @throws ProductConstraintException
-     * @throws ProductException
-     * @throws ProductNotFoundException
      */
-    public function handle(GetEditableProduct $query): EditableProduct
+    public function handle(GetProductForEditing $query): ProductForEditing
     {
         $product = $this->getProduct($query->getProductId());
 
-        return new EditableProduct(
-            $product->id,
-            $product->name,
-            $this->getProductType($product)
+        return new ProductForEditing(
+            (int) $product->id,
+            (bool) $product->active,
+            $this->getBasicInformation($product),
+            $this->getCategoriesInformation($product)
         );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductBasicInformation
+     */
+    private function getBasicInformation(Product $product): ProductBasicInformation
+    {
+        return new ProductBasicInformation(
+            $this->getProductType($product),
+            $product->name,
+            $product->description,
+            $product->description_short
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductCategoriesInformation
+     */
+    private function getCategoriesInformation(Product $product): ProductCategoriesInformation
+    {
+        $categoryIds = array_map('intval', $product->getCategories());
+        $defaultCategoryId = (int) $product->id_category_default;
+
+        return new ProductCategoriesInformation($categoryIds, $defaultCategoryId);
     }
 
     /**

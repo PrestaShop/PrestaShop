@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Get Product data necessary for edition
+ * Get Product data necessary for editing
  */
-class GetEditableProduct
+class GetProductForEditing
 {
     /**
      * @var ProductId

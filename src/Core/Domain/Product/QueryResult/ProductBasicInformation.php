@@ -24,17 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 /**
- * DTO for product that needs to be edited
+ * Contains some basic information about product
  */
-class EditableProduct
+class ProductBasicInformation
 {
     /**
-     * @var int
+     * @var ProductType
      */
-    private $productId;
+    private $type;
 
     /**
      * @var string[]
@@ -42,26 +44,39 @@ class EditableProduct
     private $localizedNames;
 
     /**
-     * @var ProductType
+     * @var string[]
      */
-    private $type;
+    private $localizedDescriptions;
 
+    /**
+     * @var string[]
+     */
+    private $localizedShortDescriptions;
+
+    /**
+     * @param ProductType $type
+     * @param string[] $localizedNames
+     * @param string[] $localizedDescriptions
+     * @param string[] $localizedShortDescriptions
+     */
     public function __construct(
-        int $productId,
+        ProductType $type,
         array $localizedNames,
-        ProductType $type
+        array $localizedDescriptions,
+        array $localizedShortDescriptions
     ) {
-        $this->productId = $productId;
-        $this->localizedNames = $localizedNames;
         $this->type = $type;
+        $this->localizedNames = $localizedNames;
+        $this->localizedDescriptions = $localizedDescriptions;
+        $this->localizedShortDescriptions = $localizedShortDescriptions;
     }
 
     /**
-     * @return int
+     * @return ProductType
      */
-    public function getProductId(): int
+    public function getType(): ProductType
     {
-        return $this->productId;
+        return $this->type;
     }
 
     /**
@@ -73,10 +88,18 @@ class EditableProduct
     }
 
     /**
-     * @return ProductType
+     * @return string[]
      */
-    public function getType(): ProductType
+    public function getLocalizedDescriptions(): array
     {
-        return $this->type;
+        return $this->localizedDescriptions;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedShortDescriptions(): array
+    {
+        return $this->localizedShortDescriptions;
     }
 }

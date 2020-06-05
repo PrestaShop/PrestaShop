@@ -24,17 +24,48 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetEditableProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\EditableProduct;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-interface GetEditableProductHandlerInterface
+/**
+ * Contains information about product categories
+ */
+class ProductCategoriesInformation
 {
     /**
-     * @param GetEditableProduct $query
-     *
-     * @return EditableProduct
+     * @var int[]
      */
-    public function handle(GetEditableProduct $query): EditableProduct;
+    private $categoryIds;
+
+    /**
+     * @var int
+     */
+    private $defaultCategoryId;
+
+    /**
+     * @param int[] $categoryIds
+     * @param int $defaultCategoryId
+     */
+    public function __construct(array $categoryIds, int $defaultCategoryId)
+    {
+        $this->categoryIds = $categoryIds;
+        $this->defaultCategoryId = $defaultCategoryId;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCategoryIds(): array
+    {
+        return $this->categoryIds;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultCategoryId(): int
+    {
+        return $this->defaultCategoryId;
+    }
 }
