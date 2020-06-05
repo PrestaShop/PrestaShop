@@ -30,11 +30,11 @@ services:
             - 'admin_merchandise_returns_filter'
 
     prestashop.core.grid.filter.merchandise_return_products_form_factory:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
+      class: 'PrestaShop\PrestaShop\Core\Grid\Filter\MerchandiseReturnProductsFilterFormFactory'
       arguments:
         - '@prestashop.core.grid.filter.form_factory'
         - '@router'
-        - 'admin_merchandise_returns_products_filter'
+        - '@request_stack'
 
     prestashop.core.grid.filter.credit_slip_form_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
