@@ -5,8 +5,9 @@ Feature: Update product price fields from Back Office (BO).
 
   @update_prices
   Scenario: I update product prices
-    Given I add product "product1" with following basic information:
+    Given I add product "product1" with following information:
       | name       | en-US:magic staff |
       | is_virtual | false             |
     Then product "product1" should have following values:
       | price            | 0           |
+

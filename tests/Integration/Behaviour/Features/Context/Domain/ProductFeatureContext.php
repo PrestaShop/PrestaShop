@@ -176,15 +176,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['price'])) {
-            //@todo: implement prices in productForediting
-            $price = (string) $product->price;
+            $expectedPrice = new Number((string) $data['price']);
+            $actualPrice = $productForEditing->getPricesInformation()->getPrice();
 
-            if ($this->assertEqualNumbers($data['price'], $price)) {
+            if ($expectedPrice->equals($actualPrice)) {
                 return;
             }
 
             throw new RuntimeException(
-                sprintf('Product price expected to be "%s", but is "%s"', $data['price'], $price)
+                sprintf('Product price expected to be "%s", but is "%s"', $expectedPrice, $actualPrice)
             );
         }
     }
