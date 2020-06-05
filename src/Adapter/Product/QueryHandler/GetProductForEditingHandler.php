@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Pack;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingH
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use Product;
 
@@ -53,7 +55,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             (int) $product->id,
             (bool) $product->active,
             $this->getBasicInformation($product),
-            $this->getCategoriesInformation($product)
+            $this->getCategoriesInformation($product),
+            $this->getPricesInformation($product)
         );
     }
 
@@ -83,6 +86,24 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         $defaultCategoryId = (int) $product->id_category_default;
 
         return new ProductCategoriesInformation($categoryIds, $defaultCategoryId);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductPricesInformation
+     */
+    private function getPricesInformation(Product $product): ProductPricesInformation
+    {
+        return new ProductPricesInformation(
+            new Number((string) $product->price),
+            new Number((string) $product->ecotax),
+            (int) $product->id_tax_rules_group,
+            (bool) $product->on_sale,
+            new Number((string) $product->wholesale_price),
+            new Number((string) $product->unit_price),
+            (string) $product->unity
+        );
     }
 
     /**
