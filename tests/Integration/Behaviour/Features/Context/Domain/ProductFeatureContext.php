@@ -190,9 +190,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function updateProductPrices(string $productReference, TableNode $table)
     {
         $data = $table->getRowsHash();
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        $command = new UpdateProductPricesCommand($this->getProductIdByName($productId));
+        $command = new UpdateProductPricesCommand($this->getSharedStorage()->get($productReference));
 
         if (isset($data['price'])) {
             $command->setPrice($data['price']);
