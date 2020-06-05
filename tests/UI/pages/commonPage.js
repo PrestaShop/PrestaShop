@@ -119,9 +119,10 @@ module.exports = class CommonPage {
   /**
    * Open link in new Tab and get opened Page
    * @param selector, where to click
+   * @param newPageSelector, selector to wait in new page (default to FO logo)
    * @return newPage, what was opened by the browser
    */
-  async openLinkWithTargetBlank(selector) {
+  async openLinkWithTargetBlank(selector, newPageSelector = 'body .logo') {
     const [newPage] = await Promise.all([
       this.page.waitForEvent('popup'),
       this.page.click(selector),
@@ -129,8 +130,7 @@ module.exports = class CommonPage {
 
     await newPage.waitForLoadState('networkidle');
 
-    await newPage.waitForSelector('body a', {state: 'visible'});
-    await newPage.screenshot({path: 'screenshot.png'});
+    await newPage.waitForSelector(newPageSelector, {state: 'visible'});
     return newPage;
   }
 
