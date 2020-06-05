@@ -127,7 +127,7 @@ class UpdateProductPricesCommand
      */
     public function setEcotax(string $ecotax): self
     {
-        $this->ecotax = $ecotax;
+        $this->ecotax = new Number($ecotax);
 
         return $this;
     }
@@ -187,7 +187,7 @@ class UpdateProductPricesCommand
      */
     public function setWholesalePrice(string $wholesalePrice): self
     {
-        $this->wholesalePrice = $wholesalePrice;
+        $this->wholesalePrice = new Number($wholesalePrice);
 
         return $this;
     }
@@ -207,7 +207,7 @@ class UpdateProductPricesCommand
      */
     public function setUnitPrice(string $unitPrice): self
     {
-        $this->unitPrice = $unitPrice;
+        $this->unitPrice = new Number($unitPrice);
 
         return $this;
     }
