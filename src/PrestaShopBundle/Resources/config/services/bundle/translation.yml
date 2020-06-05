@@ -3,6 +3,8 @@ services:
         public: true
 
     #TRANSLATIONS FACTORIES
+    #TODO: I see no need to put this in a service as it is used only by TranslationService
+    # and it requires locale that has to be in the constructor to avoid setter
     prestashop.translation.translations_provider:
         class: PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider
         arguments:
