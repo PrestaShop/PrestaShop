@@ -31,6 +31,8 @@ admin_merchandise_returns_products_filter:
     _controller: PrestaShopBundle:Admin\Common:searchGrid
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.merchandise_return_products
     redirectRoute: admin_merchandise_returns_edit
+    redirectQueryParamsToKeep:
+      - 'merchandiseReturnId'
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn:submitFilterorder_return
   requirements:
