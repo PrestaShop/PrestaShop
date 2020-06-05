@@ -160,18 +160,26 @@ class TranslationsCatalogueProvider
             throw new \LogicException('Locale cannot be null. Call setLocale first');
         }
 
-        // Instantiate the providers
-        if ('external_legacy_module' === $this->type) {
-            $catalogues = $this->getExternalLegacyModuleCatalogues();
-        } elseif ('themes' === $this->type) {
-            $catalogues = $this->getThemeCatalogues();
-        } else {
-            $catalogues = $this->getCatalogues();
-        }
+        $defaultCatalogue = $this->translationCatalogueProviderFactory->getDefaultCatalogueProvider(
+            $this->type,
+            $this->locale,
+            $this->theme
+        )
+            ->getDefaultCatalogue();
 
-        $defaultCatalogue = $catalogues['default'];
-        $fileTranslatedCatalogue = $catalogues['file_translated'];
-        $userTranslatedCatalogue = $catalogues['user_translated'];
+        $fileTranslatedCatalogue = $this->translationCatalogueProviderFactory->getFileTranslatedCatalogueProvider(
+            $this->type,
+            $this->locale,
+            $this->theme
+        )
+            ->getFilesystemCatalogue();
+
+        $userTranslatedCatalogue = $this->translationCatalogueProviderFactory->getUserTranslatedCatalogueProvider(
+            $this->type,
+            $this->locale,
+            $this->theme
+        )
+            ->getUserTranslatedCatalogue($this->theme);
 
         $translations = [];
 
@@ -211,69 +219,6 @@ class TranslationsCatalogueProvider
         ksort($translations);
 
         return $translations;
-    }
-
-    /**
-     * @return array
-     *
-     * @throws FileNotFoundException
-     */
-    private function getExternalLegacyModuleCatalogues(): array
-    {
-        $provider = $this->translationCatalogueProviderFactory->getExternalLegacyModuleProvider();
-
-        $provider->setLocale($this->locale);
-
-        return [
-            'default' => $provider->getDefaultCatalogue(),
-            'file_translated' => $provider->getFilesystemCatalogue(),
-            'user_translated' => $provider->getUserTranslatedCatalogue($this->theme),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getThemeCatalogues(): array
-    {
-        $provider = $this->translationCatalogueProviderFactory->getThemeCatalogueProvider(
-            $this->locale,
-            $this->theme
-        );
-
-        return [
-            'default' => $provider->getDefaultCatalogue(),
-            'file_translated' => $provider->getFilesystemCatalogue(),
-            'user_translated' => $provider->getUserTranslatedCatalogue(),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getCatalogues(): array
-    {
-        // Instantiate the providers
-        $defaultCatalogueProvider = $this->translationCatalogueProviderFactory->getDefaultCatalogueProvider(
-            $this->type,
-            $this->locale
-        );
-        $fileTranslatedCatalogueProvider = $this->translationCatalogueProviderFactory->getFileTranslatedCatalogueProvider(
-            $this->type,
-            $this->locale,
-            $this->theme
-        );
-        $userTranslatedCatalogueProvider = $this->translationCatalogueProviderFactory->getUserTranslatedCatalogueProvider(
-            $this->type,
-            $this->locale,
-            $this->theme
-        );
-
-        return [
-            'default' => $defaultCatalogueProvider->getCatalogue(),
-            'file_translated' => $fileTranslatedCatalogueProvider->getCatalogue(),
-            'user_translated' => $userTranslatedCatalogueProvider->getCatalogue(),
-        ];
     }
 
     /**

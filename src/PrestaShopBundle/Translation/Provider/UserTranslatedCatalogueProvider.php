@@ -32,7 +32,7 @@ use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
+class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface, UserTranslatedCatalogueProviderInterface
 {
     /**
      * @var DatabaseTranslationLoader
@@ -42,87 +42,38 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     /**
      * @var string
      */
-    private $theme;
+    private $locale;
 
     /**
      * @var array
      */
-    private $translationDomains = [''];
+    private $translationDomains;
 
-    /**
-     * @var string
-     */
-    private $locale;
-
-    public function __construct(DatabaseTranslationLoader $databaseLoader)
-    {
+    public function __construct(
+        DatabaseTranslationLoader $databaseLoader,
+        string $locale,
+        array $translationDomains
+    ) {
         $this->databaseLoader = $databaseLoader;
-    }
-
-    /**
-     * @param string|null $theme
-     *
-     * @return $this
-     */
-    public function setTheme(?string $theme): UserTranslatedCatalogueProvider
-    {
-        $this->theme = $theme;
-
-        return $this;
-    }
-
-    /**
-     * @param string|null $locale
-     *
-     * @return $this
-     */
-    public function setLocale(?string $locale): UserTranslatedCatalogueProvider
-    {
         $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * Returns a list of patterns used to choose which wordings will be imported from database.
-     * Patterns from this list will be run against translation domains.
-     *
-     * @return string[] List of Mysql compatible regexes (no regex delimiter)
-     */
-    protected function getTranslationDomains(): array
-    {
-        return $this->translationDomains;
-    }
-
-    /**
-     * @param array $translationDomains
-     *
-     * @return UserTranslatedCatalogueProvider
-     */
-    public function setTranslationDomains(array $translationDomains): UserTranslatedCatalogueProvider
-    {
         $this->translationDomains = $translationDomains;
-
-        return $this;
     }
 
     /**
+     * @param string|null $themeName
+     *
      * @return MessageCatalogueInterface
      */
-    public function getCatalogue(): MessageCatalogueInterface
+    public function getCatalogue(?string $themeName = null): MessageCatalogueInterface
     {
-        if (null === $this->locale) {
-            throw new \LogicException('Locale cannot be null. Call setLocale first');
-        }
-
         $catalogue = new MessageCatalogue($this->locale);
 
-        foreach ($this->getTranslationDomains() as $translationDomain) {
+        foreach ($this->translationDomains as $translationDomain) {
             $domainCatalogue = $this->databaseLoader->load(
                 null,
                 $this->locale,
                 $translationDomain,
-                $this->theme
+                $themeName
             );
 
             if ($domainCatalogue instanceof MessageCatalogue) {
@@ -131,5 +82,15 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @param string|null $themeName
+     *
+     * @return MessageCatalogueInterface
+     */
+    public function getUserTranslatedCatalogue(?string $themeName = null): MessageCatalogueInterface
+    {
+        return $this->getCatalogue($themeName);
     }
 }

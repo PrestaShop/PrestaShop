@@ -33,39 +33,14 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Define contract to retrieve translations.
  */
-interface ProviderInterface
+interface ProviderInterface extends DefaultCatalogueProviderInterface, FileTranslatedCatalogueProviderInterface, UserTranslatedCatalogueProviderInterface
 {
-    /**
-     * Get the Catalogue from database only.
-     *
-     * @param string|null $themeName Theme name
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getUserTranslatedCatalogue(string $themeName = null);
-
-    /**
-     * Returns the default (aka not translated) catalogue
-     *
-     * @param bool $empty [default=true] If true, keeps the keys but empties translations
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface;
-
     /**
      * Returns the fully translated message catalogue
      *
      * @return MessageCatalogueInterface
      */
     public function getMessageCatalogue(): MessageCatalogueInterface;
-
-    /**
-     * Returns the catalogue from files.
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface;
 
     /**
      * Returns the provider's unique identifier
