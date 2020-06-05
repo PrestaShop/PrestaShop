@@ -28,4 +28,12 @@ Feature: Update product price fields from Back Office (BO).
       | wholesale_price    | 70          |
       | unit_price         | 900         |
       | unity              | bag of ten  |
-    #@todo: unit price ratio assertion
+    Then product "product1" should have following values:
+      | price              | 100.99      |
+      | ecotax             | 0           |
+      | tax_rules_group_id | 0           |
+      | on_sale            | true        |
+      | wholesale_price    | 70          |
+      | unit_price         | 900         |
+      | unity              | bag of ten  |
+      | unit_price_ratio   | 0.112211    |
