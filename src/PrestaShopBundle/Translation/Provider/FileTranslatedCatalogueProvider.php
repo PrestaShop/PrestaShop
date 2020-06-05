@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class FileTranslatedCatalogueProvider implements FileSystemCatalogueProviderInterface, TranslationCatalogueProviderInterface
+class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface, FileTranslatedCatalogueProviderInterface
 {
     /**
      * @var string
@@ -49,38 +49,25 @@ class FileTranslatedCatalogueProvider implements FileSystemCatalogueProviderInte
      */
     private $locale;
 
-    public function setDirectory(string $directory): FileSystemCatalogueProviderInterface
-    {
-        $this->directory = $directory;
-
-        return $this;
-    }
-
-    public function setLocale(string $locale): FileSystemCatalogueProviderInterface
+    /**
+     * DefaultCatalogueProvider constructor.
+     *
+     * @param string $locale
+     * @param string $directory
+     * @param array $filenameFilters
+     */
+    public function __construct(string $locale, string $directory, array $filenameFilters)
     {
         $this->locale = $locale;
-
-        return $this;
+        $this->directory = $directory;
+        $this->filenameFilters = $filenameFilters;
     }
 
     /**
-     * @param array $filenameFilters
-     *
-     * @return DefaultCatalogueProvider
+     * @return MessageCatalogueInterface
      */
-    public function setFilenameFilters(array $filenameFilters): FileSystemCatalogueProviderInterface
-    {
-        $this->filenameFilters = $filenameFilters;
-
-        return $this;
-    }
-
     public function getCatalogue(): MessageCatalogueInterface
     {
-        if (null === $this->locale) {
-            throw new \LogicException('Locale cannot be null. Call setLocale first');
-        }
-
         $catalogue = new MessageCatalogue($this->locale);
         $translationFinder = new TranslationFinder();
         $localeResourceDirectory = $this->directory . DIRECTORY_SEPARATOR . $this->locale;
@@ -99,5 +86,13 @@ class FileTranslatedCatalogueProvider implements FileSystemCatalogueProviderInte
         }
 
         return $catalogue;
+    }
+
+    /**
+     * @return MessageCatalogueInterface
+     */
+    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    {
+        return $this->getCatalogue();
     }
 }
