@@ -129,10 +129,11 @@ class ModuleProvider implements ProviderInterface
      */
     public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
     {
-        return (new DefaultCatalogueProvider())
-            ->setFilenameFilters($this->getFilenameFilters())
-            ->setDirectory($this->resourceDirectory . DIRECTORY_SEPARATOR . 'default')
-            ->setLocale($this->locale)
+        return (new DefaultCatalogueProvider(
+            $this->locale,
+            $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
+            $this->getFilenameFilters()
+        ))
             ->getCatalogue($empty);
     }
 
@@ -143,10 +144,11 @@ class ModuleProvider implements ProviderInterface
      */
     public function getFilesystemCatalogue(): MessageCatalogueInterface
     {
-        return (new FileTranslatedCatalogueProvider())
-            ->setDirectory($this->resourceDirectory)
-            ->setFilenameFilters($this->getFilenameFilters())
-            ->setLocale($this->locale)
+        return (new FileTranslatedCatalogueProvider(
+            $this->locale,
+            $this->resourceDirectory,
+            $this->getFilenameFilters()
+        ))
             ->getCatalogue();
     }
 
@@ -159,11 +161,12 @@ class ModuleProvider implements ProviderInterface
     {
         $translationDomains = ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
 
-        return (new UserTranslatedCatalogueProvider($this->databaseLoader))
-            ->setTranslationDomains($translationDomains)
-            ->setLocale($this->locale)
-            ->setTheme($theme)
-            ->getCatalogue();
+        return (new UserTranslatedCatalogueProvider(
+            $this->databaseLoader,
+            $this->locale,
+            $translationDomains
+        ))
+            ->getCatalogue($theme);
     }
 
     /**
