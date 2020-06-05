@@ -28,21 +28,25 @@ module.exports = class Monitoring extends BOBasePage {
     this.editRowLink = (table, row) => `${this.actionsColumn(table, row)} a[data-original-title='Edit']`;
     this.dropdownToggleButton = (table, row) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = (table, row) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
-    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a[href*='/delete']`;
+    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a[data-confirm-button-label='Delete']`;
     // Category selectors
     this.viewCategoryRowLink = row => `${this.actionsColumn('empty_category', row)} a[data-original-title='View']`;
     this.editCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)} a[href*='/edit']`;
     this.deleteCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)
     } a.js-delete-category-row-action`;
-    this.deleteModeModal = '#empty_category_grid_delete_categories_modal';
+    this.deleteModeCategoryModal = '#empty_category_grid_delete_categories_modal';
     this.deleteModeInput = position => `#delete_categories_delete_mode_${position}`;
-    this.deleteModeModalDiv = '#delete_categories_delete_mode';
-    this.submitDeleteModeButton = `${this.deleteModeModal} button.js-submit-delete-categories`;
+    this.deleteModeCategoryModalDiv = '#delete_categories_delete_mode';
+    this.submitDeleteCategoryButton = `${this.deleteModeCategoryModal} button.js-submit-delete-categories`;
     // Sort Selectors
     this.tableHead = table => `${this.gridTable(table)} thead`;
     this.sortColumnDiv = (table, column) => `${this.tableHead(table)
     } div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
+
+    // Modal products list
+    this.deleteProductModal = table => `#${table}-grid-confirm-modal`;
+    this.submitDeleteProductButton = table => `${this.deleteProductModal(table)} button.btn-confirm-submit`;
   }
 
   /* Reset Methods */
@@ -143,9 +147,15 @@ module.exports = class Monitoring extends BOBasePage {
    * @return {Promise<textContent>}
    */
   async deleteProductInGrid(table, row) {
-    this.dialogListener(true);
     await this.openDropdownMenu(table, row);
-    await this.clickAndWaitForNavigation(this.deleteRowLink(table, row));
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.page.click(this.deleteRowLink(table, row)),
+      this.waitForVisibleSelector(`${this.deleteProductModal(table)}.show`),
+    ]);
+
+    await this.clickAndWaitForNavigation(this.submitDeleteProductButton(table));
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
@@ -186,11 +196,11 @@ module.exports = class Monitoring extends BOBasePage {
     await this.openDropdownMenu(table, row);
     await Promise.all([
       this.page.click(this.deleteCategoryRowLink(row)),
-      this.waitForVisibleSelector(this.deleteModeModal),
+      this.waitForVisibleSelector(this.deleteModeCategoryModal),
     ]);
     // choose deletion mode
     await this.page.click(this.deleteModeInput(deletionModePosition));
-    await this.clickAndWaitForNavigation(this.submitDeleteModeButton);
+    await this.clickAndWaitForNavigation(this.submitDeleteCategoryButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
