@@ -133,7 +133,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                 ])
                 ->setAssociatedColumn('product_reference')
             )
-            ->add((new Filter('product_Name', TextType::class))
+            ->add((new Filter('product_name', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -156,9 +156,12 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                     'reset_route' => 'admin_common_reset_search_by_filter_id',
                     'reset_route_params' => [
                         'filterId' => self::GRID_ID,
+                        /** @todo use proper id */
+                        'merchandiseReturnId' => 4
                     ],
                     'redirect_route' => 'admin_merchandise_returns_edit',
                     'redirect_route_params' => [
+                        /** @todo use proper id */
                         'merchandiseReturnId' => 4
                     ]
                 ])
