@@ -875,8 +875,7 @@ class ToolsCore
         }
 
         if (gettype($price) === 'string') {
-            $price = (new Number($price))
-                ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+            $price = (new Number($price))->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
         }
 
         if (!is_numeric($price)) {
