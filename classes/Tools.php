@@ -874,7 +874,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance($currency);
         }
 
-        if (gettype($price) === "string") {
+        if (gettype($price) === 'string') {
             $price = (new Number($price))
                 ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
         }
