@@ -880,7 +880,7 @@ class ToolsCore
         }
 
         if (!is_numeric($price)) {
-            throw new PrestaShopException('Invalid price');
+            return $price;
         }
 
         $c_id = (is_array($currency) ? $currency['id_currency'] : $currency->id);
