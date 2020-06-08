@@ -225,6 +225,25 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update product :productReference prices and apply non-existing tax rules group
+     *
+     * @param string $productReference
+     */
+    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        $command = new UpdateProductPricesCommand($productId);
+        $command->setTaxRulesGroupId(50000000);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @param array $data
      * @param ProductForEditing $productForEditing
      */
@@ -407,6 +426,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'ecotax' => ProductConstraintException::INVALID_ECOTAX,
             'wholesale price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit price' => ProductConstraintException::INVALID_UNIT_PRICE,
+            'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
         ];
 
         if (!array_key_exists($priceField, $priceFieldErrorMap)) {
