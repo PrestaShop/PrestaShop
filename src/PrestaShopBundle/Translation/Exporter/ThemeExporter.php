@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
+use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
@@ -92,8 +93,8 @@ class ThemeExporter
         Filesystem $filesystem
     ) {
         $this->themeExtractor = $themeExtractor;
-        $this->themeExtractor
-            ->setThemeProvider($themeProvider);
+//        $this->themeExtractor
+//            ->setThemeProvider($themeProvider);
 
         $this->themeProvider = $themeProvider;
         $this->themeRepository = $themeRepository;
@@ -208,23 +209,28 @@ class ThemeExporter
      */
     protected function getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir = false)
     {
-        $tmpFolderPath = $this->getTemporaryExtractionFolder($themeName);
-        $folderPath = $this->getFlattenizationFolder($themeName);
+        $theme = $this->themeRepository->getInstanceByName($themeName);
 
-        $this->filesystem->remove($folderPath);
+//        $folderPath = $this->themeExtractor->getCachedFilesPath($theme);
+        $tmpFolderPath = $this->themeExtractor->getTemporaryFilesPath($theme);
+
+//        $this->filesystem->remove($folderPath);
         $this->filesystem->remove($tmpFolderPath);
 
-        $this->filesystem->mkdir($folderPath);
-        $this->filesystem->mkdir($tmpFolderPath);
+//        $this->filesystem->mkdir($folderPath . DIRECTORY_SEPARATOR . $locale);
+//        $this->filesystem->mkdir($tmpFolderPath);
+        $this->filesystem->mkdir($tmpFolderPath . DIRECTORY_SEPARATOR . $locale);
 
-        $theme = $this->themeRepository->getInstanceByName($themeName);
         $this->themeExtractor
-            ->setOutputPath($tmpFolderPath)
             ->extract($theme, $locale, $rootDir);
 
-        Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
+        Flattenizer::flatten(
+            $this->themeExtractor->getCachedFilesPath($theme),
+            $tmpFolderPath . DIRECTORY_SEPARATOR . $locale,
+            $locale
+        );
 
-        return (new TranslationFinder())->getCatalogueFromPaths($folderPath, $locale, '*');
+        return (new TranslationFinder())->getCatalogueFromPaths($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $locale, '*');
     }
 
     /**

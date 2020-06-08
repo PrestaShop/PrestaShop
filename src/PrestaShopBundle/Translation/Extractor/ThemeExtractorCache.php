@@ -142,6 +142,26 @@ class ThemeExtractorCache implements ThemeExtractorInterface
     }
 
     /**
+     * Returns the path to the directory where default translations are stored in cache
+     *
+     * @param Theme $theme
+     *
+     * @return string
+     */
+    public function getTemporaryFilesPath(Theme $theme)
+    {
+        return implode(
+            DIRECTORY_SEPARATOR,
+            [
+                $this->cacheRootDirectory,
+                sprintf('%s-tmp', $theme->getName()),
+                'translations',
+                'default',
+            ]
+        );
+    }
+
+    /**
      * @param Theme $theme
      * @param MessageCatalogue $catalogue
      */
