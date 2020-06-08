@@ -365,6 +365,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^I should get error that product "(.+)" is invalid$/
+     *
      * @param string $priceField
      */
     public function assertLastPriceErrorConstraint(string $priceField)
@@ -376,14 +377,14 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'unit price' => ProductConstraintException::INVALID_UNIT_PRICE,
         ];
 
-        if (array_key_exists($priceField, $priceFieldErrorMap)) {
-            $this->assertLastErrorIs(
-                ProductConstraintException::class,
-                $priceFieldErrorMap[$priceField]
-            );
+        if (!array_key_exists($priceField, $priceFieldErrorMap)) {
+            throw new RuntimeException(sprintf('"%s" doesn\'t exist in priceField-errorCode map.', $priceField));
         }
 
-        throw new RuntimeException(sprintf('"%s" doesn\'t exist in priceField-errorCode map.', $priceField));
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            $priceFieldErrorMap[$priceField]
+        );
     }
 
     /**
