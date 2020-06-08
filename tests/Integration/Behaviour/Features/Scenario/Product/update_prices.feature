@@ -12,26 +12,27 @@ Feature: Update product price fields from Back Office (BO).
       | price              | 0           |
       | ecotax             | 0           |
 #      # @todo: remake to a more user friendly name instead of using "id"?
-      | tax_rules_group_id | 0           |
+      | tax rules group    |             |
       | on_sale            | false       |
       | wholesale_price    | 0           |
       | unit_price         | 0           |
       | unity              |             |
       | unit_price_ratio   | 0           |
+    And tax rules group named "US-AL Rate (4%)" exists
     When I update product "product1" prices with following information:
-      | price              | 100.99      |
-      | ecotax             | 0           |
-      | tax_rules_group_id | 1           |
-      | on_sale            | true        |
-      | wholesale_price    | 70          |
-      | unit_price         | 900         |
-      | unity              | bag of ten  |
+      | price              | 100.99          |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 70              |
+      | unit_price         | 900             |
+      | unity              | bag of ten      |
     Then product "product1" should have following values:
-      | price              | 100.99      |
-      | ecotax             | 0           |
-      | tax_rules_group_id | 1           |
-      | on_sale            | true        |
-      | wholesale_price    | 70          |
+      | price              | 100.99          |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 70              |
 #      #todo: rounding issue. #19620
 #      #| unit_price         | 900         |
       | unity              | bag of ten  |
@@ -39,11 +40,11 @@ Feature: Update product price fields from Back Office (BO).
 
     Scenario: I partially update product prices, providing only those values which I want to update
       Given product "product1" has following values:
-        | price              | 100.99      |
-        | ecotax             | 0           |
-        | tax_rules_group_id | 1           |
-        | on_sale            | true        |
-        | wholesale_price    | 70          |
+        | price              | 100.99          |
+        | ecotax             | 0               |
+        | tax rules group    | US-AL Rate (4%) |
+        | on_sale            | true            |
+        | wholesale_price    | 70              |
 #      #todo: rounding issue. #19620
 #      #| unit_price         | 900         |
         | unity              | bag of ten  |
@@ -51,28 +52,28 @@ Feature: Update product price fields from Back Office (BO).
       When I update product "product1" prices with following information:
         | price              | 200         |
       Then product "product1" should have following values:
-        | price              | 200         |
-        | ecotax             | 0           |
-        | tax_rules_group_id | 1           |
-        | on_sale            | true        |
-        | wholesale_price    | 70          |
+        | price              | 200             |
+        | ecotax             | 0               |
+        | tax rules group    | US-AL Rate (4%) |
+        | on_sale            | true            |
+        | wholesale_price    | 70              |
 #        #todo: rounding issue. #19620
 #        #| unit_price         | 900         |
-        | unity              | bag of ten  |
-        | unit_price_ratio   | 0.222222    |
+        | unity              | bag of ten      |
+        | unit_price_ratio   | 0.222222        |
       When I update product "product1" prices with following information:
-        | ecotax              | 5.5        |
-        | on_sale             | false      |
+        | ecotax              | 5.5            |
+        | on_sale             | false          |
       Then product "product1" should have following values:
-        | price              | 200         |
-        | ecotax             | 5.5         |
-        | tax_rules_group_id | 1           |
-        | on_sale            | false       |
-        | wholesale_price    | 70          |
+        | price              | 200             |
+        | ecotax             | 5.5             |
+        | tax rules group    | US-AL Rate (4%) |
+        | on_sale            | false           |
+        | wholesale_price    | 70              |
 #        #todo: rounding issue. #19620
 #        #| unit_price         | 900         |
-        | unity              | bag of ten  |
-        | unit_price_ratio   | 0.222222    |
+        | unity              | bag of ten      |
+        | unit_price_ratio   | 0.222222        |
 
       Scenario: I update product prices with negative values
         Given I add product "product2" with following information:

@@ -179,6 +179,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             }
         }
 
+        $this->assertTaxRulesGroup($data, $productForEditing);
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
     }
 
@@ -199,8 +200,9 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['ecotax'])) {
             $command->setEcotax($data['ecotax']);
         }
-        if (isset($data['tax_rules_group_id'])) {
-            $command->setTaxRulesGroupId($data['tax_rules_group_id']);
+        if (isset($data['tax rules group'])) {
+            $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['tax rules group'])->id;
+            $command->setTaxRulesGroupId($taxRulesGroupId);
         }
         if (isset($data['on_sale'])) {
             $command->setOnSale(PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']));
@@ -219,6 +221,36 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $this->getQueryBus()->handle($command);
         } catch (ProductException $e) {
             $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param ProductForEditing $productForEditing
+     */
+    private function assertTaxRulesGroup(array $data, ProductForEditing $productForEditing)
+    {
+        if (!isset($data['tax rules group'])) {
+            return;
+        }
+
+        $expectedName = $data['tax rules group'];
+
+        if ('' === $expectedName) {
+            $expectedId = 0;
+        } else {
+            $expectedId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($expectedName)->id;
+        }
+        $actualId = $productForEditing->getTaxRulesGroupId();
+
+        if ($expectedId !== $actualId) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected tax rules group "%s", but got "%s"',
+                    $expectedName,
+                    TaxRulesGroupFeatureContext::getTaxRulesGroupByName($actualId)->name
+                )
+            );
         }
     }
 
