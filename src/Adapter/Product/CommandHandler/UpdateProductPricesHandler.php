@@ -29,11 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Entity\TaxRulesGroup;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShopException;
 use Product;
 
@@ -81,9 +83,12 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             $this->validateField($product, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
         }
 
-        if (null !== $command->getTaxRulesGroupId()) {
-            $product->id_tax_rules_group = $command->getTaxRulesGroupId();
+        $taxRulesGroupId = $command->getTaxRulesGroupId();
+
+        if (null !== $taxRulesGroupId) {
+            $product->id_tax_rules_group = $taxRulesGroupId;
             $this->validateField($product, 'id_tax_rules_group', ProductConstraintException::INVALID_TAX_RULES_GROUP_ID);
+            $this->assertTaxRulesGroupExists($taxRulesGroupId);
         }
 
         if (null !== $command->isOnSale()) {
@@ -93,6 +98,39 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         if (null !== $command->getWholesalePrice()) {
             $product->wholesale_price = (float) (string) $command->getWholesalePrice();
             $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
+        }
+    }
+
+    /**
+     * @param int $taxRulesGroupId
+     *
+     * @throws ProductConstraintException
+     * @throws ProductException
+     */
+    private function assertTaxRulesGroupExists(int $taxRulesGroupId): void
+    {
+        $code = ProductConstraintException::INVALID_TAX_RULES_GROUP_ID;
+
+        try {
+            $taxRulesGroup = new TaxRulesGroup($taxRulesGroupId);
+            if (!$taxRulesGroup->id) {
+                throw new ProductConstraintException(
+                    sprintf(
+                        'Invalid tax rules group id "%s". Group doesn\'t exist',
+                        $taxRulesGroupId
+                    ),
+                    $code
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                sprintf(
+                    'Error occurred when trying to load tax rules group #%s for product',
+                    $taxRulesGroupId
+                ),
+                0,
+                $e
+            );
         }
     }
 
