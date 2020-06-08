@@ -55,6 +55,10 @@ class ProductForEditing
      * @var ProductPricesInformation
      */
     private $pricesInformation;
+    /**
+     * @var int
+     */
+    private $taxRulesGroupId;
 
     /**
      * @param int $productId
@@ -62,19 +66,22 @@ class ProductForEditing
      * @param ProductBasicInformation $basicInformation
      * @param ProductCategoriesInformation $categoriesInformation
      * @param ProductPricesInformation $pricesInformation
+     * @param int $taxRulesGroupId
      */
     public function __construct(
         int $productId,
         bool $active,
         ProductBasicInformation $basicInformation,
         ProductCategoriesInformation $categoriesInformation,
-        ProductPricesInformation $pricesInformation
+        ProductPricesInformation $pricesInformation,
+        int $taxRulesGroupId
     ) {
         $this->productId = $productId;
         $this->active = $active;
         $this->basicInformation = $basicInformation;
         $this->categoriesInformation = $categoriesInformation;
         $this->pricesInformation = $pricesInformation;
+        $this->taxRulesGroupId = $taxRulesGroupId;
     }
 
     /**
@@ -115,5 +122,13 @@ class ProductForEditing
     public function getPricesInformation(): ProductPricesInformation
     {
         return $this->pricesInformation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTaxRulesGroupId(): int
+    {
+        return $this->taxRulesGroupId;
     }
 }
