@@ -81,7 +81,19 @@ Feature: Update product price fields from Back Office (BO).
           | name       | en-US: white hat  |
           | is_virtual | false             |
         And product "product2" has following values:
-          | price      | 0                 |
+          | price           | 0            |
+          | ecotax          | 0            |
+          | wholesale_price | 0            |
+          | unit_price      | 0            |
         When I update product "product2" prices with following information:
-          | price               | -20      |
-        Then I should get error that product price is invalid
+          | price           | -20          |
+        Then I should get error that product "price" is invalid
+        When I update product "product2" prices with following information:
+          | ecotax          | -2           |
+        Then I should get error that product "ecotax" is invalid
+        When I update product "product2" prices with following information:
+          | wholesale_price | -35          |
+        Then I should get error that product "wholesale price" is invalid
+        When I update product "product2" prices with following information:
+          | unit_price      | -300         |
+        Then I should get error that product "unit price" is invalid
