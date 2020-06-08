@@ -103,12 +103,23 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      *
      * @throws ProductConstraintException
      */
-    private function setUnitPriceInfo(Product $product, Number $unitPrice, Number $price): void
+    private function setUnitPriceInfo(Product $product, Number $unitPrice, ?Number $price): void
     {
         $this->validateUnitPrice($unitPrice);
 
         if ($unitPrice->equals(new Number('0'))) {
             return;
+        }
+
+        if (null === $price) {
+            $price = new Number((string) $product->price);
+        }
+
+        if ($price->equals(new Number('0'))) {
+            throw new ProductConstraintException(
+                'Cannot set unit price when product price is 0',
+                ProductConstraintException::INVALID_UNIT_PRICE
+            );
         }
 
         $ratio = $price->dividedBy($unitPrice);
