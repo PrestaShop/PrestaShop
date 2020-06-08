@@ -136,11 +136,11 @@ class TranslationController extends ApiController
             $search = $request->query->get('search');
 
             if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others'])) {
-                throw new Exception("The 'type' parameter is not valid");
+                throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
             }
 
             if (in_array($type, ['modules', 'themes']) && empty($selected)) {
-                throw new Exception('The parameter \'selected\' is not valid.');
+                throw new Exception("The 'selected' parameter is empty.");
             }
 
             $treeType = $type;

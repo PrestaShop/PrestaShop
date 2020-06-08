@@ -92,9 +92,6 @@ class ThemeExporter
         Filesystem $filesystem
     ) {
         $this->themeExtractor = $themeExtractor;
-        $this->themeExtractor
-            ->setThemeProvider($themeProvider);
-
         $this->themeProvider = $themeProvider;
         $this->themeRepository = $themeRepository;
         $this->dumper = $dumper;
@@ -137,7 +134,7 @@ class ThemeExporter
         $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
 
         try {
-            $themeCatalogue = $this->themeProvider->getThemeCatalogue();
+            $themeCatalogue = $this->themeProvider->getFilesystemCatalogue();
         } catch (FileNotFoundException $exception) {
             // if the theme doesn't have translation files (eg. the default theme)
             $themeCatalogue = new MessageCatalogue($locale);
@@ -208,23 +205,28 @@ class ThemeExporter
      */
     protected function getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir = false)
     {
-        $tmpFolderPath = $this->getTemporaryExtractionFolder($themeName);
-        $folderPath = $this->getFlattenizationFolder($themeName);
+        $theme = $this->themeRepository->getInstanceByName($themeName);
+
+        $folderPath = $this->themeExtractor->getCachedFilesPath($theme);
+        $tmpFolderPath = $this->themeExtractor->getTemporaryFilesPath($theme);
 
         $this->filesystem->remove($folderPath);
         $this->filesystem->remove($tmpFolderPath);
 
-        $this->filesystem->mkdir($folderPath);
-        $this->filesystem->mkdir($tmpFolderPath);
+        $tmpExtractPath = $tmpFolderPath . DIRECTORY_SEPARATOR . $locale;
 
-        $theme = $this->themeRepository->getInstanceByName($themeName);
+        $this->filesystem->mkdir($tmpExtractPath);
+
         $this->themeExtractor
-            ->setOutputPath($tmpFolderPath)
             ->extract($theme, $locale, $rootDir);
 
-        Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
+        Flattenizer::flatten(
+            $folderPath . DIRECTORY_SEPARATOR . ThemeExtractorInterface::DEFAULT_LOCALE,
+            $tmpExtractPath,
+            $locale
+        );
 
-        return (new TranslationFinder())->getCatalogueFromPaths($folderPath, $locale, '*');
+        return (new TranslationFinder())->getCatalogueFromPaths($tmpExtractPath, $locale, '*');
     }
 
     /**
@@ -307,21 +309,6 @@ class ThemeExporter
     }
 
     /**
-     * @param string $themeName
-     * @param string $locale
-     *
-     * @return string
-     *
-     * @throws \Exception
-     */
-    protected function makeArchiveParentDirectory($themeName, $locale)
-    {
-        $zipFilename = $this->makeZipFilename($themeName, $locale);
-
-        return dirname($zipFilename);
-    }
-
-    /**
      * @param MessageCatalogue $catalogue
      */
     protected function updateCatalogueMetadata(MessageCatalogue $catalogue)
@@ -369,22 +356,6 @@ class ThemeExporter
     protected function shouldAddFileMetadata(array $metadata = null)
     {
         return null === $metadata || !array_key_exists('file', $metadata);
-    }
-
-    /**
-     * @param string $locale
-     * @param MessageCatalogue $sourceCatalogue
-     *
-     * @return MessageCatalogue
-     */
-    protected function addLocaleToDomain($locale, MessageCatalogue $sourceCatalogue)
-    {
-        $catalogue = new MessageCatalogue($locale, []);
-        foreach ($sourceCatalogue->all() as $domain => $messages) {
-            $catalogue->add($messages, $domain . '.' . $locale);
-        }
-
-        return $catalogue;
     }
 
     /**
