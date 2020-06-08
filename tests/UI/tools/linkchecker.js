@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('UI');
 const {expect} = require('chai');
 const fs = require('fs');
 const urlsList = require('./urls.js');
