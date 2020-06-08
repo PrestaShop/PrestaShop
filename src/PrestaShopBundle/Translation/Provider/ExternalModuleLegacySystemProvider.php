@@ -241,8 +241,6 @@ class ExternalModuleLegacySystemProvider implements SearchProviderInterface
      * @param string $locale
      *
      * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
      */
     private function buildTranslationCatalogueFromLegacyFiles(string $locale)
     {
@@ -301,7 +299,7 @@ class ExternalModuleLegacySystemProvider implements SearchProviderInterface
 
             // add delimiters
             // only add if the domain is relevant to this module
-            foreach ($this->filenameFilters as $pattern) {
+            foreach ($this->getFilenameFilters() as $pattern) {
                 if (preg_match($pattern, $newDomain)) {
                     $newCatalogue->add(
                         $catalogue->all($domain),
