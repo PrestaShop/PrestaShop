@@ -18,7 +18,6 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_BO_shopParameters_productSettings_pagination_updateNumberOfProductsPerPage';
 
 
-
 let browserContext;
 let page;
 const updatedProductPerPage = 5;

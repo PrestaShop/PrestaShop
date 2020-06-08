@@ -39,9 +39,7 @@ describe('Order a product and check order confirmation', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    await page.setExtraHTTPHeaders({
-      'Accept-Language': 'en-GB',
-    });
+
     this.pageObjects = await init();
   });
   after(async () => {

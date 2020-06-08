@@ -120,6 +120,7 @@ module.exports = class Order extends BOBasePage {
    * @return {Promise<*>}
    */
   async downloadDocument(row) {
+    /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     await this.page.$eval(this.documentNumberLink(row), el => el.target = '');
 
@@ -129,6 +130,7 @@ module.exports = class Order extends BOBasePage {
     ]);
 
     return download.path();
+    /* eslint-enable no-return-assign, no-param-reassign */
   }
 
   /**

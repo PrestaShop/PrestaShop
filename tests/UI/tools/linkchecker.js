@@ -44,6 +44,7 @@ let outputEntry = {
 let requestError = false;
 let javascriptError = false;
 
+let browser;
 let page;
 
 let pagesToCrawl;
