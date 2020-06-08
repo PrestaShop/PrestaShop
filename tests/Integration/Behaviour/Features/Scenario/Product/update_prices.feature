@@ -11,7 +11,6 @@ Feature: Update product price fields from Back Office (BO).
     And product "product1" should have following values:
       | price              | 0           |
       | ecotax             | 0           |
-#      # @todo: remake to a more user friendly name instead of using "id"?
       | tax rules group    |             |
       | on_sale            | false       |
       | wholesale_price    | 0           |
@@ -131,3 +130,12 @@ Feature: Update product price fields from Back Office (BO).
           | price            | 20           |
           | unit_price       | 500          |
           | unit_price_ratio | 0.04         |
+
+      Scenario: I update product prices providing non-existing tax rules group
+        Given I add product "product5" with following information:
+          | name       | en-US: black tie     |
+          | is_virtual | false                |
+        And product "product4" has following values:
+          | tax rules group |           |
+        When I update product "product5" prices and apply non-existing tax rules group
+        Then I should get error that product "tax rules group" is invalid
