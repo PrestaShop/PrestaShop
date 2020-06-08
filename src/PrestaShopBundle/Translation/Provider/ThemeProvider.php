@@ -273,20 +273,6 @@ class ThemeProvider implements ProviderInterface
     }
 
     /**
-     * Returns the catalogue from the Xliff files located within the theme itself
-     *
-     * @deprecated Since 1.7.6.5, use self::getXliffCatalogue instead
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getThemeCatalogue()
-    {
-        @trigger_error(__FUNCTION__ . 'is deprecated since version 1.7.6.5 Use ThemeProvider::getXliffCatalogue() instead.', E_USER_DEPRECATED);
-
-        return $this->getFilesystemCatalogue();
-    }
-
-    /**
      * @return string
      */
     public function getIdentifier(): string
