@@ -105,6 +105,16 @@ use Symfony\Component\HttpFoundation\Response;
 class OrderController extends FrameworkBundleAdminController
 {
     /**
+     * Default number of products per page (in case invalid value is used)
+     */
+    const DEFAULT_PRODUCTS_NUMBER = 8;
+
+    /**
+     * Options used for the number of products per page
+     */
+    const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+
+    /**
      * Shows list of orders
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
@@ -458,8 +468,8 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderSiblingProviderInterface $orderSiblingProvider */
         $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
-        $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', 8);
-        $paginationNumOptions = [8, 20, 50, 100];
+        $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
         if (!in_array($paginationNum, $paginationNumOptions)) {
             $paginationNumOptions[] = $paginationNum;
         }
@@ -1435,7 +1445,7 @@ class OrderController extends FrameworkBundleAdminController
     {
         $numPerPage = (int) $request->request->get('numPerPage');
         if ($numPerPage < 1) {
-            $numPerPage = 10;
+            $numPerPage = self::DEFAULT_PRODUCTS_NUMBER;
         }
 
         try {
