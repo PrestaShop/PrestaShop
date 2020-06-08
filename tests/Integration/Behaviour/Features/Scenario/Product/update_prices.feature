@@ -1,9 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update_prices
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-prices
 @reset-database-before-feature
+@update-prices
 Feature: Update product price fields from Back Office (BO).
   As a BO user I want to be able to update product fields associated with price.
 
-  @update_prices
   Scenario: I update product prices
     Given I add product "product1" with following information:
       | name       | en-US:magic staff   |
@@ -37,7 +37,6 @@ Feature: Update product price fields from Back Office (BO).
       | unity              | bag of ten  |
       | unit_price_ratio   | 0.112211    |
 
-    @update_prices
     Scenario: I partially update product prices, providing only those values which I want to update
       Given product "product1" has following values:
         | price              | 100.99      |
@@ -75,7 +74,6 @@ Feature: Update product price fields from Back Office (BO).
         | unity              | bag of ten  |
         | unit_price_ratio   | 0.222222    |
 
-      @update_prices
       Scenario: I update product prices with negative values
         Given I add product "product2" with following information:
           | name       | en-US: white hat  |
@@ -100,7 +98,6 @@ Feature: Update product price fields from Back Office (BO).
           | unit_price      | -300         |
         Then I should get error that product "unit price" is invalid
 
-      @update_prices
       Scenario: I update product unit price without when product price is 0
         Given I add product "product3" with following information:
           | name       | en-US: black hat  |
@@ -112,7 +109,6 @@ Feature: Update product price fields from Back Office (BO).
           | unit_price      | 300          |
         Then I should get error that product "unit price" is invalid
 
-      @update_prices
       Scenario: I update product unit price along with product price
         Given I add product "product4" with following information:
           | name       | en-US: blue dress  |
