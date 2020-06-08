@@ -92,7 +92,7 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
             if ($orderState['deleted'] == 1 && (empty($options['current_state']) || $options['current_state'] != $orderState['id_order_state'])) {
                 continue;
             }
-            $orderState['name'] .= $orderState['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], '') : '';
+            $orderState['name'] .= $orderState['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], 'Admin.Global') : '';
             $choices[$orderState['name']] = $orderState['id_order_state'];
         }
 
@@ -110,7 +110,7 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
         $attrs = [];
 
         foreach ($orderStates as $orderState) {
-            $orderState['name'] .= $orderState['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], '') : '';
+            $orderState['name'] .= $orderState['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], 'Admin.Global') : '';
             $attrs[$orderState['name']]['data-background-color'] = $orderState['color'];
             $attrs[$orderState['name']]['data-is-bright'] = $this->colorBrightnessCalculator->isBright($orderState['color']);
         }
