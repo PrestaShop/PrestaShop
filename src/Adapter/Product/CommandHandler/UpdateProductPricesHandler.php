@@ -109,6 +109,11 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      */
     private function assertTaxRulesGroupExists(int $taxRulesGroupId): void
     {
+        // 0 is valid value meaning no tax rules group is applied.
+        if (0 === $taxRulesGroupId) {
+            return;
+        }
+
         $code = ProductConstraintException::INVALID_TAX_RULES_GROUP_ID;
 
         try {
