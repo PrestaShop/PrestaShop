@@ -364,14 +364,26 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that product price is invalid
+     * @Then /^I should get error that product "(.+)" is invalid$/
+     * @param string $priceField
      */
-    public function assertLastErrorIsInvalidPriceConstraint()
+    public function assertLastPriceErrorConstraint(string $priceField)
     {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_PRICE
-        );
+        $priceFieldErrorMap = [
+            'price' => ProductConstraintException::INVALID_PRICE,
+            'ecotax' => ProductConstraintException::INVALID_ECOTAX,
+            'wholesale price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
+            'unit price' => ProductConstraintException::INVALID_UNIT_PRICE,
+        ];
+
+        if (array_key_exists($priceField, $priceFieldErrorMap)) {
+            $this->assertLastErrorIs(
+                ProductConstraintException::class,
+                $priceFieldErrorMap[$priceField]
+            );
+        }
+
+        throw new RuntimeException(sprintf('"%s" doesn\'t exist in priceField-errorCode map.', $priceField));
     }
 
     /**
