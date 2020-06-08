@@ -398,7 +398,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         );
 
-        if (!(new Number((string) $amount->getTaxIncluded()))->equals(new Number((string) $initialProductPriceTaxIncl))) {
+        // Use the same rounding decimals used to call Product::getPriceStatic
+        $amountTaxIncluded = Tools::ps_round($amount->getTaxIncluded(), 2);
+        if (!(new Number((string) $amountTaxIncluded))->equals(new Number((string) $initialProductPriceTaxIncl))) {
             // @todo: use private method to create specific price object
             $specificPrice = new SpecificPrice();
             $specificPrice->id_shop = 0;
