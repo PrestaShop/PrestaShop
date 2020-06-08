@@ -160,6 +160,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then product :productReference should have following values:
+     * @Then product :productReference has following values:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -359,6 +360,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             ProductConstraintException::class,
             ProductConstraintException::INVALID_PRODUCT_TYPE
+        );
+    }
+
+    /**
+     * @Then I should get error that product price is invalid
+     */
+    public function assertLastErrorIsInvalidPriceConstraint()
+    {
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            ProductConstraintException::INVALID_PRICE
         );
     }
 
