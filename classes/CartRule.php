@@ -1074,6 +1074,11 @@ class CartRuleCore extends ObjectModel
             return 0;
         }
 
+        // set base price that will be used for percent reductions
+        if (!empty($context->virtualTotalTaxIncluded) && !empty($context->virtualTotalTaxExcluded)) {
+            $basePriceForPercentReduction = $use_tax ? $context->virtualTotalTaxIncluded : $context->virtualTotalTaxExcluded;
+        }
+
         if (!$context) {
             $context = Context::getContext();
         }
@@ -1156,8 +1161,9 @@ class CartRuleCore extends ObjectModel
                         }
                     }
                 }
-
-                $reduction_value += $order_total * $this->reduction_percent / 100;
+                // set base price on which percentage reduction will be applied
+                $basePriceForPercentReduction = $basePriceForPercentReduction ?? $order_total;
+                $reduction_value += $basePriceForPercentReduction * $this->reduction_percent / 100;
             }
 
             // Discount (%) on a specific product
@@ -1375,6 +1381,13 @@ class CartRuleCore extends ObjectModel
         }
 
         Cache::store($cache_id, $reduction_value);
+
+        // update virtual total values, for percentage reductions that might applied later
+        if ($use_tax && !empty($context->virtualTotalTaxIncluded)) {
+            $context->virtualTotalTaxIncluded -= $reduction_value;
+        } elseif (!$use_tax && !empty($context->virtualTotalTaxExcluded)) {
+            $context->virtualTotalTaxExcluded -= $reduction_value;
+        }
 
         return $reduction_value;
     }
