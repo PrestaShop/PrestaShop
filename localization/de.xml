@@ -7,8 +7,8 @@
     <language iso_code="de"/>
   </languages>
   <taxes>
-    <tax id="1" name="MwSt. DE 19%" rate="19" eu-tax-group="virtual"/>
-    <tax id="2" name="MwSt. DE 7%" rate="7"/>
+    <tax id="1" name="MwSt. DE 16%" rate="16" eu-tax-group="virtual"/>
+    <tax id="2" name="MwSt. DE 5%" rate="5"/>
     <tax id="3" name="USt. AT 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="4" name="TVA BE 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="5" name="ДДС BG 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
