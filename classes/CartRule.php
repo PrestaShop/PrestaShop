@@ -1382,7 +1382,7 @@ class CartRuleCore extends ObjectModel
 
         Cache::store($cache_id, $reduction_value);
 
-        // update virtual total values, for percentage reductions that might applied later
+        // update virtual total values, for percentage reductions that might be applied later
         if ($use_tax && !empty($context->virtualTotalTaxIncluded)) {
             $context->virtualTotalTaxIncluded -= $reduction_value;
         } elseif (!$use_tax && !empty($context->virtualTotalTaxExcluded)) {
