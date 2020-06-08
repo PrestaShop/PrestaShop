@@ -103,7 +103,7 @@ class TranslationCatalogueProviderFactory
         }
 
         if ('external_legacy_module' === $type) {
-            return $this->getExternalLegacyModuleProvider();
+            return $this->getExternalLegacyModuleProvider($locale);
         }
         if ('themes' === $type) {
             return $this->getThemeCatalogueProvider($locale, $theme);
@@ -132,7 +132,7 @@ class TranslationCatalogueProviderFactory
             throw new LogicException("The 'type' parameter is not valid. $type given2");
         }
         if ('external_legacy_module' === $type) {
-            return $this->getExternalLegacyModuleProvider();
+            return $this->getExternalLegacyModuleProvider($locale);
         }
         if ('themes' === $type) {
             return $this->getThemeCatalogueProvider($locale, $theme);
@@ -162,7 +162,7 @@ class TranslationCatalogueProviderFactory
         }
 
         if ('external_legacy_module' === $type) {
-            return $this->getExternalLegacyModuleProvider();
+            return $this->getExternalLegacyModuleProvider($locale);
         }
         if ('themes' === $type) {
             return $this->getThemeCatalogueProvider($locale, $theme);
@@ -176,11 +176,13 @@ class TranslationCatalogueProviderFactory
     }
 
     /**
+     * @param string $locale
+     *
      * @return ExternalModuleLegacySystemProvider
      */
-    public function getExternalLegacyModuleProvider(): ExternalModuleLegacySystemProvider
+    public function getExternalLegacyModuleProvider(string $locale): ExternalModuleLegacySystemProvider
     {
-        return $this->externalModuleLegacySystemProvider;
+        return $this->externalModuleLegacySystemProvider->setLocale($locale);
     }
 
     /**
