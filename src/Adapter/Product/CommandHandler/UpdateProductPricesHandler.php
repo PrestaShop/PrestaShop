@@ -114,8 +114,6 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             return;
         }
 
-        $code = ProductConstraintException::INVALID_TAX_RULES_GROUP_ID;
-
         try {
             $taxRulesGroup = new TaxRulesGroup($taxRulesGroupId);
             if (!$taxRulesGroup->id) {
@@ -124,7 +122,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
                         'Invalid tax rules group id "%s". Group doesn\'t exist',
                         $taxRulesGroupId
                     ),
-                    $code
+                    ProductConstraintException::INVALID_TAX_RULES_GROUP_ID
                 );
             }
         } catch (PrestaShopException $e) {
