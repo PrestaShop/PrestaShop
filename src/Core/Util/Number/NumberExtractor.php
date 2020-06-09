@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Util\Number;
 
 use PrestaShop\Decimal\Number;
+use stdClass;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
@@ -50,15 +51,28 @@ class NumberExtractor
     }
 
     /**
-     * @param $objectOrArray
+     * If provided resource is array, access its values using brackets e.g. '[one_property][another_level_property]'
+     * If provided resource is object, access its properties using dots e.g. 'myProperty.anotherProperty'
+     * You can also simply provide the name of property/key to reach the value if it is not multidimensional.
+     *
+     * e.g:
+     * ->extract($myMultiDimensionalArray, '[firstDimensionKey][secondDimensionKey]')
+     *
+     * ->extract($productForEditing, 'priceInformation.price')
+     *
+     * ->extract($productEntity, 'price')
+     *
+     * ->extract($simpleArray, 'someKey')
+     *
+     * @param array|stdClass $resource
      * @param string $propertyPath
      *
      * @return Number
      */
-    public function extract($objectOrArray, string $propertyPath): Number
+    public function extract($resource, string $propertyPath): Number
     {
         try {
-            $plainValue = $this->propertyAccessor->getValue($objectOrArray, $propertyPath);
+            $plainValue = $this->propertyAccessor->getValue($resource, $propertyPath);
         } catch (InvalidArgumentException $e) {
             throw new NumberExtractorException(
                 sprintf('Invalid property path "%s" provided', $propertyPath),
