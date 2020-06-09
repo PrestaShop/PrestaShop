@@ -59,14 +59,12 @@ class NumberExtractor
     {
         try {
             $plainValue = $this->propertyAccessor->getValue($objectOrArray, $propertyPath);
-
         } catch (InvalidArgumentException $e) {
             throw new NumberExtractorException(
                 sprintf('Invalid property path "%s" provided', $propertyPath),
                 NumberExtractorException::INVALID_PROPERTY_PATH,
                 $e
             );
-
         } catch (AccessException $e) {
             throw new NumberExtractorException(
                 sprintf(
@@ -76,7 +74,6 @@ class NumberExtractor
                 NumberExtractorException::NOT_ACCESSIBLE,
                 $e
             );
-
         } catch (UnexpectedTypeException $e) {
             throw new NumberExtractorException(
                 'Invalid type of resource within a path given. Expected array or object',
