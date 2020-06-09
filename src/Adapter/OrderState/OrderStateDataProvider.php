@@ -39,6 +39,6 @@ final class OrderStateDataProvider implements OrderStateDataProviderInterface
      */
     public function getOrderStates($languageId)
     {
-        return OrderState::getOrderStates($languageId, true);
+        return OrderState::getOrderStates($languageId, false);
     }
 }

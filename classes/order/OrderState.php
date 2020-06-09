@@ -118,10 +118,12 @@ class OrderStateCore extends ObjectModel
      *
      * @return array Order statuses
      */
-    public static function getOrderStates($id_lang, $getDeletedStates = false)
+    public static function getOrderStates($id_lang, $filterDeleted = true)
     {
-        $deletedStates = $getDeletedStates ? '' : 'WHERE deleted = 0';
+        $deletedStates = $filterDeleted ? 'WHERE deleted = 0' : '';
         $cache_id = 'OrderState::getOrderStates_' . (int) $id_lang;
+        $cache_id .= $filterDeleted ? '_filterDeleted' : '';
+
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *

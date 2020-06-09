@@ -926,7 +926,7 @@ class OrderCore extends ObjectModel
             $context = Context::getContext();
         }
 
-        $orderStates = OrderState::getOrderStates((int) $context->language->id, true);
+        $orderStates = OrderState::getOrderStates((int) $context->language->id, false);
         $indexedOrderStates = [];
         foreach ($orderStates as $orderState) {
             $indexedOrderStates[$orderState['id_order_state']] = $orderState;
