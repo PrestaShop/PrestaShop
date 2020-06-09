@@ -1,5 +1,5 @@
 const fs = require('fs');
-const PDFJS = require('pdfjs-dist');
+const pdfJs = require('pdfjs-dist/es5/build/pdf.js');
 
 module.exports = {
   /**
@@ -8,7 +8,9 @@ module.exports = {
    * @return {Promise<void>}
    */
   async deleteFile(pathToFile) {
-    if (fs.existsSync(pathToFile)) fs.unlinkSync(pathToFile);
+    if (fs.existsSync(pathToFile)) {
+      fs.unlinkSync(pathToFile);
+    }
   },
 
   /**
@@ -45,7 +47,7 @@ module.exports = {
    * @return boolean, true if text exist, false if not
    */
   async isTextInPDF(fileName, text) {
-    const pdf = await PDFJS.getDocument(fileName).promise;
+    const pdf = await pdfJs.getDocument(fileName).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
     for (let pageNo = 1; pageNo <= maxPages; pageNo += 1) {
@@ -61,7 +63,7 @@ module.exports = {
    * @return imageNumber, number of images in PDF file
    */
   async getImageNumberInPDF(filePath) {
-    const pdf = await PDFJS.getDocument(filePath).promise;
+    const pdf = await pdfJs.getDocument(filePath).promise;
     const nbrPages = pdf.numPages;
     let imageNumber = 0;
     for (let pageNo = 1; pageNo <= nbrPages; pageNo += 1) {
@@ -69,7 +71,7 @@ module.exports = {
       /* eslint-disable no-loop-func */
       await page.getOperatorList().then(async (ops) => {
         for (let i = 0; i < ops.fnArray.length; i++) {
-          if (ops.fnArray[i] === PDFJS.OPS.paintImageXObject) {
+          if (ops.fnArray[i] === pdfJs.OPS.paintImageXObject) {
             imageNumber += 1;
           }
         }
