@@ -46,7 +46,7 @@ class NumberExtractorTest extends TestCase
     }
 
     /**
-     * @dataProvider getValidDataForArrayExtractions
+     * @dataProvider getValidDataForArrayAndObjectExtractions
      *
      * @param $resource
      * @param $path
@@ -62,7 +62,7 @@ class NumberExtractorTest extends TestCase
     /**
      * @return Generator
      */
-    public function getValidDataForArrayExtractions(): Generator
+    public function getValidDataForArrayAndObjectExtractions(): Generator
     {
         $obj = new stdClass();
         $obj->test = 17;
