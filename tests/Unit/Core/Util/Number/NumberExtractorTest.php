@@ -37,6 +37,9 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class NumberExtractorTest extends TestCase
 {
+    /**
+     * @var NumberExtractor
+     */
     private $numberExtractor;
 
     public function setUp()
