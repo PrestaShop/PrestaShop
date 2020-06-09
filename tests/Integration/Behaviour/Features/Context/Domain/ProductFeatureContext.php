@@ -282,7 +282,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         if (isset($data['on_sale'])) {
             $expectedOnSale = PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']);
-            $onSaleInWords = $expectedOnSale ? 'to be on sale' : 'to be not on sale';
+            $onSaleInWords = $expectedOnSale ? 'to be on sale' : 'not to be on sale';
 
             Assert::assertEquals(
                 $expectedOnSale,
