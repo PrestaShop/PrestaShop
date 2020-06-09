@@ -80,6 +80,7 @@ describe('Filter, pagination and sort files', async () => {
     describe(`Create file n°${index + 1} in BO`, async () => {
       const createFileData = new FileFaker({name: `todelete${index}`});
       before(() => files.createFile('.', createFileData.filename, `test ${createFileData.filename}`));
+      after(() => files.deleteFile(createFileData.filename));
 
       it('should go to new file page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewFilePage${index}`, baseContext);

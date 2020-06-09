@@ -51,7 +51,7 @@ Check the current year in the invoice file name
 Disable Add current year to invoice number
 Check that the current year does not exist in the invoice file name
  */
-describe('Edit invoice prefix and check the generated invoice file name', async () => {
+describe('Enable invoice current year option', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

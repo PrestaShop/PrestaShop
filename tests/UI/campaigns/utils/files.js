@@ -1,5 +1,5 @@
 const fs = require('fs');
-const PDFJS = require('pdfjs-dist/es5/build/pdf.js');
+const PDFJS = require('pdfjs-dist');
 
 module.exports = {
   /**

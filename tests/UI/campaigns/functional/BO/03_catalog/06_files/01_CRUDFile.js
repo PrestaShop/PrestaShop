@@ -58,6 +58,11 @@ describe('Create, update and delete file', async () => {
     ]);
   });
   after(async () => {
+    await Promise.all([
+      files.deleteFile(createFileData.filename),
+      files.deleteFile(editFileData.filename),
+    ]);
+
     await helper.closeBrowserContext(browserContext);
   });
 
