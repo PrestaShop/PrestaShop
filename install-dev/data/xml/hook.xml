@@ -2768,5 +2768,10 @@
       <title>Category footer</title>
       <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
+    <hook id="actionPresentProductListing">
+      <name>actionPresentProductListing</name>
+      <title>Product Listing Presenter</title>
+      <description>This hook is called before a product listing is presented</description>
+    </hook>
   </entities>
 </entity_hook>
