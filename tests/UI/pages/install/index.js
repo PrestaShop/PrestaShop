@@ -165,6 +165,6 @@ module.exports = class Install extends CommonPage {
    */
   async goToFOAfterInstall() {
     await this.waitForVisibleSelector(this.discoverFoButton);
-    return this.openLinkWithTargetBlank(this.page, this.discoverFoButton, false);
+    return this.openLinkWithTargetBlank(this.discoverFoButton);
   }
 };

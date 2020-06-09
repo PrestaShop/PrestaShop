@@ -211,7 +211,7 @@ module.exports = class BOBasePage extends CommonPage {
    * @return FOPage, page opened
    */
   async viewMyShop() {
-    return this.openLinkWithTargetBlank(this.page, this.headerShopNameLink, false);
+    return this.openLinkWithTargetBlank(this.headerShopNameLink, false);
   }
 
   /**

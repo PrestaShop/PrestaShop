@@ -46,7 +46,7 @@ module.exports = class AddPage extends BOBasePage {
    * @return page opened
    */
   async previewPage() {
-    return this.openLinkWithTargetBlank(this.page, this.saveAndPreviewPageButton, false);
+    return this.openLinkWithTargetBlank(this.saveAndPreviewPageButton);
   }
 
   /**

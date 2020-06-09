@@ -24,9 +24,9 @@ module.exports = class AddProduct extends BOBasePage {
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
     this.productShortDescriptionTab = '#tab_description_short a';
-    this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
+    this.productShortDescriptionIframe = '#form_step1_description_short';
     this.productDescriptionTab = '#tab_description a';
-    this.productDescriptionIframe = '#form_step1_description_1_ifr';
+    this.productDescriptionIframe = '#form_step1_description';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
     this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
@@ -216,7 +216,7 @@ module.exports = class AddProduct extends BOBasePage {
    */
   async previewProduct() {
     await this.waitForVisibleSelector(this.previewProductLink);
-    this.page = await this.openLinkWithTargetBlank(this.page, this.previewProductLink);
+    this.page = await this.openLinkWithTargetBlank(this.previewProductLink);
     const textBody = await this.getTextContent('body');
     if (await textBody.includes('[Debug] This page has moved')) {
       await this.clickAndWaitForNavigation('a');
