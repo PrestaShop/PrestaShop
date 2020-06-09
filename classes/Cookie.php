@@ -501,7 +501,7 @@ class CookieCore
     }
 
     /**
-     * Check if this session is still alived
+     * Check if this session is still alive
      *
      * @return bool
      */
