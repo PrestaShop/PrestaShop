@@ -5,4 +5,4 @@ services:
   prestashop.core.util.number.number_extractor:
     class: 'PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
     arguments:
-      '@property_accessor'
+      - '@property_accessor'
