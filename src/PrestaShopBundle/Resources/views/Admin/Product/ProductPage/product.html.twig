@@ -24,6 +24,8 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
+
 {% block content %}
 
   <form name="form" id="form" method="post" class="form-horizontal product-page row justify-content-md-center" novalidate="novalidate">
@@ -150,7 +152,7 @@
 
         {# PANEL HOOKED MODULES #}
         {% block product_panel_modules %}
-          {% if hookcount('displayAdminProductsExtra') > 0 %}
+          {% if hooksarraycontent(hooks) is not empty %}
             <div role="tabpanel" class="form-contenttab tab-pane" id="hooks">
               <div class="row">
                 <div class="col-md-12">
@@ -159,8 +161,6 @@
 
                       {# LEFT #}
                       <div class="col-md-12">
-                        {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
-
                         <div class="row module-selection" style="display: none;">
                           <div class="col-md-12 col-lg-7">
                             {% for module in hooks %}
