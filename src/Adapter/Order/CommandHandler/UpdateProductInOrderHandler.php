@@ -26,14 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Cart;
+use CartRule;
 use Configuration;
+use Context;
 use Customization;
 use Hook;
 use Order;
 use OrderCarrier;
+use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
@@ -49,6 +54,16 @@ use Validate;
 final class UpdateProductInOrderHandler extends AbstractOrderHandler implements UpdateProductInOrderHandlerInterface
 {
     /**
+     * @var OrderAmountUpdater
+     */
+    private $orderAmountUpdater;
+
+    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    {
+        $this->orderAmountUpdater = $orderAmountUpdater;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductInOrderCommand $command)
@@ -58,6 +73,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         $order = $this->getOrderObject($command->getOrderId());
         $orderDetail = new OrderDetail($command->getOrderDetailId());
+        $cart = new Cart($order->id_cart);
         $orderInvoice = null;
         if (!empty($command->getOrderInvoiceId())) {
             $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
@@ -145,6 +161,16 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         // Save order detail
         $res &= $orderDetail->update();
+
+        // Apply the changes on the cart
+        $cart->updateQty(
+            $old_quantity - $orderDetail->product_quantity,
+            $orderDetail->product_id,
+            $orderDetail->product_attribute_id,
+            false,
+            $orderDetail->product_quantity > $old_quantity ? 'up' : 'down'
+        );
+        $this->updateCartRules($cart, $order, $orderInvoice);
 
         // Update weight SUM
         $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
@@ -248,5 +274,80 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
         }
+    }
+
+    private function updateCartRules(Cart $cart, Order $order, ?OrderInvoice $invoice = null)
+    {
+        $computingPrecision = Context::getContext()->getComputingPrecision();
+
+        $cart = $this->syncCartOrderCartRules($order, $cart);
+        Context::getContext()->cart = $cart;
+        CartRule::autoAddToCart();
+        CartRule::autoRemoveFromCart();
+
+        $orderCartRulesData = $order->getCartRules();
+        /** @var OrderCartRule $orderCartRule */
+        foreach($orderCartRulesData as $orderCartRuleData) {
+            $orderCartRule = new OrderCartRule((int) $orderCartRuleData['id_order_cart_rule']);
+            $idCartRule = (int) $orderCartRule->id_cart_rule;
+            $cartRule = new CartRule($idCartRule);
+            $values = [
+                'tax_incl' => \Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision),
+                'tax_excl' => \Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision),
+            ];
+
+            if (
+                ($values['tax_incl'] !== \Tools::ps_round($orderCartRule->value, $computingPrecision)) ||
+                ($values['tax_excl'] !== \Tools::ps_round($orderCartRule->value_tax_excl, $computingPrecision))
+            ) {
+                $orderCartRule->value = $values['tax_incl'];
+                $orderCartRule->value_tax_excl = $values['tax_excl'];
+
+                $orderCartRule->update();
+            }
+        }
+
+        $order = $this->orderAmountUpdater->update($order, $cart, $invoice && !empty($invoice->id));
+        $order->update();
+    }
+
+    private function syncCartOrderCartRules(Order $order, Cart $cart): Cart
+    {
+        $orderCartRulesData = $order->getCartRules();
+        $orderCartRulesIds = array_map(
+            function(array $orderCartRuleData) { return (int)$orderCartRuleData['id_cart_rule']; },
+            $orderCartRulesData
+        );
+
+        $cartRules = $cart->getCartRules();
+        $cartRulesIds = array_map(
+            function(array $cartRule) { return (int)$cartRule['id_cart_rule']; },
+            $cartRules
+        );
+
+        sort($orderCartRulesIds);
+        sort($cartRulesIds);
+
+        $difference = array_diff($orderCartRulesIds, $cartRulesIds);
+
+        if (count($orderCartRulesIds) > count($cartRulesIds)) {
+            foreach ($difference as $cartRuleId) {
+                $cart->addCartRule($cartRuleId);
+            }
+        } else {
+            foreach ($difference as $cartRuleId) {
+                $cartRule = $cartRules[$cartRuleId];
+                $order->addCartRule(
+                    $cartRuleId,
+                    $cartRule->name[$order->id_lang],
+                    [
+                        'tax_incl' => $cartRule['value_real'],
+                        'tax_excl' => $cartRule['value_tax_exc'],
+                    ]
+                );
+            }
+        }
+
+        return $cart;
     }
 }
