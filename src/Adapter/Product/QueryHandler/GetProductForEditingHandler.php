@@ -56,8 +56,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             (bool) $product->active,
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
-            $this->getPricesInformation($product),
-            (int) $product->id_tax_rules_group
+            $this->getPricesInformation($product)
         );
     }
 
