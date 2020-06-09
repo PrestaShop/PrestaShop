@@ -1,4 +1,4 @@
-### Node & Puppeteer specific rules ###
+### Node & UI folder rules ###
 
 node_modules
 */node_modules

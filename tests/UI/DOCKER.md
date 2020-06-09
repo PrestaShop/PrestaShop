@@ -1,5 +1,5 @@
-# PrestaShop Tests with Puppeteer (Docker version)
-This file will explain to you how to run tests in puppeteer with docker-compose.
+# PrestaShop UI Tests (Docker version)
+This file will explain to you how to run tests with docker-compose.
 
 ### LinkChecker
 To create shop and run LinkChecker

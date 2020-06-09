@@ -1,12 +1,12 @@
-# PrestaShop Tests with Puppeteer
+# PrestaShop UI Tests
 
 ## How to install your environment
 
 ```bash
 # Clone Prestashop
 git clone https://github.com/PrestaShop/PrestaShop/
-# Install dependencies in puppeteer folder
-cd tests/puppeteer/
+# Install dependencies in UI folder
+cd tests/UI/
 npm install
 ```
 
@@ -24,7 +24,6 @@ npm install
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
 | HEADLESS            | Boolean to run tests in headless or not (default to **`true`**) |
-| DOWNLOAD_PATH       | PATH of your download folder (default to **`/downloads`**)|
 
 Before running tests, you should install your shop manually or run the install script **`campaigns/sanity/01_installShop/*`** with the [`specific-test` command](README.md#specific-test).
 

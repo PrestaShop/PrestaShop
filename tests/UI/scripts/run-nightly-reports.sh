@@ -15,7 +15,7 @@ NO_SHUTDOWN=$([ -z "$2" ] && echo "" || echo "yes")
 DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
 REPORT_PATH="${DIR_PATH}/campaigns"
-TESTS_DIR="${DIR_PATH}/prestashop/tests/puppeteer"
+TESTS_DIR="${DIR_PATH}/prestashop/tests/UI"
 LOG_DIR="/var/log/ps-reports/"
 LOG_PATH="${LOG_DIR}${REPORT_NAME}.log"
 
