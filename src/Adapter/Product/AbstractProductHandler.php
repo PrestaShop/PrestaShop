@@ -76,6 +76,37 @@ abstract class AbstractProductHandler
     }
 
     /**
+     * Provides product field as Number instead of float.
+     *
+     * @param Product $product
+     * @param string $field
+     *
+     * @return Number
+     */
+    protected function getPropertyAsNumber(Product $product, string $property): Number
+    {
+        $numericProperties = [
+            'price',
+            'ecotax',
+            'wholesale_price',
+            'unit_price',
+            'unit_price_ratio',
+        ];
+
+        if (!in_array($property, $numericProperties, true)) {
+            throw new ProductException(sprintf('Product property "%s" does\'t exist or is not numeric', $property));
+        }
+
+        // To make sure all values are safely converted to Number.
+        // Because casting null to string results in empty string which isn't valid to create Number and throws error.
+        if (null === $product->{$property}) {
+            $product->{$property} = 0;
+        }
+
+        return new Number((string) $product->{$property});
+    }
+
+    /**
      * @todo: product name is not required. Fix that? issue: #19441 for discussion
      *
      * Validates Product object model multilingual property using legacy validation
@@ -130,8 +161,8 @@ abstract class AbstractProductHandler
      */
     private function setUnitPrice(Product $product)
     {
-        $price = new Number((string) $product->price);
-        $unitPriceRatio = new Number((string) $product->unit_price_ratio);
+        $price = $this->getPropertyAsNumber($product, 'price');
+        $unitPriceRatio = $this->getPropertyAsNumber($product, 'unit_price_ratio');
 
         if (!$unitPriceRatio->equals(new Number('0'))) {
             $product->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
