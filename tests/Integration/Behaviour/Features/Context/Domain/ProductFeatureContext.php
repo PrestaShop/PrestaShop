@@ -234,6 +234,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         $command = new UpdateProductPricesCommand($productId);
+        // this id value does not exist, it is used on purpose.
         $command->setTaxRulesGroupId(50000000);
 
         try {
