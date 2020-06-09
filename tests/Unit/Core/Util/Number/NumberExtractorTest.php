@@ -32,6 +32,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use stdClass;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -49,7 +50,7 @@ class NumberExtractorTest extends TestCase
     }
 
     /**
-     * @dataProvider getValidDataForArrayAndObjectExtractions
+     * @dataProvider getValidData
      *
      * @param $resource
      * @param $path
@@ -63,9 +64,23 @@ class NumberExtractorTest extends TestCase
     }
 
     /**
+     * @dataProvider getDataWithInvalidResourcePropertyType
+     *
+     * @param $resource
+     * @param string $path
+     */
+    public function testItThrowsExceptionWhenNonNumericValueIsProvidedInAccessedProperty($resource, string $path)
+    {
+        $this->expectException(NumberExtractorException::class);
+        $this->expectExceptionCode(NumberExtractorException::NON_NUMERIC_PROPERTY);
+
+        $this->numberExtractor->extract($resource, $path);
+    }
+
+    /**
      * @return Generator
      */
-    public function getValidDataForArrayAndObjectExtractions(): Generator
+    public function getValidData(): Generator
     {
         $obj = new stdClass();
         $obj->test = 17;
@@ -103,6 +118,29 @@ class NumberExtractorTest extends TestCase
             $obj,
             'obj2.test2',
             new Number('19.5'),
+        ];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getDataWithInvalidResourcePropertyType(): Generator
+    {
+        $obj = new stdClass();
+        $obj->test = 'this is not a numeric value';
+        $obj->test2 = null;
+
+        yield [
+            ['test' => 'this is not a numeric value'],
+            '[test]',
+        ];
+        yield [
+            $obj,
+            'test',
+        ];
+        yield [
+            $obj,
+            'test2',
         ];
     }
 }

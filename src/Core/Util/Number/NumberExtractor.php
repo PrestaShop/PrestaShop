@@ -62,7 +62,7 @@ class NumberExtractor
      *
      * ->extract($productEntity, 'price')
      *
-     * ->extract($simpleArray, 'someKey')
+     * ->extract($simpleArray, '[someKey]')
      *
      * @param array|stdClass $resource
      * @param string $propertyPath
