@@ -43,7 +43,7 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
 {
     /**
      * Only fields defined in this array will be updated.
-     * Its necessary to avoid resetting some of product properties (which are not loaded by default) during partial update
+     * It is necessary to avoid resetting some of product properties (which are not loaded by default) during partial update
      *
      * @var array
      */
@@ -57,7 +57,7 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
-        $this->fillUpdatableFields($product, $command);
+        $this->fillUpdatableFieldsWithCommandData($product, $command);
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
         $this->performUpdate($product);
@@ -67,8 +67,10 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
      * @param Product $product
      * @param UpdateProductBasicInformationCommand $command
      */
-    private function fillUpdatableFields(Product $product, UpdateProductBasicInformationCommand $command): void
-    {
+    private function fillUpdatableFieldsWithCommandData(
+        Product $product,
+        UpdateProductBasicInformationCommand $command
+    ): void {
         if (null !== $command->isVirtual()) {
             $product->is_virtual = $command->isVirtual();
             $this->fieldsToUpdate['is_virtual'] = true;
