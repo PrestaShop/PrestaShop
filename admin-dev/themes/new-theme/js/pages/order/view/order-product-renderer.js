@@ -197,6 +197,9 @@ export default class OrderProductRenderer {
   }
 
   updateNumPerPage(numPerPage) {
+    if (numPerPage < 1) {
+      numPerPage = 1;
+    }
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numPages = Math.ceil($rows.length / numPerPage);
