@@ -42,6 +42,14 @@ use Product;
 final class UpdateProductBasicInformationHandler extends AbstractProductHandler implements UpdateProductBasicInformationHandlerInterface
 {
     /**
+     * Only fields defined in this array will be updated.
+     * Its necessary to avoid resetting some of product properties (which are not loaded by default) during partial update
+     *
+     * @var array
+     */
+    private $fieldsToUpdate = [];
+
+    /**
      * {@inheritdoc}
      *
      * Null values are not updated, because are considered unchanged
@@ -49,26 +57,64 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
+        $this->fillUpdatableFields($product, $command);
+        $product->setFieldsToUpdate($this->fieldsToUpdate);
 
+        $this->performUpdate($product);
+    }
+
+    /**
+     * @param Product $product
+     * @param UpdateProductBasicInformationCommand $command
+     */
+    private function fillUpdatableFields(Product $product, UpdateProductBasicInformationCommand $command): void
+    {
         if (null !== $command->isVirtual()) {
             $product->is_virtual = $command->isVirtual();
+            $this->fieldsToUpdate['is_virtual'] = true;
         }
 
-        if (null !== $command->getLocalizedNames()) {
-            $product->name = $command->getLocalizedNames();
+        $localizedNames = $command->getLocalizedNames();
+        $localizedDescriptions = $command->getLocalizedDescriptions();
+        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
+
+        if (null !== $localizedNames) {
+            $product->name = $localizedNames;
             $this->validateLocalizedField($product, 'name', ProductConstraintException::INVALID_NAME);
+            $this->setLocalizedFieldToUpdate('name', $localizedNames);
         }
 
-        if (null !== $command->getLocalizedDescriptions()) {
-            $product->description = $command->getLocalizedDescriptions();
+        if (null !== $localizedDescriptions) {
+            $product->description = $localizedDescriptions;
             $this->validateLocalizedField($product, 'description', ProductConstraintException::INVALID_DESCRIPTION);
+            $this->setLocalizedFieldToUpdate('description', $localizedDescriptions);
         }
 
-        if (null !== $command->getLocalizedShortDescriptions()) {
-            $product->description_short = $command->getLocalizedShortDescriptions();
+        if (null !== $localizedShortDescriptions) {
+            $product->description_short = $localizedShortDescriptions;
             $this->validateLocalizedField($product, 'description_short', ProductConstraintException::INVALID_SHORT_DESCRIPTION);
+            $this->setLocalizedFieldToUpdate('description_short', $localizedShortDescriptions);
         }
+    }
 
+    /**
+     * @param string $field
+     * @param array $localizedValues
+     */
+    private function setLocalizedFieldToUpdate(string $field, array $localizedValues): void
+    {
+        foreach ($localizedValues as $langId => $value) {
+            $this->fieldsToUpdate[$field][$langId] = true;
+        }
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws CannotUpdateProductException
+     */
+    private function performUpdate(Product $product): void
+    {
         try {
             if (false === $product->update()) {
                 throw new CannotUpdateProductException(
