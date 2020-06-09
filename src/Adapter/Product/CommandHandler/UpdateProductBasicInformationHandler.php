@@ -60,6 +60,10 @@ final class UpdateProductBasicInformationHandler extends AbstractProductHandler 
         $this->fillUpdatableFieldsWithCommandData($product, $command);
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
+        if (empty($this->fieldsToUpdate)) {
+            return;
+        }
+
         $this->performUpdate($product);
     }
 
