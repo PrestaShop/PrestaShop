@@ -260,7 +260,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         } else {
             $expectedId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($expectedName)->id;
         }
-        $actualId = $productForEditing->getTaxRulesGroupId();
+        $actualId = $productForEditing->getPricesInformation()->getTaxRulesGroupId();
 
         if ($expectedId !== $actualId) {
             throw new RuntimeException(
