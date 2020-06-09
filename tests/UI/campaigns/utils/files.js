@@ -117,17 +117,24 @@ module.exports = {
   },
 
   /**
-   * Get fileName with
-   * @param dir
-   * @param fileStartWith
-   * @param fileEndWith
+   * Create directory if not exist
+   * @param path
+   * @return {Promise<void>}
+   */
+  async createDirectory(path) {
+    if (!fs.existsSync(path)) await fs.mkdirSync(path);
+  },
+
+  /**
+   * Generate report filename
    * @return {Promise<string>}
    */
-  async getFileNameFromDir(dir, fileStartWith = '', fileEndWith = '') {
-    const filesNames = await fs.readdirSync(dir).filter(fn => fn.startsWith(fileStartWith) && fn.endsWith(fileEndWith));
-    if (filesNames.length === 0) {
-      throw Error('File was not found in directory');
-    }
-    return filesNames[0];
+  async generateReportFilename() {
+    const curDate = new Date();
+    return `report-${
+      curDate.toJSON().slice(0, 10)}-${
+      curDate.getHours()}-${
+      curDate.getMinutes()}-${
+      curDate.getSeconds()}`;
   },
 };
