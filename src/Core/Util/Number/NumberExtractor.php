@@ -35,7 +35,7 @@ use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * Extracts @var Number from given array/object
+ * Extracts numeric value as @var Number from given resource
  */
 class NumberExtractor
 {
