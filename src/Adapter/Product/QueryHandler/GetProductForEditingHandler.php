@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Pack;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -95,31 +94,15 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
      */
     private function getPricesInformation(Product $product): ProductPricesInformation
     {
-        $priceNumberFields = [
-            'price',
-            'ecotax',
-            'wholesale_price',
-            'unit_price',
-            'unit_price_ratio',
-        ];
-
-        // To make sure all values are safely converted to Number.
-        // Because casting null to string results in empty string which isn't valid to create Number and throws error.
-        foreach ($priceNumberFields as $field) {
-            if (null === $product->{$field}) {
-                $product->{$field} = 0;
-            }
-        }
-
         return new ProductPricesInformation(
-            new Number((string) $product->price),
-            new Number((string) $product->ecotax),
+            $this->getPropertyAsNumber($product, 'price'),
+            $this->getPropertyAsNumber($product, 'ecotax'),
             (int) $product->id_tax_rules_group,
             (bool) $product->on_sale,
-            new Number((string) $product->wholesale_price),
-            new Number((string) $product->unit_price),
+            $this->getPropertyAsNumber($product, 'wholesale_price'),
+            $this->getPropertyAsNumber($product, 'unit_price'),
             (string) $product->unity,
-            new Number((string) $product->unit_price_ratio)
+            $this->getPropertyAsNumber($product, 'unit_price_ratio')
         );
     }
 

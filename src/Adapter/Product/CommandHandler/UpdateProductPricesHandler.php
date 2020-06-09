@@ -45,12 +45,22 @@ use Product;
 final class UpdateProductPricesHandler extends AbstractProductHandler implements UpdateProductPricesHandlerInterface
 {
     /**
+     * @var array specific product fields which needs to be updated.
+     *
+     * This is necessary because product is not fully loaded from database by default
+     * So during partial update we don't want to accidentally reset some fields
+     */
+    private $fieldsToUpdate = [];
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
-        $this->fillProductWithCommandData($product, $command);
+        $this->fillUpdatableFieldsWithCommandData($product, $command);
+        $product->setFieldsToUpdate($this->fieldsToUpdate);
+
         $this->performUpdate($product);
     }
 
@@ -60,7 +70,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      *
      * @throws ProductConstraintException
      */
-    private function fillProductWithCommandData(Product $product, UpdateProductPricesCommand $command): void
+    private function fillUpdatableFieldsWithCommandData(Product $product, UpdateProductPricesCommand $command): void
     {
         $price = $command->getPrice();
         $unitPrice = $command->getUnitPrice();
@@ -68,6 +78,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         if (null !== $price) {
             $product->price = (float) (string) $price;
             $this->validateField($product, 'price', ProductConstraintException::INVALID_PRICE);
+            $this->fieldsToUpdate['price'] = true;
         }
 
         if (null !== $unitPrice) {
@@ -76,11 +87,13 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
 
         if (null !== $command->getUnity()) {
             $product->unity = $command->getUnity();
+            $this->fieldsToUpdate['unity'] = true;
         }
 
         if (null !== $command->getEcotax()) {
             $product->ecotax = (float) (string) $command->getEcotax();
             $this->validateField($product, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
+            $this->fieldsToUpdate['ecotax'] = true;
         }
 
         $taxRulesGroupId = $command->getTaxRulesGroupId();
@@ -89,15 +102,18 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             $product->id_tax_rules_group = $taxRulesGroupId;
             $this->validateField($product, 'id_tax_rules_group', ProductConstraintException::INVALID_TAX_RULES_GROUP_ID);
             $this->assertTaxRulesGroupExists($taxRulesGroupId);
+            $this->fieldsToUpdate['id_tax_rules_group'] = true;
         }
 
         if (null !== $command->isOnSale()) {
             $product->on_sale = $command->isOnSale();
+            $this->fieldsToUpdate['on_sale'] = true;
         }
 
         if (null !== $command->getWholesalePrice()) {
             $product->wholesale_price = (float) (string) $command->getWholesalePrice();
             $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
+            $this->fieldsToUpdate['wholesale_price'] = true;
         }
     }
 
@@ -153,9 +169,10 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         }
 
         if (null === $price) {
-            $price = new Number((string) $product->price);
+            $price = $this->getPropertyAsNumber($product, 'price');
         }
 
+        //@todo: update the Number lib dependency. It should have methods to compare to 0 already.
         if ($price->equals(new Number('0'))) {
             throw new ProductConstraintException(
                 'Cannot set unit price when product price is 0',
@@ -165,7 +182,11 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
 
         $ratio = $price->dividedBy($unitPrice);
         $product->unit_price_ratio = (float) (string) $ratio;
+        //unit_price is not saved to database, it is only calculated depending on price and unit_price_ratio
         $product->unit_price = (float) (string) $unitPrice;
+
+        $this->fieldsToUpdate['unit_price_ratio'] = true;
+        $this->fieldsToUpdate['unit_price'] = true;
     }
 
     /**
