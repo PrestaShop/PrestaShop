@@ -61,7 +61,7 @@ class OrderDetailCustomization
         $this->type = $type;
         $this->name = $name;
         $this->value = $value;
-        /** @todo change const */
+        /* @todo change const */
         if (0 === $this->type) {
             $this->image = _THEME_PROD_PIC_DIR_ . $this->value . '_small';
         }
