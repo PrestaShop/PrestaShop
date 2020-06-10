@@ -32,5 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFro
 
 interface DeleteProductFromMerchandiseReturnHandlerInterface
 {
+    /**
+     * @param DeleteProductFromMerchandiseReturnCommand $command
+     */
     public function handle(DeleteProductFromMerchandiseReturnCommand $command): void;
 }

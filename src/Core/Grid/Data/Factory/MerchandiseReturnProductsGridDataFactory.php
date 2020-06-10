@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetOrderDetailCustomization;
@@ -31,10 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryHandler\GetOrderDet
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Product;
 
 /**
- * Gets data for manufacturer addresses grid
+ * Gets data for merchandise return products grid
  */
 class MerchandiseReturnProductsGridDataFactory implements GridDataFactoryInterface
 {
@@ -43,6 +44,7 @@ class MerchandiseReturnProductsGridDataFactory implements GridDataFactoryInterfa
      * @var GridDataFactoryInterface
      */
     private $merchandiseReturnProductsGridDataFactory;
+
     /**
      * @var GetOrderDetailCustomizationHandlerInterface
      */
