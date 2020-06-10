@@ -56,8 +56,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         RequestStack $requestStack
-    )
-    {
+    ) {
         parent::__construct($hookDispatcher);
         $this->requestStack = $requestStack;
     }
@@ -145,6 +144,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
         ) {
             $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
         }
+
         return (new FilterCollection())
             ->add((new Filter('reference', TextType::class))
             ->setTypeOptions([
