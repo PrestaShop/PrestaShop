@@ -144,6 +144,11 @@ class OrderForViewing
     private $discounts;
 
     /**
+     * @var OrderBrothersForViewing
+     */
+    private $brothers;
+
+    /**
      * @var DateTimeImmutable
      */
     private $createdAt;
@@ -231,7 +236,8 @@ class OrderForViewing
         OrderPaymentsForViewing $payments,
         OrderMessagesForViewing $messages,
         OrderPricesForViewing $prices,
-        OrderDiscountsForViewing $discounts
+        OrderDiscountsForViewing $discounts,
+        OrderBrothersForViewing $brothers
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -261,6 +267,7 @@ class OrderForViewing
         $this->carrierName = $carrierName;
         $this->shopId = $shopId;
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
+        $this->brothers = $brothers;
     }
 
     /**
@@ -466,6 +473,14 @@ class OrderForViewing
     public function getDiscounts(): OrderDiscountsForViewing
     {
         return $this->discounts;
+    }
+
+    /**
+     * @return OrderBrothersForViewing
+     */
+    public function getBrothers(): OrderBrothersForViewing
+    {
+        return $this->brothers;
     }
 
     /**

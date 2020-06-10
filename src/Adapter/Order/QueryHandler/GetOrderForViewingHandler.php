@@ -41,6 +41,7 @@ use Order;
 use OrderInvoice;
 use OrderPayment;
 use OrderSlip;
+use OrderState;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -51,6 +52,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderBrotherForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderBrothersForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -189,7 +192,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderPayments($order),
             $this->getOrderMessages($order),
             $this->getOrderPrices($order),
-            $this->getOrderDiscounts($order)
+            $this->getOrderDiscounts($order),
+            $this->getOrderBrothers($order)
         );
     }
 
@@ -755,6 +759,36 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         }
 
         return new OrderDiscountsForViewing($discountsForViewing);
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return OrderBrothersForViewing
+     */
+    private function getOrderBrothers(Order $order): OrderBrothersForViewing
+    {
+        $brothersData = $order->getBrother();
+        $brothers = [];
+        foreach ($brothersData as $brotherItem) {
+            $isTaxExcluded = !$this->isTaxIncludedInOrder($brotherItem);
+
+            if ($isTaxExcluded) {
+                $totalAmount = (float) $order->total_paid_tax_excl;
+            } else {
+                $totalAmount = (float) $order->total_paid_tax_incl;
+            }
+
+            $orderState = new OrderState($brotherItem->current_state);
+
+            $brothers[] = new OrderBrotherForViewing(
+                $brotherItem->id,
+                $orderState->name[$brotherItem->id_lang],
+                $totalAmount
+            );
+        }
+
+        return new OrderBrothersForViewing($brothers);
     }
 
     /**
