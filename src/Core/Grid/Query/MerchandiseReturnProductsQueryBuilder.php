@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class MerchandiseReturnQueryBuilder builds queries for merchandise returns grid data.
@@ -44,6 +45,10 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
     private $searchCriteriaApplicator;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @param Connection $connection
@@ -55,11 +60,13 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        int $contextLanguageId
+        int $contextLanguageId,
+        RequestStack $requestStack
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextLanguageId = $contextLanguageId;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -103,6 +110,12 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
      */
     private function getMerchandiseReturnProductsQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        if (null !== ($request = $this->requestStack->getCurrentRequest())
+            && $request->attributes->has('merchandiseReturnId')
+        ) {
+            $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
+        }
+
         $queryBuilder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'order_return_detail', 'ord')
             ->leftJoin(
@@ -119,8 +132,7 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
             )
             ->where('ord.id_order_return = :order_return_id')
             ->setParameter('context_language_id', $this->contextLanguageId)
-            /** @todo change 3 to an actual value didn't figure out how to pass order_return_id to query builder yet.   */
-            ->setParameter('order_return_id', 4);
+            ->setParameter('order_return_id', $merchandiseReturnId);
 
         $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
 
@@ -140,11 +152,18 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
             'product_name',
             'quantity',
             'customization_name',
-            'customization_value'
+            'customization_value',
+            'merchandiseReturnId'
         ];
 
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters)) {
+                continue;
+            }
+
+            if ($filterName === 'merchandiseReturnId') {
+                $qb->andWhere('ord.`id_order_return` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }
 

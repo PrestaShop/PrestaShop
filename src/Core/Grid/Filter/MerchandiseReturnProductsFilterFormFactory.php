@@ -98,6 +98,12 @@ final class MerchandiseReturnProductsFilterFormFactory implements GridFilterForm
             $queryParams['merchandiseReturnId'] = $request->attributes->get('merchandiseReturnId');
         }
 
+        if (null !== ($request = $this->requestStack->getCurrentRequest())
+            && $request->attributes->has('merchandiseReturnId')
+        ) {
+            $queryParams['merchandiseReturnId'] = $request->attributes->get('merchandiseReturnId');
+        }
+
         $newMerchandiseReturnFormBuilder->setAction(
             $this->urlGenerator->generate('admin_merchandise_returns_products_filter', $queryParams)
         );
