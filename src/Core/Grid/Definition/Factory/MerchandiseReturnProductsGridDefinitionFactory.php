@@ -36,8 +36,10 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\MerchandiseReturnCustomizationColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class MerchandiseReturnGridDefinitionFactory builds grid definition for merchandise returns grid.
@@ -45,6 +47,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     const GRID_ID = 'merchandise_return_products';
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        RequestStack $requestStack
+    )
+    {
+        parent::__construct($hookDispatcher);
+        $this->requestStack = $requestStack;
+    }
 
     /**
      * {@inheritdoc}
@@ -124,6 +140,11 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
      */
     protected function getFilters()
     {
+        if (null !== ($request = $this->requestStack->getCurrentRequest())
+            && $request->attributes->has('merchandiseReturnId')
+        ) {
+            $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
+        }
         return (new FilterCollection())
             ->add((new Filter('reference', TextType::class))
             ->setTypeOptions([
@@ -157,13 +178,11 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
                 'reset_route_params' => [
                     'filterId' => self::GRID_ID,
-                    /* @todo use proper id */
-                    'merchandiseReturnId' => 4,
+                    'merchandiseReturnId' => $merchandiseReturnId,
                 ],
                 'redirect_route' => 'admin_merchandise_returns_edit',
                 'redirect_route_params' => [
-                    /* @todo use proper id */
-                    'merchandiseReturnId' => 4,
+                    'merchandiseReturnId' => $merchandiseReturnId,
                 ],
             ])
             ->setAssociatedColumn('actions')
