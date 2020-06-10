@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,33 +18,22 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = window.$;
-
-/**
- * Gets language id by target element.
- *
- * @param {jQuery} $targetElement
- *
- * @returns {Number|null}
- */
-const getLanguageIdByElement = ($targetElement) => {
-  const langId = $targetElement.attr('data-lang-id');
-
-  return typeof langId === 'undefined' ? null : parseInt(langId);
-};
+const {$} = window;
 
 /**
  * Component which allows to copy regular text to url friendly text
  *
  * Usage example in template:
  *
- * <input name="source-input" class="js-link-rewrite-copier-source"> // The original text will be taken from this element
- * <input name="destination-input" class="js-link-rewrite-copier-destination"> // Modified text will be added to this input
+ * <input name="source-input"
+ *        class="js-link-rewrite-copier-source"> // The original text will be taken from this element
+ * <input name="destination-input"
+ *        class="js-link-rewrite-copier-destination"> // Modified text will be added to this input
  *
  * in javascript:
  *
@@ -54,7 +43,8 @@ const getLanguageIdByElement = ($targetElement) => {
  * });
  *
  * If the source-input has value "test name" the link rewrite value will be "test-name".
- * If the source-input has value "test name #$" link rewrite will be "test-name-" since #$ are un allowed characters in url.
+ * If the source-input has value "test name #$" link rewrite will be "test-name-" since #$
+ * are un allowed characters in url.
  *
  * You can also pass additional options to change the event name, or encoding format:
  *
@@ -67,17 +57,16 @@ const getLanguageIdByElement = ($targetElement) => {
  * });
  *
  */
-const textToLinkRewriteCopier = ({ sourceElementSelector, destinationElementSelector, options = { eventName: 'input', } }) => {
-
-    $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
-      const $nameInput = $(event.currentTarget);
-      const langId = getLanguageIdByElement($nameInput);
-      let elementToModifySelector = null !== langId ? `${destinationElementSelector}[data-lang-id="${langId}"]` : destinationElementSelector;
-
-      $(elementToModifySelector).val(str2url($nameInput.val(), 'UTF-8'));
-    })
+const textToLinkRewriteCopier = (
+  {
+    sourceElementSelector,
+    destinationElementSelector,
+    options = {eventName: 'input'},
+  },
+) => {
+  $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
+    $(destinationElementSelector).val(window.str2url($(event.currentTarget).val(), 'UTF-8'));
+  });
 };
 
 export default textToLinkRewriteCopier;
-
-

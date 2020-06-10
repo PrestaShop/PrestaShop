@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -104,7 +104,7 @@ class ControllerTest extends TestCase
         }
 
         $this->prophesizeRequest($testedController);
-        $testedController->run();
+        $this->assertNull($testedController->run());
     }
 
     /**
@@ -120,20 +120,16 @@ class ControllerTest extends TestCase
             array('AdminLoginController'),
             array('AdminQuickAccessesController'),
             array('AdminCustomerThreadsController'),
-            array('AdminManufacturersController'),
             array('AdminReferrersController'),
-            array('AdminAttachmentsController'),
             array('AdminReturnController'),
             array('AdminStoresController'),
             array('AdminSuppliersController'),
             array('AdminAttributesGroupsController'),
             array('AdminNotFoundController'),
             array('AdminFeaturesController'),
-            array('AdminOrderMessageController'),
             array('AdminSearchEnginesController'),
             array('AdminGendersController'),
             array('AdminTagsController'),
-            array('AdminOrdersController'),
             array('AdminShopController'),
             array('AdminCartRulesController'),
             array('AdminGroupsController'),
@@ -151,8 +147,7 @@ class ControllerTest extends TestCase
 
     protected function declareRequiredConstants()
     {
-        $configDirectory = __DIR__ . '/../../../app/config';
-        $configuration = require_once $configDirectory . '/parameters.php';
+        $configuration = require_once _PS_CACHE_DIR_ . 'appParameters.php';
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
             return;
@@ -178,7 +173,7 @@ class ControllerTest extends TestCase
             define('_DB_PREFIX_', $configuration['parameters']['database_prefix']);
         }
         if (!defined('_COOKIE_KEY_')) {
-            define('_COOKIE_KEY_', Tools::passwdGen(56));
+            define('_COOKIE_KEY_', Tools::passwdGen(64));
         }
         if (!defined('_PS_VERSION_')) {
             define('_PS_VERSION_', '1.7');
@@ -282,6 +277,9 @@ class ControllerTest extends TestCase
         $translatorProphecy = $this->prophesizeTranslator();
         $contextProphecy->getTranslator()->willReturn($translatorProphecy->reveal());
         $contextProphecy->getDevice()->willReturn(null);
+        $contextProphecy->getCurrentLocale()->willReturn(
+            $this->prophesizeLocale()->reveal()
+        );
 
         $templateEngineProphecy = $this->prophesizeTemplateEngine();
 
@@ -309,6 +307,7 @@ class ControllerTest extends TestCase
     protected function prophesizeLink()
     {
         $linkProphecy = $this->prophesize(Link::class);
+        $linkProphecy->getTabLink(Argument::type('array'))->willReturn('/link');
         $linkProphecy->getAdminLink(Argument::any(), Argument::cetera())->willReturn('/link');
 
         return $linkProphecy;
@@ -339,10 +338,15 @@ class ControllerTest extends TestCase
         Tools::resetRequest();
     }
 
+    protected function prophesizeLocale()
+    {
+        return $this->prophesize(Locale::class);
+    }
+
     protected function prophesizeLocaleRepository()
     {
         $localeRepositoryProphecy = $this->prophesize(LocaleRepository::class);
-        $localeProphecy           = $this->prophesize(Locale::class);
+        $localeProphecy = $this->prophesizeLocale();
         $localeRepositoryProphecy
             ->getLocale(Argument::any())
             ->willReturn($localeProphecy->reveal());

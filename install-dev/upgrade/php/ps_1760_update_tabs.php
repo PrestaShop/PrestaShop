@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,9 +31,13 @@ function ps_1760_update_tabs()
 {
     // STEP 1: Add new sub menus for modules (tab may exist but we need authorization roles to be added as well)
     $moduleTabsToBeAdded = array(
-        'AdminMailTheme' => [
+        'AdminMailThemeParent' => [
             'translations' => 'en:Email Themes',
             'parent' => 'AdminParentThemes',
+        ],
+        'AdminMailTheme' => [
+            'translations' => 'en:Email Themes',
+            'parent' => 'AdminMailThemeParent',
         ],
         'AdminModulesUpdates' => array(
             'translations' => 'en:Updates|fr:Mises à jour|es:Actualizaciones|de:Aktualisierung|it:Aggiornamenti',

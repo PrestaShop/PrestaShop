@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,13 +60,7 @@ class CurrencyDataSource implements DataSourceInterface
     }
 
     /**
-     * Get complete currency data by currency code, in a given language.
-     *
-     * @param LocalizedCurrencyId $localizedCurrencyId
-     *                                                 The currency data identifier (currency code + locale code)
-     *
-     * @return CurrencyData
-     *                      The currency data
+     * {@inheritdoc}
      */
     public function getLocalizedCurrencyData(LocalizedCurrencyId $localizedCurrencyId)
     {
@@ -88,17 +82,29 @@ class CurrencyDataSource implements DataSourceInterface
     }
 
     /**
-     * Get all the available (installed + active) currencies' data.
-     *
-     * @param string $localeCode
-     *                           IETF tag. Data will be translated in this language
-     *
-     * @return CurrencyData[]
-     *                        The available currencies' data
+     * {@inheritdoc}
      */
     public function getAvailableCurrenciesData($localeCode)
     {
-        $currencyCodes = $this->installedDataLayer->getAvailableCurrencyCodes();
+        return $this->formatCurrenciesData($this->installedDataLayer->getAvailableCurrencyCodes(), $localeCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllInstalledCurrenciesData($localeCode)
+    {
+        return $this->formatCurrenciesData($this->installedDataLayer->getAllInstalledCurrencyIsoCodes(), $localeCode);
+    }
+
+    /**
+     * @param array $currencyCodes
+     * @param string $localeCode
+     *
+     * @return array
+     */
+    private function formatCurrenciesData(array $currencyCodes, $localeCode)
+    {
         $currenciesData = [];
         foreach ($currencyCodes as $currencyCode) {
             $currenciesData[] = $this->getLocalizedCurrencyData(new LocalizedCurrencyId($currencyCode, $localeCode));

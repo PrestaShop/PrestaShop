@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -56,11 +56,6 @@ class EditEmployeeCommand
      * @var Email
      */
     private $email;
-
-    /**
-     * @var bool
-     */
-    private $isSubscribedToNewsletter;
 
     /**
      * @var int
@@ -176,26 +171,6 @@ class EditEmployeeCommand
     public function setEmail($email)
     {
         $this->email = new Email($email);
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSubscribedToNewsletter()
-    {
-        return $this->isSubscribedToNewsletter;
-    }
-
-    /**
-     * @param bool $isSubscribedToNewsletter
-     *
-     * @return EditEmployeeCommand
-     */
-    public function setIsSubscribedToNewsletter($isSubscribedToNewsletter)
-    {
-        $this->isSubscribedToNewsletter = $isSubscribedToNewsletter;
 
         return $this;
     }

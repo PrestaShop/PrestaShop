@@ -18,12 +18,16 @@
         <td width="10">&nbsp;</td>
         <td>
           <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
-            <p data-html-only="1" style="border-bottom:1px solid #D6D4D4;">
-              {{ '{product} is now available.'|trans({}, 'Emails.Body', locale) }}
-            </p>
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ '{product} is now available.'|trans({}, 'Emails.Body', locale) }}
+              </p>
+            
+{% endif %}
             <span>
-              {{ 'This item is once again in-stock.'|trans({}, 'Emails.Body', locale)|raw }}<br /><br />
-              {{ 'You can access the product page by clicking on the link:'|trans({}, 'Emails.Body', locale)|raw }} <span><strong><a href="{product_link}">{product}</a></strong></span><br />
+              {{ 'This item is once again in-stock.'|trans({}, 'Emails.Body', locale)|raw }}<br/><br/>
+              {{ 'You can access the product page by clicking on the link:'|trans({}, 'Emails.Body', locale)|raw }} <span><strong><a href="{product_link}">{product}</a></strong></span><br/>
               {{ 'You can order it right now from our online shop.'|trans({}, 'Emails.Body', locale)|raw }}
             </span>
           </font>

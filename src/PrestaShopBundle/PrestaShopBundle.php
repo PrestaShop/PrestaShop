@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,9 +27,13 @@
 namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\CommandAndQueryCollectorPass;
+use PrestaShopBundle\DependencyInjection\Compiler\ContainerInjectionPass;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
-use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
+use PrestaShopBundle\DependencyInjection\Compiler\GridDefinitionServiceIdsCollectorPass;
+use PrestaShopBundle\DependencyInjection\Compiler\IdentifiableObjectFormTypesCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
+use PrestaShopBundle\DependencyInjection\Compiler\ModulesDoctrineCompilerPass;
+use PrestaShopBundle\DependencyInjection\Compiler\OptionsFormHookNameCollectorPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTranslatorServiceCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\OverrideTwigServiceCompilerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPass;
@@ -65,5 +69,9 @@ class PrestaShopBundle extends Bundle
         $container->addCompilerPass(new OverrideTwigServiceCompilerPass());
         $container->addCompilerPass(new ModulesDoctrineCompilerPass());
         $container->addCompilerPass(new CommandAndQueryCollectorPass());
+        $container->addCompilerPass(new OptionsFormHookNameCollectorPass());
+        $container->addCompilerPass(new GridDefinitionServiceIdsCollectorPass());
+        $container->addCompilerPass(new IdentifiableObjectFormTypesCollectorPass());
+        $container->addCompilerPass(new ContainerInjectionPass());
     }
 }

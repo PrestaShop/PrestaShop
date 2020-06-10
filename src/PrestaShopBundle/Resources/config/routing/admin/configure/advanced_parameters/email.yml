@@ -49,7 +49,7 @@ admin_emails_delete_all:
 
 admin_emails_delete:
     path: /delete/{mailId}
-    methods: [GET]
+    methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:delete'
         _legacy_controller: AdminEmails

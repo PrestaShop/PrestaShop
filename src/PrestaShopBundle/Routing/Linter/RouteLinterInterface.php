@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Routing\Linter;
 
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -36,7 +37,7 @@ interface RouteLinterInterface
     /**
      * @param Route $route
      *
-     * @return bool True if route passes linter or False otherwise
+     * @throws LinterException when linting error occurs
      */
-    public function lint(Route $route);
+    public function lint($routeName, Route $route);
 }

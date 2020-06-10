@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,33 +19,38 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCoverImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryMenuThumbnailImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\ToggleCategoryStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteImageException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -66,7 +71,10 @@ class CategoryController extends FrameworkBundleAdminController
     /**
      * Show categories listing.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to list this."
+     * )
      *
      * @param Request $request
      * @param CategoryFilters $filters
@@ -84,7 +92,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
 
-        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, ['categories_to_delete_parent' => (int) $currentCategoryId], []);
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CATEGORIES_CARD)
@@ -105,12 +113,33 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+     * Process Grid search.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(Request $request)
+    {
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.category'),
+            $request,
+            CategoryGridDefinitionFactory::GRID_ID,
+            'admin_categories_index'
+        );
+    }
+
+    /**
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to create this."
+     *     message="You do not have permission to create this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param Request $request
@@ -134,20 +163,25 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $categoryForm->getData()['id_parent'],
+                    'categoryId' => $categoryForm->getData()['id_parent'],
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig', [
-            'allowMenuThumbnailsUpload' => true,
-            'categoryForm' => $categoryForm->createView(),
-            'defaultGroups' => $defaultGroups,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/create.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => true,
+                'categoryForm' => $categoryForm->createView(),
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
+                    ->getUrl(0, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -155,8 +189,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['create'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to create this."
+     *     message="You do not have permission to create this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param Request $request
@@ -165,10 +199,8 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function createRootAction(Request $request)
     {
-        $rootCategoryFormBuilder =
-            $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
-        $rootCategoryFormHandler =
-            $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
+        $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
+        $rootCategoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
 
         $rootCategoryForm = $rootCategoryFormBuilder->getForm();
         $rootCategoryForm->handleRequest($request);
@@ -180,20 +212,25 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                    'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig', [
-            'allowMenuThumbnailsUpload' => true,
-            'rootCategoryForm' => $rootCategoryForm->createView(),
-            'defaultGroups' => $defaultGroups,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/create_root.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => true,
+                'rootCategoryForm' => $rootCategoryForm->createView(),
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
+                    ->getUrl(0, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -201,8 +238,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to edit this."
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param int $categoryId
@@ -231,6 +268,7 @@ class CategoryController extends FrameworkBundleAdminController
 
             $categoryFormOptions = [
                 'id_category' => (int) $categoryId,
+                'subcategories' => $editableCategory->getSubCategories(),
             ];
 
             $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
@@ -242,23 +280,28 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $categoryForm->getData()['id_parent'],
+                    'categoryId' => $categoryForm->getData()['id_parent'],
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig', [
-            'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
-            'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
-            'contextLangId' => $this->getContextLangId(),
-            'editCategoryForm' => $categoryForm->createView(),
-            'editableCategory' => $editableCategory,
-            'defaultGroups' => $defaultGroups,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
+                'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
+                'contextLangId' => $this->getContextLangId(),
+                'editCategoryForm' => $categoryForm->createView(),
+                'editableCategory' => $editableCategory,
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
+                    ->getUrl($categoryId, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -266,8 +309,8 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
-     *     redirectRoute="admin_categories_index",
-     *     message="You do not have permission to edit this."
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_categories_index"
      * )
      *
      * @param int $categoryId
@@ -290,10 +333,8 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_categories_index');
         }
 
-        $rootCategoryFormBuilder =
-            $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
-        $rootCategoryFormHandler =
-            $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
+        $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
+        $rootCategoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
 
         try {
             $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
@@ -305,23 +346,28 @@ class CategoryController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
-                    'id_category' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
+                    'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
                 ]);
             }
-        } catch (CategoryException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
 
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig', [
-            'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
-            'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
-            'contextLangId' => $this->getContextLangId(),
-            'editRootCategoryForm' => $rootCategoryForm->createView(),
-            'editableCategory' => $editableCategory,
-            'defaultGroups' => $defaultGroups,
-        ]);
+        return $this->render(
+            '@PrestaShop/Admin/Sell/Catalog/Categories/edit_root.html.twig',
+            [
+                'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
+                'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
+                'contextLangId' => $this->getContextLangId(),
+                'editRootCategoryForm' => $rootCategoryForm->createView(),
+                'editableCategory' => $editableCategory,
+                'defaultGroups' => $defaultGroups,
+                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
+                    ->getUrl($categoryId, '{friendy-url}'),
+            ]
+        );
     }
 
     /**
@@ -329,9 +375,9 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_edit",
-     *     redirectQueryParamsToKeep={"categoryId"},
-     *     message="You do not have permission to edit this."
+     *     redirectQueryParamsToKeep={"categoryId"}
      * )
      *
      * @param Request $request
@@ -370,9 +416,9 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * @AdminSecurity(
      *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_edit",
-     *     redirectQueryParamsToKeep={"categoryId"},
-     *     message="You do not have permission to edit this."
+     *     redirectQueryParamsToKeep={"categoryId"}
      * )
      *
      * @param Request $request
@@ -432,9 +478,11 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         try {
-            $command = new ToggleCategoryStatusCommand((int) $categoryId);
+            $isEnabled = $this->getQueryBus()->handle(new GetCategoryIsEnabled((int) $categoryId));
 
-            $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle(
+                new SetCategoryIsEnabledCommand((int) $categoryId, !$isEnabled)
+            );
 
             $response = [
                 'status' => true,
@@ -536,10 +584,12 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
+        $idParent = $this->configuration->getInt('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
             try {
                 $categoriesDeleteData = $deleteCategoriesForm->getData();
+                $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
                 $categoryIds = array_map(function ($categoryId) {
                     return (int) $categoryId;
                 }, $categoriesDeleteData['categories_to_delete']);
@@ -560,7 +610,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_categories_index');
+        return $this->redirectToRoute('admin_categories_index', ['categoryId' => $idParent]);
     }
 
     /**
@@ -581,9 +631,11 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class);
         $deleteCategoriesForm->handleRequest($request);
+        $idParent = $this->configuration->getInt('PS_HOME_CATEGORY');
 
         if ($deleteCategoriesForm->isSubmitted()) {
             $categoriesDeleteData = $deleteCategoriesForm->getData();
+            $idParent = (int) $categoriesDeleteData['categories_to_delete_parent'];
 
             try {
                 $command = new DeleteCategoryCommand(
@@ -599,7 +651,7 @@ class CategoryController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_categories_index');
+        return $this->redirectToRoute('admin_categories_index', ['categoryId' => $idParent]);
     }
 
     /**
@@ -618,6 +670,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function exportAction(CategoryFilters $filters)
     {
+        $filters = new CategoryFilters(['limit' => null] + $filters->all());
         $categoriesGridFactory = $this->get('prestashop.core.grid.factory.category');
         $categoriesGrid = $categoriesGridFactory->getGrid($filters);
 
@@ -644,8 +697,7 @@ class CategoryController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('category_' . date('Y-m-d_His') . '.csv')
-        ;
+            ->setFileName('category_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
@@ -700,7 +752,10 @@ class CategoryController extends FrameworkBundleAdminController
             ];
         }
 
-        $categoryId = $request->query->get('id_category', $this->configuration->getInt('PS_HOME_CATEGORY'));
+        $categoryId = $request->attributes->get('categoryId');
+        if (empty($categoryId)) {
+            $categoryId = $this->configuration->getInt('PS_HOME_CATEGORY');
+        }
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_categories_create', ['id_parent' => $categoryId]),
@@ -712,7 +767,7 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get translated error messsages for category exceptions
+     * Get translated error messages for category exceptions
      *
      * @return array
      */
@@ -731,6 +786,14 @@ class CategoryController extends FrameworkBundleAdminController
             ],
             CannotDeleteRootCategoryForShopException::class => $this->trans(
                 'You cannot remove this category because one of your shops uses it as a root category.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotAddCategoryException::class => $this->trans(
+                'An error occurred while creating the category.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotEditCategoryException::class => $this->trans(
+                'An error occurred while editing the category.',
                 'Admin.Catalog.Notification'
             ),
             CannotUpdateCategoryStatusException::class => $this->trans(

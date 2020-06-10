@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -33,9 +33,14 @@
             type="number"
             name="qty"
             id="quantity_wanted"
-            value="{$product.quantity_wanted}"
+            {if $product.quantity_wanted}
+              value="{$product.quantity_wanted}"
+              min="{$product.minimal_quantity}"
+            {else}
+              value="1"
+              min="1"
+            {/if}
             class="input-group"
-            min="{$product.minimal_quantity}"
             aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
           >
         </div>

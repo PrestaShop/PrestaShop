@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,7 +57,6 @@ class SearchAndResetType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $showResetButton = false;
-        $disableSearchButton = true;
 
         if (null !== $form->getParent()) {
             $configuredTypeNames = array_keys($form->getParent()->all());
@@ -66,7 +65,6 @@ class SearchAndResetType extends AbstractType
             $configuredData = array_intersect($configuredTypeNames, $availableValueNames);
             if (!empty($configuredData)) {
                 $showResetButton = true;
-                $disableSearchButton = false;
             }
         }
 
@@ -88,14 +86,10 @@ class SearchAndResetType extends AbstractType
         }
 
         if (in_array(null, [$resetUrl, $redirectUrl])) {
-            throw new LogicException(sprintf(
-                'You must configure "reset_route" and "redirect_route" options for "%s" type.',
-                self::class
-            ));
+            throw new LogicException(sprintf('You must configure "reset_route" and "redirect_route" options for "%s" type.', self::class));
         }
 
         $view->vars['show_reset_button'] = $showResetButton;
-        $view->vars['disable_search_button'] = $disableSearchButton;
         $view->vars['redirect_url'] = $redirectUrl;
         $view->vars['reset_url'] = $resetUrl;
     }

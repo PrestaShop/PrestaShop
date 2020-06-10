@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="vai"/>
 		<script type="Latn"/>
 	</identity>
@@ -184,7 +184,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MD">Mɔlidova</territory>
 			<territory type="MG">Madagasita</territory>
 			<territory type="MH">Masha Tiŋŋɛ</territory>
-			<territory type="MK">Masedoninya</territory>
 			<territory type="ML">Mali</territory>
 			<territory type="MM">Miyamaha</territory>
 			<territory type="MN">Mɔngoliya</territory>
@@ -288,7 +287,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 	<characters>
 		<exemplarCharacters>[a á ã b ɓ c d ɗ e é ẽ ɛ {ɛ\u0301} {ɛ\u0303} f g h i í ĩ j k l m n ŋ o ó õ ɔ {ɔ\u0301} {ɔ\u0303} p q r s t u ú ũ v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B Ɓ C D Ɗ E Ɛ F G H I J K L M N Ŋ O Ɔ P Q R S T U V W X Y Z]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -617,6 +616,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Malagasi Ariyari</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>Mɔretani Yugiya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Mɔretani Yugiya</displayName>
 			</currency>
 			<currency type="MUR">
@@ -653,6 +655,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Somaliya Siyeŋ</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Sawo Tombe ɓɛ a Gbawo Dobura (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Sawo Tombe ɓɛ a Gbawo Dobura</displayName>
 			</currency>
 			<currency type="SZL">

@@ -66,18 +66,6 @@ File: modules/ps_emailalerts/ps_emailalerts.php:235</note>
         <note>Context:
 File: modules/ps_emailalerts/ps_emailalerts.php:287</note>
       </trans-unit>
-      <trans-unit id="1d744a9ad1dac20645cfc4a36b77323b">
-        <source>image(s)</source>
-        <target>image(s)</target>
-        <note>Context:
-File: modules/ps_emailalerts/ps_emailalerts.php:308</note>
-      </trans-unit>
-      <trans-unit id="9137796c15dd92e5553c3f29574d0968">
-        <source>Voucher code:</source>
-        <target>Voucher code:</target>
-        <note>Context:
-File: modules/ps_emailalerts/ps_emailalerts.php:340</note>
-      </trans-unit>
       <trans-unit id="58a20987a1f4e45d508b4491614a2c57">
         <source>Customer notifications</source>
         <target>Customer notifications</target>
@@ -203,6 +191,20 @@ File: modules/ps_emailalerts/ps_emailalerts.php:1043</note>
         <target>Merchant notifications</target>
         <note>Context:
 File: modules/ps_emailalerts/ps_emailalerts.php:1049</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/MailTemplate/MailPreviewVariablesBuilder.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d744a9ad1dac20645cfc4a36b77323b">
+        <source>image(s)</source>
+        <target>image(s)</target>
+        <note>Line: 273</note>
+      </trans-unit>
+      <trans-unit id="9137796c15dd92e5553c3f29574d0968">
+        <source>Voucher code:</source>
+        <target>Voucher code:</target>
+        <note>Line: 305</note>
       </trans-unit>
     </body>
   </file>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -9,7 +9,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13705 $"/>
+		<version number="$Revision$"/>
 		<language type="ga"/>
 	</identity>
 	<localeDisplayNames>
@@ -195,30 +195,30 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="iu">Ionúitis</language>
 			<language type="ja">Seapáinis</language>
 			<language type="jbo">Lojban</language>
-			<language type="jgo">jgo</language>
-			<language type="jmc">jmc</language>
+			<language type="jgo">Ngomba</language>
+			<language type="jmc">Machame</language>
 			<language type="jut">Iútlainnis</language>
 			<language type="jv">Iáivis</language>
 			<language type="ka">Seoirsis</language>
 			<language type="kaa">Cara-Chalpáis</language>
-			<language type="kab">kab</language>
+			<language type="kab">Caibílis</language>
 			<language type="kac">kac</language>
 			<language type="kaj">kaj</language>
-			<language type="kam">kam</language>
+			<language type="kam">Cambais</language>
 			<language type="kbd">kbd</language>
 			<language type="kcg">kcg</language>
-			<language type="kde">kde</language>
+			<language type="kde">Makonde</language>
 			<language type="kea">Kabuverdianu</language>
 			<language type="kfo">kfo</language>
 			<language type="kg">Congóis</language>
 			<language type="kha">kha</language>
-			<language type="khq">khq</language>
+			<language type="khq">Koyra Chiini</language>
 			<language type="ki">Ciocúis</language>
 			<language type="kj">Cuainiáimis</language>
 			<language type="kk">Casaicis</language>
-			<language type="kkj">kkj</language>
+			<language type="kkj">Kako</language>
 			<language type="kl">Kalaallisut</language>
-			<language type="kln">kln</language>
+			<language type="kln">Kalenjin</language>
 			<language type="km">Ciméiris</language>
 			<language type="kmb">kmb</language>
 			<language type="kn">Cannadais</language>
@@ -240,7 +240,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="ky">Cirgisis</language>
 			<language type="la">Laidin</language>
 			<language type="lad">Laidínis</language>
-			<language type="lag">lag</language>
+			<language type="lag">Langi</language>
 			<language type="lah">Puinseáibis Iartharach</language>
 			<language type="lb">Lucsambuirgis</language>
 			<language type="lez">lez</language>
@@ -248,33 +248,33 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="li">Liombuirgis</language>
 			<language type="lij">Liogúiris</language>
 			<language type="liv">Liovóinis</language>
-			<language type="lkt">lkt</language>
+			<language type="lkt">Lakota</language>
 			<language type="lmo">Lombairdis</language>
 			<language type="ln">Liongáilis</language>
 			<language type="lo">Laoisis</language>
 			<language type="loz">loz</language>
-			<language type="lrc">lrc</language>
+			<language type="lrc">Luri Thuaidh</language>
 			<language type="lt">Liotuáinis</language>
 			<language type="lu">Lúba-Cataingis</language>
 			<language type="lua">lua</language>
 			<language type="lun">lun</language>
-			<language type="luo">luo</language>
+			<language type="luo">Lúóis</language>
 			<language type="lus">lus</language>
-			<language type="luy">luy</language>
+			<language type="luy">Luyia</language>
 			<language type="lv">Laitvis</language>
 			<language type="mad">mad</language>
 			<language type="mag">mag</language>
 			<language type="mai">mai</language>
 			<language type="mak">mak</language>
-			<language type="mas">mas</language>
+			<language type="mas">Másais</language>
 			<language type="mdf">mdf</language>
 			<language type="men">Meindis</language>
-			<language type="mer">mer</language>
-			<language type="mfe">mfe</language>
+			<language type="mer">Meru</language>
+			<language type="mfe">Morisyen</language>
 			<language type="mg">Malagáisis</language>
 			<language type="mga">Meán-Ghaeilge</language>
-			<language type="mgh">mgh</language>
-			<language type="mgo">mgo</language>
+			<language type="mgh">Makhuwa-Meetto</language>
+			<language type="mgo">Metaʼ</language>
 			<language type="mh">Mairsillis</language>
 			<language type="mi">Maorais</language>
 			<language type="mic">mic</language>
@@ -289,18 +289,18 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="mrj">Mairis Iartharach</language>
 			<language type="ms">Malaeis</language>
 			<language type="mt">Máltais</language>
-			<language type="mua">mua</language>
+			<language type="mua">Mundang</language>
 			<language type="mul">Ilteangacha</language>
 			<language type="mus">mus</language>
 			<language type="mwl">Mioraindéis</language>
 			<language type="mwr">Marmhairis</language>
 			<language type="my">Burmais</language>
 			<language type="myv">myv</language>
-			<language type="mzn">mzn</language>
+			<language type="mzn">Mazanderani</language>
 			<language type="na">Nárúis</language>
 			<language type="nan">Sínis Min Nan</language>
 			<language type="nap">Napóilis</language>
-			<language type="naq">naq</language>
+			<language type="naq">Nama</language>
 			<language type="nb">Ioruais Bokmål</language>
 			<language type="nd">Ndeibéilis an Tuaiscirt</language>
 			<language type="nds">Gearmáinis Íochtarach</language>
@@ -312,19 +312,19 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="niu">Níobhais</language>
 			<language type="nl">Ollainnis</language>
 			<language type="nl_BE">Pléimeannais</language>
-			<language type="nmg">nmg</language>
+			<language type="nmg">Kwasio</language>
 			<language type="nn">Nua-Ioruais</language>
-			<language type="nnh">nnh</language>
+			<language type="nnh">Ngiemboon</language>
 			<language type="no">Ioruais</language>
 			<language type="nog">nog</language>
 			<language type="non">Sean-Lochlainnis</language>
 			<language type="nqo">nqo</language>
 			<language type="nr">Ndeibéilis an Deiscirt</language>
 			<language type="nso">Sútúis an Tuaiscirt</language>
-			<language type="nus">nus</language>
+			<language type="nus">Nuer</language>
 			<language type="nv">Navachóis</language>
 			<language type="ny">Siséivis</language>
-			<language type="nyn">nyn</language>
+			<language type="nyn">Niancóilis</language>
 			<language type="oc">Ocsatáinis</language>
 			<language type="oj">Óisibis</language>
 			<language type="om">Oraimis</language>
@@ -373,7 +373,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="sd">Sindis</language>
 			<language type="se">Sáimis Thuaidh</language>
 			<language type="seh">seh</language>
-			<language type="ses">ses</language>
+			<language type="ses">Koyraboro Senni</language>
 			<language type="sg">Sangóis</language>
 			<language type="sga">Sean-Ghaeilge</language>
 			<language type="sh">Seirbea-Chróitis</language>
@@ -460,6 +460,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="yi">Giúdais</language>
 			<language type="yo">Iarúibis</language>
 			<language type="yue">Cantainis</language>
+			<language type="yue" alt="menu">Sínis, Cantainis</language>
 			<language type="za">Siuáingis</language>
 			<language type="zea">Séalainnis</language>
 			<language type="zgh">Tamazight Caighdeánach Mharacó</language>
@@ -634,7 +635,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		</scripts>
 		<territories>
 			<territory type="001">an Domhan</territory>
-			<territory type="002">An Afraic</territory>
+			<territory type="002">an Afraic</territory>
 			<territory type="003">Meiriceá Thuaidh</territory>
 			<territory type="005">Meiriceá Theas</territory>
 			<territory type="009">an Aigéine</territory>
@@ -642,7 +643,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="013">Meiriceá Láir</territory>
 			<territory type="014">Oirthear na hAfraice</territory>
 			<territory type="015">Tuaisceart na hAfraice</territory>
-			<territory type="017">An Afraic Láir</territory>
+			<territory type="017">an Afraic Láir</territory>
 			<territory type="018">Deisceart na hAfraice</territory>
 			<territory type="019">Críocha Mheiriceá</territory>
 			<territory type="021">Tuaisceart Mheiriceá</territory>
@@ -662,6 +663,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="151">Oirthear na hEorpa</territory>
 			<territory type="154">Tuaisceart na hEorpa</territory>
 			<territory type="155">Iarthar na hEorpa</territory>
+			<territory type="202">an Afraic fho-Shahárach</territory>
 			<territory type="419">Meiriceá Laidineach</territory>
 			<territory type="AC">Oileán na Deascabhála</territory>
 			<territory type="AD">Andóra</territory>
@@ -710,6 +712,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="CG" alt="variant">an Congó (Poblacht)</territory>
 			<territory type="CH">an Eilvéis</territory>
 			<territory type="CI">an Cósta Eabhair</territory>
+			<territory type="CI" alt="variant">Côte d’Ivoire</territory>
 			<territory type="CK">Oileáin Cook</territory>
 			<territory type="CL">an tSile</territory>
 			<territory type="CM">Camarún</territory>
@@ -722,7 +725,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="CW">Curaçao</territory>
 			<territory type="CX">Oileán na Nollag</territory>
 			<territory type="CY">an Chipir</territory>
-			<territory type="CZ">An tSeicia</territory>
+			<territory type="CZ">an tSeicia</territory>
 			<territory type="CZ" alt="variant">Poblacht na Seice</territory>
 			<territory type="DE">an Ghearmáin</territory>
 			<territory type="DG">Diego Garcia</territory>
@@ -819,8 +822,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="MF">Saint-Martin</territory>
 			<territory type="MG">Madagascar</territory>
 			<territory type="MH">Oileáin Marshall</territory>
-			<territory type="MK">an Mhacadóin</territory>
-			<territory type="MK" alt="variant">an Mhacadóin (PIIM)</territory>
+			<territory type="MK">an Mhacadóin Thuaidh</territory>
 			<territory type="ML">Mailí</territory>
 			<territory type="MM">Maenmar (Burma)</territory>
 			<territory type="MN">an Mhongóil</territory>
@@ -892,7 +894,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="SV">an tSalvadóir</territory>
 			<territory type="SX">Sint Maarten</territory>
 			<territory type="SY">an tSiria</territory>
-			<territory type="SZ">an tSuasalainn</territory>
+			<territory type="SZ">eSuaitíní</territory>
+			<territory type="SZ" alt="variant">an tSuasalainn</territory>
 			<territory type="TA">Tristan da Cunha</territory>
 			<territory type="TC">Oileáin na dTurcach agus Caicos</territory>
 			<territory type="TD">Sead</territory>
@@ -902,6 +905,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="TJ">an Táidsíceastáin</territory>
 			<territory type="TK">Tócalá</territory>
 			<territory type="TL">Tíomór Thoir</territory>
+			<territory type="TL" alt="variant">TL</territory>
 			<territory type="TM">an Tuircméanastáin</territory>
 			<territory type="TN">an Túinéis</territory>
 			<territory type="TO">Tonga</territory>
@@ -913,7 +917,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="UA">an Úcráin</territory>
 			<territory type="UG">Uganda</territory>
 			<territory type="UM">Oileáin Imeallacha S.A.M.</territory>
-			<territory type="UN">na Náisiúin Aontaiteh</territory>
+			<territory type="UN">na Náisiúin Aontaithe</territory>
 			<territory type="UN" alt="short">NA</territory>
 			<territory type="US">Stáit Aontaithe Mheiriceá</territory>
 			<territory type="US" alt="short">SAM</territory>
@@ -928,6 +932,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="VU">Vanuatú</territory>
 			<territory type="WF">Vailís agus Futúna</territory>
 			<territory type="WS">Samó</territory>
+			<territory type="XA">Bréagdhiaicriticí</territory>
+			<territory type="XB">Bréag-Bidi</territory>
 			<territory type="XK">an Chosaiv</territory>
 			<territory type="YE">Éimin</territory>
 			<territory type="YT">Mayotte</territory>
@@ -1170,41 +1176,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 	<characters>
 		<exemplarCharacters>[a á b c d e é f g h i í l m n o ó p r s t u ú]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[å ḃ ċ ḋ ḟ ġ j k ṁ ṗ q ṡ ṫ v w x y z]</exemplarCharacters>
-		<exemplarCharacters type="index" draft="unconfirmed">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
-		<ellipsis type="final">{0}…</ellipsis>
-		<ellipsis type="initial">…{0}</ellipsis>
-		<ellipsis type="medial">{0}…{1}</ellipsis>
-		<ellipsis type="word-final">{0} …</ellipsis>
-		<ellipsis type="word-initial">… {0}</ellipsis>
-		<ellipsis type="word-medial">{0} … {1}</ellipsis>
-		<moreInformation>?</moreInformation>
+		<exemplarCharacters type="index" draft="contributed">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="punctuation" draft="contributed">[\- ‐ ‑ – — , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § @ * / \&amp; # † ‡ ′ ″]</exemplarCharacters>
 		<parseLenients scope="date" level="lenient">
-			<parseLenient sample="-" draft="contributed">[\--/]</parseLenient>
 			<parseLenient sample=":" draft="contributed">[\:∶]</parseLenient>
 		</parseLenients>
-		<parseLenients scope="general" level="lenient">
-			<parseLenient sample="." draft="contributed">[.․。︒﹒．｡]</parseLenient>
-			<parseLenient sample="$" draft="contributed">[\$﹩＄$]</parseLenient>
-			<parseLenient sample="£" draft="contributed">[£₤]</parseLenient>
-			<parseLenient sample="₹" draft="contributed">[₨₹{Rp}{Rs}]</parseLenient>
-		</parseLenients>
-		<parseLenients scope="number" level="lenient">
-			<parseLenient sample="-" draft="contributed">[\-‒⁻₋−➖﹣－]</parseLenient>
-			<parseLenient sample="," draft="contributed">[,،٫、︐︑﹐﹑，､]</parseLenient>
-			<parseLenient sample="+" draft="contributed">[+⁺₊➕﬩﹢＋]</parseLenient>
-		</parseLenients>
-		<parseLenients scope="number" level="stricter">
-			<parseLenient sample="," draft="contributed">[,٫︐﹐，]</parseLenient>
-			<parseLenient sample="." draft="contributed">[.․﹒．｡]</parseLenient>
-		</parseLenients>
 	</characters>
-	<delimiters>
-		<quotationStart>“</quotationStart>
-		<quotationEnd>”</quotationEnd>
-		<alternateQuotationStart>‘</alternateQuotationStart>
-		<alternateQuotationEnd>’</alternateQuotationEnd>
-	</delimiters>
 	<dates>
 		<calendars>
 			<calendar type="buddhist">
@@ -1475,6 +1453,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="B">h B – h B</greatestDifference>
+							<greatestDifference id="h">h – h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="B">h:mm B – h:mm B</greatestDifference>
+							<greatestDifference id="h">h:mm – h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm – h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d – d</greatestDifference>
 						</intervalFormatItem>
@@ -1787,27 +1774,19 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 							<dayPeriod type="am">r.n.</dayPeriod>
 							<dayPeriod type="pm">i.n.</dayPeriod>
 						</dayPeriodWidth>
-						<dayPeriodWidth type="narrow">
-							<dayPeriod type="am">a</dayPeriod>
-							<dayPeriod type="pm">p</dayPeriod>
-						</dayPeriodWidth>
 						<dayPeriodWidth type="wide">
 							<dayPeriod type="am">r.n.</dayPeriod>
 							<dayPeriod type="pm">i.n.</dayPeriod>
 						</dayPeriodWidth>
 					</dayPeriodContext>
 					<dayPeriodContext type="stand-alone">
-						<dayPeriodWidth type="abbreviated">
-							<dayPeriod type="am">a.m.</dayPeriod>
-							<dayPeriod type="pm">p.m.</dayPeriod>
-						</dayPeriodWidth>
 						<dayPeriodWidth type="narrow">
-							<dayPeriod type="am">a</dayPeriod>
-							<dayPeriod type="pm">p</dayPeriod>
+							<dayPeriod type="am">r.n.</dayPeriod>
+							<dayPeriod type="pm">i.n.</dayPeriod>
 						</dayPeriodWidth>
 						<dayPeriodWidth type="wide">
-							<dayPeriod type="am">a.m.</dayPeriod>
-							<dayPeriod type="pm">p.m.</dayPeriod>
+							<dayPeriod type="am">r.n.</dayPeriod>
+							<dayPeriod type="pm">i.n.</dayPeriod>
 						</dayPeriodWidth>
 					</dayPeriodContext>
 				</dayPeriods>
@@ -1930,11 +1909,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<dateFormatItem id="MMMd">d MMM</dateFormatItem>
 						<dateFormatItem id="MMMEd">E d MMM</dateFormatItem>
 						<dateFormatItem id="MMMMd">d MMMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="one">'seachtain' 'a' W 'i' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="two">'seachtain' 'a' W 'i' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="few">'seachtain' 'a' W 'i' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="many">'seachtain' 'a' W 'i' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="other">'seachtain' 'a' W 'i' MMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="one">'seachtain' 'a' W 'i' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="two">'seachtain' 'a' W 'i' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="few">'seachtain' 'a' W 'i' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="many">'seachtain' 'a' W 'i' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="other">'seachtain' 'a' W 'i' MMMM</dateFormatItem>
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
 						<dateFormatItem id="y">y</dateFormatItem>
 						<dateFormatItem id="yM">MM/y</dateFormatItem>
@@ -1957,6 +1936,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					</appendItems>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="Bh">
+							<greatestDifference id="B">h B – h B</greatestDifference>
+							<greatestDifference id="h">h – h B</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Bhm">
+							<greatestDifference id="B">h:mm B – h:mm B</greatestDifference>
+							<greatestDifference id="h">h:mm – h:mm B</greatestDifference>
+							<greatestDifference id="m">h:mm – h:mm B</greatestDifference>
+						</intervalFormatItem>
 						<intervalFormatItem id="d">
 							<greatestDifference id="d">d – d</greatestDifference>
 						</intervalFormatItem>
@@ -5288,11 +5276,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		</otherNumberingSystems>
 		<minimumGroupingDigits draft="contributed">1</minimumGroupingDigits>
 		<symbols numberSystem="latn">
-			<decimal>.</decimal>
-			<group>,</group>
+			<group draft="contributed">,</group>
 			<percentSign>%</percentSign>
-			<plusSign>+</plusSign>
-			<minusSign>-</minusSign>
 			<exponential>E</exponential>
 			<superscriptingExponent>×</superscriptingExponent>
 			<perMille>‰</perMille>
@@ -5301,11 +5286,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<timeSeparator draft="contributed">:</timeSeparator>
 		</symbols>
 		<decimalFormats numberSystem="latn">
-			<decimalFormatLength>
-				<decimalFormat>
-					<pattern>#,##0.###</pattern>
-				</decimalFormat>
-			</decimalFormatLength>
 			<decimalFormatLength type="long">
 				<decimalFormat>
 					<pattern type="1000" count="one">0 mhíle</pattern>
@@ -5536,7 +5516,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheseta Andóra</displayName>
 				<displayName count="many">bpeseta Andóra</displayName>
 				<displayName count="other">peseta Andóra</displayName>
-				<symbol>ADP</symbol>
+				<symbol draft="contributed">ADP</symbol>
 			</currency>
 			<currency type="AED">
 				<displayName>Dirham Aontas na nÉimíríochtaí Arabacha</displayName>
@@ -5545,7 +5525,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhirham Aontas na nÉimíríochtaí Arabacha</displayName>
 				<displayName count="many">ndirham Aontas na nÉimíríochtaí Arabacha</displayName>
 				<displayName count="other">dirham Aontas na nÉimíríochtaí Arabacha</displayName>
-				<symbol>AED</symbol>
 			</currency>
 			<currency type="AFA">
 				<displayName>Afgainí (1927–2002)</displayName>
@@ -5563,7 +5542,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">afghani na hAfganastáine</displayName>
 				<displayName count="many">n-afghani na hAfganastáine</displayName>
 				<displayName count="other">afghani na hAfganastáine</displayName>
-				<symbol>AFN</symbol>
 			</currency>
 			<currency type="ALK">
 				<displayName>Lek na hAlbáine (1946–1965)</displayName>
@@ -5581,7 +5559,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lek na hAlbáine</displayName>
 				<displayName count="many">lek na hAlbáine</displayName>
 				<displayName count="other">Lek na hAlbáine</displayName>
-				<symbol>ALL</symbol>
 			</currency>
 			<currency type="AMD">
 				<displayName>Dram na hAirméine</displayName>
@@ -5590,7 +5567,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhram na hAirméine</displayName>
 				<displayName count="many">ndram na hAirméine</displayName>
 				<displayName count="other">dram na hAirméine</displayName>
-				<symbol>AMD</symbol>
 			</currency>
 			<currency type="ANG">
 				<displayName>Gildear Aintillí na hÍsiltíre</displayName>
@@ -5599,7 +5575,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ghildear Aintillí na hÍsiltíre</displayName>
 				<displayName count="many">ngildear Aintillí na hÍsiltíre</displayName>
 				<displayName count="other">gildear Aintillí na hÍsiltíre</displayName>
-				<symbol>ANG</symbol>
 			</currency>
 			<currency type="AOA">
 				<displayName>Kwanza Angóla</displayName>
@@ -5608,7 +5583,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kwanza Angóla</displayName>
 				<displayName count="many">kwanza Angóla</displayName>
 				<displayName count="other">kwanza Angóla</displayName>
-				<symbol>AOA</symbol>
 				<symbol alt="narrow" draft="contributed">Kz</symbol>
 			</currency>
 			<currency type="AOK">
@@ -5645,10 +5619,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Austral Airgintíneach</displayName>
 				<displayName count="many">Austral Airgintíneach</displayName>
 				<displayName count="other">Austral Airgintíneach</displayName>
-				<symbol>ARA</symbol>
+				<symbol draft="contributed">ARA</symbol>
 			</currency>
 			<currency type="ARL">
-				<symbol>ARL</symbol>
+				<symbol draft="contributed">ARL</symbol>
 			</currency>
 			<currency type="ARM">
 				<displayName>Peso na hAirgintíne (1881–1970)</displayName>
@@ -5657,7 +5631,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso na hAirgintíne (1881–1970)</displayName>
 				<displayName count="many">bpeso na hAirgintíne (1881–1970)</displayName>
 				<displayName count="other">peso na hAirgintíne (1881–1970)</displayName>
-				<symbol>ARM</symbol>
+				<symbol draft="contributed">ARM</symbol>
 			</currency>
 			<currency type="ARP">
 				<displayName>Peso na hAirgintíne (1983–1985)</displayName>
@@ -5666,7 +5640,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso na hAirgintíne (1983–1985)</displayName>
 				<displayName count="many">bpeso na hAirgintíne (1983–1985)</displayName>
 				<displayName count="other">peso na hAirgintíne (1983–1985)</displayName>
-				<symbol>ARP</symbol>
+				<symbol draft="contributed">ARP</symbol>
 			</currency>
 			<currency type="ARS">
 				<displayName>Peso na hAirgintíne</displayName>
@@ -5675,7 +5649,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso na hAirgintíne</displayName>
 				<displayName count="many">bpeso na hAirgintíne</displayName>
 				<displayName count="other">peso na hAirgintíne</displayName>
-				<symbol>ARS</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="ATS">
@@ -5694,7 +5667,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na hAstráile</displayName>
 				<displayName count="many">ndollar na hAstráile</displayName>
 				<displayName count="other">dollar na hAstráile</displayName>
-				<symbol>A$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="AWG">
@@ -5704,7 +5676,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhlóirín Arúba</displayName>
 				<displayName count="many">bhflóirín Arúba</displayName>
 				<displayName count="other">flóirín Arúba</displayName>
-				<symbol>AWG</symbol>
 			</currency>
 			<currency type="AZM">
 				<displayName>Manat na hAsarbaiseáine (1993–2006)</displayName>
@@ -5713,7 +5684,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mhanat na hAsarbaiseáine (1993–2006)</displayName>
 				<displayName count="many">manat na hAsarbaiseáine (1993–2006)</displayName>
 				<displayName count="other">manat na hAsarbaiseáine (1993–2006)</displayName>
-				<symbol>AZM</symbol>
+				<symbol draft="contributed">AZM</symbol>
 			</currency>
 			<currency type="AZN">
 				<displayName>Manat na hAsarbaiseáine</displayName>
@@ -5722,7 +5693,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mhanat na hAsarbaiseáine</displayName>
 				<displayName count="many">manat na hAsarbaiseáine</displayName>
 				<displayName count="other">manat na hAsarbaiseáine</displayName>
-				<symbol>AZN</symbol>
 			</currency>
 			<currency type="BAD">
 				<displayName>Dínear Bhoisnia-Heirseagaivéin (1992–1994)</displayName>
@@ -5731,7 +5701,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Dínear Bhoisnia-Heirseagaivéin (1992–1994)</displayName>
 				<displayName count="many">Dínear Bhoisnia-Heirseagaivéin (1992–1994)</displayName>
 				<displayName count="other">Dínear Bhoisnia-Heirseagaivéin (1992–1994)</displayName>
-				<symbol>BAD</symbol>
+				<symbol draft="contributed">BAD</symbol>
 			</currency>
 			<currency type="BAM">
 				<displayName>Marg Inmhalartaithe na Boisnia-Heirseagaivéine</displayName>
@@ -5740,11 +5710,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mharg inmhalartaithe na Boisnia-Heirseagaivéine</displayName>
 				<displayName count="many">marg inmhalartaithe na Boisnia-Heirseagaivéine</displayName>
 				<displayName count="other">marg inmhalartaithe na Boisnia-Heirseagaivéine</displayName>
-				<symbol>BAM</symbol>
 				<symbol alt="narrow" draft="contributed">KM</symbol>
 			</currency>
 			<currency type="BAN">
-				<symbol>BAN</symbol>
+				<symbol draft="contributed">BAN</symbol>
 			</currency>
 			<currency type="BBD">
 				<displayName>Dollar Bharbadós</displayName>
@@ -5753,7 +5722,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Bharbadós</displayName>
 				<displayName count="many">ndollar Bharbadós</displayName>
 				<displayName count="other">dollar Bharbadós</displayName>
-				<symbol>BBD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BDT">
@@ -5763,7 +5731,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">thaka na Banglaidéise</displayName>
 				<displayName count="many">dtaka na Banglaidéise</displayName>
 				<displayName count="other">taka na Banglaidéise</displayName>
-				<symbol>BDT</symbol>
 				<symbol alt="narrow" draft="contributed">৳</symbol>
 			</currency>
 			<currency type="BEC">
@@ -5800,7 +5767,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lev chrua na Bulgáire</displayName>
 				<displayName count="many">lev chrua na Bulgáire</displayName>
 				<displayName count="other">lev crua na Bulgáire</displayName>
-				<symbol>BGL</symbol>
+				<symbol draft="contributed">BGL</symbol>
 			</currency>
 			<currency type="BGN">
 				<displayName>Lev na Bulgáire</displayName>
@@ -5809,7 +5776,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lev na Bulgáire</displayName>
 				<displayName count="many">lev na Bulgáire</displayName>
 				<displayName count="other">lev na Bulgáire</displayName>
-				<symbol>BGN</symbol>
 			</currency>
 			<currency type="BGO">
 				<displayName>Lev na Bulgáire (1879–1952)</displayName>
@@ -5818,7 +5784,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lev na Bulgáire (1879–1952)</displayName>
 				<displayName count="many">lev na Bulgáire (1879–1952)</displayName>
 				<displayName count="other">lev na Bulgáire (1879–1952)</displayName>
-				<symbol>BGO</symbol>
+				<symbol draft="contributed">BGO</symbol>
 			</currency>
 			<currency type="BHD">
 				<displayName>Dinar Bhairéin</displayName>
@@ -5827,7 +5793,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar Bhairéin</displayName>
 				<displayName count="many">ndinar Bhairéin</displayName>
 				<displayName count="other">dinar Bhairéin</displayName>
-				<symbol>BHD</symbol>
 			</currency>
 			<currency type="BIF">
 				<displayName>Franc na Burúine</displayName>
@@ -5836,7 +5801,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc na Burúine</displayName>
 				<displayName count="many">bhfranc na Burúine</displayName>
 				<displayName count="other">franc na Burúine</displayName>
-				<symbol>BIF</symbol>
 			</currency>
 			<currency type="BMD">
 				<displayName>Dollar Bheirmiúda</displayName>
@@ -5845,7 +5809,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Bheirmiúda</displayName>
 				<displayName count="many">ndollar Bheirmiúda</displayName>
 				<displayName count="other">dollar Bheirmiúda</displayName>
-				<symbol>BMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BND">
@@ -5855,7 +5818,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Bhrúiné</displayName>
 				<displayName count="many">ndollar Bhrúiné</displayName>
 				<displayName count="other">dollar Bhrúiné</displayName>
-				<symbol>BND</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BOB">
@@ -5865,11 +5827,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bholiviano</displayName>
 				<displayName count="many">mboliviano</displayName>
 				<displayName count="other">boliviano</displayName>
-				<symbol>BOB</symbol>
 				<symbol alt="narrow" draft="contributed">Bs</symbol>
 			</currency>
 			<currency type="BOL">
-				<symbol>BOL</symbol>
+				<symbol draft="contributed">BOL</symbol>
 			</currency>
 			<currency type="BOP">
 				<displayName>Peso na Bolaive</displayName>
@@ -5878,7 +5839,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso na Bolaive</displayName>
 				<displayName count="many">bpeso na Bolaive</displayName>
 				<displayName count="other">peso na Bolaive</displayName>
-				<symbol>BOP</symbol>
+				<symbol draft="contributed">BOP</symbol>
 			</currency>
 			<currency type="BOV">
 				<displayName>Mvdol na Bolaive</displayName>
@@ -5887,7 +5848,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mvdol na Bolaive</displayName>
 				<displayName count="many">mvdol na Bolaive</displayName>
 				<displayName count="other">mvdol na Bolaive</displayName>
-				<symbol>BOV</symbol>
+				<symbol draft="contributed">BOV</symbol>
 			</currency>
 			<currency type="BRB">
 				<displayName>Cruzeiro Nua na Brasaíle (1967–1986)</displayName>
@@ -5896,7 +5857,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chruzeiro nua na Brasaíle (1967–1986)</displayName>
 				<displayName count="many">gcruzeiro nua na Brasaíle (1967–1986)</displayName>
 				<displayName count="other">cruzeiro nua na Brasaíle (1967–1986)</displayName>
-				<symbol>BRB</symbol>
+				<symbol draft="contributed">BRB</symbol>
 			</currency>
 			<currency type="BRC">
 				<displayName>Cruzado na Brasaíle (1986–1989)</displayName>
@@ -5905,7 +5866,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chruzado na Brasaíle (1986–1989)</displayName>
 				<displayName count="many">gcruzado na Brasaíle (1986–1989)</displayName>
 				<displayName count="other">cruzado na Brasaíle (1986–1989)</displayName>
-				<symbol>BRC</symbol>
+				<symbol draft="contributed">BRC</symbol>
 			</currency>
 			<currency type="BRE">
 				<displayName>Cruzeiro na Brasaíle (1990–1993)</displayName>
@@ -5914,7 +5875,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chruzeiro na Brasaíle (1990–1993)</displayName>
 				<displayName count="many">gcruzeiro na Brasaíle (1990–1993)</displayName>
 				<displayName count="other">cruzeiro na Brasaíle (1990–1993)</displayName>
-				<symbol>BRE</symbol>
+				<symbol draft="contributed">BRE</symbol>
 			</currency>
 			<currency type="BRL">
 				<displayName>Real na Brasaíle</displayName>
@@ -5923,7 +5884,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">real na Brasaíle</displayName>
 				<displayName count="many">real na Brasaíle</displayName>
 				<displayName count="other">real na Brasaíle</displayName>
-				<symbol>R$</symbol>
 				<symbol alt="narrow" draft="contributed">R$</symbol>
 			</currency>
 			<currency type="BRN">
@@ -5933,7 +5893,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chruzado nua na Brasaíle (1989–1990)</displayName>
 				<displayName count="many">gcruzado nua na Brasaíle (1989–1990)</displayName>
 				<displayName count="other">cruzado nua na Brasaíle (1989–1990)</displayName>
-				<symbol>BRN</symbol>
+				<symbol draft="contributed">BRN</symbol>
 			</currency>
 			<currency type="BRR">
 				<displayName>Cruzeiro na Brasaíle (1993–1994)</displayName>
@@ -5942,7 +5902,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chruzeiro na Brasaíle (1993–1994)</displayName>
 				<displayName count="many">gcruzeiro na Brasaíle (1993–1994)</displayName>
 				<displayName count="other">cruzeiro na Brasaíle (1993–1994)</displayName>
-				<symbol>BRR</symbol>
+				<symbol draft="contributed">BRR</symbol>
 			</currency>
 			<currency type="BRZ">
 				<displayName>Cruzeiro na Brasaíle (1942–1967)</displayName>
@@ -5951,7 +5911,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chruzeiro na Brasaíle (1942–1967)</displayName>
 				<displayName count="many">gcruzeiro na Brasaíle (1942–1967)</displayName>
 				<displayName count="other">cruzeiro na Brasaíle (1942–1967)</displayName>
-				<symbol>BRZ</symbol>
+				<symbol draft="contributed">BRZ</symbol>
 			</currency>
 			<currency type="BSD">
 				<displayName>Dollar na mBahámaí</displayName>
@@ -5960,7 +5920,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na mBahámaí</displayName>
 				<displayName count="many">ndollar na mBahámaí</displayName>
 				<displayName count="other">dollar na mBahámaí</displayName>
-				<symbol>BSD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BTN">
@@ -5970,7 +5929,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ngultrum na Bútáine</displayName>
 				<displayName count="many">ngultrum na Bútáine</displayName>
 				<displayName count="other">ngultrum na Bútáine</displayName>
-				<symbol>BTN</symbol>
 			</currency>
 			<currency type="BUK">
 				<displayName>Kyat Bhurma</displayName>
@@ -5979,7 +5937,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kyat Bhurma</displayName>
 				<displayName count="many">kyat Bhurma</displayName>
 				<displayName count="other">kyat Bhurma</displayName>
-				<symbol>BUK</symbol>
+				<symbol draft="contributed">BUK</symbol>
 			</currency>
 			<currency type="BWP">
 				<displayName>Pula na Botsuáine</displayName>
@@ -5988,7 +5946,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phula na Botsuáine</displayName>
 				<displayName count="many">bpula na Botsuáine</displayName>
 				<displayName count="other">pula na Botsuáine</displayName>
-				<symbol>BWP</symbol>
 				<symbol alt="narrow" draft="contributed">P</symbol>
 			</currency>
 			<currency type="BYB">
@@ -5998,7 +5955,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúbal nua na Bealarúise (1994–1999)</displayName>
 				<displayName count="many">rúbal nua na Bealarúise (1994–1999)</displayName>
 				<displayName count="other">rúbal nua na Bealarúise (1994–1999)</displayName>
-				<symbol>BYB</symbol>
+				<symbol draft="contributed">BYB</symbol>
 			</currency>
 			<currency type="BYN">
 				<displayName>Rúbal na Bealarúise</displayName>
@@ -6007,8 +5964,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúbal na Bealarúise</displayName>
 				<displayName count="many">rúbal na Bealarúise</displayName>
 				<displayName count="other">rúbal na Bealarúise</displayName>
-				<symbol>BYN</symbol>
-				<symbol alt="narrow" draft="contributed">р.</symbol>
 			</currency>
 			<currency type="BYR">
 				<displayName>Rúbal na Bealarúise (2000–2016)</displayName>
@@ -6017,7 +5972,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúbal na Bealarúise (2000–2016)</displayName>
 				<displayName count="many">rúbal na Bealarúise (2000–2016)</displayName>
 				<displayName count="other">rúbal na Bealarúise (2000–2016)</displayName>
-				<symbol>BYR</symbol>
+				<symbol draft="contributed">BYR</symbol>
 			</currency>
 			<currency type="BZD">
 				<displayName>Dollar na Beilíse</displayName>
@@ -6026,7 +5981,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na Beilíse</displayName>
 				<displayName count="many">ndollar na Beilíse</displayName>
 				<displayName count="other">dollar na Beilíse</displayName>
-				<symbol>BZD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CAD">
@@ -6036,7 +5990,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Cheanada</displayName>
 				<displayName count="many">ndollar Cheanada</displayName>
 				<displayName count="other">dollar Cheanada</displayName>
-				<symbol>CA$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CDF">
@@ -6046,7 +5999,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc an Chongó</displayName>
 				<displayName count="many">bhfranc an Chongó</displayName>
 				<displayName count="other">franc an Chongó</displayName>
-				<symbol>CDF</symbol>
 			</currency>
 			<currency type="CHF">
 				<displayName>Franc na hEilvéise</displayName>
@@ -6055,7 +6007,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc na hEilvéise</displayName>
 				<displayName count="many">bhfranc na hEilvéise</displayName>
 				<displayName count="other">franc na hEilvéise</displayName>
-				<symbol>CHF</symbol>
 			</currency>
 			<currency type="CLE">
 				<displayName>Escudo na Sile</displayName>
@@ -6064,7 +6015,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">escudo na Sile</displayName>
 				<displayName count="many">n-escudo na Sile</displayName>
 				<displayName count="other">escudo na Sile</displayName>
-				<symbol>CLE</symbol>
+				<symbol draft="contributed">CLE</symbol>
 			</currency>
 			<currency type="CLF">
 				<displayName>Unidades de Fomento na Sile</displayName>
@@ -6073,7 +6024,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Unidades de Fomento na Sile</displayName>
 				<displayName count="many">Unidades de Fomento na Sile</displayName>
 				<displayName count="other">Unidades de Fomento na Sile</displayName>
-				<symbol>CLF</symbol>
+				<symbol draft="contributed">CLF</symbol>
 			</currency>
 			<currency type="CLP">
 				<displayName>Peso na Sile</displayName>
@@ -6082,7 +6033,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso na Sile</displayName>
 				<displayName count="many">bpeso na Sile</displayName>
 				<displayName count="other">peso na Sile</displayName>
-				<symbol>CLP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CNH">
@@ -6100,7 +6050,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">yuan na Síne</displayName>
 				<displayName count="many">yuan na Síne</displayName>
 				<displayName count="other">yuan na Síne</displayName>
-				<symbol>CN¥</symbol>
 				<symbol alt="narrow" draft="contributed">¥</symbol>
 			</currency>
 			<currency type="COP">
@@ -6110,11 +6059,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso na Colóime</displayName>
 				<displayName count="many">bpeso na Colóime</displayName>
 				<displayName count="other">peso na Colóime</displayName>
-				<symbol>COP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="COU">
-				<symbol>COU</symbol>
+				<symbol draft="contributed">COU</symbol>
 			</currency>
 			<currency type="CRC">
 				<displayName>Colón Chósta Ríce</displayName>
@@ -6123,7 +6071,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">cholón Chósta Ríce</displayName>
 				<displayName count="many">gcolón Chósta Ríce</displayName>
 				<displayName count="other">colón Chósta Ríce</displayName>
-				<symbol>CRC</symbol>
 				<symbol alt="narrow" draft="contributed">₡</symbol>
 			</currency>
 			<currency type="CSD">
@@ -6133,7 +6080,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar na Seirbia (2002–2006)</displayName>
 				<displayName count="many">ndinar na Seirbia (2002–2006)</displayName>
 				<displayName count="other">dinar na Seirbia (2002–2006)</displayName>
-				<symbol>CSD</symbol>
+				<symbol draft="contributed">CSD</symbol>
 			</currency>
 			<currency type="CSK">
 				<displayName>Koruna Crua na Seicslóvaice</displayName>
@@ -6142,7 +6089,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">koruna chrua na Seicslóvaice</displayName>
 				<displayName count="many">koruna chrua na Seicslóvaice</displayName>
 				<displayName count="other">koruna crua na Seicslóvaice</displayName>
-				<symbol>CSK</symbol>
+				<symbol draft="contributed">CSK</symbol>
 			</currency>
 			<currency type="CUC">
 				<displayName>Peso Inmhalartaithe Chúba</displayName>
@@ -6151,7 +6098,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso inmhalartaithe Chúba</displayName>
 				<displayName count="many">bpeso inmhalartaithe Chúba</displayName>
 				<displayName count="other">peso inmhalartaithe Chúba</displayName>
-				<symbol>CUC</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CUP">
@@ -6161,7 +6107,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso Chúba</displayName>
 				<displayName count="many">bpeso Chúba</displayName>
 				<displayName count="other">peso Chúba</displayName>
-				<symbol>CUP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CVE">
@@ -6171,7 +6116,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">escudo Rinn Verde</displayName>
 				<displayName count="many">n-escudo Rinn Verde</displayName>
 				<displayName count="other">escudo Rinn Verde</displayName>
-				<symbol>CVE</symbol>
 			</currency>
 			<currency type="CYP">
 				<displayName>Punt na Cipire</displayName>
@@ -6180,7 +6124,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt na Cipire</displayName>
 				<displayName count="many">bpunt na Cipire</displayName>
 				<displayName count="other">punt na Cipire</displayName>
-				<symbol>CYP</symbol>
+				<symbol draft="contributed">CYP</symbol>
 			</currency>
 			<currency type="CZK">
 				<displayName>Koruna Phoblacht na Seice</displayName>
@@ -6189,7 +6133,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">koruna Phoblacht na Seice</displayName>
 				<displayName count="many">koruna Phoblacht na Seice</displayName>
 				<displayName count="other">koruna Phoblacht na Seice</displayName>
-				<symbol>CZK</symbol>
 				<symbol alt="narrow" draft="contributed">Kč</symbol>
 			</currency>
 			<currency type="DDM">
@@ -6217,7 +6160,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc Djibouti</displayName>
 				<displayName count="many">bhfranc Djibouti</displayName>
 				<displayName count="other">franc Djibouti</displayName>
-				<symbol>DJF</symbol>
 			</currency>
 			<currency type="DKK">
 				<displayName>Coróin na Danmhairge</displayName>
@@ -6226,7 +6168,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">choróin na Danmhairge</displayName>
 				<displayName count="many">gcoróin na Danmhairge</displayName>
 				<displayName count="other">coróin na Danmhairge</displayName>
-				<symbol>DKK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="DOP">
@@ -6236,7 +6177,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso na Poblachta Doiminicí</displayName>
 				<displayName count="many">bpeso na Poblachta Doiminicí</displayName>
 				<displayName count="other">peso na Poblachta Doiminicí</displayName>
-				<symbol>DOP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="DZD">
@@ -6246,7 +6186,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar na hAilgéire</displayName>
 				<displayName count="many">ndinar na hAilgéire</displayName>
 				<displayName count="other">dinar na hAilgéire</displayName>
-				<symbol>DZD</symbol>
 			</currency>
 			<currency type="ECS">
 				<displayName>Sucre Eacuadóir</displayName>
@@ -6255,7 +6194,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Sucre Eacuadóir</displayName>
 				<displayName count="many">Sucre Eacuadóir</displayName>
 				<displayName count="other">Sucre Eacuadóir</displayName>
-				<symbol>ECS</symbol>
+				<symbol draft="contributed">ECS</symbol>
 			</currency>
 			<currency type="ECV">
 				<displayName>Unidad de Valor Constante (UVC) Eacuadóir</displayName>
@@ -6264,7 +6203,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Unidad de Valor Constante (UVC) Eacuadóir</displayName>
 				<displayName count="many">Unidad de Valor Constante (UVC) Eacuadóir</displayName>
 				<displayName count="other">Unidad de Valor Constante (UVC) Eacuadóir</displayName>
-				<symbol>ECV</symbol>
+				<symbol draft="contributed">ECV</symbol>
 			</currency>
 			<currency type="EEK">
 				<displayName>Kroon na hEastóine</displayName>
@@ -6282,7 +6221,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt na hÉigipte</displayName>
 				<displayName count="many">bpunt na hÉigipte</displayName>
 				<displayName count="other">punt na hÉigipte</displayName>
-				<symbol>EGP</symbol>
 				<symbol alt="narrow" draft="contributed">E£</symbol>
 			</currency>
 			<currency type="ERN">
@@ -6292,13 +6230,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">nakfa na hEiritré</displayName>
 				<displayName count="many">nakfa na hEiritré</displayName>
 				<displayName count="other">nakfa na hEiritré</displayName>
-				<symbol>ERN</symbol>
 			</currency>
 			<currency type="ESA">
-				<symbol>ESA</symbol>
+				<symbol draft="contributed">ESA</symbol>
 			</currency>
 			<currency type="ESB">
-				<symbol>ESB</symbol>
+				<symbol draft="contributed">ESB</symbol>
 			</currency>
 			<currency type="ESP">
 				<displayName>Peseta na Spáinne</displayName>
@@ -6307,7 +6244,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheseta na Spáinne</displayName>
 				<displayName count="many">bpeseta na Spáinne</displayName>
 				<displayName count="other">peseta na Spáinne</displayName>
-				<symbol>ESP</symbol>
+				<symbol draft="contributed">ESP</symbol>
 				<symbol alt="narrow" draft="contributed">₧</symbol>
 			</currency>
 			<currency type="ETB">
@@ -6317,7 +6254,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bhirr na hAetóipe</displayName>
 				<displayName count="many">mbirr na hAetóipe</displayName>
 				<displayName count="other">birr na hAetóipe</displayName>
-				<symbol>ETB</symbol>
 			</currency>
 			<currency type="EUR">
 				<displayName>Euro</displayName>
@@ -6326,7 +6262,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">euro</displayName>
 				<displayName count="many">euro</displayName>
 				<displayName count="other">euro</displayName>
-				<symbol>€</symbol>
+				<symbol draft="contributed">€</symbol>
 				<symbol alt="narrow" draft="contributed">€</symbol>
 			</currency>
 			<currency type="FIM">
@@ -6345,7 +6281,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Fhidsí</displayName>
 				<displayName count="many">ndollar Fhidsí</displayName>
 				<displayName count="other">dollar Fhidsí</displayName>
-				<symbol>FJD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="FKP">
@@ -6355,7 +6290,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt Oileáin Fháclainne</displayName>
 				<displayName count="many">bpunt Oileáin Fháclainne</displayName>
 				<displayName count="other">punt Oileáin Fháclainne</displayName>
-				<symbol>FKP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="FRF">
@@ -6374,7 +6308,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt steirling</displayName>
 				<displayName count="many">bpunt steirling</displayName>
 				<displayName count="other">punt steirling</displayName>
-				<symbol>£</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="GEK">
@@ -6393,7 +6326,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lari na Seoirsia</displayName>
 				<displayName count="many">lari na Seoirsia</displayName>
 				<displayName count="other">lari na Seoirsia</displayName>
-				<symbol>GEL</symbol>
 				<symbol alt="narrow" draft="contributed">₾</symbol>
 			</currency>
 			<currency type="GHC">
@@ -6403,7 +6335,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chedi Ghána (1979–2007)</displayName>
 				<displayName count="many">gcedi Ghána (1979–2007)</displayName>
 				<displayName count="other">cedi Ghána (1979–2007)</displayName>
-				<symbol>GHC</symbol>
+				<symbol draft="contributed">GHC</symbol>
 			</currency>
 			<currency type="GHS">
 				<displayName>Cedi Ghána</displayName>
@@ -6412,7 +6344,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chedi Ghána</displayName>
 				<displayName count="many">gcedi Ghána</displayName>
 				<displayName count="other">cedi Ghána</displayName>
-				<symbol>GHS</symbol>
 			</currency>
 			<currency type="GIP">
 				<displayName>Punt Ghiobráltar</displayName>
@@ -6421,7 +6352,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt Ghiobráltar</displayName>
 				<displayName count="many">bpunt Ghiobráltar</displayName>
 				<displayName count="other">punt Ghiobráltar</displayName>
-				<symbol>GIP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="GMD">
@@ -6431,7 +6361,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhalasi na Gaimbia</displayName>
 				<displayName count="many">ndalasi na Gaimbia</displayName>
 				<displayName count="other">dalasi na Gaimbia</displayName>
-				<symbol>GMD</symbol>
 			</currency>
 			<currency type="GNF">
 				<displayName>Franc na Guine</displayName>
@@ -6440,7 +6369,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc na Guine</displayName>
 				<displayName count="many">bhfranc na Guine</displayName>
 				<displayName count="other">franc na Guine</displayName>
-				<symbol>GNF</symbol>
 				<symbol alt="narrow" draft="contributed">FG</symbol>
 			</currency>
 			<currency type="GNS">
@@ -6459,7 +6387,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Ekwele Guineana na Guine Meánchiorclaí</displayName>
 				<displayName count="many">Ekwele Guineana na Guine Meánchiorclaí</displayName>
 				<displayName count="other">Ekwele Guineana na Guine Meánchriosaí</displayName>
-				<symbol>GQE</symbol>
+				<symbol draft="contributed">GQE</symbol>
 			</currency>
 			<currency type="GRD">
 				<displayName>Drachma Gréagach</displayName>
@@ -6468,7 +6396,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Drachma Gréagach</displayName>
 				<displayName count="many">Drachma Gréagach</displayName>
 				<displayName count="other">Drachma Gréagach</displayName>
-				<symbol>GRD</symbol>
+				<symbol draft="contributed">GRD</symbol>
 			</currency>
 			<currency type="GTQ">
 				<displayName>Quetzal Ghuatamala</displayName>
@@ -6477,7 +6405,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">quetzal Ghuatamala</displayName>
 				<displayName count="many">quetzal Ghuatamala</displayName>
 				<displayName count="other">quetzal Ghuatamala</displayName>
-				<symbol>GTQ</symbol>
 				<symbol alt="narrow" draft="contributed">Q</symbol>
 			</currency>
 			<currency type="GWE">
@@ -6505,7 +6432,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na Guáine</displayName>
 				<displayName count="many">ndollar na Guáine</displayName>
 				<displayName count="other">dollar na Guáine</displayName>
-				<symbol>GYD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="HKD">
@@ -6515,7 +6441,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Hong Cong</displayName>
 				<displayName count="many">ndollar Hong Cong</displayName>
 				<displayName count="other">dollar Hong Cong</displayName>
-				<symbol>HK$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="HNL">
@@ -6525,7 +6450,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lempira Hondúras</displayName>
 				<displayName count="many">lempira Hondúras</displayName>
 				<displayName count="other">lempira Hondúras</displayName>
-				<symbol>HNL</symbol>
 				<symbol alt="narrow" draft="contributed">L</symbol>
 			</currency>
 			<currency type="HRD">
@@ -6544,7 +6468,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kuna na Cróite</displayName>
 				<displayName count="many">kuna na Cróite</displayName>
 				<displayName count="other">kuna na Cróite</displayName>
-				<symbol>HRK</symbol>
 				<symbol alt="narrow" draft="contributed">kn</symbol>
 			</currency>
 			<currency type="HTG">
@@ -6554,7 +6477,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ghourde Háítí</displayName>
 				<displayName count="many">ngourde Háítí</displayName>
 				<displayName count="other">gourde Háítí</displayName>
-				<symbol>HTG</symbol>
 			</currency>
 			<currency type="HUF">
 				<displayName>Forint na hUngáire</displayName>
@@ -6563,7 +6485,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhorint na hUngáire</displayName>
 				<displayName count="many">bhforint na hUngáire</displayName>
 				<displayName count="other">forint na hUngáire</displayName>
-				<symbol>HUF</symbol>
 				<symbol alt="narrow" draft="contributed">Ft</symbol>
 			</currency>
 			<currency type="IDR">
@@ -6573,7 +6494,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rupiah na hIndinéise</displayName>
 				<displayName count="many">rupiah na hIndinéise</displayName>
 				<displayName count="other">rupiah na hIndinéise</displayName>
-				<symbol>IDR</symbol>
 				<symbol alt="narrow" draft="contributed">Rp</symbol>
 			</currency>
 			<currency type="IEP">
@@ -6601,7 +6521,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">sheiceal nua Iosrael</displayName>
 				<displayName count="many">seiceal nua Iosrael</displayName>
 				<displayName count="other">seiceal nua Iosrael</displayName>
-				<symbol>₪</symbol>
 				<symbol alt="narrow" draft="contributed">₪</symbol>
 			</currency>
 			<currency type="INR">
@@ -6611,7 +6530,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúipí na hIndia</displayName>
 				<displayName count="many">rúipí na hIndia</displayName>
 				<displayName count="other">rúipí na hIndia</displayName>
-				<symbol>₹</symbol>
 				<symbol alt="narrow" draft="contributed">₹</symbol>
 			</currency>
 			<currency type="IQD">
@@ -6621,7 +6539,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar na hIaráice</displayName>
 				<displayName count="many">ndinar na hIaráice</displayName>
 				<displayName count="other">dinar na hIaráice</displayName>
-				<symbol>IQD</symbol>
 			</currency>
 			<currency type="IRR">
 				<displayName>Rial na hIaráine</displayName>
@@ -6630,7 +6547,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rial na hIaráine</displayName>
 				<displayName count="many">rial na hIaráine</displayName>
 				<displayName count="other">rial na hIaráine</displayName>
-				<symbol>IRR</symbol>
 			</currency>
 			<currency type="ISK">
 				<displayName>Króna na hÍoslainne</displayName>
@@ -6639,7 +6555,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">króna na hÍoslainne</displayName>
 				<displayName count="many">króna na hÍoslainne</displayName>
 				<displayName count="other">króna na hÍoslainne</displayName>
-				<symbol>ISK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="ITL">
@@ -6649,7 +6564,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lira na hIodáile</displayName>
 				<displayName count="many">lira na hIodáile</displayName>
 				<displayName count="other">lira na hIodáile</displayName>
-				<symbol>ITL</symbol>
+				<symbol draft="contributed">ITL</symbol>
 			</currency>
 			<currency type="JMD">
 				<displayName>Dollar na hIamáice</displayName>
@@ -6658,7 +6573,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na hIamáice</displayName>
 				<displayName count="many">ndollar na hIamáice</displayName>
 				<displayName count="other">dollar na hIamáice</displayName>
-				<symbol>JMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="JOD">
@@ -6668,7 +6582,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar na hIordáine</displayName>
 				<displayName count="many">ndinar na hIordáine</displayName>
 				<displayName count="other">dinar na hIordáine</displayName>
-				<symbol>JOD</symbol>
 			</currency>
 			<currency type="JPY">
 				<displayName>Yen na Seapáine</displayName>
@@ -6687,7 +6600,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">scilling na Céinia</displayName>
 				<displayName count="many">scilling na Céinia</displayName>
 				<displayName count="other">scilling na Céinia</displayName>
-				<symbol>KES</symbol>
 			</currency>
 			<currency type="KGS">
 				<displayName>Som na Cirgeastáine</displayName>
@@ -6696,7 +6608,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">shom na Cirgeastáine</displayName>
 				<displayName count="many">som na Cirgeastáine</displayName>
 				<displayName count="other">som na Cirgeastáine</displayName>
-				<symbol>KGS</symbol>
 			</currency>
 			<currency type="KHR">
 				<displayName>Riel na Cambóide</displayName>
@@ -6705,7 +6616,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">riel na Cambóide</displayName>
 				<displayName count="many">riel na Cambóide</displayName>
 				<displayName count="other">riel na Cambóide</displayName>
-				<symbol>KHR</symbol>
 				<symbol alt="narrow" draft="contributed">៛</symbol>
 			</currency>
 			<currency type="KMF">
@@ -6715,7 +6625,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc Oileáin Chomóra</displayName>
 				<displayName count="many">bhfranc Oileáin Chomóra</displayName>
 				<displayName count="other">franc Oileáin Chomóra</displayName>
-				<symbol>KMF</symbol>
 				<symbol alt="narrow" draft="contributed">CF</symbol>
 			</currency>
 			<currency type="KPW">
@@ -6725,14 +6634,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">won na Cóiré Thuaidh</displayName>
 				<displayName count="many">won na Cóiré Thuaidh</displayName>
 				<displayName count="other">won na Cóiré Thuaidh</displayName>
-				<symbol>KPW</symbol>
 				<symbol alt="narrow" draft="contributed">₩</symbol>
 			</currency>
 			<currency type="KRH">
-				<symbol>KRH</symbol>
+				<symbol draft="contributed">KRH</symbol>
 			</currency>
 			<currency type="KRO">
-				<symbol>KRO</symbol>
+				<symbol draft="contributed">KRO</symbol>
 			</currency>
 			<currency type="KRW">
 				<displayName>Won na Cóiré Theas</displayName>
@@ -6741,7 +6649,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">won na Cóiré Theas</displayName>
 				<displayName count="many">won na Cóiré Theas</displayName>
 				<displayName count="other">won na Cóiré Theas</displayName>
-				<symbol>₩</symbol>
 				<symbol alt="narrow" draft="contributed">₩</symbol>
 			</currency>
 			<currency type="KWD">
@@ -6751,7 +6658,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar Chuáit</displayName>
 				<displayName count="many">ndinar Chuáit</displayName>
 				<displayName count="other">dinar Chuáit</displayName>
-				<symbol>KWD</symbol>
 			</currency>
 			<currency type="KYD">
 				<displayName>Dollar Oileáin Cayman</displayName>
@@ -6760,7 +6666,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Oileáin Cayman</displayName>
 				<displayName count="many">ndollar Oileáin Cayman</displayName>
 				<displayName count="other">dollar Oileáin Cayman</displayName>
-				<symbol>KYD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="KZT">
@@ -6770,7 +6675,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">thenge na Casacstáine</displayName>
 				<displayName count="many">dtenge na Casacstáine</displayName>
 				<displayName count="other">tenge na Casacstáine</displayName>
-				<symbol>KZT</symbol>
 				<symbol alt="narrow" draft="contributed">₸</symbol>
 			</currency>
 			<currency type="LAK">
@@ -6780,7 +6684,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kip Laos</displayName>
 				<displayName count="many">kip Laos</displayName>
 				<displayName count="other">kip Laos</displayName>
-				<symbol>LAK</symbol>
 				<symbol alt="narrow" draft="contributed">₭</symbol>
 			</currency>
 			<currency type="LBP">
@@ -6790,7 +6693,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt na Liobáine</displayName>
 				<displayName count="many">bpunt na Liobáine</displayName>
 				<displayName count="other">punt na Liobáine</displayName>
-				<symbol>LBP</symbol>
 				<symbol alt="narrow" draft="contributed">L£</symbol>
 			</currency>
 			<currency type="LKR">
@@ -6800,7 +6702,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúipí Shrí Lanca</displayName>
 				<displayName count="many">rúipí Shrí Lanca</displayName>
 				<displayName count="other">rúipí Shrí Lanca</displayName>
-				<symbol>LKR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="LRD">
@@ -6810,7 +6711,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na Libéire</displayName>
 				<displayName count="many">ndollar na Libéire</displayName>
 				<displayName count="other">dollar na Libéire</displayName>
-				<symbol>LRD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="LSL">
@@ -6829,7 +6729,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">litas na Liotuáine</displayName>
 				<displayName count="many">litas na Liotuáine</displayName>
 				<displayName count="other">litas na Liotuáine</displayName>
-				<symbol>LTL</symbol>
+				<symbol draft="contributed">LTL</symbol>
 				<symbol alt="narrow" draft="contributed">Lt</symbol>
 			</currency>
 			<currency type="LTT">
@@ -6866,7 +6766,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lats na Laitvia</displayName>
 				<displayName count="many">lats na Laitvia</displayName>
 				<displayName count="other">lats na Laitvia</displayName>
-				<symbol>LVL</symbol>
+				<symbol draft="contributed">LVL</symbol>
 				<symbol alt="narrow" draft="contributed">Ls</symbol>
 			</currency>
 			<currency type="LVR">
@@ -6885,7 +6785,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar na Libia</displayName>
 				<displayName count="many">ndinar na Libia</displayName>
 				<displayName count="other">dinar na Libia</displayName>
-				<symbol>LYD</symbol>
 			</currency>
 			<currency type="MAD">
 				<displayName>Dirham Mharacó</displayName>
@@ -6894,7 +6793,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhirham Mharacó</displayName>
 				<displayName count="many">ndirham Mharacó</displayName>
 				<displayName count="other">dirham Mharacó</displayName>
-				<symbol>MAD</symbol>
 			</currency>
 			<currency type="MAF">
 				<displayName>Franc Mharacó</displayName>
@@ -6903,7 +6801,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc Mharacó</displayName>
 				<displayName count="many">bhfranc Mharacó</displayName>
 				<displayName count="other">franc Mharacó</displayName>
-				<symbol>MAF</symbol>
+				<symbol draft="contributed">MAF</symbol>
 			</currency>
 			<currency type="MDL">
 				<displayName>Leu na Moldóive</displayName>
@@ -6912,7 +6810,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">leu na Moldóive</displayName>
 				<displayName count="many">leu na Moldóive</displayName>
 				<displayName count="other">leu na Moldóive</displayName>
-				<symbol>MDL</symbol>
 			</currency>
 			<currency type="MGA">
 				<displayName>Ariary Mhadagascar</displayName>
@@ -6921,7 +6818,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ariary Mhadagascar</displayName>
 				<displayName count="many">n-ariary Mhadagascar</displayName>
 				<displayName count="other">ariary Mhadagascar</displayName>
-				<symbol>MGA</symbol>
 				<symbol alt="narrow" draft="contributed">Ar</symbol>
 			</currency>
 			<currency type="MGF">
@@ -6940,10 +6836,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhenar na Macadóine</displayName>
 				<displayName count="many">ndenar na Macadóine</displayName>
 				<displayName count="other">denar na Macadóine</displayName>
-				<symbol>MKD</symbol>
 			</currency>
 			<currency type="MKN">
-				<symbol>MKN</symbol>
+				<symbol draft="contributed">MKN</symbol>
 			</currency>
 			<currency type="MLF">
 				<displayName>Franc Mhailí</displayName>
@@ -6961,7 +6856,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kyat Mhaenmar</displayName>
 				<displayName count="many">kyat Mhaenmar</displayName>
 				<displayName count="other">kyat Mhaenmar</displayName>
-				<symbol>MMK</symbol>
 				<symbol alt="narrow" draft="contributed">K</symbol>
 			</currency>
 			<currency type="MNT">
@@ -6971,7 +6865,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">thugrik na Mongóile</displayName>
 				<displayName count="many">dtugrik na Mongóile</displayName>
 				<displayName count="other">tugrik na Mongóile</displayName>
-				<symbol>MNT</symbol>
 				<symbol alt="narrow" draft="contributed">₮</symbol>
 			</currency>
 			<currency type="MOP">
@@ -6981,16 +6874,23 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phataca Mhacao</displayName>
 				<displayName count="many">bpataca Mhacao</displayName>
 				<displayName count="other">pataca Mhacao</displayName>
-				<symbol>MOP</symbol>
 			</currency>
 			<currency type="MRO">
+				<displayName>Ouguiya na Máratáine (1973–2017)</displayName>
+				<displayName count="one">ouguiya na Máratáine (1973–2017)</displayName>
+				<displayName count="two">ouguiya na Máratáine (1973–2017)</displayName>
+				<displayName count="few">ouguiya na Máratáine (1973–2017)</displayName>
+				<displayName count="many">n-ouguiya na Máratáine (1973–2017)</displayName>
+				<displayName count="other">ouguiya na Máratáine (1973–2017)</displayName>
+				<symbol draft="contributed">MRO</symbol>
+			</currency>
+			<currency type="MRU">
 				<displayName>Ouguiya na Máratáine</displayName>
 				<displayName count="one">ouguiya na Máratáine</displayName>
 				<displayName count="two">ouguiya na Máratáine</displayName>
 				<displayName count="few">ouguiya na Máratáine</displayName>
 				<displayName count="many">n-ouguiya na Máratáine</displayName>
 				<displayName count="other">ouguiya na Máratáine</displayName>
-				<symbol>MRO</symbol>
 			</currency>
 			<currency type="MTL">
 				<displayName>Lira Mhálta</displayName>
@@ -6999,7 +6899,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lira Mhálta</displayName>
 				<displayName count="many">lira Mhálta</displayName>
 				<displayName count="other">lira Mhálta</displayName>
-				<symbol>MTL</symbol>
+				<symbol draft="contributed">MTL</symbol>
 			</currency>
 			<currency type="MTP">
 				<displayName>Punt Mhálta</displayName>
@@ -7008,7 +6908,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt Mhálta</displayName>
 				<displayName count="many">bpunt Mhálta</displayName>
 				<displayName count="other">punt Mhálta</displayName>
-				<symbol>MTP</symbol>
+				<symbol draft="contributed">MTP</symbol>
 			</currency>
 			<currency type="MUR">
 				<displayName>Rúipí Oileán Mhuirís</displayName>
@@ -7017,7 +6917,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúipí Oileán Mhuirís</displayName>
 				<displayName count="many">rúipí Oileán Mhuirís</displayName>
 				<displayName count="other">rúipí Oileán Mhuirís</displayName>
-				<symbol>MUR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="MVP">
@@ -7036,7 +6935,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rufiyaa Oileáin Mhaildíve</displayName>
 				<displayName count="many">rufiyaa Oileáin Mhaildíve</displayName>
 				<displayName count="other">rufiyaa Oileáin Mhaildíve</displayName>
-				<symbol>MVR</symbol>
 			</currency>
 			<currency type="MWK">
 				<displayName>Kwacha na Maláive</displayName>
@@ -7045,7 +6943,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kwacha na Maláive</displayName>
 				<displayName count="many">kwacha na Maláive</displayName>
 				<displayName count="other">kwacha na Maláive</displayName>
-				<symbol>MWK</symbol>
 			</currency>
 			<currency type="MXN">
 				<displayName>Peso Mheicsiceo</displayName>
@@ -7054,7 +6951,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso Mheicsiceo</displayName>
 				<displayName count="many">bpeso Mheicsiceo</displayName>
 				<displayName count="other">peso Mheicsiceo</displayName>
-				<symbol>MX$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="MXP">
@@ -7064,7 +6960,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso airgid Mheicsiceo (1861–1992)</displayName>
 				<displayName count="many">bpeso airgid Mheicsiceo (1861–1992)</displayName>
 				<displayName count="other">peso airgid Mheicsiceo (1861–1992)</displayName>
-				<symbol>MXP</symbol>
+				<symbol draft="contributed">MXP</symbol>
 			</currency>
 			<currency type="MXV">
 				<displayName>MXV</displayName>
@@ -7073,7 +6969,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Unidad de Inversion (UDI) Meicsiceo</displayName>
 				<displayName count="many">Unidad de Inversion (UDI) Meicsiceo</displayName>
 				<displayName count="other">Unidad de Inversion (UDI) Meicsiceo</displayName>
-				<symbol>MXV</symbol>
+				<symbol draft="contributed">MXV</symbol>
 			</currency>
 			<currency type="MYR">
 				<displayName>Ringgit na Malaeisia</displayName>
@@ -7082,7 +6978,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ringgit na Malaeisia</displayName>
 				<displayName count="many">ringgit na Malaeisia</displayName>
 				<displayName count="other">ringgit na Malaeisia</displayName>
-				<symbol>MYR</symbol>
 				<symbol alt="narrow" draft="contributed">RM</symbol>
 			</currency>
 			<currency type="MZE">
@@ -7110,7 +7005,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mhetical Mhósaimbíc</displayName>
 				<displayName count="many">metical Mhósaimbíc</displayName>
 				<displayName count="other">metical Mhósaimbíc</displayName>
-				<symbol>MZN</symbol>
 			</currency>
 			<currency type="NAD">
 				<displayName>Dollar na Namaibe</displayName>
@@ -7119,7 +7013,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na Namaibe</displayName>
 				<displayName count="many">ndollar na Namaibe</displayName>
 				<displayName count="other">dollar na Namaibe</displayName>
-				<symbol>NAD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="NGN">
@@ -7129,7 +7022,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">naira na Nigéire</displayName>
 				<displayName count="many">naira na Nigéire</displayName>
 				<displayName count="other">naira na Nigéire</displayName>
-				<symbol>NGN</symbol>
 				<symbol alt="narrow" draft="contributed">₦</symbol>
 			</currency>
 			<currency type="NIC">
@@ -7139,7 +7031,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chórdoba Nicearagua (1988–1991)</displayName>
 				<displayName count="many">gcórdoba Nicearagua (1988–1991)</displayName>
 				<displayName count="other">córdoba Nicearagua (1988–1991)</displayName>
-				<symbol>NIC</symbol>
+				<symbol draft="contributed">NIC</symbol>
 			</currency>
 			<currency type="NIO">
 				<displayName>Córdoba Nicearagua</displayName>
@@ -7148,7 +7040,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">chórdoba Nicearagua</displayName>
 				<displayName count="many">gcórdoba Nicearagua</displayName>
 				<displayName count="other">córdoba Nicearagua</displayName>
-				<symbol>NIO</symbol>
 				<symbol alt="narrow" draft="contributed">C$</symbol>
 			</currency>
 			<currency type="NLG">
@@ -7167,7 +7058,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">choróin na hIorua</displayName>
 				<displayName count="many">gcoróin na hIorua</displayName>
 				<displayName count="other">coróin na hIorua</displayName>
-				<symbol>NOK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="NPR">
@@ -7177,7 +7067,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúipí Neipeal</displayName>
 				<displayName count="many">rúipí Neipeal</displayName>
 				<displayName count="other">rúipí Neipeal</displayName>
-				<symbol>NPR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="NZD">
@@ -7187,7 +7076,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na Nua-Shéalainne</displayName>
 				<displayName count="many">ndollar na Nua-Shéalainne</displayName>
 				<displayName count="other">dollar na Nua-Shéalainne</displayName>
-				<symbol>NZ$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="OMR">
@@ -7197,7 +7085,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rial Óman</displayName>
 				<displayName count="many">rial Óman</displayName>
 				<displayName count="other">rial Óman</displayName>
-				<symbol>OMR</symbol>
 			</currency>
 			<currency type="PAB">
 				<displayName>Balboa Phanama</displayName>
@@ -7206,7 +7093,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bhalboa Phanama</displayName>
 				<displayName count="many">mbalboa Phanama</displayName>
 				<displayName count="other">balboa Phanama</displayName>
-				<symbol>PAB</symbol>
 			</currency>
 			<currency type="PEI">
 				<displayName>Inti Pheiriú</displayName>
@@ -7215,7 +7101,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Inti Pheiriú</displayName>
 				<displayName count="many">Inti Pheiriú</displayName>
 				<displayName count="other">Inti Pheiriú</displayName>
-				<symbol>PEI</symbol>
+				<symbol draft="contributed">PEI</symbol>
 			</currency>
 			<currency type="PEN">
 				<displayName>Sol Pheiriú</displayName>
@@ -7224,7 +7110,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">sol Pheiriú</displayName>
 				<displayName count="many">sol Pheiriú</displayName>
 				<displayName count="other">Sol Pheiriú</displayName>
-				<symbol>PEN</symbol>
 			</currency>
 			<currency type="PES">
 				<displayName>Sol Pheiriú (1863–1965)</displayName>
@@ -7233,7 +7118,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">shol Pheiriú (1863–1965)</displayName>
 				<displayName count="many">sol Pheiriú (1863–1965)</displayName>
 				<displayName count="other">sol Pheiriú (1863–1965)</displayName>
-				<symbol>PES</symbol>
+				<symbol draft="contributed">PES</symbol>
 			</currency>
 			<currency type="PGK">
 				<displayName>Kina Nua-Ghuine Phapua</displayName>
@@ -7242,7 +7127,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kina Nua-Ghuine Phapua</displayName>
 				<displayName count="many">kina Nua-Ghuine Phapua</displayName>
 				<displayName count="other">kina Nua-Ghuine Phapua</displayName>
-				<symbol>PGK</symbol>
 			</currency>
 			<currency type="PHP">
 				<displayName>Peso na nOileán Filipíneach</displayName>
@@ -7251,7 +7135,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso na nOileán Filipíneach</displayName>
 				<displayName count="many">bpeso na nOileán Filipíneach</displayName>
 				<displayName count="other">peso na nOileán Filipíneach</displayName>
-				<symbol>PHP</symbol>
 				<symbol alt="narrow" draft="contributed">₱</symbol>
 			</currency>
 			<currency type="PKR">
@@ -7261,7 +7144,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúipí na Pacastáine</displayName>
 				<displayName count="many">rúipí na Pacastáine</displayName>
 				<displayName count="other">rúipí na Pacastáine</displayName>
-				<symbol>PKR</symbol>
 				<symbol alt="narrow" draft="contributed">Rs</symbol>
 			</currency>
 			<currency type="PLN">
@@ -7271,7 +7153,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">zloty na Polainne</displayName>
 				<displayName count="many">zloty na Polainne</displayName>
 				<displayName count="other">zloty na Polainne</displayName>
-				<symbol>PLN</symbol>
 				<symbol alt="narrow" draft="contributed">zł</symbol>
 			</currency>
 			<currency type="PLZ">
@@ -7290,7 +7171,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">escudo na Portaingéile</displayName>
 				<displayName count="many">n-escudo na Portaingéile</displayName>
 				<displayName count="other">escudo na Portaingéile</displayName>
-				<symbol>PTE</symbol>
+				<symbol draft="contributed">PTE</symbol>
 			</currency>
 			<currency type="PYG">
 				<displayName>Guaraní Pharagua</displayName>
@@ -7299,7 +7180,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ghuaraní Pharagua</displayName>
 				<displayName count="many">nguaraní Pharagua</displayName>
 				<displayName count="other">guaraní Pharagua</displayName>
-				<symbol>PYG</symbol>
 				<symbol alt="narrow" draft="contributed">₲</symbol>
 			</currency>
 			<currency type="QAR">
@@ -7309,7 +7189,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">riyal Chatar</displayName>
 				<displayName count="many">riyal Chatar</displayName>
 				<displayName count="other">riyal Chatar</displayName>
-				<symbol>QAR</symbol>
 			</currency>
 			<currency type="ROL">
 				<displayName>Leu na Rómáine (1952–2006)</displayName>
@@ -7318,7 +7197,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">leu na Rómáine (1952–2006)</displayName>
 				<displayName count="many">leu na Rómáine (1952–2006)</displayName>
 				<displayName count="other">leu na Rómáine (1952–2006)</displayName>
-				<symbol>ROL</symbol>
+				<symbol draft="contributed">ROL</symbol>
 			</currency>
 			<currency type="RON">
 				<displayName>Leu na Rómáine</displayName>
@@ -7327,7 +7206,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">leu na Rómáine</displayName>
 				<displayName count="many">leu na Rómáine</displayName>
 				<displayName count="other">leu na Rómáine</displayName>
-				<symbol>RON</symbol>
 				<symbol alt="narrow" draft="contributed">lei</symbol>
 			</currency>
 			<currency type="RSD">
@@ -7337,7 +7215,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar na Seirbia</displayName>
 				<displayName count="many">ndinar na Seirbia</displayName>
 				<displayName count="other">dinar na Seirbia</displayName>
-				<symbol>RSD</symbol>
 			</currency>
 			<currency type="RUB">
 				<displayName>Rúbal na Rúise</displayName>
@@ -7346,7 +7223,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúbal na Rúise</displayName>
 				<displayName count="many">rúbal na Rúise</displayName>
 				<displayName count="other">rúbal na Rúise</displayName>
-				<symbol>RUB</symbol>
 				<symbol alt="narrow" draft="contributed">₽</symbol>
 			</currency>
 			<currency type="RUR">
@@ -7356,7 +7232,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúbal na Rúise (1991–1998)</displayName>
 				<displayName count="many">rúbal na Rúise (1991–1998)</displayName>
 				<displayName count="other">rúbal na Rúise (1991–1998)</displayName>
-				<symbol>RUR</symbol>
+				<symbol draft="contributed">RUR</symbol>
 				<symbol alt="narrow" draft="contributed">р.</symbol>
 			</currency>
 			<currency type="RWF">
@@ -7366,7 +7242,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc Ruanda</displayName>
 				<displayName count="many">bhfranc Ruanda</displayName>
 				<displayName count="other">franc Ruanda</displayName>
-				<symbol>RWF</symbol>
 				<symbol alt="narrow" draft="contributed">RF</symbol>
 			</currency>
 			<currency type="SAR">
@@ -7376,7 +7251,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">riyal na hAraibe Sádaí</displayName>
 				<displayName count="many">riyal na hAraibe Sádaí</displayName>
 				<displayName count="other">riyal na hAraibe Sádaí</displayName>
-				<symbol>SAR</symbol>
 			</currency>
 			<currency type="SBD">
 				<displayName>Dollar Oileáin Sholomón</displayName>
@@ -7385,7 +7259,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Oileáin Sholomón</displayName>
 				<displayName count="many">ndollar Oileáin Sholomón</displayName>
 				<displayName count="other">dollar Oileáin Sholomón</displayName>
-				<symbol>SBD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="SCR">
@@ -7395,7 +7268,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúipí na Séiséal</displayName>
 				<displayName count="many">rúipí na Séiséal</displayName>
 				<displayName count="other">rúipí na Séiséal</displayName>
-				<symbol>SCR</symbol>
 			</currency>
 			<currency type="SDD">
 				<displayName>Dinar na Súdáine (1992–2007)</displayName>
@@ -7404,7 +7276,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar na Súdáine (1992–2007)</displayName>
 				<displayName count="many">ndinar na Súdáine (1992–2007)</displayName>
 				<displayName count="other">dinar na Súdáine (1992–2007)</displayName>
-				<symbol>SDD</symbol>
+				<symbol draft="contributed">SDD</symbol>
 			</currency>
 			<currency type="SDG">
 				<displayName>Punt na Súdáine</displayName>
@@ -7413,7 +7285,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt na Súdáine</displayName>
 				<displayName count="many">bpunt na Súdáine</displayName>
 				<displayName count="other">punt na Súdáine</displayName>
-				<symbol>SDG</symbol>
 			</currency>
 			<currency type="SDP">
 				<displayName>Punt na Súdáine (1957–1998)</displayName>
@@ -7422,7 +7293,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt na Súdáine (1957–1998)</displayName>
 				<displayName count="many">bpunt na Súdáine (1957–1998)</displayName>
 				<displayName count="other">punt na Súdáine (1957–1998)</displayName>
-				<symbol>SDP</symbol>
+				<symbol draft="contributed">SDP</symbol>
 			</currency>
 			<currency type="SEK">
 				<displayName>Coróin na Sualainne</displayName>
@@ -7431,7 +7302,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">choróin na Sualainne</displayName>
 				<displayName count="many">gcoróin na Sualainne</displayName>
 				<displayName count="other">coróin na Sualainne</displayName>
-				<symbol>SEK</symbol>
 				<symbol alt="narrow" draft="contributed">kr</symbol>
 			</currency>
 			<currency type="SGD">
@@ -7441,7 +7311,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Shingeapór</displayName>
 				<displayName count="many">ndollar Shingeapór</displayName>
 				<displayName count="other">dollar Shingeapór</displayName>
-				<symbol>SGD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="SHP">
@@ -7451,7 +7320,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt San Héilin</displayName>
 				<displayName count="many">bpunt San Héilin</displayName>
 				<displayName count="other">punt San Héilin</displayName>
-				<symbol>SHP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="SIT">
@@ -7461,7 +7329,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">tholar na Slóivéine</displayName>
 				<displayName count="many">dtolar na Slóivéine</displayName>
 				<displayName count="other">tolar na Slóivéine</displayName>
-				<symbol>SIT</symbol>
+				<symbol draft="contributed">SIT</symbol>
 			</currency>
 			<currency type="SKK">
 				<displayName>Koruna na Slóvaice</displayName>
@@ -7470,7 +7338,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">koruna na Slóvaice</displayName>
 				<displayName count="many">koruna na Slóvaice</displayName>
 				<displayName count="other">koruna na Slóvaice</displayName>
-				<symbol>SKK</symbol>
+				<symbol draft="contributed">SKK</symbol>
 			</currency>
 			<currency type="SLL">
 				<displayName>Leone Shiarra Leon</displayName>
@@ -7479,7 +7347,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">leone Shiarra Leon</displayName>
 				<displayName count="many">leone Shiarra Leon</displayName>
 				<displayName count="other">leone Shiarra Leon</displayName>
-				<symbol>SLL</symbol>
 			</currency>
 			<currency type="SOS">
 				<displayName>Scilling na Somáile</displayName>
@@ -7488,7 +7355,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">scilling na Somáile</displayName>
 				<displayName count="many">scilling na Somáile</displayName>
 				<displayName count="other">scilling na Somáile</displayName>
-				<symbol>SOS</symbol>
 			</currency>
 			<currency type="SRD">
 				<displayName>Dollar Shuranam</displayName>
@@ -7497,7 +7363,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Shuranam</displayName>
 				<displayName count="many">ndollar Shuranam</displayName>
 				<displayName count="other">dollar Shuranam</displayName>
-				<symbol>SRD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="SRG">
@@ -7507,7 +7372,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">ghildear Shuranam</displayName>
 				<displayName count="many">ngildear Shuranam</displayName>
 				<displayName count="other">gildear Shuranam</displayName>
-				<symbol>SRG</symbol>
+				<symbol draft="contributed">SRG</symbol>
 			</currency>
 			<currency type="SSP">
 				<displayName>Punt na Súdáine Theas</displayName>
@@ -7516,17 +7381,24 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt na Súdáine Theas</displayName>
 				<displayName count="many">bpunt na Súdáine Theas</displayName>
 				<displayName count="other">punt na Súdáine Theas</displayName>
-				<symbol>SSP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="STD">
+				<displayName>Dobra São Tomé agus Príncipe (1977–2017)</displayName>
+				<displayName count="one">dobra São Tomé agus Príncipe (1977–2017)</displayName>
+				<displayName count="two">dhobra São Tomé agus Príncipe (1977–2017)</displayName>
+				<displayName count="few">dhobra São Tomé agus Príncipe (1977–2017)</displayName>
+				<displayName count="many">ndobra São Tomé agus Príncipe (1977–2017)</displayName>
+				<displayName count="other">dobra São Tomé agus Príncipe (1977–2017)</displayName>
+				<symbol draft="contributed">STD</symbol>
+			</currency>
+			<currency type="STN">
 				<displayName>Dobra São Tomé agus Príncipe</displayName>
 				<displayName count="one">dobra São Tomé agus Príncipe</displayName>
 				<displayName count="two">dhobra São Tomé agus Príncipe</displayName>
 				<displayName count="few">dhobra São Tomé agus Príncipe</displayName>
 				<displayName count="many">ndobra São Tomé agus Príncipe</displayName>
 				<displayName count="other">dobra São Tomé agus Príncipe</displayName>
-				<symbol>STD</symbol>
 				<symbol alt="narrow" draft="contributed">Db</symbol>
 			</currency>
 			<currency type="SUR">
@@ -7536,7 +7408,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rúbal an Aontais Shóivéadaigh</displayName>
 				<displayName count="many">rúbal an Aontais Shóivéadaigh</displayName>
 				<displayName count="other">rúbal an Aontais Shóivéadaigh</displayName>
-				<symbol>SUR</symbol>
+				<symbol draft="contributed">SUR</symbol>
 			</currency>
 			<currency type="SVC">
 				<displayName>Colón na Salvadóire</displayName>
@@ -7545,7 +7417,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">cholón na Salvadóire</displayName>
 				<displayName count="many">gcolón na Salvadóire</displayName>
 				<displayName count="other">colón na Salvadóire</displayName>
-				<symbol>SVC</symbol>
+				<symbol draft="contributed">SVC</symbol>
 			</currency>
 			<currency type="SYP">
 				<displayName>Punt na Siria</displayName>
@@ -7554,7 +7426,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phunt na Siria</displayName>
 				<displayName count="many">bpunt na Siria</displayName>
 				<displayName count="other">punt na Siria</displayName>
-				<symbol>SYP</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="SZL">
@@ -7564,7 +7435,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lilangeni na Suasalainne</displayName>
 				<displayName count="many">lilangeni na Suasalainne</displayName>
 				<displayName count="other">lilangeni na Suasalainne</displayName>
-				<symbol>SZL</symbol>
 			</currency>
 			<currency type="THB">
 				<displayName>Baht na Téalainne</displayName>
@@ -7592,7 +7462,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">shomoni na Táidsíceastáine</displayName>
 				<displayName count="many">somoni na Táidsíceastáine</displayName>
 				<displayName count="other">somoni na Táidsíceastáine</displayName>
-				<symbol>TJS</symbol>
 			</currency>
 			<currency type="TMM">
 				<displayName>Manat na Tuircméanastáine (1993–2009)</displayName>
@@ -7610,7 +7479,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">mhanat na Tuircméanastáine</displayName>
 				<displayName count="many">manat na Tuircméanastáine</displayName>
 				<displayName count="other">manat na Tuircméanastáine</displayName>
-				<symbol>TMT</symbol>
 			</currency>
 			<currency type="TND">
 				<displayName>Dinar na Túinéise</displayName>
@@ -7619,7 +7487,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhinar na Túinéise</displayName>
 				<displayName count="many">ndinar na Túinéise</displayName>
 				<displayName count="other">dinar na Túinéise</displayName>
-				<symbol>TND</symbol>
 			</currency>
 			<currency type="TOP">
 				<displayName>Paʻanga Thonga</displayName>
@@ -7628,7 +7495,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">phaʻanga Thonga</displayName>
 				<displayName count="many">bpaʻanga Thonga</displayName>
 				<displayName count="other">paʻanga Thonga</displayName>
-				<symbol>TOP</symbol>
 				<symbol alt="narrow" draft="contributed">T$</symbol>
 			</currency>
 			<currency type="TPE">
@@ -7647,7 +7513,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lira na Tuirce (1922–2005)</displayName>
 				<displayName count="many">lira na Tuirce (1922–2005)</displayName>
 				<displayName count="other">lira na Tuirce (1922–2005)</displayName>
-				<symbol>TRL</symbol>
+				<symbol draft="contributed">TRL</symbol>
 			</currency>
 			<currency type="TRY">
 				<displayName>Lira na Tuirce</displayName>
@@ -7656,7 +7522,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">lira na Tuirce</displayName>
 				<displayName count="many">lira na Tuirce</displayName>
 				<displayName count="other">lira na Tuirce</displayName>
-				<symbol>TRY</symbol>
 				<symbol alt="narrow" draft="contributed">₺</symbol>
 				<symbol alt="variant" draft="contributed">TL</symbol>
 			</currency>
@@ -7667,7 +7532,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar Oileán na Tríonóide agus Tobága</displayName>
 				<displayName count="many">ndollar Oileán na Tríonóide agus Tobága</displayName>
 				<displayName count="other">dollar Oileán na Tríonóide agus Tobága</displayName>
-				<symbol>TTD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="TWD">
@@ -7677,7 +7541,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar nua na Téaváine</displayName>
 				<displayName count="many">ndollar nua na Téaváine</displayName>
 				<displayName count="other">dollar nua na Téaváine</displayName>
-				<symbol>NT$</symbol>
 				<symbol alt="narrow" draft="contributed">NT$</symbol>
 			</currency>
 			<currency type="TZS">
@@ -7687,7 +7550,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">scilling na Tansáine</displayName>
 				<displayName count="many">scilling na Tansáine</displayName>
 				<displayName count="other">scilling na Tansáine</displayName>
-				<symbol>TZS</symbol>
 			</currency>
 			<currency type="UAH">
 				<displayName>Hryvnia na hÚcráine</displayName>
@@ -7696,7 +7558,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">hryvnia na hÚcráine</displayName>
 				<displayName count="many">hryvnia na hÚcráine</displayName>
 				<displayName count="other">hryvnia na hÚcráine</displayName>
-				<symbol>UAH</symbol>
 				<symbol alt="narrow" draft="contributed">₴</symbol>
 			</currency>
 			<currency type="UAK">
@@ -7724,7 +7585,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">scilling Uganda</displayName>
 				<displayName count="many">scilling Uganda</displayName>
 				<displayName count="other">scilling Uganda</displayName>
-				<symbol>UGX</symbol>
 			</currency>
 			<currency type="USD">
 				<displayName>Dollar S.A.M.</displayName>
@@ -7743,7 +7603,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar S.A.M. (an chéad lá eile)</displayName>
 				<displayName count="many">ndollar S.A.M. (an chéad lá eile)</displayName>
 				<displayName count="other">dollar S.A.M. (an chéad lá eile)</displayName>
-				<symbol>USN</symbol>
+				<symbol draft="contributed">USN</symbol>
 			</currency>
 			<currency type="USS">
 				<displayName>Dollar S.A.M. (an lá céanna)</displayName>
@@ -7752,7 +7612,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar S.A.M. (an lá céanna)</displayName>
 				<displayName count="many">ndollar S.A.M. (an lá céanna)</displayName>
 				<displayName count="other">dollar S.A.M. (an lá céanna)</displayName>
-				<symbol>USS</symbol>
+				<symbol draft="contributed">USS</symbol>
 			</currency>
 			<currency type="UYP">
 				<displayName>Peso Uragua (1975–1993)</displayName>
@@ -7761,7 +7621,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso Uragua (1975–1993)</displayName>
 				<displayName count="many">bpeso Uragua (1975–1993)</displayName>
 				<displayName count="other">peso Uragua (1975–1993)</displayName>
-				<symbol>UYP</symbol>
+				<symbol draft="contributed">UYP</symbol>
 			</currency>
 			<currency type="UYU">
 				<displayName>Peso Uragua</displayName>
@@ -7770,7 +7630,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">pheso Uragua</displayName>
 				<displayName count="many">bpeso Uragua</displayName>
 				<displayName count="other">peso Uragua</displayName>
-				<symbol>UYU</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="UZS">
@@ -7780,7 +7639,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">shum na hÚisbéiceastáine</displayName>
 				<displayName count="many">sum na hÚisbéiceastáine</displayName>
 				<displayName count="other">sum na hÚisbéiceastáine</displayName>
-				<symbol>UZS</symbol>
 			</currency>
 			<currency type="VEB">
 				<displayName>Bolívar Veiniséala (1871–2008)</displayName>
@@ -7789,17 +7647,26 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">bholívar Veiniséala (1871–2008)</displayName>
 				<displayName count="many">mbolívar Veiniséala (1871–2008)</displayName>
 				<displayName count="other">bolívar Veiniséala (1871–2008)</displayName>
-				<symbol>VEB</symbol>
+				<symbol draft="contributed">VEB</symbol>
 			</currency>
 			<currency type="VEF">
+				<displayName>Bolívar Veiniséala (2008–2018)</displayName>
+				<displayName count="one">bholívar Veiniséala (2008–2018)</displayName>
+				<displayName count="two">bholívar Veiniséala (2008–2018)</displayName>
+				<displayName count="few">bholívar Veiniséala (2008–2018)</displayName>
+				<displayName count="many">mbolívar Veiniséala (2008–2018)</displayName>
+				<displayName count="other">bolívar Veiniséala (2008–2018)</displayName>
+				<symbol draft="contributed">VEF</symbol>
+				<symbol alt="narrow" draft="contributed">Bs</symbol>
+			</currency>
+			<currency type="VES">
 				<displayName>Bolívar Veiniséala</displayName>
 				<displayName count="one">bholívar Veiniséala</displayName>
 				<displayName count="two">bholívar Veiniséala</displayName>
 				<displayName count="few">bholívar Veiniséala</displayName>
 				<displayName count="many">mbolívar Veiniséala</displayName>
 				<displayName count="other">bolívar Veiniséala</displayName>
-				<symbol>VEF</symbol>
-				<symbol alt="narrow" draft="contributed">Bs</symbol>
+				<symbol draft="contributed">VES</symbol>
 			</currency>
 			<currency type="VND">
 				<displayName>Dong Vítneam</displayName>
@@ -7808,7 +7675,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhong Vítneam</displayName>
 				<displayName count="many">ndong Vítneam</displayName>
 				<displayName count="other">Dong Vítneam</displayName>
-				<symbol>₫</symbol>
 				<symbol alt="narrow" draft="contributed">₫</symbol>
 			</currency>
 			<currency type="VNN">
@@ -7818,7 +7684,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhong Vítneam (1978–1985)</displayName>
 				<displayName count="many">ndong Vítneam (1978–1985)</displayName>
 				<displayName count="other">dong Vítneam (1978–1985)</displayName>
-				<symbol>VNN</symbol>
+				<symbol draft="contributed">VNN</symbol>
 			</currency>
 			<currency type="VUV">
 				<displayName>Vatu Vanuatú</displayName>
@@ -7827,7 +7693,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">vatu Vanuatú</displayName>
 				<displayName count="many">vatu Vanuatú</displayName>
 				<displayName count="other">vatu Vanuatú</displayName>
-				<symbol>VUV</symbol>
 			</currency>
 			<currency type="WST">
 				<displayName>Tala Shamó</displayName>
@@ -7836,7 +7701,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">thala Shamó</displayName>
 				<displayName count="many">dtala Shamó</displayName>
 				<displayName count="other">tala Shamó</displayName>
-				<symbol>WST</symbol>
 			</currency>
 			<currency type="XAF">
 				<displayName>Franc CFA na hAfraice Láir</displayName>
@@ -7845,7 +7709,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc CFA na hAfraice Láir</displayName>
 				<displayName count="many">bhfranc CFA na hAfraice Láir</displayName>
 				<displayName count="other">franc CFA na hAfraice Láir</displayName>
-				<symbol>FCFA</symbol>
 			</currency>
 			<currency type="XAG">
 				<displayName>Airgead</displayName>
@@ -7854,7 +7717,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">unsaí troí airgid</displayName>
 				<displayName count="many">unsaí troí airgid</displayName>
 				<displayName count="other">unsaí troí airgid</displayName>
-				<symbol>XAG</symbol>
+				<symbol draft="contributed">XAG</symbol>
 			</currency>
 			<currency type="XAU">
 				<displayName>Ór</displayName>
@@ -7863,7 +7726,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">unsaí troí óir</displayName>
 				<displayName count="many">unsaí troí óir</displayName>
 				<displayName count="other">unsaí troí óir</displayName>
-				<symbol>XAU</symbol>
+				<symbol draft="contributed">XAU</symbol>
 			</currency>
 			<currency type="XBA">
 				<displayName>Aonad Ilchodach Eorpach</displayName>
@@ -7881,7 +7744,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Aonad Airgeadaíochta Eorpach</displayName>
 				<displayName count="many">Aonad Airgeadaíochta Eorpach</displayName>
 				<displayName count="other">Aonad Airgeadaíochta Eorpach</displayName>
-				<symbol>XBB</symbol>
+				<symbol draft="contributed">XBB</symbol>
 			</currency>
 			<currency type="XBC">
 				<displayName>Aonad Cuntais Eorpach (XBC)</displayName>
@@ -7890,7 +7753,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Aonad Cuntais Eorpach (XBC)</displayName>
 				<displayName count="many">Aonad Cuntais Eorpach (XBC)</displayName>
 				<displayName count="other">Aonad Cuntais Eorpach (XBC)</displayName>
-				<symbol>XBC</symbol>
+				<symbol draft="contributed">XBC</symbol>
 			</currency>
 			<currency type="XBD">
 				<displayName>Aonad Cuntais Eorpach (XBD)</displayName>
@@ -7908,7 +7771,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">dhollar na Cairibe Thoir</displayName>
 				<displayName count="many">ndollar na Cairibe Thoir</displayName>
 				<displayName count="other">dollar na Cairibe Thoir</displayName>
-				<symbol>EC$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="XDR">
@@ -7918,7 +7780,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Cearta Speisialta Tarraingthe</displayName>
 				<displayName count="many">Cearta Speisialta Tarraingthe</displayName>
 				<displayName count="other">Cearta Speisialta Tarraingthe</displayName>
-				<symbol>XDR</symbol>
+				<symbol draft="contributed">XDR</symbol>
 			</currency>
 			<currency type="XEU">
 				<displayName>Aonad Airgeadra Eorpach</displayName>
@@ -7936,7 +7798,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Franc Ór Francach</displayName>
 				<displayName count="many">Franc Ór Francach</displayName>
 				<displayName count="other">Franc Ór Francach</displayName>
-				<symbol>XFO</symbol>
+				<symbol draft="contributed">XFO</symbol>
 			</currency>
 			<currency type="XFU">
 				<displayName>UIC-Franc Francach</displayName>
@@ -7954,7 +7816,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc CFA Iarthar na hAfraice</displayName>
 				<displayName count="many">bhfranc CFA Iarthar na hAfraice</displayName>
 				<displayName count="other">franc CFA Iarthar na hAfraice</displayName>
-				<symbol>CFA</symbol>
 			</currency>
 			<currency type="XPD">
 				<displayName>Pallaidiam</displayName>
@@ -7963,7 +7824,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">unsaí troí pallaidiam</displayName>
 				<displayName count="many">unsaí troí pallaidiam</displayName>
 				<displayName count="other">unsaí troí pallaidiam</displayName>
-				<symbol>XPD</symbol>
+				<symbol draft="contributed">XPD</symbol>
 			</currency>
 			<currency type="XPF">
 				<displayName>Franc CFP</displayName>
@@ -7972,7 +7833,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">fhranc CFP</displayName>
 				<displayName count="many">bhfranc CFP</displayName>
 				<displayName count="other">franc CFP</displayName>
-				<symbol>CFPF</symbol>
 			</currency>
 			<currency type="XPT">
 				<displayName>Platanam</displayName>
@@ -7981,13 +7841,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">unsaí troí platanaim</displayName>
 				<displayName count="many">unsaí troí platanaim</displayName>
 				<displayName count="other">unsaí troí platanaim</displayName>
-				<symbol>XPT</symbol>
+				<symbol draft="contributed">XPT</symbol>
 			</currency>
 			<currency type="XRE">
-				<symbol>XRE</symbol>
+				<symbol draft="contributed">XRE</symbol>
 			</currency>
 			<currency type="XSU">
-				<symbol>XSU</symbol>
+				<symbol draft="contributed">XSU</symbol>
 			</currency>
 			<currency type="XXX">
 				<displayName>Airgeadra Anaithnid</displayName>
@@ -8005,7 +7865,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Dínear Éimin</displayName>
 				<displayName count="many">Dínear Éimin</displayName>
 				<displayName count="other">Dínear Éimin</displayName>
-				<symbol>YDD</symbol>
+				<symbol draft="contributed">YDD</symbol>
 			</currency>
 			<currency type="YER">
 				<displayName>Rial Éimin</displayName>
@@ -8014,7 +7874,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rial Éimin</displayName>
 				<displayName count="many">rial Éimin</displayName>
 				<displayName count="other">rial Éimin</displayName>
-				<symbol>YER</symbol>
 			</currency>
 			<currency type="YUD">
 				<displayName>Dínear Crua Iúgslavach (1966–1990)</displayName>
@@ -8023,7 +7882,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Dínear Crua Iúgslavach (1966–1990)</displayName>
 				<displayName count="many">Dínear Crua Iúgslavach (1966–1990)</displayName>
 				<displayName count="other">Dínear Crua Iúgslavach (1966–1990)</displayName>
-				<symbol>YUD</symbol>
+				<symbol draft="contributed">YUD</symbol>
 			</currency>
 			<currency type="YUM">
 				<displayName>Dínear Nua Iúgslavach (1994–2002)</displayName>
@@ -8032,7 +7891,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Dínear Nua Iúgslavach (1994–2002)</displayName>
 				<displayName count="many">Dínear Nua Iúgslavach (1994–2002)</displayName>
 				<displayName count="other">Dínear Nua Iúgslavach (1994–2002)</displayName>
-				<symbol>YUM</symbol>
+				<symbol draft="contributed">YUM</symbol>
 			</currency>
 			<currency type="YUN">
 				<displayName>YUN</displayName>
@@ -8041,10 +7900,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Dínear Inathraithe Iúgslavach</displayName>
 				<displayName count="many">Dínear Inathraithe Iúgslavach</displayName>
 				<displayName count="other">Dínear Inathraithe Iúgslavach</displayName>
-				<symbol>YUN</symbol>
+				<symbol draft="contributed">YUN</symbol>
 			</currency>
 			<currency type="YUR">
-				<symbol>YUR</symbol>
+				<symbol draft="contributed">YUR</symbol>
 			</currency>
 			<currency type="ZAL">
 				<displayName>Rand na hAfraice Theas (airgeadúil)</displayName>
@@ -8062,7 +7921,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">rand na hAfraice Theas</displayName>
 				<displayName count="many">rand na hAfraice Theas</displayName>
 				<displayName count="other">rand na hAfraice Theas</displayName>
-				<symbol>ZAR</symbol>
 				<symbol alt="narrow" draft="contributed">R</symbol>
 			</currency>
 			<currency type="ZMK">
@@ -8081,7 +7939,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">kwacha na Saimbia</displayName>
 				<displayName count="many">kwacha na Saimbia</displayName>
 				<displayName count="other">kwacha na Saimbia</displayName>
-				<symbol>ZMW</symbol>
 				<symbol alt="narrow" draft="contributed">ZK</symbol>
 			</currency>
 			<currency type="ZRN">
@@ -8100,7 +7957,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="few">Zaire Sáíreach</displayName>
 				<displayName count="many">Zaire Sáíreach</displayName>
 				<displayName count="other">Zaire Sáíreach</displayName>
-				<symbol>ZRZ</symbol>
+				<symbol draft="contributed">ZRZ</symbol>
 			</currency>
 			<currency type="ZWD">
 				<displayName>Dollar Siombábach (1980–2008)</displayName>
@@ -8113,7 +7970,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</currency>
 		</currencies>
 		<miscPatterns numberSystem="latn">
+			<pattern type="approximately">~{0}</pattern>
 			<pattern type="atLeast">{0}+</pattern>
+			<pattern type="atMost">≤{0}</pattern>
 			<pattern type="range">{0}–{1}</pattern>
 		</miscPatterns>
 		<minimalPairs>
@@ -8264,6 +8123,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} orlach cearnach</unitPattern>
 				<perUnitPattern>{0} san orlach cearnach</perUnitPattern>
 			</unit>
+			<unit type="area-dunam">
+				<displayName>dunaim</displayName>
+				<unitPattern count="one">{0} dunam</unitPattern>
+				<unitPattern count="two">{0} dhunam</unitPattern>
+				<unitPattern count="few">{0} dhunam</unitPattern>
+				<unitPattern count="many">{0} ndunam</unitPattern>
+				<unitPattern count="other">{0} dunam</unitPattern>
+			</unit>
 			<unit type="concentr-karat">
 				<displayName>carait óir</displayName>
 				<unitPattern count="one">{0} charat óir</unitPattern>
@@ -8296,6 +8163,38 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} sa mhilliún</unitPattern>
 				<unitPattern count="other">{0} sa mhilliún</unitPattern>
 			</unit>
+			<unit type="concentr-percent">
+				<displayName>faoin gcéad</displayName>
+				<unitPattern count="one">{0} faoin gcéad</unitPattern>
+				<unitPattern count="two">{0}%</unitPattern>
+				<unitPattern count="few">{0}%</unitPattern>
+				<unitPattern count="many">{0}%</unitPattern>
+				<unitPattern count="other">{0} faoin gcéad</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>faoin míle</displayName>
+				<unitPattern count="one">{0} faoin míle</unitPattern>
+				<unitPattern count="two">{0}‰</unitPattern>
+				<unitPattern count="few">{0}‰</unitPattern>
+				<unitPattern count="many">{0}‰</unitPattern>
+				<unitPattern count="other">{0} faoin míle</unitPattern>
+			</unit>
+			<unit type="concentr-permyriad">
+				<displayName>permeiriad</displayName>
+				<unitPattern count="one">{0} permeiriad</unitPattern>
+				<unitPattern count="two">{0}‱</unitPattern>
+				<unitPattern count="few">{0}‱</unitPattern>
+				<unitPattern count="many">{0}‱</unitPattern>
+				<unitPattern count="other">{0}‱</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>móil</displayName>
+				<unitPattern count="one">{0} mhól</unitPattern>
+				<unitPattern count="two">{0} mhól</unitPattern>
+				<unitPattern count="few">{0} mhól</unitPattern>
+				<unitPattern count="many">{0} mól</unitPattern>
+				<unitPattern count="other">{0} mól</unitPattern>
+			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>lítir sa chiliméadar</displayName>
 				<unitPattern count="one">{0} lítear sa chiliméadar</unitPattern>
@@ -8327,6 +8226,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} mhíle sa ghalún impiriúil</unitPattern>
 				<unitPattern count="many">{0} míle sa ghalún impiriúil</unitPattern>
 				<unitPattern count="other">{0} míle sa ghalún impiriúil</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>peitibheart</displayName>
+				<unitPattern count="one">{0} peitibheart</unitPattern>
+				<unitPattern count="two">{0} PB</unitPattern>
+				<unitPattern count="few">{0} PB</unitPattern>
+				<unitPattern count="many">{0} PB</unitPattern>
+				<unitPattern count="other">{0} petabytes</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>teiribhearta</displayName>
@@ -8415,6 +8322,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} chéad bliain</unitPattern>
 				<unitPattern count="many">{0} gcéad bliain</unitPattern>
 				<unitPattern count="other">{0} céad bliain</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<displayName draft="contributed">deicheanna blianta</displayName>
+				<unitPattern count="one" draft="contributed">{0} deich mbliana</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} dec</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} dec</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} dec</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} deich mbliana</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>blianta</displayName>
@@ -8583,6 +8498,46 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} gcileavatuair</unitPattern>
 				<unitPattern count="other">{0} cileavatuair</unitPattern>
 			</unit>
+			<unit type="energy-electronvolt">
+				<displayName>leictravoltaí</displayName>
+				<unitPattern count="one">{0} leictreavolta</unitPattern>
+				<unitPattern count="two">{0} eV</unitPattern>
+				<unitPattern count="few">{0} eV</unitPattern>
+				<unitPattern count="many">{0} eV</unitPattern>
+				<unitPattern count="other">{0} leictreavoltaí</unitPattern>
+			</unit>
+			<unit type="energy-british-thermal-unit">
+				<displayName>aonad teirmeach Briotanach</displayName>
+				<unitPattern count="one">{0} aonad teirmeach Briontanach</unitPattern>
+				<unitPattern count="two">{0} Btu</unitPattern>
+				<unitPattern count="few">{0} Btu</unitPattern>
+				<unitPattern count="many">{0} Btu</unitPattern>
+				<unitPattern count="other">{0} aonad teirmeach Briotanach</unitPattern>
+			</unit>
+			<unit type="energy-therm-us">
+				<displayName draft="contributed">teirmeacha US</displayName>
+				<unitPattern count="one" draft="contributed">{0} teirm US</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} theirm US</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} theirm US</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} dteirm US</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} teirm US</unitPattern>
+			</unit>
+			<unit type="force-pound-force">
+				<displayName>puint fórsa</displayName>
+				<unitPattern count="one">{0} punt fórsa</unitPattern>
+				<unitPattern count="two">{0} lbf</unitPattern>
+				<unitPattern count="few">{0} lbf</unitPattern>
+				<unitPattern count="many">{0} lbf</unitPattern>
+				<unitPattern count="other">{0} lbf</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>niútain</displayName>
+				<unitPattern count="one">{0} niútan</unitPattern>
+				<unitPattern count="two">{0} N</unitPattern>
+				<unitPattern count="few">{0} N</unitPattern>
+				<unitPattern count="many">{0} N</unitPattern>
+				<unitPattern count="other">{0} niútan</unitPattern>
+			</unit>
 			<unit type="frequency-gigahertz">
 				<displayName>gigiheirts</displayName>
 				<unitPattern count="one">{0} ghigiheirts</unitPattern>
@@ -8614,6 +8569,57 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} heirts</unitPattern>
 				<unitPattern count="many">{0} heirts</unitPattern>
 				<unitPattern count="other">{0} heirts</unitPattern>
+			</unit>
+			<unit type="graphics-em">
+				<displayName draft="contributed">eim chlógrafach</displayName>
+			</unit>
+			<unit type="graphics-pixel">
+				<displayName draft="contributed">picteilíní</displayName>
+				<unitPattern count="one" draft="contributed">{0} picteilín</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} px</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} px</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} px</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} picteilín</unitPattern>
+			</unit>
+			<unit type="graphics-megapixel">
+				<displayName draft="contributed">meigiphicteilíní</displayName>
+				<unitPattern count="one" draft="contributed">{0} meigiphicteilín</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} MP</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} MP</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} MP</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} meigiphicteilín</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-centimeter">
+				<displayName draft="contributed">picteilíní sa cheintiméadar</displayName>
+				<unitPattern count="one" draft="contributed">{0} picteilín sa cheintiméadar</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} ppcm</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} ppcm</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} ppcm</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} picteilíní sa cheintiméadar</unitPattern>
+			</unit>
+			<unit type="graphics-pixel-per-inch">
+				<displayName draft="contributed">picteilíní san orlach</displayName>
+				<unitPattern count="one" draft="contributed">{0} picteilín san orlach</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} ppi</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} ppi</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} ppi</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} picteilín san orlach</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-centimeter">
+				<displayName draft="contributed">poncanna sa cheintiméadar</displayName>
+				<unitPattern count="one" draft="contributed">{0} ponc sa cheintiméadar</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} dpcm</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} dpcm</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} dpcm</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} poncanna sa cheintiméadar</unitPattern>
+			</unit>
+			<unit type="graphics-dot-per-inch">
+				<displayName draft="contributed">poncanna san orlach</displayName>
+				<unitPattern count="one" draft="contributed">{0} ponc san orlach</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} dpi</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} dpi</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} dpi</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} poncanna san orlach</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>ciliméadair</displayName>
@@ -8780,6 +8786,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} bpointe</unitPattern>
 				<unitPattern count="other">{0} pointe</unitPattern>
 			</unit>
+			<unit type="length-solar-radius">
+				<displayName>raonta gréine</displayName>
+				<unitPattern count="one">{0} raon gréine</unitPattern>
+				<unitPattern count="two">{0} R☉</unitPattern>
+				<unitPattern count="few">{0} R☉</unitPattern>
+				<unitPattern count="many">{0} R☉</unitPattern>
+				<unitPattern count="other">{0} raon gréine</unitPattern>
+			</unit>
 			<unit type="light-lux">
 				<displayName>lucsa</displayName>
 				<unitPattern count="one">{0} lucsa</unitPattern>
@@ -8787,6 +8801,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} lucsa</unitPattern>
 				<unitPattern count="many">{0} lucsa</unitPattern>
 				<unitPattern count="other">{0} lucsa</unitPattern>
+			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>lonrachtaí gréine</displayName>
+				<unitPattern count="one">{0} lonracht ghréine</unitPattern>
+				<unitPattern count="two">{0} L☉</unitPattern>
+				<unitPattern count="few">{0} L☉</unitPattern>
+				<unitPattern count="many">{0} L☉</unitPattern>
+				<unitPattern count="other">{0} lonracht ghréine</unitPattern>
 			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>tonnaí méadracha</displayName>
@@ -8880,6 +8902,30 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} gcarat</unitPattern>
 				<unitPattern count="other">{0} carat</unitPattern>
 			</unit>
+			<unit type="mass-dalton">
+				<displayName>daltúin</displayName>
+				<unitPattern count="one">{0} daltún</unitPattern>
+				<unitPattern count="two">{0} dhaltún</unitPattern>
+				<unitPattern count="few">{0} dhaltún</unitPattern>
+				<unitPattern count="many">{0} ndaltún</unitPattern>
+				<unitPattern count="other">{0} daltún</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>maiseanna an Domhain</displayName>
+				<unitPattern count="one">mais an Domhain</unitPattern>
+				<unitPattern count="two">{0} mhais an Domhain</unitPattern>
+				<unitPattern count="few">{0} mhais an Domhain</unitPattern>
+				<unitPattern count="many">{0} mais an Domhain</unitPattern>
+				<unitPattern count="other">{0} mais an Domhain</unitPattern>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>maiseanna gréine</displayName>
+				<unitPattern count="one">{0} mais ghréine</unitPattern>
+				<unitPattern count="two">{0} mhais ghréine</unitPattern>
+				<unitPattern count="few">{0} mhais ghréine</unitPattern>
+				<unitPattern count="many">{0} mais ghréine</unitPattern>
+				<unitPattern count="other">{0} mais ghréine</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>gigeavatanna</displayName>
 				<unitPattern count="one">{0} ghigeavata</unitPattern>
@@ -8928,14 +8974,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} n-each-chumhacht</unitPattern>
 				<unitPattern count="other">{0} each-chumhacht</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>heicteapascail</displayName>
-				<unitPattern count="one">{0} heicteapascal</unitPattern>
-				<unitPattern count="two">{0} heicteapascal</unitPattern>
-				<unitPattern count="few">{0} heicteapascal</unitPattern>
-				<unitPattern count="many">{0} heicteapascal</unitPattern>
-				<unitPattern count="other">{0} heicteapascal</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>milliméadair mhearcair</displayName>
 				<unitPattern count="one">{0} mhilliméadar mearcair</unitPattern>
@@ -8960,6 +8998,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} n-orlach mearcair</unitPattern>
 				<unitPattern count="other">{0} orlach mearcair</unitPattern>
 			</unit>
+			<unit type="pressure-bar">
+				<displayName draft="contributed">barraí</displayName>
+				<unitPattern count="one" draft="contributed">{0} bharra</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} bharra</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} bharra</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} mbarra</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} barra</unitPattern>
+			</unit>
 			<unit type="pressure-millibar">
 				<displayName>milleabair</displayName>
 				<unitPattern count="one">{0} mhilleabar</unitPattern>
@@ -8967,6 +9013,38 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} mhilleabar</unitPattern>
 				<unitPattern count="many">{0} milleabar</unitPattern>
 				<unitPattern count="other">{0} milleabar</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atmaisféar</displayName>
+				<unitPattern count="one">{0} atmaisféar</unitPattern>
+				<unitPattern count="two">{0} atm</unitPattern>
+				<unitPattern count="few">{0} atm</unitPattern>
+				<unitPattern count="many">{0} atm</unitPattern>
+				<unitPattern count="other">{0} atmaisféar</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>heicteapascail</displayName>
+				<unitPattern count="one">{0} heicteapascal</unitPattern>
+				<unitPattern count="two">{0} heicteapascal</unitPattern>
+				<unitPattern count="few">{0} heicteapascal</unitPattern>
+				<unitPattern count="many">{0} heicteapascal</unitPattern>
+				<unitPattern count="other">{0} heicteapascal</unitPattern>
+			</unit>
+			<unit type="pressure-kilopascal">
+				<displayName>cileapascail</displayName>
+				<unitPattern count="one">{0} cileapascal</unitPattern>
+				<unitPattern count="two">{0} kPa</unitPattern>
+				<unitPattern count="few">{0} kPa</unitPattern>
+				<unitPattern count="many">{0} kPa</unitPattern>
+				<unitPattern count="other">{0} kPa</unitPattern>
+			</unit>
+			<unit type="pressure-megapascal">
+				<displayName>meigeapascail</displayName>
+				<unitPattern count="one">meigeapascal</unitPattern>
+				<unitPattern count="two">{0} MPa</unitPattern>
+				<unitPattern count="few">{0} MPa</unitPattern>
+				<unitPattern count="many">{0} MPa</unitPattern>
+				<unitPattern count="other">{0} meigeapascal</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>ciliméadair san uair</displayName>
@@ -9031,6 +9109,22 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} chéim cheilvin</unitPattern>
 				<unitPattern count="many">{0} gcéim cheilvin</unitPattern>
 				<unitPattern count="other">{0} céim cheilvin</unitPattern>
+			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>punt-troigh</displayName>
+				<unitPattern count="one">{0} punt-troigh</unitPattern>
+				<unitPattern count="two">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="few">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="many">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="other">{0} punt-troigh</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>méadar niútain</displayName>
+				<unitPattern count="one">{0} méadar niútain</unitPattern>
+				<unitPattern count="two">{0} N⋅m</unitPattern>
+				<unitPattern count="few">{0} N⋅m</unitPattern>
+				<unitPattern count="many">{0} N⋅m</unitPattern>
+				<unitPattern count="other">{0} méadar niútain</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>ciliméadair chiúbacha</displayName>
@@ -9221,6 +9315,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} n-unsa leachtacha</unitPattern>
 				<unitPattern count="other">{0} unsa leachtach</unitPattern>
 			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<displayName>Unsaí leachtacha impiriúla</displayName>
+				<unitPattern count="one">{0} unsa leachtach impiriúil</unitPattern>
+				<unitPattern count="two">{0} unsa leachtach impiriúil</unitPattern>
+				<unitPattern count="few">{0} fl oz Imp.</unitPattern>
+				<unitPattern count="many">{0} fl oz Imp.</unitPattern>
+				<unitPattern count="other">{0} fl oz Imp.</unitPattern>
+			</unit>
 			<unit type="volume-tablespoon">
 				<displayName>spúnóga boird</displayName>
 				<unitPattern count="one">{0} spúnóg bhoird</unitPattern>
@@ -9237,11 +9339,20 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} dtaespúnóg</unitPattern>
 				<unitPattern count="other">{0} taespúnóg</unitPattern>
 			</unit>
+			<unit type="volume-barrel">
+				<displayName>bairillí</displayName>
+				<unitPattern count="one">{0} bairille</unitPattern>
+				<unitPattern count="two">{0} bbl</unitPattern>
+				<unitPattern count="few">{0} bbl</unitPattern>
+				<unitPattern count="many">{0} bbl</unitPattern>
+				<unitPattern count="other">{0} bbl</unitPattern>
+			</unit>
 			<coordinateUnit>
-				<coordinateUnitPattern type="east">{0}O</coordinateUnitPattern>
-				<coordinateUnitPattern type="north">{0}T</coordinateUnitPattern>
-				<coordinateUnitPattern type="south">{0}D</coordinateUnitPattern>
-				<coordinateUnitPattern type="west">{0}I</coordinateUnitPattern>
+				<displayName>príomhaird</displayName>
+				<coordinateUnitPattern type="east">{0} oirthear</coordinateUnitPattern>
+				<coordinateUnitPattern type="north">{0} thuaidh</coordinateUnitPattern>
+				<coordinateUnitPattern type="south">{0} theas</coordinateUnitPattern>
+				<coordinateUnitPattern type="west">{0} iarthar</coordinateUnitPattern>
 			</coordinateUnit>
 		</unitLength>
 		<unitLength type="short">
@@ -9381,6 +9492,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} or²</unitPattern>
 				<perUnitPattern>{0}/or²</perUnitPattern>
 			</unit>
+			<unit type="area-dunam">
+				<displayName>dunaim</displayName>
+				<unitPattern count="one">{0} dunam</unitPattern>
+				<unitPattern count="two">{0} dhunam</unitPattern>
+				<unitPattern count="few">{0} dhunam</unitPattern>
+				<unitPattern count="many">{0} ndunam</unitPattern>
+				<unitPattern count="other">{0} dunam</unitPattern>
+			</unit>
 			<unit type="concentr-karat">
 				<displayName>kt</displayName>
 				<unitPattern count="one">{0} kt</unitPattern>
@@ -9413,6 +9532,38 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0}/milliún</unitPattern>
 				<unitPattern count="other">{0}/milliún</unitPattern>
 			</unit>
+			<unit type="concentr-percent">
+				<displayName>faoin gcéad</displayName>
+				<unitPattern count="one">{0}%</unitPattern>
+				<unitPattern count="two">{0}%</unitPattern>
+				<unitPattern count="few">{0}%</unitPattern>
+				<unitPattern count="many">{0}%</unitPattern>
+				<unitPattern count="other">{0}%</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>faoin míle</displayName>
+				<unitPattern count="one">{0}‰</unitPattern>
+				<unitPattern count="two">{0}‰</unitPattern>
+				<unitPattern count="few">{0}‰</unitPattern>
+				<unitPattern count="many">{0}‰</unitPattern>
+				<unitPattern count="other">{0}‰</unitPattern>
+			</unit>
+			<unit type="concentr-permyriad">
+				<displayName>permeiriad</displayName>
+				<unitPattern count="one">{0}‱</unitPattern>
+				<unitPattern count="two">{0}‱</unitPattern>
+				<unitPattern count="few">{0}‱</unitPattern>
+				<unitPattern count="many">{0}‱</unitPattern>
+				<unitPattern count="other">{0}‱</unitPattern>
+			</unit>
+			<unit type="concentr-mole">
+				<displayName>mól</displayName>
+				<unitPattern count="one">{0} mhól</unitPattern>
+				<unitPattern count="two">{0} mhól</unitPattern>
+				<unitPattern count="few">{0} mhól</unitPattern>
+				<unitPattern count="many">{0} mól</unitPattern>
+				<unitPattern count="other">{0} mól</unitPattern>
+			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>lítir/km</displayName>
 				<unitPattern count="one">{0} l/km</unitPattern>
@@ -9444,6 +9595,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} msg imp</unitPattern>
 				<unitPattern count="many">{0} msg imp</unitPattern>
 				<unitPattern count="other">{0} msg imp</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>PBheart</displayName>
+				<unitPattern count="one">{0} PB</unitPattern>
+				<unitPattern count="two">{0} PB</unitPattern>
+				<unitPattern count="few">{0} PB</unitPattern>
+				<unitPattern count="many">{0} PB</unitPattern>
+				<unitPattern count="other">{0} PB</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>TB</displayName>
@@ -9700,6 +9859,46 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} kWh</unitPattern>
 				<unitPattern count="other">{0} kWh</unitPattern>
 			</unit>
+			<unit type="energy-electronvolt">
+				<displayName>leictravolta</displayName>
+				<unitPattern count="one">{0} eV</unitPattern>
+				<unitPattern count="two">{0} eV</unitPattern>
+				<unitPattern count="few">{0} eV</unitPattern>
+				<unitPattern count="many">{0} eV</unitPattern>
+				<unitPattern count="other">{0} eV</unitPattern>
+			</unit>
+			<unit type="energy-british-thermal-unit">
+				<displayName>BTU</displayName>
+				<unitPattern count="one">{0} Btu</unitPattern>
+				<unitPattern count="two">{0} Btu</unitPattern>
+				<unitPattern count="few">{0} Btu</unitPattern>
+				<unitPattern count="many">{0} Btu</unitPattern>
+				<unitPattern count="other">{0} Btu</unitPattern>
+			</unit>
+			<unit type="energy-therm-us">
+				<displayName draft="contributed">teirmeacha US</displayName>
+				<unitPattern count="one" draft="contributed">{0} teirm US</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} theirm US</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} theirm US</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} dteirm US</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} teirm US</unitPattern>
+			</unit>
+			<unit type="force-pound-force">
+				<displayName>punt-fhórsa</displayName>
+				<unitPattern count="one">{0} lbf</unitPattern>
+				<unitPattern count="two">{0} lbf</unitPattern>
+				<unitPattern count="few">{0} lbf</unitPattern>
+				<unitPattern count="many">{0} lbf</unitPattern>
+				<unitPattern count="other">{0} lbf</unitPattern>
+			</unit>
+			<unit type="force-newton">
+				<displayName>niútan</displayName>
+				<unitPattern count="one">{0} N</unitPattern>
+				<unitPattern count="two">{0} N</unitPattern>
+				<unitPattern count="few">{0} N</unitPattern>
+				<unitPattern count="many">{0} N</unitPattern>
+				<unitPattern count="other">{0} N</unitPattern>
+			</unit>
 			<unit type="frequency-gigahertz">
 				<displayName>GHz</displayName>
 				<unitPattern count="one">{0} GHz</unitPattern>
@@ -9731,6 +9930,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} Hz</unitPattern>
 				<unitPattern count="many">{0} Hz</unitPattern>
 				<unitPattern count="other">{0} Hz</unitPattern>
+			</unit>
+			<unit type="graphics-pixel">
+				<displayName draft="contributed">picteilíní</displayName>
+			</unit>
+			<unit type="graphics-megapixel">
+				<displayName draft="contributed">meigiphicteilíní</displayName>
 			</unit>
 			<unit type="length-kilometer">
 				<displayName>km</displayName>
@@ -9867,11 +10072,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="length-fathom">
 				<displayName>feánna</displayName>
-				<unitPattern count="one">{0} fm</unitPattern>
-				<unitPattern count="two">{0} fm</unitPattern>
-				<unitPattern count="few">{0} fm</unitPattern>
-				<unitPattern count="many">{0} fm</unitPattern>
-				<unitPattern count="other">{0} fm</unitPattern>
+				<unitPattern count="one">{0} fth</unitPattern>
+				<unitPattern count="two">{0} fth</unitPattern>
+				<unitPattern count="few">{0} fth</unitPattern>
+				<unitPattern count="many">{0} fth</unitPattern>
+				<unitPattern count="other">{0} fth</unitPattern>
 			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>muirmh.</displayName>
@@ -9897,6 +10102,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} pt</unitPattern>
 				<unitPattern count="other">{0} pt</unitPattern>
 			</unit>
+			<unit type="length-solar-radius">
+				<displayName>raonta gréine</displayName>
+				<unitPattern count="one">{0} R☉</unitPattern>
+				<unitPattern count="two">{0} R☉</unitPattern>
+				<unitPattern count="few">{0} R☉</unitPattern>
+				<unitPattern count="many">{0} R☉</unitPattern>
+				<unitPattern count="other">{0} R☉</unitPattern>
+			</unit>
 			<unit type="light-lux">
 				<displayName>lucsa</displayName>
 				<unitPattern count="one">{0} lx</unitPattern>
@@ -9904,6 +10117,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} lx</unitPattern>
 				<unitPattern count="many">{0} lx</unitPattern>
 				<unitPattern count="other">{0} lx</unitPattern>
+			</unit>
+			<unit type="light-solar-luminosity">
+				<displayName>lonrachtaí gréine</displayName>
+				<unitPattern count="one">{0} L☉</unitPattern>
+				<unitPattern count="two">{0} L☉</unitPattern>
+				<unitPattern count="few">{0} L☉</unitPattern>
+				<unitPattern count="many">{0} L☉</unitPattern>
+				<unitPattern count="other">{0} L☉</unitPattern>
 			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>t</displayName>
@@ -9997,6 +10218,30 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} CD</unitPattern>
 				<unitPattern count="other">{0} CD</unitPattern>
 			</unit>
+			<unit type="mass-dalton">
+				<displayName>daltúin</displayName>
+				<unitPattern count="one">{0} Da</unitPattern>
+				<unitPattern count="two">{0} Da</unitPattern>
+				<unitPattern count="few">{0} Da</unitPattern>
+				<unitPattern count="many">{0} Da</unitPattern>
+				<unitPattern count="other">{0} Da</unitPattern>
+			</unit>
+			<unit type="mass-earth-mass">
+				<displayName>maiseanna an Domhain</displayName>
+				<unitPattern count="one">{0} M⊕</unitPattern>
+				<unitPattern count="two">{0} M⊕</unitPattern>
+				<unitPattern count="few">{0} M⊕</unitPattern>
+				<unitPattern count="many">{0} M⊕</unitPattern>
+				<unitPattern count="other">{0} M⊕</unitPattern>
+			</unit>
+			<unit type="mass-solar-mass">
+				<displayName>maiseanna gréine</displayName>
+				<unitPattern count="one">{0} M☉</unitPattern>
+				<unitPattern count="two">{0} M☉</unitPattern>
+				<unitPattern count="few">{0} M☉</unitPattern>
+				<unitPattern count="many">{0} M☉</unitPattern>
+				<unitPattern count="other">{0} M☉</unitPattern>
+			</unit>
 			<unit type="power-gigawatt">
 				<displayName>GW</displayName>
 				<unitPattern count="one">{0} GW</unitPattern>
@@ -10045,14 +10290,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} ec</unitPattern>
 				<unitPattern count="other">{0} ec</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hPa</displayName>
-				<unitPattern count="one">{0} hPa</unitPattern>
-				<unitPattern count="two">{0} hPa</unitPattern>
-				<unitPattern count="few">{0} hPa</unitPattern>
-				<unitPattern count="many">{0} hPa</unitPattern>
-				<unitPattern count="other">{0} hPa</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>mm Hg</displayName>
 				<unitPattern count="one">{0} mm Hg</unitPattern>
@@ -10077,6 +10314,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} n-or. Hg</unitPattern>
 				<unitPattern count="other">{0} or. Hg</unitPattern>
 			</unit>
+			<unit type="pressure-bar">
+				<displayName draft="contributed">barra</displayName>
+				<unitPattern count="one" draft="contributed">{0} bharra</unitPattern>
+				<unitPattern count="two" draft="contributed">{0} bharra</unitPattern>
+				<unitPattern count="few" draft="contributed">{0} bharra</unitPattern>
+				<unitPattern count="many" draft="contributed">{0} mbarra</unitPattern>
+				<unitPattern count="other" draft="contributed">{0} barra</unitPattern>
+			</unit>
 			<unit type="pressure-millibar">
 				<displayName>mbar</displayName>
 				<unitPattern count="one">{0} mbar</unitPattern>
@@ -10084,6 +10329,38 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} mbar</unitPattern>
 				<unitPattern count="many">{0} mbar</unitPattern>
 				<unitPattern count="other">{0} mbar</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atm</displayName>
+				<unitPattern count="one">{0} atm</unitPattern>
+				<unitPattern count="two">{0} atm</unitPattern>
+				<unitPattern count="few">{0} atm</unitPattern>
+				<unitPattern count="many">{0} atm</unitPattern>
+				<unitPattern count="other">{0} atm</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="one">{0} hPa</unitPattern>
+				<unitPattern count="two">{0} hPa</unitPattern>
+				<unitPattern count="few">{0} hPa</unitPattern>
+				<unitPattern count="many">{0} hPa</unitPattern>
+				<unitPattern count="other">{0} hPa</unitPattern>
+			</unit>
+			<unit type="pressure-kilopascal">
+				<displayName>kPa</displayName>
+				<unitPattern count="one">{0} kPa</unitPattern>
+				<unitPattern count="two">{0} kPa</unitPattern>
+				<unitPattern count="few">{0} kPa</unitPattern>
+				<unitPattern count="many">{0} kPa</unitPattern>
+				<unitPattern count="other">{0} kPa</unitPattern>
+			</unit>
+			<unit type="pressure-megapascal">
+				<displayName>MPa</displayName>
+				<unitPattern count="one">{0} MPa</unitPattern>
+				<unitPattern count="two">{0} MPa</unitPattern>
+				<unitPattern count="few">{0} MPa</unitPattern>
+				<unitPattern count="many">{0} MPa</unitPattern>
+				<unitPattern count="other">{0} MPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/uair</displayName>
@@ -10148,6 +10425,22 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0} K</unitPattern>
 				<unitPattern count="many">{0} K</unitPattern>
 				<unitPattern count="other">{0} K</unitPattern>
+			</unit>
+			<unit type="torque-pound-foot">
+				<displayName>lbf⋅ft</displayName>
+				<unitPattern count="one">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="two">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="few">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="many">{0} lbf⋅ft</unitPattern>
+				<unitPattern count="other">{0} lbf⋅ft</unitPattern>
+			</unit>
+			<unit type="torque-newton-meter">
+				<displayName>N⋅m</displayName>
+				<unitPattern count="one">{0} N⋅m</unitPattern>
+				<unitPattern count="two">{0} N⋅m</unitPattern>
+				<unitPattern count="few">{0} N⋅m</unitPattern>
+				<unitPattern count="many">{0} N⋅m</unitPattern>
+				<unitPattern count="other">{0} N⋅m</unitPattern>
 			</unit>
 			<unit type="volume-cubic-kilometer">
 				<displayName>km³</displayName>
@@ -10338,6 +10631,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} n-unsa l.</unitPattern>
 				<unitPattern count="other">{0} unsa l.</unitPattern>
 			</unit>
+			<unit type="volume-fluid-ounce-imperial">
+				<displayName>Unsa leachtach impiriúil</displayName>
+				<unitPattern count="one">{0} fl oz Imp.</unitPattern>
+				<unitPattern count="two">{0} fl oz Imp.</unitPattern>
+				<unitPattern count="few">{0} fl oz Imp.</unitPattern>
+				<unitPattern count="many">{0} fl oz Imp.</unitPattern>
+				<unitPattern count="other">{0} fl oz Imp.</unitPattern>
+			</unit>
 			<unit type="volume-tablespoon">
 				<displayName>spbh</displayName>
 				<unitPattern count="one">{0} spbh</unitPattern>
@@ -10354,7 +10655,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0} tsp</unitPattern>
 				<unitPattern count="other">{0} tsp</unitPattern>
 			</unit>
+			<unit type="volume-barrel">
+				<displayName>bairille</displayName>
+				<unitPattern count="one">{0} bbl</unitPattern>
+				<unitPattern count="two">{0} bbl</unitPattern>
+				<unitPattern count="few">{0} bbl</unitPattern>
+				<unitPattern count="many">{0} bbl</unitPattern>
+				<unitPattern count="other">{0} bbl</unitPattern>
+			</unit>
 			<coordinateUnit>
+				<displayName>treo</displayName>
 				<coordinateUnitPattern type="east">{0}O</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}T</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}D</coordinateUnitPattern>
@@ -10529,6 +10839,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0}/milliún</unitPattern>
 				<unitPattern count="many">{0}/milliún</unitPattern>
 				<unitPattern count="other">{0}/milliún</unitPattern>
+			</unit>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="one">{0}%</unitPattern>
+				<unitPattern count="two">{0}%</unitPattern>
+				<unitPattern count="few">{0}%</unitPattern>
+				<unitPattern count="many">{0}%</unitPattern>
+				<unitPattern count="other">{0}%</unitPattern>
 			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>l/km</displayName>
@@ -10984,11 +11302,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="length-fathom">
 				<displayName>feá</displayName>
-				<unitPattern count="one">{0} fm</unitPattern>
-				<unitPattern count="two">{0} fm</unitPattern>
-				<unitPattern count="few">{0} fm</unitPattern>
-				<unitPattern count="many">{0} fm</unitPattern>
-				<unitPattern count="other">{0} fm</unitPattern>
+				<unitPattern count="one">{0} fth</unitPattern>
+				<unitPattern count="two">{0} fth</unitPattern>
+				<unitPattern count="few">{0} fth</unitPattern>
+				<unitPattern count="many">{0} fth</unitPattern>
+				<unitPattern count="other">{0} fth</unitPattern>
 			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>muirmh.</displayName>
@@ -11162,14 +11480,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="many">{0}ec</unitPattern>
 				<unitPattern count="other">{0}ec</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hPa</displayName>
-				<unitPattern count="one">{0}hPa</unitPattern>
-				<unitPattern count="two">{0}hPa</unitPattern>
-				<unitPattern count="few">{0}hPa</unitPattern>
-				<unitPattern count="many">{0}hPa</unitPattern>
-				<unitPattern count="other">{0}hPa</unitPattern>
-			</unit>
 			<unit type="pressure-millimeter-of-mercury">
 				<displayName>mm Hg</displayName>
 				<unitPattern count="one">{0}mmHg</unitPattern>
@@ -11201,6 +11511,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="few">{0}mb</unitPattern>
 				<unitPattern count="many">{0}mb</unitPattern>
 				<unitPattern count="other">{0}mb</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="one">{0}hPa</unitPattern>
+				<unitPattern count="two">{0}hPa</unitPattern>
+				<unitPattern count="few">{0}hPa</unitPattern>
+				<unitPattern count="many">{0}hPa</unitPattern>
+				<unitPattern count="other">{0}hPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/u</displayName>
@@ -11472,6 +11790,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} tsp</unitPattern>
 			</unit>
 			<coordinateUnit>
+				<displayName>treo</displayName>
 				<coordinateUnitPattern type="east">{0}O</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}T</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}D</coordinateUnitPattern>
@@ -11500,6 +11819,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<listPatternPart type="middle">{0}, {1}</listPatternPart>
 			<listPatternPart type="end">{0}, nó {1}</listPatternPart>
 			<listPatternPart type="2">{0} nó {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="standard-narrow">
+			<listPatternPart type="start">{0}, {1}</listPatternPart>
+			<listPatternPart type="middle">{0}, {1}</listPatternPart>
+			<listPatternPart type="end">{0}, {1}</listPatternPart>
+			<listPatternPart type="2">{0}, {1}</listPatternPart>
 		</listPattern>
 		<listPattern type="standard-short">
 			<listPatternPart type="start">{0}, {1}</listPatternPart>
@@ -11551,8 +11876,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="african_scripts">Scripteanna na hAfraice</characterLabel>
 		<characterLabel type="american_scripts">Scripteanna Meiriceánacha</characterLabel>
 		<characterLabel type="animal">ainmhí</characterLabel>
-		<characterLabel type="animals_nature">Ainmhithe agus an Nádúr</characterLabel>
-		<characterLabel type="arrows">Saighde</characterLabel>
+		<characterLabel type="animals_nature">Ainmhithe nó an Nádúr</characterLabel>
+		<characterLabel type="arrows">saighead</characterLabel>
 		<characterLabel type="body">corp</characterLabel>
 		<characterLabel type="box_drawing">Líníocht Boscaí</characterLabel>
 		<characterLabel type="braille">Braille</characterLabel>
@@ -11564,8 +11889,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="digits">Digití</characterLabel>
 		<characterLabel type="dingbats">Smísteoga</characterLabel>
 		<characterLabel type="divination_symbols">Siombailí na Fáistine</characterLabel>
-		<characterLabel type="downwards_arrows">Saighde Síos</characterLabel>
-		<characterLabel type="downwards_upwards_arrows">Saighde Síos Suas</characterLabel>
+		<characterLabel type="downwards_arrows">saighead síos</characterLabel>
+		<characterLabel type="downwards_upwards_arrows">saighead síos suas</characterLabel>
 		<characterLabel type="east_asian_scripts">Scripteanna na hÁise Thoir</characterLabel>
 		<characterLabel type="emoji">Emoji</characterLabel>
 		<characterLabel type="european_scripts">Scripteanna na hEorpa</characterLabel>
@@ -11575,9 +11900,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="food_drink">Bia agus Deoch</characterLabel>
 		<characterLabel type="format">Formáid</characterLabel>
 		<characterLabel type="format_whitespace">Formáid agus Spás Bán</characterLabel>
-		<characterLabel type="full_width_form_variant">Foirmeacha Malartacha Lánleithid</characterLabel>
+		<characterLabel type="full_width_form_variant">athraitheach leithid iomláin</characterLabel>
 		<characterLabel type="geometric_shapes">Cruthanna Geoiméadracha</characterLabel>
-		<characterLabel type="half_width_form_variant">Foirmeacha Malartacha Leathleithid</characterLabel>
+		<characterLabel type="half_width_form_variant">athraitheach leathleithid</characterLabel>
 		<characterLabel type="han_characters">Carachtair Han</characterLabel>
 		<characterLabel type="han_radicals">Fréamhacha Han</characterLabel>
 		<characterLabel type="hanja">Hanaí</characterLabel>
@@ -11590,8 +11915,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="kanbun">Kanbun</characterLabel>
 		<characterLabel type="kanji">Ceansaí</characterLabel>
 		<characterLabel type="keycap">caipín eochrach</characterLabel>
-		<characterLabel type="leftwards_arrows">Saighde Clé</characterLabel>
-		<characterLabel type="leftwards_rightwards_arrows">Saighde Clé-Deas</characterLabel>
+		<characterLabel type="leftwards_arrows">Saighead Chlé</characterLabel>
+		<characterLabel type="leftwards_rightwards_arrows">Saighead Chlé-Dheas</characterLabel>
 		<characterLabel type="letterlike_symbols">Siombailí Cosúil le Litreacha</characterLabel>
 		<characterLabel type="limited_use">Neamhfhorleathan</characterLabel>
 		<characterLabel type="male">fireann</characterLabel>
@@ -11602,7 +11927,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="modifier">Mionathraitheoir</characterLabel>
 		<characterLabel type="musical_symbols">Siombailí Ceoil</characterLabel>
 		<characterLabel type="nature">nádúr</characterLabel>
-		<characterLabel type="nonspacing">Neamhspásáilte</characterLabel>
+		<characterLabel type="nonspacing">Neamhspásáil</characterLabel>
 		<characterLabel type="numbers">Uimhreacha</characterLabel>
 		<characterLabel type="objects">Nithe</characterLabel>
 		<characterLabel type="other">Eile</characterLabel>
@@ -11613,11 +11938,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="place">áit</characterLabel>
 		<characterLabel type="plant">planda</characterLabel>
 		<characterLabel type="punctuation">Poncaíocht</characterLabel>
-		<characterLabel type="rightwards_arrows">Saighde Deasa</characterLabel>
+		<characterLabel type="rightwards_arrows">Saighead Dheas</characterLabel>
 		<characterLabel type="sign_standard_symbols">Comharthaí/Siombailí Coitianta</characterLabel>
-		<characterLabel type="small_form_variant">Foirmeacha Beaga Malartacha</characterLabel>
+		<characterLabel type="small_form_variant">athraithigh bheaga</characterLabel>
 		<characterLabel type="smiley">straoiseog</characterLabel>
-		<characterLabel type="smileys_people">Straoiseoga agus Daoine</characterLabel>
+		<characterLabel type="smileys_people">Straoiseoga nó Daoine</characterLabel>
 		<characterLabel type="south_asian_scripts">Scripteanna na hÁise Theas</characterLabel>
 		<characterLabel type="southeast_asian_scripts">Scripteanna na hÁise Thoir Theas</characterLabel>
 		<characterLabel type="spacing">Spásáil</characterLabel>
@@ -11626,12 +11951,82 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="technical_symbols">Siombailí Teicniúla</characterLabel>
 		<characterLabel type="tone_marks">Comharthaí Toin</characterLabel>
 		<characterLabel type="travel">taisteal</characterLabel>
-		<characterLabel type="travel_places">Taisteal agus Áiteanna</characterLabel>
-		<characterLabel type="upwards_arrows">Saighde Suas</characterLabel>
+		<characterLabel type="travel_places">Taisteal nó Áiteanna</characterLabel>
+		<characterLabel type="upwards_arrows">Saighead suas</characterLabel>
 		<characterLabel type="variant_forms">Foirmeacha Malartacha</characterLabel>
 		<characterLabel type="vocalic_jamo">Seamó Guthach</characterLabel>
 		<characterLabel type="weather">aimsir</characterLabel>
 		<characterLabel type="western_asian_scripts">Scripteanna na hÁise Thiar</characterLabel>
 		<characterLabel type="whitespace">Spás Bán</characterLabel>
 	</characterLabels>
+	<typographicNames>
+		<axisName type="ital">iodálach</axisName>
+		<axisName type="opsz">méid optúil</axisName>
+		<axisName type="slnt">claonadh</axisName>
+		<axisName type="wdth">leithead</axisName>
+		<axisName type="wght">meáchan</axisName>
+		<styleName type="ital" subtype="1">reatha</styleName>
+		<styleName type="opsz" subtype="8">teideal</styleName>
+		<styleName type="opsz" subtype="12">téacs</styleName>
+		<styleName type="opsz" subtype="18">teideal a chur leis</styleName>
+		<styleName type="opsz" subtype="72">léiriú</styleName>
+		<styleName type="opsz" subtype="144">póstaer</styleName>
+		<styleName type="slnt" subtype="-12">cúlchlaonta</styleName>
+		<styleName type="slnt" subtype="0">díreach</styleName>
+		<styleName type="slnt" subtype="12">claonta</styleName>
+		<styleName type="slnt" subtype="24">an-chlaonta</styleName>
+		<styleName type="wdth" subtype="50">an-chomhdhlúite</styleName>
+		<styleName type="wdth" subtype="50" alt="compressed">an-chomhbhrúite</styleName>
+		<styleName type="wdth" subtype="50" alt="narrow">an-chaol</styleName>
+		<styleName type="wdth" subtype="62.5">fíor-chomhdhlúite</styleName>
+		<styleName type="wdth" subtype="62.5" alt="compressed">fíor-chomhbhrúite</styleName>
+		<styleName type="wdth" subtype="62.5" alt="narrow">fíorchaol</styleName>
+		<styleName type="wdth" subtype="75">comhdhlúite</styleName>
+		<styleName type="wdth" subtype="75" alt="compressed">comhbhrúite</styleName>
+		<styleName type="wdth" subtype="75" alt="narrow">comhbhrúite</styleName>
+		<styleName type="wdth" subtype="87.5">leath-chomhdhlúite</styleName>
+		<styleName type="wdth" subtype="87.5" alt="compressed">leath-chomhbhrúite</styleName>
+		<styleName type="wdth" subtype="87.5" alt="narrow">leath-chaol</styleName>
+		<styleName type="wdth" subtype="100">normálta</styleName>
+		<styleName type="wdth" subtype="112.5">leath-leathnaithe</styleName>
+		<styleName type="wdth" subtype="112.5" alt="extended">leath-shínte</styleName>
+		<styleName type="wdth" subtype="112.5" alt="wide">leath-leathan</styleName>
+		<styleName type="wdth" subtype="125">sínte</styleName>
+		<styleName type="wdth" subtype="125" alt="extended">sínte</styleName>
+		<styleName type="wdth" subtype="125" alt="wide">leathan</styleName>
+		<styleName type="wdth" subtype="150">an-leathnaithe</styleName>
+		<styleName type="wdth" subtype="150" alt="extended">an-sínte</styleName>
+		<styleName type="wdth" subtype="150" alt="wide">an-fhíorleathan</styleName>
+		<styleName type="wdth" subtype="200">fíorfhairsingthe</styleName>
+		<styleName type="wdth" subtype="200" alt="extended">fíorshínte</styleName>
+		<styleName type="wdth" subtype="200" alt="wide">fíorleathan</styleName>
+		<styleName type="wght" subtype="100">caol</styleName>
+		<styleName type="wght" subtype="200">an-éadrom</styleName>
+		<styleName type="wght" subtype="200" alt="ultra">fíor-éadrom</styleName>
+		<styleName type="wght" subtype="300">éadrom</styleName>
+		<styleName type="wght" subtype="350">leath-éadrom</styleName>
+		<styleName type="wght" subtype="380">leabhar</styleName>
+		<styleName type="wght" subtype="400">gnáthach</styleName>
+		<styleName type="wght" subtype="500">meánach</styleName>
+		<styleName type="wght" subtype="600">leath-throm</styleName>
+		<styleName type="wght" subtype="600" alt="demi">demi-throm</styleName>
+		<styleName type="wght" subtype="700">cló trom</styleName>
+		<styleName type="wght" subtype="800">an-trom</styleName>
+		<styleName type="wght" subtype="900">dubh</styleName>
+		<styleName type="wght" subtype="900" alt="heavy">trom</styleName>
+		<styleName type="wght" subtype="950">an-dubh</styleName>
+		<styleName type="wght" subtype="950" alt="ultrablack">fíordhubh</styleName>
+		<styleName type="wght" subtype="950" alt="ultraheavy">fíorthrom</styleName>
+		<featureName type="afrc">codáin dhíreacha</featureName>
+		<featureName type="cpsp">spásáil ceannlitreacha</featureName>
+		<featureName type="dlig">nasclitreacha roghnacha</featureName>
+		<featureName type="frac">codáin thrasnánacha</featureName>
+		<featureName type="lnum">uimhreacha líneála</featureName>
+		<featureName type="onum">figiúirí sean-stíle</featureName>
+		<featureName type="ordn">orduimhreacha</featureName>
+		<featureName type="pnum">uimhreacha comhréireacha</featureName>
+		<featureName type="smcp">ceannlitreacha beaga</featureName>
+		<featureName type="tnum">uimhreacha táblacha</featureName>
+		<featureName type="zero">náid shlaiseáilte</featureName>
+	</typographicNames>
 </ldml>

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -36,7 +36,7 @@ class NotificationCore
      */
     public function __construct()
     {
-        $this->types = array('order', 'customer_message', 'customer');
+        $this->types = ['order', 'customer_message', 'customer'];
     }
 
     /**
@@ -47,7 +47,7 @@ class NotificationCore
      */
     public function getLastElements()
     {
-        $notifications = array();
+        $notifications = [];
         $employeeInfos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT id_last_order, id_last_customer_message, id_last_customer
 		FROM `' . _DB_PREFIX_ . 'employee`
@@ -116,7 +116,7 @@ class NotificationCore
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
         $total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT FOUND_ROWS()', false);
-        $json = array('total' => $total, 'results' => array());
+        $json = ['total' => $total, 'results' => []];
         foreach ($result as $value) {
             $customerName = '';
             if (isset($value['firstname'], $value['lastname'])) {
@@ -125,19 +125,27 @@ class NotificationCore
                 $customerName = Tools::safeOutput($value['email']);
             }
 
-            $json['results'][] = array(
+            $json['results'][] = [
                 'id_order' => ((!empty($value['id_order'])) ? (int) $value['id_order'] : 0),
                 'id_customer' => ((!empty($value['id_customer'])) ? (int) $value['id_customer'] : 0),
                 'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int) $value['id_customer_message'] : 0),
                 'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int) $value['id_customer_thread'] : 0),
-                'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float) $value['total_paid'], (int) $value['id_currency'], false) : 0),
+                'total_paid' => ((!empty($value['total_paid'])) ? Tools::getContextLocale(Context::getContext())->formatPrice((float) $value['total_paid'], Currency::getIsoCodeById((int) $value['id_currency'])) : 0),
                 'carrier' => ((!empty($value['name'])) ? Tools::safeOutput($value['name']) : ''),
                 'iso_code' => ((!empty($value['iso_code'])) ? Tools::safeOutput($value['iso_code']) : ''),
                 'company' => ((!empty($value['company'])) ? Tools::safeOutput($value['company']) : ''),
                 'status' => ((!empty($value['status'])) ? Tools::safeOutput($value['status']) : ''),
                 'customer_name' => $customerName,
                 'date_add' => isset($value['date_add']) ? Tools::displayDate($value['date_add']) : 0,
-            );
+                'customer_view_url' => Context::getContext()->link->getAdminLink(
+                    'AdminCustomers',
+                    true,
+                    [
+                        'customerId' => $value['id_customer'],
+                        'viewcustomer' => true,
+                    ]
+                ),
+            ];
         }
 
         return $json;

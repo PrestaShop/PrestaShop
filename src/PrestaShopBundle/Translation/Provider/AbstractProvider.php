@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,22 +19,21 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation\Provider;
 
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use Symfony\Component\Translation\Loader\LoaderInterface;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\MessageCatalogue;
-use PrestaShopBundle\Translation\Locale\Converter;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInterface, DatabaseCatalogueInterface
 {
-    use TranslationFinderTrait;
-
     const DEFAULT_LOCALE = 'en-US';
 
     /**
@@ -119,9 +118,9 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     /**
      * Get the PrestaShop locale from real locale.
      *
-     * @deprecated since 1.7.6, to be removed in the next major
-     *
      * @return string The PrestaShop locale
+     *
+     * @deprecated since 1.7.6, to be removed in the next major
      */
     public function getPrestaShopLocale()
     {
@@ -153,6 +152,8 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
 
     /**
      * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
      */
     public function getDefaultCatalogue($empty = true)
     {
@@ -176,6 +177,8 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
 
     /**
      * {@inheritdoc}
+     *
+     * @throws FileNotFoundException
      */
     public function getXliffCatalogue()
     {
@@ -232,6 +235,8 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
+     * Empties out the catalogue by removing translations but leaving keys
+     *
      * @param MessageCatalogueInterface $messageCatalogue
      *
      * @return MessageCatalogueInterface Empty the catalogue
@@ -246,4 +251,23 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
 
         return $messageCatalogue;
     }
+
+    /**
+     * @param array $paths a list of paths when we can look for translations
+     * @param string $locale the Symfony (not the PrestaShop one) locale
+     * @param string|null $pattern a regular expression
+     *
+     * @return MessageCatalogue
+     *
+     * @throws FileNotFoundException
+     */
+    public function getCatalogueFromPaths($paths, $locale, $pattern = null)
+    {
+        return (new TranslationFinder())->getCatalogueFromPaths($paths, $locale, $pattern);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    abstract public function getDefaultResourceDirectory();
 }

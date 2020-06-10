@@ -4,24 +4,28 @@ admin_attribute_get_all:
     defaults:
         _controller: PrestaShopBundle:Admin/Attribute:getAllAttributes
         _format: json
+        _legacy_controller: AdminProducts
 
 admin_attribute_generator:
     path:     /generator
     methods:  [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Attribute:attributesGenerator
+        _legacy_controller: AdminProducts
 
 admin_delete_attribute:
     path:     /{idProduct}
     methods:  [DELETE]
     defaults:
         _controller: PrestaShopBundle:Admin/Attribute:deleteAttribute
+        _legacy_controller: AdminProducts
 
 admin_delete_all_attributes:
     path:     /delete-all/{idProduct}
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Attribute:deleteAllAttribute
+        _legacy_controller: AdminProducts
         idProduct: 0
     requirements:
         idProduct: \d+
@@ -32,6 +36,7 @@ admin_get_form_images_combination:
     defaults:
         _controller: PrestaShopBundle:Admin/Attribute:getFormImages
         _format: json
+        _legacy_controller: AdminProducts
         idProduct: 0
     requirements:
         idProduct: \d+

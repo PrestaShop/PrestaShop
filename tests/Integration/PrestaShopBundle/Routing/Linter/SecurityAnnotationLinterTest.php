@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,14 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\PrestaShopBundle\Routing\Linter;
 
-use PrestaShopBundle\Routing\Linter\LinterException;
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
@@ -53,7 +53,7 @@ class SecurityAnnotationLinterTest extends KernelTestCase
             '_controller' => sprintf('%s::%s', TestController::class, 'indexAction'),
         ]);
 
-        $this->securityAnnotationLinter->lint($route);
+        $this->securityAnnotationLinter->lint('route_name', $route);
 
         $this->assertTrue($exceptionWasNotThrown = true);
     }
@@ -66,7 +66,7 @@ class SecurityAnnotationLinterTest extends KernelTestCase
 
         $this->expectException(LinterException::class);
 
-        $this->securityAnnotationLinter->lint($route);
+        $this->securityAnnotationLinter->lint('route_name', $route);
     }
 
     protected function tearDown()

@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -107,7 +107,7 @@
 			<section class="dash_links panel">
 				<h3><i class="icon-link"></i> {l s="We stay by your side!" d='Admin.Dashboard.Feature'}</h3>
 					<dl>
-						<dt><a href="{$help_center_link}" class="_blank">{l s="Help Center" d='Admin.Dashboard.Feature'}</a></dt>
+						<dt><a href="{$help_center_link}" class="_blank">{l s="Help Center" d='Admin.Global'}</a></dt>
 						<dd>{l s="Documentation, support, experts, training... PrestaShop and all of its community are here to guide you" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>

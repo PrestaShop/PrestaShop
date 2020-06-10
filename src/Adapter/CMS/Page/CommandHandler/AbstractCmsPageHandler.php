@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,9 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler;
 
 use CMS;
+use CMSCategory;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryNotFoundException;
 use PrestaShopException;
 
 /**
@@ -47,7 +50,6 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
      * @return CMS
      *
      * @throws CmsPageException
-     * @throws CmsPageNotFoundException
      */
     protected function getCmsPageIfExistsById($cmsId)
     {
@@ -55,16 +57,31 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
             $cms = new CMS($cmsId);
 
             if (0 >= $cms->id) {
-                throw new CmsPageNotFoundException(
-                    sprintf('Cms page with id "%s" not found', $cmsId)
-                );
+                throw new CmsPageNotFoundException(sprintf('Cms page with id "%s" not found', $cmsId));
             }
         } catch (PrestaShopException $exception) {
-            throw new CmsPageException(
-                sprintf('An error occurred when trying to get cms page with id %s', $cmsId)
-            );
+            throw new CmsPageException(sprintf('An error occurred when trying to get cms page with id %s', $cmsId));
         }
 
         return $cms;
+    }
+
+    /**
+     * Checks whether cms page category exists by provided id.
+     *
+     * @param $cmsCategoryId
+     *
+     * @throws CmsPageCategoryException
+     */
+    protected function assertCmsCategoryExists($cmsCategoryId)
+    {
+        try {
+            $cmsCategory = new CMSCategory($cmsCategoryId);
+            if (0 >= $cmsCategory->id) {
+                throw new CmsPageCategoryNotFoundException(sprintf('Cms page category with id "%s" not found', $cmsCategoryId));
+            }
+        } catch (PrestaShopException $exception) {
+            throw new CmsPageCategoryException(sprintf('An error occurred when trying to get cms page category with id %s', $cmsCategoryId));
+        }
     }
 }

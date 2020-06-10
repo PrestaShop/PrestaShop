@@ -1,5 +1,5 @@
 {#**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
@@ -225,7 +225,7 @@
         <ul class="translationsLocales nav nav-pills">
             {% for translationsFields in form %}
                 <li class="nav-item">
-                    <a href="#" class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
+                    <a href="#" data-locale="{{ translationsFields.vars.label }}" class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">
                         {{ translationsFields.vars.label|capitalize }}
                     </a>
                 </li>
@@ -235,7 +235,7 @@
 
         <div class="translationsFields tab-content">
             {% for translationsFields in form %}
-                <div class="translationsFields-{{ translationsFields.vars.id }} tab-pane translation-field {% if hideTabs == false and form|length > 1 %}panel panel-default{% endif %} {% if defaultLocale.id_lang == translationsFields.vars.name %}show active{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
+                <div data-locale="{{ translationsFields.vars.label }}" class="translationsFields-{{ translationsFields.vars.id }} tab-pane translation-field {% if hideTabs == false and form|length > 1 %}panel panel-default{% endif %} {% if defaultLocale.id_lang == translationsFields.vars.name %}show active{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
                     {{ form_errors(translationsFields) }}
                     {{ form_widget(translationsFields) }}
                 </div>
@@ -332,17 +332,17 @@
 {%- endblock translate_textarea_widget %}
 
 {% block date_picker_widget %}
-    {% spaceless %}
-        {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
-        <div class="input-group datepicker">
-            <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-            <div class="input-group-append">
-                <div class="input-group-text">
-                    <i class="material-icons">date_range</i>
-                </div>
-            </div>
+  {% spaceless %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    <div class="input-group datepicker">
+      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <i class="material-icons">date_range</i>
         </div>
-    {% endspaceless %}
+      </div>
+    </div>
+  {% endspaceless %}
 {% endblock date_picker_widget %}
 
 {% block date_range_widget %}
@@ -358,13 +358,12 @@
                 class="btn btn-primary grid-search-button d-block float-right"
                 title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
                 name="{{ full_name }}[search]"
-                {% if disable_search_button %} disabled="true" {% endif %}
         >
           <i class="material-icons">search</i>
           {{ 'Search'|trans({}, 'Admin.Actions') }}
         </button>
-
-          <div class="js-grid-reset-button" {% if not show_reset_button %} hidden {% endif %}>
+      {% if show_reset_button %}
+          <div class="js-grid-reset-button">
           <div class="clearfix"></div>
             <button type="reset"
                     name="{{ full_name }}[reset]"
@@ -376,6 +375,7 @@
               {{ 'Reset'|trans({}, 'Admin.Actions') }}
             </button>
           </div>
+      {% endif %}
     {% endspaceless %}
 {% endblock search_and_reset_widget %}
 
@@ -402,7 +402,7 @@
           <table id="product-attachment-file" class="table">
             <thead class="thead-default">
               <tr>
-                <th class="col-md-3"><input type="checkbox" id="product-attachment-files-check" /> {{ 'Title'|trans({}, 'Admin.Global') }}</th>
+                <th class="col-md-3">{{ 'Title'|trans({}, 'Admin.Global') }}</th>
                 <th class="col-md-6">{{ 'File name'|trans({}, 'Admin.Global') }}</th>
                 <th class="col-md-2">{{ 'Type'|trans({}, 'Admin.Catalog.Feature') }}</th>
               </tr>
@@ -425,7 +425,6 @@
 {# Labels #}
 
 {% block form_label -%}
-    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' control-label')|trim}) -%}
     {{- parent() -}}
 {%- endblock form_label %}
 
@@ -456,7 +455,7 @@
           {% set label = name|humanize %}
       {% endif %}
 
-      {% if material_design is defined %}
+      {% if material_design is defined or attr.material_design is defined %}
         <div class="md-checkbox md-checkbox-inline">
           <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
           {{- widget|raw -}}
@@ -659,6 +658,9 @@
         <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
                 type="button"
                 data-toggle="dropdown"
+                {% if change_form_language_url is defined %}
+                  data-change-language-url="{{ form.vars.change_form_language_url }}"
+                {% endif %}
                 aria-haspopup="true"
                 aria-expanded="false"
                 id="{{ form.vars.id }}"
@@ -701,6 +703,11 @@
 {% endblock birthday_widget %}
 
 {% block file_widget %}
+  <style>
+    .custom-file-label:after {
+      content: "{{ "Browse"|trans({}, 'Admin.Actions')  }}";
+    }
+  </style>
   <div class="custom-file">
     {% set attr = attr|merge({
       class: (attr.class|default('') ~ ' custom-file-input')|trim,
@@ -780,3 +787,39 @@
     </em>
   </small>
 {% endblock text_with_recommended_length_widget %}
+
+{% block integer_min_max_filter_widget %}
+  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}
+
+{% block number_min_max_filter_widget %}
+  {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
+  {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
+{% endblock %}
+
+{% block form_help %}
+  {% if help %}
+    <small class="form-text">{{ help }}</small>
+  {% endif %}
+{% endblock form_help %}
+
+{% block custom_content_widget %}
+  {% include template with data %}
+{% endblock %}
+
+{% block text_widget %}
+  {% if data_list is not null %}
+    {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
+  {% endif %}
+
+  {{ form_widget(form, {'attr': attr}) }}
+
+  {% if data_list is not null %}
+    <datalist id="{{ id ~ '_datalist' }}">
+      {% for item in data_list %}
+        <option value="{{ item }}"></option>
+      {% endfor%}
+    </datalist>
+  {% endif %}
+{% endblock text_widget %}

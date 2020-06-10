@@ -36,7 +36,7 @@ admin_languages_edit:
 
 admin_languages_delete:
   path: /{languageId}/delete
-  methods: [POST]
+  methods: [POST, DELETE]
   defaults:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Language:delete'
     _legacy_controller: AdminLanguages

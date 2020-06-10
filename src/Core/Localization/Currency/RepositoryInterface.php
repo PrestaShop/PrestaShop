@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,4 +59,15 @@ interface RepositoryInterface
      *                            The available currencies
      */
     public function getAvailableCurrencies($localeCode);
+
+    /**
+     * Get all the installed currencies in database (regardless of their active or soft deleted status).
+     *
+     * @param string $localeCode
+     *                           IETF tag. Data will be translated in this language
+     *
+     * @return CurrencyCollection
+     *                            The installed currencies in database
+     */
+    public function getAllInstalledCurrencies($localeCode);
 }

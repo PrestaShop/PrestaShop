@@ -62,6 +62,26 @@
         <target>Contact Us!</target>
         <note>Line: 126</note>
       </trans-unit>
+      <trans-unit id="3baecdcf2a4503bac6d0b385146b5f3e">
+        <source>We stay by your side!</source>
+        <target>We stay by your side!</target>
+        <note>Line: 108</note>
+      </trans-unit>
+      <trans-unit id="9b3a8fd98f6da8d3a2e338d0faa771ea">
+        <source>Documentation, support, experts, training... PrestaShop and all of its community are here to guide you</source>
+        <target>Documentation, support, experts, training... PrestaShop and all of its community are here to guide you</target>
+        <note>Line: 111</note>
+      </trans-unit>
+      <trans-unit id="1862c358989cfbd20d38ca9adf69e27a">
+        <source>PrestaShop Marketplace</source>
+        <target>PrestaShop Marketplace</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="44a9a480bd52a55b362fc1c3b885204c">
+        <source>Traffic, conversion rate, customer loyalty... Increase your sales with all of the PrestaShop modules and themes</source>
+        <target>Traffic, conversion rate, customer loyalty... Increase your sales with all of the PrestaShop modules and themes</target>
+        <note>Line: 115</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminDashboardController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -94,12 +114,12 @@
       <trans-unit id="e7c89563e25ff383dddc384817a7b857">
         <source>Average gross margin percentage</source>
         <target>Average gross margin percentage</target>
-        <note>Line: 196</note>
+        <note>Line: 197</note>
       </trans-unit>
       <trans-unit id="719d7270f0014508129eecfe03ffd84e">
         <source>Other fees per order</source>
         <target>Other fees per order</target>
-        <note>Line: 206</note>
+        <note>Line: 207</note>
       </trans-unit>
     </body>
   </file>

@@ -7,10 +7,11 @@
 		<language iso_code="en" />
 		<language iso_code="ms" />
 		<language iso_code="zh" />
+		<language iso_code="ta" />
 	</languages>
 	<taxes>
 		<tax id="1" name="GST SG 7%" rate="7" />
-		
+
 		<taxRulesGroup name="SG Standard Rate (7%)">
 			<taxRule iso_code_country="sg" id_tax="1" />
 		</taxRulesGroup>

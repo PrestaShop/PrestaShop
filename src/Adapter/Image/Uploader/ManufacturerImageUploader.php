@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use Configuration;
-use Context;
 use ImageManager;
 use ImageType;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
@@ -46,31 +45,24 @@ final class ManufacturerImageUploader extends AbstractImageUploader
      */
     public function upload($manufacturerId, UploadedFile $image)
     {
+        $this->checkImageIsAllowedForUpload($image);
         $temporaryImageName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 
         if (!$temporaryImageName) {
-            throw new ImageUploadException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
         if (!move_uploaded_file($image->getPathname(), $temporaryImageName)) {
-            throw new ImageUploadException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
+            throw new ImageUploadException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
         // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
         if (!ImageManager::checkImageMemoryLimit($temporaryImageName)) {
-            throw new MemoryLimitException(
-                'Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.'
-            );
+            throw new MemoryLimitException('Due to memory limit restrictions, this image cannot be loaded. Increase your memory_limit value.');
         }
         // Copy new image
         if (!ImageManager::resize($temporaryImageName, _PS_MANU_IMG_DIR_ . $manufacturerId . '.jpg')) {
-            throw new ImageOptimizationException(
-                'An error occurred while uploading the image. Check your directory permissions.'
-            );
+            throw new ImageOptimizationException('An error occurred while uploading the image. Check your directory permissions.');
         }
 
         $this->generateDifferentSizeImages($manufacturerId);
@@ -112,11 +104,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
                     }
                 }
 
-                $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId .
-                    '_' .
-                    Context::getContext()->shop->id .
-                    '.jpg'
-                ;
+                $currentLogo = _PS_TMP_IMG_DIR_ . 'manufacturer_mini_' . $manufacturerId . '.jpg';
 
                 if ($resized && file_exists($currentLogo)) {
                     unlink($currentLogo);
@@ -127,9 +115,7 @@ final class ManufacturerImageUploader extends AbstractImageUploader
         }
 
         if (!$resized) {
-            throw new ImageOptimizationException(
-                'Unable to resize one or more of your pictures.'
-            );
+            throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
 
         return $resized;

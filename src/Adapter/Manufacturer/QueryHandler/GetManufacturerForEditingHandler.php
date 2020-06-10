@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -44,17 +44,10 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
      */
     private $imageTagSourceParser;
 
-    /**
-     * @var int
-     */
-    private $contextShopId;
-
     public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser,
-        $contextShopId
+        ImageTagSourceParserInterface $imageTagSourceParser
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -68,7 +61,7 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
         return new EditableManufacturer(
             $manufacturerId,
             $manufacturer->name,
-            $manufacturer->active,
+            (bool) $manufacturer->active,
             $manufacturer->short_description,
             $manufacturer->description,
             $manufacturer->meta_title,
@@ -89,7 +82,7 @@ final class GetManufacturerForEditingHandler extends AbstractManufacturerHandler
         $pathToImage = _PS_MANU_IMG_DIR_ . $manufacturerId->getValue() . '.jpg';
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
-            'manufacturer_' . $manufacturerId->getValue() . '_' . $this->contextShopId . '.jpg',
+            'manufacturer_' . $manufacturerId->getValue() . '.jpg',
             350,
             'jpg',
             true,

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,6 +60,16 @@ class ShowcaseCard
     const CMS_PAGES_CARD = 'cms-pages_card';
 
     /**
+     * Card shown in Sell -> Catalog -> Attributes & features -> Attributes
+     */
+    const ATTRIBUTES_CARD = 'attributes_card';
+
+    /**
+     * Card shown in Sell -> Catalog -> Monitoring
+     */
+    const MONITORING_CARD = 'monitoring_card';
+
+    /**
      * List of supported card names
      */
     const SUPPORTED_NAMES = [
@@ -68,6 +78,8 @@ class ShowcaseCard
         self::CUSTOMERS_CARD => true,
         self::EMPLOYEES_CARD => true,
         self::CMS_PAGES_CARD => true,
+        self::ATTRIBUTES_CARD => true,
+        self::MONITORING_CARD => true,
     ];
 
     /**
@@ -85,9 +97,7 @@ class ShowcaseCard
     public function __construct($name)
     {
         if (!$this->isSupported($name)) {
-            throw new InvalidShowcaseCardNameException(
-                sprintf('Unsupported showcase card name: %s', print_r($name, true))
-            );
+            throw new InvalidShowcaseCardNameException(sprintf('Unsupported showcase card name: %s', print_r($name, true)));
         }
 
         $this->name = $name;

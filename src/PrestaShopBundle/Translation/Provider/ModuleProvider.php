@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,12 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation\Provider;
+
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 
 /**
  * Translation provider for a specific native module (maintained by the core team)
@@ -42,7 +44,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
      */
     public function getTranslationDomains()
     {
-        return ['^Modules' . $this->getModuleDomain() . '*'];
+        return ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
     }
 
     /**
@@ -50,7 +52,7 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
      */
     public function getFilters()
     {
-        return ['#^Modules' . $this->getModuleDomain() . '*#i'];
+        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
     }
 
     /**
@@ -77,13 +79,5 @@ class ModuleProvider extends AbstractProvider implements SearchProviderInterface
     public function getDefaultResourceDirectory()
     {
         return $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default';
-    }
-
-    /**
-     * @return string
-     */
-    private function getModuleDomain()
-    {
-        return preg_replace('/^ps_(\w+)/', '$1', $this->moduleName);
     }
 }

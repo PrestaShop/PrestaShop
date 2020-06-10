@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,42 +19,60 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Loader;
 
-use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 
 /**
+ * Tests extract of translations from legacy translation files
+ *
  * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="LegacyFileLoaderTest"
  */
 class LegacyFileLoaderTest extends KernelTestCase
 {
-    public function testExtract()
-    {
-        self::bootKernel();
-        $localeConverter = self::$kernel->getContainer()->get('prestashop.core.translation.locale.converter');
-        $extractor = new LegacyFileLoader($localeConverter);
-        $catalogue = $extractor->load($this->getTranslationsFolder(), 'fr-FR');
+    /**
+     * @var string
+     */
+    private $translationsFolder = __DIR__ . '/../../../../Resources/modules/translationtest/translations/';
 
-        $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
-        $this->assertCount(88, $catalogue->all('messages'));
-        $someId = 'c7e728f436eee2692d6c6f756621a70e';
-        $this->assertTrue($catalogue->has($someId));
-        $this->assertSame(
-            'Une erreur est survenue, veuillez vérifier votre fichier zip',
-            $catalogue->get($someId)
-        );
+    /**
+     * @var CatalogueVerifier
+     */
+    private $catalogueVerifier;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->catalogueVerifier = new CatalogueVerifier($this);
     }
 
-    protected function tearDown()
+    /**
+     * @param string $locale
+     * @param array[] $expected
+     *
+     * @dataProvider provideTestCases
+     */
+    public function testItExtractsTranslationsFromLegacyFiles($locale, $expected)
     {
-        self::$kernel->shutdown();
+        self::bootKernel();
+        $extractor = self::$kernel->getContainer()->get('prestashop.translation.legacy_file_loader');
+
+        $catalogue = $extractor->load($this->getTranslationsFolder(), $locale);
+
+        $this->assertInstanceOf(MessageCatalogueInterface::class, $catalogue);
+
+        $this->catalogueVerifier->assertCataloguesMatch($catalogue, $expected);
     }
 
     /**
@@ -62,6 +80,42 @@ class LegacyFileLoaderTest extends KernelTestCase
      */
     private function getTranslationsFolder()
     {
-        return __DIR__ . '/../../../../resources/some_module/translations/';
+        return $this->translationsFolder;
+    }
+
+    public function provideTestCases()
+    {
+        return [
+            'French' => [
+                'fr-FR',
+                [
+                    'ModulesTranslationtestAdmin' => [
+                        '9e8be49b9cfd2252504e0a48ddb1c9df' => 'Contrôleur moderne',
+                    ],
+                    'ModulesTranslationtestTranslationtest' => [
+                        'b10a8db164e0754105b7a99be72e3fe5' => 'Bonjour le monde',
+                    ],
+                    'ModulesTranslationtestSomefile.with-things' => [
+                        '9e5c5556b32cabcca238e5d30f6e10c4' => 'Le template Smarty',
+                    ],
+                ],
+            ],
+            'Spanish' => [
+                'es-ES',
+                [
+                    'ModulesTranslationtestTranslationtest' => [
+                        'b10a8db164e0754105b7a99be72e3fe5' => 'Hola mundo',
+                    ],
+                ],
+            ],
+            'Italian' => [
+                'it-IT',
+                [
+                    'ModulesTranslationtestTranslationtest' => [
+                        'b10a8db164e0754105b7a99be72e3fe5' => 'Ciao mondo',
+                    ],
+                ],
+            ],
+        ];
     }
 }

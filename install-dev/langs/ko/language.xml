@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+	<name><![CDATA[한국어 (Korean)]]></name>
+	<locale>ko-KR</locale>
+	<language_code>ko</language_code>
+	<date_format_lite>Y-m-d</date_format_lite>
+	<date_format_full>Y-m-d H:i:s</date_format_full>
+	<is_rtl>false</is_rtl>
+</language>

@@ -258,7 +258,7 @@
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">
-                                          {{ 'We are pleased to offer you a discount of <span class="label">{amount}%</span> off your next order. And this offer is valid for <span class="label">{days}</span> days, so do not wait any longer!'|trans({}, 'Emails.Body', locale)|raw }}
+                                          {{ 'We are pleased to offer you a discount of [1]{amount}%[/1] off your next order. And this offer is valid for [1]{days}[/1] days, so do not wait any longer!'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}
                                         </div>
                                       </td>
                                     </tr>

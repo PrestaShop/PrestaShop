@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -29,8 +29,13 @@
 			$(".ajax_table_link").click(function () {
 				var link = $(this);
 				$.post($(this).attr('href'), function (data) {
-					if (data.success == 1) {
-						showSuccessMessage(data.text);
+				  // If response comes from symfony controller
+          // then data has "status" and "message" properties
+          // otherwise if response comes from legacy controller
+          // then data has "success" and "text" properties.
+
+					if (data.success == 1 || data.status === true) {
+						showSuccessMessage(data.text || data.message);
 						if (link.hasClass('action-disabled')){
 							link.removeClass('action-disabled').addClass('action-enabled');
 						} else {
@@ -44,7 +49,7 @@
 							}
 						});
 					} else {
-						showErrorMessage(data.text);
+						showErrorMessage(data.text || data.message);
 					}
 				}, 'json');
 				return false;

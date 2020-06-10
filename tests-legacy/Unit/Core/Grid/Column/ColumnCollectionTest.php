@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,10 +27,14 @@
 namespace LegacyTests\Unit\Core\Grid\Column;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 
+/**
+ * @doc ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --filter=ColumnCollectionTest
+ */
 class ColumnCollectionTest extends TestCase
 {
     public function testItAddsColumnsToCollection()
@@ -186,10 +190,52 @@ class ColumnCollectionTest extends TestCase
         $this->assertCount(3, $columnsArray);
     }
 
+    public function testAColumnCanBeMoved()
+    {
+        $columns = (new ColumnCollection())
+            ->add($this->createColumnMock('test_1'))
+            ->add($this->createColumnMock('test_2'))
+            ->add($this->createColumnMock('test_3'))
+            ->add($this->createColumnMock('test_4'))
+            ->add($this->createColumnMock('test_5'))
+            ->add($this->createColumnMock('test_6'))
+            ->add($this->createColumnMock('test_7'))
+        ;
+
+        $columns->move('test_1', 1)
+            ->move('test_5', 0)
+            ->move('test_2', 4)
+        ;
+
+        $this->assertValidColumnWithId($columns, 'test_5');
+        $columns->next();
+        $this->assertValidColumnWithId($columns, 'test_1');
+        $columns->next();
+        $columns->next();
+        $columns->next();
+        $this->assertValidColumnWithId($columns, 'test_2');
+        $columns->next();
+        $this->assertValidColumnWithId($columns, 'test_6');
+
+        $this->assertCount(7, $columns);
+    }
+
+    public function testColumnMoveWithInvalidIdWillThrowsAnException()
+    {
+        $this->expectException(ColumnNotFoundException::class);
+
+        $columns = (new ColumnCollection())
+            ->add($this->createColumnMock('test_1'))
+            ->add($this->createColumnMock('test_2'))
+            ->add($this->createColumnMock('test_3'));
+
+        $columns->move('undefined_id', 10);
+    }
+
     /**
      * @param string $id
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|ColumnInterface
+     * @return MockObject|ColumnInterface
      */
     private function createColumnMock($id)
     {
@@ -214,5 +260,16 @@ class ColumnCollectionTest extends TestCase
         }
 
         return $positions;
+    }
+
+    /**
+     * Helper assertion.
+     *
+     * @param ColumnCollection $columnCollection
+     * @param string $columnId
+     */
+    private function assertValidColumnWithId(ColumnCollection $columnCollection, $columnId)
+    {
+        $this->assertSame($columnCollection->current()->getId(), $columnId);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,20 +19,20 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Command;
 
+use Context;
+use Employee;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Context;
-use Employee;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ThemeEnablerCommand extends ContainerAwareCommand
 {
@@ -51,8 +51,6 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
      */
     protected function init(InputInterface $input, OutputInterface $output)
     {
-        require $this->getContainer()->get('kernel')->getRootDir() . '/../config/config.inc.php';
-
         Context::getContext()->employee = new Employee();
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -69,5 +69,28 @@ final class ContextEmployeeProvider implements ContextEmployeeProviderInterface
     public function getLanguageId()
     {
         return (int) $this->contextEmployee->id_lang;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getProfileId()
+    {
+        return (int) $this->contextEmployee->id_profile;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
+    {
+        return [
+            'id' => (int) $this->contextEmployee->id,
+            'profileId' => (int) $this->contextEmployee->id_profile,
+            'languageId' => (int) $this->contextEmployee->id_lang,
+            'firstname' => $this->contextEmployee->firstname,
+            'lastname' => $this->contextEmployee->lastname,
+            'email' => $this->contextEmployee->email,
+        ];
     }
 }

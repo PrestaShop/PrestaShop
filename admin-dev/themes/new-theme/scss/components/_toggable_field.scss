@@ -4,21 +4,25 @@
   height: auto;
   input.token-input[type="text"] {
     display: inline-block;
+    max-width: 100%;
+    background-color: transparent;
     border: 0;
     outline: none;
-    background-color: transparent;
-    max-width: 100%;
   }
 
   .token {
     display: inline-block;
-    padding: .4rem;
-    margin: .1rem;
+    padding: 0.4rem;
+    margin: 0.1rem;
     line-height: 1;
     color: #fff;
     text-align: center;
     vertical-align: baseline;
     background-color: $brand-primary;
+
+    &.invalid {
+      background-color: $brand-warning;
+    }
 
     > .token-label {
       white-space: nowrap;
@@ -26,10 +30,10 @@
 
     .close {
       margin: 0 .4rem;
-      color: $gray-dark;
-      text-decoration: none;
       font-size: .875rem;
       font-weight: 400;
+      color: $gray-dark;
+      text-decoration: none;
       text-shadow: none;
 
       &:hover {
@@ -39,7 +43,9 @@
   }
 
   .token-input {
+    /* stylelint-disable declaration-no-important */
     width: auto !important;
+    /* stylelint-enable declaration-no-important */
   }
 }
 

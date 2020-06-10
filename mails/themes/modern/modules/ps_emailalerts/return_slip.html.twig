@@ -319,16 +319,19 @@
                         <div class="mj-column-per-100 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tr>
-                              <td align="left" style="font-size:0px;padding:10px 25px;padding-right:50px;padding-left:50px;word-break:break-word;">
+                              <td align="left" class="products-table mail-alert" style="font-size:0px;padding:10px 25px;padding-right:50px;padding-left:50px;word-break:break-word;">
                                 <table cellpadding="0" cellspacing="0" width="100%" border="0" style="cellspacing:0;color:#000000;font-family:Open sans, arial, sans-serif;font-size:14px;line-height:22px;table-layout:auto;width:100%;">
+                                  <colgroup>
+                                    <col span="1" style="width: 25%;">
+                                    <col span="1" style="width: 50%;">
+                                    <col span="1" style="width: 25%;">
+                                  </colgroup>
                                   <tr>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Reference'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Product'|trans({}, 'Emails.Body', locale)|raw }}</th>
-                                    <th bgcolor="#FDFDFD" class="table-header">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD">{{ 'Reference'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD">{{ 'Product'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                                    <th bgcolor="#FDFDFD">{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
                                   </tr>
-                                  <tr>
-                                    <td colspan="3" style="border: 1px solid #DFDFDF;padding:10px 0 10px 10px"> {items} </td>
-                                  </tr>
+                                  <mj-raw> {items} </mj-raw>
                                 </table>
                               </td>
                             </tr>
@@ -697,16 +700,29 @@
       font-size: 14px;
     }
 
-    .table-header {
+    .products-table,
+    .products-table th,
+    .products-table td {
       font-family: Open sans, Arial, sans-serif;
-      font-weight: 600;
-      font-size: 14px;
+      font-size: 12px;
       background-color: #FDFDFD;
       color: #353943;
     }
 
-    th.table-header {
+    .products-table th {
+      font-weight: 600;
+      padding: 10px 5px;
+      border: 1px solid #DFDFDF;
+    }
+
+    .products-table .order_summary td {
+      font-weight: 600;
+      font-size: 14px;
       padding: 10px;
+      border: 1px solid #DFDFDF;
+    }
+
+    .products-table.mail-alert td {
       border: 1px solid #DFDFDF;
     }
 

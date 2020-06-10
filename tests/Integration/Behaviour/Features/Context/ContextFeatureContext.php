@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use LegacyTests\Unit\ContextMocker;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 class ContextFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -42,6 +43,14 @@ class ContextFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function mockContext()
     {
+        /** @var LegacyContext $localeRepository */
+        $legacyContext = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.context');
+        /*
+         * We need to call this before initializing the ContextMocker because this method forcefully init
+         * the shop context thus overriding the expected value
+         */
+        $legacyContext->getContext();
+
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
     }

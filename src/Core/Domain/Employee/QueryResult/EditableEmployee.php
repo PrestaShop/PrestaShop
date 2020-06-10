@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,17 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
  * Stores editable data of an employee.
@@ -55,11 +55,6 @@ class EditableEmployee
      * @var Email
      */
     private $email;
-
-    /**
-     * @var bool
-     */
-    private $isSubscribedToNewsletter;
 
     /**
      * @var int
@@ -97,7 +92,6 @@ class EditableEmployee
      * @param LastName $lastName
      * @param Email $email
      * @param string $avatarUrl
-     * @param bool $isSubscribedToNewsletter
      * @param int $defaultPageId
      * @param int $languageId
      * @param bool $active
@@ -110,7 +104,6 @@ class EditableEmployee
         LastName $lastName,
         Email $email,
         $avatarUrl,
-        $isSubscribedToNewsletter,
         $defaultPageId,
         $languageId,
         $active,
@@ -121,7 +114,6 @@ class EditableEmployee
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
-        $this->isSubscribedToNewsletter = $isSubscribedToNewsletter;
         $this->defaultPageId = $defaultPageId;
         $this->languageId = $languageId;
         $this->active = $active;
@@ -160,14 +152,6 @@ class EditableEmployee
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSubscribedToNewsletter()
-    {
-        return $this->isSubscribedToNewsletter;
     }
 
     /**

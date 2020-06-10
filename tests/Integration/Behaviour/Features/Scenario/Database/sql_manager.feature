@@ -1,4 +1,5 @@
-Feature: SQL Manager
+@reset-database-before-feature
+  Feature: SQL Manager
   PrestaShop allows BO users to manage SQL queries in the Configure > Advanced > Database page
   As a BO user
   I must be able to create, save, edit and run SQL queries

@@ -3,8 +3,8 @@
   border: 1px solid $gray-light;
 
   .choice-tree-actions {
-    border-bottom: .063rem solid $gray-light;
     margin-bottom: 10px;
+    border-bottom: .063rem solid $gray-light;
   }
 
   ul.choice-tree {
@@ -13,13 +13,13 @@
 
     li {
       list-style: none;
-      background-size: 12px 12px;
       background: no-repeat 0 3px;
+      background-size: 12px 12px;
 
       .checkbox,
       .radio {
-        padding-left: 20px;
         padding-top: 0;
+        padding-left: 20px;
       }
 
       .checkbox {
@@ -36,7 +36,7 @@
           &:checked,
           &:indeterminate {
             + i.md-checkbox-control {
-              &:after {
+              &::after {
                 // make material checkmark smaller
                 top: 5px;
                 left: 3px;
@@ -55,8 +55,8 @@
 
     .collapsed,
     .expanded {
-      background: none;
       position: relative;
+      background: none;
 
       > .checkbox,
       > .radio {
@@ -64,12 +64,12 @@
 
         &::before {
           position: absolute;
-          font-family: 'Material Icons';
-          cursor: pointer;
+          top: -.25rem;
+          left: -.1rem;
+          font-family: "Material Icons", Arial, Helvetica, sans-serif;
           font-size: 1.25rem;
           color: $gray-medium;
-          top: -0.25rem;
-          left: -0.1rem;
+          cursor: pointer;
         }
       }
     }

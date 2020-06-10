@@ -1,0 +1,60 @@
+#manufacturer {
+  #main {
+    ul {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+
+      .brand {
+        padding: 10px;
+        margin: 5px;
+        text-align: center;
+        background: white;
+        transition: 0.4s ease-out;
+        width: calc(20% - 10px);
+        min-width: 210px;
+        position: relative;
+
+        &-infos {
+          a {
+            &::before {
+              content: "";
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              z-index: 1;
+              top: 0;
+              left: 0;
+            }
+          }
+        }
+
+        &:hover {
+          box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        &-products {
+          display: none;
+        }
+
+        &-img {
+          width: 200px;
+          margin: auto;
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  #manufacturer {
+    #main {
+      ul {
+        display: flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  }
+}

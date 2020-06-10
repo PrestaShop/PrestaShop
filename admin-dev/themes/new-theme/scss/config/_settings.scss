@@ -1,13 +1,15 @@
-
+// Its not a library, no need default flag
+/* stylelint-disable scss/dollar-variable-default */
 // Colors
-
 $gray-dark-text: #bebebe;
 $gray-dark-title: #bbcdd1;
 $gray-dark-hover: #282b30;
 $background-grey: #eaebec;
-$gray-dark-text-hover: #ffffff;
-$gray-dark-divider: #eeeeee;
+$gray-dark-text-hover: #fff;
+$gray-dark-divider: #eee;
 $color-separator: #dfdfdf;
+$purple: #34219e;
+$bright-status-text: #383838;
 
 // Sizes
 
@@ -21,23 +23,23 @@ $header-mobile-padding-y: .625rem;
 // Imported from bootstrap
 
 $grid-gutter-width: 1.875rem;
-
 $border-radius: 0;
+$enable-transitions: true;
 
 //UI Kit variables - to be removed
-$gray-soft: #FAFBFC;
-$gray-light: #BBCDD2;
+$gray-soft: #fafbfc;
+$gray-light: #bbcdd2;
 $medium-gray: #6c868e;
 $gray-medium: $medium-gray;
 $gray-dark: #363a41;
 $primary: #25b9d7;
-$primary-hover: #3ED2F0;
+$primary-hover: #3ed2f0;
 $secondary: $medium-gray;
 $secondary-hover: $gray-dark;
-$notice: #DFF5F9;
-$success: #78D07D;
-$warning: #CD9321;
-$warning-hover: #FDE7BB;
+$notice: #dff5f9;
+$success: #78d07d;
+$warning: #cd9321;
+$warning-hover: #fde7bb;
 $danger: #c05c67;
 $danger-hover: #fde1e1;
 $brand-primary: $primary;
@@ -47,7 +49,7 @@ $brand-warning: #f0ad4e !default;
 $font-size-base: .875rem;
 $font-weight-normal: 400;
 $font-weight-semibold: 600;
-$font-size-xs: 0.625rem;
+$font-size-xs: .625rem;
 $font-size-h1: 1.5rem;
 $nav-tabs-active-link-hover-border-color: $brand-primary;
 $link-color: $brand-primary;
@@ -69,7 +71,7 @@ $grid-breakpoints: (
   md: 768px,
   lg: 1024px,
   xl: 1300px,
-  xxl: 1600px    // PS custom
+  xxl: 1600px // PS custom
 );
 
 $card-border-color: #dbe6e9 !default;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -111,7 +111,6 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             $data['lastname'],
             $data['email'],
             $data['password'],
-            $data['optin'],
             $data['default_page'],
             $data['language'],
             $data['active'],
@@ -131,7 +130,6 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])
             ->setEmail($data['email'])
-            ->setIsSubscribedToNewsletter((bool) $data['optin'])
             ->setDefaultPageId((int) $data['default_page'])
             ->setLanguageId((int) $data['language'])
             ->setActive((bool) $data['active'])
@@ -174,10 +172,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         $oldPassword = $this->employeeDataProvider->getEmployeeHashedPassword($employeeId);
 
         if (!$this->hashing->checkHash($plainPassword, $oldPassword)) {
-            throw new EmployeeConstraintException(
-                'Old and new passwords do not match.',
-                EmployeeConstraintException::INCORRECT_PASSWORD
-            );
+            throw new EmployeeConstraintException('Old and new passwords do not match.', EmployeeConstraintException::INCORRECT_PASSWORD);
         }
     }
 

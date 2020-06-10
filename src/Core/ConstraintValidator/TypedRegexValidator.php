@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,15 +19,18 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -38,6 +41,19 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
+    /**
+     * @var CharacterCleaner
+     */
+    private $characterCleaner;
+
+    /**
+     * @param CharacterCleaner $characterCleaner
+     */
+    public function __construct(CharacterCleaner $characterCleaner)
+    {
+        $this->characterCleaner = $characterCleaner;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -77,44 +93,26 @@ class TypedRegexValidator extends ConstraintValidator
     private function getPattern($type)
     {
         $typePatterns = [
-            'name' => $this->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
-            'catalog_name' => $this->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            'generic_name' => $this->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
-            'city_name' => $this->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
-            'address' => $this->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
-            'post_code' => '/^[a-zA-Z 0-9-]+$/',
-            'phone_number' => '/^[+0-9. ()\/-]*$/',
-            'message' => '/[<>{}]/i',
-            'language_iso_code' => IsoCode::PATTERN,
-            'language_code' => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            TypedRegex::TYPE_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
+            TypedRegex::TYPE_CATALOG_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
+            TypedRegex::TYPE_GENERIC_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
+            TypedRegex::TYPE_CITY_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
+            TypedRegex::TYPE_ADDRESS => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
+            TypedRegex::TYPE_POST_CODE => '/^[a-zA-Z 0-9-]+$/',
+            TypedRegex::TYPE_PHONE_NUMBER => '/^[+0-9. ()\/-]*$/',
+            TypedRegex::TYPE_MESSAGE => '/[<>{}]/i',
+            TypedRegex::TYPE_LANGUAGE_ISO_CODE => IsoCode::PATTERN,
+            TypedRegex::TYPE_LANGUAGE_CODE => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
+            TypedRegex::TYPE_CURRENCY_ISO_CODE => AlphaIsoCode::PATTERN,
+            TypedRegex::TYPE_FILE_NAME => '/^[a-zA-Z0-9_.-]+$/',
+            TypedRegex::TYPE_DNI_LITE => AddressConstraint::DNI_LITE_PATTERN,
         ];
 
         if (isset($typePatterns[$type])) {
             return $typePatterns[$type];
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'Type "%s" is not defined. Defined types are: %s',
-            $type,
-            implode(',', array_keys($typePatterns))
-        ));
-    }
-
-    /**
-     * Delete unicode class from regular expression patterns.
-     * Cleaning non unicode is optional. Refer to legacy Validate to see if it's needed.
-     *
-     * @param string $pattern
-     *
-     * @return string pattern
-     */
-    private function cleanNonUnicodeSupport($pattern)
-    {
-        if (!defined('PREG_BAD_UTF8_OFFSET')) {
-            return $pattern;
-        }
-
-        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
+        throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, implode(',', array_keys($typePatterns))));
     }
 
     /**

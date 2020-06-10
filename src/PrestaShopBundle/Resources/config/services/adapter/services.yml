@@ -60,9 +60,6 @@ services:
     prestashop.adapter.legacy.hook:
         class: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
 
-    prestashop.adapter.validate:
-        class: PrestaShop\PrestaShop\Adapter\Validate
-
     # SSL middleware
     prestashop.adapter.middleware.ssl:
         class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
@@ -112,6 +109,7 @@ services:
             - "@prestashop.adapter.shop.context"
             - "@prestashop.adapter.data_provider.tax"
             - "@router"
+            - "@prestashop.utils.float_parser"
 
     prestashop.adapter.translation_route_finder:
         class: PrestaShop\PrestaShop\Adapter\Translations\TranslationRouteFinder

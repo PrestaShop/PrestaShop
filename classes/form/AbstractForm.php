@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -110,12 +110,16 @@ abstract class AbstractFormCore implements FormInterface
             $this->smarty
         );
 
+        $context = Context::getContext();
+        $theme = $context->shop->theme->getName();
+
         $scope->assign($extraVariables);
         $scope->assign($this->getTemplateVariables());
 
         $tpl = $this->smarty->createTemplate(
             $this->getTemplate(),
-            $scope
+            $scope,
+            $theme
         );
 
         return $tpl->fetch();
@@ -129,14 +133,34 @@ abstract class AbstractFormCore implements FormInterface
     public function validate()
     {
         foreach ($this->formFields as $field) {
-            if ($field->isRequired() && !$field->getValue()) {
-                $field->addError(
-                    $this->constraintTranslator->translate('required')
-                );
+            if ($field->isRequired()) {
+                if (!$field->getValue()) {
+                    $field->addError(
+                        $this->constraintTranslator->translate('required')
+                    );
+                } elseif (!$this->checkFieldLength($field)) {
+                    $field->addError(
+                        $this->translator->trans(
+                            'The %1$s field is too long (%2$d chars max).',
+                            [$field->getLabel(), $field->getMaxLength()],
+                            'Shop.Notifications.Error'
+                        )
+                    );
+                }
 
                 continue;
-            } elseif (!$field->isRequired() && !$field->getValue()) {
-                continue;
+            } elseif (!$field->isRequired()) {
+                if (!$field->getValue()) {
+                    continue;
+                } elseif (!$this->checkFieldLength($field)) {
+                    $field->addError(
+                        $this->translator->trans(
+                            'The %1$s field is too long (%2$d chars max).',
+                            [$field->getLabel(), $field->getMaxLength()],
+                            'Shop.Notifications.Error'
+                        )
+                    );
+                }
             }
 
             foreach ($field->getConstraints() as $constraint) {
@@ -199,5 +223,19 @@ abstract class AbstractFormCore implements FormInterface
         $this->getField($field_name)->setValue($value);
 
         return $this;
+    }
+
+    /**
+     * Validate field length
+     *
+     * @param $field the field to check
+     *
+     * @return bool
+     */
+    protected function checkFieldLength($field)
+    {
+        $error = $field->getMaxLength() != null && strlen($field->getValue()) > (int) $field->getMaxLength();
+
+        return  !$error;
     }
 }

@@ -1,0 +1,17 @@
+{
+    "name": "prestashop/translations",
+    "authors": [
+        {
+            "name": "Mickaël Andrieu",
+            "email": "mickael.andrieu@prestashop.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PrestaShop\\Module\\TranslationTest\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "type": "prestashop-module",
+    "require": {}
+}

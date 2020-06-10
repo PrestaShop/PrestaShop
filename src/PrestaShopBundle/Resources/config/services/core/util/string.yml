@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.util.string.string_validator:
+    class: 'PrestaShop\PrestaShop\Core\Util\String\StringValidator'
+
+  prestashop.core.util.string.string_modifier:
+    class: 'PrestaShop\PrestaShop\Core\Util\String\StringModifier'

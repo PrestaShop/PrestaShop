@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -34,6 +34,7 @@ use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * This dispatcher is used to trigger hook listeners.
@@ -56,6 +57,19 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     private $propagationStoppedCalledBy = false;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @param RequestStack $requestStack (nullable to preserve backward compatibility)
+     */
+    public function __construct(RequestStack $requestStack = null)
+    {
+        $this->requestStack = $requestStack;
+    }
+
+    /**
      * {@inheritdoc}
      * This override will check if $event is an instance of HookEvent.
      *
@@ -64,13 +78,18 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     public function dispatch($eventName, Event $event = null)
     {
         if ($event === null) {
-            $event = new HookEvent();
+            $event = $this->createHookEventWithContextParameters();
         }
+
         if (!$event instanceof HookEvent) {
             throw new \Exception('HookDispatcher must dispatch a HookEvent subclass only. ' . get_class($event) . ' given.');
         }
 
-        return parent::dispatch($eventName, $event);
+        if ($listeners = $this->getListeners(strtolower($eventName))) {
+            $this->doDispatch($listeners, $eventName, $event);
+        }
+
+        return $event;
     }
 
     /**
@@ -97,7 +116,10 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     public function dispatchMultiple(array $eventNames, array $eventParameters)
     {
         foreach ($eventNames as $name) {
-            $this->dispatch($name, (new HookEvent())->setHookParameters($eventParameters));
+            $this->dispatch(
+                $name,
+                ($this->createHookEventWithContextParameters())->setHookParameters($eventParameters)
+            );
         }
     }
 
@@ -145,7 +167,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      */
     public function dispatchForParameters($eventName, array $parameters = [])
     {
-        $event = new HookEvent();
+        $event = $this->createHookEventWithContextParameters();
         $event->setHookParameters($parameters);
 
         return $this->dispatch($eventName, $event);
@@ -196,5 +218,31 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
     {
         return $this->dispatchRendering(new Hook($hookName, $hookParameters));
+    }
+
+    /**
+     * @return hookEvent
+     *
+     * Context parameters are injected into the new HookEvent
+     *
+     * Note: _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture
+     */
+    private function createHookEventWithContextParameters(): HookEvent
+    {
+        $globalParameters = ['_ps_version' => \AppKernel::VERSION];
+
+        if (null === $this->requestStack) {
+            return new HookEvent($globalParameters);
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            return new HookEvent($globalParameters);
+        }
+
+        $globalParameters['request'] = $request;
+        $globalParameters['route'] = $request->get('_route');
+
+        return new HookEvent($globalParameters);
     }
 }

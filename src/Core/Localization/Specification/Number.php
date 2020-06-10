@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -179,7 +179,7 @@ class Number implements NumberInterface
      *
      * @throws LocalizationException
      */
-    public function getSymbolsByNumberingSystem($numberingSystem = null)
+    public function getSymbolsByNumberingSystem($numberingSystem = NumberInterface::NUMBERING_SYSTEM_LATIN)
     {
         if (!isset($this->symbols[$numberingSystem])) {
             throw new LocalizationException('Unknown or invalid numbering system');
@@ -325,12 +325,21 @@ class Number implements NumberInterface
     }
 
     /**
-     * @deprecated https://github.com/PrestaShop/PrestaShop/issues/13168
+     * To array function
      *
-     * @param int $maxFractionDigits
+     * @return array
      */
-    public function setMaxFractionDigits($maxFractionDigits)
+    public function toArray()
     {
-        $this->maxFractionDigits = $maxFractionDigits;
+        return [
+            'numberSymbols' => $this->getSymbolsByNumberingSystem()->toArray(),
+            'positivePattern' => $this->getPositivePattern(),
+            'negativePattern' => $this->getNegativePattern(),
+            'maxFractionDigits' => $this->getMaxFractionDigits(),
+            'minFractionDigits' => $this->getMinFractionDigits(),
+            'groupingUsed' => $this->isGroupingUsed(),
+            'primaryGroupSize' => $this->getPrimaryGroupSize(),
+            'secondaryGroupSize' => $this->getSecondaryGroupSize(),
+        ];
     }
 }

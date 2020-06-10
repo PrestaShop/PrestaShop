@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -53,15 +53,15 @@ final class AddTaxHandler extends AbstractTaxHandler implements AddTaxHandlerInt
         $tax->active = $command->isEnabled();
 
         try {
+            if (false === $tax->validateFields(false) || false === $tax->validateFieldsLang(false)) {
+                throw new TaxException('Tax contains invalid field values');
+            }
+
             if (!$tax->save()) {
-                throw new TaxException(
-                    sprintf('Cannot create tax with id "%s"', $tax->id)
-                );
+                throw new TaxException(sprintf('Cannot create tax with id "%s"', $tax->id));
             }
         } catch (PrestaShopException $e) {
-            throw new TaxException(
-                sprintf('Cannot create tax with id "%s"', $tax->id)
-            );
+            throw new TaxException(sprintf('Cannot create tax with id "%s"', $tax->id));
         }
 
         return new TaxId((int) $tax->id);

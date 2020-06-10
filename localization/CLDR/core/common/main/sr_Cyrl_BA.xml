@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13706 $"/>
+		<version number="$Revision$"/>
 		<language type="sr"/>
 		<script type="Cyrl"/>
 		<territory type="BA"/>
@@ -25,9 +25,12 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<language type="nqo" draft="contributed">н’ко</language>
 			<language type="shi" draft="contributed">јужни шилха</language>
 			<language type="si" draft="contributed">синхалски</language>
+			<language type="sw_CD" draft="contributed">кисвахили</language>
 			<language type="tzm" draft="contributed">централноатласки тамашек</language>
 			<language type="xh" draft="contributed">исикоса</language>
 			<language type="zgh" draft="contributed">стандардни марокански тамашек</language>
+			<language type="zh_Hans" draft="contributed">поједностављени кинески</language>
+			<language type="zh_Hant" draft="contributed">традиционални кинески</language>
 			<language type="zu" draft="contributed">исизулу</language>
 		</languages>
 		<territories>
@@ -37,7 +40,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="CZ" draft="contributed">Чешка Република</territory>
 			<territory type="DE" draft="contributed">Њемачка</territory>
 			<territory type="KN" draft="contributed">Свети Китс и Невис</territory>
-			<territory type="MK" alt="variant" draft="contributed">БЈР Македонија</territory>
 			<territory type="MO" draft="contributed">САР Макао</territory>
 			<territory type="PM" draft="contributed">Свети Пјер и Микелон</territory>
 			<territory type="RE" draft="contributed">Реунион</territory>
@@ -63,50 +65,16 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				</dateTimeFormats>
 			</calendar>
 			<calendar type="gregorian">
-				<months>
-					<monthContext type="format">
-						<monthWidth type="abbreviated">
-							<month type="1" draft="contributed">јан.</month>
-							<month type="2" draft="contributed">феб.</month>
-							<month type="3" draft="contributed">март</month>
-							<month type="4" draft="contributed">апр.</month>
-							<month type="5" draft="contributed">мај</month>
-							<month type="6" draft="contributed">јун</month>
-							<month type="7" draft="contributed">јул</month>
-							<month type="8" draft="contributed">авг.</month>
-							<month type="9" draft="contributed">септ.</month>
-							<month type="10" draft="contributed">окт.</month>
-							<month type="11" draft="contributed">нов.</month>
-							<month type="12" draft="contributed">дец.</month>
-						</monthWidth>
-					</monthContext>
-					<monthContext type="stand-alone">
-						<monthWidth type="abbreviated">
-							<month type="1" draft="contributed">јан.</month>
-							<month type="2" draft="contributed">феб.</month>
-							<month type="3" draft="contributed">март</month>
-							<month type="4" draft="contributed">апр.</month>
-							<month type="5" draft="contributed">мај</month>
-							<month type="6" draft="contributed">јун</month>
-							<month type="7" draft="contributed">јул</month>
-							<month type="8" draft="contributed">авг.</month>
-							<month type="9" draft="contributed">септ.</month>
-							<month type="10" draft="contributed">окт.</month>
-							<month type="11" draft="contributed">нов.</month>
-							<month type="12" draft="contributed">дец.</month>
-						</monthWidth>
-					</monthContext>
-				</months>
 				<days>
 					<dayContext type="format">
 						<dayWidth type="abbreviated">
-							<day type="sun" draft="contributed">нед.</day>
-							<day type="mon" draft="contributed">пон.</day>
-							<day type="tue" draft="contributed">ут.</day>
-							<day type="wed" draft="contributed">ср.</day>
-							<day type="thu" draft="contributed">чет.</day>
-							<day type="fri" draft="contributed">пет.</day>
-							<day type="sat" draft="contributed">суб.</day>
+							<day type="sun" draft="contributed">нед</day>
+							<day type="mon" draft="contributed">пон</day>
+							<day type="tue">ут</day>
+							<day type="wed">ср</day>
+							<day type="thu" draft="contributed">чет</day>
+							<day type="fri" draft="contributed">пет</day>
+							<day type="sat" draft="contributed">суб</day>
 						</dayWidth>
 						<dayWidth type="wide">
 							<day type="sun" draft="contributed">недјеља</day>
@@ -120,13 +88,13 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 					</dayContext>
 					<dayContext type="stand-alone">
 						<dayWidth type="abbreviated">
-							<day type="sun" draft="contributed">нед.</day>
-							<day type="mon" draft="contributed">пон.</day>
-							<day type="tue" draft="contributed">ут.</day>
-							<day type="wed" draft="contributed">ср.</day>
-							<day type="thu" draft="contributed">чет.</day>
-							<day type="fri" draft="contributed">пет.</day>
-							<day type="sat" draft="contributed">суб.</day>
+							<day type="sun" draft="contributed">нед</day>
+							<day type="mon" draft="contributed">пон</day>
+							<day type="tue">ут</day>
+							<day type="wed">ср</day>
+							<day type="thu" draft="contributed">чет</day>
+							<day type="fri" draft="contributed">пет</day>
+							<day type="sat" draft="contributed">суб</day>
 						</dayWidth>
 						<dayWidth type="wide">
 							<day type="sun" draft="contributed">недјеља</day>
@@ -149,7 +117,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 							<dayPeriod type="morning1" draft="contributed">јутро</dayPeriod>
 							<dayPeriod type="afternoon1" draft="contributed">по под.</dayPeriod>
 							<dayPeriod type="evening1" draft="contributed">вече</dayPeriod>
-							<dayPeriod type="night1" draft="contributed">ноћу</dayPeriod>
+							<dayPeriod type="night1">ноћу</dayPeriod>
 						</dayPeriodWidth>
 						<dayPeriodWidth type="narrow">
 							<dayPeriod type="midnight" draft="contributed">поноћ</dayPeriod>
@@ -187,39 +155,45 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				</eras>
 				<dateTimeFormats>
 					<availableFormats>
-						<dateFormatItem id="MMMMW" count="one" draft="contributed">W. 'сједмица' 'у' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="few" draft="contributed">W. 'сједмица' 'у' MMM</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="other" draft="contributed">W. 'сједмица' 'у' MMM</dateFormatItem>
-						<dateFormatItem id="yw" count="one" draft="contributed">w. 'сједмица' 'у' y.</dateFormatItem>
-						<dateFormatItem id="yw" count="few" draft="contributed">w. 'сједмица' 'у' y.</dateFormatItem>
-						<dateFormatItem id="yw" count="other" draft="contributed">w. 'сједмица' 'у' y.</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="one" draft="contributed">W. 'сједмица' 'у' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="few" draft="contributed">W. 'сједмица' 'у' MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="other" draft="contributed">W. 'сједмица' 'у' MMMM</dateFormatItem>
+						<dateFormatItem id="yw" count="one" draft="contributed">w. 'сједмица' 'у' Y.</dateFormatItem>
+						<dateFormatItem id="yw" count="few" draft="contributed">w. 'сједмица' 'у' Y.</dateFormatItem>
+						<dateFormatItem id="yw" count="other" draft="contributed">w. 'сједмица' 'у' Y.</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatItem id="Md">
-							<greatestDifference id="d" draft="unconfirmed">MM-dd – MM-dd</greatestDifference>
-							<greatestDifference id="M" draft="unconfirmed">MM-dd – MM-dd</greatestDifference>
+							<greatestDifference id="d" draft="contributed">MM-dd – MM-dd</greatestDifference>
+							<greatestDifference id="M" draft="contributed">MM-dd – MM-dd</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="MEd">
-							<greatestDifference id="d" draft="unconfirmed">E, MM-dd – E, MM-dd</greatestDifference>
-							<greatestDifference id="M" draft="unconfirmed">E, MM-dd – E, MM-dd</greatestDifference>
+							<greatestDifference id="d" draft="contributed">E, MM-dd – E, MM-dd</greatestDifference>
+							<greatestDifference id="M" draft="contributed">E, MM-dd – E, MM-dd</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yM">
-							<greatestDifference id="M" draft="unconfirmed">y-MM – y-MM</greatestDifference>
-							<greatestDifference id="y" draft="unconfirmed">y-MM – y-MM</greatestDifference>
+							<greatestDifference id="M" draft="contributed">y-MM – y-MM</greatestDifference>
+							<greatestDifference id="y" draft="contributed">y-MM – y-MM</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMd">
-							<greatestDifference id="d" draft="unconfirmed">y-MM-dd – y-MM-dd</greatestDifference>
-							<greatestDifference id="M" draft="unconfirmed">y-MM-dd – y-MM-dd</greatestDifference>
-							<greatestDifference id="y" draft="unconfirmed">y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="d" draft="contributed">y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="M" draft="contributed">y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="y" draft="contributed">y-MM-dd – y-MM-dd</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMEd">
-							<greatestDifference id="d" draft="unconfirmed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
-							<greatestDifference id="M" draft="unconfirmed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
-							<greatestDifference id="y" draft="unconfirmed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
+							<greatestDifference id="d" draft="contributed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
+							<greatestDifference id="M" draft="contributed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
+							<greatestDifference id="y" draft="contributed">E, y-MM-dd – E, y-MM-dd</greatestDifference>
 						</intervalFormatItem>
 					</intervalFormats>
 				</dateTimeFormats>
 			</calendar>
 		</calendars>
+		<fields>
+			<field type="week">
+				<relative type="-1" draft="contributed">претходне недеље</relative>
+				<relative type="1" draft="contributed">наредне недеље</relative>
+			</field>
+		</fields>
 	</dates>
 </ldml>

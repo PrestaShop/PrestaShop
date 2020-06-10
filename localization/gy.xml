@@ -7,9 +7,9 @@
 		<language iso_code="en" />
 	</languages>
 	<taxes>
-		<tax id="1" name="VAT GY 16%" rate="16" />
+		<tax id="1" name="VAT GY 14%" rate="14" />
 		
-		<taxRulesGroup name="GY Standard Rate (16%)">
+		<taxRulesGroup name="GY Standard Rate (14%)">
 			<taxRule iso_code_country="gy" id_tax="1" />
 		</taxRulesGroup>
 	</taxes>

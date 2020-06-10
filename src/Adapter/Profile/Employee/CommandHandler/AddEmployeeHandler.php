@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -94,7 +94,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
 
         $this->associateWithShops($employee, $command->getShopAssociation());
 
-        return new EmployeeId($employee->id);
+        return new EmployeeId((int) $employee->id);
     }
 
     /**
@@ -113,7 +113,6 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee->id_lang = $command->getLanguageId();
         $employee->id_profile = $command->getProfileId();
         $employee->default_tab = $command->getDefaultPageId();
-        $employee->optin = $command->isSubscribedToNewsletter();
         $employee->active = $command->isActive();
         $employee->passwd = $this->hashing->hash($command->getPlainPassword()->getValue());
         $employee->id_last_order = $employee->getLastElementsForNotify('order');
@@ -121,9 +120,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
         $employee->id_last_customer = $employee->getLastElementsForNotify('customer');
 
         if (false === $employee->add()) {
-            throw new EmployeeException(
-                sprintf('Failed to add new employee with email "%s"', $command->getEmail()->getValue())
-            );
+            throw new EmployeeException(sprintf('Failed to add new employee with email "%s"', $command->getEmail()->getValue()));
         }
 
         return $employee;
@@ -137,10 +134,7 @@ final class AddEmployeeHandler extends AbstractEmployeeHandler implements AddEmp
     private function assertEmailIsNotAlreadyUsed($email)
     {
         if (Employee::employeeExists($email)) {
-            throw new EmailAlreadyUsedException(
-                $email,
-                'An account already exists for this email address'
-            );
+            throw new EmailAlreadyUsedException($email, 'An account already exists for this email address');
         }
     }
 }

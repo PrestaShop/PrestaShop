@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -138,6 +138,13 @@ class ProductPresenterTest extends UnitTestCase
         $this->settings->catalog_mode = true;
         $this->settings->catalog_mode_with_prices = true;
         $this->assertTrue($this->getPresentedProduct('show_price'));
+    }
+
+    public function testPriceShouldNotBeShownInCatalogModeWithoutPrices()
+    {
+        $this->settings->catalog_mode = true;
+        $this->settings->catalog_mode_with_prices = false;
+        $this->assertFalse($this->getPresentedProduct('show_price'));
     }
 
     public function testPriceShouldShownInRestrictedCountryMode()
@@ -273,15 +280,21 @@ class ProductPresenterTest extends UnitTestCase
         );
     }
 
-    public function testProductHasOnlyOnSaleFlagIfItHasADiscountAndIsOnSale()
+    public function testProductHasBothOnSaleFlagAndDiscountFlagIfItHasADiscountAndIsOnSale()
     {
         $this->product['reduction'] = true;
         $this->product['on_sale'] = true;
         $this->assertEquals(
-            ['on-sale' => [
-                'type'  => 'on-sale',
-                'label' => 'some label',
-            ]],
+            [
+                'on-sale' => [
+                    'type'  => 'on-sale',
+                    'label' => 'some label',
+                ],
+                'discount' => [
+                    'type'  => 'discount',
+                    'label' => 'some label',
+                ]
+            ],
             $this->getPresentedProduct('flags')
         );
     }

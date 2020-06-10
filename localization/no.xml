@@ -5,24 +5,35 @@
 	</currencies>
 	<languages>
 		<language iso_code="no" />
+		<language iso_code="nn" />
 	</languages>
 	<taxes>
 		<tax id="1" name="MVA NO 25%" rate="25" />
 		<tax id="2" name="MVA NO 15%" rate="15" />
-		<tax id="3" name="MVA NO 8%" rate="8" />
-		
+		<tax id="3" name="MVA NO 12%" rate="12" />
+    <tax id="4" name="MVA NO 11.1%" rate="11.1" />
+		<tax id="5" name="MVA NO 0%" rate="0" />
+
 		<taxRulesGroup name="NO Standard Rate (25%)">
 			<taxRule iso_code_country="no" id_tax="1" />
 		</taxRulesGroup>
-		
+
 		<taxRulesGroup name="NO Reduced Rate (15%)">
 			<taxRule iso_code_country="no" id_tax="2" />
 		</taxRulesGroup>
-		
-		<taxRulesGroup name="NO Super Reduced Rate (8%)">
+
+		<taxRulesGroup name="NO Super Reduced Rate (12%)">
 			<taxRule iso_code_country="no" id_tax="3" />
 		</taxRulesGroup>
-	</taxes>
+
+		<taxRulesGroup name="NO Raw Fish Rate (11.1%)">
+			<taxRule iso_code_country="no" id_tax="4" />
+		</taxRulesGroup>
+
+		<taxRulesGroup name="NO Zero Rate (0%)">
+			<taxRule iso_code_country="no" id_tax="5" />
+		</taxRulesGroup>
+  </taxes>
 	<units>
 		<unit type="weight" value="kg" />
 		<unit type="volume" value="L" />

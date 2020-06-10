@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -65,28 +65,6 @@ class ServerRequirementsCheckerTest extends TestCase
         $this->mockedConfiguration = $this->createMock(Configuration::class);
         $this->mockedHostingInformation = $this->createMock(HostingInformation::class);
         $this->mockedPhpExtensionChecker = $this->createMock(PhpExtensionCheckerInterface::class);
-    }
-
-    public function testErrorIsReturnedWhenNonApacheWebServerIsUsed()
-    {
-        $this->mockedHostingInformation
-            ->method('getServerInformation')
-            ->willReturn(['version' => 'nginx']);
-
-        $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
-
-        $this->assertContains('To avoid operating problems, please use an Apache server.', $errors);
-    }
-
-    public function testNoErrorsAreReturnedWhenUsingApacheWebServer()
-    {
-        $this->mockedHostingInformation
-            ->method('getServerInformation')
-            ->willReturn(['version' => 'Apache/2.4.29 (Ubuntu)']);
-
-        $errors = $this->createNewServerRequirementsChecker()->checkForErrors();
-
-        $this->assertNotContains('To avoid operating problems, please use an Apache server.', $errors);
     }
 
     public function testNoErrorsAreReturnedWhenSslIsEnabled()

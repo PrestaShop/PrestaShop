@@ -1,0 +1,5 @@
+admin_errors_enable_debug_mode:
+  path: /enable-debug-mode
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Error:enableDebugMode

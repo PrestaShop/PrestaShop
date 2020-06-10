@@ -5,17 +5,17 @@
       <trans-unit id="e8699fcc0a32d2a30f1506e3ab4e3c5f">
         <source>Address successfully updated!</source>
         <target>Address successfully updated!</target>
-        <note>Line: 63</note>
+        <note>Line: 72</note>
       </trans-unit>
       <trans-unit id="fac734224cd546613e8530c66d28f69c">
         <source>Address successfully added!</source>
         <target>Address successfully added!</target>
-        <note>Line: 65</note>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="2e3e7c5849ac5eefe1cc6c4c73f182af">
         <source>Address successfully deleted!</source>
         <target>Address successfully deleted!</target>
-        <note>Line: 78</note>
+        <note>Line: 94</note>
       </trans-unit>
     </body>
   </file>
@@ -42,7 +42,7 @@
       <trans-unit id="7c8682d92dfb1522b4cc2975608e582d">
         <source>Information successfully updated.</source>
         <target>Information successfully updated.</target>
-        <note>Line: 57</note>
+        <note>Line: 56</note>
       </trans-unit>
     </body>
   </file>
@@ -51,7 +51,7 @@
       <trans-unit id="0c478a7069ab13f446e9e765cffd1550">
         <source>Message successfully sent</source>
         <target>Message successfully sent</target>
-        <note>Line: 180</note>
+        <note>Line: 182</note>
       </trans-unit>
     </body>
   </file>
@@ -60,12 +60,12 @@
       <trans-unit id="6e05d9291d7796566bb503890da070bf">
         <source>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</source>
         <target>If this email address has been registered in our shop, you will receive a link to reset your password at %email%.</target>
-        <note>Line: 99</note>
+        <note>Line: 112</note>
       </trans-unit>
       <trans-unit id="19b1f74d6e96f3db9805e8d5c9301b7a">
         <source>Your password has been successfully reset and a confirmation has been sent to your email address: %s</source>
         <target>Your password has been successfully reset and a confirmation has been sent to your email address: %s</target>
-        <note>Line: 180</note>
+        <note>Line: 212</note>
       </trans-unit>
     </body>
   </file>

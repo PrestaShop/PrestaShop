@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\Tools\Setup;
 use LegacyCompilerPass;
 use PrestaShop\PrestaShop\Adapter\Container\ContainerBuilderExtensionInterface;
@@ -189,7 +190,8 @@ class ContainerBuilder
      */
     private function loadDoctrineAnnotationMetadata()
     {
-        Setup::createAnnotationMetadataConfiguration([]);
+        //IMPORTANT: we need to provide a cache because doctrine tries to init a connection on redis, memcached, ... on its own
+        Setup::createAnnotationMetadataConfiguration([], $this->environment->isDebug(), null, new ArrayCache());
     }
 
     /**

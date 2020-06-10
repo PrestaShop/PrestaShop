@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,17 +19,11 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
  $this->displayTemplate('header') ?>
-
-<script type="text/javascript">
-<!--
-var default_iso = '<?php echo $this->session->shop_country ?>';
--->
-</script>
 
 <!-- Configuration form -->
 <div id="infosShopBlock">
@@ -108,21 +102,6 @@ var default_iso = '<?php echo $this->session->shop_country ?>';
 		</div>
 		<?php echo $this->displayError('shop_timezone') ?>
 	</div>
-
-	<!-- Shop logo
-	<div class="field clearfix">
-		<label for="uploadedImage" class="aligned logo"><?php echo $this->translator->trans('Shop logo', array(), 'Install'); ?></label>
-		<div class="contentinput">
-			<p id="alignedLogo"><img id="uploadedImage" src="../img/logo.jpg?t=<?php echo time() ?>" alt="Logo" /></p>
-		</div>
-		<p class="userInfos aligned"><?php echo $this->translator->trans('Optional - You can add you logo at a later time.', array(), 'Install'); ?></p>
-
-		<div id="inputFileLogo" class="contentinput" style="top:-20px;position:relative">
-			<input type="file" name="fileToUpload" id="fileToUpload"/>
-		</div>
-		<span id="resultInfosLogo" class="result"></span>
-	</div>
-	 -->
 
 	<h2 style="margin-top:20px"><?php echo $this->translator->trans('Your Account', array(), 'Install'); ?></h2>
 

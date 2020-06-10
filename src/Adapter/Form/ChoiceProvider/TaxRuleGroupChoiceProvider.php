@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,33 +19,55 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use TaxRulesGroup;
 
 /**
  * Provides tax rule group choices with tax rule name as key and id as value
  */
-final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface
+final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
 {
     /**
      * {@inheritdoc}
      */
     public function getChoices()
     {
-        $rules = TaxRulesGroup::getTaxRulesGroupsForOptions();
-
         $choices = [];
-        foreach ($rules as $rule) {
+        foreach ($this->getRules() as $rule) {
             $choices[$rule['name']] = $rule['id_tax_rules_group'];
         }
 
         return $choices;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChoicesAttributes(): array
+    {
+        $attrs = [];
+        foreach ($this->getRules() as $rule) {
+            $attrs[$rule['name']] = [
+                'data-tax-rate' => !empty($rule['rate']) ? $rule['rate'] : null,
+            ];
+        }
+
+        return $attrs;
+    }
+
+    /**
+     * @return array
+     */
+    private function getRules(): array
+    {
+        return TaxRulesGroup::getTaxRulesGroupsForOptions();
     }
 }

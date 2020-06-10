@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -42,20 +42,12 @@ final class ManufacturerLogoThumbnailProvider implements ImageProviderInterface
     private $imageTagSourceParser;
 
     /**
-     * @var int
-     */
-    private $contextShopId;
-
-    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
-     * @param int $contextShopId
      */
     public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser,
-        $contextShopId
+        ImageTagSourceParserInterface $imageTagSourceParser
     ) {
         $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -67,7 +59,7 @@ final class ManufacturerLogoThumbnailProvider implements ImageProviderInterface
 
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
-            'manufacturer_mini_' . $manufacturerId . '_' . $this->contextShopId . '.jpg',
+            'manufacturer_mini_' . $manufacturerId . '.jpg',
             HelperList::LIST_THUMBNAIL_SIZE
         );
 

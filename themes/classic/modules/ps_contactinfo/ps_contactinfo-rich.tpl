@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
@@ -49,14 +49,14 @@
       </div>
     </div>
   {/if}
-  {if $contact_infos.email}
+  {if $contact_infos.email && $display_email}
     <hr/>
     <div class="block">
       <div class="icon"><i class="material-icons">&#xE158;</i></div>
       <div class="data email">
         {l s='Email us:' d='Shop.Theme.Global'}<br/>
-       </div>
-       <a href="mailto:{$contact_infos.email}">{$contact_infos.email}</a>
+      </div>
+      {mailto address=$contact_infos.email encode="javascript"}
     </div>
   {/if}
 </div>

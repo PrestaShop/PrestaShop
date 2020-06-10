@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\CommandHandler\EditCmsPageHandlerI
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotEditCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
 use PrestaShopException;
 
 /**
@@ -43,6 +44,7 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
      * {@inheritdoc}
      *
      * @throws CmsPageException
+     * @throws CmsPageCategoryException
      */
     public function handle(EditCmsPageCommand $command)
     {
@@ -53,20 +55,13 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
                 throw new CmsPageException('Cms page contains invalid field values');
             }
             if (false === $cms->update()) {
-                throw new CannotEditCmsPageException(
-                    sprintf('Failed to update cms page with id %s', $command->getCmsPageId()->getValue())
-                );
+                throw new CannotEditCmsPageException(sprintf('Failed to update cms page with id %s', $command->getCmsPageId()->getValue()));
             }
-            $this->associateWithShops($cms, $command->getShopAssociation());
+            if (null !== $command->getShopAssociation()) {
+                $this->associateWithShops($cms, $command->getShopAssociation());
+            }
         } catch (PrestaShopException $e) {
-            throw new CmsPageException(
-                sprintf(
-                    'An unexpected error occurred when editing cms page with id %s',
-                    $command->getCmsPageId()->getValue()
-                ),
-                0,
-                $e
-            );
+            throw new CmsPageException(sprintf('An unexpected error occurred when editing cms page with id %s', $command->getCmsPageId()->getValue()), 0, $e);
         }
     }
 
@@ -77,10 +72,16 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
      *
      * @throws CmsPageException
      * @throws CmsPageNotFoundException
+     * @throws CmsPageCategoryException
      */
     private function createCmsFromCommand(EditCmsPageCommand $command)
     {
         $cms = $this->getCmsPageIfExistsById($command->getCmsPageId()->getValue());
+        $cmsCategoryId = null === $command->getCmsPageCategoryId() ?: $command->getCmsPageCategoryId()->getValue();
+
+        if (null !== $cmsCategoryId && $this->assertCmsCategoryExists($cmsCategoryId)) {
+            $cms->id_cms_category = $cmsCategoryId;
+        }
 
         if (null !== $command->getLocalizedTitle()) {
             $cms->meta_title = $command->getLocalizedTitle();
@@ -88,10 +89,6 @@ final class EditCmsPageHandler extends AbstractCmsPageHandler implements EditCms
 
         if (null !== $command->getLocalizedMetaTitle()) {
             $cms->head_seo_title = $command->getLocalizedMetaTitle();
-        }
-
-        if (null !== $command->getCmsPageCategoryId()) {
-            $cms->id_cms_category = $command->getCmsPageCategoryId()->getValue();
         }
 
         if (null !== $command->getLocalizedMetaDescription()) {

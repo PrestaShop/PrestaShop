@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -84,7 +84,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_customers_create' => ['/sell/customers/new', 'AdminCustomers', 'addcustomer'],
             'admin_customers_edit' => ['/sell/customers/42/edit', 'AdminCustomers', 'updatecustomer', ['id_customer' => 42]],
             'admin_customers_view' => ['/sell/customers/42/view', 'AdminCustomers', 'viewcustomer', ['id_customer' => 42]],
-            'admin_customers_save_private_note' => ['/sell/customers/42/save-private-note', 'AdminCustomers', 'updateCustomerNote', ['id_customer' => 42]],
+            'admin_customers_save_private_note' => ['/sell/customers/42/set-private-note', 'AdminCustomers', 'updateCustomerNote', ['id_customer' => 42]],
             'admin_customers_toggle_status' => ['/sell/customers/42/toggle-status', 'AdminCustomers', 'statuscustomer', ['id_customer' => 42]],
             'admin_customers_transform_guest_to_customer' => ['/sell/customers/42/transform-guest-to-customer', 'AdminCustomers', 'guesttocustomer', ['id_customer' => 42]],
             'admin_customers_toggle_newsletter_subscription' => ['/sell/customers/42/toggle-newsletter-subscription', 'AdminCustomers', 'changeNewsletterVal', ['id_customer' => 42]],
@@ -176,34 +176,75 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             //'admin_module_configure_action' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['module_name' => 'ps_linklist']],
             //'admin_module_configure_action_legacy' => ['/improve/modules/manage/action/configure/ps_linklist', 'AdminModules', 'configure', ['configure' => 'ps_linklist']],
 
-            /*'admin_sql_request' => ['/configure/advanced/request-sql/', 'AdminRequestSql'],
-            'admin_sql_request_search' => ['/configure/advanced/request-sql/', 'AdminRequestSql', 'search'],
-            'admin_sql_request_process' => ['/configure/advanced/request-sql/settings', 'AdminRequestSql', 'update'],
-            'admin_sql_request_create' => ['/configure/advanced/request-sql/new', 'AdminRequestSql', 'addrequest_sql'],
-            'admin_sql_request_edit' => ['/configure/advanced/request-sql/edit/42', 'AdminRequestSql', 'updaterequest_sql', ['id_request_sql' => 42]],
-            'admin_sql_request_delete' => ['/configure/advanced/request-sql/delete/42', 'AdminRequestSql', 'deleterequest_sql', ['id_request_sql' => 42]],
-            'admin_sql_request_delete_bulk' => ['/configure/advanced/request-sql/delete/bulk', 'AdminRequestSql', 'submitBulkdeleterequest_sql'],
-            'admin_sql_request_table_columns' => ['/configure/advanced/request-sql/tables/plop/columns', 'AdminRequestSql', 'ajax', ['table' => 'plop']],
-            'admin_sql_request_view' => ['/configure/advanced/request-sql/view/42', 'AdminRequestSql', 'viewsql_request', ['id_request_sql' => 42]],
-            'admin_sql_request_export' => ['/configure/advanced/request-sql/export/42', 'AdminRequestSql', 'exportsql_request', ['id_request_sql' => 42]],*/
+            'admin_sql_request' => ['/configure/advanced/sql-requests/', 'AdminRequestSql'],
+            'admin_sql_request_search' => ['/configure/advanced/sql-requests/', 'AdminRequestSql', 'search'],
+            'admin_sql_request_process' => ['/configure/advanced/sql-requests/process-settings', 'AdminRequestSql', 'update'],
+            'admin_sql_request_create' => ['/configure/advanced/sql-requests/new', 'AdminRequestSql', 'addrequest_sql'],
+            'admin_sql_request_edit' => ['/configure/advanced/sql-requests/42/edit', 'AdminRequestSql', 'updaterequest_sql', ['id_request_sql' => 42]],
+            'admin_sql_request_delete' => ['/configure/advanced/sql-requests/42/delete', 'AdminRequestSql', 'deleterequest_sql', ['id_request_sql' => 42]],
+            'admin_sql_request_delete_bulk' => ['/configure/advanced/sql-requests/delete-bulk', 'AdminRequestSql', 'submitBulkdeleterequest_sql'],
+            'admin_sql_request_table_columns' => ['/configure/advanced/sql-requests/tables/plop/columns', 'AdminRequestSql', 'ajax', ['table' => 'plop']],
+            'admin_sql_request_view' => ['/configure/advanced/sql-requests/42/view', 'AdminRequestSql', 'viewsql_request', ['id_request_sql' => 42]],
+            'admin_sql_request_export' => ['/configure/advanced/sql-requests/42/export', 'AdminRequestSql', 'exportsql_request', ['id_request_sql' => 42]],
 
-            /*'admin_webservice' => ['/configure/advanced/webservice/', 'AdminWebservice'],
-            'admin_webservice_search' => ['/configure/advanced/webservice/', 'AdminWebservice', 'search'],
-            'admin_webservice_settings_save' => ['/configure/advanced/webservice/settings', 'AdminWebservice', 'update'],
-            'admin_webservice_list_create' => ['/configure/advanced/webservice/create', 'AdminWebservice', 'addwebservice_account'],
-            'admin_webservice_list_edit' => ['/configure/advanced/webservice/settings', 'AdminWebservice', 'update'],
-            'admin_delete_single_webservice_log' => ['/configure/advanced/webservice/delete/42', 'AdminWebservice', 'deletewebservice_account', ['id_webservice_account' => 42]],
-            'admin_delete_multiple_webservice_log' => ['/configure/advanced/webservice/delete', 'AdminWebservice', 'submitBulkdeletewebservice_account'],
-            'admin_webservice_status_toggle' => ['/configure/advanced/webservice/status/42', 'AdminWebservice', 'status', ['id_webservice_account' => 42]],
-            'admin_webservice_bulk_enable' => ['/configure/advanced/webservice/status/bulk/enable', 'AdminWebservice', 'submitBulkenableSelectionwebservice_account'],
-            'admin_webservice_bulk_disable' => ['/configure/advanced/webservice/status/bulk/disable', 'AdminWebservice', 'submitBulkdisableSelectionwebservice_account'],*/
+            'admin_webservice_keys_index' => ['/configure/advanced/webservice-keys/', 'AdminWebservice'],
+            'admin_webservice_keys_search' => ['/configure/advanced/webservice-keys/', 'AdminWebservice', 'submitFilterwebservice_account'],
+            'admin_webservice_save_settings' => ['/configure/advanced/webservice-keys/settings', 'AdminWebservice', 'submitOptionswebservice_account'],
+            'admin_webservice_keys_create' => ['/configure/advanced/webservice-keys/new', 'AdminWebservice', 'addwebservice_account'],
+            'admin_webservice_keys_edit' => ['/configure/advanced/webservice-keys/42/edit', 'AdminWebservice', 'updatewebservice_account', ['id_webservice_account' => 42]],
+            'admin_webservice_keys_delete' => ['/configure/advanced/webservice-keys/42/delete', 'AdminWebservice', 'deletewebservice_account', ['id_webservice_account' => 42]],
+            'admin_webservice_keys_bulk_delete' => ['/configure/advanced/webservice-keys/bulk-delete', 'AdminWebservice', 'submitBulkdeletewebservice_account'],
+            'admin_webservice_keys_toggle_status' => ['/configure/advanced/webservice-keys/42/toggle-status', 'AdminWebservice', 'statuswebservice_account', ['id_webservice_account' => 42]],
+            'admin_webservice_keys_bulk_enable' => ['/configure/advanced/webservice-keys/bulk-enable', 'AdminWebservice', 'submitBulkenableSelectionwebservice_account'],
+            'admin_webservice_keys_bulk_disable' => ['/configure/advanced/webservice-keys/bulk-disable', 'AdminWebservice', 'submitBulkdisableSelectionwebservice_account'],
 
             'admin_profiles_index' => ['/configure/advanced/profiles/', 'AdminProfiles'],
             'admin_profiles_search' => ['/configure/advanced/profiles/', 'AdminProfiles', 'submitFilterprofile'],
             'admin_profiles_create' => ['/configure/advanced/profiles/new', 'AdminProfiles', 'addprofile'],
-            'admin_profiles_edit' => ['/configure/advanced/profiles/1000/edit', 'AdminProfiles', 'updateprofile', ['id_profile' => 1000]],
+            'admin_profiles_edit' => ['/configure/advanced/profiles/42/edit', 'AdminProfiles', 'updateprofile', ['id_profile' => 42]],
             'admin_profiles_bulk_delete' => ['/configure/advanced/profiles/delete/bulk', 'AdminProfiles', 'submitBulkdeleteprofile'],
             'admin_profiles_delete' => ['/configure/advanced/profiles/12/delete', 'AdminProfiles', 'deleteprofile', ['id_profile' => 12]],
+
+            'admin_currencies_index' => ['/improve/international/currencies/', 'AdminCurrencies'],
+            'admin_currencies_search' => ['/improve/international/currencies/', 'AdminCurrencies', 'submitFiltercurrency'],
+            'admin_currencies_create' => ['/improve/international/currencies/new', 'AdminCurrencies', 'addcurrency'],
+            'admin_currencies_edit' => ['/improve/international/currencies/42/edit', 'AdminCurrencies', 'updatecurrency', ['id_currency' => 42]],
+            'admin_currencies_delete' => ['/improve/international/currencies/42/delete', 'AdminCurrencies', 'deletecurrency', ['id_currency' => 42]],
+            'admin_currencies_toggle_status' => ['/improve/international/currencies/42/toggle-status', 'AdminCurrencies', 'statuscurrency', ['id_currency' => 42]],
+            'admin_currencies_refresh_exchange_rates' => ['/improve/international/currencies/refresh-exchange-rates', 'AdminCurrencies', 'SubmitExchangesRates'],
+
+            'admin_employees_index' => ['/configure/advanced/employees/', 'AdminEmployees'],
+            'admin_employees_search' => ['/configure/advanced/employees/', 'AdminEmployees', 'submitFilteremployee'],
+            'admin_employees_save_options' => ['/configure/advanced/employees/save-options', 'AdminEmployees', 'submitOptionsemployee'],
+            'admin_employees_toggle_status' => ['/configure/advanced/employees/42/toggle-status', 'AdminEmployees', 'statusemployee', ['id_employee' => 42]],
+            'admin_employees_bulk_enable_status' => ['/configure/advanced/employees/bulk-enable-status', 'AdminEmployees', 'submitBulkenableSelectionemployee'],
+            'admin_employees_bulk_disable_status' => ['/configure/advanced/employees/bulk-disable-status', 'AdminEmployees', 'submitBulkdisableSelectionemployee'],
+            'admin_employees_delete' => ['/configure/advanced/employees/42/delete', 'AdminEmployees', 'deleteemployee', ['id_employee' => 42]],
+            'admin_employees_bulk_delete' => ['/configure/advanced/employees/bulk-delete', 'AdminEmployees', 'submitBulkdeleteemployee'],
+            'admin_employees_create' => ['/configure/advanced/employees/new', 'AdminEmployees', 'addemployee'],
+            'admin_employees_edit' => ['/configure/advanced/employees/42/edit', 'AdminEmployees', 'updateemployee', ['id_employee' => 42]],
+
+            'admin_international_translations_export_theme' => ['/improve/international/translations/export', 'AdminTranslations', 'submitExport'],
+            'admin_international_translations_add_update_language' => ['/improve/international/translations/add-update-language', 'AdminTranslations', 'submitAddLanguage'],
+            'admin_international_translations_copy_language' => ['/improve/international/translations/copy', 'AdminTranslations', 'submitCopyLang'],
+
+            'admin_themes_index' => ['/improve/design/themes/', 'AdminThemes'],
+            'admin_themes_upload_logos' => ['/improve/design/themes/upload-logos', 'AdminThemes', 'submitOptionsconfiguration'],
+            'admin_themes_export_current' => ['/improve/design/themes/export', 'AdminThemes', 'exporttheme'],
+            'admin_themes_import' => ['/improve/design/themes/import', 'AdminThemes', 'importtheme'],
+            'admin_themes_enable' => ['/improve/design/themes/prestashop_theme/enable', 'AdminThemes', 'enableTheme', ['theme_name' => 'prestashop_theme']],
+            'admin_themes_delete' => ['/improve/design/themes/prestashop_theme/delete', 'AdminThemes', 'deleteTheme', ['theme_name' => 'prestashop_theme']],
+            'admin_themes_adapt_to_rtl_languages' => ['/improve/design/themes/adapt-to-rtl-languages', 'AdminThemes', 'submitGenerateRTL'],
+            'admin_theme_customize_layouts' => ['/improve/design/themes/customize-layouts', 'AdminThemes', 'submitConfigureLayouts'],
+            'admin_themes_reset_layouts' => ['/improve/design/themes/prestashop_theme/reset-layouts', 'AdminThemes', 'resetToDefaults', ['theme_name' => 'prestashop_theme']],
+
+            'admin_attachments_index' => ['/sell/attachments/', 'AdminAttachments'],
+            'admin_attachments_filter' => ['/sell/attachments/', 'AdminAttachments', 'submitFilterattachment'],
+            'admin_attachments_create' => ['/sell/attachments/new', 'AdminAttachments', 'addattachment'],
+            'admin_attachments_edit' => ['/sell/attachments/42/edit', 'AdminAttachments', 'updateattachment', ['id_attachment' => 42]],
+            'admin_attachments_view' => ['/sell/attachments/42/view', 'AdminAttachments', 'viewattachment', ['id_attachment' => 42]],
+            'admin_attachments_delete_bulk' => ['/sell/attachments/delete-bulk', 'AdminAttachments', 'submitBulkdeleteattachment'],
+            'admin_attachments_delete' => ['/sell/attachments/42/delete', 'AdminAttachments', 'deleteattachment', ['id_attachment' => 42]],
         ];
     }
 

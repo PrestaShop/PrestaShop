@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Routing\Linter;
 
 use Doctrine\Common\Annotations\Reader;
+use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
@@ -58,9 +59,15 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $routeName
+     * @param Route $route
+     *
+     * @return AdminSecurity
+     *
+     * @throws \ReflectionException
+     * @throws LinterException
      */
-    public function lint(Route $route)
+    public function getRouteSecurityAnnotation($routeName, Route $route)
     {
         $controllerAndMethod = $this->extractControllerAndMethodNamesFromRoute($route);
 
@@ -72,12 +79,18 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
         $annotation = $this->annotationReader->getMethodAnnotation($reflection, AdminSecurity::class);
 
         if (null === $annotation) {
-            throw new LinterException(sprintf(
-                '"%s:%s" does not have AdminSecurity annotation configured',
-                 $controllerAndMethod['controller'],
-                 $controllerAndMethod['method']
-            ));
+            throw new LinterException(sprintf('"%s:%s" does not have AdminSecurity annotation configured', $controllerAndMethod['controller'], $controllerAndMethod['method']));
         }
+
+        return $annotation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function lint($routeName, Route $route)
+    {
+        $this->getRouteSecurityAnnotation($routeName, $route);
     }
 
     /**

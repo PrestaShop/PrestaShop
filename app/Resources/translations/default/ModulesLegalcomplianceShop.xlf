@@ -35,22 +35,22 @@
       <trans-unit id="6f06a13b9608ee5f2da343a3ca049f31">
         <source>[1]For digital goods:[/1] I want immediate access to the digital content and I acknowledge that thereby I lose my right to cancel once the service has begun.[2][1]For services:[/1] I agree to the starting of the service and I acknowledge that I lose my right to cancel once the service has been fully performed.</source>
         <target>[1]For digital goods:[/1] I want immediate access to the digital content and I acknowledge that thereby I lose my right to cancel once the service has begun.[2][1]For services:[/1] I agree to the starting of the service and I acknowledge that I lose my right to cancel once the service has been fully performed.</target>
-        <note>Line: 809</note>
+        <note>Line: 808</note>
       </trans-unit>
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
-        <note>Line: 890</note>
+        <note>Line: 888</note>
       </trans-unit>
       <trans-unit id="16b24a264ab76a36917095bf6e41ef62">
         <source>Our previous price</source>
         <target>Our previous price</target>
-        <note>Line: 903</note>
+        <note>Line: 901</note>
       </trans-unit>
       <trans-unit id="89bea8045e50a337d8ce9849a4e1633c">
         <source>Shipping excluded</source>
         <target>Shipping excluded</target>
-        <note>Line: 928</note>
+        <note>Line: 926</note>
       </trans-unit>
     </body>
   </file>

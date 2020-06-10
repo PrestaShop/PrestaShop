@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -27,8 +27,9 @@
 namespace Tests\Integration\PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -45,20 +46,18 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         self::bootKernel();
     }
 
-    /**
-     * @expectedException \Symfony\Component\Console\Exception\RuntimeException
-     * @expectedExceptionMessage Not enough arguments (missing: "theme, locale").
-     */
     public function testMissingArguments()
     {
+        $this->expectException(RuntimeException::class, 'Not enough arguments (missing: "theme, locale").');
+
         $application = new Application(static::$kernel);
 
         $command = $application->find('prestashop:mail:generate');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
-        ));
+        ]);
     }
 
     public function testGenerateTemplates()
@@ -71,12 +70,12 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $command = $application->find('prestashop:mail:generate');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
             'theme' => 'classic',
             'locale' => 'en',
             'coreOutputFolder' => $outputFolder,
-        ));
+        ]);
         $this->assertEquals(0, $commandTester->getStatusCode());
 
         $finder = new Finder();
@@ -112,13 +111,13 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         $command = $application->find('prestashop:mail:generate');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
+        $commandTester->execute([
             'command' => $command->getName(),
             'theme' => 'classic',
             'locale' => 'en',
             'coreOutputFolder' => $coreOutputFolder,
             'modulesOutputFolder' => $modulesOutputFolder,
-        ));
+        ]);
         $this->assertEquals(0, $commandTester->getStatusCode());
 
         $finder = new Finder();

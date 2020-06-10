@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,13 +19,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\Design\Theme;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestriction;
 use PrestaShop\PrestaShop\Core\Form\DTO\ShopRestrictionField;
 use PrestaShopBundle\Form\Admin\Type\ShopRestrictionCheckboxType;
@@ -77,18 +78,34 @@ class ShopLogosType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $shopLogoSettings = new ShopLogoSettings();
+
+        $availableLogoFileTypes = implode(',', $shopLogoSettings->getLogoImageExtensionsWithDot());
+
         $builder
             ->add('header_logo', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'accept' => $availableLogoFileTypes,
+                ],
             ])
             ->add('mail_logo', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'accept' => $availableLogoFileTypes,
+                ],
             ])
             ->add('invoice_logo', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'accept' => $availableLogoFileTypes,
+                ],
             ])
             ->add('favicon', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'accept' => $shopLogoSettings->getIconImageExtensionWithDot(),
+                ],
             ])
         ;
 

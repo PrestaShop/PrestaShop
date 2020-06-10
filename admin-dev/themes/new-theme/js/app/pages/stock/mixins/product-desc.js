@@ -1,5 +1,5 @@
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -26,10 +26,13 @@ export default {
   computed: {
     thumbnail() {
       if (this.product.combination_thumbnail !== 'N/A') {
-        return `${window.data.baseUrl}/${this.product.combination_thumbnail}`;
-      } else if (this.product.product_thumbnail !== 'N/A') {
-        return `${window.data.baseUrl}/${this.product.product_thumbnail}`;
+        return `${this.product.combination_thumbnail}`;
       }
+
+      if (this.product.product_thumbnail !== 'N/A') {
+        return `${this.product.product_thumbnail}`;
+      }
+
       return null;
     },
     combinationName() {

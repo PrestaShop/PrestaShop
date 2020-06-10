@@ -38,7 +38,7 @@ admin_backup_download:
 
 admin_backups_delete:
     path: /{deleteFileName}
-    methods: [DELETE]
+    methods: [DELETE, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:delete'
         _legacy_controller: 'AdminBackup'

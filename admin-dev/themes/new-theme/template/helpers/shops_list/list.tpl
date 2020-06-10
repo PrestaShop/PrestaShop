@@ -1,5 +1,5 @@
 {**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -18,14 +18,14 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {strip}
 <ul class="items-list">
     <li{if !isset($current_shop_value) || $current_shop_value == ''} class="active"{/if}>
-      <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a>
+      <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops' d='Admin.Global'}</a>
     </li>
     {foreach key=group_id item=group_data from=$tree}
         {if !isset($multishop_context) || $is_group_context}

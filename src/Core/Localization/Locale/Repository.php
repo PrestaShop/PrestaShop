@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -20,7 +20,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Locale;
 
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
-use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
+use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
@@ -62,7 +62,7 @@ class Repository implements RepositoryInterface
     /**
      * Repository used to retrieve Currency objects.
      *
-     * @var CurrencyRepository
+     * @var CurrencyRepositoryInterface
      */
     protected $currencyRepository;
 
@@ -121,7 +121,7 @@ class Repository implements RepositoryInterface
 
     public function __construct(
         CldrLocaleRepository $cldrLocaleRepository,
-        CurrencyRepository $currencyRepository,
+        CurrencyRepositoryInterface $currencyRepository,
         $roundingMode = Rounding::ROUND_HALF_UP,
         $numberingSystem = Locale::NUMBERING_SYSTEM_LATIN,
         $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL,
@@ -204,7 +204,7 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        $currencies = $this->currencyRepository->getAvailableCurrencies($localeCode);
+        $currencies = $this->currencyRepository->getAllInstalledCurrencies($localeCode);
 
         $priceSpecifications = new PriceSpecificationMap();
         foreach ($currencies as $currency) {
@@ -214,9 +214,9 @@ class Repository implements RepositoryInterface
                 $cldrLocale,
                 $currency,
                 $this->numberGroupingUsed,
-                $this->currencyDisplayType
+                $this->currencyDisplayType,
+                (int) $currency->getDecimalPrecision()
             );
-            $thisPriceSpecification->setMaxFractionDigits((int) $currency->getDecimalPrecision());
 
             // Add the spec to the collection
             $priceSpecifications->add(

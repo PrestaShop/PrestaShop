@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2019 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13133 $"/>
+		<version number="$Revision$"/>
 		<language type="lg"/>
 	</identity>
 	<localeDisplayNames>
@@ -184,7 +184,6 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<territory type="MD">Molodova</territory>
 			<territory type="MG">Madagasika</territory>
 			<territory type="MH">Bizinga bya Mariso</territory>
-			<territory type="MK">Masedoniya</territory>
 			<territory type="ML">Mali</territory>
 			<territory type="MM">Myanima</territory>
 			<territory type="MN">Mongoliya</territory>
@@ -693,6 +692,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Faranga ey’eMalagase</displayName>
 			</currency>
 			<currency type="MRO">
+				<displayName>Wugwiya ey’eMawritenya (1973–2017)</displayName>
+			</currency>
+			<currency type="MRU">
 				<displayName>Wugwiya ey’eMawritenya</displayName>
 			</currency>
 			<currency type="MUR">
@@ -735,6 +737,9 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 				<displayName>Silingi ey’eSomaliya</displayName>
 			</currency>
 			<currency type="STD">
+				<displayName>Dobura ey’eSantome ne Purincipe (1977–2017)</displayName>
+			</currency>
+			<currency type="STN">
 				<displayName>Dobura ey’eSantome ne Purincipe</displayName>
 			</currency>
 			<currency type="SZL">
