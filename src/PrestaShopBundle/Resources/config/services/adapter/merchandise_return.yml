@@ -16,6 +16,12 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing'
 
+  prestashop.adapter.merchandise_return.query_handler.get_order_detail_customization:
+    class: 'PrestaShop\PrestaShop\Adapter\MerchandiseReturn\QueryHandler\GetOrderDetailCustomizationHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetOrderDetailCustomization'
+
   prestashop.adapter.merchandise_return.command_handler.edit_merchandise_return_handler:
     class: 'PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler\EditMerchandiseReturnHandler'
     tags:
