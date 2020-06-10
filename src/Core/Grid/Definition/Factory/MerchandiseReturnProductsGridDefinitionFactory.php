@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\MerchandiseReturnCustomizationColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -89,10 +90,10 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                     ])
             )
             ->add(
-                (new DataColumn('customization'))
-                    ->setName($this->trans('Customization', [], 'Admin.Catalog.Feature'))
+                (new MerchandiseReturnCustomizationColumn('customizations'))
+                    ->setName($this->trans('Customizations', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'value',
+                        'customizations' => 'customizations',
                     ])
             )
             ->add(

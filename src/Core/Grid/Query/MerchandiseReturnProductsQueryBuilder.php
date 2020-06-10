@@ -69,7 +69,15 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
     {
         $qb = $this->getMerchandiseReturnProductsQueryBuilder($searchCriteria);
         $qb
-            ->select('ord.id_order_return, ord.id_order_detail, ord.product_quantity, od.product_name, od.product_reference, cd.value')
+            ->select('
+            ord.id_order_return,
+            ord.id_order_detail,
+            ord.product_quantity,
+            od.product_name,
+            od.product_reference,
+            od.id_customization,
+            o.id_cart'
+            )
             ->groupBy('ord.id_order_detail');
 
         $this->searchCriteriaApplicator
@@ -104,15 +112,15 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
                 'ord.id_order_detail = od.id_order_detail'
             )
             ->leftJoin(
-                'ord',
-                $this->dbPrefix . 'customized_data',
-                'cd',
-                'ord.id_customization = cd.id_customization'
+                'od',
+                $this->dbPrefix . 'orders',
+                'o',
+                'od.id_order = o.id_order'
             )
             ->where('ord.id_order_return = :order_return_id')
             ->setParameter('context_language_id', $this->contextLanguageId)
             /** @todo change 3 to an actual value didn't figure out how to pass order_return_id to query builder yet.   */
-            ->setParameter('order_return_id', 3);
+            ->setParameter('order_return_id', 4);
 
         $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
 
@@ -131,10 +139,24 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
             'product_reference',
             'product_name',
             'quantity',
+            'customization_name',
+            'customization_value'
         ];
 
         foreach ($filters as $filterName => $filterValue) {
             if (!in_array($filterName, $allowedFilters)) {
+                continue;
+            }
+
+            if ($filterName === 'customization_name') {
+                $qb->andWhere('cfl.`name` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
+                continue;
+            }
+
+            if ($filterName === 'customization_value') {
+                $qb->andWhere('cd.`value` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }
 
