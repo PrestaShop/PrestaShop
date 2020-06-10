@@ -84,7 +84,7 @@ class MerchandiseReturnProductsGridDataFactory implements GridDataFactoryInterfa
     {
         $modifiedMerchandiseReturnProducts = [];
         foreach ($merchandiseReturnProducts as $merchandiseReturnProduct) {
-            $getOrderDetailCustomization = new GetOrderDetailCustomization($merchandiseReturnProduct['id_order_detail']);
+            $getOrderDetailCustomization = new GetOrderDetailCustomization((int) $merchandiseReturnProduct['id_order_detail']);
             $merchandiseReturnProduct['customizations'] = $this->getOrderDetailCustomizationHandler->handle($getOrderDetailCustomization);
             $modifiedMerchandiseReturnProducts[] = $merchandiseReturnProduct;
         }
