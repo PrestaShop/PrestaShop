@@ -50,8 +50,9 @@ admin_merchandise_returns_edit:
   requirements:
     merchandiseReturnId: \d+
 
+# @todo is this a good way to pass customizationId?
 admin_merchandise_returns_delete_product:
-  path: /{merchandiseReturnId}/products/{merchandiseReturnDetailId}/delete
+  path: /{merchandiseReturnId}/products/{merchandiseReturnDetailId}/delete/{customizationId}
   methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProduct
@@ -63,4 +64,5 @@ admin_merchandise_returns_delete_product:
   requirements:
     merchandiseReturnId: \d+
     merchandiseReturnDetailId: \d+
+    customizationId: \d+
 
