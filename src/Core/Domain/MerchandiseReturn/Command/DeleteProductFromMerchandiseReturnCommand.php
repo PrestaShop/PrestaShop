@@ -52,6 +52,7 @@ class DeleteProductFromMerchandiseReturnCommand
 
     /**
      * DeleteProductFromMerchandiseReturnCommand constructor.
+     *
      * @param int $merchandiseReturnId
      * @param int $merchandiseReturnDetailId
      * @param int $customizationId
