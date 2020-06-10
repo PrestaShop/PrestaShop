@@ -291,6 +291,7 @@ services:
       arguments:
         - '@prestashop.core.query.doctrine_search_criteria_applicator'
         - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - '@request_stack'
 
     prestashop.core.grid.query_builder.tax_rules_group:
       class: 'PrestaShop\PrestaShop\Core\Grid\Query\TaxRulesGroupQueryBuilder'
