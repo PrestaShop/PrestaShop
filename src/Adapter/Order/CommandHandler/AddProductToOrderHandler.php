@@ -136,6 +136,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $combination
             );
 
+            //@TODO: what is this? it causes duplicate entry because $specificPrice above is created identical.
             // Restore any specific prices for the products in the order
             $restoredSpecificPrices = $this->restoreOrderProductsSpecificPrices(
                 $order,
