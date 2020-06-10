@@ -23,7 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import MerchandiseReturnEditPage from '@pages/merchandise-return/merchandise-return-edit-page';
 import Grid from '../../components/grid/grid';
 import SortingExtension from '../../components/grid/extension/sorting-extension';
 import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
@@ -40,8 +39,4 @@ $(() => {
   grid.addExtension(new ReloadListExtension());
   grid.addExtension(new SubmitRowActionExtension());
   new TranslatableInput();
-
-  const merchandiseReturnEditPage = new MerchandiseReturnEditPage();
-  merchandiseReturnEditPage.listenForProductDelete();
-  merchandiseReturnEditPage.listenForProductPagination();
 });
