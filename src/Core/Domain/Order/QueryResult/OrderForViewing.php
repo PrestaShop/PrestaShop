@@ -174,6 +174,11 @@ class OrderForViewing
     private $invoiceManagementIsEnabled;
 
     /**
+     * @var OrderSourcesForViewing
+     */
+    private $sources;
+
+    /**
      * @param int $orderId
      * @param int $currencyId
      * @param int $carrierId
@@ -202,6 +207,7 @@ class OrderForViewing
      * @param OrderMessagesForViewing $messages
      * @param OrderPricesForViewing $prices
      * @param OrderDiscountsForViewing $discounts
+     * @param OrderSourcesForViewing $sources
      */
     public function __construct(
         int $orderId,
@@ -231,7 +237,8 @@ class OrderForViewing
         OrderPaymentsForViewing $payments,
         OrderMessagesForViewing $messages,
         OrderPricesForViewing $prices,
-        OrderDiscountsForViewing $discounts
+        OrderDiscountsForViewing $discounts,
+        OrderSourcesForViewing $sources
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
@@ -261,6 +268,7 @@ class OrderForViewing
         $this->carrierName = $carrierName;
         $this->shopId = $shopId;
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
+        $this->sources = $sources;
     }
 
     /**
@@ -490,6 +498,14 @@ class OrderForViewing
     public function isInvoiceManagementIsEnabled(): bool
     {
         return $this->invoiceManagementIsEnabled;
+    }
+
+    /**
+     * @return OrderSourcesForViewing
+     */
+    public function getSources(): OrderSourcesForViewing
+    {
+        return $this->sources;
     }
 
     /**
