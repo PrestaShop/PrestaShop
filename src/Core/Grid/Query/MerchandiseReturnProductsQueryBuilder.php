@@ -63,7 +63,7 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         int $contextLanguageId,
-        /**
+        /*
          * @todo
          * I need RequestStack to get merchandiseReturnId to query builder.
          * I saw that categoryQueryBuilder uses filters for this purpose and it ends up using
