@@ -90,6 +90,7 @@ class CmsPageController extends FrameworkBundleAdminController
     public function indexAction(CmsPageCategoryFilters $categoryFilters, CmsPageFilters $cmsFilters, Request $request)
     {
         $cmsCategoryParentId = (int) $categoryFilters->getFilters()['id_cms_category_parent'];
+        $categoryFilters->addFilter(['is_search_request' => $this->requestHasSearchParameters($request)]);
         $viewData = [];
 
         try {
@@ -1209,5 +1210,15 @@ class CmsPageController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function requestHasSearchParameters(Request $request)
+    {
+        return !empty($request->query->get(CmsPageCategoryDefinitionFactory::GRID_ID)['filters']);
     }
 }
