@@ -149,8 +149,8 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param Request $request
      * @param int $merchandiseReturnId
      * @param int $merchandiseReturnDetailId
-     *
      * @param int $customizationId
+     *
      * @return RedirectResponse
      */
     public function deleteProductAction(Request $request, int $merchandiseReturnId, int $merchandiseReturnDetailId, int $customizationId): RedirectResponse
