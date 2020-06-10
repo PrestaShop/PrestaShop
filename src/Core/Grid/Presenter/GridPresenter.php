@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Grid\Presenter;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
@@ -40,6 +42,10 @@ use Symfony\Component\DependencyInjection\Container;
  */
 final class GridPresenter implements GridPresenterInterface
 {
+    private const CATEGORY_GRID_IDS = [
+        CategoryGridDefinitionFactory::GRID_ID,
+        CmsPageCategoryDefinitionFactory::GRID_ID,
+    ];
     /**
      * @var HookDispatcherInterface
      */
@@ -92,6 +98,14 @@ final class GridPresenter implements GridPresenterInterface
 
         if ($searchCriteria instanceof Filters) {
             $presentedGrid['form_prefix'] = $searchCriteria->getFilterId();
+        }
+
+        // Category definitions have at least 1 default filter for the parent_id
+        // We should consider them empty.
+        if (in_array($definition->getId(), self::CATEGORY_GRID_IDS)
+            && count($searchCriteria->getFilters()) === 1
+            && $data->getRecords()->count() === 0) {
+            $presentedGrid['attributes']['is_empty_state'] = true;
         }
 
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridPresenterModifier', [
