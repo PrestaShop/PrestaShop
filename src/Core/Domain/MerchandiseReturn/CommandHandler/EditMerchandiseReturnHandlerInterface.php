@@ -33,5 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerc
 
 interface EditMerchandiseReturnHandlerInterface
 {
+    /**
+     * @param EditMerchandiseReturnCommand $command
+     * @return EditableMerchandiseReturn
+     */
     public function handle(EditMerchandiseReturnCommand $command): EditableMerchandiseReturn;
 }
