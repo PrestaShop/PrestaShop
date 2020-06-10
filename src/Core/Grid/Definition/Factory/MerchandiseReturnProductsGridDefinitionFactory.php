@@ -123,7 +123,10 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                                 'route' => 'admin_merchandise_returns_delete_product',
                                 'route_param_name' => 'merchandiseReturnId',
                                 'route_param_field' => 'id_order_return',
-                                'extra_route_params' => ['merchandiseReturnDetailId' => 'id_order_detail'],
+                                'extra_route_params' => [
+                                    'merchandiseReturnDetailId' => 'id_order_detail',
+                                    'customizationId' => 'id_customization',
+                                ],
                                 'confirm_message' => $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
                             ])
                             ),

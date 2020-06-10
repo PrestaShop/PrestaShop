@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Product;
+
 /** @todo at this point duplicate of PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing */
 class OrderDetailCustomization
 {
@@ -61,8 +63,7 @@ class OrderDetailCustomization
         $this->type = $type;
         $this->name = $name;
         $this->value = $value;
-        /* @todo change const */
-        if (0 === $this->type) {
+        if (Product::CUSTOMIZE_FILE === $this->type) {
             $this->image = _THEME_PROD_PIC_DIR_ . $this->value . '_small';
         }
     }
