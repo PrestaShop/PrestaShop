@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPrices
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShopException;
 use Product;
 
@@ -129,8 +130,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      */
     private function assertTaxRulesGroupExists(int $taxRulesGroupId): void
     {
-        // 0 is valid value meaning no tax rules group is applied.
-        if (0 === $taxRulesGroupId) {
+        if (ProductTaxRulesGroupSettings::NONE_APPLIED === $taxRulesGroupId) {
             return;
         }
 
