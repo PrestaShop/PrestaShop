@@ -125,8 +125,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $cart = $this->createNewOrEditExistingCart($order);
 
-            $oldCartRules = $cart->getCartRules();
-
             $specificPrice = $this->createSpecificPriceIfNeeded(
                 new AmountImmutable(
                     (float) (string) $command->getProductPriceTaxIncluded(),
