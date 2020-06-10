@@ -150,13 +150,14 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * @param int $merchandiseReturnId
      * @param int $merchandiseReturnDetailId
      *
+     * @param int $customizationId
      * @return RedirectResponse
      */
-    public function deleteProductAction(Request $request, int $merchandiseReturnId, int $merchandiseReturnDetailId): RedirectResponse
+    public function deleteProductAction(Request $request, int $merchandiseReturnId, int $merchandiseReturnDetailId, int $customizationId): RedirectResponse
     {
         try {
             $this->getCommandBus()->handle(
-                new DeleteProductFromMerchandiseReturnCommand($merchandiseReturnId, $merchandiseReturnDetailId)
+                new DeleteProductFromMerchandiseReturnCommand($merchandiseReturnId, $merchandiseReturnDetailId, $customizationId)
             );
 
             $this->addFlash(
