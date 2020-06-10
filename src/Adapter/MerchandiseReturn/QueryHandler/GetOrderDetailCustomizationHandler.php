@@ -43,6 +43,10 @@ class GetOrderDetailCustomizationHandler implements GetOrderDetailCustomizationH
      */
     private $contextLangId;
 
+    /**
+     * GetOrderDetailCustomizationHandler constructor.
+     * @param int $contextLangId
+     */
     public function __construct(
         int $contextLangId
     ) {
