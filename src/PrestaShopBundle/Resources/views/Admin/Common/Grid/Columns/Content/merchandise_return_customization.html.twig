@@ -28,8 +28,16 @@
       {% for customizations in [record[column.options.customizations]] %}
           {% if customizations is not null %}
             {% for customization in customizations.orderDetailCustomizations %}
-              {{ customization.name }}: {{ customization.value }}
-              {{ customization.image }}
+              <div class="row">
+                <span class="col-lg-12"><strong>{{ customization.name }}</strong></span>
+                <div class="col-lg-12">
+                  {% if customization.image is not null %}
+                    <img class="img-thumbnail" src="{{ customization.image }}">
+                  {% else %}
+                    {{ customization.value }}
+                  {% endif %}
+                </div>
+              </div>
             {% endfor %}
           {% endif %}
       {% endfor %}
