@@ -189,6 +189,12 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
                 continue;
             }
 
+            if ($filterName === 'quantity') {
+                $qb->andWhere('od.`product_quantity` LIKE :' . $filterName);
+                $qb->setParameter($filterName, '%' . $filterValue . '%');
+                continue;
+            }
+
             $qb->andWhere('od.`' . $filterName . '` LIKE :' . $filterName);
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }

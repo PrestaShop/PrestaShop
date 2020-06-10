@@ -43,6 +43,7 @@ class DeleteProductFromMerchandiseReturnHandler extends AbstractMerchandiseRetur
     {
         $merchandiseReturnId = $command->getMerchandiseReturnId();
         $detailId = $command->getMerchandiseReturnDetailId();
+        $customizationId = $command->getCustomizationId();
         $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
 
         $this->assertOrderReturnWasFound($merchandiseReturnId, $orderReturn);
@@ -51,7 +52,7 @@ class DeleteProductFromMerchandiseReturnHandler extends AbstractMerchandiseRetur
             throw new DeleteMerchandiseReturnDetailException('Can\'t delete last product from merchandise return');
         }
 
-        if (!OrderReturn::deleteOrderReturnDetail($merchandiseReturnId->getValue(), $detailId)) {
+        if (!OrderReturn::deleteOrderReturnDetail($merchandiseReturnId->getValue(), $detailId, $customizationId)) {
             throw new DeleteMerchandiseReturnDetailException('Failed to delete merchandise return detail');
         }
     }
