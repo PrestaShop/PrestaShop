@@ -42,6 +42,7 @@ use Order;
 use OrderInvoice;
 use OrderPayment;
 use OrderSlip;
+use OrderState;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -52,6 +53,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderBrotherForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderBrothersForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -137,7 +140,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         Context $context,
         CustomerDataProvider $customerDataProvider,
         GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler
-    ) {
+    )
+    {
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
         $this->locale = $locale;
@@ -162,19 +166,19 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->translator->trans('Tax included', [], 'Admin.Global') :
             $this->translator->trans('Tax excluded', [], 'Admin.Global');
 
-        $invoiceManagementIsEnabled = (bool) Configuration::get('PS_INVOICE', null, null, $order->id_shop);
+        $invoiceManagementIsEnabled = (bool)Configuration::get('PS_INVOICE', null, null, $order->id_shop);
 
         return new OrderForViewing(
-            (int) $order->id,
-            (int) $order->id_currency,
-            (int) $order->id_carrier,
-            (string) $orderCarrier->name,
-            (int) $order->id_shop,
+            (int)$order->id,
+            (int)$order->id_currency,
+            (int)$order->id_carrier,
+            (string)$orderCarrier->name,
+            (int)$order->id_shop,
             $order->reference,
-            (bool) $order->isVirtual(),
+            (bool)$order->isVirtual(),
             $taxMethod,
             $isTaxIncluded,
-            (bool) $order->valid,
+            (bool)$order->valid,
             $order->hasBeenPaid(),
             $order->hasInvoice(),
             $order->hasBeenDelivered(),
@@ -193,7 +197,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderMessages($order),
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
-            $this->getOrderSources($order)
+            $this->getOrderSources($order),
+            $this->getOrderBrothers($order)
         );
     }
 
@@ -249,7 +254,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
             $customer->note,
-            (bool) $customer->is_guest
+            (bool)$customer->is_guest
         );
     }
 
@@ -332,12 +337,12 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         foreach ($history as $item) {
             $statuses[] = new OrderStatusForViewing(
-                (int) $item['id_order_history'],
-                (int) $item['id_order_state'],
+                (int)$item['id_order_history'],
+                (int)$item['id_order_state'],
                 $item['ostate_name'],
                 $item['color'],
                 new DateTimeImmutable($item['date_add']),
-                (bool) $item['send_email'],
+                (bool)$item['send_email'],
                 $item['employee_firstname'],
                 $item['employee_lastname']
             );
@@ -447,7 +452,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             count($order->getInvoicesCollection()) &&
             $order->invoice_number;
 
-        $canGenerateDeliverySlip = (bool) $order->delivery_number;
+        $canGenerateDeliverySlip = (bool)$order->delivery_number;
 
         return new OrderDocumentsForViewing(
             $canGenerateInvoice,
@@ -500,11 +505,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $weight = sprintf('%.3f %s', $item['weight'], Configuration::get('PS_WEIGHT_UNIT'));
 
                 $carriers[] = new OrderCarrierForViewing(
-                    (int) $item['id_order_carrier'],
+                    (int)$item['id_order_carrier'],
                     new DateTimeImmutable($item['date_add']),
                     $item['carrier_name'],
                     $weight,
-                    (int) $item['id_carrier'],
+                    (int)$item['id_carrier'],
                     $price,
                     $trackingUrl,
                     $trackingNumber,
@@ -515,8 +520,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         return new OrderShippingForViewing(
             $carriers,
-            (bool) $order->recyclable,
-            (bool) $order->gift,
+            (bool)$order->recyclable,
+            (bool)$order->gift,
             $order->gift_message,
             $carrierModuleInfo
         );
@@ -549,9 +554,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             }
 
             $orderReturns[] = new OrderReturnForViewing(
-                (int) $orderReturn['id_order_return'],
-                isset($orderReturn['id_order_invoice']) ? (int) $orderReturn['id_order_invoice'] : 0,
-                isset($orderReturn['id_carrier']) ? (int) $orderReturn['id_carrier'] : 0,
+                (int)$orderReturn['id_order_return'],
+                isset($orderReturn['id_order_invoice']) ? (int)$orderReturn['id_order_invoice'] : 0,
+                isset($orderReturn['id_carrier']) ? (int)$orderReturn['id_carrier'] : 0,
                 new DateTimeImmutable($orderReturn['date_add']),
                 $orderReturn['type'],
                 $orderReturn['state_name'],
@@ -635,18 +640,18 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private function getOrderMessages(Order $order): OrderMessagesForViewing
     {
         $orderMessagesForOrderPage = $this->customerDataProvider->getCustomerMessages(
-            (int) $order->id_customer,
-            (int) $order->id
+            (int)$order->id_customer,
+            (int)$order->id
         );
 
         $messages = [];
 
         foreach ($orderMessagesForOrderPage['messages'] as $orderMessage) {
-            $messageEmployeeId = (int) $orderMessage['id_employee'];
-            $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
+            $messageEmployeeId = (int)$orderMessage['id_employee'];
+            $isCurrentEmployeesMessage = (int)$this->context->employee->id === $messageEmployeeId;
 
             $messages[] = new OrderMessageForViewing(
-                (int) $orderMessage['id_customer_message'],
+                (int)$orderMessage['id_customer_message'],
                 $orderMessage['message'],
                 new OrderMessageDateForViewing(
                     new DateTimeImmutable($orderMessage['date_add']),
@@ -658,7 +663,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $orderMessage['elastname'],
                 $orderMessage['cfirstname'],
                 $orderMessage['clastname'],
-                (bool) $orderMessage['private']
+                (bool)$orderMessage['private']
             );
         }
 
@@ -689,31 +694,31 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         }
 
         if ($isTaxExcluded) {
-            $productsPrice = (float) $order->total_products;
-            $discountsAmount = (float) $order->total_discounts_tax_excl;
-            $wrappingPrice = (float) $order->total_wrapping_tax_excl;
-            $shippingPrice = (float) $order->total_shipping_tax_excl;
+            $productsPrice = (float)$order->total_products;
+            $discountsAmount = (float)$order->total_discounts_tax_excl;
+            $wrappingPrice = (float)$order->total_wrapping_tax_excl;
+            $shippingPrice = (float)$order->total_shipping_tax_excl;
             $shippingRefundable = max(0, $shipping_refundable_tax_excl);
-            $totalAmount = (float) $order->total_paid_tax_excl;
+            $totalAmount = (float)$order->total_paid_tax_excl;
         } else {
-            $productsPrice = (float) $order->total_products_wt;
-            $discountsAmount = (float) $order->total_discounts_tax_incl;
-            $wrappingPrice = (float) $order->total_wrapping_tax_incl;
-            $shippingPrice = (float) $order->total_shipping_tax_incl;
+            $productsPrice = (float)$order->total_products_wt;
+            $discountsAmount = (float)$order->total_discounts_tax_incl;
+            $wrappingPrice = (float)$order->total_wrapping_tax_incl;
+            $shippingPrice = (float)$order->total_shipping_tax_incl;
             $shippingRefundable = max(0, $shipping_refundable_tax_incl);
-            $totalAmount = (float) $order->total_paid_tax_incl;
+            $totalAmount = (float)$order->total_paid_tax_incl;
         }
 
         $taxesAmount = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
 
         return new OrderPricesForViewing(
-            new Number((string) $productsPrice),
-            new Number((string) $discountsAmount),
-            new Number((string) $wrappingPrice),
-            new Number((string) $shippingPrice),
-            new Number((string) $shippingRefundable),
-            new Number((string) $taxesAmount),
-            new Number((string) $totalAmount),
+            new Number((string)$productsPrice),
+            new Number((string)$discountsAmount),
+            new Number((string)$wrappingPrice),
+            new Number((string)$shippingPrice),
+            new Number((string)$shippingRefundable),
+            new Number((string)$taxesAmount),
+            new Number((string)$totalAmount),
             Tools::displayPrice($productsPrice, $currency),
             Tools::displayPrice($discountsAmount, $currency),
             Tools::displayPrice($wrappingPrice, $currency),
@@ -741,19 +746,19 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         foreach ($discounts as $discount) {
             $discountAmount = $isTaxIncluded ? $discount['value'] : $discount['value_tax_excl'];
 
-            $cartRule = new CartRule((int) $discount['id_cart_rule']);
-            if ((int) $cartRule->reduction_currency !== $order->id_currency) {
+            $cartRule = new CartRule((int)$discount['id_cart_rule']);
+            if ((int)$cartRule->reduction_currency !== $order->id_currency) {
                 $discountAmount = Tools::convertPriceFull(
                     $isTaxIncluded ? $discount['value'] : $discount['value_tax_excl'],
-                    new Currency((int) $cartRule->reduction_currency),
-                    new Currency((int) $order->id_currency)
+                    new Currency((int)$cartRule->reduction_currency),
+                    new Currency((int)$order->id_currency)
                 );
             }
 
             $discountsForViewing[] = new OrderDiscountForViewing(
-                (int) $discount['id_order_cart_rule'],
+                (int)$discount['id_order_cart_rule'],
                 $discount['name'],
-                new Number((string) $discountAmount),
+                new Number((string)$discountAmount),
                 Tools::displayPrice($discountAmount, $currency)
             );
         }
@@ -781,6 +786,35 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         }
 
         return new OrderSourcesForViewing($sources);
+    }
+
+    /**
+     * @return OrderBrothersForViewing
+     */
+    private function getOrderBrothers(Order $order): OrderBrothersForViewing
+    {
+        $brothersData = $order->getBrother();
+        $brothers = [];
+        /** @var Order $brotherItem */
+        foreach ($brothersData as $brotherItem) {
+            $isTaxExcluded = !$this->isTaxIncludedInOrder($brotherItem);
+
+            if ($isTaxExcluded) {
+                $totalAmount = (float)$order->total_paid_tax_excl;
+            } else {
+                $totalAmount = (float)$order->total_paid_tax_incl;
+            }
+
+            $orderState = new OrderState($brotherItem->current_state);
+
+            $brothers[] = new OrderBrotherForViewing(
+                $brotherItem->id,
+                $orderState->name[$brotherItem->id_lang],
+                $totalAmount
+            );
+        }
+
+        return new OrderBrothersForViewing($brothers);
     }
 
     /**
