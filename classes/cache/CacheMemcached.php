@@ -79,7 +79,10 @@ class CacheMemcachedCore extends Cache
             $this->memcached->addServer($server['ip'], $server['port'], (int) $server['weight']);
         }
 
-        $this->is_connected = in_array('255.255.255', $this->memcached->getVersion(), true) === false;
+        $versions = $this->memcached->getVersion();
+        $this->is_connected = is_array($versions)
+            ? in_array('255.255.255', $versions, true) === false
+            : false;
     }
 
     /**
