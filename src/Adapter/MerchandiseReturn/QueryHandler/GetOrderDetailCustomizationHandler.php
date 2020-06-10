@@ -39,6 +39,17 @@ use Product;
 class GetOrderDetailCustomizationHandler implements GetOrderDetailCustomizationHandlerInterface
 {
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    public function __construct(
+        int $contextLangId
+    ) {
+        $this->contextLangId = $contextLangId;
+    }
+
+    /**
      * @param GetOrderDetailCustomization $query
      *
      * @return OrderDetailCustomizations|null
@@ -51,8 +62,7 @@ class GetOrderDetailCustomizationHandler implements GetOrderDetailCustomizationH
         $orderDetail = new OrderDetail($query->getOrderDetailId());
         $order = new Order($orderDetail->id_order);
         $customizations = [];
-        /** @todo need id lang */
-        $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, 1, true, null, $orderDetail->id_customization);
+        $productCustomizations = Product::getAllCustomizedDatas($order->id_cart, $this->contextLangId, true, null, $orderDetail->id_customization);
         $customizedDatas = null;
         if (isset($productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id])) {
             $customizedDatas = $productCustomizations[$orderDetail->product_id][$orderDetail->product_attribute_id];
