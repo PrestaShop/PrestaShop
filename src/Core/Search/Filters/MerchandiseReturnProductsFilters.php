@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\MerchandiseReturnProductsGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 

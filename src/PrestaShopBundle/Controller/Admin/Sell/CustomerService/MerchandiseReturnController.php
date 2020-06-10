@@ -32,7 +32,6 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
@@ -40,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnProductsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -99,8 +97,8 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @param int $merchandiseReturnId
      * @param Request $request
-     *
      * @param MerchandiseReturnProductsFilters $filters
+     *
      * @return Response
      */
     public function editAction(int $merchandiseReturnId, Request $request, MerchandiseReturnProductsFilters $filters): Response
@@ -141,7 +139,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Actions')),
             'merchandiseReturnForm' => $form->createView(),
             'editableMerchandiseReturn' => $editableMerchandiseReturn,
-            'merchandiseReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters))
+            'merchandiseReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
         ]);
     }
 
@@ -165,7 +163,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
             );
-
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -175,7 +172,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             $this->redirectToRoute(
                 'admin_merchandise_returns_edit',
                 [
-                    'merchandiseReturnId' => $merchandiseReturnId
+                    'merchandiseReturnId' => $merchandiseReturnId,
                 ]
             );
     }

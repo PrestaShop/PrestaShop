@@ -155,7 +155,7 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
             'quantity',
             'customization_name',
             'customization_value',
-            'merchandiseReturnId'
+            'merchandiseReturnId',
         ];
 
         foreach ($filters as $filterName => $filterValue) {
