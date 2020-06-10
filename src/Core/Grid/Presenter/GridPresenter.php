@@ -94,6 +94,12 @@ final class GridPresenter implements GridPresenterInterface
             $presentedGrid['form_prefix'] = $searchCriteria->getFilterId();
         }
 
+        if (isset($searchCriteria->getFilters()['is_search_request'])
+            && false === $searchCriteria->getFilters()['is_search_request']
+            && 0 === $data->getRecordsTotal()) {
+            $presentedGrid['attributes']['is_empty_state'] = true;
+        }
+
         $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridPresenterModifier', [
             'presented_grid' => &$presentedGrid,
         ]);
