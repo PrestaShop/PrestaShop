@@ -182,33 +182,30 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
 
-            $newCartRules = $cart->getCartRules();
+            $cartRules = $cart->getCartRules();
 
-            sort($oldCartRules);
-            sort($newCartRules);
-
-            // Serialize permits to diff multi dimensional array
-            $result = array_diff(
-                array_map('serialize', $newCartRules),
-                array_map('serialize', $oldCartRules)
-            );
-            $result = array_map('unserialize', $result);
-
-            foreach ($result as $cartRule) {
+            foreach ($cartRules as $cartRule) {
                 // Create OrderCartRule
                 $rule = new CartRule($cartRule['id_cart_rule']);
                 $values = [
                     'tax_incl' => $rule->getContextualValue(true),
                     'tax_excl' => $rule->getContextualValue(false),
                 ];
-                $orderCartRule = new OrderCartRule();
-                $orderCartRule->id_order = $order->id;
-                $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
-                $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
-                $orderCartRule->name = $cartRule['name'];
-                $orderCartRule->value = $values['tax_incl'];
-                $orderCartRule->value_tax_excl = $values['tax_excl'];
-                $orderCartRule->add();
+
+                foreach ($order->getCartRules() as $orderCartRule) {
+                    if ($orderCartRule['id_cart_rule'] !== $cartRule['id_cart_rule']) {
+                        continue;
+                    }
+
+                    $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
+                    $orderCartRule->id_order = $order->id;
+                    $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
+                    $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
+                    $orderCartRule->name = $cartRule['name'];
+                    $orderCartRule->value = $values['tax_incl'];
+                    $orderCartRule->value_tax_excl = $values['tax_excl'];
+                    $orderCartRule->update();
+                }
             }
 
             // Update totals amount of order
