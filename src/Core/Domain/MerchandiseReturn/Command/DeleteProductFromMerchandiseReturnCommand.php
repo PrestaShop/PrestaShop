@@ -45,10 +45,24 @@ class DeleteProductFromMerchandiseReturnCommand
      */
     private $merchandiseReturnDetailId;
 
-    public function __construct(int $merchandiseReturnId, int $merchandiseReturnDetailId)
+    /**
+     * @var int
+     */
+    private $customizationId;
+
+    /**
+     * DeleteProductFromMerchandiseReturnCommand constructor.
+     * @param int $merchandiseReturnId
+     * @param int $merchandiseReturnDetailId
+     * @param int $customizationId
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException
+     */
+    public function __construct(int $merchandiseReturnId, int $merchandiseReturnDetailId, int $customizationId)
     {
         $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
         $this->merchandiseReturnDetailId = $merchandiseReturnDetailId;
+        $this->customizationId = $customizationId;
     }
 
     /**
@@ -65,5 +79,13 @@ class DeleteProductFromMerchandiseReturnCommand
     public function getMerchandiseReturnDetailId(): int
     {
         return $this->merchandiseReturnDetailId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCustomizationId(): int
+    {
+        return $this->customizationId;
     }
 }
