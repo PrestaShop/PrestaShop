@@ -78,6 +78,7 @@ class EditableMerchandiseReturn
 
     /**
      * EditableMerchandiseReturn constructor.
+     *
      * @param MerchandiseReturnId $merchandiseReturnId
      * @param CustomerId $customerId
      * @param string $customerFirstName
