@@ -117,12 +117,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 )
             );
 
-            $productsForViewing = $this->getQueryBus()->handle(
-                new GetMerchandiseReturnProductsForViewing(
-                    $merchandiseReturnId
-                )
-            );
-
             $form = $formBuilder->getFormFor($merchandiseReturnId);
             $form->handleRequest($request);
 
@@ -147,7 +141,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Actions')),
             'merchandiseReturnForm' => $form->createView(),
             'editableMerchandiseReturn' => $editableMerchandiseReturn,
-            'merchandiseReturnProductsForViewing' => $productsForViewing,
             'merchandiseReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters))
         ]);
     }
