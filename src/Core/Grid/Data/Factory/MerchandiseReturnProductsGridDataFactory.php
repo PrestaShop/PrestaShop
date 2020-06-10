@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 class MerchandiseReturnProductsGridDataFactory implements GridDataFactoryInterface
 {
-
     /**
      * @var GridDataFactoryInterface
      */
@@ -53,8 +52,7 @@ class MerchandiseReturnProductsGridDataFactory implements GridDataFactoryInterfa
     public function __construct(
         GridDataFactoryInterface $merchandiseReturnProductsGridDataFactory,
         GetOrderDetailCustomizationHandlerInterface $getOrderDetailCustomizationHandler
-    )
-    {
+    ) {
         $this->merchandiseReturnProductsGridDataFactory = $merchandiseReturnProductsGridDataFactory;
         $this->getOrderDetailCustomizationHandler = $getOrderDetailCustomizationHandler;
     }

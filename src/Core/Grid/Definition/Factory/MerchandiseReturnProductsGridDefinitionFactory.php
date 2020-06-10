@@ -102,15 +102,15 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                     ->setOptions([
                         'actions' => (new RowActionCollection())
                             ->add((new SubmitRowAction('delete'))
-                                ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                                ->setIcon('delete')
-                                ->setOptions([
-                                    'route' => 'admin_merchandise_returns_delete_product',
-                                    'route_param_name' => 'merchandiseReturnId',
-                                    'route_param_field' => 'id_order_return',
-                                    'extra_route_params' => ['merchandiseReturnDetailId' => 'id_order_detail'],
-                                    'confirm_message' => $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
-                                ])
+                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                            ->setIcon('delete')
+                            ->setOptions([
+                                'route' => 'admin_merchandise_returns_delete_product',
+                                'route_param_name' => 'merchandiseReturnId',
+                                'route_param_field' => 'id_order_return',
+                                'extra_route_params' => ['merchandiseReturnDetailId' => 'id_order_detail'],
+                                'confirm_message' => $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
+                            ])
                             ),
                     ])
             )
@@ -126,47 +126,47 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
     {
         return (new FilterCollection())
             ->add((new Filter('reference', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search Reference', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('product_reference')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search Reference', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('product_reference')
             )
             ->add((new Filter('product_name', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search Name', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('product_name')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search Name', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('product_name')
             )
             ->add((new Filter('quantity', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Search quantity', [], 'Admin.Actions'),
-                    ],
-                ])
-                ->setAssociatedColumn('quantity')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Search quantity', [], 'Admin.Actions'),
+                ],
+            ])
+            ->setAssociatedColumn('quantity')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions([
-                    'reset_route' => 'admin_common_reset_search_by_filter_id',
-                    'reset_route_params' => [
-                        'filterId' => self::GRID_ID,
-                        /** @todo use proper id */
-                        'merchandiseReturnId' => 4
-                    ],
-                    'redirect_route' => 'admin_merchandise_returns_edit',
-                    'redirect_route_params' => [
-                        /** @todo use proper id */
-                        'merchandiseReturnId' => 4
-                    ]
-                ])
-                ->setAssociatedColumn('actions')
+            ->setTypeOptions([
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
+                    /* @todo use proper id */
+                    'merchandiseReturnId' => 4,
+                ],
+                'redirect_route' => 'admin_merchandise_returns_edit',
+                'redirect_route_params' => [
+                    /* @todo use proper id */
+                    'merchandiseReturnId' => 4,
+                ],
+            ])
+            ->setAssociatedColumn('actions')
             )
         ;
     }
