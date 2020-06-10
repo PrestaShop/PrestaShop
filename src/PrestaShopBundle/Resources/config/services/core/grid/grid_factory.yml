@@ -300,7 +300,7 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
       arguments:
         - '@prestashop.core.grid.definition.factory.merchandise_return_products'
-        - '@prestashop.core.grid.data_provider.merchandise_return_products'
+        - '@prestashop.core.grid.data.factory.merchandise_return_products_decorator'
         - '@prestashop.core.grid.filter.merchandise_return_products_form_factory'
         - '@prestashop.core.hook.dispatcher'
 
