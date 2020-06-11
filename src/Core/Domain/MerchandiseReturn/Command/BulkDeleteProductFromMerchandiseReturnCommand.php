@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetail;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 
 /**
@@ -39,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseR
  */
 class BulkDeleteProductFromMerchandiseReturnCommand
 {
-
     /**
      * @var MerchandiseReturnId
      */
@@ -74,7 +72,7 @@ class BulkDeleteProductFromMerchandiseReturnCommand
     {
         foreach ($merchandiseReturnDetails as $merchandiseReturnDetail) {
             if (!$merchandiseReturnDetail instanceof MerchandiseReturnDetail) {
-                /** @todo error */
+                /* @todo error */
                 throw new MerchandiseReturnException('Need a proper error here');
             }
             $this->merchandiseReturnDetails[] = $merchandiseReturnDetail;
