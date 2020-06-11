@@ -1,10 +1,10 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add
 @reset-database-before-feature
+@add
 Feature: Add basic product from Back Office (BO)
   As a BO user
   I need to be able to add new product with basic information from the BO
 
-  @add
   Scenario: I add a product with basic information
     When I add product "product1" with following information:
       | name       | en-US:bottle of beer |
@@ -15,7 +15,6 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" localized "name" should be "en-US:bottle of beer"
     And product "product1" should be assigned to default category
 
-  @add
   Scenario: I add a product with basic information
     When I add product "product1" with following information:
       | name       | en-US:bottle of beer |
@@ -27,7 +26,6 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" localized "name" should be "en-US:bottle of beer"
     And product "product1" should be assigned to default category
 
-  @add
   Scenario: I add a product with invalid characters in name
     When I add product "product2" with following information:
       | name       | en-US: T-shirt #1 |

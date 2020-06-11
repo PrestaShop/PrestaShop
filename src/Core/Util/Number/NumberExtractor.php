@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Util\Number;
 
 use PrestaShop\Decimal\Number;
-use stdClass;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
@@ -64,7 +63,7 @@ class NumberExtractor
      *
      * ->extract($simpleArray, '[someKey]')
      *
-     * @param array|stdClass $resource
+     * @param array|object $resource
      * @param string $propertyPath
      *
      * @return Number

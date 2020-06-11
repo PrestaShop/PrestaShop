@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInfor
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
 /**
@@ -43,6 +44,20 @@ use Product;
  */
 class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
+    /**
+     * @var NumberExtractor
+     */
+    private $numberExtractor;
+
+    /**
+     * @param NumberExtractor $numberExtractor
+     */
+    public function __construct(
+        NumberExtractor $numberExtractor
+    ) {
+        $this->numberExtractor = $numberExtractor;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -95,14 +110,14 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     private function getPricesInformation(Product $product): ProductPricesInformation
     {
         return new ProductPricesInformation(
-            $this->getPropertyAsNumber($product, 'price'),
-            $this->getPropertyAsNumber($product, 'ecotax'),
+            $this->numberExtractor->extract($product, 'price'),
+            $this->numberExtractor->extract($product, 'ecotax'),
             (int) $product->id_tax_rules_group,
             (bool) $product->on_sale,
-            $this->getPropertyAsNumber($product, 'wholesale_price'),
-            $this->getPropertyAsNumber($product, 'unit_price'),
+            $this->numberExtractor->extract($product, 'wholesale_price'),
+            $this->numberExtractor->extract($product, 'unit_price'),
             (string) $product->unity,
-            $this->getPropertyAsNumber($product, 'unit_price_ratio')
+            $this->numberExtractor->extract($product, 'unit_price_ratio')
         );
     }
 

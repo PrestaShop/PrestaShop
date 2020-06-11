@@ -62,8 +62,6 @@ abstract class AbstractProductHandler
                     $productIdValue
                 ));
             }
-
-            $this->setUnitPrice($product);
         } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf('Error occurred when trying to get product #%s', $productId),
@@ -153,19 +151,6 @@ abstract class AbstractProductHandler
                 ),
                 $errorCode
             );
-        }
-    }
-
-    /**
-     * @param Product $product
-     */
-    private function setUnitPrice(Product $product)
-    {
-        $price = $this->getPropertyAsNumber($product, 'price');
-        $unitPriceRatio = $this->getPropertyAsNumber($product, 'unit_price_ratio');
-
-        if (!$unitPriceRatio->equals(new Number('0'))) {
-            $product->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
         }
     }
 }
