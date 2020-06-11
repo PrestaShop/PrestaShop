@@ -30,9 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn;
 
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnDetailException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MissingMerchandiseReturnRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 use PrestaShopException;
 
@@ -76,6 +79,44 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         }
 
         return $orderReturn;
+    }
+
+    protected function deleteMerchandiseReturnDetail(
+        MerchandiseReturnId $merchandiseReturnId,
+        MerchandiseReturnDetailId $merchandiseReturnDetailId,
+        ?CustomizationId $customizationId
+    ) {
+        $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
+        $this->assertOrderReturnWasFound($merchandiseReturnId, $orderReturn);
+
+
+        /**
+         * @todo I am not sure if this is the right solution, but one alternative was do do an if
+         * If I would not validate customizationId inside valueObject and simply let 0 pass from gridDefinitionFactory
+         * it would also work. However this way when using this command to delete order detail I would need to pass 0 if there no customization
+         * which is not exactly good practice right? I guess I could also set $customizationId as 0 by default, in that case I couldn't use ValueObject.
+         */
+
+        /**
+         * Sets customizationIdValue as 0 as this is default value passed in deleteOrderReturnDetail for id customization
+         * if there is no customization we don't want to pass anything there
+         * @var int $customizationIdValue
+         */
+        $customizationIdValue = 0;
+        if ($customizationId !== NULL) {
+            $customizationIdValue = $customizationId->getValue();
+        }
+        if ((int) ($orderReturn->countProduct()) <= 1) {
+            throw new DeleteMerchandiseReturnDetailException('Can\'t delete last product from merchandise return');
+        }
+
+        if (!OrderReturn::deleteOrderReturnDetail(
+            $merchandiseReturnId->getValue(),
+            $merchandiseReturnDetailId->getValue(),
+            $customizationIdValue
+        )) {
+            throw new DeleteMerchandiseReturnDetailException('Failed to delete merchandise return detail');
+        }
     }
 
     /**
