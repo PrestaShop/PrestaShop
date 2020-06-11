@@ -60,4 +60,9 @@ class ProductConstraintException extends ProductException
      * When invalid product short description is supplied
      */
     const INVALID_SHORT_DESCRIPTION = 60;
+
+    /**
+     * When product visibility value is not valid
+     */
+    const INVALID_VISIBILITY = 70;
 }
