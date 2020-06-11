@@ -24,9 +24,9 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
-
 {% block content %}
+
+  {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
 
   <form name="form" id="form" method="post" class="form-horizontal product-page row justify-content-md-center" novalidate="novalidate">
 
@@ -53,7 +53,7 @@
     <div id="form-loading" class="col-xxl-10">
       {# FORM TABS CONTAINER #}
       {% block product_tabs_container %}
-        {{ include('@Product/ProductPage/Blocks/tabs.html.twig') }}
+        {{ include('@Product/ProductPage/Blocks/tabs.html.twig', { 'hooks': hooks }) }}
       {% endblock %}
       <div id="form_content" class="tab-content">
 

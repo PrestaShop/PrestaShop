@@ -176,15 +176,14 @@ class HookExtension extends \Twig_Extension
      */
     public function hooksArrayContent($hooksArray)
     {
-        $content = '';
         if (!is_array($hooksArray)) {
-            return $content;
+            return '';
         }
 
+        $content = '';
+
         foreach ($hooksArray as $hook) {
-            if (isset($hook['content'])) {
-                $content .= $hook['content'];
-            }
+            $content .= $hook['content'] ?? '';
         }
 
         return $content;
