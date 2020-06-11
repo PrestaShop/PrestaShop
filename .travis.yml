@@ -87,6 +87,8 @@ install:
     fi
 
 script:
+  - composer update --dry-run roave/security-advisories
+
   - if [ "$PRESTASHOP_TEST_TYPE" = "unit" ]; then
         bash tests/check_file_syntax.sh;
     fi
