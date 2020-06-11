@@ -89,7 +89,6 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
         $this->assertOrderReturnWasFound($merchandiseReturnId, $orderReturn);
 
-
         /**
          * @todo I am not sure if this is the right solution, but one alternative was do do an if
          * If I would not validate customizationId inside valueObject and simply let 0 pass from gridDefinitionFactory
@@ -100,10 +99,11 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         /**
          * Sets customizationIdValue as 0 as this is default value passed in deleteOrderReturnDetail for id customization
          * if there is no customization we don't want to pass anything there
-         * @var int $customizationIdValue
+         *
+         * @var int
          */
         $customizationIdValue = 0;
-        if ($customizationId !== NULL) {
+        if ($customizationId !== null) {
             $customizationIdValue = $customizationId->getValue();
         }
         if ((int) ($orderReturn->countProduct()) <= 1) {
