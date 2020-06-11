@@ -37,7 +37,7 @@ class I18nController extends ApiController
     /**
      * Show translation for page-app build with vue-js.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * No access restrictions because it is require for VueJs translations
      *
      * @param Request $request
      *
