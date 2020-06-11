@@ -565,7 +565,7 @@ class HookCore extends ObjectModel
         if (is_array($hook_name)) {
             $hook_names = $hook_name;
         } else {
-            $hook_names = array($hook_name);
+            $hook_names = [$hook_name];
         }
 
         $idShops = ($shop_list) ? ' AND `id_shop` IN(' . implode(', ', array_map('intval', $shop_list)) . ')' : '';
