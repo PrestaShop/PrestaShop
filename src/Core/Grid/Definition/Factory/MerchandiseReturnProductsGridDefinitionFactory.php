@@ -28,10 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\MerchandiseReturnCustomizationColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -44,8 +48,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Class MerchandiseReturnGridDefinitionFactory builds grid definition for merchandise returns grid.
  */
-final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
+final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory implements FilterableGridDefinitionFactoryInterface
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     const GRID_ID = 'merchandise_return_products';
 
     /**
@@ -83,6 +90,12 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
     protected function getColumns()
     {
         $columns = (new ColumnCollection())
+            ->add(
+                (new BulkActionColumn('merchandise_return_bulk'))
+                    ->setOptions([
+                        'bulk_field' => 'id_order_return',
+                    ])
+            )
             ->add(
                 (new DataColumn('product_reference'))
                     ->setName($this->trans('Reference', [], 'Admin.Global'))
@@ -142,6 +155,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
      */
     protected function getFilters()
     {
+        /** @todo need to do something if merchandiseReturnId not found. Redirect to index? */
         if (null !== ($request = $this->requestStack->getCurrentRequest())
             && $request->attributes->has('merchandiseReturnId')
         ) {
@@ -191,5 +205,37 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
             ->setAssociatedColumn('actions')
             )
         ;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        /** @todo need to do something if merchandiseReturnId not found. Redirect to index? */
+        if (null !== ($request = $this->requestStack->getCurrentRequest())
+            && $request->attributes->has('merchandiseReturnId')
+        ) {
+            $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
+        }
+        return (new BulkActionCollection())
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
+                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                ->setOptions([
+                    'submit_route' => 'admin_merchandise_returns_delete_product_bulk',
+                    'route_params' =>  [
+                        'merchandiseReturnId' => $merchandiseReturnId,
+                    ],
+                    'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
+                    'modal_options' => new ModalOptions([
+                        'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
+                        'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                        'confirm_button_class' => 'btn-danger',
+                    ]),
+                ])
+            )
+            ;
     }
 }
