@@ -110,7 +110,7 @@ module.exports = class CreditSlips extends BOBasePage {
   }
 
   /**
-   * Generate PDF by date and download
+   * Generate PDF by date and download it
    * @param dateFrom
    * @param dateTo
    * @return {Promise<*>}
