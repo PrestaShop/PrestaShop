@@ -23,20 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<tr class="column-filters {% if 0 == grid.data.records_total and grid.filters is empty %}d-none{% endif %}">
-  {% for column in grid.columns %}
-    <td>
-      {% if loop.first and grid.actions.bulk|length > 0 %}
-        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {'grid': grid}) }}
-      {% endif %}
+<div class="text-center showcase-list-card">
+  <img class="img-responsive mt-3 img-rtl" src="{{ asset('themes/new-theme/img/empty_state/order.png') }}">
 
-      {% if grid.filter_form|length > 1 %}
-        {% if grid.column_filters[column.id] is defined %}
-          {% for filter_name in grid.column_filters[column.id] %}
-            {{ form_widget(grid.filter_form[filter_name]) }}
-          {% endfor %}
-        {% endif %}
-      {% endif %}
-    </td>
-  {% endfor %}
-</tr>
+  <p class="mt-4 showcase-list-card__header">{{ 'Manage your orders'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+
+  <p class="mx-auto showcase-list-card__message">
+    {{ 'Find all your orders on this page and access their main information in one click: check the cart total, the payment method, the shipping details, or if it comes from a new client. You can even update the status from the listing!'|trans({}, 'Admin.Orderscustomers.Feature') }}
+  </p>
+
+</div>
