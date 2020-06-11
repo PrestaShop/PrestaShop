@@ -26,27 +26,50 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject;
 
-use PrestaShop\PrestaShop\Adapter\Entity\OrderReturn;
-use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\DeleteProductFromMerchandiseReturnHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnDetailException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 
-class DeleteProductFromMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler implements DeleteProductFromMerchandiseReturnHandlerInterface
+/**
+ * Provides merchandise return id
+ */
+class MerchandiseReturnDetailId
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws DeleteMerchandiseReturnDetailException
+     * @var int
      */
-    public function handle(DeleteProductFromMerchandiseReturnCommand $command): void
+    private $id;
+
+    /**
+     * @param int $id
+     *
+     * @throws MerchandiseReturnConstraintException
+     */
+    public function __construct($id)
     {
-        $this->deleteMerchandiseReturnDetail(
-            $command->getMerchandiseReturnId(),
-            $command->getMerchandiseReturnDetailId(),
-            $command->getCustomizationId()
-        );
+        $this->assertIsIntegerGreaterThanZero($id);
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param $value
+     *
+     * @throws MerchandiseReturnConstraintException
+     */
+    private function assertIsIntegerGreaterThanZero($value)
+    {
+        if (!is_int($value) || 0 >= $value) {
+            throw new MerchandiseReturnConstraintException(sprintf('Invalid merchandise return detail id "%s".', var_export($value, true)));
+        }
     }
 }
