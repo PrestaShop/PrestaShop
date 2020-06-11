@@ -196,7 +196,6 @@ module.exports = class Monitoring extends BOBasePage {
 
   /**
    * Get toggle column value for a row
-   * @param table
    * @param row
    * @return {Promise<string>}
    */
@@ -207,7 +206,6 @@ module.exports = class Monitoring extends BOBasePage {
   // Sort methods
   /**
    * Get content from all rows
-   * @param table
    * @param column
    * @return {Promise<[]>}
    */
@@ -226,7 +224,6 @@ module.exports = class Monitoring extends BOBasePage {
 
   /**
    * Sort table
-   * @param table
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}
