@@ -22,13 +22,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import Router from '@components/router';
+
 const refreshNotifications = function () {
   let timer = null;
+  const router = new Router();
 
   $.ajax({
     type: 'POST',
     headers: {'cache-control': 'no-cache'},
-    url: `${window.adminNotificationGetLink}&rand=${new Date().getTime()}`,
+    url: router.generate('admin_common_notifications'),
     async: true,
     cache: false,
     dataType: 'json',

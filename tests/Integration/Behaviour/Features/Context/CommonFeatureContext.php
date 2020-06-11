@@ -86,6 +86,16 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * Return PrestaShop Symfony services container
+     *
+     * @return ContainerInterface
+     */
+    public static function getContainer()
+    {
+        return static::$kernel->getContainer();
+    }
+
+    /**
      * This hook can be used to flag a scenario for database hard reset
      *
      * @BeforeScenario @database-scenario
@@ -104,15 +114,5 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function clearEntityManager()
     {
         $this::getContainer()->get('doctrine.orm.entity_manager')->clear();
-    }
-
-    /**
-     * Return PrestaShop Symfony services container
-     *
-     * @return ContainerInterface
-     */
-    public static function getContainer()
-    {
-        return static::$kernel->getContainer();
     }
 }

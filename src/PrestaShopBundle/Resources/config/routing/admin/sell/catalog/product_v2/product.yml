@@ -1,0 +1,10 @@
+admin_products_v2_edit:
+  path: /{productId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:edit
+    _legacy_controller: AdminProducts
+    _legacy_parameters:
+      id_attachment: productId
+  requirements:
+    productId: \d+

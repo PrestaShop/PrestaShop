@@ -661,20 +661,19 @@ class ToolsCore
 
     public static function getCountry($address = null)
     {
-        $id_country = (int) Tools::getValue('id_country');
-        if (!$id_country && isset($address, $address->id_country) && $address->id_country) {
-            $id_country = (int) $address->id_country;
-        } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-            if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0])) {
-                $id_country = (int) Country::getByIso($array[0], true);
-            }
-        }
-        if (!isset($id_country) || !$id_country) {
-            $id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
+        $countryId = Tools::getValue('id_country');
+        if (Validate::isInt($countryId)
+            && (int) $countryId > 0
+            && !empty(Country::getIsoById((int) $countryId))
+        ) {
+            return (int) $countryId;
         }
 
-        return (int) $id_country;
+        if (!empty($address->id_country) && (int) $address->id_country > 0) {
+            return (int) $address->id_country;
+        }
+
+        return (int) Configuration::get('PS_COUNTRY_DEFAULT');
     }
 
     /**
@@ -4360,10 +4359,13 @@ exit;
                 $n_categories = (int) count($categories);
                 foreach ($categories as $category) {
                     $action = (($category['id_category'] == (int) Configuration::get('PS_HOME_CATEGORY') || $home) ? 'index' : 'updatecategory');
-                    $link = Context::getContext()->link->getAdminLink('AdminCategories', true, ['action' => $action, 'id_category' => (int) $category['id_category']]);
-                    $edit = '<a href="' . Tools::safeOutput($link) . '" title="' . ($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify') . '"><i class="icon-' . (($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil') . '"></i></a> ';
+                    $link_params = ['action' => $action, 'id_category' => (int) $category['id_category']];
+                    $edit_link = Context::getContext()->link->getAdminLink('AdminCategories', true, $link_params);
+                    $link_params['action'] = 'index';
+                    $index_link = Context::getContext()->link->getAdminLink('AdminCategories', true, $link_params);
+                    $edit = '<a href="' . Tools::safeOutput($edit_link) . '" title="' . ($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify') . '"><i class="icon-' . (($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil') . '"></i></a> ';
                     $full_path .= $edit .
-                                  ($n < $n_categories ? '<a href="' . Tools::safeOutput($link) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
+                                  ($n < $n_categories ? '<a href="' . Tools::safeOutput($index_link) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
                                   (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">' . htmlentities($highlight, ENT_NOQUOTES, 'UTF-8') . '</span>', $category['name']) : $category['name']) .
                                   ($n < $n_categories ? '</a>' : '') .
                                   (($n++ != $n_categories || !empty($path)) ? ' > ' : '');

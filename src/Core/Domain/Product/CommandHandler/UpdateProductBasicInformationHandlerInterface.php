@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2020 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
@@ -21,14 +22,19 @@
  * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-<div class="col-12">
-  <p class="text-center">
-    <button type="button" class="btn btn-link see-more" data-category="{{ id }}">
-      {{ 'See more' | trans({}, 'Admin.Actions') }}
-    </button>
-    <button type="button" class="btn btn-link see-less d-none" data-category="{{ id }}">
-      {{ 'See less' | trans({}, 'Admin.Actions') }}
-    </button>
-  </p>
-</div>
+ */
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+
+/**
+ * Defines contract for UpdateProductBasicInformationHandler
+ */
+interface UpdateProductBasicInformationHandlerInterface
+{
+    /**
+     * @param UpdateProductBasicInformationCommand $command
+     */
+    public function handle(UpdateProductBasicInformationCommand $command): void;
+}

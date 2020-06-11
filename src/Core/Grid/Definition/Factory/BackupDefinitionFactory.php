@@ -108,7 +108,7 @@ final class BackupDefinitionFactory extends AbstractGridDefinitionFactory
                         'actions' => (new RowActionCollection())
                             ->add(
                                 (new LinkRowAction('view'))
-                                    ->setIcon('remove_red_eye')
+                                    ->setIcon('cloud_download')
                                     ->setOptions([
                                         'route' => 'admin_backups_download_view',
                                         'route_param_name' => 'downloadFileName',

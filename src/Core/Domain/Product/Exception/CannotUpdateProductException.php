@@ -31,4 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
  */
 class CannotUpdateProductException extends ProductException
 {
+    /**
+     * When basic information update fails
+     */
+    const FAILED_UPDATE_BASIC_INFO = 10;
 }

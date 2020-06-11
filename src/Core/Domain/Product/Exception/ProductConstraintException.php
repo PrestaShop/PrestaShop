@@ -26,10 +26,38 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
+/**
+ * Is thrown when product constraints are violated
+ */
 class ProductConstraintException extends ProductException
 {
     /**
      * Code is used when invalid id is supplied.
      */
     const INVALID_ID = 10;
+
+    /**
+     * When invalid product type is supplied.
+     */
+    const INVALID_PRODUCT_TYPE = 20;
+
+    /**
+     * When invalid product name in one or another language is supplied
+     */
+    const INVALID_NAME = 30;
+
+    /**
+     * When invalid product condition is supplied
+     */
+    const INVALID_CONDITION = 40;
+
+    /**
+     * When invalid product description is supplied
+     */
+    const INVALID_DESCRIPTION = 50;
+
+    /**
+     * When invalid product short description is supplied
+     */
+    const INVALID_SHORT_DESCRIPTION = 60;
 }

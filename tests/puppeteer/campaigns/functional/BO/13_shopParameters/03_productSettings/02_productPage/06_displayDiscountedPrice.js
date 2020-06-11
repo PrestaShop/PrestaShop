@@ -30,8 +30,10 @@ const priceRuleData = new PriceRuleFaker({
   fromQuantity: 3,
   reduction: 20,
 });
+// Unit discount in Volume discounts table(Product page FO)
 const unitDiscountToCheck = '€20.00';
-const unitPriceToCheck = '€2.94';
+// Unit price in Volume discounts table(Product page FO)
+const unitPriceToCheck = '€8.68';
 
 // Init objects needed
 const init = async function () {
