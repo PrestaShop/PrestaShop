@@ -164,7 +164,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         // Apply the changes on the cart
         $cart->updateQty(
-            $old_quantity - $orderDetail->product_quantity,
+            abs($old_quantity - $orderDetail->product_quantity),
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
             false,
@@ -276,6 +276,14 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         }
     }
 
+    /**
+     * @param Cart $cart
+     * @param Order $order
+     * @param OrderInvoice|null $invoice
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
     private function updateCartRules(Cart $cart, Order $order, ?OrderInvoice $invoice = null)
     {
         $computingPrecision = Context::getContext()->getComputingPrecision();
@@ -286,8 +294,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         CartRule::autoRemoveFromCart();
 
         $orderCartRulesData = $order->getCartRules();
-        /** @var OrderCartRule $orderCartRule */
-        foreach($orderCartRulesData as $orderCartRuleData) {
+        foreach ($orderCartRulesData as $orderCartRuleData) {
             $orderCartRule = new OrderCartRule((int) $orderCartRuleData['id_order_cart_rule']);
             $idCartRule = (int) $orderCartRule->id_cart_rule;
             $cartRule = new CartRule($idCartRule);
@@ -311,17 +318,23 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         $order->update();
     }
 
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     *
+     * @return Cart
+     */
     private function syncCartOrderCartRules(Order $order, Cart $cart): Cart
     {
         $orderCartRulesData = $order->getCartRules();
         $orderCartRulesIds = array_map(
-            function(array $orderCartRuleData) { return (int)$orderCartRuleData['id_cart_rule']; },
+            function (array $orderCartRuleData) { return (int) $orderCartRuleData['id_cart_rule']; },
             $orderCartRulesData
         );
 
         $cartRules = $cart->getCartRules();
         $cartRulesIds = array_map(
-            function(array $cartRule) { return (int)$cartRule['id_cart_rule']; },
+            function (array $cartRule) { return (int) $cartRule['id_cart_rule']; },
             $cartRules
         );
 
