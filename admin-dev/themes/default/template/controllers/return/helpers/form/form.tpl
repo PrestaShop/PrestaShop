@@ -82,7 +82,7 @@
 											<div class="form-group">
 												<span class="col-lg-3 control-label"><strong>{l s='Attachment'}</strong></span>
 												<div class="col-lg-9">
-													<a href="{$link->getAdminLink('AdminCarts', true, [], ['ajax' => 1, 'action' => 'customizationImage', 'img' => $data['value'], 'name' => $returnedCustomization['id_order_detail']|intval|cat:'-file'|cat:$smarty.foreach.data.iteration.iteration])}" class="_blank"><img class="img-thumbnail" src="{$picture_folder}{$data['value']}_small" alt="" /></a>
+													<a href="{$link->getAdminLink('AdminCarts', true, [], ['ajax' => 1, 'action' => 'customizationImage', 'img' => $data['value'], 'name' => $returnedCustomization['id_order_detail']|intval|cat:'-file'|cat:$smarty.foreach.data.iteration.iteration])}" target="_blank" rel="noopener noreferrer nofollow"><img class="img-thumbnail" src="{$picture_folder}{$data['value']}_small" alt="" /></a>
 												</div>
 											</div>
 										{/foreach}
