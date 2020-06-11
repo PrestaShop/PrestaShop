@@ -44,10 +44,10 @@ class MerchandiseReturnDetail
     private $customizationId;
 
     public function __construct(MerchandiseReturnDetailId $merchandiseReturnDetailId, CustomizationId $customizationId)
-   {
-       $this->merchandiseReturnDetailId = $merchandiseReturnDetailId;
-       $this->customizationId = $customizationId;
-   }
+    {
+        $this->merchandiseReturnDetailId = $merchandiseReturnDetailId;
+        $this->customizationId = $customizationId;
+    }
 
     /**
      * @return MerchandiseReturnDetailId

@@ -50,7 +50,7 @@ class DeleteProductFromMerchandiseReturnCommand
     private $merchandiseReturnDetailId;
 
     /**
-     * @var null|CustomizationId
+     * @var CustomizationId|null
      */
     private $customizationId;
 
