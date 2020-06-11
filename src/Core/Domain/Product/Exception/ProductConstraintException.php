@@ -85,4 +85,9 @@ class ProductConstraintException extends ProductException
      * When invalid product wholesale_price is supplied
      */
     const INVALID_WHOLESALE_PRICE = 110;
+
+    /**
+     * When product visibility value is not valid
+     */
+    const INVALID_VISIBILITY = 120;
 }
