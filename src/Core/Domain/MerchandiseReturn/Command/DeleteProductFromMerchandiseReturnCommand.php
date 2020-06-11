@@ -28,9 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 
 /**
+ * @todo I am not sure about naming, since technically it's detail not a product
+ * Maybe DeleteMerchandiseReturnDetailCommand? and don't use FromMerchandiseReturn
  * Deletes product from given order.
  */
 class DeleteProductFromMerchandiseReturnCommand
@@ -41,12 +45,12 @@ class DeleteProductFromMerchandiseReturnCommand
     private $merchandiseReturnId;
 
     /**
-     * @var int
+     * @var MerchandiseReturnDetailId
      */
     private $merchandiseReturnDetailId;
 
     /**
-     * @var int
+     * @var null|CustomizationId
      */
     private $customizationId;
 
@@ -62,12 +66,14 @@ class DeleteProductFromMerchandiseReturnCommand
     public function __construct(int $merchandiseReturnId, int $merchandiseReturnDetailId, int $customizationId)
     {
         $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
-        $this->merchandiseReturnDetailId = $merchandiseReturnDetailId;
-        $this->customizationId = $customizationId;
+        $this->merchandiseReturnDetailId = new MerchandiseReturnDetailId($merchandiseReturnDetailId);
+        if ($customizationId !== 0) {
+            $this->customizationId = new CustomizationId($customizationId);
+        }
     }
 
     /**
-     * @return int
+     * @return MerchandiseReturnId
      */
     public function getMerchandiseReturnId(): MerchandiseReturnId
     {
@@ -75,17 +81,17 @@ class DeleteProductFromMerchandiseReturnCommand
     }
 
     /**
-     * @return int
+     * @return MerchandiseReturnDetailId
      */
-    public function getMerchandiseReturnDetailId(): int
+    public function getMerchandiseReturnDetailId(): MerchandiseReturnDetailId
     {
         return $this->merchandiseReturnDetailId;
     }
 
     /**
-     * @return int
+     * @return CustomizationId|null
      */
-    public function getCustomizationId(): int
+    public function getCustomizationId(): ?CustomizationId
     {
         return $this->customizationId;
     }

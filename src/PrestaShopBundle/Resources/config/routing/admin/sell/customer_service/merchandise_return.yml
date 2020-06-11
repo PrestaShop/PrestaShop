@@ -66,3 +66,10 @@ admin_merchandise_returns_delete_product:
     merchandiseReturnDetailId: \d+
     customizationId: \d+
 
+admin_merchandise_returns_delete_product_bulk:
+  path: /{merchandiseReturnId}/products/bulk-delete
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProductBulk
+  requirements:
+    merchandiseReturnId: \d+

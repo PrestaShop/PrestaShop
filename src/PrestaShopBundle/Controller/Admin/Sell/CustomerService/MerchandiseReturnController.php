@@ -185,6 +185,52 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
+     * Deletes cartRules on bulk action
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_retuir_index")
+     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteProductAction(Request $request): RedirectResponse
+    {
+        $merchandiseReturnDetails = $this->getBulkMerchandiseReturnDetailsFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductFromMerchandiseReturnCommand($merchandiseReturnDetails));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_cart_rules_index');
+    }
+
+    /**
+     * Provides cart rule ids from request of bulk action
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkMerchandiseReturnDetailsFromRequest(Request $request): array
+    {
+        $merchandiseReturnDetailIds = $request->request->get('merchandise_return_product_bulk');
+
+        if (!is_array($merchandiseReturnDetailIds)) {
+            return [];
+        }
+
+        return array_map('intval', $merchandiseReturnDetailIds);
+    }
+
+
+    /**
      * @return FormHandlerInterface
      */
     private function getOptionsFormHandler(): FormHandlerInterface
