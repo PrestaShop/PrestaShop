@@ -109,6 +109,18 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $errors = $this->model_database->testDatabaseSettings($server, $database, $login, $password, $prefix, $clear);
 
+        if (count($errors) > 0 && $server === '127.0.0.1') {
+            $errorsAgain = $this->model_database->testDatabaseSettings('localhost', $database, $login, $password, $prefix, $clear);
+
+            if (empty($errorsAgain)) {
+                $this->ajaxJsonAnswer(
+                    true,
+                    $this->translator->trans('Database can be reached if you use localhost for server name instead of 127.0.0.1', array(), 'Install')
+                );
+                return;
+            }
+        }
+
         $this->ajaxJsonAnswer(
             (count($errors)) ? false : true,
             (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', array(), 'Install')
