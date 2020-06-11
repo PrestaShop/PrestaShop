@@ -183,27 +183,26 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $cartRules = $cart->getCartRules();
 
-            foreach ($cartRules as $cartRule) {
-                // Create OrderCartRule
-                $rule = new CartRule($cartRule['id_cart_rule']);
-                $values = [
-                    'tax_incl' => $rule->getContextualValue(true),
-                    'tax_excl' => $rule->getContextualValue(false),
-                ];
+            foreach ($cartRules as $cartRuleInArray) {
+                if (empty($order->getCartRules())) {
+                    $this->createNewOrUpdateExistingOrderCartRule(new OrderCartRule(), $cartRuleInArray, $order, $invoice);
+
+                    continue;
+                }
 
                 foreach ($order->getCartRules() as $orderCartRule) {
-                    if ($orderCartRule['id_cart_rule'] !== $cartRule['id_cart_rule']) {
+                    if ($orderCartRule['id_cart_rule'] !== $cartRuleInArray['id_cart_rule']) {
+                        $this->createNewOrUpdateExistingOrderCartRule(new OrderCartRule(), $cartRuleInArray, $order, $invoice);
+
                         continue;
                     }
 
-                    $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
-                    $orderCartRule->id_order = $order->id;
-                    $orderCartRule->id_cart_rule = $cartRule['id_cart_rule'];
-                    $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
-                    $orderCartRule->name = $cartRule['name'];
-                    $orderCartRule->value = $values['tax_incl'];
-                    $orderCartRule->value_tax_excl = $values['tax_excl'];
-                    $orderCartRule->update();
+                    $this->createNewOrUpdateExistingOrderCartRule(
+                        new OrderCartRule($orderCartRule['id_order_cart_rule']),
+                        $cartRuleInArray,
+                        $order,
+                        $invoice
+                    );
                 }
             }
 
@@ -229,6 +228,32 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         $this->contextStateManager->restoreContext();
+    }
+
+    /**
+     * @param CartRule $cartRuleInArray
+     * @param Order $order
+     * @param OrderInvoice|null $invoice
+     *
+     * @return OrderCartRule
+     */
+    private function createNewOrUpdateExistingOrderCartRule(
+        OrderCartRule $orderCartRule,
+        array $cartRuleInArray,
+        Order $order,
+        ?OrderInvoice $invoice
+    ): OrderCartRule {
+        $cartRule = new CartRule($cartRuleInArray['id_cart_rule']);
+
+        $orderCartRule->id_order = $order->id;
+        $orderCartRule->id_cart_rule = $cartRule->id;
+        $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
+        $orderCartRule->name = $cartRuleInArray['name'];
+        $orderCartRule->value = $cartRule->getContextualValue(true);
+        $orderCartRule->value_tax_excl = $cartRule->getContextualValue(false);
+        $orderCartRule->save();
+
+        return $orderCartRule;
     }
 
     /**
