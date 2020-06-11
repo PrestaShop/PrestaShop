@@ -42,12 +42,12 @@ module.exports = {
 
   /**
    * Check text in PDF
-   * @param fileName
+   * @param filePath
    * @param text
    * @return boolean, true if text exist, false if not
    */
-  async isTextInPDF(fileName, text) {
-    const pdf = await pdfJs.getDocument(fileName).promise;
+  async isTextInPDF(filePath, text) {
+    const pdf = await pdfJs.getDocument(filePath).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
     for (let pageNo = 1; pageNo <= maxPages; pageNo += 1) {
@@ -96,14 +96,14 @@ module.exports = {
   },
   /**
    * Check text in file
-   * @param fileName
+   * @param filePath
    * @param textToCheckWith
    * @param ignoreSpaces, true to delete all spaces before the check
    * @param ignoreTimeZone, true to delete timezone string added to some image url
    * @return {Promise<boolean>}
    */
-  async isTextInFile(fileName, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
-    let fileText = await fs.readFileSync(fileName, 'utf8');
+  async isTextInFile(filePath, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
+    let fileText = await fs.readFileSync(filePath, 'utf8');
     let text = textToCheckWith;
     if (ignoreSpaces) {
       fileText = await fileText.replace(/\s/g, '');
