@@ -47,7 +47,6 @@ use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
-use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -362,7 +361,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $orderDetail = new OrderDetail($row['id_order_detail']);
             $product = new Product((int) $orderDetail->product_id);
 
-            $restoredSpecificPrices[] = $this->createSpecificPriceIfNeeded(
+            $restoredSpecificPrice = $this->createSpecificPriceIfNeeded(
                 new Number((string) $orderDetail->unit_price_tax_incl),
                 new Number((string) $orderDetail->unit_price_tax_excl),
                 $order,
@@ -370,6 +369,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $product,
                 new Combination($orderDetail->product_attribute_id)
             );
+            if (null !== $restoredSpecificPrice) {
+                $restoredSpecificPrices[] = $restoredSpecificPrice;
+            }
         }
 
         return $restoredSpecificPrices;
@@ -410,9 +412,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             return null;
         }
 
-        $initialProductPriceTaxIncl = Product::getPriceStatic(
+        $initialProductPriceTaxExcl = Product::getPriceStatic(
             $product->id,
-            true,
+            false,
             $combination ? $combination->id : null,
             2,
             null,
@@ -425,7 +427,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         );
 
-        if (!$priceTaxIncluded->equals(new Number((string) $initialProductPriceTaxIncl))) {
+        // Better check with price tax excluded since it's the one saved in database
+        if (!$priceTaxExcluded->equals(new Number((string) $initialProductPriceTaxExcl))) {
             $specificPrice = new SpecificPrice();
             $specificPrice->id_shop = 0;
             $specificPrice->id_cart = 0;

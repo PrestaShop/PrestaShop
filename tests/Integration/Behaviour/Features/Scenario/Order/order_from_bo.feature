@@ -265,6 +265,58 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  Scenario: Add product without specific price, add it again with different specific price The second specific price is used
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 15                                        |
+      | free_shipping | true                                      |
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should have following details:
+      | total_products           | 38.800 |
+      | total_products_wt        | 41.130 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 45.8   |
+      | total_paid_tax_incl      | 48.550 |
+      | total_paid               | 48.550 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 10                                        |
+      | free_shipping | true                                      |
+    Then order "bo_order1" should have 4 products in total
+    Then order "bo_order1" should have following details:
+      | total_products           | 43.800 |
+      | total_products_wt        | 46.430 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 50.800 |
+      | total_paid_tax_incl      | 53.850 |
+      | total_paid               | 53.850 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
   Scenario: Add product to an existing Order with invoice with free shipping to new invoice
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoices
