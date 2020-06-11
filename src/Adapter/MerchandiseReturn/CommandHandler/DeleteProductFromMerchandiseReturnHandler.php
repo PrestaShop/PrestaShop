@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\OrderReturn;
 use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\DeleteProductFromMerchandiseReturnHandlerInterface;
