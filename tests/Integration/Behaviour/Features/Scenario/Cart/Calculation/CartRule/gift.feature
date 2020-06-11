@@ -15,7 +15,7 @@ Feature: Cart calculation with cart rules giving gift
     When I use the discount "cartrule13"
     Then I should have 0 products in my cart
     Then my cart total should be 0.0 tax included
-    # Test know not to be reliable on previous
+    # Test known not to be reliable on previous
     # Then my cart total using previous calculation method should be 0.0 tax included
 
   Scenario: 2 products in cart, one cart rule offering a gift (out of stock) and a global 10% discount
@@ -32,7 +32,7 @@ Feature: Cart calculation with cart rules giving gift
     When I use the discount "cartrule13"
     Then I should have 3 products in my cart
     Then my cart total should be 60.4924 tax included
-    # Test know not to be reliable on previous
+    # Test known not to be reliable on previous
     # Then my cart total using previous calculation method should be 60.4924 tax included
 
     @my-test
@@ -52,5 +52,5 @@ Feature: Cart calculation with cart rules giving gift
     When I use the discount "cartrule12"
     Then I should have 6 products in my cart
     Then my cart total should be 126.8692 tax included
-    # Test know not to be reliable on previous
+    # Test known not to be reliable on previous
     # Then my cart total using previous calculation method should be 126.8692 tax included
