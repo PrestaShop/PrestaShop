@@ -15,7 +15,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_taxes_pagination';
 
-
 let browserContext;
 let page;
 

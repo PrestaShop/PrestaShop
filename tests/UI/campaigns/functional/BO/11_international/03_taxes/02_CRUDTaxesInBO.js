@@ -17,7 +17,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_taxes_CRUDTax';
 
-
 let browserContext;
 let page;
 let numberOfTaxes = 0;

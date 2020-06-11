@@ -12,7 +12,6 @@ const ProductPage = require('@pages/FO/product');
 const CartPage = require('@pages/FO/cart');
 const CartData = require('@data/FO/cart');
 
-
 let browserContext;
 let page;
 let totalTTC = 0;

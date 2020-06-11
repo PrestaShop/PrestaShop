@@ -11,8 +11,6 @@ const OrdersPage = require('@pages/BO/orders/index');
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_helperCard';
-
-
 let browserContext;
 let page;
 

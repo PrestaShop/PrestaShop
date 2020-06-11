@@ -10,7 +10,6 @@ const baseContext = 'sanity_catalogFO_filterProducts';
 const HomePage = require('@pages/FO/home');
 const {Categories} = require('@data/demo/categories');
 
-
 let browserContext;
 let page;
 let allProductsNumber = 0;

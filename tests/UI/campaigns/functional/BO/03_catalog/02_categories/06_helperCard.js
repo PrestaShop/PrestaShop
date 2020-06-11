@@ -16,7 +16,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_categories_helperCard';
 
-
 let browserContext;
 let page;
 

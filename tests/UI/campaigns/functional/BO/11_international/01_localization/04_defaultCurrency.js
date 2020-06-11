@@ -21,7 +21,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_defaultCurrency';
 
-
 let browserContext;
 let page;
 const contentToImport = {

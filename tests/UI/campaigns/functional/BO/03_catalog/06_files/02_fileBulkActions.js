@@ -21,7 +21,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_files_fileBulkActions';
 
-
 let browserContext;
 let page;
 let numberOfFiles = 0;

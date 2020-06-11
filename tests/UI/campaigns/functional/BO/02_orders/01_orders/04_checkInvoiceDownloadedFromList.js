@@ -24,7 +24,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_checkInvoiceDownloadedFromList';
 
-
 let browserContext;
 let page;
 let filePath;

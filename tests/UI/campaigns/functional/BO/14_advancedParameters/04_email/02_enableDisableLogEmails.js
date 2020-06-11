@@ -16,7 +16,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_email_enableDisableLogEmails';
 
-
 let browserContext;
 let page;
 

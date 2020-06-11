@@ -24,7 +24,6 @@ const {DefaultAccount} = require('@data/demo/customer');
 const AddressData = require('@data/faker/address');
 const CustomerFaker = require('@data/faker/customer');
 
-
 let browserContext;
 let page;
 

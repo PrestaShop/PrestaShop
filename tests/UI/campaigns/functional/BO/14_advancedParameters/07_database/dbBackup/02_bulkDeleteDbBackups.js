@@ -17,7 +17,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_database_dbBackup_bulkDeleteDbBackups';
 
-
 let browserContext;
 let page;
 let numberOfBackups = 0;

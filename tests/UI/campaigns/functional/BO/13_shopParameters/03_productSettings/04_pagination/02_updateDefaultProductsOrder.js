@@ -17,7 +17,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_pagination_updateDefaultProductsOrder';
 
-
 let browserContext;
 let page;
 

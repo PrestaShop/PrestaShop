@@ -24,7 +24,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_employees_filterAndQuickEditEmployees';
 
-
 let browserContext;
 let page;
 

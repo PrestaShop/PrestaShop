@@ -17,7 +17,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_translations_exportLanguage';
 
-
 let browserContext;
 let page;
 

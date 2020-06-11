@@ -23,7 +23,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_employees_employeesBulkActions';
 
-
 let browserContext;
 let page;
 let numberOfEmployees = 0;

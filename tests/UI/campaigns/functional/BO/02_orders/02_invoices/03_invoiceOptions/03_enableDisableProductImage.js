@@ -26,7 +26,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_invoices_invoiceOptions_enableDisableProductImage';
 
-
 let browserContext;
 let page;
 let filePath;

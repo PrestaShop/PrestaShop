@@ -21,7 +21,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_general_minimumPurchaseTotalRequired';
 
-
 let browserContext;
 let page;
 

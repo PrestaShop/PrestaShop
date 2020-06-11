@@ -21,7 +21,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_team_profiles_paginationProfiles';
 
-
 let browserContext;
 let page;
 let numberOfProfiles = 0;

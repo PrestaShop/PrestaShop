@@ -20,7 +20,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customerService_orderMessages_paginationAndSortOrderMessages';
 
-
 let browserContext;
 let page;
 let numberOfOrderMessages = 0;

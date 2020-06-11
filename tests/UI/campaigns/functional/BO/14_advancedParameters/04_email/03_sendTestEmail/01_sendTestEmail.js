@@ -17,7 +17,6 @@ const EmailPage = require('@pages/BO/advancedParameters/email');
 
 const baseContext = 'functional_BO_advancedParameters_email_sendTestEmail';
 
-
 let browserContext;
 let page;
 

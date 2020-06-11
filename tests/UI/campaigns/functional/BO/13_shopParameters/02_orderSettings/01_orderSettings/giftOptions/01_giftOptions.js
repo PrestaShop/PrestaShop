@@ -26,7 +26,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_giftOptions';
 
-
 let browserContext;
 let page;
 

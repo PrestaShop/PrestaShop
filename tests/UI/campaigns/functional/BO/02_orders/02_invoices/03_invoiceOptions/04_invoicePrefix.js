@@ -17,7 +17,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_invoices_invoiceOptions_invoicePrefix';
 
-
 let browserContext;
 let page;
 let fileName;

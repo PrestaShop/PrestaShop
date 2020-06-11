@@ -18,7 +18,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_database_dbBackup_createAndDeleteDbBackup';
 
-
 let browserContext;
 let page;
 

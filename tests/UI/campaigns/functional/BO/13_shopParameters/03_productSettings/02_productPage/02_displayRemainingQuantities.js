@@ -24,7 +24,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_displayRemainingQuantities';
 
-
 let browserContext;
 let page;
 

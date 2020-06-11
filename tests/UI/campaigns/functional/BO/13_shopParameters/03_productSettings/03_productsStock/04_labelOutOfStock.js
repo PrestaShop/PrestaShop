@@ -24,7 +24,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_labelOutOfStock';
 
-
 let browserContext;
 let page;
 const productData = new ProductFaker({type: 'Standard product', quantity: 0});

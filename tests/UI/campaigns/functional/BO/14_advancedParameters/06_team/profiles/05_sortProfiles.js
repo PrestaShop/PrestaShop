@@ -17,7 +17,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_team_profiles_sortProfiles';
 
-
 let browserContext;
 let page;
 

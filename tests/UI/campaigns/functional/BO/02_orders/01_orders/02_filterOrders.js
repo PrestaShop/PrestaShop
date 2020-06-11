@@ -14,7 +14,6 @@ const OrdersPage = require('@pages/BO/orders');
 const {Orders} = require('@data/demo/orders');
 
 let numberOfOrders;
-
 let browserContext;
 let page;
 // creating pages objects in a function

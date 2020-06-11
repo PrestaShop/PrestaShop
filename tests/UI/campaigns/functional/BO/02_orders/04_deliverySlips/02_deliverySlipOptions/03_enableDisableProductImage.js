@@ -28,7 +28,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_enableDisableProductImage';
 
-
 let browserContext;
 let page;
 

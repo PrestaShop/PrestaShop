@@ -20,7 +20,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_modules_advancedParameters_webservice_CRUDWebservice';
 
-
 let browserContext;
 let page;
 
