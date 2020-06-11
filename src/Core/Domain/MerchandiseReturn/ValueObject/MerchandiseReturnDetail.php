@@ -26,27 +26,42 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject;
 
-use PrestaShop\PrestaShop\Adapter\Entity\OrderReturn;
-use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\DeleteProductFromMerchandiseReturnHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnDetailException;
-
-class DeleteProductFromMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler implements DeleteProductFromMerchandiseReturnHandlerInterface
+/**
+ * Provides merchandise return id
+ */
+class MerchandiseReturnDetail
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws DeleteMerchandiseReturnDetailException
+     * @var MerchandiseReturnDetailId
      */
-    public function handle(DeleteProductFromMerchandiseReturnCommand $command): void
+    private $merchandiseReturnDetailId;
+
+    /**
+     * @var CustomizationId
+     */
+    private $customizationId;
+
+    public function __construct(MerchandiseReturnDetailId $merchandiseReturnDetailId, CustomizationId $customizationId)
+   {
+       $this->merchandiseReturnDetailId = $merchandiseReturnDetailId;
+       $this->customizationId = $customizationId;
+   }
+
+    /**
+     * @return MerchandiseReturnDetailId
+     */
+    public function getMerchandiseReturnDetailId(): MerchandiseReturnDetailId
     {
-        $this->deleteMerchandiseReturnDetail(
-            $command->getMerchandiseReturnId(),
-            $command->getMerchandiseReturnDetailId(),
-            $command->getCustomizationId()
-        );
+        return $this->merchandiseReturnDetailId;
+    }
+
+    /**
+     * @return CustomizationId
+     */
+    public function getCustomizationId(): CustomizationId
+    {
+        return $this->customizationId;
     }
 }
