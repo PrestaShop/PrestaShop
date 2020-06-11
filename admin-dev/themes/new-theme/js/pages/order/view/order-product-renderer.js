@@ -99,7 +99,7 @@ export default class OrderProductRenderer {
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
     $rows.removeClass('d-none');
-    $(OrderViewPageMap.productsNavPagination).addClass('d-none');
+    $(OrderViewPageMap.productsPagination).addClass('d-none');
 
     const scrollValue = $(scrollTarget).offset().top - $('.header-toolbar').height() - 100;
     $('html,body').animate({scrollTop: scrollValue}, 'slow');
@@ -111,6 +111,7 @@ export default class OrderProductRenderer {
 
     $(OrderViewPageMap.productsPanel).detach().appendTo(OrderViewPageMap.productOriginalPosition);
 
+    $(OrderViewPageMap.productsPagination).removeClass('d-none');
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
     $(`${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`).addClass('d-none');
 
@@ -193,6 +194,32 @@ export default class OrderProductRenderer {
       $(OrderViewPageMap.productsTablePaginationNext).addClass('disabled');
     }
     this.togglePaginationControls();
+  }
+
+  updateNumPerPage(numPerPage) {
+    if (numPerPage < 1) {
+      numPerPage = 1;
+    }
+    const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
+    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
+    const numPages = Math.ceil($rows.length / numPerPage);
+
+    // Update table data fields
+    $tablePagination.data('numPages', numPages);
+    $tablePagination.data('numPerPage', numPerPage);
+
+    // Clean all page links, reinsert the removed template
+    const $linkPaginationTemplate = $(OrderViewPageMap.productsTablePaginationTemplate);
+    $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page])`).remove();
+    $(OrderViewPageMap.productsTablePaginationNext).before($linkPaginationTemplate);
+
+    // Add appropriate pages
+    for (let i = 1; i <= numPages; ++i) {
+      const $linkPagination = $linkPaginationTemplate.clone();
+      $linkPagination.find('span').attr('data-page', i);
+      $linkPagination.find('span').html(i);
+      $linkPaginationTemplate.before($linkPagination.removeClass('d-none'));
+    }
   }
 
   paginationAddPage(numPage) {

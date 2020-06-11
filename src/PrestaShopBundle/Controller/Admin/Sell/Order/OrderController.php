@@ -105,6 +105,16 @@ use Symfony\Component\HttpFoundation\Response;
 class OrderController extends FrameworkBundleAdminController
 {
     /**
+     * Default number of products per page (in case invalid value is used)
+     */
+    const DEFAULT_PRODUCTS_NUMBER = 8;
+
+    /**
+     * Options used for the number of products per page
+     */
+    const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+
+    /**
      * Shows list of orders
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
@@ -458,6 +468,13 @@ class OrderController extends FrameworkBundleAdminController
         /** @var OrderSiblingProviderInterface $orderSiblingProvider */
         $orderSiblingProvider = $this->get('prestashop.adapter.order.order_sibling_provider');
 
+        $paginationNum = (int) $this->configuration->get('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
+        if (!in_array($paginationNum, $paginationNumOptions)) {
+            $paginationNumOptions[] = $paginationNum;
+        }
+        sort($paginationNumOptions);
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -483,6 +500,8 @@ class OrderController extends FrameworkBundleAdminController
             'priceSpecification' => $this->getContextLocale()->getPriceSpecification($orderCurrency->iso_code)->toArray(),
             'previousOrderId' => $orderSiblingProvider->getPreviousOrderId($orderId),
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
+            'paginationNum' => $paginationNum,
+            'paginationNumOptions' => $paginationNumOptions,
         ]);
     }
 
@@ -1413,6 +1432,32 @@ class OrderController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function configureProductPaginationAction(Request $request): JsonResponse
+    {
+        $numPerPage = (int) $request->request->get('numPerPage');
+        if ($numPerPage < 1) {
+            $numPerPage = self::DEFAULT_PRODUCTS_NUMBER;
+        }
+
+        try {
+            $this->configuration->set('PS_ORDER_PRODUCTS_NB_PER_PAGE', $numPerPage);
+        } catch (Exception $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
