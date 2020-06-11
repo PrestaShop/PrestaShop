@@ -391,4 +391,26 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $cartRule->reduction_amount));
         }
     }
+
+    /**
+     * @Then /^cart rule "(.+)" has a contextual reduction value of (\d+.\d+)$/
+     *
+     * @param $cartRuleName
+     * @param $expectedValue
+     */
+    public function checkCartRuleContextualValue(string $cartRuleName, float $expectedValue)
+    {
+        $cartRules = $this->getCurrentCart()->getCartRules();
+        $cartRuleFound = false;
+        foreach ($cartRules as $currentCartRule) {
+            if ($currentCartRule['description'] === $cartRuleName && round($currentCartRule['value_real'], 6) != round($expectedValue, 6)) {
+                throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $currentCartRule['value_real']));
+            }
+            if ($currentCartRule['description'] === $cartRuleName) $cartRuleFound = true;
+        }
+
+        if (!$cartRuleFound) {
+            throw new \RuntimeException(sprintf('The cart rule "%s" was not found', $cartRuleName));
+        }
+    }
 }
