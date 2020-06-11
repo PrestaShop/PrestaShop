@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToO
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 use Shop;
 use SpecificPrice;
@@ -136,7 +137,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $combination
             );
 
-            //@TODO: what is this? it causes duplicate entry because $specificPrice above is created identical.
             // Restore any specific prices for the products in the order
             $restoredSpecificPrices = $this->restoreOrderProductsSpecificPrices(
                 $order,
@@ -393,6 +393,21 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $cart->id,
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         );
+
+        if (SpecificPrice::exists(
+            $product->id,
+            $combination ? $combination->id : 0,
+            0,
+            0,
+            0,
+            $order->id_currency,
+            $order->id_customer,
+            1,
+            DateTime::NULL_VALUE,
+            DateTime::NULL_VALUE
+        )) {
+            return null;
+        }
 
         if (!(new Number((string) $amount->getTaxIncluded()))->equals(new Number((string) $initialProductPriceTaxIncl))) {
             // @todo: use private method to create specific price object
