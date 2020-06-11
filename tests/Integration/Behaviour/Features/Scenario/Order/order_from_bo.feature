@@ -126,9 +126,9 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
     Then order "bo_order1" should have following details:
       | total_products           | 38.800 |
-      | total_products_wt        | 40.230 |
+      | total_products_wt        | 41.130 |
       | total_discounts_tax_excl | 15.000 |
-      | total_discounts_tax_incl | 15.000 |
+      | total_discounts_tax_incl | 15.900 |
       | total_paid_tax_excl      | 30.8   |
       | total_paid_tax_incl      | 32.650 |
       | total_paid               | 32.650 |
@@ -147,6 +147,120 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_excl      | 30.800 |
       | total_paid_tax_incl      | 32.650 |
       | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice And add this same product a second time
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    And there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
+    And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
+    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product Cart Rule On Select Product"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 15                                        |
+      | free_shipping | true                                      |
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
+    Then order "bo_order1" should have following details:
+      | total_products           | 38.800 |
+      | total_products_wt        | 41.130 |
+      | total_discounts_tax_excl | 7.5000 |
+      | total_discounts_tax_incl | 7.9500 |
+      | total_paid_tax_excl      | 38.3   |
+      | total_paid_tax_incl      | 40.600 |
+      | total_paid               | 40.600 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 15                                        |
+      | free_shipping | true                                      |
+    Then order "bo_order1" should have 4 products in total
+    Then order "bo_order1" should contain 2 product "Test Product Cart Rule On Select Product"
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
+    Then order "bo_order1" should have following details:
+      | total_products           | 53.800 |
+      | total_products_wt        | 57.030 |
+      | total_discounts_tax_excl | 15.000 |
+      | total_discounts_tax_incl | 15.900 |
+      | total_paid_tax_excl      | 45.800 |
+      | total_paid_tax_incl      | 48.550 |
+      | total_paid               | 48.550 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Add product with specific price, add it again with different specific price The first price is kept
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 100 items in stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 10                                        |
+      | free_shipping | true                                      |
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should have following details:
+      | total_products           | 33.800 |
+      | total_products_wt        | 35.830 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 40.8   |
+      | total_paid_tax_incl      | 43.250 |
+      | total_paid               | 43.250 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 12                                        |
+      | free_shipping | true                                      |
+    Then order "bo_order1" should have 4 products in total
+    Then order "bo_order1" should have following details:
+      | total_products           | 43.800 |
+      | total_products_wt        | 46.430 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 50.800 |
+      | total_paid_tax_incl      | 53.850 |
+      | total_paid               | 53.850 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |

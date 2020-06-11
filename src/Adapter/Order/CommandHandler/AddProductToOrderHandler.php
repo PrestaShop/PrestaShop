@@ -126,21 +126,20 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $cart = $this->createNewOrEditExistingCart($order);
 
-            $specificPrice = $this->createSpecificPriceIfNeeded(
-                new AmountImmutable(
-                    (float) (string) $command->getProductPriceTaxIncluded(),
-                    (float) (string) $command->getProductPriceTaxExcluded()
-                ),
-                $order,
-                $cart,
-                $product,
-                $combination
-            );
-
             // Restore any specific prices for the products in the order
             $restoredSpecificPrices = $this->restoreOrderProductsSpecificPrices(
                 $order,
                 $cart
+            );
+
+            // Add specific price for the product being added
+            $specificPrice = $this->createSpecificPriceIfNeeded(
+                $command->getProductPriceTaxIncluded(),
+                $command->getProductPriceTaxExcluded(),
+                $order,
+                $cart,
+                $product,
+                $combination
             );
 
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
@@ -364,7 +363,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $product = new Product((int) $orderDetail->product_id);
 
             $restoredSpecificPrices[] = $this->createSpecificPriceIfNeeded(
-                new AmountImmutable($orderDetail->unit_price_tax_incl, $orderDetail->unit_price_tax_excl),
+                new Number((string) $orderDetail->unit_price_tax_incl),
+                new Number((string) $orderDetail->unit_price_tax_excl),
                 $order,
                 $cart,
                 $product,
@@ -376,7 +376,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param AmountImmutable $amount
+     * @param Number $priceTaxIncluded
+     * @param Number $priceTaxExcluded
      * @param Order $order
      * @param Cart $cart
      * @param Product $product
@@ -385,27 +386,15 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @return SpecificPrice|null
      */
     private function createSpecificPriceIfNeeded(
-        AmountImmutable $amount,
+        Number $priceTaxIncluded,
+        Number $priceTaxExcluded,
         Order $order,
         Cart $cart,
         Product $product,
         $combination
     ) {
-        $initialProductPriceTaxIncl = Product::getPriceStatic(
-            $product->id,
-            true,
-            $combination ? $combination->id : null,
-            2,
-            null,
-            false,
-            true,
-            1,
-            false,
-            $order->id_customer,
-            $cart->id,
-            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
-        );
-
+        // Check it the SpecificPrice has already been added by restoreOrderProductsSpecificPrices, if yes ignore new
+        // price because the first one is kept
         if (SpecificPrice::exists(
             $product->id,
             $combination ? $combination->id : 0,
@@ -421,8 +410,22 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             return null;
         }
 
-        if (!(new Number((string) $amount->getTaxIncluded()))->equals(new Number((string) $initialProductPriceTaxIncl))) {
-            // @todo: use private method to create specific price object
+        $initialProductPriceTaxIncl = Product::getPriceStatic(
+            $product->id,
+            true,
+            $combination ? $combination->id : null,
+            2,
+            null,
+            false,
+            true,
+            1,
+            false,
+            $order->id_customer,
+            $cart->id,
+            $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
+        );
+
+        if (!$priceTaxIncluded->equals(new Number((string) $initialProductPriceTaxIncl))) {
             $specificPrice = new SpecificPrice();
             $specificPrice->id_shop = 0;
             $specificPrice->id_cart = 0;
@@ -433,11 +436,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $specificPrice->id_customer = $order->id_customer;
             $specificPrice->id_product = $product->id;
             $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-            $specificPrice->price = new Number((string) $amount->getTaxExcluded());
+            $specificPrice->price = (float) (string) $priceTaxExcluded;
             $specificPrice->from_quantity = 1;
             $specificPrice->reduction = 0;
             $specificPrice->reduction_type = 'amount';
-            $specificPrice->reduction_tax = 0;
+            $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
             $specificPrice->from = '0000-00-00 00:00:00';
             $specificPrice->to = '0000-00-00 00:00:00';
             $specificPrice->add();
