@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const urlsList = require('@tools/urls.js');
 
-const LOG_PASSED = process.env.LOG_PASSED || false;
+const LOG_PASSED = !!process.env.LOG_PASSED;
 
 // Report dir and file
 const reportPath = 'campaigns/tools/reports';
