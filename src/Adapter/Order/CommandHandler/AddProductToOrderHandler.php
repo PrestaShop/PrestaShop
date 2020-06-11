@@ -54,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToO
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 use Shop;
 use SpecificPrice;
@@ -136,6 +137,12 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $combination
             );
 
+            // Restore any specific prices for the products in the order
+            $restoredSpecificPrices = $this->restoreOrderProductsSpecificPrices(
+                $order,
+                $cart
+            );
+
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
 
             // Fetch Cart Product
@@ -182,6 +189,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Delete specific price if exists
             if (null !== $specificPrice) {
                 $specificPrice->delete();
+            }
+
+            // Delete restored specific prices
+            foreach ($restoredSpecificPrices as $restoredSpecificPrice) {
+                if (null !== $restoredSpecificPrice) {
+                    $restoredSpecificPrice->delete();
+                }
             }
 
             $order->update();
@@ -334,6 +348,34 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
+     * @param Order $order
+     * @param Cart $cart
+     *
+     * @return array
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function restoreOrderProductsSpecificPrices(Order $order, Cart $cart): array
+    {
+        $restoredSpecificPrices = [];
+        foreach ($order->getOrderDetailList() as $row) {
+            $orderDetail = new OrderDetail($row['id_order_detail']);
+            $product = new Product((int) $orderDetail->product_id);
+
+            $restoredSpecificPrices[] = $this->createSpecificPriceIfNeeded(
+                new AmountImmutable($orderDetail->unit_price_tax_incl, $orderDetail->unit_price_tax_excl),
+                $order,
+                $cart,
+                $product,
+                new Combination($orderDetail->product_attribute_id)
+            );
+        }
+
+        return $restoredSpecificPrices;
+    }
+
+    /**
      * @param AmountImmutable $amount
      * @param Order $order
      * @param Cart $cart
@@ -363,6 +405,21 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $cart->id,
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         );
+
+        if (SpecificPrice::exists(
+            $product->id,
+            $combination ? $combination->id : 0,
+            0,
+            0,
+            0,
+            $order->id_currency,
+            $order->id_customer,
+            1,
+            DateTime::NULL_VALUE,
+            DateTime::NULL_VALUE
+        )) {
+            return null;
+        }
 
         if (!(new Number((string) $amount->getTaxIncluded()))->equals(new Number((string) $initialProductPriceTaxIncl))) {
             // @todo: use private method to create specific price object
