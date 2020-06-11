@@ -138,6 +138,15 @@ class CustomerFormCore extends AbstractForm
             );
             $birthdayField->setValue($dateBuilt->format('Y-m-d'));
         }
+
+        $passwordField = $this->getField('password');
+        if (Validate::isPasswd($passwordField->getValue()) === false) {
+            $passwordField->AddError($this->translator->trans(
+                'Password must be between 5 and 72 characters long',
+                [],
+                'Shop.Notifications.Error'
+            ));
+        }
         $this->validateFieldsLengths();
         $this->validateByModules();
 
