@@ -155,7 +155,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
      */
     protected function getFilters()
     {
-        /** @todo need to do something if merchandiseReturnId not found. Redirect to index? */
+        /* @todo need to do something if merchandiseReturnId not found. Redirect to index? */
         if (null !== ($request = $this->requestStack->getCurrentRequest())
             && $request->attributes->has('merchandiseReturnId')
         ) {
@@ -207,34 +207,34 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
         ;
     }
 
-
     /**
      * {@inheritdoc}
      */
     protected function getBulkActions()
     {
-        /** @todo need to do something if merchandiseReturnId not found. Redirect to index? */
+        /* @todo need to do something if merchandiseReturnId not found. Redirect to index? */
         if (null !== ($request = $this->requestStack->getCurrentRequest())
             && $request->attributes->has('merchandiseReturnId')
         ) {
             $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
         }
+
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_merchandise_returns_delete_product_bulk',
-                    'route_params' =>  [
-                        'merchandiseReturnId' => $merchandiseReturnId,
-                    ],
-                    'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
-                    'modal_options' => new ModalOptions([
-                        'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
-                        'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
-                        'confirm_button_class' => 'btn-danger',
-                    ]),
-                ])
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_merchandise_returns_delete_product_bulk',
+                        'route_params' => [
+                            'merchandiseReturnId' => $merchandiseReturnId,
+                        ],
+                        'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
+                        'modal_options' => new ModalOptions([
+                            'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
+                            'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                            'confirm_button_class' => 'btn-danger',
+                        ]),
+                    ])
             )
             ;
     }
