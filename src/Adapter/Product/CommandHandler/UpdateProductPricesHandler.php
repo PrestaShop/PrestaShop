@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShopException;
 use Product;
 
@@ -52,6 +53,20 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      * So during partial update we don't want to accidentally reset some fields
      */
     private $fieldsToUpdate = [];
+
+    /**
+     * @var NumberExtractor
+     */
+    private $numberExtractor;
+
+    /**
+     * @param NumberExtractor $numberExtractor
+     */
+    public function __construct(
+        NumberExtractor $numberExtractor
+    ) {
+        $this->numberExtractor = $numberExtractor;
+    }
 
     /**
      * {@inheritdoc}
@@ -173,7 +188,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         }
 
         if (null === $price) {
-            $price = $this->getPropertyAsNumber($product, 'price');
+            $price = $this->numberExtractor->extract($product, 'price');
         }
 
         //@todo: update the Number lib dependency. It should have methods to compare to 0 already.

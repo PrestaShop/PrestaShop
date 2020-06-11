@@ -68,6 +68,8 @@ services:
 
     prestashop.adapter.product.command_handler.get_product_for_editing_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
+      arguments:
+        - '@prestashop.core.util.number.number_extractor'
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
@@ -89,6 +91,8 @@ services:
 
     prestashop.adapter.product.command_handler.update_product_prices_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPricesHandler
+      arguments:
+        - '@prestashop.core.util.number.number_extractor'
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
