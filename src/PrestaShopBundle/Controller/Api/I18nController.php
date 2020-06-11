@@ -36,7 +36,7 @@ class I18nController extends ApiController
     /**
      * Show translation for page-app build with vue-js.
      *
-     * No access restrictions because it is require for VueJs translations
+     * No access restrictions because it is required for VueJs translations
      *
      * @param Request $request
      *
