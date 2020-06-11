@@ -32,6 +32,7 @@ module.exports = {
       throw new Error(e);
     }
   },
+
   /**
    * Create a browser context
    *
