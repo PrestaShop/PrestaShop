@@ -33,6 +33,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      */
     protected $objOutput;
 
+    /**
+     * @var mixed $output
+     */
     protected $output;
 
     /**
@@ -47,8 +50,14 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      */
     public $resourceConfiguration;
 
+    /**
+     * @var mixed $attachment_id
+     */
     protected $attachment_id;
 
+    /**
+     * @var mixed $displayFile
+     */
     protected $displayFile;
 
     /*
@@ -69,11 +78,19 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         return $this;
     }
 
+    /**
+     * Get Object Output
+     */
     public function getObjectOutput()
     {
         return $this->objOutput;
     }
 
+    /**
+     * Set Webservice Object
+     *
+     * @param WebserviceRequestCore $obj
+     */
     public function setWsObject(WebserviceRequestCore $obj)
     {
         $this->wsObject = $obj;
@@ -81,32 +98,41 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         return $this;
     }
 
+    /**
+     * Get Webservice Object
+     */
     public function getWsObject()
     {
         return $this->wsObject;
     }
 
+    /**
+     * Get content
+     *
+     * @return string
+     */
     public function getContent()
     {
         if ($this->displayFile) {
             // if displayFile is set, present the file (download)
-            $this->objOutput->setHeaderParams('Content-Type', $this->displayFile['mime']);
-            $this->objOutput->setHeaderParams('Content-Length', $this->displayFile['file_size']);
-            $this->objOutput->setHeaderParams('Content-Disposition', 'attachment; filename="' . utf8_decode($this->displayFile['file_name']) . '"');
+            $this->getObjectOutput()->setHeaderParams('Content-Type', $this->displayFile['mime']);
+            $this->getObjectOutput()->setHeaderParams('Content-Length', $this->displayFile['file_size']);
+            $this->getObjectOutput()->setHeaderParams('Content-Disposition', 'attachment; filename="' . utf8_decode($this->displayFile['file_name']) . '"');
 
             return file_get_contents($this->displayFile['file']);
-        } else {
-            // Emulate non-specific management
-            $this->wsObject->objectSpecificManagement = false;
-            $this->wsObject->returnOutput();
         }
+
+        // Emulate non-specific management
+        $this->getWsObject()->setObjectSpecificManagement(null);
+
+        return '';
     }
 
     public function manage()
     {
         $this->manageAttachments();
 
-        return $this->wsObject->getOutputEnabled();
+        return $this->getWsObject()->getOutputEnabled();
     }
 
     /**
@@ -129,20 +155,20 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      */
     public function manageAttachments()
     {
-        if (isset($this->wsObject->urlSegment)) {
+        if (isset($this->getWsObject()->urlSegment)) {
             for ($i = 1; $i < 6; ++$i) {
-                if (count($this->wsObject->urlSegment) == $i) {
-                    $this->wsObject->urlSegment[$i] = '';
+                if (count($this->getWsObject()->urlSegment) == $i) {
+                    $this->getWsObject()->urlSegment[$i] = '';
                 }
             }
         }
 
-        if ($this->wsObject->urlSegment[0] != '') {
+        if ($this->getWsObject()->urlSegment[0] != '') {
             /**
              * @var ObjectModel
              */
             $object = new Attachment();
-            $this->wsObject->resourceConfiguration = $object->getWebserviceParameters();
+            $this->getWsObject()->resourceConfiguration = $object->getWebserviceParameters();
         }
 
         /*
@@ -165,9 +191,9 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
          *      PUT     (bin) (upload/update file)
          *      DELETE
          */
-        if ($this->wsObject->urlSegment[1] == 'file') {
+        if ($this->getWsObject()->urlSegment[1] == 'file') {
             // File handling (upload/download)
-            switch ($this->wsObject->method) {
+            switch ($this->getWsObject()->method) {
                 case 'GET':
                 case 'HEAD':
                     $this->displayFile = $this->executeFileGetAndHead();
@@ -177,38 +203,38 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     $this->executeFileAddAndEdit();
 
                     // Emulate get/head to return output
-                    $this->wsObject->method = 'GET';
-                    $this->wsObject->urlSegment[1] = $this->attachment_id;
-                    $this->wsObject->urlSegment[2] = '';
-                    $this->wsObject->executeEntityGetAndHead();
+                    $this->getWsObject()->method = 'GET';
+                    $this->getWsObject()->urlSegment[1] = $this->attachment_id;
+                    $this->getWsObject()->urlSegment[2] = '';
+                    $this->getWsObject()->executeEntityGetAndHead();
                     break;
                 case 'DELETE':
-                    $attachment = new Attachment((int) $this->wsObject->urlSegment[1]);
+                    $attachment = new Attachment((int) $this->getWsObject()->urlSegment[1]);
                     $attachment->delete();
                     break;
             }
         } else {
             // Default handling via WebserviceRequest
-            switch ($this->wsObject->method) {
+            switch ($this->getWsObject()->method) {
                 case 'GET':
                 case 'HEAD':
-                    $this->wsObject->executeEntityGetAndHead();
+                    $this->getWsObject()->executeEntityGetAndHead();
                     break;
                 case 'POST':
-                    $this->wsObject->executeEntityPost();
+                    $this->getWsObject()->executeEntityPost();
                     break;
                 case 'PUT':
-                    $this->wsObject->executeEntityPut();
+                    $this->getWsObject()->executeEntityPut();
                     break;
                 case 'DELETE':
-                    $this->wsObject->executeEntityDelete();
+                    $this->getWsObject()->executeEntityDelete();
                     break;
             }
         }
         // Need to set an object for the WebserviceOutputBuilder object in any case
         // because schema need to get webserviceParameters of this object
         if (isset($object)) {
-            $this->wsObject->objects['empty'] = $object;
+            $this->getWsObject()->objects['empty'] = $object;
         }
     }
 
@@ -221,12 +247,12 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      */
     public function executeFileGetAndHead()
     {
-        $attachment = new Attachment((int) $this->wsObject->urlSegment[2]);
+        $attachment = new Attachment((int) $this->getWsObject()->urlSegment[2]);
         if (!$attachment) {
             throw new WebserviceException(
                 sprintf(
                     'Attachment %d not found',
-                    $this->wsObject->urlSegment[2]
+                    $this->getWsObject()->urlSegment[2]
                 ),
                 [
                     1,
@@ -242,7 +268,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
             throw new WebserviceException(
                 sprintf(
                     'Unable to load the attachment file for attachment %d',
-                    $this->wsObject->urlSegment[2]
+                    $this->getWsObject()->urlSegment[2]
                 ),
                 [
                     1,
@@ -270,13 +296,13 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     public function executeFileAddAndEdit()
     {
         // Load attachment with or without id depending on method
-        $attachment = new Attachment($this->wsObject->method == 'PUT' ? (int) $this->wsObject->urlSegment[1] : null);
+        $attachment = new Attachment($this->getWsObject()->method == 'PUT' ? (int) $this->getWsObject()->urlSegment[1] : null);
 
         // Check form data
         if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
             // Ensure file is within allowed size limit
             if ($_FILES['file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024)) {
-                $this->wsObject->errors[] = sprintf(
+                $this->getWsObject()->errors[] = sprintf(
                     $this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
                     Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024,
                     number_format(($_FILES['file']['size'] / 1024), 2, '.', '')
@@ -296,7 +322,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
 
                 // Move file to download dir
                 if (!move_uploaded_file($_FILES['file']['tmp_name'], _PS_DOWNLOAD_DIR_ . $attachment->file)) {
-                    $this->wsObject->errors[] = $this->l('Failed to copy the file.');
+                    $this->getWsObject()->errors[] = $this->l('Failed to copy the file.');
                 } else {
                     // Create/update attachment
                     if ($attachment->id) {

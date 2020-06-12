@@ -49,7 +49,7 @@ class WebserviceRequestCore
      *
      * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|WebserviceSpecificManagementAttachments|false
      */
-    public $objectSpecificManagement = false;
+    protected $objectSpecificManagement = false;
 
     /**
      * Base PrestaShop webservice URL.
@@ -591,7 +591,7 @@ class WebserviceRequestCore
                     if (!class_exists($specificObjectName)) {
                         $this->setError(501, sprintf('The specific management class is not implemented for the "%s" entity.', $this->urlSegment[0]), 124);
                     } else {
-                        $this->objectSpecificManagement = new $specificObjectName();
+                        $this->setObjectSpecificManagement(new $specificObjectName());
                         $this->objectSpecificManagement->setObjectOutput($this->objOutput)
                             ->setWsObject($this);
 
@@ -1891,5 +1891,15 @@ class WebserviceRequestCore
         ksort($retarr);
 
         return $retarr;
+    }
+
+    /**
+     * Set Object Specific Management
+     *
+     * @param mixed $objectSpecificManagement
+     */
+    public function setObjectSpecificManagement($objectSpecificManagement)
+    {
+        $this->objectSpecificManagement = $objectSpecificManagement;
     }
 }
