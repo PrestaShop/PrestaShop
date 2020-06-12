@@ -141,13 +141,14 @@ module.exports = class Categories extends BOBasePage {
   async updateToggleColumnValue(row, column, valueWanted = true) {
     await this.waitForVisibleSelector(this.categoriesListTableColumn(row, column), 2000);
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      this.page.click(this.categoriesListTableColumn(row, column));
+      await this.page.click(this.categoriesListTableColumn(row, column));
       await this.waitForVisibleSelector(
         (
           valueWanted
             ? this.categoriesListColumnValidIcon(row, column)
             : this.categoriesListColumnNotValidIcon(row, column)
         ),
+        15000,
       );
       return true;
     }
