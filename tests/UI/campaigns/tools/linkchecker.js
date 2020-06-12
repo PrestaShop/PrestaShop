@@ -24,14 +24,17 @@ let outputEntry = {
   url: '',
   passed: [],
   failed: [],
-  jsError: [],
+  Error: [],
 };
 
-let requestError = false;
-let requestTextError = '';
+let responseError = false;
+let responseTextError = '';
 
 let javascriptError = false;
 let javascriptTextError = '';
+
+let consoleError = false;
+let consoleTextError = '';
 
 let page;
 let browser;
@@ -57,13 +60,29 @@ describe('Crawl every page for defects and issues', async () => {
     });
 
     // Intercepts JS errors
-    await page.on('pageerror', (pageerr) => {
-      javascriptTextError = pageerr.toString();
+    await page.on('pageerror', (exception) => {
+      javascriptTextError = exception.toString();
       javascriptError = true;
 
-      outputEntry.jsError.push({
-        error: javascriptTextError,
+      outputEntry.Error.push({
+        type: 'JS error',
+        msg: javascriptTextError,
       });
+    });
+
+
+    // Intercept console errors
+    await page.on('console', (msg) => {
+      // Handle only errors.
+      if (msg.type() === 'error') {
+        consoleTextError = msg.text();
+        consoleError = true;
+
+        outputEntry.Error.push({
+          type: 'Console error',
+          msg: consoleTextError,
+        });
+      }
     });
   });
 
@@ -84,11 +103,28 @@ describe('Crawl every page for defects and issues', async () => {
 
           await crawlPage(page, crawledPage);
 
-          // Check no request error
-          await expect(requestError, requestTextError).to.be.false;
+          let somethingFailed = false;
+          const errors = [];
 
-          // Check no javascript error
-          await expect(javascriptError, javascriptTextError).to.be.false;
+          // Checking all type of errors
+
+          if (responseError) {
+            somethingFailed = true;
+            await errors.push(responseTextError);
+          }
+
+          if (javascriptError) {
+            somethingFailed = true;
+            await errors.push(javascriptTextError);
+          }
+
+          if (consoleError) {
+            somethingFailed = true;
+            await errors.push(consoleTextError);
+          }
+
+          // Print all errors
+          await expect(somethingFailed, `List of errors : \n${errors}`).to.be.false;
         });
       });
     });
@@ -102,15 +138,16 @@ describe('Crawl every page for defects and issues', async () => {
  * @return {Promise<void>}
  */
 async function crawlPage(browserPage, thisPageToCrawl) {
-  requestError = false;
+  responseError = false;
   javascriptError = false;
+  consoleError = false;
 
   outputEntry = {
     name: thisPageToCrawl.name,
     url: thisPageToCrawl.url,
     passed: [],
     failed: [],
-    jsError: [],
+    Error: [],
   };
 
   await Promise.all([
@@ -133,8 +170,8 @@ async function crawlPage(browserPage, thisPageToCrawl) {
  */
 async function checkResponseStatus(url, status) {
   if (status.startsWith('4') || status.startsWith('5')) {
-    requestError = true;
-    requestTextError = `Request error : ${url} (${status}`;
+    responseError = true;
+    responseTextError = `Request error : ${url} (${status}`;
 
     outputEntry.failed.push({url, status});
   } else if (JSON.parse(LOG_PASSED) === true) {
