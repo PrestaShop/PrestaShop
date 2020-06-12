@@ -40,13 +40,26 @@ admin_merchandise_returns_products_filter:
 
 admin_merchandise_returns_edit:
   path: /{merchandiseReturnId}/edit
-  methods: [GET, POST]
+  methods: [GET]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:edit
     _legacy_controller: AdminReturn
 #    _legacy_link: AdminReturn:updateorder_return
 #    _legacy_parameters:
 #      id_order_return: merchandiseReturnId
+  requirements:
+    merchandiseReturnId: \d+
+
+# @todo wonder If I can have the same action in controller for this route or do I need to create another one to clearly separate them?
+admin_merchandise_returns_update:
+  path: /{merchandiseReturnId}/update
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:edit
+    _legacy_controller: AdminReturn
+  #    _legacy_link: AdminReturn:updateorder_return
+  #    _legacy_parameters:
+  #      id_order_return: merchandiseReturnId
   requirements:
     merchandiseReturnId: \d+
 
@@ -70,6 +83,6 @@ admin_merchandise_returns_delete_product_bulk:
   path: /{merchandiseReturnId}/products/bulk-delete
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:deleteProductBulk
+    _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:bulkDeleteProduct
   requirements:
     merchandiseReturnId: \d+
