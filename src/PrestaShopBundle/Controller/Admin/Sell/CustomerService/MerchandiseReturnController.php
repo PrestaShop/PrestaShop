@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\BulkDeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnProductsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -184,6 +186,9 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
+     * @todo need to make this work still. Problem is that I need id_customzation and id merchandise return detail
+     * I am not sure how to pass both via bulk
+     *
      * Deletes cartRules on bulk action
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_retuir_index")
@@ -219,7 +224,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      */
     private function getBulkMerchandiseReturnDetailsFromRequest(Request $request): array
     {
-        $merchandiseReturnDetailIds = $request->request->get('merchandise_return_product_bulk');
+        $merchandiseReturnDetailIds = $request->request->get('merchandise_return_products_merchandise_return_bulk');
 
         if (!is_array($merchandiseReturnDetailIds)) {
             return [];
