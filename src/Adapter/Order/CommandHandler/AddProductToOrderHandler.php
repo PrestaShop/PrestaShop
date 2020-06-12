@@ -90,6 +90,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $translator;
 
     /**
+     * @var array
+     */
+    private $temporarySpecificPrices;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
      */
@@ -115,24 +120,25 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer));
 
+        $this->temporarySpecificPrices = [];
         try {
             $this->assertOrderWasNotShipped($order);
 
             $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
             $combination = $this->getCombination($command->getCombinationId());
 
-            $this->checkProductInStock($command->getProductId()->getValue(), $command->getCombinationId(), $command->getProductQuantity());
+            $this->checkProductInStock($product, $command);
 
             $cart = $this->createNewOrEditExistingCart($order);
 
             // Restore any specific prices for the products in the order
-            $restoredSpecificPrices = $this->restoreOrderProductsSpecificPrices(
+            $this->restoreOrderProductsSpecificPrices(
                 $order,
                 $cart
             );
 
             // Add specific price for the product being added
-            $specificPrice = $this->createSpecificPriceIfNeeded(
+            $this->createSpecificPriceIfNeeded(
                 $command->getProductPriceTaxIncluded(),
                 $command->getProductPriceTaxExcluded(),
                 $order,
@@ -184,20 +190,12 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             // Update totals amount of order
             $order = $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
 
-            // Delete specific price if exists
-            if (null !== $specificPrice) {
-                $specificPrice->delete();
-            }
-
-            // Delete restored specific prices
-            foreach ($restoredSpecificPrices as $restoredSpecificPrice) {
-                if (null !== $restoredSpecificPrice) {
-                    $restoredSpecificPrice->delete();
-                }
-            }
+            // Delete temporary specific prices
+            $this->clearTemporarySpecificPrices();
 
             $order->update();
         } catch (Exception $e) {
+            $this->clearTemporarySpecificPrices();
             $this->contextStateManager->restoreContext();
             throw $e;
         }
@@ -349,19 +347,16 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Order $order
      * @param Cart $cart
      *
-     * @return array
-     *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function restoreOrderProductsSpecificPrices(Order $order, Cart $cart): array
+    private function restoreOrderProductsSpecificPrices(Order $order, Cart $cart): void
     {
-        $restoredSpecificPrices = [];
         foreach ($order->getOrderDetailList() as $row) {
             $orderDetail = new OrderDetail($row['id_order_detail']);
             $product = new Product((int) $orderDetail->product_id);
 
-            $restoredSpecificPrice = $this->createSpecificPriceIfNeeded(
+            $this->createSpecificPriceIfNeeded(
                 new Number((string) $orderDetail->unit_price_tax_incl),
                 new Number((string) $orderDetail->unit_price_tax_excl),
                 $order,
@@ -369,12 +364,25 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $product,
                 new Combination($orderDetail->product_attribute_id)
             );
-            if (null !== $restoredSpecificPrice) {
-                $restoredSpecificPrices[] = $restoredSpecificPrice;
-            }
+        }
+    }
+
+    /**
+     * Clean all the specific prices that were created but this handler
+     *
+     * @throws \PrestaShopException
+     */
+    private function clearTemporarySpecificPrices(): void
+    {
+        if (empty($this->temporarySpecificPrices)) {
+            return;
         }
 
-        return $restoredSpecificPrices;
+        /** @var SpecificPrice $specificPrice */
+        foreach ($this->temporarySpecificPrices as $specificPrice) {
+            $specificPrice->delete();
+        }
+        $this->temporarySpecificPrices = [];
     }
 
     /**
@@ -384,8 +392,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      * @param Cart $cart
      * @param Product $product
      * @param Combination|null $combination
-     *
-     * @return SpecificPrice|null
      */
     private function createSpecificPriceIfNeeded(
         Number $priceTaxIncluded,
@@ -394,7 +400,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         Cart $cart,
         Product $product,
         $combination
-    ) {
+    ): void {
         // Check it the SpecificPrice has already been added by restoreOrderProductsSpecificPrices, if yes ignore new
         // price because the first one is kept
         if (SpecificPrice::exists(
@@ -409,7 +415,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             DateTime::NULL_VALUE,
             DateTime::NULL_VALUE
         )) {
-            return null;
+            return;
         }
 
         $initialProductPriceTaxExcl = Product::getPriceStatic(
@@ -427,31 +433,31 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)}
         );
 
-        // Better check with price tax excluded since it's the one saved in database
-        if (!$priceTaxExcluded->equals(new Number((string) $initialProductPriceTaxExcl))) {
-            $specificPrice = new SpecificPrice();
-            $specificPrice->id_shop = 0;
-            $specificPrice->id_cart = 0;
-            $specificPrice->id_shop_group = 0;
-            $specificPrice->id_currency = $order->id_currency;
-            $specificPrice->id_country = 0;
-            $specificPrice->id_group = 0;
-            $specificPrice->id_customer = $order->id_customer;
-            $specificPrice->id_product = $product->id;
-            $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
-            $specificPrice->price = (float) (string) $priceTaxExcluded;
-            $specificPrice->from_quantity = 1;
-            $specificPrice->reduction = 0;
-            $specificPrice->reduction_type = 'amount';
-            $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
-            $specificPrice->from = '0000-00-00 00:00:00';
-            $specificPrice->to = '0000-00-00 00:00:00';
-            $specificPrice->add();
-
-            return $specificPrice;
+        // Better check with price tax excluded since it's the one saved in database, if the price matches
+        // the product's one no need for specific price
+        if ($priceTaxExcluded->equals(new Number((string) $initialProductPriceTaxExcl))) {
+            return;
         }
 
-        return null;
+        $specificPrice = new SpecificPrice();
+        $specificPrice->id_shop = 0;
+        $specificPrice->id_cart = 0;
+        $specificPrice->id_shop_group = 0;
+        $specificPrice->id_currency = $order->id_currency;
+        $specificPrice->id_country = 0;
+        $specificPrice->id_group = 0;
+        $specificPrice->id_customer = $order->id_customer;
+        $specificPrice->id_product = $product->id;
+        $specificPrice->id_product_attribute = $combination ? $combination->id : 0;
+        $specificPrice->price = (float) (string) $priceTaxExcluded;
+        $specificPrice->from_quantity = 1;
+        $specificPrice->reduction = 0;
+        $specificPrice->reduction_type = 'amount';
+        $specificPrice->reduction_tax = !$priceTaxIncluded->equals($priceTaxExcluded);
+        $specificPrice->from = '0000-00-00 00:00:00';
+        $specificPrice->to = '0000-00-00 00:00:00';
+        $specificPrice->add();
+        $this->temporarySpecificPrices[] = $specificPrice;
     }
 
     /**
@@ -700,21 +706,29 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     }
 
     /**
-     * @param int $productId
-     * @param int $combinationId
-     * @param int $expectedQuantity
+     * @param Product $product
+     * @param AddProductToOrderCommand $command
      *
      * @throws ProductOutOfStockException
      */
-    private function checkProductInStock(int $productId, int $combinationId, int $expectedQuantity): void
+    private function checkProductInStock(Product $product, AddProductToOrderCommand $command): void
     {
-        //check if product is available in stock
-        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($productId))) {
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($productId, $combinationId);
+        if ($command->getCombinationId() > 0) {
+            $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
+            $isEnoughQuantity = Attribute::checkAttributeQty(
+                $command->getCombinationId(),
+                $command->getProductQuantity()
+            );
 
-            if ($availableQuantity < $expectedQuantity) {
-                throw new ProductOutOfStockException('Not enough products in stock');
+            if (!$isAvailableWhenOutOfStock && !$isEnoughQuantity) {
+                throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
             }
+
+            return;
+        }
+
+        if (!$product->checkQty($command->getProductQuantity())) {
+            throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
         }
     }
 

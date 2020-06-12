@@ -317,6 +317,51 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @order-bo-no-stock
+  Scenario: Add product with specific price without stock, get error, allow out of stock order and retry, it should work (no unicity error)
+    Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
+    Then order "bo_order1" should have 2 products in total
+    Then order "bo_order1" should have 0 invoices
+    Then order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product Cart Rule On Select Product" with a price of 15.0 and 0 items in stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 8                                         |
+      | free_shipping | true                                      |
+    Then I should get error that product is out of stock
+    Given shop configuration for "PS_ORDER_OUT_OF_STOCK" is set to 1
+    # Use different price to be sure this one will be used
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Cart Rule On Select Product  |
+      | amount        | 1                                         |
+      | price         | 10                                        |
+      | free_shipping | true                                      |
+    # This is to avoid regression, previously a specific price was added but not cleared and it caused an unexpected bug
+    Then order "bo_order1" should have 3 products in total
+    Then order "bo_order1" should have following details:
+      | total_products           | 33.800 |
+      | total_products_wt        | 35.830 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 40.8   |
+      | total_paid_tax_incl      | 43.250 |
+      | total_paid               | 43.250 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+
   Scenario: Add product to an existing Order with invoice with free shipping to new invoice
     Given I update order "bo_order1" status to "Payment accepted"
     And order "bo_order1" should have 1 invoices
