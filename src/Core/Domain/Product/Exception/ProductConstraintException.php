@@ -85,4 +85,9 @@ class ProductConstraintException extends ProductException
      * When product upc code value is invalid
      */
     const INVALID_UPC = 110;
+
+    /**
+     * When product reference value is invalid
+     */
+    const INVALID_REFERENCE = 120;
 }

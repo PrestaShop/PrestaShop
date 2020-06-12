@@ -41,6 +41,11 @@ class Ean13
     const VALID_PATTERN = '/^[0-9]{0,13}$/';
 
     /**
+     * Maximum allowed symbols
+     */
+    const MAX_LENGTH = 13;
+
+    /**
      * @var string
      */
     private $value;
@@ -55,21 +60,30 @@ class Ean13
     }
 
     /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    /**
      * @param string $value
      *
      * @throws ProductConstraintException
      */
     private function assertEan13IsValid(string $value): void
     {
-        if (preg_match(self::VALID_PATTERN, $value)) {
+        if (strlen($value) <= self::MAX_LENGTH && preg_match(self::VALID_PATTERN, $value)) {
             return;
         }
 
         throw new ProductConstraintException(
             sprintf(
-                'Invalid Ean13 "%s". It should match pattern "%s"',
+                'Invalid Ean13 "%s". It should match pattern "%s" and cannot exceed %s symbols',
                 $value,
-                self::VALID_PATTERN
+                self::VALID_PATTERN,
+                self::MAX_LENGTH
             ),
             ProductConstraintException::INVALID_EAN_13
         );

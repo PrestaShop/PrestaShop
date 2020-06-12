@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Mpn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 
 class UpdateProductOptionsCommand
@@ -94,6 +95,11 @@ class UpdateProductOptionsCommand
     private $mpn;
 
     /**
+     * @var Reference|null
+     */
+    private $reference;
+
+    /**
      * @param int $productId
      */
     public function __construct(int $productId)
@@ -132,7 +138,7 @@ class UpdateProductOptionsCommand
     /**
      * @return bool|null
      */
-    public function getAvailableForOrder(): ?bool
+    public function isAvailableForOrder(): ?bool
     {
         return $this->availableForOrder;
     }
@@ -305,6 +311,26 @@ class UpdateProductOptionsCommand
     public function setMpn(string $mpn): UpdateProductOptionsCommand
     {
         $this->mpn = new Mpn($mpn);
+
+        return $this;
+    }
+
+    /**
+     * @return Reference|null
+     */
+    public function getReference(): ?Reference
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setReference(string $reference): UpdateProductOptionsCommand
+    {
+        $this->reference = new Reference($reference);
 
         return $this;
     }
