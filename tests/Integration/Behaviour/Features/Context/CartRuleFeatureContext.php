@@ -407,7 +407,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
             if ($currentCartRule['description'] === $cartRuleName && (string) $currentCartRule['value_real'] !== (string) $expectedValue) {
                 throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $currentCartRule['value_real']));
             }
-            if ($currentCartRule['description'] === $cartRuleName) $cartRuleFound = true;
+            if ($currentCartRule['description'] === $cartRuleName) {
+                $cartRuleFound = true;
+            }
         }
 
         if (!$cartRuleFound) {
