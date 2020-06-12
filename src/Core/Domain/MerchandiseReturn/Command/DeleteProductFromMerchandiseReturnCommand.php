@@ -63,7 +63,7 @@ class DeleteProductFromMerchandiseReturnCommand
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException
      */
-    public function __construct(int $merchandiseReturnId, int $merchandiseReturnDetailId, int $customizationId)
+    public function __construct(int $merchandiseReturnId, int $merchandiseReturnDetailId, int $customizationId = 0)
     {
         $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
         $this->merchandiseReturnDetailId = new MerchandiseReturnDetailId($merchandiseReturnDetailId);
