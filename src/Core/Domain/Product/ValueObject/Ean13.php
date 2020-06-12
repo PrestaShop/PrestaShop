@@ -24,55 +24,54 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Is thrown when product constraints are violated
+ * Holds product Ean13 code value
  */
-class ProductConstraintException extends ProductException
+class Ean13
 {
     /**
-     * Code is used when invalid id is supplied.
+     * Valid ean regex pattern
      */
-    const INVALID_ID = 10;
+    const VALID_PATTERN = '/^[0-9]{0,13}$/';
 
     /**
-     * When invalid product type is supplied.
+     * @var string
      */
-    const INVALID_PRODUCT_TYPE = 20;
+    private $value;
 
     /**
-     * When invalid product name in one or another language is supplied
+     * @param string $value
      */
-    const INVALID_NAME = 30;
+    public function __construct(string $value)
+    {
+        $this->assertEan13IsValid($value);
+        $this->value = $value;
+    }
 
     /**
-     * When invalid product condition is supplied
+     * @param string $value
+     *
+     * @throws ProductConstraintException
      */
-    const INVALID_CONDITION = 40;
+    private function assertEan13IsValid(string $value): void
+    {
+        if (preg_match(self::VALID_PATTERN, $value)) {
+            return;
+        }
 
-    /**
-     * When invalid product description is supplied
-     */
-    const INVALID_DESCRIPTION = 50;
-
-    /**
-     * When invalid product short description is supplied
-     */
-    const INVALID_SHORT_DESCRIPTION = 60;
-
-    /**
-     * When product visibility value is not valid
-     */
-    const INVALID_VISIBILITY = 70;
-
-    /**
-     * When product Ean13 code value is not valid
-     */
-    const INVALID_EAN_13 = 80;
-
-    /**
-     * When product ISBN code value is not valid
-     */
-    const INVALID_ISBN = 90;
+        throw new ProductConstraintException(
+            sprintf(
+                'Invalid Ean13 "%s". It should match pattern "%s"',
+                $value,
+                self::VALID_PATTERN
+            ),
+            ProductConstraintException::INVALID_EAN_13
+        );
+    }
 }

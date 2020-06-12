@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
@@ -70,7 +72,7 @@ class UpdateProductOptionsCommand
     private $condition;
 
     /**
-     * @var string|null
+     * @var Isbn|null
      */
     private $isbn;
 
@@ -80,7 +82,7 @@ class UpdateProductOptionsCommand
     private $upc;
 
     /**
-     * @var string|null
+     * @var Ean13|null
      */
     private $ean13;
 
@@ -226,7 +228,7 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return string|null
+     * @return Isbn|null
      */
     public function getIsbn(): ?string
     {
@@ -240,7 +242,7 @@ class UpdateProductOptionsCommand
      */
     public function setIsbn(string $isbn): UpdateProductOptionsCommand
     {
-        $this->isbn = $isbn;
+        $this->isbn = new Isbn($isbn);
 
         return $this;
     }
@@ -266,9 +268,9 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return string
+     * @return Ean13|null
      */
-    public function getEan13(): string
+    public function getEan13(): ?Ean13
     {
         return $this->ean13;
     }
@@ -280,7 +282,7 @@ class UpdateProductOptionsCommand
      */
     public function setEan13(string $ean13): UpdateProductOptionsCommand
     {
-        $this->ean13 = $ean13;
+        $this->ean13 = new Ean13($ean13);
 
         return $this;
     }
