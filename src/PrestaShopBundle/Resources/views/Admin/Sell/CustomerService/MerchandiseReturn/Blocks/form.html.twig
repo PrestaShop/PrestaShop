@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{{ form_start(merchandiseReturnForm) }}
+{{ form_start(merchandiseReturnForm, {action: path('admin_merchandise_returns_update', {'merchandiseReturnId': editableMerchandiseReturn.merchandiseReturnId.value})}) }}
   <div class="card">
   <h3 class="card-header">
     <i class="material-icons">person</i>
