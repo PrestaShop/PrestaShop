@@ -87,17 +87,27 @@ class ProductConstraintException extends ProductException
     const INVALID_WHOLESALE_PRICE = 110;
 
     /**
-     * When product visibility value is not valid
+     * When product visibility value is invalid
      */
     const INVALID_VISIBILITY = 120;
 
     /**
-     * When product Ean13 code value is not valid
+     * When product Ean13 code value is invalid
      */
     const INVALID_EAN_13 = 130;
 
     /**
-     * When product ISBN code value is not valid
+     * When product ISBN code value is invalid
      */
     const INVALID_ISBN = 140;
+
+    /**
+     * When product mpn code value is invalid
+     */
+    const INVALID_MPN = 150;
+
+    /**
+     * When product upc code value is invalid
+     */
+    const INVALID_UPC = 160;
 }
