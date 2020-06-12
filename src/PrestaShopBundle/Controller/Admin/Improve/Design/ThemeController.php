@@ -140,7 +140,7 @@ class ThemeController extends AbstractAdminController
         if ($logosUploadForm->isSubmitted()) {
             $data = $logosUploadForm->getData();
             try {
-                $this->getShopLogosFormHandler()->save($data['shop_logos']);
+                $this->getShopLogosFormHandler()->save($data);
 
                 $this->addFlash(
                     'success',

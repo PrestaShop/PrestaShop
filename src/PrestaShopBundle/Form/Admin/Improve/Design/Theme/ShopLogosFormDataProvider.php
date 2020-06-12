@@ -65,9 +65,7 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
-            'shop_logos' => $this->themeMultiStoreSettingsFormDataProvider->getData(),
-        ];
+        return $this->themeMultiStoreSettingsFormDataProvider->getData();
     }
 
     /**
