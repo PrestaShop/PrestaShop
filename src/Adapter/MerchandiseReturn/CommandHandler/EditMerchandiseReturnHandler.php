@@ -40,7 +40,7 @@ class EditMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler impl
     /**
      * {@inheritdoc}
      */
-    public function handle(EditMerchandiseReturnCommand $command): EditableMerchandiseReturn
+    public function handle(EditMerchandiseReturnCommand $command): void
     {
         $merchandiseReturnId = $command->getMerchandiseReturnId();
         $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
