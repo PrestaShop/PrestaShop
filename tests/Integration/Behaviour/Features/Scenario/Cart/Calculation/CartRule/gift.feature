@@ -35,7 +35,6 @@ Feature: Cart calculation with cart rules giving gift
     # Test known not to be reliable on previous
     # Then my cart total using previous calculation method should be 60.4924 tax included
 
-    @my-test
   Scenario: 2 products in cart, one cart rule offering a gift (in stock) and a global 10% discount
     Given I have an empty default cart
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
