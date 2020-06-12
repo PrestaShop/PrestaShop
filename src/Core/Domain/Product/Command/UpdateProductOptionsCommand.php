@@ -152,7 +152,7 @@ class UpdateProductOptionsCommand
     /**
      * @return bool|null
      */
-    public function getOnlineOnly(): ?bool
+    public function isOnlineOnly(): ?bool
     {
         return $this->onlineOnly;
     }
@@ -172,7 +172,7 @@ class UpdateProductOptionsCommand
     /**
      * @return bool|null
      */
-    public function getShowPrice(): ?bool
+    public function toShowPrice(): ?bool
     {
         return $this->showPrice;
     }
@@ -290,7 +290,7 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return null|Mpn
+     * @return Mpn|null
      */
     public function getMpn(): ?Mpn
     {
