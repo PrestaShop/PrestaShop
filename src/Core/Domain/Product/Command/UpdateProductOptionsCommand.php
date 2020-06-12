@@ -28,27 +28,280 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 
 class UpdateProductOptionsCommand
 {
     /**
-     * @var null|ProductVisibility
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var ProductVisibility|null
      */
     private $visibility;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $availableForOrder;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $onlineOnly;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $showPrice;
+
+    /**
+     * @var string[]|null
+     */
+    private $tags;
+
+    /**
+     * @var ProductCondition|null
+     */
+    private $condition;
+
+    /**
+     * @var string|null
+     */
+    private $isbn;
+
+    /**
+     * @var string|null
+     */
+    private $upc;
+
+    /**
+     * @var string|null
+     */
+    private $ean13;
+
+    /**
+     * @var string|null
+     */
+    private $mpn;
+
+    /**
+     * @param ProductId $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return ProductVisibility|null
+     */
+    public function getVisibility(): ?ProductVisibility
+    {
+        return $this->visibility;
+    }
+
+    /**
+     * @param ProductVisibility $visibility
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setVisibility(string $visibility): UpdateProductOptionsCommand
+    {
+        $this->visibility = new ProductVisibility($visibility);
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getAvailableForOrder(): ?bool
+    {
+        return $this->availableForOrder;
+    }
+
+    /**
+     * @param bool $availableForOrder
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setAvailableForOrder(bool $availableForOrder): UpdateProductOptionsCommand
+    {
+        $this->availableForOrder = $availableForOrder;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getOnlineOnly(): ?bool
+    {
+        return $this->onlineOnly;
+    }
+
+    /**
+     * @param bool $onlineOnly
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setOnlineOnly(bool $onlineOnly): UpdateProductOptionsCommand
+    {
+        $this->onlineOnly = $onlineOnly;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getShowPrice(): ?bool
+    {
+        return $this->showPrice;
+    }
+
+    /**
+     * @param bool $showPrice
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setShowPrice(bool $showPrice): UpdateProductOptionsCommand
+    {
+        $this->showPrice = $showPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getTags(): ?array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param string[] $tags
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setTags(array $tags): UpdateProductOptionsCommand
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    /**
+     * @return ProductCondition|null
+     */
+    public function getCondition(): ?ProductCondition
+    {
+        return $this->condition;
+    }
+
+    /**
+     * @param string $condition
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setCondition(string $condition): UpdateProductOptionsCommand
+    {
+        $this->condition = new ProductCondition($condition);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIsbn(): ?string
+    {
+        return $this->isbn;
+    }
+
+    /**
+     * @param string $isbn
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setIsbn(string $isbn): UpdateProductOptionsCommand
+    {
+        $this->isbn = $isbn;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUpc(): ?string
+    {
+        return $this->upc;
+    }
+
+    /**
+     * @param string $upc
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setUpc(string $upc): UpdateProductOptionsCommand
+    {
+        $this->upc = $upc;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEan13(): string
+    {
+        return $this->ean13;
+    }
+
+    /**
+     * @param string $ean13
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setEan13(string $ean13): UpdateProductOptionsCommand
+    {
+        $this->ean13 = $ean13;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMpn(): string
+    {
+        return $this->mpn;
+    }
+
+    /**
+     * @param string $mpn
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setMpn(string $mpn): UpdateProductOptionsCommand
+    {
+        $this->mpn = $mpn;
+
+        return $this;
+    }
 }
