@@ -51,6 +51,18 @@ export default class OrderViewPage {
   }
 
   listenToEvents() {
+
+    $(OrderViewPageMap.invoiceAddressEditBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+    $(OrderViewPageMap.deliveryAddressEditBtn).fancybox({
+      'type': 'iframe',
+      'width': '90%',
+      'height': '90%',
+    });
+
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
       // Remove the row
       const $row = $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId));

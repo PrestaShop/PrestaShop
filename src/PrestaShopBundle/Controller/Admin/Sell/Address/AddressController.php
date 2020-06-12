@@ -397,6 +397,7 @@ class AddressController extends FrameworkBundleAdminController
     public function editOrderAction(int $orderId, string $addressType, Request $request): Response
     {
         try {
+            // @todo: don't rely on Order ObjectModel, use a Adapter DataProvider
             $order = new Order($orderId);
             $addressId = null;
             switch ($addressType) {
@@ -431,7 +432,7 @@ class AddressController extends FrameworkBundleAdminController
                 $formData['id_country'] = $formCountryId;
             }
 
-            // Addres form is built based on address id to fill the data related to this address
+            // Address form is built based on address id to fill the data related to this address
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
             $addressForm->handleRequest($request);
 
@@ -440,6 +441,13 @@ class AddressController extends FrameworkBundleAdminController
 
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                if ($request->query->has('submitFormAjax')) {
+                    return $this->render(
+                        '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
+                        ['refreshCartAddresses' => 'false']
+                    );
+                }
 
                 return $this->redirectToRoute('admin_orders_view', ['orderId' => $orderId]);
             }
@@ -461,6 +469,7 @@ class AddressController extends FrameworkBundleAdminController
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'cancelPath' => $this->generateUrl('admin_orders_view', ['orderId' => $orderId]),
+            'displayInIframe' => $request->query->has('submitFormAjax'),
         ]);
     }
 
