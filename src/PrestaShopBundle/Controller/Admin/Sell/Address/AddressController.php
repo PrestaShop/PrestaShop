@@ -394,7 +394,7 @@ class AddressController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editOrderAction(int $orderId, string $addressType, Request $request): Response
+    public function editOrderAddressAction(int $orderId, string $addressType, Request $request): Response
     {
         try {
             // @todo: don't rely on Order ObjectModel, use a Adapter DataProvider
