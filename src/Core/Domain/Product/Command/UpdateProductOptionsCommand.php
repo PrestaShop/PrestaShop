@@ -30,9 +30,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Mpn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 
 class UpdateProductOptionsCommand
 {
@@ -77,7 +79,7 @@ class UpdateProductOptionsCommand
     private $isbn;
 
     /**
-     * @var string|null
+     * @var Upc|null
      */
     private $upc;
 
@@ -87,12 +89,12 @@ class UpdateProductOptionsCommand
     private $ean13;
 
     /**
-     * @var string|null
+     * @var Mpn|null
      */
     private $mpn;
 
     /**
-     * @param ProductId $productId
+     * @param int $productId
      */
     public function __construct(int $productId)
     {
@@ -248,9 +250,9 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return string|null
+     * @return Upc|null
      */
-    public function getUpc(): ?string
+    public function getUpc(): ?Upc
     {
         return $this->upc;
     }
@@ -262,7 +264,7 @@ class UpdateProductOptionsCommand
      */
     public function setUpc(string $upc): UpdateProductOptionsCommand
     {
-        $this->upc = $upc;
+        $this->upc = new Upc($upc);
 
         return $this;
     }
@@ -288,9 +290,9 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return string
+     * @return null|Mpn
      */
-    public function getMpn(): string
+    public function getMpn(): ?Mpn
     {
         return $this->mpn;
     }
@@ -302,7 +304,7 @@ class UpdateProductOptionsCommand
      */
     public function setMpn(string $mpn): UpdateProductOptionsCommand
     {
-        $this->mpn = $mpn;
+        $this->mpn = new Mpn($mpn);
 
         return $this;
     }
