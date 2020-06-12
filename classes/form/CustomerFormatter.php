@@ -29,7 +29,13 @@ class CustomerFormatterCore extends AbstractFormFormatter
 {
     private $translator;
     private $language;
-    private $definition;
+
+    /**
+     * @var array fields_definition customer fields definition
+     *
+     * @see Customer::$definition
+     */
+    private $fields_definition;
 
     private $ask_for_birthdate = true;
     private $ask_for_partner_optin = true;
@@ -44,7 +50,7 @@ class CustomerFormatterCore extends AbstractFormFormatter
     ) {
         $this->translator = $translator;
         $this->language = $language;
-        $this->definition = Customer::$definition['fields'];
+        $this->fields_definition = Customer::$definition['fields'];
     }
 
     public function setAskForBirthdate($ask_for_birthdate)
@@ -250,6 +256,6 @@ class CustomerFormatterCore extends AbstractFormFormatter
 
         // TODO: TVA etc.?
 
-        return $this->setConstraints($format, $this->definition);
+        return $this->setConstraints($format, $this->fields_definition);
     }
 }

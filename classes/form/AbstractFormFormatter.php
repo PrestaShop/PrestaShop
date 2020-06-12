@@ -31,17 +31,17 @@ abstract class AbstractFormFormatterCore implements FormFormatterInterface
     /**
      * Add validation constrains
      *
-     * @param $format
-     * @param $definition array object difinition
+     * @param $format array
+     * @param $fieldsDefinition array object definition
      *
      * @return array
      */
-    protected function addConstraints(array $format, array $definition)
+    protected function addConstraints(array $format, array $fieldsDefinition): array
     {
         foreach ($format as $field) {
-            if (!empty($definition[$field->getName()]['validate'])) {
+            if (!empty($fieldsDefinition[$field->getName()]['validate'])) {
                 $field->addConstraint(
-                    $definition[$field->getName()]['validate']
+                    $fieldsDefinition[$field->getName()]['validate']
                 );
             }
         }
@@ -52,17 +52,17 @@ abstract class AbstractFormFormatterCore implements FormFormatterInterface
     /**
      * Add max length
      *
-     * @param $format
-     * @param $definition array object difinition
+     * @param $format array
+     * @param $fieldsDefinition array object definition
      *
      * @return array
      */
-    protected function addMaxLength(array $format, array $definition)
+    protected function addMaxLength(array $format, array $fieldsDefinition): array
     {
         foreach ($format as $field) {
-            if (!empty($definition[$field->getName()]['size'])) {
+            if (!empty($fieldsDefinition[$field->getName()]['size'])) {
                 $field->setMaxLength(
-                    $definition[$field->getName()]['size']
+                    $fieldsDefinition[$field->getName()]['size']
                 );
             }
         }
@@ -73,13 +73,13 @@ abstract class AbstractFormFormatterCore implements FormFormatterInterface
     /**
      * Set contrains and lengths
      *
-     * @param $format
-     * @param $definition array object difinition
+     * @param $format array
+     * @param $fieldsDefinition array object definition
      *
      * @return array
      */
-    protected function setConstraints(array $format, array $definition)
+    protected function setConstraints(array $format, array $fieldsDefinition): array
     {
-        return $this->addConstraints($this->addMaxLength($format, $definition), $definition);
+        return $this->addConstraints($this->addMaxLength($format, $fieldsDefinition), $fieldsDefinition);
     }
 }
