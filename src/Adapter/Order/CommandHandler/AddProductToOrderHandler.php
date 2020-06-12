@@ -95,6 +95,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $temporarySpecificPrices;
 
     /**
+     * @var int
+     */
+    private $computingPrecision;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
      */
@@ -120,6 +125,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer));
 
+        // Get context precision just in case
+        $this->computingPrecision = $this->context->getComputingPrecision();
         $this->temporarySpecificPrices = [];
         try {
             $this->assertOrderWasNotShipped($order);
@@ -130,6 +137,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $this->checkProductInStock($product, $command);
 
             $cart = $this->createNewOrEditExistingCart($order);
+            // Cart precision is more adapted
+            $this->computingPrecision = $this->getPrecisionFromCart($cart);
 
             // Restore any specific prices for the products in the order
             $this->restoreOrderProductsSpecificPrices(
@@ -233,8 +242,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $orderCartRule->id_cart_rule = $cartCartRule['id_cart_rule'];
             $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
             $orderCartRule->name = $cartCartRule['name'];
-            $orderCartRule->value = $rule->getContextualValue(true);
-            $orderCartRule->value_tax_excl = $rule->getContextualValue(false);
+            $orderCartRule->value = Tools::ps_round($rule->getContextualValue(true), $this->computingPrecision);
+            $orderCartRule->value_tax_excl = Tools::ps_round($rule->getContextualValue(false), $this->computingPrecision);
             $orderCartRule->save();
         }
     }
@@ -422,7 +431,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $product->id,
             false,
             $combination ? $combination->id : null,
-            2,
+            $this->computingPrecision,
             null,
             false,
             true,
@@ -490,11 +499,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             case Order::ROUND_LINE:
                 $productItem['total'] = Tools::ps_round(
                     $productItem['price_with_reduction_without_tax'] * $quantity,
-                    Context::getContext()->getComputingPrecision()
+                    $this->computingPrecision
                 );
                 $productItem['total_wt'] = Tools::ps_round(
                     $productItem['price_with_reduction'] * $quantity,
-                    Context::getContext()->getComputingPrecision()
+                    $this->computingPrecision
                 );
 
                 break;
@@ -503,11 +512,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             default:
                 $productItem['total'] = Tools::ps_round(
                         $productItem['price_with_reduction_without_tax'],
-                        Context::getContext()->getComputingPrecision()
+                        $this->computingPrecision
                     ) * $quantity;
                 $productItem['total_wt'] = Tools::ps_round(
                         $productItem['price_with_reduction'],
-                        Context::getContext()->getComputingPrecision()
+                        $this->computingPrecision
                     ) * $quantity;
 
                 break;
@@ -635,15 +644,13 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $carrier = new Carrier((int) $order->id_carrier);
         $taxCalculator = $carrier->getTaxCalculator($invoice_address);
 
-        // @todo: use https://github.com/PrestaShop/decimal to compute prices and taxes
-        $precision = $this->getPrecisionFromCart($cart);
         $invoice->total_paid_tax_excl = Tools::ps_round(
             (float) $cart->getOrderTotal(false, $totalMethod, $newProducts),
-            $precision
+            $this->computingPrecision
         );
         $invoice->total_paid_tax_incl = Tools::ps_round(
             (float) $cart->getOrderTotal(true, $totalMethod, $newProducts),
-            $precision
+            $this->computingPrecision
         );
         $invoice->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $newProducts);
         $invoice->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $newProducts);
@@ -678,16 +685,15 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function updateExistingInvoice($orderInvoiceId, Cart $cart, array $newProducts)
     {
-        $precision = $this->getPrecisionFromCart($cart);
         $invoice = new OrderInvoice($orderInvoiceId);
 
         $invoice->total_paid_tax_excl += Tools::ps_round(
             (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING, $newProducts),
-            $precision
+            $this->computingPrecision
         );
         $invoice->total_paid_tax_incl += Tools::ps_round(
             (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $newProducts),
-            $precision
+            $this->computingPrecision
         );
         $invoice->total_products += (float) $cart->getOrderTotal(
             false,
