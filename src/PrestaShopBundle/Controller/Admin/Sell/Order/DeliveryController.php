@@ -103,7 +103,7 @@ class DeliveryController extends FrameworkBundleAdminController
         if ($form->isSubmitted() && $form->isValid()) {
             $errors = $formHandler->save($form->getData());
             if (empty($errors)) {
-                $pdf = $form->get('pdf')->getData();
+                $pdf = $form->getData();
 
                 return $this->redirect(
                     $this->get('prestashop.adapter.legacy.context')->getAdminLink(

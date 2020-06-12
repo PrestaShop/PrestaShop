@@ -140,7 +140,7 @@ class ThemeController extends AbstractAdminController
         if ($logosUploadForm->isSubmitted()) {
             $data = $logosUploadForm->getData();
             try {
-                $this->getShopLogosFormHandler()->save($data['shop_logos']);
+                $this->getShopLogosFormHandler()->save($data);
 
                 $this->addFlash(
                     'success',
@@ -450,7 +450,7 @@ class ThemeController extends AbstractAdminController
      *
      * @throws Exception
      */
-    protected function getLogosUploadForm()
+    protected function getLogosUploadForm(): FormInterface
     {
         return $this->getShopLogosFormHandler()->getForm();
     }
@@ -458,7 +458,7 @@ class ThemeController extends AbstractAdminController
     /**
      * @return FormInterface
      */
-    protected function getAdaptThemeToRtlLanguageForm()
+    protected function getAdaptThemeToRtlLanguageForm(): FormInterface
     {
         return $this->createForm(AdaptThemeToRTLLanguagesType::class);
     }
@@ -466,7 +466,7 @@ class ThemeController extends AbstractAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getShopLogosFormHandler()
+    private function getShopLogosFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.shop_logos_settings.form_handler');
     }

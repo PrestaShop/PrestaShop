@@ -59,9 +59,7 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return [
-            'general' => $this->generalDataConfiguration->getConfiguration(),
-        ];
+        return $this->generalDataConfiguration->getConfiguration();
     }
 
     /**
@@ -73,7 +71,7 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
             return $errors;
         }
 
-        return $this->generalDataConfiguration->updateConfiguration($data['general']);
+        return $this->generalDataConfiguration->updateConfiguration($data);
     }
 
     /**
@@ -87,7 +85,7 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
     {
         $errors = [];
 
-        $passwordResetDelay = $data['general']['password_reset_delay'];
+        $passwordResetDelay = $data['password_reset_delay'];
         if (!is_numeric($passwordResetDelay) || $passwordResetDelay < 0) {
             $fieldName = $this->translator->trans('Password reset delay', [], 'Admin.Shopparameters.Feature');
 

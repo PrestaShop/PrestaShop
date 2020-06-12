@@ -536,7 +536,7 @@ class MailThemeController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getMailThemeFormHandler()
+    private function getMailThemeFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.mail_theme.form_handler');
     }

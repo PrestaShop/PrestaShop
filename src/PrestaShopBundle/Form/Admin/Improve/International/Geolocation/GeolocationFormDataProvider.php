@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Validation\ValidatorInterface;
 
 /**
  * Class GeolocationFormDataProvider is responsible for handling geolocation form data.
+ *
+ * @deprecated since 1.7.8, will be removed in the next major version
  */
 final class GeolocationFormDataProvider implements FormDataProviderInterface
 {

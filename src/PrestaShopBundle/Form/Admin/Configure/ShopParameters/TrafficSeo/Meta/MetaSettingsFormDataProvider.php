@@ -36,6 +36,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class MetaSettingsFormDataProvider is responsible for providing configurations data and responsible for persisting data
  * in configuration database.
+ *
+ * @deprecated since 1.7.8, will be removed in the next major version
  */
 final class MetaSettingsFormDataProvider implements FormDataProviderInterface
 {

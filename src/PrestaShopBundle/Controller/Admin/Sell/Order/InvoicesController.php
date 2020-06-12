@@ -61,9 +61,9 @@ class InvoicesController extends FrameworkBundleAdminController
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'byDateForm' => $byDateForm->createView(),
-            'byStatusForm' => $byStatusForm->createView(),
-            'optionsForm' => $optionsForm->createView(),
+            'generateByDateForm' => $byDateForm->createView(),
+            'generateByStatusForm' => $byStatusForm->createView(),
+            'invoiceOptionsForm' => $optionsForm->createView(),
         ];
     }
 
