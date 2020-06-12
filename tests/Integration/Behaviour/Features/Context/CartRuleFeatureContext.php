@@ -403,7 +403,8 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRules = $this->getCurrentCart()->getCartRules();
         $cartRuleFound = false;
         foreach ($cartRules as $currentCartRule) {
-            if ($currentCartRule['description'] === $cartRuleName && round($currentCartRule['value_real'], 6) != round($expectedValue, 6)) {
+            // float numbers are compared as string because float numbers seemingly equals can still be unequals.
+            if ($currentCartRule['description'] === $cartRuleName && (string) $currentCartRule['value_real'] !== (string) $expectedValue) {
                 throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedValue, $currentCartRule['value_real']));
             }
             if ($currentCartRule['description'] === $cartRuleName) $cartRuleFound = true;
