@@ -48,7 +48,7 @@
                 <a href="http://{{ source.requestUri }}">{{ source.requestUri | slice(0,100) }}</a>
                 <br/>
                 {% if source.keywords != '' %}
-                  <b>{{ 'Keywords'|trans({}) }}</b>
+                  <b>{{ 'Keywords'|trans({}, 'Admin.Global') }}</b>
                   <br/>
                   {{ source.keywords }}
                 {% endif %}
