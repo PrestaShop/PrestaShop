@@ -90,4 +90,14 @@ class ProductConstraintException extends ProductException
      * When product visibility value is not valid
      */
     const INVALID_VISIBILITY = 120;
+
+    /**
+     * When product Ean13 code value is not valid
+     */
+    const INVALID_EAN_13 = 130;
+
+    /**
+     * When product ISBN code value is not valid
+     */
+    const INVALID_ISBN = 140;
 }
