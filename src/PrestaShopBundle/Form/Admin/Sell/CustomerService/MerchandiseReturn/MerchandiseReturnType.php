@@ -42,6 +42,10 @@ class MerchandiseReturnType extends AbstractType
      */
     private $stateChoices;
 
+    /**
+     * MerchandiseReturnType constructor.
+     * @param array $stateChoices
+     */
     public function __construct(array $stateChoices)
     {
         $this->stateChoices = $stateChoices;
