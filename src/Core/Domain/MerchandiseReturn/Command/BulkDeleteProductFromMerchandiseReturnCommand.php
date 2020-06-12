@@ -72,8 +72,9 @@ class BulkDeleteProductFromMerchandiseReturnCommand
     {
         foreach ($merchandiseReturnDetails as $merchandiseReturnDetail) {
             if (!$merchandiseReturnDetail instanceof MerchandiseReturnDetail) {
-                /* @todo error */
-                throw new MerchandiseReturnException('Need a proper error here');
+                throw new MerchandiseReturnConstraintException(
+                    'merchandise return details array must instances of MerchandiseReturnDetail'
+                );
             }
             $this->merchandiseReturnDetails[] = $merchandiseReturnDetail;
         }
