@@ -30,20 +30,18 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
-/**
- * Holds product upc code value
- */
-class Upc
+class Reference
 {
     /**
-     * Valid upc regex pattern
+     * Valid ean regex pattern
      */
-    const VALID_PATTERN = '/^[0-9]{0,12}$/';
+    const VALID_PATTERN = '/^[^<>;={}]*$/u';
 
     /**
      * Maximum allowed symbols
      */
-    const MAX_LENGTH = 12;
+    const MAX_LENGTH = 64;
+
     /**
      * @var string
      */
@@ -54,7 +52,7 @@ class Upc
      */
     public function __construct(string $value)
     {
-        $this->assertUpcIsValid($value);
+        $this->assertReferenceIsValid($value);
         $this->value = $value;
     }
 
@@ -71,7 +69,7 @@ class Upc
      *
      * @throws ProductConstraintException
      */
-    private function assertUpcIsValid(string $value): void
+    private function assertReferenceIsValid(string $value): void
     {
         if (strlen($value) <= self::MAX_LENGTH && preg_match(self::VALID_PATTERN, $value)) {
             return;
@@ -79,12 +77,12 @@ class Upc
 
         throw new ProductConstraintException(
             sprintf(
-                'Invalid UPC "%s". It should match pattern "%s" and cannot exceed %s symbols',
+                'Invalid reference "%s". It should match pattern "%s" and cannot exceed %s symbols',
                 $value,
                 self::VALID_PATTERN,
                 self::MAX_LENGTH
             ),
-            ProductConstraintException::INVALID_UPC
+            ProductConstraintException::INVALID_REFERENCE
         );
     }
 }

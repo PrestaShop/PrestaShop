@@ -55,6 +55,14 @@ class Mpn
     }
 
     /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    /**
      * @param string $value
      *
      * @throws ProductConstraintException

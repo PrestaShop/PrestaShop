@@ -37,7 +37,13 @@ class CannotUpdateProductException extends ProductException
     const FAILED_UPDATE_BASIC_INFO = 10;
 
     /**
+<<<<<<< HEAD
      * When updating product fields associated with price fails
      */
     const FAILED_UPDATE_PRICES = 20;
+=======
+     * When product options update fails
+     */
+    const FAILED_UPDATE_OPTIONS = 20;
+>>>>>>> 73918b2322...  fill updatable fields in handler
 }

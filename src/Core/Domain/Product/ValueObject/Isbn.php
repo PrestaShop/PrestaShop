@@ -41,6 +41,11 @@ class Isbn
     const VALID_PATTERN = '/^[0-9-]{0,32}$/';
 
     /**
+     * Maximum allowed symbols
+     */
+    const MAX_LENGTH = 32;
+
+    /**
      * @var string
      */
     private $value;
@@ -55,21 +60,30 @@ class Isbn
     }
 
     /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    /**
      * @param string $value
      *
      * @throws ProductConstraintException
      */
     private function assertIsbnIsValid(string $value): void
     {
-        if (preg_match(self::VALID_PATTERN, $value)) {
+        if (strlen($value) <= self::MAX_LENGTH && preg_match(self::VALID_PATTERN, $value)) {
             return;
         }
 
         throw new ProductConstraintException(
             sprintf(
-                'Invalid ISBN "%s". It should match pattern "%s"',
+                'Invalid ISBN "%s". It should match pattern "%s" and cannot exceed %s symbols',
                 $value,
-                self::VALID_PATTERN
+                self::VALID_PATTERN,
+                self::MAX_LENGTH
             ),
             ProductConstraintException::INVALID_ISBN
         );
