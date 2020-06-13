@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShopException;
 use Product;
+use Tag;
 
 /**
  * Handles UpdateProductOptionsCommand using legacy object models
@@ -58,26 +59,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         $this->fillUpdatableFieldsWithCommandData($product, $command);
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
-        try {
-            if (false === $product->update()) {
-                throw new CannotUpdateProductException(
-                    sprintf(
-                        'Failed to update product #%s options',
-                        $product->id
-                    ),
-                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf(
-                    'Error occurred during product #%s options update',
-                    $product->id
-                ),
-                0,
-                $e
-            );
-        }
+        $this->performUpdate($product, $command->getLocalizedTags());
     }
 
     /**
@@ -119,11 +101,89 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         if (null !== $command->getVisibility()) {
             $product->visibility = $command->getVisibility()->getValue();
             $this->fieldsToUpdate['visibility'] = true;
-            //@todo: do i need to validate this?
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @param array|null $localizedTags
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    private function performUpdate(Product $product, ?array $localizedTags)
+    {
+        try {
+            if (false === $product->update()) {
+                throw new CannotUpdateProductException(
+                    sprintf(
+                        'Failed to update product #%s options',
+                        $product->id
+                    ),
+                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+                );
+            }
+
+            if (null !== $localizedTags) {
+                $this->updateTags($product, $localizedTags);
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                sprintf(
+                    'Error occurred during product #%s options update',
+                    $product->id
+                ),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @param array $localizedTags
+     *
+     * @throws CannotUpdateProductException
+     * @throws PrestaShopException
+     */
+    private function updateTags(Product $product, array $localizedTags)
+    {
+        $productId = (int) $product->id;
+
+        if (empty($localizedTags)) {
+            $this->deleteAllProductTags($productId);
         }
 
-        if (null !== $command->getTags()) {
-            //@todo: check how tags is set
+        foreach ($localizedTags as $langId => $tags) {
+            if (false === Tag::deleteTagsForProduct($productId, $langId)) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to delete product #%s previous tags in lang #%s', $productId, $langId),
+                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+                );
+            }
+
+            if (false === Tag::addTags($langId, $productId, $tags)) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to update product #%s tags in lang #%s', $productId, $langId),
+                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+                );
+            }
+        }
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @throws CannotUpdateProductException
+     * @throws PrestaShopException
+     */
+    private function deleteAllProductTags(int $productId): void
+    {
+        if (false === Tag::deleteTagsForProduct($productId)) {
+            throw new CannotUpdateProductException(
+                sprintf('Failed to delete product #%s tags', $productId),
+                CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+            );
         }
     }
 }
