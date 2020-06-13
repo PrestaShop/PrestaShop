@@ -139,12 +139,43 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
+        //@todo: refactor to some better way? Needed this for product tags
+        //empty($expectedLocalizedValues) is not enough, because it might have empty values for each lang
+        $isEmpty = true;
+        foreach ($expectedLocalizedValues as $value) {
+            if (!empty($value)) {
+                //if array contains at least one non empty value inside then it is not empty.
+                $isEmpty = false;
+            }
+        }
+
+        // assert case when all values should be empty
+        if ($isEmpty) {
+            $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+            Assert::assertEquals(
+                [],
+                $actualValues,
+                sprintf('Expected empty localized %s', $fieldName)
+            );
+
+            return;
+        }
+
         foreach ($expectedLocalizedValues as $langId => $expectedValue) {
-            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $fieldName)[$langId];
+            $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+            $langIso = Language::getIsoById($langId);
+
+            if (!isset($actualValues[$langId])) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized %s value is not set in %s language',
+                    $fieldName,
+                    $langIso
+                ));
+            }
+
+            $actualValue = $actualValues[$langId];
 
             if ($expectedValue !== $actualValue) {
-                $langIso = Language::getIsoById($langId);
-
                 throw new RuntimeException(
                     sprintf(
                         'Expected %s in "%s" language was "%s", but got "%s"',
@@ -170,13 +201,72 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
 
-        if (isset($data['active'])) {
-            $status = PrimitiveUtils::castStringBooleanIntoBoolean($data['active']);
-            $statusInWords = $status ? 'enabled' : 'disabled';
+        $this->assertBoolProperty($productForEditing, $data, 'available_for_order');
+        $this->assertBoolProperty($productForEditing, $data, 'online_only');
+        $this->assertBoolProperty($productForEditing, $data, 'show_price');
+        $this->assertBoolProperty($productForEditing, $data, 'active');
+        $this->assertStringProperty($productForEditing, $data, 'visibility');
+        $this->assertStringProperty($productForEditing, $data, 'condition');
+        $this->assertStringProperty($productForEditing, $data, 'isbn');
+        $this->assertStringProperty($productForEditing, $data, 'upc');
+        $this->assertStringProperty($productForEditing, $data, 'ean13');
+        $this->assertStringProperty($productForEditing, $data, 'mpn');
+        $this->assertStringProperty($productForEditing, $data, 'reference');
 
-            if ((bool) $productForEditing->isActive() !== $status) {
-                throw new RuntimeException(sprintf('Product expected to be %s', $statusInWords));
+        if (isset($data['tags'])) {
+            $expectedTags = empty($data['tags']) ? [] : $data['tags'];
+
+            if (!empty($expectedTags)) {
+                $expectedTags = $this->parseLocalizedArray($expectedTags);
+                foreach ($expectedTags as $langId => &$tags) {
+                    $tags = explode(',', $tags);
+                }
             }
+
+            $actualTags = $this->extractValueFromProductForEditing($productForEditing, 'tags');
+
+            Assert::assertEquals(
+                $expectedTags,
+                $actualTags,
+                sprintf('Expected tags "%s". Got "%s".', $expectedTags, $actualTags)
+            );
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    private function assertBoolProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    private function assertStringProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = $data[$propertyName];
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
         }
 
         $this->assertTaxRulesGroup($data, $productForEditing);
@@ -476,6 +566,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'name' => 'basicInformation.localizedNames',
             'description' => 'basicInformation.localizedDescriptions',
             'description_short' => 'basicInformation.localizedShortDescriptions',
+            'active' => 'active',
+            'visibility' => 'options.visibility',
+            'available_for_order' => 'options.availableForOrder',
+            'online_only' => 'options.onlineOnly',
+            'show_price' => 'options.toShowPrice',
+            'condition' => 'options.condition',
+            'isbn' => 'options.isbn',
+            'upc' => 'options.upc',
+            'ean13' => 'options.ean13',
+            'mpn' => 'options.mpn',
+            'reference' => 'options.reference',
+            'tags' => 'options.localizedTags',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();

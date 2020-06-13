@@ -158,7 +158,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             (bool) $product->available_for_order,
             (bool) $product->online_only,
             (bool) $product->show_price,
-            Tag::getProductTags($product->id),
+            Tag::getProductTags($product->id) ?: [],
             $product->condition,
             $product->isbn,
             $product->upc,
