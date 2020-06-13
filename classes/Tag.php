@@ -303,13 +303,25 @@ class TagCore extends ObjectModel
      * Delete tags for product.
      *
      * @param int $idProduct Product ID
+     * @param int|null $langId provide lang id to delete tags only in specific language
      *
      * @return bool
+     * @throws PrestaShopDatabaseException
      */
-    public static function deleteTagsForProduct($idProduct)
+    public static function deleteTagsForProduct($idProduct, int $langId = null)
     {
-        $tagsRemoved = Db::getInstance()->executeS('SELECT id_tag FROM ' . _DB_PREFIX_ . 'product_tag WHERE id_product=' . (int) $idProduct);
-        $result = Db::getInstance()->delete('product_tag', 'id_product = ' . (int) $idProduct);
+        $removeWhere = 'id_product = ' . (int) $idProduct;
+        $selectTagsToRemove = '
+            SELECT id_tag FROM ' . _DB_PREFIX_ . 'product_tag
+            WHERE id_product=' . (int) $idProduct
+        ;
+        if ($langId) {
+            $removeWhere .= ' AND id_lang =' . (int) $langId;
+            $selectTagsToRemove .= ' AND id_lang =' . (int) $langId;
+        }
+
+        $tagsRemoved = Db::getInstance()->executeS($selectTagsToRemove);
+        $result = Db::getInstance()->delete('product_tag', $removeWhere);
         Db::getInstance()->delete('tag', 'NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'product_tag
         												WHERE ' . _DB_PREFIX_ . 'product_tag.id_tag = ' . _DB_PREFIX_ . 'tag.id_tag)');
         $tagList = [];
