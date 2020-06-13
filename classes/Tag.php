@@ -231,7 +231,7 @@ class TagCore extends ObjectModel
         }
         $result = [];
         foreach ($tmp as $tag) {
-            $result[$tag['id_lang']][] = $tag['name'];
+            $result[(int) $tag['id_lang']][] = $tag['name'];
         }
 
         return $result;
