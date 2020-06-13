@@ -306,6 +306,7 @@ class TagCore extends ObjectModel
      * @param int|null $langId provide lang id to delete tags only in specific language
      *
      * @return bool
+     *
      * @throws PrestaShopDatabaseException
      */
     public static function deleteTagsForProduct($idProduct, int $langId = null)
