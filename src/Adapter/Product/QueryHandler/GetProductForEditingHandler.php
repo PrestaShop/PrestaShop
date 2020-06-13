@@ -34,8 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingH
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use Product;
+use Tag;
 
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
@@ -53,7 +55,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             (int) $product->id,
             (bool) $product->active,
             $this->getBasicInformation($product),
-            $this->getCategoriesInformation($product)
+            $this->getCategoriesInformation($product),
+            $this->getOptions($product)
         );
     }
 
@@ -105,5 +108,27 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         }
 
         return new ProductType($productTypeValue);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductOptions
+     */
+    private function getOptions(Product $product): ProductOptions
+    {
+        return new ProductOptions(
+            $product->visibility,
+            (bool) $product->available_for_order,
+            (bool) $product->online_only,
+            (bool) $product->show_price,
+            Tag::getProductTags($product->id),
+            $product->condition,
+            $product->isbn,
+            $product->upc,
+            $product->ean13,
+            $product->mpn,
+            $product->reference
+        );
     }
 }
