@@ -65,9 +65,9 @@ class UpdateProductOptionsCommand
     private $showPrice;
 
     /**
-     * @var string[]|null
+     * @var array|null key value pairs where key is language id and value is the array of tags
      */
-    private $tags;
+    private $localizedTags;
 
     /**
      * @var ProductCondition|null
@@ -198,19 +198,19 @@ class UpdateProductOptionsCommand
     /**
      * @return string[]|null
      */
-    public function getTags(): ?array
+    public function getLocalizedTags(): ?array
     {
-        return $this->tags;
+        return $this->localizedTags;
     }
 
     /**
-     * @param string[] $tags
+     * @param string[] $localizedTags
      *
      * @return UpdateProductOptionsCommand
      */
-    public function setTags(array $tags): UpdateProductOptionsCommand
+    public function setLocalizedTags(array $localizedTags): UpdateProductOptionsCommand
     {
-        $this->tags = $tags;
+        $this->localizedTags = $localizedTags;
 
         return $this;
     }
