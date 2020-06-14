@@ -242,3 +242,4 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderProductUpdater
     arguments:
       - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.context_state_manager'
