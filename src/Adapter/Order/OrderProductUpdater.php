@@ -1,17 +1,51 @@
 <?php
+/**
+ * 2007-2020 PrestaShop SA and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Address;
 use Cart;
 use CartRule;
 use Configuration;
 use Context;
+use Country;
+use Currency;
+use Customer;
+use Language;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Product;
 use StockAvailable;
+use Tools;
 use Validate;
 
 /**
@@ -25,9 +59,15 @@ class OrderProductUpdater
      */
     private $orderAmountUpdater;
 
-    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
     {
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -51,20 +91,32 @@ class OrderProductUpdater
     ): Order {
         $cart = new Cart($order->id_cart);
 
-        // Update quantity on the cart and stock
-        $cart = $this->updateCartProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
+        $this->contextStateManager
+            ->setCart($cart)
+            ->setCurrency(new Currency($cart->id_currency))
+            ->setCustomer(new Customer($cart->id_customer))
+            ->setLanguage(new Language($cart->id_lang))
+            ->setCountry($this->getTaxCountry($cart))
+        ;
 
-        // Fix differences between cart's cartRules and order's cartRules
-        $cart = $this->syncCartAndOrderCartRules($cart, $order);
+        try {
+            // Update quantity on the cart and stock
+            $cart = $this->updateCartProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
 
-        // Recalculate amounts of cartRules
-        $this->recalculateCartRules($cart, $order);
+            // Fix differences between cart's cartRules and order's cartRules
+            $cart = $this->syncCartAndOrderCartRules($cart, $order);
 
-        // Update prices on the order
-        $order = $this->updateOrderAmounts($cart, $order, $hasInvoice);
+            // Recalculate amounts of cartRules
+            $this->recalculateCartRules($cart, $order);
 
-        // Update weight and shipping infos
-        $order = $this->updateOrderShippingInfos($order, new Product((int) $orderDetail->product_id));
+            // Update prices on the order
+            $order = $this->updateOrderAmounts($cart, $order, $hasInvoice);
+
+            // Update weight and shipping infos
+            $order = $this->updateOrderShippingInfos($order, new Product((int) $orderDetail->product_id));
+        } finally {
+            $this->contextStateManager->restoreContext();
+        }
 
         return $order;
     }
@@ -150,9 +202,16 @@ class OrderProductUpdater
         return $cart;
     }
 
-    private function recalculateCartRules(Cart $cart, Order $order)
+    /**
+     * @param Cart $cart
+     * @param Order $order
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function recalculateCartRules(Cart $cart, Order $order): void
     {
-        $computingPrecision = Context::getContext()->getComputingPrecision();
+        $computingPrecision = $this->getPrecisionFromCart($cart);
         Context::getContext()->cart = $cart;
         CartRule::autoAddToCart();
         CartRule::autoRemoveFromCart();
@@ -162,13 +221,13 @@ class OrderProductUpdater
             $idCartRule = (int) $orderCartRule->id_cart_rule;
             $cartRule = new CartRule($idCartRule);
             $values = [
-                'tax_incl' => \Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision),
-                'tax_excl' => \Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision),
+                'tax_incl' => Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision),
+                'tax_excl' => Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision),
             ];
 
             if (
-                ($values['tax_incl'] !== \Tools::ps_round($orderCartRule->value, $computingPrecision)) ||
-                ($values['tax_excl'] !== \Tools::ps_round($orderCartRule->value_tax_excl, $computingPrecision))
+                ($values['tax_incl'] !== Tools::ps_round($orderCartRule->value, $computingPrecision)) ||
+                ($values['tax_excl'] !== Tools::ps_round($orderCartRule->value_tax_excl, $computingPrecision))
             ) {
                 $orderCartRule->value = $values['tax_incl'];
                 $orderCartRule->value_tax_excl = $values['tax_excl'];
@@ -222,5 +281,35 @@ class OrderProductUpdater
         }
 
         return $order;
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return int
+     */
+    private function getPrecisionFromCart(Cart $cart): int
+    {
+        $computingPrecision = new ComputingPrecision();
+        $currency = new Currency((int) $cart->id_currency);
+
+        return $computingPrecision->getPrecision((int) $currency->precision);
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return Country
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function getTaxCountry(Cart $cart): Country
+    {
+        $taxAddressType = Configuration::get('PS_TAX_ADDRESS_TYPE');
+        $taxAddressId = property_exists($cart, $taxAddressType) ? $cart->{$taxAddressType} : $cart->id_address_delivery;
+        $taxAddress = new Address($taxAddressId);
+
+        return new Country($taxAddress->id_country);
     }
 }

@@ -26,13 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use Cart;
-use CartRule;
-use Context;
 use Customization;
 use Hook;
 use Order;
-use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -245,93 +241,5 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
         }
-    }
-
-    /**
-     * @param Cart $cart
-     * @param Order $order
-     * @param OrderInvoice|null $invoice
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateCartRules(Cart $cart, Order $order, ?OrderInvoice $invoice = null)
-    {
-        $computingPrecision = Context::getContext()->getComputingPrecision();
-
-        $cart = $this->syncCartOrderCartRules($order, $cart);
-        Context::getContext()->cart = $cart;
-        CartRule::autoAddToCart();
-        CartRule::autoRemoveFromCart();
-
-        $orderCartRulesData = $order->getCartRules();
-        foreach ($orderCartRulesData as $orderCartRuleData) {
-            $orderCartRule = new OrderCartRule((int) $orderCartRuleData['id_order_cart_rule']);
-            $idCartRule = (int) $orderCartRule->id_cart_rule;
-            $cartRule = new CartRule($idCartRule);
-            $values = [
-                'tax_incl' => \Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision),
-                'tax_excl' => \Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision),
-            ];
-
-            if (
-                ($values['tax_incl'] !== \Tools::ps_round($orderCartRule->value, $computingPrecision)) ||
-                ($values['tax_excl'] !== \Tools::ps_round($orderCartRule->value_tax_excl, $computingPrecision))
-            ) {
-                $orderCartRule->value = $values['tax_incl'];
-                $orderCartRule->value_tax_excl = $values['tax_excl'];
-
-                $orderCartRule->update();
-            }
-        }
-
-        $order = $this->orderAmountUpdater->update($order, $cart, $invoice && !empty($invoice->id));
-        $order->update();
-    }
-
-    /**
-     * @param Order $order
-     * @param Cart $cart
-     *
-     * @return Cart
-     */
-    private function syncCartOrderCartRules(Order $order, Cart $cart): Cart
-    {
-        $orderCartRulesData = $order->getCartRules();
-        $orderCartRulesIds = array_map(
-            function (array $orderCartRuleData) { return (int) $orderCartRuleData['id_cart_rule']; },
-            $orderCartRulesData
-        );
-
-        $cartRules = $cart->getCartRules();
-        $cartRulesIds = array_map(
-            function (array $cartRule) { return (int) $cartRule['id_cart_rule']; },
-            $cartRules
-        );
-
-        sort($orderCartRulesIds);
-        sort($cartRulesIds);
-
-        $difference = array_diff($orderCartRulesIds, $cartRulesIds);
-
-        if (count($orderCartRulesIds) > count($cartRulesIds)) {
-            foreach ($difference as $cartRuleId) {
-                $cart->addCartRule($cartRuleId);
-            }
-        } else {
-            foreach ($difference as $cartRuleId) {
-                $cartRule = $cartRules[$cartRuleId];
-                $order->addCartRule(
-                    $cartRuleId,
-                    $cartRule->name[$order->id_lang],
-                    [
-                        'tax_incl' => $cartRule['value_real'],
-                        'tax_excl' => $cartRule['value_tax_exc'],
-                    ]
-                );
-            }
-        }
-
-        return $cart;
     }
 }
