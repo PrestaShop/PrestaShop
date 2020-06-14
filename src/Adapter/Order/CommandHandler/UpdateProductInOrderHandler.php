@@ -28,23 +28,20 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
 use CartRule;
-use Configuration;
 use Context;
 use Customization;
 use Hook;
 use Order;
-use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
-use Product;
 use StockAvailable;
 use Validate;
 
@@ -54,13 +51,13 @@ use Validate;
 final class UpdateProductInOrderHandler extends AbstractOrderHandler implements UpdateProductInOrderHandlerInterface
 {
     /**
-     * @var OrderAmountUpdater
+     * @var OrderProductUpdater
      */
-    private $orderAmountUpdater;
+    private $orderProductUpdater;
 
-    public function __construct(OrderAmountUpdater $orderAmountUpdater)
+    public function __construct(OrderProductUpdater $orderProductUpdater)
     {
-        $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderProductUpdater = $orderProductUpdater;
     }
 
     /**
@@ -73,7 +70,6 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 
         $order = $this->getOrderObject($command->getOrderId());
         $orderDetail = new OrderDetail($command->getOrderDetailId());
-        $cart = new Cart($order->id_cart);
         $orderInvoice = null;
         if (!empty($command->getOrderInvoiceId())) {
             $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
@@ -162,43 +158,18 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         // Save order detail
         $res &= $orderDetail->update();
 
-        // Apply the changes on the cart
-        $cart->updateQty(
-            abs($old_quantity - $orderDetail->product_quantity),
-            $orderDetail->product_id,
-            $orderDetail->product_attribute_id,
-            false,
-            $orderDetail->product_quantity > $old_quantity ? 'up' : 'down'
+        // Update quantity and amounts
+        $order = $this->orderProductUpdater->update(
+            $order,
+            $orderDetail,
+            $old_quantity,
+            $command->getQuantity(),
+            ($orderInvoice && !empty($orderInvoice->id))
         );
-        $this->updateCartRules($cart, $order, $orderInvoice);
-
-        // Update weight SUM
-        $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-        if (Validate::isLoadedObject($order_carrier)) {
-            $order_carrier->weight = (float) $order->getTotalWeight();
-            $res &= $order_carrier->update();
-            if ($res) {
-                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
-            }
-        }
 
         // Save order invoice
         if (isset($orderInvoice)) {
             $res &= $orderInvoice->update();
-        }
-
-        // Update product available quantity
-        StockAvailable::updateQuantity(
-            $orderDetail->product_id,
-            $orderDetail->product_attribute_id,
-            $old_quantity - $orderDetail->product_quantity,
-            $order->id_shop
-        );
-
-        $product = new Product($orderDetail->product_id);
-
-        if (!$product->is_virtual) {
-            $order = $order->refreshShippingCost();
         }
 
         if (!$res) {
