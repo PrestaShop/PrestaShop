@@ -48,5 +48,5 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description" should be "en-US:nice mug"
     When I update product "product1" basic information with following values:
       | description_short       | en-US:<div onmousedown=hack()>   |
-    Then I should get error that product short description is invalid
+    Then I should get error that product "short description" is invalid
     And product "product1" localized "description_short" should be "en-US:Just a nice mug"
