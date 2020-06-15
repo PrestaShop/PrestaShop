@@ -49,6 +49,8 @@ export default {
   updateCustomerAddressModal: '#updateCustomerAddressModal',
   openOrderAddressUpdateModalBtn: '.js-update-customer-address-modal-btn',
   updateOrderAddressTypeInput: '#change_order_address_address_type',
+  deliveryAddressEditBtn: '#js-delivery-address-edit-btn',
+  invoiceAddressEditBtn: '#js-invoice-address-edit-btn',
   orderMessageNameSelect: '#order_message_order_message',
   orderMessagesContainer: '.js-order-messages-container',
   orderMessage: '#order_message_message',

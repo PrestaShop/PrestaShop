@@ -110,8 +110,8 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item"
-                 href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'delivery'}) }}"
+              <a class="dropdown-item" id="js-delivery-address-edit-btn"
+                 href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'delivery', 'liteDisplaying': 1, 'submitFormAjax': 1}) }}"
               >
                 {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
               </a>
@@ -160,8 +160,8 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item"
-                 href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'invoice'}) }}"
+              <a class="dropdown-item" id="js-invoice-address-edit-btn"
+                 href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'invoice', 'liteDisplaying': 1, 'submitFormAjax': 1}) }}"
               >
                 {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
               </a>
