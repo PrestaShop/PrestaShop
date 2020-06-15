@@ -93,6 +93,11 @@ class OrderFollowControllerCore extends FrontController
      */
     public function initContent()
     {
+        if ((bool) Configuration::get('PS_ORDER_RETURN') === false) {
+            $this->redirect_after = '404';
+            $this->redirect();
+        }
+
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
         }

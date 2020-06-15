@@ -32,6 +32,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Form type for cart summary block of order create page
@@ -49,15 +50,23 @@ class CartSummaryType extends AbstractType
     private $paymentModulesChoiceProvider;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param FormChoiceProviderInterface $orderStatesChoiceProvider
      * @param FormChoiceProviderInterface $paymentModulesChoiceProvider
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         FormChoiceProviderInterface $orderStatesChoiceProvider,
-        FormChoiceProviderInterface $paymentModulesChoiceProvider
+        FormChoiceProviderInterface $paymentModulesChoiceProvider,
+        TranslatorInterface $translator
     ) {
         $this->orderStatesChoiceProvider = $orderStatesChoiceProvider;
         $this->paymentModulesChoiceProvider = $paymentModulesChoiceProvider;
+        $this->translator = $translator;
     }
 
     /**
@@ -74,13 +83,21 @@ class CartSummaryType extends AbstractType
             ])
             ->add('payment_module', ChoiceType::class, [
                 'choices' => $this->getPaymentModuleChoices(),
-                'required' => false,
-                'placeholder' => false,
+                'required' => true,
+                'placeholder' => $this->translator->trans(
+                    '-- Choose --',
+                    [],
+                    'Admin.Actions'
+                ),
             ])
             ->add('order_state', ChoiceType::class, [
                 'choices' => $this->orderStatesChoiceProvider->getChoices(),
-                'required' => false,
-                'placeholder' => false,
+                'required' => true,
+                'placeholder' => $this->translator->trans(
+                    '-- Choose --',
+                    [],
+                    'Admin.Actions'
+                ),
             ]);
     }
 

@@ -4,7 +4,7 @@ Tests
 This is PrestaShop automated tests folder.
 
 Multiple type of tests are available:
-- `puppeteer` folder contains end-to-end tests ("e2e" tests), see below
+- `UI` folder contains user interface tests, see below
 - `Unit` folder contains unit tests, see below
 - `Integration` folder contains integration tests, see below
 
@@ -23,7 +23,7 @@ PrestaShop end-to-end tests are powered by a tool suite as it requires:
 This folder contains our [pages objects](https://martinfowler.com/bliki/PageObject.html) and our test code, 
 organized in campaigns.
 
-We use [Mocha](https://mochajs.org/), [Puppeteer](https://github.com/puppeteer/puppeteer) and 
+We use [Mocha](https://mochajs.org/), [Playwright](https://github.com/microsoft/playwright) and 
 [Chai](https://www.chaijs.com/) as our base stack.
 
 ## How to write e2e tests

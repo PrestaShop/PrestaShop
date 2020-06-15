@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
 use DateTimeImmutable;
-use PrestaShop\Decimal\Number;
 
 /**
  * Contains data about order for viewing
@@ -504,6 +503,6 @@ class OrderForViewing
             }
         }
 
-        return $this->prices->getShippingRefundableAmountRaw()->isGreaterThan(new Number('0'));
+        return $this->prices->getShippingRefundableAmountRaw()->isGreaterThanZero();
     }
 }

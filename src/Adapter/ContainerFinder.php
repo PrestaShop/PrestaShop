@@ -53,7 +53,7 @@ class ContainerFinder
     }
 
     /**
-     * @return ContainerBuilder|ContainerInterface|null
+     * @return ContainerBuilder|ContainerInterface
      *
      * @throws ContainerNotFoundException
      */

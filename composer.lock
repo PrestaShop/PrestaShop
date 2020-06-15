@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af2b3c9911831936fa96e87c2baed778",
+    "content-hash": "6b962cbfae2189f57005b04a942ab96b",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -3812,19 +3812,20 @@
         },
         {
             "name": "prestashop/contactform",
-            "version": "v4.1.1",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/contactform.git",
-                "reference": "2be28a7a905db9e03f6be033b0185e7f0b3e69f1"
+                "reference": "4826b7903b6066f4e1a4c0963c68108aa0c546e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/2be28a7a905db9e03f6be033b0185e7f0b3e69f1",
-                "reference": "2be28a7a905db9e03f6be033b0185e7f0b3e69f1",
+                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/4826b7903b6066f4e1a4c0963c68108aa0c546e1",
+                "reference": "4826b7903b6066f4e1a4c0963c68108aa0c546e1",
                 "shasum": ""
             },
             "require": {
+                "jakeasmith/http_build_url": "^1",
                 "php": ">=5.4.0"
             },
             "type": "prestashop-module",
@@ -3840,7 +3841,7 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
-            "time": "2018-06-05T12:44:40+00:00"
+            "time": "2020-06-01T09:46:43+00:00"
         },
         {
             "name": "prestashop/dashactivity",
@@ -3972,16 +3973,16 @@
         },
         {
             "name": "prestashop/decimal",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/decimal.git",
-                "reference": "11e0f87b101644614e61cfbea175548bdfb389f1"
+                "reference": "8b7f47671bb691bd463743d1cbab5b519fbd6849"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/11e0f87b101644614e61cfbea175548bdfb389f1",
-                "reference": "11e0f87b101644614e61cfbea175548bdfb389f1",
+                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/8b7f47671bb691bd463743d1cbab5b519fbd6849",
+                "reference": "8b7f47671bb691bd463743d1cbab5b519fbd6849",
                 "shasum": ""
             },
             "require": {
@@ -4003,8 +4004,12 @@
             ],
             "authors": [
                 {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                },
+                {
                     "name": "Pablo Borowicz",
-                    "email": "eternoendless@gmail.com"
+                    "email": "pablo.borowicz@prestashop.com"
                 }
             ],
             "description": "Object-oriented wrapper/shim for BC Math PHP extension. Allows for arbitrary-precision math operations.",
@@ -4016,7 +4021,7 @@
                 "precision",
                 "prestashop"
             ],
-            "time": "2019-07-17T13:14:07+00:00"
+            "time": "2020-04-15T07:39:20+00:00"
         },
         {
             "name": "prestashop/graphnvd3",
@@ -4662,16 +4667,16 @@
         },
         {
             "name": "prestashop/ps_imageslider",
-            "version": "v3.0.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_imageslider.git",
-                "reference": "c676ded1614abaad4f3b251784eef8b8a2f6b961"
+                "reference": "52e9d1a068e3b2879ce2184f00c083c8190c7ce7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/c676ded1614abaad4f3b251784eef8b8a2f6b961",
-                "reference": "c676ded1614abaad4f3b251784eef8b8a2f6b961",
+                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/52e9d1a068e3b2879ce2184f00c083c8190c7ce7",
+                "reference": "52e9d1a068e3b2879ce2184f00c083c8190c7ce7",
                 "shasum": ""
             },
             "require": {
@@ -4690,7 +4695,7 @@
             ],
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
-            "time": "2018-06-05T10:10:47+00:00"
+            "time": "2020-06-01T13:57:45+00:00"
         },
         {
             "name": "prestashop/ps_languageselector",
@@ -4831,16 +4836,16 @@
         },
         {
             "name": "prestashop/ps_sharebuttons",
-            "version": "v2.0.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_sharebuttons.git",
-                "reference": "6cb2fc1100c34c44754c32eb678a70d858e970ea"
+                "reference": "2a0302774b84820be38e76a34188d777de12403f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_sharebuttons/zipball/6cb2fc1100c34c44754c32eb678a70d858e970ea",
-                "reference": "6cb2fc1100c34c44754c32eb678a70d858e970ea",
+                "url": "https://api.github.com/repos/PrestaShop/ps_sharebuttons/zipball/2a0302774b84820be38e76a34188d777de12403f",
+                "reference": "2a0302774b84820be38e76a34188d777de12403f",
                 "shasum": ""
             },
             "require": {
@@ -4849,7 +4854,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4859,7 +4864,7 @@
             ],
             "description": "PrestaShop module ps_sharebuttons",
             "homepage": "https://github.com/PrestaShop/ps_sharebuttons",
-            "time": "2017-08-03T07:12:38+00:00"
+            "time": "2020-05-20T12:16:49+00:00"
         },
         {
             "name": "prestashop/ps_shoppingcart",
@@ -5517,16 +5522,16 @@
         },
         {
             "name": "prestashop/statspersonalinfos",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statspersonalinfos.git",
-                "reference": "cc800a6ee0b8d48b5b00a56206cc92b0a0056d34"
+                "reference": "d00510d282fc442535f8110f30f44d502c4addaa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statspersonalinfos/zipball/cc800a6ee0b8d48b5b00a56206cc92b0a0056d34",
-                "reference": "cc800a6ee0b8d48b5b00a56206cc92b0a0056d34",
+                "url": "https://api.github.com/repos/PrestaShop/statspersonalinfos/zipball/d00510d282fc442535f8110f30f44d502c4addaa",
+                "reference": "d00510d282fc442535f8110f30f44d502c4addaa",
                 "shasum": ""
             },
             "require": {
@@ -5545,7 +5550,7 @@
             ],
             "description": "PrestaShop module statspersonalinfos",
             "homepage": "https://github.com/PrestaShop/statspersonalinfos",
-            "time": "2018-01-29T18:41:52+00:00"
+            "time": "2020-06-01T12:28:27+00:00"
         },
         {
             "name": "prestashop/statsproduct",
@@ -9934,6 +9939,5 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "7.1.3"
-    },
-    "plugin-api-version": "1.1.0"
+    }
 }

@@ -53,7 +53,6 @@
 		<p class="userInfos aligned"><?php echo $this->translator->trans('Help us learn more about your store so we can offer you optimal guidance and the best features for your business!', array(), 'Install') ?></p>
 	</div>
 
-	<?php if (_PS_MODE_DEV_): ?>
 	<!-- Install type (with fixtures or not) -->
 	<div class="field clearfix">
 		<label class="aligned"><?php echo $this->translator->trans('Install demo products', array(), 'Install'); ?></label>
@@ -69,9 +68,6 @@
 		</div>
 		<p class="userInfos aligned"><?php echo $this->translator->trans('Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.', array(), 'Install'); ?></p>
 	</div>
-	<?php else: ?>
-		<input value="full" name="db_mode" type="hidden" />
-	<?php endif; ?>
 
 	<!-- Country list -->
 	<div class="field clearfix">

@@ -54,9 +54,8 @@ class ImageRetriever
      *
      * @return array
      */
-    public function getProductImages(array $product, Language $language)
+    public function getAllProductImages(array $product, Language $language)
     {
-        $productAttributeId = $product['id_product_attribute'];
         $productInstance = new Product(
             $product['id_product'],
             false,
@@ -99,6 +98,20 @@ class ImageRetriever
             return $image;
         }, $images);
 
+        return $images;
+    }
+
+    /**
+     * @param array $product
+     * @param Language $language
+     *
+     * @return array
+     */
+    public function getProductImages(array $product, Language $language)
+    {
+        $images = $this->getAllProductImages($product, $language);
+
+        $productAttributeId = $product['id_product_attribute'];
         $filteredImages = [];
 
         foreach ($images as $image) {
@@ -199,6 +212,7 @@ class ImageRetriever
             'medium' => $medium,
             'large' => $large,
             'legend' => isset($object->meta_title) ? $object->meta_title : $object->name,
+            'id_image' => $id_image,
         ];
     }
 
