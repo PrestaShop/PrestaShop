@@ -26,7 +26,6 @@ module.exports = class DbBackup extends BOBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.viewRowLink = row => `${this.actionsColumn(row)} a[[href*='backups/view']`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-method='DELETE']`;
@@ -77,15 +76,6 @@ module.exports = class DbBackup extends BOBasePage {
       await this.page.click(this.downloadBackupButton),
     ]);
     return download.path();
-  }
-
-  /**
-   * View Backup
-   * @param row
-   * @return {Promise<void>}
-   */
-  async viewBackup(row) {
-    await this.clickAndWaitForNavigation(this.viewRowLink(row));
   }
 
   /**
