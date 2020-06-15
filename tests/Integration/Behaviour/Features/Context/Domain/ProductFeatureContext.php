@@ -425,8 +425,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $priceFieldErrorMap = [
             'price' => ProductConstraintException::INVALID_PRICE,
             'ecotax' => ProductConstraintException::INVALID_ECOTAX,
-            'wholesale price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
-            'unit price' => ProductConstraintException::INVALID_UNIT_PRICE,
+            'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
+            'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
             'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
         ];
 

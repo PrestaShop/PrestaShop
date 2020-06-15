@@ -93,12 +93,12 @@ Feature: Update product price fields from Back Office (BO).
         Then I should get error that product "ecotax" is invalid
         When I update product "product2" prices with following information:
           | wholesale_price | -35          |
-        Then I should get error that product "wholesale price" is invalid
+        Then I should get error that product "wholesale_price" is invalid
         When I update product "product2" prices with following information:
           | unit_price      | -300         |
-        Then I should get error that product "unit price" is invalid
+        Then I should get error that product "unit_price" is invalid
 
-      Scenario: I update product unit price without when product price is 0
+      Scenario: I update product unit price when product price is 0
         Given I add product "product3" with following information:
           | name       | en-US: black hat  |
           | is_virtual | false             |
@@ -107,7 +107,9 @@ Feature: Update product price fields from Back Office (BO).
           | unit_price      | 0            |
         When I update product "product3" prices with following information:
           | unit_price      | 300          |
-        Then I should get error that product "unit price" is invalid
+        Then product "product3" has following values:
+          | price           | 0            |
+          | unit_price      | 0            |
 
       Scenario: I update product unit price along with product price
         Given I add product "product4" with following information:
@@ -127,9 +129,9 @@ Feature: Update product price fields from Back Office (BO).
           | price            | 0            |
           | unit_price       | 500          |
         Then product "product4" should have following values:
-          | price            | 20           |
-          | unit_price       | 500          |
-          | unit_price_ratio | 0.04         |
+          | price            | 0            |
+          | unit_price       | 0            |
+          | unit_price_ratio | 0            |
 
       Scenario: I update product prices providing non-existing tax rules group
         Given I add product "product5" with following information:

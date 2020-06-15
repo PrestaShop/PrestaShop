@@ -52,6 +52,11 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
     private $numberExtractor;
 
     /**
+     * @var Product the product being updated
+     */
+    private $product;
+
+    /**
      * @param NumberExtractor $numberExtractor
      */
     public function __construct(
@@ -65,7 +70,11 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
+        //@todo: update the Number lib dependency. It should have methods to compare to 0 already
+        //  Check whole class to refactor occurrences of `new Number('0')`
+
         $product = $this->getProduct($command->getProductId());
+        $this->product = $product;
         $this->fillUpdatableFieldsWithCommandData($product, $command);
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
@@ -84,18 +93,13 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      */
     private function fillUpdatableFieldsWithCommandData(Product $product, UpdateProductPricesCommand $command): void
     {
-        $price = $command->getPrice();
-        $unitPrice = $command->getUnitPrice();
-
-        if (null !== $price) {
-            $product->price = (float) (string) $price;
+        if (null !== $command->getPrice()) {
+            $product->price = (float) (string) $command->getPrice();
             $this->validateField($product, 'price', ProductConstraintException::INVALID_PRICE);
             $this->fieldsToUpdate['price'] = true;
         }
 
-        if (null !== $unitPrice) {
-            $this->setUnitPriceInfo($product, $unitPrice, $price);
-        }
+        $this->handleUnitPriceInfo($command);
 
         if (null !== $command->getUnity()) {
             $product->unity = $command->getUnity();
@@ -127,6 +131,40 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             $this->validateField($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
             $this->fieldsToUpdate['wholesale_price'] = true;
         }
+    }
+
+    /**
+     * Update unit_price and unit_price ration depending on price
+     *
+     * @param UpdateProductPricesCommand $command
+     *
+     * @throws ProductConstraintException
+     */
+    private function handleUnitPriceInfo(UpdateProductPricesCommand $command): void
+    {
+        $price = $command->getPrice();
+        $unitPrice = $command->getUnitPrice();
+        $zero = new Number('0');
+
+        // if price was reset then also reset unit_price and unit_price_ratio
+        $priceWasReset = null !== $price && $price->equals($zero);
+        if ($priceWasReset) {
+            $this->resetUnitPriceInfo();
+        }
+
+        //if price was not reset then allow setting new unit_price and unit_price_ratio
+        if (!$priceWasReset && null !== $unitPrice) {
+            $this->setUnitPriceInfo($this->product, $unitPrice, $price);
+        }
+    }
+
+    /**
+     * @throws ProductConstraintException
+     */
+    private function resetUnitPriceInfo(): void
+    {
+        $zero = new Number('0');
+        $this->setUnitPriceInfo($this->product, $zero, $zero);
     }
 
     /**
@@ -174,24 +212,19 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
     private function setUnitPriceInfo(Product $product, Number $unitPrice, ?Number $price): void
     {
         $this->validateUnitPrice($unitPrice);
-
-        if ($unitPrice->equals(new Number('0'))) {
-            return;
-        }
+        $zero = new Number('0');
 
         if (null === $price) {
             $price = $this->numberExtractor->extract($product, 'price');
         }
 
-        //@todo: update the Number lib dependency. It should have methods to compare to 0 already.
-        if ($price->equals(new Number('0'))) {
-            throw new ProductConstraintException(
-                'Cannot set unit price when product price is 0',
-                ProductConstraintException::INVALID_UNIT_PRICE
-            );
+        // If unit price or price is zero, then reset ratio to zero too
+        if ($unitPrice->equals($zero) || $price->equals($zero)) {
+            $ratio = $zero;
+        } else {
+            $ratio = $price->dividedBy($unitPrice);
         }
 
-        $ratio = $price->dividedBy($unitPrice);
         $product->unit_price_ratio = (float) (string) $ratio;
         //unit_price is not saved to database, it is only calculated depending on price and unit_price_ratio
         $product->unit_price = (float) (string) $unitPrice;
