@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -71,37 +70,6 @@ abstract class AbstractProductHandler
         }
 
         return $product;
-    }
-
-    /**
-     * Provides product field as Number instead of float.
-     *
-     * @param Product $product
-     * @param string $field
-     *
-     * @return Number
-     */
-    protected function getPropertyAsNumber(Product $product, string $property): Number
-    {
-        $numericProperties = [
-            'price',
-            'ecotax',
-            'wholesale_price',
-            'unit_price',
-            'unit_price_ratio',
-        ];
-
-        if (!in_array($property, $numericProperties, true)) {
-            throw new ProductException(sprintf('Product property "%s" does\'t exist or is not numeric', $property));
-        }
-
-        // To make sure all values are safely converted to Number.
-        // Because casting null to string results in empty string which isn't valid to create Number and throws error.
-        if (null === $product->{$property}) {
-            $product->{$property} = 0;
-        }
-
-        return new Number((string) $product->{$property});
     }
 
     /**
