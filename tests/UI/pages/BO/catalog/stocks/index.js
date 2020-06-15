@@ -176,20 +176,6 @@ module.exports = class Stocks extends BOBasePage {
     }
   }
 
-
-  /**
-   * Get all products names from table
-   * @return {Promise<[]>}
-   */
-  async getAllProductsName() {
-    const productsNames = [];
-    const numberOfProductsInlist = await (await this.page.$$(this.productRows)).length;
-    for (let row = 1; row <= numberOfProductsInlist; row++) {
-      await productsNames.push(await this.getTextColumnFromTableStocks(row, 'name'));
-    }
-    return productsNames;
-  }
-
   /**
    * Get
    * @param row, row in table
@@ -285,14 +271,5 @@ module.exports = class Stocks extends BOBasePage {
       this.page.click(this.advancedFiltersButton),
       this.waitForVisibleSelector(`${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
     ]);
-  }
-
-  /**
-   * Reset and get number of products in list
-   * @return {Promise<int>}
-   */
-  async resetAndGetNumberOfProductsFromList() {
-    await this.reloadPage();
-    return this.getTotalNumberOfProducts();
   }
 };

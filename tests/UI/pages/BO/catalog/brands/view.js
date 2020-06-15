@@ -13,7 +13,6 @@ module.exports = class ViewBrand extends BOBasePage {
     this.addressesTableRow = row => `${this.addressesTableBody} tr:nth-of-type(${row})`;
     this.addressesTableColumn = (row, column) => `${this.addressesTableRow(row)} td:nth-of-type(${column})`;
     this.productsGrid = `${this.contentDiv} > div.row > div > div.row:nth-of-type(3)`;
-    this.productsGridHeader = `${this.productsGrid} h3.card-header`;
   }
 
   /*

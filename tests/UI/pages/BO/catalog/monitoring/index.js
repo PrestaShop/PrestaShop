@@ -29,14 +29,10 @@ module.exports = class Monitoring extends BOBasePage {
     this.dropdownToggleButton = (table, row) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = (table, row) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
     this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a[href*='/delete']`;
-    // Category selectors
-    this.viewCategoryRowLink = row => `${this.actionsColumn('empty_category', row)} a[data-original-title='View']`;
-    this.editCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)} a[href*='/edit']`;
     this.deleteCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)
     } a.js-delete-category-row-action`;
     this.deleteModeModal = '#empty_category_grid_delete_categories_modal';
     this.deleteModeInput = position => `#delete_categories_delete_mode_${position}`;
-    this.deleteModeModalDiv = '#delete_categories_delete_mode';
     this.submitDeleteModeButton = `${this.deleteModeModal} button.js-submit-delete-categories`;
     // Sort Selectors
     this.tableHead = table => `${this.gridTable(table)} thead`;
@@ -114,16 +110,6 @@ module.exports = class Monitoring extends BOBasePage {
   }
 
   /**
-   * Go to edit element page in table
-   * @param table
-   * @param row, Which row of the list
-   * @return {Promise<void>}
-   */
-  async goToEditElementPage(table, row) {
-    await this.clickAndWaitForNavigation(this.editRowLink(table, row));
-  }
-
-  /**
    * Open dropdown menu in table
    * @param table
    * @param row
@@ -150,30 +136,6 @@ module.exports = class Monitoring extends BOBasePage {
   }
 
   /* Categories methods */
-  /**
-   * View category in table
-   * @param row
-   * @return {Promise<void>}
-   */
-  async viewCategoryInGrid(row) {
-    await this.clickAndWaitForNavigation(this.viewCategoryRowLink(row));
-  }
-
-  /**
-   * Go to edit category page
-   * @param row
-   * @return {Promise<void>}
-   */
-  async editCategoryInGrid(row) {
-    await Promise.all([
-      this.page.click(this.dropdownToggleButton.replace('%ROW', row)),
-      this.waitForVisibleSelector(
-        `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
-      ),
-    ]);
-    await this.clickAndWaitForNavigation(this.editCategoryRowLink(row));
-  }
-
   /**
    * Delete Row in table empty categories
    * @param table

@@ -125,7 +125,7 @@ module.exports = class Categories extends BOBasePage {
    * Get Value of column Displayed
    * @param row, row in table
    * @param column, column to check
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(row, column) {
     return this.elementVisible(this.categoriesListColumnValidIcon(row, column), 100);

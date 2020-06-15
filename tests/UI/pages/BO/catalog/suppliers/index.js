@@ -9,7 +9,6 @@ module.exports = class Suppliers extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors header
-    this.brandsNavItemLink = '#subtab-AdminManufacturers';
     this.newSupplierLink = '#page-header-desc-configuration-add';
 
     // Selectors grid panel
@@ -43,7 +42,6 @@ module.exports = class Suppliers extends BOBasePage {
     // enable column
     this.enableColumn = row => this.tableColumn(row, 'active');
     this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
-    this.enableColumnNotValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-not-valid`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -60,14 +58,6 @@ module.exports = class Suppliers extends BOBasePage {
    */
 
   /* Header Methods */
-  /**
-   * Go to Tab Brands
-   * @return {Promise<void>}
-   */
-  async goToSubTabBrands() {
-    await this.clickAndWaitForNavigation(this.brandsNavItemLink);
-  }
-
   /**
    * Go to New Supplier Page
    * @return {Promise<void>}
