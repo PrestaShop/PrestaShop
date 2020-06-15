@@ -30,6 +30,7 @@
           <div class="col-md-6">
             <i class="material-icons">public</i>
             {{ 'Sources'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            <span class="badge badge-primary rounded">{{ orderForViewing.sources.sources|length }}</span>
           </div>
 
           <ul id="order-sources-list">
@@ -48,7 +49,7 @@
                 <a href="http://{{ source.requestUri }}">{{ source.requestUri | slice(0,100) }}</a>
                 <br/>
                 {% if source.keywords != '' %}
-                  <b>{{ 'Keywords'|trans({}) }}</b>
+                  <b>{{ 'Keywords'|trans({}, 'Admin.Global') }}</b>
                   <br/>
                   {{ source.keywords }}
                 {% endif %}
