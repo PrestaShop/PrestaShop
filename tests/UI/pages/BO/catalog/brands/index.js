@@ -50,7 +50,6 @@ module.exports = class Brands extends BOBasePage {
     this.brandsTableColumnLogoImg = row => `${this.tableColumn('manufacturer', row, 'logo')} img`;
     this.brandsTableEnableColumn = row => `${this.tableColumn('manufacturer', row, 'active')}`;
     this.brandsEnableColumnValidIcon = row => `${this.brandsTableEnableColumn(row)} i.grid-toggler-icon-valid`;
-    this.brandsEnableColumnNotValidIcon = row => `${this.brandsTableEnableColumn(row)} i.grid-toggler-icon-not-valid`;
     this.viewBrandLink = row => `${this.actionsColumn('manufacturer', row)} a[data-original-title='View']`;
     this.editBrandLink = row => `${this.dropdownToggleMenu('manufacturer', row)} a[href*='/edit']`;
     this.bulkActionsEnableButton = `${this.gridPanel('manufacturer')} #manufacturer_grid_bulk_action_enable_selection`;
@@ -488,14 +487,6 @@ module.exports = class Brands extends BOBasePage {
    */
   async exportBrandsDataToCsv() {
     return this.exportDataToCsv('manufacturer');
-  }
-
-  /**
-   * Export brand addresses data to csv file
-   * @return {Promise<*>}
-   */
-  async exportAddressesDataToCsv() {
-    return this.exportDataToCsv('manufacturer_address');
   }
 
   /**

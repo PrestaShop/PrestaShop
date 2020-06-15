@@ -18,7 +18,6 @@ module.exports = class AddProduct extends BOBasePage {
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
     this.productPriceTtcInput = '#form_step1_price_ttc_shortcut';
-    this.productPriceHtInput = '#form_step1_price_shortcut';
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';

@@ -49,7 +49,6 @@ module.exports = class Product extends BOBasePage {
     this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.product-sav-quantity`;
     this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10)`;
     this.productsListTableColumnStatusEnabled = row => `${this.productsListTableColumnStatus(row)} .action-enabled`;
-    this.productsListTableColumnStatusDisabled = row => `${this.productsListTableColumnStatus(row)} .action-disabled`;
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
     this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
@@ -215,7 +214,7 @@ module.exports = class Product extends BOBasePage {
    * Get Text Column
    * @param columnName
    * @param row
-   * @return {Promise<float|string>}
+   * @return {Promise<Float|textContent>}
    */
   async getTextColumn(columnName, row) {
     switch (columnName) {
