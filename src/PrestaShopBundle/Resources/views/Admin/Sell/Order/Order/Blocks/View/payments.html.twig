@@ -40,16 +40,16 @@
           <strong>{{ orderForViewing.payments.amountToPay }}</strong>
 
           {% if orderForViewing.brothers.brothers is not empty %}
-            
+
             {% set firstBrother = orderForViewing.brothers.brothers|first %}
-            {% if orderForViewing.brothers.brothers | length == 1 %}
+            {% if orderForViewing.brothers.brothers|length === 1 %}
               <br/>{{ 'This warning also concerns order '|trans({}, 'Admin.Orderscustomers.Notification') }}
             {% else %}
-              <br/>{{ 'This warning also concerns the next orders:'|trans({}, 'Admin.Orderscustomers.Notification') }}
+              <br/>{{ 'This warning also concerns the following orders:'|trans({}, 'Admin.Orderscustomers.Notification') }}
             {% endif %}
 
             {% for brother in orderForViewing.brothers.brothers %}
-              <a class="_blank" href="{{ path('admin_orders_view', {'orderId': brother.orderId}) }}">
+              <a target="_blank" rel="noopener noreferrer" href="{{ path('admin_orders_view', {'orderId': brother.orderId}) }}">
                 #{{ brother.orderId }}
               </a>
             {% endfor %}

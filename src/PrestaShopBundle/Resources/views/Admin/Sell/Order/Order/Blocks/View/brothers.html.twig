@@ -26,7 +26,8 @@
 <div class="card" id="orderBrothersPanel">
   <div class="card-header">
     <h3 class="card-header-title">
-      {{ 'Linked orders'|trans({}, 'Admin.Global') }}
+      {{ 'Linked orders'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      <span class="badge badge-primary rounded">{{ orderForViewing.brothers.brothers|length }}</span>
     </h3>
   </div>
 
@@ -47,7 +48,7 @@
       </tr>
       </thead>
       <tbody>
-      {% if  orderForViewing.brothers.brothers is not empty %}
+      {% if orderForViewing.brothers.brothers is not empty %}
       {% for brother in orderForViewing.brothers.brothers %}
       <tr>
         <td>

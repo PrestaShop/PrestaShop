@@ -800,9 +800,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $isTaxExcluded = !$this->isTaxIncludedInOrder($brotherItem);
 
             if ($isTaxExcluded) {
-                $totalAmount = (float)$order->total_paid_tax_excl;
+                $totalAmount = (string) $brotherItem->total_paid_tax_excl;
             } else {
-                $totalAmount = (float)$order->total_paid_tax_incl;
+                $totalAmount = (string) $brotherItem->total_paid_tax_incl;
             }
 
             $orderState = new OrderState($brotherItem->current_state);

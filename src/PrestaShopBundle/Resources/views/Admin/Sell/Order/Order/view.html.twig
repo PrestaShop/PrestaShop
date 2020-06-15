@@ -94,7 +94,7 @@
       </div>
     {% endif %}
 
-    {% if orderForViewing.brothers is not empty %}
+    {% if orderForViewing.brothers.brothers is not empty %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/brothers.html.twig' %}
     {% endif %}
 
