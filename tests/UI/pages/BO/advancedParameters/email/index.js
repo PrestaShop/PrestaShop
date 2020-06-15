@@ -69,7 +69,7 @@ module.exports = class Email extends BOBasePage {
 
   /**
    * Reset and get number of lines
-   * @returns {Promise<integer>}
+   * @returns {Promise<int>}
    */
   async resetAndGetNumberOfLines() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {

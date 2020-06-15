@@ -114,7 +114,7 @@ module.exports = class Employees extends BOBasePage {
   /**
    * Get Value of column Displayed
    * @param row, row in table
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(row) {
     return this.elementVisible(this.employeesListColumnValidIcon(row), 100);

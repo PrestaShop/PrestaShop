@@ -107,7 +107,7 @@ module.exports = class WebService extends BOBasePage {
   /**
    * Get Value of column displayed
    * @param row, row in table
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(row) {
     return this.elementVisible(this.webserviceListColumnValidIcon(row), 100);

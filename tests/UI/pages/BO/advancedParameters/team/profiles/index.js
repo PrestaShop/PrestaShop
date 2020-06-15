@@ -72,7 +72,7 @@ module.exports = class Profiles extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<textContent>}
+   * @returns {Promise<integer>}
    */
   async resetAndGetNumberOfLines() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
