@@ -47,14 +47,6 @@ use Product;
 final class UpdateProductPricesHandler extends AbstractProductHandler implements UpdateProductPricesHandlerInterface
 {
     /**
-     * @var array specific product fields which needs to be updated.
-     *
-     * This is necessary because product is not fully loaded from database by default
-     * So during partial update we don't want to accidentally reset some fields
-     */
-    private $fieldsToUpdate = [];
-
-    /**
      * @var NumberExtractor
      */
     private $numberExtractor;
