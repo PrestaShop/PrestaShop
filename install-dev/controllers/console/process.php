@@ -154,7 +154,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
-        if (in_array('fixtures', $steps)) {
+        if (in_array('fixtures', $steps) && $this->datas->fixtures) {
             if (!$this->processInstallFixtures()) {
                 $this->printErrors();
             }
