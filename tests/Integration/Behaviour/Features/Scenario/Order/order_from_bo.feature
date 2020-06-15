@@ -295,7 +295,7 @@ Feature: Order from Back Office (BO)
     Given I create customer "testFirstName" with following details:
       | firstName        | testFirstName                      |
       | lastName         | testLastName                       |
-      | email            | test.davidsonas@invertus.eu        |
+      | email            | test@mailexample.eu                |
       | password         | secret                             |
     When I add new address to customer "testFirstName" with following details:
       | Address alias    | test-address                       |
