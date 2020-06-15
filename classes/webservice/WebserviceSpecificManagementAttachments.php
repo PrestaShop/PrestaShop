@@ -34,7 +34,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     protected $objOutput;
 
     /**
-     * @var mixed $output
+     * @var mixed
      */
     protected $output;
 
@@ -51,12 +51,12 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
     public $resourceConfiguration;
 
     /**
-     * @var mixed $attachment_id
+     * @var mixed
      */
     protected $attachment_id;
 
     /**
-     * @var mixed $displayFile
+     * @var mixed
      */
     protected $displayFile;
 
