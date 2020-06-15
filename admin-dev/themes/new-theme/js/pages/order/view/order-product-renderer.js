@@ -237,24 +237,25 @@ export default class OrderProductRenderer {
   }
 
   updateNumPerPage(numPerPage) {
-    if (numPerPage < 1) {
-      numPerPage = 1;
+    let realNumPerPage = numPerPage;
+    if (realNumPerPage < 1) {
+      realNumPerPage = 1;
     }
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-    const numPages = Math.ceil($rows.length / numPerPage);
+    const numPages = Math.ceil($rows.length / realNumPerPage);
 
     // Update table data fields
     $tablePagination.data('numPages', numPages);
-    $tablePagination.data('numPerPage', numPerPage);
+    $tablePagination.data('numPerPage', realNumPerPage);
 
     // Clean all page links, reinsert the removed template
     const $linkPaginationTemplate = $(OrderViewPageMap.productsTablePaginationTemplate);
-    $(OrderViewPageMap.productsTablePagination).find(`li:has(> [data-page])`).remove();
+    $(OrderViewPageMap.productsTablePagination).find('li:has(> [data-page])').remove();
     $(OrderViewPageMap.productsTablePaginationNext).before($linkPaginationTemplate);
 
     // Add appropriate pages
-    for (let i = 1; i <= numPages; ++i) {
+    for (let i = 1; i <= numPages; i += 1) {
       const $linkPagination = $linkPaginationTemplate.clone();
       $linkPagination.find('span').attr('data-page', i);
       $linkPagination.find('span').html(i);

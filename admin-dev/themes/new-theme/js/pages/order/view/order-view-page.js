@@ -51,16 +51,15 @@ export default class OrderViewPage {
   }
 
   listenToEvents() {
-
     $(OrderViewPageMap.invoiceAddressEditBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
     $(OrderViewPageMap.deliveryAddressEditBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
 
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
@@ -192,7 +191,6 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', (event) => {
       const button = $(event.relatedTarget);
       const packItems = button.data('packItems');
-      const modal = $(this);
       $(OrderViewPageMap.productPackModal.rows).remove();
       packItems.forEach((item) => {
         const $item = $(OrderViewPageMap.productPackModal.template).clone();
@@ -272,7 +270,7 @@ export default class OrderViewPage {
       const $select = $(event.currentTarget);
       const numPerPage = parseInt($select.val(), 10);
       EventEmitter.emit(OrderViewEventMap.productListNumberPerPage, {
-        numPerPage: numPerPage
+        numPerPage,
       });
     });
 
