@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\Precision;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -387,7 +388,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $product->id,
             true,
             $combination ? $combination->id : null,
-            2,
+            Precision::DEFAULT_PRECISION,
             null,
             false,
             true,
@@ -399,7 +400,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         );
 
         // Use the same rounding decimals used to call Product::getPriceStatic
-        $amountTaxIncluded = Tools::ps_round($amount->getTaxIncluded(), 2);
+        $amountTaxIncluded = Tools::ps_round($amount->getTaxIncluded(), Precision::DEFAULT_PRECISION);
         if (!(new Number((string) $amountTaxIncluded))->equals(new Number((string) $initialProductPriceTaxIncl))) {
             // @todo: use private method to create specific price object
             $specificPrice = new SpecificPrice();
