@@ -56,6 +56,11 @@ class NumberExtractor
      * If provided resource is object, access its properties using dots e.g. 'myProperty.anotherProperty'
      * You can also simply provide the name of property/key to reach the value if it is not multidimensional.
      *
+     * object's public property will be extracted first,
+     * else it will search for getters.
+     * Note: this will only work when providing exact property name,
+     * but not path selector for inner objects
+     *
      * e.g:
      * ->extract($myMultiDimensionalArray, '[firstDimensionKey][secondDimensionKey]')
      *
@@ -67,18 +72,14 @@ class NumberExtractor
      *
      * @param array|object $resource
      * @param string $propertyPath
-     * @param bool $prioritizePublicProperty If true - object's public property  will be extracted first,
-     *                                       else it will search for getters.
-     *                                       Note: this will only work when providing exact property name,
-     *                                       but not path selector for inner objects
      *
      * @return Number
      *
      * @throws NumberExtractorException
      */
-    public function extract($resource, string $propertyPath, bool $prioritizePublicProperty = true): Number
+    public function extract($resource, string $propertyPath): Number
     {
-        if ($prioritizePublicProperty) {
+        if (is_object($resource)) {
             $numberFromPublicProperty = $this->extractPublicPropertyFirst($resource, $propertyPath);
 
             if (null !== $numberFromPublicProperty) {
@@ -126,10 +127,6 @@ class NumberExtractor
      */
     private function extractPublicPropertyFirst($resource, string $property): ?Number
     {
-        if (!is_object($resource)) {
-            return null;
-        }
-
         if (!property_exists($resource, $property)) {
             return null;
         }
