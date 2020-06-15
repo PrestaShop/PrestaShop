@@ -177,6 +177,7 @@ class TranslationCatalogueProviderFactory
 
     /**
      * @param string $locale
+     *
      * @return ExternalModuleLegacySystemProvider
      */
     public function getExternalLegacyModuleProvider(string $locale): ExternalModuleLegacySystemProvider

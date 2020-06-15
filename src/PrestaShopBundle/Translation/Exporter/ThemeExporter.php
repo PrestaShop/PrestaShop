@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
-use PrestaShopBundle\Translation\Extractor\ThemeExtractorCache;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
@@ -93,9 +92,6 @@ class ThemeExporter
         Filesystem $filesystem
     ) {
         $this->themeExtractor = $themeExtractor;
-//        $this->themeExtractor
-//            ->setThemeProvider($themeProvider);
-
         $this->themeProvider = $themeProvider;
         $this->themeRepository = $themeRepository;
         $this->dumper = $dumper;
@@ -138,7 +134,7 @@ class ThemeExporter
         $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
 
         try {
-            $themeCatalogue = $this->themeProvider->getThemeCatalogue();
+            $themeCatalogue = $this->themeProvider->getFilesystemCatalogue();
         } catch (FileNotFoundException $exception) {
             // if the theme doesn't have translation files (eg. the default theme)
             $themeCatalogue = new MessageCatalogue($locale);
@@ -211,26 +207,26 @@ class ThemeExporter
     {
         $theme = $this->themeRepository->getInstanceByName($themeName);
 
-//        $folderPath = $this->themeExtractor->getCachedFilesPath($theme);
+        $folderPath = $this->themeExtractor->getCachedFilesPath($theme);
         $tmpFolderPath = $this->themeExtractor->getTemporaryFilesPath($theme);
 
-//        $this->filesystem->remove($folderPath);
+        $this->filesystem->remove($folderPath);
         $this->filesystem->remove($tmpFolderPath);
 
-//        $this->filesystem->mkdir($folderPath . DIRECTORY_SEPARATOR . $locale);
-//        $this->filesystem->mkdir($tmpFolderPath);
-        $this->filesystem->mkdir($tmpFolderPath . DIRECTORY_SEPARATOR . $locale);
+        $tmpExtractPath = $tmpFolderPath . DIRECTORY_SEPARATOR . $locale;
+
+        $this->filesystem->mkdir($tmpExtractPath);
 
         $this->themeExtractor
             ->extract($theme, $locale, $rootDir);
 
         Flattenizer::flatten(
-            $this->themeExtractor->getCachedFilesPath($theme),
-            $tmpFolderPath . DIRECTORY_SEPARATOR . $locale,
+            $folderPath . DIRECTORY_SEPARATOR . ThemeExtractorInterface::DEFAULT_LOCALE,
+            $tmpExtractPath,
             $locale
         );
 
-        return (new TranslationFinder())->getCatalogueFromPaths($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $locale, '*');
+        return (new TranslationFinder())->getCatalogueFromPaths($tmpExtractPath, $locale, '*');
     }
 
     /**
@@ -313,21 +309,6 @@ class ThemeExporter
     }
 
     /**
-     * @param string $themeName
-     * @param string $locale
-     *
-     * @return string
-     *
-     * @throws \Exception
-     */
-    protected function makeArchiveParentDirectory($themeName, $locale)
-    {
-        $zipFilename = $this->makeZipFilename($themeName, $locale);
-
-        return dirname($zipFilename);
-    }
-
-    /**
      * @param MessageCatalogue $catalogue
      */
     protected function updateCatalogueMetadata(MessageCatalogue $catalogue)
@@ -375,22 +356,6 @@ class ThemeExporter
     protected function shouldAddFileMetadata(array $metadata = null)
     {
         return null === $metadata || !array_key_exists('file', $metadata);
-    }
-
-    /**
-     * @param string $locale
-     * @param MessageCatalogue $sourceCatalogue
-     *
-     * @return MessageCatalogue
-     */
-    protected function addLocaleToDomain($locale, MessageCatalogue $sourceCatalogue)
-    {
-        $catalogue = new MessageCatalogue($locale, []);
-        foreach ($sourceCatalogue->all() as $domain => $messages) {
-            $catalogue->add($messages, $domain . '.' . $locale);
-        }
-
-        return $catalogue;
     }
 
     /**
