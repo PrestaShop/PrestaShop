@@ -583,7 +583,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $pathsByNames = [
             'name' => 'basicInformation.localizedNames',
             'description' => 'basicInformation.localizedDescriptions',
-            'short description' => 'basicInformation.localizedShortDescriptions',
+            'description_short' => 'basicInformation.localizedShortDescriptions',
             'active' => 'active',
             'visibility' => 'options.visibility',
             'available_for_order' => 'options.availableForOrder',
