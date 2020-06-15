@@ -68,6 +68,26 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      */
     private function fillUpdatableFieldsWithCommandData(Product $product, UpdateProductOptionsCommand $command): void
     {
+        if (null !== $command->getVisibility()) {
+            $product->visibility = $command->getVisibility()->getValue();
+            $this->fieldsToUpdate['visibility'] = true;
+        }
+
+        if (null !== $command->isAvailableForOrder()) {
+            $product->available_for_order = $command->isAvailableForOrder();
+            $this->fieldsToUpdate['available_for_order'] = true;
+        }
+
+        if (null !== $command->isOnlineOnly()) {
+            $product->online_only = $command->isOnlineOnly();
+            $this->fieldsToUpdate['online_only'] = true;
+        }
+
+        if (null !== $command->toShowPrice()) {
+            $product->show_price = $command->toShowPrice();
+            $this->fieldsToUpdate['show_price'] = true;
+        }
+
         if (null !== $command->getCondition()) {
             $product->condition = $command->getCondition()->getValue();
             $this->fieldsToUpdate['condition'] = true;
@@ -96,11 +116,6 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         if (null !== $command->getUpc()) {
             $product->upc = $command->getUpc()->getValue();
             $this->fieldsToUpdate['upc'] = true;
-        }
-
-        if (null !== $command->getVisibility()) {
-            $product->visibility = $command->getVisibility()->getValue();
-            $this->fieldsToUpdate['visibility'] = true;
         }
     }
 

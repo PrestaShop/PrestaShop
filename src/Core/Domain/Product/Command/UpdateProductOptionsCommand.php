@@ -238,7 +238,7 @@ class UpdateProductOptionsCommand
     /**
      * @return Isbn|null
      */
-    public function getIsbn(): ?string
+    public function getIsbn(): ?Isbn
     {
         return $this->isbn;
     }

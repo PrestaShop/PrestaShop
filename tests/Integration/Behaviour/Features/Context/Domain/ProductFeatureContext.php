@@ -33,6 +33,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -115,6 +116,27 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['description_short'])) {
             $command->setLocalizedShortDescriptions($this->parseLocalizedArray($data['description_short']));
         }
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I update product :productReference options with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductOptions(string $productReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+        $command = new UpdateProductOptionsCommand($productId);
+
+        $this->setUpdateOptionsCommandData($data, $command);
 
         try {
             $this->getCommandBus()->handle($command);
@@ -226,6 +248,53 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualTags,
                 sprintf('Expected tags "%s". Got "%s".', $expectedTags, $actualTags)
             );
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param UpdateProductOptionsCommand $command
+     */
+    private function setUpdateOptionsCommandData(array $data, UpdateProductOptionsCommand $command): void
+    {
+        if (isset($data['visibility'])) {
+            $command->setVisibility($data['visibility']);
+        }
+
+        if (isset($data['available_for_order'])) {
+            $command->setAvailableForOrder(PrimitiveUtils::castStringBooleanIntoBoolean($data['available_for_order']));
+        }
+
+        if (isset($data['online_only'])) {
+            $command->setOnlineOnly(PrimitiveUtils::castStringBooleanIntoBoolean($data['online_only']));
+        }
+
+        if (isset($data['show_price'])) {
+            $command->setShowPrice(PrimitiveUtils::castStringBooleanIntoBoolean($data['show_price']));
+        }
+
+        if (isset($data['condition'])) {
+            $command->setCondition($data['condition']);
+        }
+
+        if (isset($data['isbn'])) {
+            $command->setIsbn($data['isbn']);
+        }
+
+        if (isset($data['upc'])) {
+            $command->setUpc($data['upc']);
+        }
+
+        if (isset($data['ean13'])) {
+            $command->setEan13($data['ean13']);
+        }
+
+        if (isset($data['mpn'])) {
+            $command->setMpn($data['mpn']);
+        }
+
+        if (isset($data['reference'])) {
+            $command->setReference($data['reference']);
         }
     }
 
