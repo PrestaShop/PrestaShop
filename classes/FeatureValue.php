@@ -167,6 +167,9 @@ class FeatureValueCore extends ObjectModel
         }
 
         if (!$custom) {
+            if(!$idLang)
+                $idLang = Context::getContext()->language->id;
+
             $idFeatureValue = Db::getInstance()->getValue('
 				SELECT fv.`id_feature_value`
 				FROM '._DB_PREFIX_.'feature_value fv
