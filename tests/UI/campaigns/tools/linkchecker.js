@@ -24,7 +24,7 @@ let outputEntry = {
   url: '',
   passed: [],
   failed: [],
-  Error: [],
+  errored: [],
 };
 
 let responseError = false;
@@ -64,7 +64,7 @@ describe('Crawl every page for defects and issues', async () => {
       javascriptTextError = exception.toString();
       javascriptError = true;
 
-      outputEntry.Error.push({
+      outputEntry.errored.push({
         type: 'JS error',
         msg: javascriptTextError,
       });
@@ -78,7 +78,7 @@ describe('Crawl every page for defects and issues', async () => {
         consoleTextError = msg.text();
         consoleError = true;
 
-        outputEntry.Error.push({
+        outputEntry.errored.push({
           type: 'Console error',
           msg: consoleTextError,
         });
@@ -147,7 +147,7 @@ async function crawlPage(browserPage, thisPageToCrawl) {
     url: thisPageToCrawl.url,
     passed: [],
     failed: [],
-    Error: [],
+    errored: [],
   };
 
   await Promise.all([
@@ -171,7 +171,7 @@ async function crawlPage(browserPage, thisPageToCrawl) {
 async function checkResponseStatus(url, status) {
   if (status.startsWith('4') || status.startsWith('5')) {
     responseError = true;
-    responseTextError = `Request error : ${url} (${status}`;
+    responseTextError = `Request error : ${url} (${status})`;
 
     outputEntry.failed.push({url, status});
   } else if (JSON.parse(LOG_PASSED) === true) {
