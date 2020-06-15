@@ -294,7 +294,9 @@ class ModuleManager implements AddonManagerInterface
         if (!empty($source)) {
             $this->moduleZipManager->storeInModulesFolder($source);
         } elseif (!$this->moduleProvider->isOnDisk($name)) {
-            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
+            if (!$this->moduleUpdater->setModuleOnDiskFromAddons($name)) {
+                throw new Exception($this->translator->trans('The module %name% has not been found on Addons.', ['%name%' => $name]));
+            }
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -622,6 +624,7 @@ class ModuleManager implements AddonManagerInterface
             $errors = $module->getInstance()->getErrors();
             $message = array_pop($errors);
         } else {
+            debug_print_backtrace();
             // Invalid instance: Missing or with syntax error
             $message = $this->translator->trans(
                 'The module is invalid and cannot be loaded.',
