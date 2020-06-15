@@ -1343,7 +1343,7 @@ class OrderController extends FrameworkBundleAdminController
         return $this->json([
             'orderTotalFormatted' => $orderForViewingPrices->getTotalAmountFormatted(),
             'discountsAmountFormatted' => $orderForViewingPrices->getDiscountsAmountFormatted(),
-            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThan(new Number('0')),
+            'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThanZero(),
             'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
             'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
             'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),

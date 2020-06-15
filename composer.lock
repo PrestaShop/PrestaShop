@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af2b3c9911831936fa96e87c2baed778",
+    "content-hash": "6b962cbfae2189f57005b04a942ab96b",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -3973,16 +3973,16 @@
         },
         {
             "name": "prestashop/decimal",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/decimal.git",
-                "reference": "11e0f87b101644614e61cfbea175548bdfb389f1"
+                "reference": "8b7f47671bb691bd463743d1cbab5b519fbd6849"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/11e0f87b101644614e61cfbea175548bdfb389f1",
-                "reference": "11e0f87b101644614e61cfbea175548bdfb389f1",
+                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/8b7f47671bb691bd463743d1cbab5b519fbd6849",
+                "reference": "8b7f47671bb691bd463743d1cbab5b519fbd6849",
                 "shasum": ""
             },
             "require": {
@@ -4004,8 +4004,12 @@
             ],
             "authors": [
                 {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                },
+                {
                     "name": "Pablo Borowicz",
-                    "email": "eternoendless@gmail.com"
+                    "email": "pablo.borowicz@prestashop.com"
                 }
             ],
             "description": "Object-oriented wrapper/shim for BC Math PHP extension. Allows for arbitrary-precision math operations.",
@@ -4017,7 +4021,7 @@
                 "precision",
                 "prestashop"
             ],
-            "time": "2019-07-17T13:14:07+00:00"
+            "time": "2020-04-15T07:39:20+00:00"
         },
         {
             "name": "prestashop/graphnvd3",
