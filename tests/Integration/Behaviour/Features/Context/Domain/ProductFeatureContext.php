@@ -134,11 +134,10 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
         $productId = $this->getSharedStorage()->get($productReference);
-        $command = new UpdateProductOptionsCommand($productId);
-
-        $this->setUpdateOptionsCommandData($data, $command);
 
         try {
+            $command = new UpdateProductOptionsCommand($productId);
+            $this->setUpdateOptionsCommandData($data, $command);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->lastException = $e;
@@ -383,47 +382,42 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that product name is invalid
+     * @Then I should get error that product :fieldName is invalid
      */
-    public function assertLastErrorIsInvalidNameConstraint()
+    public function assertConstraintError(string $fieldName): void
     {
         $this->assertLastErrorIs(
             ProductConstraintException::class,
-            ProductConstraintException::INVALID_NAME
+            $this->getConstraintErrorCode($fieldName)
         );
     }
 
     /**
-     * @Then I should get error that product type is invalid
+     * @param string $fieldName
+     *
+     * @return int
      */
-    public function assertLastErrorIsInvalidTypeConstraint()
+    private function getConstraintErrorCode(string $fieldName): int
     {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_PRODUCT_TYPE
-        );
-    }
+        $constraintErrorFieldMap = [
+            'type' => ProductConstraintException::INVALID_PRODUCT_TYPE,
+            'name' => ProductConstraintException::INVALID_NAME,
+            'description' => ProductConstraintException::INVALID_DESCRIPTION,
+            'description_short' => ProductConstraintException::INVALID_SHORT_DESCRIPTION,
+            'visibility' => ProductConstraintException::INVALID_VISIBILITY,
+            'condition' => ProductConstraintException::INVALID_CONDITION,
+            'isbn' => ProductConstraintException::INVALID_ISBN,
+            'upc' => ProductConstraintException::INVALID_UPC,
+            'ean13' => ProductConstraintException::INVALID_EAN_13,
+            'mpn' => ProductConstraintException::INVALID_MPN,
+            'reference' => ProductConstraintException::INVALID_REFERENCE,
+        ];
 
-    /**
-     * @Then I should get error that product description is invalid
-     */
-    public function assertLastErrorIsInvalidDescriptionConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_DESCRIPTION
-        );
-    }
+        if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
+            throw new RuntimeException(sprintf('Field "%s" doesn\'t exist in error map', $fieldName));
+        }
 
-    /**
-     * @Then I should get error that product short description is invalid
-     */
-    public function assertLastErrorIsInvalidShortDescriptionConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_SHORT_DESCRIPTION
-        );
+        return $constraintErrorFieldMap[$fieldName];
     }
 
     /**
@@ -439,7 +433,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $pathsByNames = [
             'name' => 'basicInformation.localizedNames',
             'description' => 'basicInformation.localizedDescriptions',
-            'description_short' => 'basicInformation.localizedShortDescriptions',
+            'short description' => 'basicInformation.localizedShortDescriptions',
             'active' => 'active',
             'visibility' => 'options.visibility',
             'available_for_order' => 'options.availableForOrder',
