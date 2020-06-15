@@ -49,8 +49,8 @@ const loginFO = async function (page) {
 const waitForTinyMCEToLoad = async function (page) {
   await page.waitForFunction(
     'typeof(tinyMCE)!== \'undefined\' && tinyMCE.activeEditor!==undefined',
-    {timeout: 10000}
-    );
+    {timeout: 10000},
+  );
 };
 
 module.exports = [
