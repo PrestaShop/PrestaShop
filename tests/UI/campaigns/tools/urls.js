@@ -47,7 +47,10 @@ const loginFO = async function (page) {
  * @return {Promise<void>}
  */
 const waitForTinyMCEToLoad = async function (page) {
-  await page.waitForFunction('tinyMCE.activeEditor!==undefined', {timeout: 10000});
+  await page.waitForFunction(
+    'typeof(tinyMCE)!== \'undefined\' && tinyMCE.activeEditor!==undefined',
+    {timeout: 10000}
+    );
 };
 
 module.exports = [
@@ -78,7 +81,13 @@ module.exports = [
         },
       },
       {name: 'BO_categories', url: 'index.php/sell/catalog/categories'},
-      {name: 'BO_add_category', url: 'index.php/sell/catalog/categories/new'},
+      {
+        name: 'BO_add_category',
+        url: 'index.php/sell/catalog/categories/new',
+        async customAction(page) {
+          await waitForTinyMCEToLoad(page);
+        },
+      },
       {name: 'BO_monitoring', url: 'index.php/sell/catalog/monitoring'},
       {name: 'BO_attributes', url: 'index.php?controller=AdminAttributesGroups'},
       {name: 'BO_add_attribute', url: 'index.php?controller=AdminAttributesGroups&addattribute_group'},
@@ -134,7 +143,13 @@ module.exports = [
       {name: 'BO_email_theme', url: 'index.php/improve/design/mail_theme/'},
       {name: 'BO_pages', url: 'index.php/improve/design/cms-pages/'},
       {name: 'BO_add_page_category', url: 'index.php/improve/design/cms-pages/category/new'},
-      {name: 'BO_add_page', url: 'index.php/improve/design/cms-pages/new'},
+      {
+        name: 'BO_add_page',
+        url: 'index.php/improve/design/cms-pages/new',
+        async customAction(page) {
+          await waitForTinyMCEToLoad(page);
+        },
+      },
       {name: 'BO_positions', url: 'index.php/improve/design/modules/positions/'},
       {name: 'BO_transplant_module', url: 'index.php?controller=AdminModulesPositions&addToHook='},
       {name: 'BO_image_settings', url: 'index.php?controller=AdminImages'},
