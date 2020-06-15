@@ -23,9 +23,7 @@ module.exports = class AddProduct extends BOBasePage {
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
-    this.productShortDescriptionTab = '#tab_description_short a';
     this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
-    this.productDescriptionTab = '#tab_description a';
     this.productDescriptionIframe = '#form_step1_description_1_ifr';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
     this.productDeleteLink = '.product-footer a.delete';
@@ -87,9 +85,7 @@ module.exports = class AddProduct extends BOBasePage {
    */
   async setBasicSetting(productData) {
     await this.setValue(this.productNameInput, productData.name);
-    await this.page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(this.productDescriptionIframe, productData.description);
-    await this.page.click(this.productShortDescriptionTab);
     await this.setValueOnTinymceInput(this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(this.productTypeSelect, productData.type);
     await this.setValue(this.productReferenceInput, productData.reference);
