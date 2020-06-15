@@ -31,7 +31,6 @@ module.exports = class Languages extends LocalizationBasePage {
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     this.enabledColumnValidIcon = row => `${this.tableColumn(row, 'active')} i.grid-toggler-icon-valid`;
-    this.enabledColumnNotValidIcon = row => `${this.tableColumn(row, 'active')} i.grid-toggler-icon-valid`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
@@ -172,7 +171,7 @@ module.exports = class Languages extends LocalizationBasePage {
    * Enable/Disable language
    * @param row
    * @param valueWanted
-   * @return {Promise<bool>}, true if click has been performed
+   * @return {Promise<boolean>}, true if click has been performed
    */
   async quickEditLanguage(row, valueWanted = true) {
     await this.waitForVisibleSelector(this.tableColumn(row, 'active'), 2000);
@@ -225,7 +224,7 @@ module.exports = class Languages extends LocalizationBasePage {
       this.page.click(this.bulkActionsDeleteButton),
       this.waitForVisibleSelector(`${this.confirmDeleteModal}.show`),
     ]);
-    await this.confirmDeleteLanguages(this.bulkActionsDeleteButton);
+    await this.confirmDeleteLanguages();
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
