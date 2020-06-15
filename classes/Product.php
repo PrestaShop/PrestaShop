@@ -5536,7 +5536,11 @@ class ProductCore extends ObjectModel
             $row['unit_price_ratio'] = $row['price_tax_exc'] / $unitPrice;
         }
 
-        $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
+        if (isset($row['unit_price_ratio'])) {
+            $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
+        } else {
+            $row['unit_price'] = 0.0;
+        }
 
         self::$productPropertiesCache[$cache_key] = $row;
 
