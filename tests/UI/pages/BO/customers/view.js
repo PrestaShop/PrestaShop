@@ -186,22 +186,4 @@ module.exports = class ViewCustomer extends BOBasePage {
     }
     return this.clickAndWaitForNavigation(selector(row));
   }
-
-  /**
-   * Go to edit voucher page
-   * @returns {Promise<void>}
-   */
-  async goToEditVoucherPage() {
-    await this.clickAndWaitForNavigation(this.voucherEditButton);
-  }
-
-  /**
-   * Delete voucher
-   * @returns {Promise<string|*>}
-   */
-  async deleteVoucher() {
-    await this.waitForSelectorAndClick(this.voucherToggleDropdown);
-    await this.waitForSelectorAndClick(this.voucherDeleteButton);
-    return this.getTextContent(this.alertSuccessBlock);
-  }
 };
