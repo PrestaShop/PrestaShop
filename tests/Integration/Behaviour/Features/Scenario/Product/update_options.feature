@@ -76,22 +76,22 @@ Feature: Update product options from Back Office (BO)
       | is_virtual | true                                     |
     When I update product "product2" options with following values:
       | visibility | show it to me plz  |
-    Then I should get error that product visibility is invalid
+    Then I should get error that product field visibility is invalid
     When I update product "product2" options with following values:
       | condition | very good condition |
-    Then I should get error that product condition is invalid
+    Then I should get error that product field condition is invalid
     When I update product "product2" options with following values:
       | isbn  | isbn1                   |
-    Then I should get error that product isbn is invalid
+    Then I should get error that product field isbn is invalid
     When I update product "product2" options with following values:
       | upc   | upc1                    |
-    Then I should get error that product upc is invalid
+    Then I should get error that product field upc is invalid
     When I update product "product2" options with following values:
       | ean13 | ean1                    |
-    Then I should get error that product ean13 is invalid
+    Then I should get error that product field ean13 is invalid
     When I update product "product2" options with following values:
       | mpn   | this is more than forty characters long string |
-    Then I should get error that product mpn is invalid
+    Then I should get error that product field mpn is invalid
     When I update product "product2" options with following values:
       | reference   | invalid chars like ^;{ |
-    Then I should get error that product reference is invalid
+    Then I should get error that product field reference is invalid

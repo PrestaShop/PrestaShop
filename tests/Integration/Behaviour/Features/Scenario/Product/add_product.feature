@@ -30,5 +30,5 @@ Feature: Add basic product from Back Office (BO)
     When I add product "product2" with following information:
       | name       | en-US: T-shirt #1 |
       | is_virtual | false             |
-    Then I should get error that product name is invalid
+    Then I should get error that product field name is invalid
 

@@ -533,7 +533,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that product :fieldName is invalid
+     * @Then I should get error that product field :fieldName is invalid
      */
     public function assertConstraintError(string $fieldName): void
     {
