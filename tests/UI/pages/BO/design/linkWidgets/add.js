@@ -17,9 +17,6 @@ module.exports = class AddLinkWidget extends BOBasePage {
     this.staticContentCheckbox = id => `#form_link_block_static_${id} + i`;
     this.customTitleInput = (position, id) => `#form_link_block_custom_${position}_${id}_title`;
     this.customUrlInput = (position, id) => `#form_link_block_custom_${position}_${id}_url`;
-    this.customBlockForm = '#form_link_block_custom';
-    this.formGroupRowDiv = id => `${this.customBlockForm} > div.form-group.row:nth-of-type(${id})`;
-    this.deleteCustomUrlButton = id => `${this.formGroupRowDiv(id)} button.remove_custom_url`;
     this.addCustomBlockButton = 'button[data-collection-id=\'form_link_block_custom\']';
     this.saveButton = '.card-footer button';
   }
@@ -157,7 +154,7 @@ module.exports = class AddLinkWidget extends BOBasePage {
   /**
    * Add linkWidget
    * @param linkWidgetData
-   * @return {Promise<*|string>}
+   * @return {Promise<string>}
    */
   async addLinkWidget(linkWidgetData) {
     // Set name in languages

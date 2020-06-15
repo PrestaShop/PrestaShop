@@ -162,7 +162,7 @@ module.exports = class Pages extends BOBasePage {
    * Get Value of column Displayed in table
    * @param table
    * @param row, row in table
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(table, row) {
     return this.elementVisible(this.columnValidIcon(table, row), 100);
@@ -394,7 +394,7 @@ module.exports = class Pages extends BOBasePage {
   /**
    * Select category pagination limit
    * @param number
-   * @returns {Promise<string >}
+   * @returns {Promise<string>}
    */
   async selectCategoryPaginationLimit(number) {
     await this.selectByVisibleText(this.categoriesPaginationLimitSelect, number);
@@ -422,7 +422,7 @@ module.exports = class Pages extends BOBasePage {
   /**
    * Select pages pagination limit
    * @param number
-   * @returns {Promise<string >}
+   * @returns {Promise<string>}
    */
   async selectPagesPaginationLimit(number) {
     await this.selectByVisibleText(this.pagesPaginationLimitSelect, number);
