@@ -243,7 +243,7 @@ module.exports = class CommonPage {
   /**
    * Go to Page and wait for navigation
    * @param selector
-   * @param waitUntil
+   * @param waitUntil, the event to wait after click (load/networkidle/domcontentloaded)
    * @return {Promise<void>}
    */
   async clickAndWaitForNavigation(selector, waitUntil = 'load') {
