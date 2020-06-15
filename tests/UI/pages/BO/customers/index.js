@@ -27,8 +27,6 @@ module.exports = class Customers extends BOBasePage {
       + ' a[data-customer-delete-url]';
     this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
       + ' i.grid-toggler-icon-valid';
-    this.customersListColumnNotValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
-      + ' i.grid-toggler-icon-not-valid';
     // Filters
     this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
     this.filterSearchButton = `${this.customersListForm} button[name='customer[actions][search]']`;
@@ -96,7 +94,7 @@ module.exports = class Customers extends BOBasePage {
   /**
    * Filter list of customers
    * @param filterType, input or select to choose method of filter
-   * @param filterBy, colomn to filter
+   * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
@@ -136,7 +134,7 @@ module.exports = class Customers extends BOBasePage {
    * Get Value of columns Enabled, Newsletter or Partner Offers
    * @param row, row in table
    * @param column, column to check
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(row, column) {
     await this.waitForVisibleSelector(this.customersListTableColumn(row, column), 2000);
