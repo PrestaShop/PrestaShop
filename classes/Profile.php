@@ -226,7 +226,7 @@ class ProfileCore extends ObjectModel
         $accessPerTab = [];
         foreach ($rolesGiven as $role) {
             preg_match(
-                '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z][A-Z0-9]*)_[A-Z]+/',
+                '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z][A-Z0-9\_]*)_(CREATE|DELETE|READ|UPDATE)+/',
                 $role['slug'],
                 $matches
             );
