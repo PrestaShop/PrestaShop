@@ -45,10 +45,10 @@ module.exports = class Invoice extends BOBasePage {
    */
 
   /**
-   *
+   * Generate PDF by date and download it
    * @param dateFrom
    * @param dateTo
-   * @returns {Promise<null|*>}
+   * @returns {Promise<*>}
    */
   async generatePDFByDateAndDownload(dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(dateFrom, dateTo);
