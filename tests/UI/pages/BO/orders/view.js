@@ -39,9 +39,9 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Modify the product quantity
-   * @param row, product row
-   * @param quantity, new quantity
-   * @returns {Promise<void>}
+   * @param row
+   * @param quantity
+   * @returns {Promise<number>}
    */
   async modifyProductQuantity(row, quantity) {
     this.dialogListener();
