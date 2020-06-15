@@ -13,14 +13,6 @@ module.exports = class LocalizationBasePage extends BOBasePage {
 
   /* Header Methods */
   /**
-   * Go to localization page
-   * @return {Promise<void>}
-   */
-  async goToSubTabLocalization() {
-    await this.clickAndWaitForNavigation(this.localizationNavItemLink);
-  }
-
-  /**
    * Go to languages page
    * @return {Promise<void>}
    */
@@ -34,13 +26,5 @@ module.exports = class LocalizationBasePage extends BOBasePage {
    */
   async goToSubTabCurrencies() {
     await this.clickAndWaitForNavigation(this.currenciesNavItemLink);
-  }
-
-  /**
-   * Go to geolocation page
-   * @return {Promise<void>}
-   */
-  async goToSubTabGeolocation() {
-    await this.clickAndWaitForNavigation(this.geolocationNavItemLink);
   }
 };

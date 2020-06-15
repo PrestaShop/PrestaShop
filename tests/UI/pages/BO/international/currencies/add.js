@@ -9,14 +9,11 @@ module.exports = class AddCurrency extends BOBasePage {
 
     // Selectors
     this.currencySelect = '#currency_selected_iso_code';
-    this.selectResultOption = id => `li.select2-results__option:nth-child(${id})`;
     this.alternativeCurrencyCheckBox = '#currency_unofficial';
     this.currencyNameInput = id => `#currency_names_${id}`;
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
-    this.decimalsInput = '#currency_precision';
     this.statusSwitch = id => `label[for='currency_active_${id}']`;
-    this.resetDefaultSettingsButton = '#currency_reset_default_settings';
     this.saveButton = 'div.card-footer button[type=\'submit\']';
 
     // currency modal

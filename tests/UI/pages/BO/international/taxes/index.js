@@ -36,8 +36,6 @@ module.exports = class Taxes extends BOBasePage {
     this.taxesGridColumnToggleDropDown = row => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
     this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a[data-url*='delete']`;
     this.toggleColumnValidIcon = (row, column) => `${this.taxesGridColumn(row, column)} i.grid-toggler-icon-valid`;
-    this.toggleColumnNotValidIcon = (row, column) => `${this.taxesGridColumn(row, column)}`
-      + ' i.grid-toggler-icon-not-valid';
 
     // Form Taxes Options
     this.enabledTaxSwitchLabel = id => `label[for='form_options_enable_tax_${id}']`;

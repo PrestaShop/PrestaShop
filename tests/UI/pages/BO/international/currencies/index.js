@@ -29,7 +29,6 @@ module.exports = class Currencies extends LocalizationBasePage {
     // enable column
     this.enableColumn = row => this.tableColumn(row, 'active');
     this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
-    this.enableColumnNotValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-not-valid`;
     // Actions buttons in row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
