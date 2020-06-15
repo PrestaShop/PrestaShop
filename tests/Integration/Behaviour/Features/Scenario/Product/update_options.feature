@@ -21,3 +21,27 @@ Feature: Update product options from Back Office (BO)
       | mpn                  |                    |
       | reference            |                    |
     And product "product1" localized "tags" should be "en-US:"
+    When I update product "product1" options with following values:
+      | visibility           | catalog            |
+      | available_for_order  | false              |
+      | online_only          | true               |
+      | show_price           | false              |
+      | condition            | used               |
+      | isbn                 | 978-3-16-148410-0  |
+      | upc                  | 72527273070        |
+      | ean13                | 978020137962       |
+      | mpn                  | mpn1               |
+      | reference            | ref1               |
+    Then product "product1" should have following values:
+      | visibility           | catalog            |
+      | available_for_order  | false              |
+      | online_only          | true               |
+      | show_price           | false              |
+      | condition            | used               |
+      | isbn                 | 978-3-16-148410-0  |
+      | upc                  | 72527273070        |
+      | ean13                | 978020137962       |
+      | mpn                  | mpn1               |
+      | reference            | ref1               |
+
+  Scenario:
