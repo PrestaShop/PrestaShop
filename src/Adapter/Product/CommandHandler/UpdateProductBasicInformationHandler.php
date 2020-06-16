@@ -42,14 +42,6 @@ use Product;
 final class UpdateProductBasicInformationHandler extends AbstractProductHandler implements UpdateProductBasicInformationHandlerInterface
 {
     /**
-     * Only fields defined in this array will be updated.
-     * It is necessary to avoid resetting some of product properties (which are not loaded by default) during partial update
-     *
-     * @var array
-     */
-    private $fieldsToUpdate = [];
-
-    /**
      * {@inheritdoc}
      *
      * Null values are not updated, because are considered unchanged

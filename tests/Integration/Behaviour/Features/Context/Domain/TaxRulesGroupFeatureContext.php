@@ -24,20 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+declare(strict_types=1);
 
-/**
- * Is thrown when updating a product failed
- */
-class CannotUpdateProductException extends ProductException
+namespace Tests\Integration\Behaviour\Features\Context\Domain;
+
+use RuntimeException;
+use TaxRulesGroup;
+
+class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * When basic information update fails
+     * @param string $name
+     *
+     * @return int
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
+    public static function getTaxRulesGroupByName(string $name): TaxRulesGroup
+    {
+        $taxRulesGroupId = (int) TaxRulesGroup::getIdByName($name);
+        $taxRulesGroup = new TaxRulesGroup($taxRulesGroupId);
+
+        if ($taxRulesGroupId !== (int) $taxRulesGroup->id) {
+            throw new RuntimeException(sprintf('Tax rules group "%s" not found', $name));
+        }
+
+        return $taxRulesGroup;
+    }
 
     /**
-     * When updating product fields associated with price fails
+     * @Given tax rules group named :name exists
+     *
+     * @param string $name
      */
-    const FAILED_UPDATE_PRICES = 20;
+    public function assertTaxRuleGroupExists(string $name)
+    {
+        self::getTaxRulesGroupByName($name);
+    }
 }

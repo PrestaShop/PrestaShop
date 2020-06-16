@@ -29,7 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Util\Number;
 
 use PrestaShop\Decimal\Number;
-use stdClass;
+use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
@@ -55,6 +56,11 @@ class NumberExtractor
      * If provided resource is object, access its properties using dots e.g. 'myProperty.anotherProperty'
      * You can also simply provide the name of property/key to reach the value if it is not multidimensional.
      *
+     * object's public property will be extracted first,
+     * else it will search for getters.
+     * Note: this will only work when providing exact property name,
+     * but not path selector for inner objects
+     *
      * e.g:
      * ->extract($myMultiDimensionalArray, '[firstDimensionKey][secondDimensionKey]')
      *
@@ -64,13 +70,23 @@ class NumberExtractor
      *
      * ->extract($simpleArray, '[someKey]')
      *
-     * @param array|stdClass $resource
+     * @param array|object $resource
      * @param string $propertyPath
      *
      * @return Number
+     *
+     * @throws NumberExtractorException
      */
     public function extract($resource, string $propertyPath): Number
     {
+        if (is_object($resource)) {
+            $numberFromPublicProperty = $this->extractPublicPropertyFirst($resource, $propertyPath);
+
+            if (null !== $numberFromPublicProperty) {
+                return $numberFromPublicProperty;
+            }
+        }
+
         try {
             $plainValue = $this->propertyAccessor->getValue($resource, $propertyPath);
         } catch (InvalidArgumentException $e) {
@@ -97,6 +113,31 @@ class NumberExtractor
         }
 
         return $this->toNumber($plainValue);
+    }
+
+    /**
+     * Check if object contains provided public property and extract it as a Number, else return null
+     *
+     * @param $resource
+     * @param string $property
+     *
+     * @return Number|null
+     *
+     * @throws ReflectionException
+     */
+    private function extractPublicPropertyFirst($resource, string $property): ?Number
+    {
+        if (!property_exists($resource, $property)) {
+            return null;
+        }
+
+        $reflectedObj = new ReflectionClass($resource);
+
+        if (!$reflectedObj->getProperty($property)->isPublic()) {
+            return null;
+        }
+
+        return $this->toNumber($resource->{$property});
     }
 
     /**

@@ -33,7 +33,6 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
-use stdClass;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class NumberExtractorTest extends TestCase
@@ -82,17 +81,7 @@ class NumberExtractorTest extends TestCase
      */
     public function getValidData(): Generator
     {
-        $obj = new stdClass();
-        $obj->test = 17;
-
-        $obj2 = new stdClass();
-        $obj2->test2 = 19.5;
-
-        $obj3 = new stdClass();
-        $obj3->test3 = '300.03';
-
-        $obj->obj2 = $obj2;
-        $obj->obj3 = $obj3;
+        $fakeClass = new FakeClass();
 
         yield [
             ['test' => 15],
@@ -110,12 +99,12 @@ class NumberExtractorTest extends TestCase
             new Number('17.3'),
         ];
         yield [
-            $obj,
+            $fakeClass,
             'test',
             new Number('17'),
         ];
         yield [
-            $obj,
+            $fakeClass,
             'obj2.test2',
             new Number('19.5'),
         ];
@@ -126,9 +115,7 @@ class NumberExtractorTest extends TestCase
      */
     public function getDataWithInvalidResourcePropertyType(): Generator
     {
-        $obj = new stdClass();
-        $obj->test = 'this is not a numeric value';
-        $obj->test2 = null;
+        $obj = new FakeClass3();
 
         yield [
             ['test' => 'this is not a numeric value'],
@@ -136,11 +123,73 @@ class NumberExtractorTest extends TestCase
         ];
         yield [
             $obj,
-            'test',
+            'notNumeric',
         ];
-        yield [
-            $obj,
-            'test2',
-        ];
+    }
+}
+
+class FakeClass
+{
+    public $test = 17;
+
+    private $obj2;
+
+    private $obj3;
+
+    public function __construct()
+    {
+        $this->obj2 = new FakeClass2();
+        $this->obj3 = new FakeClass3();
+    }
+
+    /**
+     * @return int return different number than $test property to allow checking if public property has priority against public getter
+     */
+    public function getTest()
+    {
+        return 50;
+    }
+
+    /**
+     * @return FakeClass2
+     */
+    public function getObj2(): FakeClass2
+    {
+        return $this->obj2;
+    }
+
+    /**
+     * @return FakeClass3
+     */
+    public function getObj3(): FakeClass3
+    {
+        return $this->obj3;
+    }
+}
+
+class FakeClass2
+{
+    private $test2 = 19.5;
+
+    public function getTest2(): float
+    {
+        return $this->test2;
+    }
+}
+
+class FakeClass3
+{
+    private $test3 = '300.03';
+
+    private $notNumeric = 'this string is not numeric';
+
+    public function getTest3(): string
+    {
+        return $this->test3;
+    }
+
+    public function getNotNumeric(): string
+    {
+        return $this->notNumeric;
     }
 }

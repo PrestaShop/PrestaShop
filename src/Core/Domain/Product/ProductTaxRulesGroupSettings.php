@@ -24,20 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 /**
- * Is thrown when updating a product failed
+ * Some static settings of tax rules group inside Product context
  */
-class CannotUpdateProductException extends ProductException
+class ProductTaxRulesGroupSettings
 {
     /**
-     * When basic information update fails
+     * Value of tax rules group which reflects that product has no tax rules group applied
+     * Null value doesn't fit because it is used to identify partial updates
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
-
-    /**
-     * When updating product fields associated with price fails
-     */
-    const FAILED_UPDATE_PRICES = 20;
+    const NONE_APPLIED = 0;
 }

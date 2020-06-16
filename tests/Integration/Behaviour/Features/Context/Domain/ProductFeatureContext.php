@@ -30,14 +30,18 @@ use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
 use Language;
+use PHPUnit\Framework\Assert;
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -156,6 +160,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then product :productReference should have following values:
+     * @Then product :productReference has following values:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -165,12 +170,178 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
 
-        if (!empty($data['active'])) {
+        if (isset($data['active'])) {
             $status = PrimitiveUtils::castStringBooleanIntoBoolean($data['active']);
             $statusInWords = $status ? 'enabled' : 'disabled';
 
             if ((bool) $productForEditing->isActive() !== $status) {
                 throw new RuntimeException(sprintf('Product expected to be %s', $statusInWords));
+            }
+        }
+
+        $this->assertTaxRulesGroup($data, $productForEditing);
+        $this->assertPriceFields($data, $productForEditing->getPricesInformation());
+    }
+
+    /**
+     * @When I update product :productReference prices with following information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductPrices(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $command = new UpdateProductPricesCommand($this->getSharedStorage()->get($productReference));
+
+        if (isset($data['price'])) {
+            $command->setPrice($data['price']);
+        }
+        if (isset($data['ecotax'])) {
+            $command->setEcotax($data['ecotax']);
+        }
+        if (isset($data['tax rules group'])) {
+            $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['tax rules group'])->id;
+            $command->setTaxRulesGroupId($taxRulesGroupId);
+        }
+        if (isset($data['on_sale'])) {
+            $command->setOnSale(PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']));
+        }
+        if (isset($data['wholesale_price'])) {
+            $command->setWholesalePrice($data['wholesale_price']);
+        }
+        if (isset($data['unit_price'])) {
+            $command->setUnitPrice($data['unit_price']);
+        }
+        if (isset($data['unity'])) {
+            $command->setUnity($data['unity']);
+        }
+
+        try {
+            $this->getQueryBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I update product :productReference prices and apply non-existing tax rules group
+     *
+     * @param string $productReference
+     */
+    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        $command = new UpdateProductPricesCommand($productId);
+        // this id value does not exist, it is used on purpose.
+        $command->setTaxRulesGroupId(50000000);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param ProductForEditing $productForEditing
+     */
+    private function assertTaxRulesGroup(array $data, ProductForEditing $productForEditing)
+    {
+        if (!isset($data['tax rules group'])) {
+            return;
+        }
+
+        $expectedName = $data['tax rules group'];
+
+        if ('' === $expectedName) {
+            $expectedId = 0;
+        } else {
+            $expectedId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($expectedName)->id;
+        }
+        $actualId = $productForEditing->getPricesInformation()->getTaxRulesGroupId();
+
+        if ($expectedId !== $actualId) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected tax rules group "%s", but got "%s"',
+                    $expectedName,
+                    TaxRulesGroupFeatureContext::getTaxRulesGroupByName($actualId)->name
+                )
+            );
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param ProductPricesInformation $pricesInfo
+     */
+    private function assertPriceFields(array $data, ProductPricesInformation $pricesInfo): void
+    {
+        if (isset($data['on_sale'])) {
+            $expectedOnSale = PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']);
+            $onSaleInWords = $expectedOnSale ? 'to be on sale' : 'not to be on sale';
+
+            Assert::assertEquals(
+                $expectedOnSale,
+                $pricesInfo->isOnSale(),
+                sprintf('Expected product %s', $onSaleInWords)
+            );
+        }
+
+        if (isset($data['tax_rules_group_id'])) {
+            $expectedGroup = (int) $data['tax_rules_group_id'];
+            $actualGroup = $pricesInfo->getTaxRulesGroupId();
+
+            Assert::assertEquals(
+                $expectedGroup,
+                $actualGroup,
+                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedGroup, $actualGroup)
+            );
+        }
+
+        if (isset($data['unity'])) {
+            $expectedUnity = $data['unity'];
+            $actualUnity = $pricesInfo->getUnity();
+
+            Assert::assertEquals(
+                $expectedUnity,
+                $actualUnity,
+                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedUnity, $actualUnity)
+            );
+        }
+
+        $this->assertNumberPriceFields($data, $pricesInfo);
+    }
+
+    /**
+     * @param array $expectedPrices
+     * @param ProductPricesInformation $actualPrices
+     */
+    private function assertNumberPriceFields(array $expectedPrices, ProductPricesInformation $actualPrices)
+    {
+        $numberPriceFields = [
+            'price',
+            'ecotax',
+            'wholesale_price',
+            'unit_price',
+            'unit_price_ratio',
+        ];
+
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($numberPriceFields as $field) {
+            if (isset($expectedPrices[$field])) {
+                $expectedNumber = new Number((string) $expectedPrices[$field]);
+                $actualNumber = $propertyAccessor->getValue($actualPrices, $field);
+
+                if (!$expectedNumber->equals($actualNumber)) {
+                    throw new RuntimeException(
+                        sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
+                    );
+                }
             }
         }
     }
@@ -241,6 +412,31 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             ProductConstraintException::class,
             ProductConstraintException::INVALID_PRODUCT_TYPE
+        );
+    }
+
+    /**
+     * @Then /^I should get error that product "(.+)" is invalid$/
+     *
+     * @param string $priceField
+     */
+    public function assertLastPriceErrorConstraint(string $priceField)
+    {
+        $priceFieldErrorMap = [
+            'price' => ProductConstraintException::INVALID_PRICE,
+            'ecotax' => ProductConstraintException::INVALID_ECOTAX,
+            'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
+            'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
+            'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
+        ];
+
+        if (!array_key_exists($priceField, $priceFieldErrorMap)) {
+            throw new RuntimeException(sprintf('"%s" doesn\'t exist in priceField-errorCode map.', $priceField));
+        }
+
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            $priceFieldErrorMap[$priceField]
         );
     }
 

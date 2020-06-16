@@ -24,20 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 
 /**
- * Is thrown when updating a product failed
+ * Defines contract for UpdateProductPricesHandler
  */
-class CannotUpdateProductException extends ProductException
+interface UpdateProductPricesHandlerInterface
 {
     /**
-     * When basic information update fails
+     * @param UpdateProductPricesCommand $command
      */
-    const FAILED_UPDATE_BASIC_INFO = 10;
-
-    /**
-     * When updating product fields associated with price fails
-     */
-    const FAILED_UPDATE_PRICES = 20;
+    public function handle(UpdateProductPricesCommand $command): void;
 }

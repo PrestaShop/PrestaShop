@@ -34,7 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingH
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
 /**
@@ -42,6 +44,20 @@ use Product;
  */
 class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
+    /**
+     * @var NumberExtractor
+     */
+    private $numberExtractor;
+
+    /**
+     * @param NumberExtractor $numberExtractor
+     */
+    public function __construct(
+        NumberExtractor $numberExtractor
+    ) {
+        $this->numberExtractor = $numberExtractor;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -53,7 +69,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             (int) $product->id,
             (bool) $product->active,
             $this->getBasicInformation($product),
-            $this->getCategoriesInformation($product)
+            $this->getCategoriesInformation($product),
+            $this->getPricesInformation($product)
         );
     }
 
@@ -83,6 +100,25 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         $defaultCategoryId = (int) $product->id_category_default;
 
         return new ProductCategoriesInformation($categoryIds, $defaultCategoryId);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductPricesInformation
+     */
+    private function getPricesInformation(Product $product): ProductPricesInformation
+    {
+        return new ProductPricesInformation(
+            $this->numberExtractor->extract($product, 'price'),
+            $this->numberExtractor->extract($product, 'ecotax'),
+            (int) $product->id_tax_rules_group,
+            (bool) $product->on_sale,
+            $this->numberExtractor->extract($product, 'wholesale_price'),
+            $this->numberExtractor->extract($product, 'unit_price'),
+            (string) $product->unity,
+            $this->numberExtractor->extract($product, 'unit_price_ratio')
+        );
     }
 
     /**
