@@ -39,14 +39,13 @@ class MerchandiseReturnDetail
     private $merchandiseReturnDetailId;
 
     /**
-     * @var CustomizationId
+     * @var null|CustomizationId
      */
     private $customizationId;
 
-    public function __construct(MerchandiseReturnDetailId $merchandiseReturnDetailId, CustomizationId $customizationId)
+    public function __construct(int $merchandiseReturnDetailId)
     {
-        $this->merchandiseReturnDetailId = $merchandiseReturnDetailId;
-        $this->customizationId = $customizationId;
+        $this->merchandiseReturnDetailId = new MerchandiseReturnDetailId($merchandiseReturnDetailId);
     }
 
     /**
@@ -58,10 +57,20 @@ class MerchandiseReturnDetail
     }
 
     /**
-     * @return CustomizationId
+     * @return CustomizationId|null
      */
-    public function getCustomizationId(): CustomizationId
+    public function getCustomizationId(): ?CustomizationId
     {
         return $this->customizationId;
+    }
+
+    /**
+     * @param CustomizationId|null $customizationId
+     * @return MerchandiseReturnDetail
+     */
+    public function setCustomizationId(int $customizationId): MerchandiseReturnDetail
+    {
+        $this->customizationId = new CustomizationId($customizationId);
+        return $this;
     }
 }
