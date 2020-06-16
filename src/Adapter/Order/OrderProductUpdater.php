@@ -41,12 +41,19 @@ use Order;
 use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
+use Pack;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
+use PrestaShop\PrestaShop\Adapter\StockManager;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Product;
 use StockAvailable;
+use StockManagerFactory;
+use StockMvt;
 use Tools;
 use Validate;
+use Warehouse;
 
 /**
  * Increase or decrease quantity of an order's product.
@@ -64,9 +71,18 @@ class OrderProductUpdater
      */
     private $contextStateManager;
 
-    public function __construct(OrderAmountUpdater $orderAmountUpdater, ContextStateManager $contextStateManager)
-    {
+    /**
+     * @var OrderProductRemover
+     */
+    private $orderProductRemover;
+
+    public function __construct(
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderProductRemover $orderProductRemover,
+        ContextStateManager $contextStateManager
+    ) {
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderProductRemover = $orderProductRemover;
         $this->contextStateManager = $contextStateManager;
     }
 
@@ -101,10 +117,13 @@ class OrderProductUpdater
 
         try {
             // Update quantity on the cart and stock
-            $cart = $this->updateCartProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
+            $cart = $this->updateProductQuantity($cart, $order, $orderDetail, $oldQuantity, $newQuantity);
+
+            // Update product stocks
+            $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
 
             // Fix differences between cart's cartRules and order's cartRules
-            $cart = $this->syncCartAndOrderCartRules($cart, $order);
+            $cart = $this->syncCartAndOrderCartRules($cart, $order, $newQuantity <= 0);
 
             // Recalculate amounts of cartRules
             $this->recalculateCartRules($cart, $order);
@@ -129,15 +148,24 @@ class OrderProductUpdater
      *
      * @return Cart
      */
-    private function updateCartProductQuantity(
+    private function updateProductQuantity(
         Cart $cart,
+        Order $order,
         OrderDetail $orderDetail,
         int $oldQuantity,
         int $newQuantity
     ): Cart {
         $deltaQuantity = $oldQuantity - $newQuantity;
 
-        if (0 !== $deltaQuantity) {
+        if (0 === $deltaQuantity) {
+            return $cart;
+        }
+
+        if (0 === $newQuantity) {
+            // Product deletion
+            $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $oldQuantity);
+        } else {
+            // Update product in the cart
             $updateQuantityResult = $cart->updateQty(
                 abs($deltaQuantity),
                 $orderDetail->product_id,
@@ -151,14 +179,6 @@ class OrderProductUpdater
             } elseif (true !== $updateQuantityResult) {
                 throw new \LogicException('Something went wrong');
             }
-
-            // Update product available quantity
-            StockAvailable::updateQuantity(
-                $orderDetail->product_id,
-                $orderDetail->product_attribute_id,
-                $deltaQuantity,
-                $cart->id_shop
-            );
         }
 
         return $cart;
@@ -166,12 +186,188 @@ class OrderProductUpdater
 
     /**
      * @param Cart $cart
+     * @param OrderDetail $orderDetail
+     * @param int $oldQuantity
+     * @param int $newQuantity
+     *
+     * @throws OrderException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateStocks(Cart $cart, OrderDetail $orderDetail, int $oldQuantity, int $newQuantity): void
+    {
+        $deltaQuantity = $oldQuantity - $newQuantity;
+
+        if (0 === $deltaQuantity) {
+            return;
+        }
+
+        if (0 === $newQuantity) {
+            // Product deletion. Reinject quantity in stock
+            $this->reinjectQuantity($orderDetail, $oldQuantity, $newQuantity, true);
+        } elseif ($deltaQuantity > 0) {
+            // Increase product quantity
+            StockAvailable::updateQuantity(
+                $orderDetail->product_id,
+                $orderDetail->product_attribute_id,
+                $deltaQuantity,
+                $cart->id_shop
+            );
+        } else {
+            // Decrease product quantity. Reinject quantity in stock
+            $this->reinjectQuantity($orderDetail, $oldQuantity, $newQuantity, false);
+        }
+    }
+
+    /**
+     * @param OrderDetail $orderDetail
+     * @param int $oldQuantity
+     * @param int $newQuantity
+     * @param bool $delete
+     *
+     * @throws OrderException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    protected function reinjectQuantity(
+        OrderDetail $orderDetail,
+        int $oldQuantity,
+        int $newQuantity,
+        $delete = false
+    ) {
+        // Reinject product
+        $reinjectableQuantity = $oldQuantity - $newQuantity;
+        $quantityToReinject = $oldQuantity > $reinjectableQuantity ? $reinjectableQuantity : $oldQuantity;
+
+        $product = new Product(
+            $orderDetail->product_id,
+            false,
+            (int) Context::getContext()->language->id,
+            (int) $orderDetail->id_shop
+        );
+
+        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+            && $product->advanced_stock_management
+            && $orderDetail->id_warehouse != 0
+        ) {
+            $manager = StockManagerFactory::getManager();
+            $movements = StockMvt::getNegativeStockMvts(
+                $orderDetail->id_order,
+                $orderDetail->product_id,
+                $orderDetail->product_attribute_id,
+                $quantityToReinject
+            );
+
+            foreach ($movements as $movement) {
+                if ($quantityToReinject > $movement['physical_quantity']) {
+                    $quantityToReinject = $movement['physical_quantity'];
+                }
+
+                if (Pack::isPack((int) $product->id)) {
+                    // Gets items
+                    if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
+                        || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            && Configuration::get('PS_PACK_STOCK_TYPE') > 0)
+                    ) {
+                        $products_pack = Pack::getItems((int) $product->id, (int) Configuration::get('PS_LANG_DEFAULT'));
+                        // Foreach item
+                        foreach ($products_pack as $product_pack) {
+                            if ($product_pack->advanced_stock_management == 1) {
+                                $manager->addProduct(
+                                    $product_pack->id,
+                                    $product_pack->id_pack_product_attribute,
+                                    new Warehouse($movement['id_warehouse']),
+                                    $product_pack->pack_quantity * $quantityToReinject,
+                                    null,
+                                    $movement['price_te']
+                                );
+                            }
+                        }
+                    }
+
+                    if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
+                        || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        || (
+                            $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
+                                || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
+                        )
+                    ) {
+                        $manager->addProduct(
+                            $orderDetail->product_id,
+                            $orderDetail->product_attribute_id,
+                            new Warehouse($movement['id_warehouse']),
+                            $quantityToReinject,
+                            null,
+                            $movement['price_te']
+                        );
+                    }
+                } else {
+                    $manager->addProduct(
+                        $orderDetail->product_id,
+                        $orderDetail->product_attribute_id,
+                        new Warehouse($movement['id_warehouse']),
+                        $quantityToReinject,
+                        null,
+                        $movement['price_te']
+                    );
+                }
+            }
+
+            $productId = $orderDetail->product_id;
+
+            if ($delete) {
+                $orderDetail->delete();
+            }
+
+            StockAvailable::synchronize($productId);
+        } elseif ($orderDetail->id_warehouse == 0) {
+            StockAvailable::updateQuantity(
+                $orderDetail->product_id,
+                $orderDetail->product_attribute_id,
+                $quantityToReinject,
+                $orderDetail->id_shop,
+                true,
+                [
+                    'id_order' => $orderDetail->id_order,
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON'),
+                ]
+            );
+
+            // sync all stock
+            (new StockManager())->updatePhysicalProductQuantity(
+                (int) $orderDetail->id_shop,
+                (int) Configuration::get('PS_OS_ERROR'),
+                (int) Configuration::get('PS_OS_CANCELED'),
+                null,
+                (int) $orderDetail->id_order
+            );
+
+            if ($delete) {
+                $orderDetail->delete();
+            }
+        } else {
+            throw new OrderException('This product cannot be re-stocked.');
+        }
+    }
+
+    /**
+     * @param Cart $cart
      * @param Order $order
+     * @param bool $delete
      *
      * @return Cart
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
-    private function syncCartAndOrderCartRules(Cart $cart, Order $order): Cart
+    private function syncCartAndOrderCartRules(Cart $cart, Order $order, bool $delete = false): Cart
     {
+        Context::getContext()->cart = $cart;
+        CartRule::autoAddToCart();
+        CartRule::autoRemoveFromCart();
+
         $orderCartRulesData = $order->getCartRules();
         $orderCartRulesIds = array_map(
             function (array $orderCartRuleData) { return (int) $orderCartRuleData['id_cart_rule']; },
@@ -189,11 +385,22 @@ class OrderProductUpdater
         }
 
         if (count($orderCartRulesIds) > count($cartRulesIds)) {
-            sort($orderCartRulesIds);
-            sort($cartRulesIds);
+            if ($delete) { // Product deletion, the extra order cart rules have to be deleted
+                foreach ($order->getCartRules() as $orderCartRule) {
+                    foreach (array_diff($orderCartRulesIds, $cartRulesIds) as $idCartRule) {
+                        if ($idCartRule == $orderCartRule['id_cart_rule']) {
+                            $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
+                            $orderCartRule->delete();
+                        }
+                    }
+                }
+            } else { // desynchronization of cartRules, need to be fixed
+                sort($orderCartRulesIds);
+                sort($cartRulesIds);
 
-            foreach (array_diff($orderCartRulesIds, $cartRulesIds) as $cartRuleId) {
-                $cart->addCartRule($cartRuleId);
+                foreach (array_diff($orderCartRulesIds, $cartRulesIds) as $cartRuleId) {
+                    $cart->addCartRule($cartRuleId);
+                }
             }
         } else {
             throw new \LogicException('Cart has more cart rules than order. This should never happen.');
@@ -212,9 +419,6 @@ class OrderProductUpdater
     private function recalculateCartRules(Cart $cart, Order $order): void
     {
         $computingPrecision = $this->getPrecisionFromCart($cart);
-        Context::getContext()->cart = $cart;
-        CartRule::autoAddToCart();
-        CartRule::autoRemoveFromCart();
 
         foreach ($order->getCartRules() as $orderCartRuleData) {
             $orderCartRule = new OrderCartRule((int) $orderCartRuleData['id_order_cart_rule']);

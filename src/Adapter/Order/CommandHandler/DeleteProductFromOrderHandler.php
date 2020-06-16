@@ -27,19 +27,16 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
-use CartRule;
-use Configuration;
 use Currency;
 use Customer;
 use Exception;
 use Hook;
 use Order;
-use OrderCarrier;
-use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
@@ -62,14 +59,22 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      * @var OrderAmountUpdater
      */
     private $orderAmountUpdater;
+    /**
+     * @var OrderProductUpdater
+     */
+    private $orderProductUpdater;
 
     /**
      * @param ContextStateManager $contextStateManager
      */
-    public function __construct(ContextStateManager $contextStateManager, OrderAmountUpdater $orderAmountUpdater)
-    {
+    public function __construct(
+        ContextStateManager $contextStateManager,
+        OrderAmountUpdater $orderAmountUpdater,
+        OrderProductUpdater $orderProductUpdater
+    ) {
         $this->contextStateManager = $contextStateManager;
         $this->orderAmountUpdater = $orderAmountUpdater;
+        $this->orderProductUpdater = $orderProductUpdater;
     }
 
     /**
@@ -90,18 +95,15 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             ->setCustomer(new Customer($order->id_customer));
 
         try {
-            $result = true;
-            $result &= $this->updateCart($orderDetail, $cart);
-            $result &= $this->updateOrderCartRules($order, $cart);
-            $result &= $this->updateOrderInvoice($orderDetail);
+            $order = $this->orderProductUpdater->update(
+                $order,
+                $orderDetail,
+                $orderDetail->product_quantity,
+                0,
+                $orderDetail->id_order_invoice != 0
+            );
 
-            // Reinject quantity in stock
-            $this->reinjectQuantity($orderDetail, $orderDetail->product_quantity, true);
-
-            $result &= $this->updateOrder($order, $orderDetail, $cart);
-            $result &= $this->updateOrderWeight($order);
-
-            if (!$result) {
+            if (!$this->updateOrderInvoice($orderDetail)) {
                 throw new OrderException('An error occurred while attempting to delete product from order.');
             }
 
@@ -114,29 +116,6 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         }
 
         $this->contextStateManager->restoreContext();
-    }
-
-    /**
-     * @param OrderDetail $orderDetail
-     * @param Cart $cart
-     *
-     * @return bool
-     */
-    private function updateCart(OrderDetail $orderDetail, Cart &$cart)
-    {
-        // Update Product Quantity in the cart
-        $cart->updateQty(
-            $orderDetail->product_quantity,
-            $orderDetail->product_id,
-            $orderDetail->product_attribute_id,
-            false,
-            'down'
-        );
-        // Remove & Add CartRules applied to cart
-        CartRule::autoRemoveFromCart();
-        CartRule::autoAddToCart();
-
-        return $cart->update();
     }
 
     /**
@@ -215,43 +194,6 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             $order_invoice->total_products_wt -= $orderDetail->total_price_tax_incl;
 
             return $order_invoice->update();
-        }
-
-        return true;
-    }
-
-    /**
-     * @param Order $order
-     * @param OrderDetail $orderDetail
-     * @param Cart $cart
-     *
-     * @return bool
-     */
-    private function updateOrder(Order $order, OrderDetail $orderDetail, Cart $cart)
-    {
-        $order = $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
-
-        return $order->update();
-    }
-
-    /**
-     * @param Order $order
-     *
-     * @return bool
-     */
-    private function updateOrderWeight(Order $order)
-    {
-        $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-
-        if (Validate::isLoadedObject($orderCarrier)) {
-            $orderCarrier->weight = (float) $order->getTotalWeight();
-            $updated = $orderCarrier->update();
-
-            if ($updated) {
-                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
-            }
-
-            return $updated;
         }
 
         return true;
