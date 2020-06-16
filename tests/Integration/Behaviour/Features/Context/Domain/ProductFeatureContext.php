@@ -233,6 +233,9 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertStringProperty($productForEditing, $data, 'ean13');
         $this->assertStringProperty($productForEditing, $data, 'mpn');
         $this->assertStringProperty($productForEditing, $data, 'reference');
+
+        $this->assertTaxRulesGroup($data, $productForEditing);
+        $this->assertPriceFields($data, $productForEditing->getPricesInformation());
     }
 
     /**
@@ -317,9 +320,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
         }
-
-        $this->assertTaxRulesGroup($data, $productForEditing);
-        $this->assertPriceFields($data, $productForEditing->getPricesInformation());
     }
 
     /**
@@ -427,17 +427,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $expectedOnSale,
                 $pricesInfo->isOnSale(),
                 sprintf('Expected product %s', $onSaleInWords)
-            );
-        }
-
-        if (isset($data['tax_rules_group_id'])) {
-            $expectedGroup = (int) $data['tax_rules_group_id'];
-            $actualGroup = $pricesInfo->getTaxRulesGroupId();
-
-            Assert::assertEquals(
-                $expectedGroup,
-                $actualGroup,
-                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedGroup, $actualGroup)
             );
         }
 
@@ -568,6 +557,12 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
             'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
         ];
+
+        if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
+            throw new RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
+        }
+
+        return $constraintErrorFieldMap[$fieldName];
     }
 
     /**
