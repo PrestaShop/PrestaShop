@@ -25,7 +25,7 @@ Feature: Update product basic information from Back Office (BO)
     Given product "product1" localized "name" is "en-US:photo of funny mug"
     When I update product "product1" basic information with following values:
       | name       | en-US:#hashtagmug        |
-    Then I should get error that product field name is invalid
+    Then I should get error that product name is invalid
     And product "product1" localized "name" should be "en-US:photo of funny mug"
 
   Scenario: I only change product virtual property and leave other properties unchanged
@@ -44,9 +44,9 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description_short" is "en-US:Just a nice mug"
     When I update product "product1" basic information with following values:
       | description       | en-US:<script>            |
-    Then I should get error that product field description is invalid
+    Then I should get error that product description is invalid
     And product "product1" localized "description" should be "en-US:nice mug"
     When I update product "product1" basic information with following values:
       | description_short       | en-US:<div onmousedown=hack()>   |
-    Then I should get error that product field "description_short" is invalid
+    Then I should get error that product "description_short" is invalid
     And product "product1" localized "description_short" should be "en-US:Just a nice mug"
