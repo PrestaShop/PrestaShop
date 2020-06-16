@@ -43,14 +43,6 @@ use Tag;
 final class UpdateProductOptionsHandler extends AbstractProductHandler implements UpdateProductOptionsHandlerInterface
 {
     /**
-     * Only fields defined in this array will be updated.
-     * It is necessary to avoid resetting some of product properties (which are not loaded by default) during partial update
-     *
-     * @var bool[]
-     */
-    private $fieldsToUpdate = [];
-
-    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductOptionsCommand $command): void
