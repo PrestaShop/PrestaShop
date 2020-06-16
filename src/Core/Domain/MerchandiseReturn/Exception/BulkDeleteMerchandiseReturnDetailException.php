@@ -28,6 +28,33 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
 
+use Exception;
+
 class BulkDeleteMerchandiseReturnDetailException extends MerchandiseReturnException
 {
+    /**
+     * @var int[]
+     */
+    private $merchandiseReturnDetailIds;
+
+    /**
+     * @param int[] $merchandiseReturnDetailIds
+     * @param string $message
+     * @param int $code
+     * @param Exception $previous
+     */
+    public function __construct(array $merchandiseReturnDetailIds, $message = '', $code = 0, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->merchandiseReturnDetailIds = $merchandiseReturnDetailIds;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getMerchandiseReturnDetailIds(): array
+    {
+        return $this->merchandiseReturnDetailIds;
+    }
 }

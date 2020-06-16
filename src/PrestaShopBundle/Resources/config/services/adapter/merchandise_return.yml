@@ -35,3 +35,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand'
+
+  prestashop.adapter.merchandise_return.command_handler.bulk_delete_product_from_merchandise_return_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler\BulkDeleteProductFromMerchandiseReturnHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\BulkDeleteProductFromMerchandiseReturnCommand'
