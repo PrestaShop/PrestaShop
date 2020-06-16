@@ -908,9 +908,16 @@ class WebserviceRequestCore
      */
     protected function groupShopExists($params)
     {
+        $idShopGroup = null;
         if (isset($params['id_shop_group']) && is_numeric($params['id_shop_group'])) {
-            Shop::setContext(Shop::CONTEXT_GROUP, (int) $params['id_shop_group']);
-            self::$shopIDs = Shop::getShops(true, (int) $params['id_shop_group'], true);
+            $idShopGroup = (int) $params['id_shop_group'];
+        } else if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop'])) {
+            $idShopGroup = (int) $params['id_group_shop'];
+        }
+
+        if (null !== $idShopGroup) {
+            Shop::setContext(Shop::CONTEXT_GROUP, $idShopGroup);
+            self::$shopIDs = Shop::getShops(true, $idShopGroup, true);
             if (!is_countable(self::$shopIDs) || count(self::$shopIDs) == 0) {
                 // @FIXME Set ErrorCode !
                 $this->setError(500, 'This shop group doesn\'t have shops', 999);
