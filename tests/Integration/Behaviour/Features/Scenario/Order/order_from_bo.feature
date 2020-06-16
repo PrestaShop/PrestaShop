@@ -361,7 +361,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  Scenario: Add discount with code to whole order, when a product is removed the discount should still be present
+  Scenario: Add discount to whole order, when a product is removed the discount should still be present
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should have 0 invoices
