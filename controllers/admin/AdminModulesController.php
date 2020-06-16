@@ -1415,7 +1415,13 @@ class AdminModulesControllerCore extends AdminController
         $translateLinks = [];
 
         if (Tools::getIsset('configure')) {
+            /** @var Module|false $module */
             $module = Module::getInstanceByName(Tools::getValue('configure'));
+
+            if (false === $module) {
+                return;
+            }
+
             $isNewTranslateSystem = $module->isUsingNewTranslationSystem();
             $link = Context::getContext()->link;
             foreach ($languages as $lang) {

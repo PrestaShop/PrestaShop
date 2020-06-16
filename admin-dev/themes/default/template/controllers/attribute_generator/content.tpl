@@ -95,7 +95,7 @@
 
 				<div class="alert alert-info">{l s='You\'re currently generating combinations for the following product:'} <b>{$product_name|escape:'html':'UTF-8'}</b></div>
 
-				<div class="alert alert-info"><strong>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "Add")'}</strong></div>
+				<div class="alert alert-info"><strong>{l s='Step 1: On the left side, select the attributes you want to use (Hold down the "Ctrl" key on your keyboard and validate by clicking on "%add_label%")' d='Admin.Catalog.Notification' sprintf=['%add_label%' => {l s='Add' d='Admin.Actions'}]}</strong></div>
 
 				{foreach $attribute_groups as $k => $attribute_group}
 					{if isset($attribute_js[$attribute_group['id_attribute_group']])}
@@ -135,7 +135,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="alert alert-info">{l s='Please click on "Generate these combinations".'}</div>
+				<div class="alert alert-info">{l s='Please click on "%generate_label%".' d='Admin.Catalog.Notification' sprintf=['%generate_label%' => {l s='Generate these combinations'}]}</div>
 				<button type="submit" class="btn btn-default" name="generate"><i class="icon-random"></i> {l s='Generate these combinations'}</button>
 			</div>
 		</div>

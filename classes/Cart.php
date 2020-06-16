@@ -1633,15 +1633,10 @@ class CartCore extends ObjectModel
      */
     public function orderExists()
     {
-        $cache_id = 'Cart::orderExists_' . (int) $this->id;
-        if (!Cache::isStored($cache_id)) {
-            $result = (bool) Db::getInstance()->getValue('SELECT count(*) FROM `' . _DB_PREFIX_ . 'orders` WHERE `id_cart` = ' . (int) $this->id);
-            Cache::store($cache_id, $result);
-
-            return $result;
-        }
-
-        return Cache::retrieve($cache_id);
+        return (bool) Db::getInstance()->getValue(
+            'SELECT count(*) FROM `' . _DB_PREFIX_ . 'orders` WHERE `id_cart` = ' . (int) $this->id,
+            false
+        );
     }
 
     /**

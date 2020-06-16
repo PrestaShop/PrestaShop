@@ -25,13 +25,13 @@
 <div class="images-container">
   {block name='product_cover'}
     <div class="product-cover">
-      {if $product.cover}
+      {if $product.default_image}
         <img
           class="js-qv-product-cover"
-          src="{$product.cover.bySize.large_default.url}"
-          {if !empty($product.cover.legend)}
-            alt="{$product.cover.legend}"
-            title="{$product.cover.legend}"
+          src="{$product.default_image.bySize.large_default.url}"
+          {if !empty($product.default_image.legend)}
+            alt="{$product.default_image.legend}"
+            title="{$product.default_image.legend}"
           {else}
             alt="{$product.name}"
           {/if}
@@ -53,7 +53,7 @@
         {foreach from=$product.images item=image}
           <li class="thumb-container">
             <img
-              class="thumb js-thumb {if $image.id_image == $product.cover.id_image} selected {/if}"
+              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected {/if}"
               data-image-medium-src="{$image.bySize.medium_default.url}"
               data-image-large-src="{$image.bySize.large_default.url}"
               src="{$image.bySize.home_default.url}"

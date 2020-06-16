@@ -53,8 +53,8 @@ class Money
      */
     public function __construct(Number $amount, CurrencyId $currencyId)
     {
-        if (!$amount->isGreaterOrEqualThan(new Number('0'))) {
-            throw new DomainConstraintException(sprintf('Money amount cannot be lower than zero, %s given', (string) $amount), DomainConstraintException::INVALID_MONEY_AMOUNT);
+        if (!$amount->isGreaterOrEqualThanZero()) {
+            throw new DomainConstraintException(sprintf('Money amount cannot be lower than zero, %f given', (string) $amount), DomainConstraintException::INVALID_MONEY_AMOUNT);
         }
 
         $this->amount = $amount;

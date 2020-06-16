@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\editableCatalogPriceRule;
@@ -64,7 +63,7 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
         $from = $editableCatalogPriceRule->getFrom();
         $to = $editableCatalogPriceRule->getTo();
 
-        if ($price->isLowerOrEqualThan(new Number('0'))) {
+        if ($price->isLowerOrEqualThanZero()) {
             $price = null;
             $leaveInitialPrice = true;
         }

@@ -70,7 +70,7 @@ class OrderDetailRefund
             throw new InvalidAmountException();
         }
 
-        if ($decimalRefundedAmount->isLowerOrEqualThan(new Number('0'))) {
+        if ($decimalRefundedAmount->isLowerOrEqualThanZero()) {
             throw new InvalidCancelProductException(InvalidCancelProductException::INVALID_AMOUNT);
         }
 

@@ -120,7 +120,7 @@ class OrderRefundCalculator
         }
 
         // Something has to be refunded (check refunds count instead of the sum in case a voucher is implied)
-        if (count($productRefunds) <= 0 && $refundedAmount->isLowerOrEqualThan($numberZero)) {
+        if (count($productRefunds) <= 0 && $refundedAmount->isLowerOrEqualThanZero()) {
             throw new InvalidCancelProductException(InvalidCancelProductException::NO_REFUNDS);
         }
 

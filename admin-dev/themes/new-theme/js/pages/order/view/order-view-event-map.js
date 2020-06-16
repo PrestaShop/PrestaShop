@@ -29,4 +29,5 @@ export default {
   productUpdated: 'productUpdated',
   productEditionCanceled: 'productEditionCanceled',
   productListPaginated: 'productListPaginated',
+  productListNumberPerPage: 'productListNumberPerPage',
 };

@@ -377,7 +377,7 @@ abstract class PaymentModuleCore extends Module
                     $transaction_id = null;
                 }
 
-                if (!$order->addOrderPayment($amount_paid, null, $transaction_id)) {
+                if (!isset($order) || !$order->addOrderPayment($amount_paid, null, $transaction_id)) {
                     PrestaShopLogger::addLog('PaymentModule::validateOrder - Cannot save Order Payment', 3, null, 'Cart', (int) $id_cart, true);
 
                     throw new PrestaShopException('Can\'t save Order Payment');
@@ -398,7 +398,7 @@ abstract class PaymentModuleCore extends Module
                         $message .= '<br />' . $this->trans('Warning: the secure key is empty, check your payment account before validation', [], 'Admin.Payment.Notification');
                     }
                     // Optional message to attach to this order
-                    if (isset($message) & !empty($message)) {
+                    if (!empty($message)) {
                         $msg = new Message();
                         $message = strip_tags($message, '<br>');
                         if (Validate::isCleanHtml($message)) {

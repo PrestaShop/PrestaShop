@@ -46,10 +46,22 @@ export default class OrderViewPage {
     this.orderDocumentsRefresher = new OrderDocumentsRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
     this.orderProductCancel = new OrderProductCancel();
+    this.router = new Router();
     this.listenToEvents();
   }
 
   listenToEvents() {
+    $(OrderViewPageMap.invoiceAddressEditBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
+    $(OrderViewPageMap.deliveryAddressEditBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
+
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
       // Remove the row
       const $row = $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId));
@@ -72,7 +84,6 @@ export default class OrderViewPage {
         currentPage -= 1;
       }
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        orderId: event.orderId,
         numPage: currentPage,
       });
 
@@ -134,7 +145,6 @@ export default class OrderViewPage {
         }
         // Move to last page
         EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-          orderId: event.orderId,
           numPage: numPages,
         });
       }
@@ -181,7 +191,6 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', (event) => {
       const button = $(event.relatedTarget);
       const packItems = button.data('packItems');
-      const router = new Router();
       $(OrderViewPageMap.productPackModal.rows).remove();
       packItems.forEach((item) => {
         const $item = $(OrderViewPageMap.productPackModal.template).clone();
@@ -190,7 +199,7 @@ export default class OrderViewPage {
         $item.find(OrderViewPageMap.productPackModal.product.name).html(item.name);
         $item.find(OrderViewPageMap.productPackModal.product.link).attr(
           'href',
-          router.generate('admin_product_form', {id: item.id}),
+          this.router.generate('admin_product_form', {id: item.id}),
         );
         if (item.reference !== '') {
           $item.find(OrderViewPageMap.productPackModal.product.ref).append(item.reference);
@@ -231,7 +240,6 @@ export default class OrderViewPage {
       event.preventDefault();
       const $btn = $(event.currentTarget);
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        orderId: $btn.data('orderId'),
         numPage: $btn.data('page'),
       });
     });
@@ -243,7 +251,6 @@ export default class OrderViewPage {
       }
       const activePage = this.getActivePage();
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        orderId: $(activePage).data('orderId'),
         numPage: parseInt($(activePage).html(), 10) + 1,
       });
     });
@@ -255,8 +262,15 @@ export default class OrderViewPage {
       }
       const activePage = this.getActivePage();
       EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        orderId: $(activePage).data('orderId'),
         numPage: parseInt($(activePage).html(), 10) - 1,
+      });
+    });
+    $(OrderViewPageMap.productsTablePaginationNumberSelector).on('change', (event) => {
+      event.preventDefault();
+      const $select = $(event.currentTarget);
+      const numPerPage = parseInt($select.val(), 10);
+      EventEmitter.emit(OrderViewEventMap.productListNumberPerPage, {
+        numPerPage,
       });
     });
 
@@ -265,6 +279,23 @@ export default class OrderViewPage {
       this.listenForProductDelete();
       this.listenForProductEdit();
       this.resetToolTips();
+    });
+
+    EventEmitter.on(OrderViewEventMap.productListNumberPerPage, (event) => {
+      // Update pagination num per page (page links are regenerated)
+      this.orderProductRenderer.updateNumPerPage(event.numPerPage);
+
+      // Paginate to page 1
+      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+        numPage: 1,
+      });
+
+      // Save new config
+      $.ajax({
+        url: this.router.generate('admin_orders_configure_product_pagination'),
+        method: 'POST',
+        data: {numPerPage: event.numPerPage},
+      });
     });
   }
 

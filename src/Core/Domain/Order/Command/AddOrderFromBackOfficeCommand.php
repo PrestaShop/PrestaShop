@@ -28,7 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
+use PrestaShopBundle\Exception\InvalidModuleException;
 
 /**
  * Adds new order from given cart.
@@ -122,24 +123,27 @@ class AddOrderFromBackOfficeCommand
     /**
      * @param string $moduleName
      *
-     * @throws OrderException
+     * @throws InvalidModuleException
      */
     private function assertIsModuleName($moduleName)
     {
         if (!is_string($moduleName) || !preg_match('/^[a-zA-Z0-9_-]+$/', $moduleName)) {
-            throw new OrderException('Payment module name is invalid');
+            throw new InvalidModuleException();
         }
     }
 
     /**
      * @param int $orderStateId
      *
-     * @throws OrderException
+     * @throws InvalidOrderStateException
      */
     private function assertOrderStateIsPositiveInt($orderStateId)
     {
         if (!is_int($orderStateId) || 0 >= $orderStateId) {
-            throw new OrderException('Invalid order state id');
+            throw new InvalidOrderStateException(
+                InvalidOrderStateException::INVALID_ID,
+                'Invalid order state id'
+            );
         }
     }
 }

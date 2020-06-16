@@ -618,7 +618,7 @@ class CurrencyController extends FrameworkBundleAdminController
                 'Admin.International.Notification'
             ),
             InvalidUnofficialCurrencyException::class => $this->trans(
-                'Oops... it looks like this ISO code already exists. If you are: <ul><li>trying to create an alternative currency, you must type a different ISO code</li><li>trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box</li></ul>',
+                'Oops... it looks like this ISO code already exists. If you are: [1][2]trying to create an alternative currency, you must type a different ISO code[/2][2]trying to modify the currency with ISO code %isoCode%, make sure you did not check the creation box[/2][/1]',
                 'Admin.International.Notification',
                 [
                     '%isoCode%' => $isoCode,

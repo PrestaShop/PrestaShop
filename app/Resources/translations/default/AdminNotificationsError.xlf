@@ -1317,11 +1317,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <target>Image format not recognized, allowed formats are: .gif, .jpg, .png</target>
         <note>Line: 505</note>
       </trans-unit>
-      <trans-unit id="d46b3092a3a483fc500357fd90be18d4">
-        <source>The address for this supplier have been deleted</source>
-        <target>The address for this supplier have been deleted</target>
-        <note>Line: 456</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Customer/CustomerController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1353,16 +1348,6 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
         <source>Positive product quantity is required</source>
         <target>Positive product quantity is required</target>
         <note>Line: 536</note>
-      </trans-unit>
-      <trans-unit id="86f57ed3b1fc0dc03e6cb040ec54add3">
-        <source>Selected currency cannot be used because it is deleted</source>
-        <target>Selected currency cannot be used because it is deleted</target>
-        <note>Line: 548</note>
-      </trans-unit>
-      <trans-unit id="f956270d456bfab7964f3a3e690d9482">
-        <source>Selected currency cannot be used because it is disabled</source>
-        <target>Selected currency cannot be used because it is disabled</target>
-        <note>Line: 552</note>
       </trans-unit>
       <trans-unit id="3e74675c59f263c1cbb391eca17051ee">
         <source>Custom field text cannot be longer than %limit% characters</source>
