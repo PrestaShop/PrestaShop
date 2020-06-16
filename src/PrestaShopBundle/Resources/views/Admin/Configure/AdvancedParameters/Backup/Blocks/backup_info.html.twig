@@ -27,7 +27,7 @@
   <div class="alert alert-info" role="alert">
     {% if isHostMode %}
       <h4>{{ 'How to restore a database backup'|trans({}, 'Admin.Advparameters.Notification') }}</h4>
-      <p>{{ 'If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].'|trans({'[1]': '<strong>',  '[/1]': '</strong>', '[2]': '<a class="_blank" href="https://addons.prestashop.com/support/16298-support-essentiel-plan.html">', '[/2]': '</a>'}, 'Admin.Advparameters.Notification')|raw }}</p>
+      <p>{{ 'If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].'|trans({'[1]': '<strong>',  '[/1]': '</strong>', '[2]': '<a target="_blank" rel="noopener noreferrer nofollow" href="https://addons.prestashop.com/support/16298-support-essentiel-plan.html">', '[/2]': '</a>'}, 'Admin.Advparameters.Notification')|raw }}</p>
       <p>{{ 'Our team will take care of restoring your database safely.'|trans({}, 'Admin.Advparameters.Notification') }}</p>
       <br>
       <p>{{ 'Why can\'t I restore it by myself?'|trans({}, 'Admin.Advparameters.Notification') }}</p>

@@ -371,7 +371,7 @@
             <li><a href="{l s='https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">extension</i> {l s='PrestaShop Marketplace' d='Admin.Navigation.Header'}</a></li>
             <li><a href="{l s='https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">help</i> {l s='Help Center' d='Admin.Global'}</a></li>
             {if $host_mode}
-              <li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="material-icons">settings_applications</i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
+              <li><a href="https://www.prestashop.com/cloud/" target="_blank" rel="noopener noreferrer nofollow"><i class="material-icons">settings_applications</i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
             {/if}
             <li class="divider"></li>
             <li class="signout text-center" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}"><i class="material-icons visible-xs">power_settings_new</i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>

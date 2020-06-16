@@ -163,14 +163,14 @@ $(function() {
             <tbody>
             {foreach $addons key=key item=addon}
                 <tr>
-                    <td><a href="{$addon.href|escape:'html':'UTF-8'}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'html':'UTF-8'}</strong></a></td>
-                    <td><a href="{$addon.href|escape:'html':'UTF-8'}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{if is_string($addon.description)}{$addon.description|truncate:256:'...'|escape:'html':'UTF-8'}{/if}</a></td>
+                    <td><a href="{$addon.href|escape:'html':'UTF-8'}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" target="_blank" rel="noopener noreferrer nofollow"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'html':'UTF-8'}</strong></a></td>
+                    <td><a href="{$addon.href|escape:'html':'UTF-8'}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" target="_blank" rel="noopener noreferrer nofollow">{if is_string($addon.description)}{$addon.description|truncate:256:'...'|escape:'html':'UTF-8'}{/if}</a></td>
                 </tr>
             {/foreach}
         </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="2" class="text-center"><a href="https://addons.prestashop.com/search.php?search_query={$query|urlencode}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank"><strong>{l s='Show more results...' d='Admin.Navigation.Search'}</strong></a></td>
+                    <td colspan="2" class="text-center"><a href="https://addons.prestashop.com/search.php?search_query={$query|urlencode}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" target="_blank" rel="noopener noreferrer nofollow"><strong>{l s='Show more results...' d='Admin.Navigation.Search'}</strong></a></td>
                 </tr>
             </tfoot>
         </table>
