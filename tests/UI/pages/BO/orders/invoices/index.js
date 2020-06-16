@@ -13,17 +13,16 @@ module.exports = class Invoice extends BOBasePage {
 
     // Invoices page
     // By date form
-    this.generateByDateForm = '[name="generate_by_date"]';
-    this.dateFromInput = `${this.generateByDateForm} #form_generate_by_date_date_from`;
-    this.dateToInput = `${this.generateByDateForm} #form_generate_by_date_date_to`;
-    this.generatePdfByDateButton = `${this.generateByDateForm} .btn.btn-primary`;
+    this.generateByDateForm = '#form-generate-invoices-by-date';
+    this.dateFromInput = `${this.generateByDateForm} #form_date_from`;
+    this.dateToInput = `${this.generateByDateForm} #form_date_to`;
+    this.generatePdfByDateButton = `${this.generateByDateForm} button`;
     // By order status form
-    this.generateByStatusForm = '[name="generate_by_status"]';
-    this.formGenerateByStatus = '#form_generate_by_status_order_states';
-    this.statusOrderStateSpan = `${this.formGenerateByStatus} span:not(.badge)`;
-    this.generatePdfByStatusButton = `${this.generateByStatusForm} .btn.btn-primary`;
+    this.generateByStatusForm = '#form-generate-invoices-by-status';
+    this.statusOrderStateSpan = `${this.generateByStatusForm} span:not(.badge)`;
+    this.generatePdfByStatusButton = `${this.generateByStatusForm} button`;
     // Invoice options form
-    this.invoiceOptionsForm = '[name="invoice_options"]';
+    this.invoiceOptionsForm = '#form-invoices-options';
     this.invoiceOptionsEnable = id => `${this.invoiceOptionsForm
     } label[for='form_invoice_options_enable_invoices_${id}']`;
     this.taxBreakdownEnable = id => `${this.invoiceOptionsForm
