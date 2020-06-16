@@ -26,12 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
+use Configuration;
 use Context;
 use ImageManager;
 use ImageType;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
