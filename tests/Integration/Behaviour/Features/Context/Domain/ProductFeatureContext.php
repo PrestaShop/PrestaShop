@@ -160,24 +160,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
-        //@todo: refactor to some better way? Needed this for product tags
-        //empty($expectedLocalizedValues) is not enough, because it might have empty values for each lang
-        $isEmpty = true;
-        foreach ($expectedLocalizedValues as $value) {
-            if (!empty($value)) {
-                //if array contains at least one non empty value inside then it is not empty.
-                $isEmpty = false;
-            }
-        }
-
-        // assert case when all values should be empty
-        if ($isEmpty) {
-            $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
-            Assert::assertEquals(
-                [],
-                $actualValues,
-                sprintf('Expected empty localized %s', $fieldName)
-            );
+        if ('tags' === $fieldName) {
+            $this->assertLocalizedTags($expectedLocalizedValues, $productForEditing);
 
             return;
         }
@@ -202,8 +186,74 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                         'Expected %s in "%s" language was "%s", but got "%s"',
                         $fieldName,
                         $langIso,
-                        $expectedValue,
-                        $actualValue
+                        var_export($expectedValue, true),
+                        var_export($actualValue, true)
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * Product tags differs from other localized properties, because each locale can have an array of tags
+     * (whereas common property will have one value per language)
+     * This is why it needs some additional parsing
+     *
+     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
+     *                                   e.g. [1 => 'hello, goodbye', 2 => 'bonjour,Au revoir']
+     * @param ProductForEditing $productForEditing
+     */
+    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
+    {
+        $fieldName = 'tags';
+        $isEmpty = true;
+        foreach ($localizedTagStrings as $value) {
+            if (!empty($value)) {
+                //if array contains at least one non empty value inside then it is not empty.
+                $isEmpty = false;
+
+                break;
+            }
+        }
+
+        // when expecting empty values, it will be parsed to array with empty keys,
+        // but in tags case if there are no tags for product it will return empty array without languageId keys
+        // and that would result in assert failure
+        // so in this case an array which contains only empty keys should be considered equal to empty array
+        // therefore we assert actual value against empty array
+        if ($isEmpty) {
+            $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+            Assert::assertEquals([], $actualValues, 'Expected empty localized tags');
+
+            return;
+        }
+
+        foreach ($localizedTagStrings as $langId => $expectedValue) {
+            $expectedTags = explode(',', $expectedValue);
+            $actualLocalizedTags = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+            $langIso = Language::getIsoById($langId);
+
+            if (empty($expectedTags) && !isset($actualLocalizedTags[$langId])) {
+                continue;
+            }
+
+            if (!isset($actualLocalizedTags[$langId])) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized tags value is not set in %s language',
+                    $langIso
+                ));
+            }
+
+            $actualTags = $actualLocalizedTags[$langId];
+
+            if ($expectedTags !== $actualTags) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Expected %s in "%s" language was "%s", but got "%s"',
+                        $fieldName,
+                        $langIso,
+                        var_export($expectedValue, true),
+                        var_export($actualTags, true)
                     )
                 );
             }
@@ -282,6 +332,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($data['reference'])) {
             $command->setReference($data['reference']);
+        }
+
+        if (isset($data['tags'])) {
+            $localizedTagStrings = $this->parseLocalizedArray($data['tags']);
+            $localizedTags = [];
+
+            foreach ($localizedTagStrings as $langId => $localizedTagString) {
+                $localizedTags[$langId] = explode(',', $localizedTagString);
+            }
+
+            $command->setLocalizedTags($localizedTags);
         }
     }
 

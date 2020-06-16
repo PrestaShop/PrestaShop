@@ -95,3 +95,17 @@ Feature: Update product options from Back Office (BO)
     When I update product "product2" options with following values:
       | reference   | invalid chars like ^;{ |
     Then I should get error that product reference is invalid
+
+    Scenario: I update product tags in multiple languages
+      Given language "language1" with locale "en-US" exists
+      And language with iso code "en" is the default one
+      And language "language2" with locale "fr-FR" exists
+      And I add product "product3" with following information:
+        | name       | en-US:Mechanical watch;fr-FR:montre mécanique |
+        | is_virtual | false                                         |
+      And product "product3" should have following values:
+        | name       | en-US:Mechanical watch;fr-FR:montre mécanique |
+      And product "product3" localized "tags" should be "en-US:;fr-FR:"
+      When I update product "product3" options with following values:
+        | tags       | en-US:mechanic,watch;fr-FR:montre,mécanique |
+      And product "product3" localized "tags" should be "en-US:mechanic,watch;fr-FR:montre,mécanique"
