@@ -647,7 +647,7 @@ class ProductCore extends ObjectModel
         $unitPriceRatio = new Number((string) $this->unit_price_ratio);
         $price = new Number((string) $this->price);
 
-        if ($unitPriceRatio->isGreaterThan(new Number('0'))) {
+        if ($unitPriceRatio->isGreaterThanZero()) {
             $this->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
         }
 
