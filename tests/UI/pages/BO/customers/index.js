@@ -51,7 +51,8 @@ module.exports = class Customers extends BOBasePage {
     // Required field section
     this.setRequiredFieldsButton = 'button[data-target=\'#customerRequiredFieldsContainer\']';
     this.requiredFieldCheckBox = id => `#required_fields_required_fields_${id}`;
-    this.saveButton = '#customerRequiredFieldsContainer button';
+    this.requiredFieldsForm = '#customerRequiredFieldsContainer';
+    this.saveButton = `${this.requiredFieldsForm} button`;
     // Modal Dialog
     this.deleteCustomerModal = '#customer_grid_delete_customers_modal.show';
     this.deleteCustomerModalDeleteButton = `${this.deleteCustomerModal} button.js-submit-delete-customers`;
@@ -337,12 +338,22 @@ module.exports = class Customers extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setRequiredFields(id, valueWanted = true) {
-    await this.waitForSelectorAndClick(this.setRequiredFieldsButton);
+    // Check if form is open
+    if (await this.elementNotVisible(`${this.requiredFieldsForm}.show`, 1000)) {
+      await Promise.all([
+        this.waitForSelectorAndClick(this.setRequiredFieldsButton),
+        this.waitForVisibleSelector(`${this.requiredFieldsForm}.show`),
+      ]);
+    }
+
+    // Click on checkbox if not selected
     const isCheckboxSelected = await this.isCheckboxSelected(this.requiredFieldCheckBox(id));
     if (valueWanted !== isCheckboxSelected) {
       await this.page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
     }
-    await this.waitForSelectorAndClick(this.saveButton);
+
+    // Save setting
+    await this.clickAndWaitForNavigation(this.saveButton);
     return this.getTextContent(this.alertSuccessBlockParagraph);
   }
 
