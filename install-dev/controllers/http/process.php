@@ -198,16 +198,17 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->initializeContext();
 
         $success = $this->model_install->configureShop(array(
-            'shop_name' =>                $this->session->shop_name,
-            'shop_activity' =>            $this->session->shop_activity,
-            'shop_country' =>            $this->session->shop_country,
-            'shop_timezone' =>            $this->session->shop_timezone,
+            'shop_name' =>              $this->session->shop_name,
+            'shop_activity' =>          $this->session->shop_activity,
+            'shop_country' =>           $this->session->shop_country,
+            'shop_timezone' =>          $this->session->shop_timezone,
             'admin_firstname' =>        $this->session->admin_firstname,
-            'admin_lastname' =>            $this->session->admin_lastname,
-            'admin_password' =>            $this->session->admin_password,
+            'admin_lastname' =>         $this->session->admin_lastname,
+            'admin_password' =>         $this->session->admin_password,
             'admin_email' =>            $this->session->admin_email,
-            'configuration_agrement' =>    $this->session->configuration_agrement,
-            'rewrite_engine' =>            $this->session->rewrite_engine,
+            'configuration_agrement' => $this->session->configuration_agrement,
+            'enable_ssl' =>             $this->session->enable_ssl,
+            'rewrite_engine' =>         $this->session->rewrite_engine,
         ));
 
         if (!$success || $this->model_install->getErrors()) {
