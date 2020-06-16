@@ -28,8 +28,8 @@ const {$} = window;
 class CatalogModeOptionHandler {
   constructor(pageMap) {
     this.pageMap = {
-      catalogModeField: 'input[name="form[general][catalog_mode]"]',
-      selectedCatalogModeField: 'input[name="form[general][catalog_mode]"]:checked',
+      catalogModeField: 'input[name="general[catalog_mode]"]',
+      selectedCatalogModeField: 'input[name="general[catalog_mode]"]:checked',
       catalogModeOptions: '.catalog-mode-option',
       ...pageMap,
     };
