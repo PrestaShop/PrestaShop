@@ -44,6 +44,7 @@ class MerchandiseReturnType extends AbstractType
 
     /**
      * MerchandiseReturnType constructor.
+     *
      * @param array $stateChoices
      */
     public function __construct(array $stateChoices)

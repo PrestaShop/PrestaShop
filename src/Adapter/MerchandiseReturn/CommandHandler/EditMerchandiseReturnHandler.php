@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHan
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\EditMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\EditMerchandiseReturnHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
 
 class EditMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler implements EditMerchandiseReturnHandlerInterface
 {
