@@ -93,8 +93,6 @@ class FileTranslatedCatalogueProviderTest extends TestCase
         $this->assertSame([
             'ShopSomethingElse',
         ], $domains);
-
-
     }
 
     public function testGetCatalogueMessages()
