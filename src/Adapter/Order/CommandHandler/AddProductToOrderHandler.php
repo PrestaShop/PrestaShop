@@ -227,9 +227,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             // Search for existing order cart rule
             $orderCartRule = null;
-            foreach ($order->getCartRules() as $orderCartRule) {
-                if ($orderCartRule['id_cart_rule'] === $cartCartRule['id_cart_rule']) {
-                    $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
+            foreach ($order->getCartRules() as $existingCartRule) {
+                if ($existingCartRule['id_cart_rule'] === $cartCartRule['id_cart_rule']) {
+                    $orderCartRule = new OrderCartRule($existingCartRule['id_order_cart_rule']);
 
                     break;
                 }

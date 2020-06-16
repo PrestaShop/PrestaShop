@@ -92,7 +92,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             $result = true;
             $oldCartRules = $cart->getCartRules();
             $result &= $this->updateCart($orderDetail, $cart);
-            $result &= $this->updateCartRules($order, $oldCartRules, $cart->getCartRules());
+            $result &= $this->updateOrderCartRules($order, $cart->getCartRules());
             $result &= $this->updateOrderInvoice($orderDetail);
 
             // Reinject quantity in stock
@@ -143,27 +143,23 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      * Remove previous cart rules applied to order
      *
      * @param Order $order
-     * @param array $oldCartRules
      * @param array $newCartRules
      *
      * @return bool
      */
-    private function updateCartRules(Order $order, array $oldCartRules, array $newCartRules)
+    private function updateOrderCartRules(Order $order, array $newCartRules)
     {
-        $result = array_diff(
-            array_map('serialize', $oldCartRules),
-            array_map('serialize', $newCartRules)
-        );
-        $result = array_map('unserialize', $result);
-
         foreach ($order->getCartRules() as $orderCartRule) {
-            foreach ($result as $itemCartRule) {
-                if ($itemCartRule['id_cart_rule'] == $orderCartRule['id_cart_rule']) {
-                    $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
-                    if (!$orderCartRule->delete()) {
-                        return false;
-                    }
+            foreach ($newCartRules as $newCartRule) {
+                if ($newCartRule['id_cart_rule'] == $orderCartRule['id_cart_rule']) {
+                    // Cart rule is still in the cart no need to remove it
+                    continue 2;
                 }
+            }
+
+            $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
+            if (!$orderCartRule->delete()) {
+                return false;
             }
         }
 
