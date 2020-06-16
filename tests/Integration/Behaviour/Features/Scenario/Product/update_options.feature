@@ -109,3 +109,6 @@ Feature: Update product options from Back Office (BO)
       When I update product "product3" options with following values:
         | tags       | en-US:mechanic,watch;fr-FR:montre,mécanique |
       And product "product3" localized "tags" should be "en-US:mechanic,watch;fr-FR:montre,mécanique"
+      When I update product "product3" options with following values:
+        | tags       | en-US:mechanic,watch;fr-FR: |
+      And product "product3" localized "tags" should be "en-US:mechanic,watch;fr-FR:"

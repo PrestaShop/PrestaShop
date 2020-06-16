@@ -228,12 +228,27 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             return;
         }
 
-        foreach ($localizedTagStrings as $langId => $expectedValue) {
-            $expectedTags = explode(',', $expectedValue);
+        foreach ($localizedTagStrings as $langId => $expectedTagsString) {
+            $expectedTags = explode(',', $expectedTagsString);
             $actualLocalizedTags = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
             $langIso = Language::getIsoById($langId);
 
-            if (empty($expectedTags) && !isset($actualLocalizedTags[$langId])) {
+            $nonEmptyExpectedTags = [];
+            foreach ($expectedTags as $expectedTag) {
+                if (!empty($expectedTag)) {
+                    $nonEmptyExpectedTags[] = $expectedTag;
+
+                    continue;
+                }
+
+                //each empty tag in language should be considered equal to non-set value of that language
+                Assert::assertTrue(
+                    empty($expectedTag) && !isset($actualLocalizedTags[$langId]),
+                    sprintf('Expected no value of localized tag in "%s" language', $langIso)
+                );
+            }
+
+            if (empty($nonEmptyExpectedTags) && !isset($actualLocalizedTags[$langId])) {
                 continue;
             }
 
@@ -246,13 +261,13 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             $actualTags = $actualLocalizedTags[$langId];
 
-            if ($expectedTags !== $actualTags) {
+            if ($nonEmptyExpectedTags !== $actualTags) {
                 throw new RuntimeException(
                     sprintf(
                         'Expected %s in "%s" language was "%s", but got "%s"',
                         $fieldName,
                         $langIso,
-                        var_export($expectedValue, true),
+                        var_export($expectedTags, true),
                         var_export($actualTags, true)
                     )
                 );

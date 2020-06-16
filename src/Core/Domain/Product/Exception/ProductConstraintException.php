@@ -115,4 +115,9 @@ class ProductConstraintException extends ProductException
      * When product reference value is invalid
      */
     const INVALID_REFERENCE = 170;
+
+    /**
+     * When product tag value is invalid
+     */
+    const INVALID_TAG = 180;
 }

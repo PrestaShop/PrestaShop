@@ -32,10 +32,12 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShopException;
 use Product;
 use Tag;
+use Validate;
 
 /**
  * Handles UpdateProductOptionsCommand using legacy object models
@@ -147,6 +149,13 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
     }
 
     /**
+     * Due to this method it is possible to partially update tags in separate languages.
+     *
+     * If all localizedTags array is empty, all previous tags will be deleted.
+     * If tags in some language are null, it will be skipped.
+     * If tags in some language has any values, all previous tags will be deleted and new ones inserted instead
+     * If tags in some language are empty, then all previous tags will be deleted and none inserted.
+     *
      * @param Product $product
      * @param array $localizedTags
      *
@@ -162,6 +171,12 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         }
 
         foreach ($localizedTags as $langId => $tags) {
+            // don't do anything with this language tags if its null (equivalent to other partial updates)
+            if (null === $tags) {
+                continue;
+            }
+
+            // delete all this product tags for this lang
             if (false === Tag::deleteTagsForProduct($productId, $langId)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to delete product #%s previous tags in lang #%s', $productId, $langId),
@@ -169,7 +184,31 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                 );
             }
 
-            if (false === Tag::addTags($langId, $productId, $tags)) {
+            if (empty($tags)) {
+                continue;
+            }
+
+            $validTags = [];
+            foreach ($tags as $tag) {
+                //skip empty values
+                if (empty($tag)) {
+                    continue;
+                }
+
+                //validate tag
+                if (false === Validate::isGenericName($tag)) {
+                    throw new ProductConstraintException(
+                        sprintf(
+                            'Invalid product tag "%s" in language with id "%s"',
+                            $tag,
+                            $langId
+                        )
+                    );
+                }
+                $validTags[] = $tag;
+            }
+
+            if (false === Tag::addTags($langId, $productId, $validTags)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to update product #%s tags in lang #%s', $productId, $langId),
                     CannotUpdateProductException::FAILED_UPDATE_OPTIONS
