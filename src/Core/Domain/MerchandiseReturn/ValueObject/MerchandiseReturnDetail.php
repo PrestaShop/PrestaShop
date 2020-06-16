@@ -39,7 +39,7 @@ class MerchandiseReturnDetail
     private $merchandiseReturnDetailId;
 
     /**
-     * @var null|CustomizationId
+     * @var CustomizationId|null
      */
     private $customizationId;
 
@@ -66,11 +66,13 @@ class MerchandiseReturnDetail
 
     /**
      * @param CustomizationId|null $customizationId
+     *
      * @return MerchandiseReturnDetail
      */
     public function setCustomizationId(int $customizationId): MerchandiseReturnDetail
     {
         $this->customizationId = new CustomizationId($customizationId);
+
         return $this;
     }
 }
