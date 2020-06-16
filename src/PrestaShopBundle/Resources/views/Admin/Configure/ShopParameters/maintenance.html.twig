@@ -28,7 +28,7 @@
 
 
 {% block content %}
-  {{ form_start(generalForm, {'attr' : {'class': 'form'} }) }}
+  {{ form_start(generalForm, {'attr' : {'class': 'form', 'id': 'form-maintenance'} }) }}
     <div class="row justify-content-center">
       {% block maintenance_form_general %}
         <div class="col-xl-10">
@@ -64,7 +64,7 @@
             </div>
             <div class="card-footer">
               <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                <button class="btn btn-primary" id="form-maintenance-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
               </div>
             </div>
           </div>
