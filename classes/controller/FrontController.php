@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class FrontControllerCore extends Controller
 {
@@ -329,8 +330,15 @@ class FrontControllerCore extends Controller
             }
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
-                $id_country = $has_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country) ?
-                    (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)) : (int) Tools::getCountry();
+                if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
+                    $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
+                } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                        && Validate::isLanguageIsoCode($array[0])) {
+                    $id_country = (int) Country::getByIso($array[0], true);
+                } else {
+                    $id_country = Tools::getCountry();
+                }
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 
@@ -718,7 +726,7 @@ class FrontControllerCore extends Controller
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
             $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
-            if (!in_array(Tools::getRemoteAddr(), $allowed_ips)) {
+            if (!IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 

@@ -140,7 +140,7 @@ export default class CartEditor {
       productId: product.productId,
       attributeId: product.attributeId,
       customizationId: product.customizationId,
-    }).then((cartInfo) => EventEmitter.emit(eventMap.productRemovedFromCart, cartInfo))
+    }).then((cartInfo) => EventEmitter.emit(eventMap.productRemovedFromCart, {cartInfo, product}))
       .catch((response) => window.showErrorMessage(response.responseJSON.message));
   }
 
@@ -177,7 +177,7 @@ export default class CartEditor {
       newQty: product.newQty,
       attributeId: product.attributeId,
       customizationId: product.customizationId,
-    }).then((cartInfo) => EventEmitter.emit(eventMap.productQtyChanged, cartInfo))
+    }).then((cartInfo) => EventEmitter.emit(eventMap.productQtyChanged, {cartInfo, product}))
       .catch((response) => EventEmitter.emit(eventMap.productQtyChangeFailed, response));
   }
 

@@ -49,7 +49,7 @@ class EmailSendingTest {
    */
   handle(event) {
     // fill test email sending form with configured values
-    $('#test_email_sending_mail_method').val($('input[name="form[email_config][mail_method]"]:checked').val());
+    $('#test_email_sending_mail_method').val($('input[name="form[mail_method]"]:checked').val());
     $('#test_email_sending_smtp_server').val($('#form_smtp_config_server').val());
     $('#test_email_sending_smtp_username').val($('#form_smtp_config_username').val());
     $('#test_email_sending_smtp_password').val($('#form_smtp_config_password').val());

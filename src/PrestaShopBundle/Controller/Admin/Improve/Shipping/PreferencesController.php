@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Shipping;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -49,20 +50,20 @@ class PreferencesController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
-        $form = $this->get('prestashop.admin.shipping_preferences.form_handler')->getForm();
+        $handlingForm = $this->getHandlingFormHandler()->getForm();
+        $carrierOptionsForm = $this->getCarrierOptionsFormHandler()->getForm();
 
         return $this->render('@PrestaShop/Admin/Improve/Shipping/Preferences/preferences.html.twig', [
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'form' => $form->createView(),
+            'handlingForm' => $handlingForm->createView(),
+            'carrierOptionsForm' => $carrierOptionsForm->createView(),
         ]);
     }
 
     /**
-     * Handle form submit.
-     *
      * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_shipping_preferences")
@@ -71,21 +72,81 @@ class PreferencesController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processFormAction(Request $request)
+    public function processHandlingFormAction(Request $request)
     {
-        $formHandler = $this->get('prestashop.admin.shipping_preferences.form_handler');
+        return $this->processForm(
+            $request,
+            $this->getHandlingFormHandler(),
+            'Handling'
+        );
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this.",
+     *     redirectRoute="admin_shipping_preferences")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processCarrierOptionsFormAction(Request $request)
+    {
+        return $this->processForm(
+            $request,
+            $this->getCarrierOptionsFormHandler(),
+            'CarrierOptions'
+        );
+    }
+
+    /**
+     * Process the Shipping Preferences configuration form.
+     *
+     * @param Request $request
+     * @param FormHandlerInterface $formHandler
+     * @param string $hookName
+     *
+     * @return RedirectResponse
+     */
+    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
+    {
+        $this->dispatchHook(
+            'actionAdminShippingPreferencesControllerPostProcess' . $hookName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminShippingPreferencesControllerPostProcessBefore', ['controller' => $this]);
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
-            } else {
+            $data = $form->getData();
+            $saveErrors = $formHandler->save($data);
+
+            if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            } else {
+                $this->flashErrors($saveErrors);
             }
         }
 
         return $this->redirectToRoute('admin_shipping_preferences');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getHandlingFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.shipping_preferences.handling.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getCarrierOptionsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.shipping_preferences.carrier_options.form_handler');
     }
 }

@@ -31,6 +31,8 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
  * Class SmtpDataConfigurator is responsible for configuring SMTP data.
+ *
+ * @deprecated since 1.7.8, will be removed in the next major version
  */
 final class SmtpDataConfigurator implements DataConfigurationInterface
 {

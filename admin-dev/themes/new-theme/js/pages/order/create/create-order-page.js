@@ -462,10 +462,12 @@ export default class CreateOrderPage {
    * @private
    */
   initProductRemoveFromCart(event) {
+    const productQty = Number($(event.currentTarget).parents().find(createOrderMap.listedProductQtyInput).val());
     const product = {
       productId: $(event.currentTarget).data('product-id'),
       attributeId: $(event.currentTarget).data('attribute-id'),
       customizationId: $(event.currentTarget).data('customization-id'),
+      qtyToRemove: productQty,
     };
 
     this.productManager.removeProductFromCart(this.cartId, product);
@@ -502,6 +504,7 @@ export default class CreateOrderPage {
       attributeId: $(event.currentTarget).data('attribute-id'),
       customizationId: $(event.currentTarget).data('customization-id'),
       newQty: $(event.currentTarget).val(),
+      prevQty: $(event.currentTarget).data('prev-qty'),
     };
 
     this.productManager.changeProductQty(this.cartId, product);

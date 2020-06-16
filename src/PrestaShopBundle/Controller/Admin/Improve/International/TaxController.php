@@ -368,7 +368,7 @@ class TaxController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getTaxOptionsFormHandler()
+    private function getTaxOptionsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.tax_options.form_handler');
     }
