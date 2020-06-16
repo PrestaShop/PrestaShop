@@ -911,7 +911,7 @@ class WebserviceRequestCore
         $idShopGroup = null;
         if (isset($params['id_shop_group']) && is_numeric($params['id_shop_group'])) {
             $idShopGroup = (int) $params['id_shop_group'];
-        } else if (isset($params['id_group_shop']) && is_numeric($params['id_group_shop'])) {
+        } elseif (isset($params['id_group_shop']) && is_numeric($params['id_group_shop'])) {
             $idShopGroup = (int) $params['id_group_shop'];
         }
 
