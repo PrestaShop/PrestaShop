@@ -70,9 +70,6 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
-        //@todo: update the Number lib dependency. It should have methods to compare to 0 already
-        //  Check whole class to refactor occurrences of `new Number('0')`
-
         $product = $this->getProduct($command->getProductId());
         $this->product = $product;
         $this->fillUpdatableFieldsWithCommandData($product, $command);
@@ -144,10 +141,9 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
     {
         $price = $command->getPrice();
         $unitPrice = $command->getUnitPrice();
-        $zero = new Number('0');
 
         // if price was reset then also reset unit_price and unit_price_ratio
-        $priceWasReset = null !== $price && $price->equals($zero);
+        $priceWasReset = null !== $price && $price->equalsZero();
         if ($priceWasReset) {
             $this->resetUnitPriceInfo();
         }
@@ -212,15 +208,14 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
     private function setUnitPriceInfo(Product $product, Number $unitPrice, ?Number $price): void
     {
         $this->validateUnitPrice($unitPrice);
-        $zero = new Number('0');
 
         if (null === $price) {
             $price = $this->numberExtractor->extract($product, 'price');
         }
 
         // If unit price or price is zero, then reset ratio to zero too
-        if ($unitPrice->equals($zero) || $price->equals($zero)) {
-            $ratio = $zero;
+        if ($unitPrice->equalsZero() || $price->equalsZero()) {
+            $ratio = new Number('0');
         } else {
             $ratio = $price->dividedBy($unitPrice);
         }
@@ -242,7 +237,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
      */
     private function validateUnitPrice(Number $unitPrice): void
     {
-        if ($unitPrice->isLowerThan(new Number('0'))) {
+        if ($unitPrice->isLowerThanZero()) {
             throw new ProductConstraintException(
                 sprintf(
                     'Invalid product unit_price. Got "%s"',
