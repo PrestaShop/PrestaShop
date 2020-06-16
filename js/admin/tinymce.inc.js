@@ -45,37 +45,35 @@ function tinySetup(config) {
     config.selector = '.' + config.editor_selector;
   }
 
-  var default_config = {};
+  var default_config = {
+    selector: '.rte',
+    plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
+    browser_spellcheck: true,
+    toolbar1:
+      'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
+    toolbar2: '',
+    external_filemanager_path: baseAdminDir + 'filemanager/',
+    filemanager_title: 'File manager',
+    external_plugins: {
+      filemanager: baseAdminDir + 'filemanager/plugin.min.js'
+    },
+    language: iso_user,
+    content_style: lang_is_rtl === '1' ? 'body {direction:rtl;}' : '',
+    skin: 'prestashop',
+    menubar: false,
+    statusbar: false,
+    relative_urls: false,
+    convert_urls: false,
+    entity_encoding: 'raw',
+    extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
+    valid_children: '+*[*]',
+    valid_elements: '*[*]',
+    init_instance_callback: 'changeToMaterial',
+    rel_list: [{title: 'nofollow', value: 'nofollow'}]
+  };
 
-  if (defaultTinyMceConfig) {
-    default_config = defaultTinyMceConfig;
-  } else {
-    default_config = {
-      selector: '.rte',
-      plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
-      browser_spellcheck: true,
-      toolbar1:
-        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect',
-      toolbar2: '',
-      external_filemanager_path: baseAdminDir + 'filemanager/',
-      filemanager_title: 'File manager',
-      external_plugins: {
-        filemanager: baseAdminDir + 'filemanager/plugin.min.js'
-      },
-      language: iso_user,
-      content_style: lang_is_rtl === '1' ? 'body {direction:rtl;}' : '',
-      skin: 'prestashop',
-      menubar: false,
-      statusbar: false,
-      relative_urls: false,
-      convert_urls: false,
-      entity_encoding: 'raw',
-      extended_valid_elements: 'em[class|name|id],@[role|data-*|aria-*]',
-      valid_children: '+*[*]',
-      valid_elements: '*[*]',
-      init_instance_callback: 'changeToMaterial',
-      rel_list: [{title: 'nofollow', value: 'nofollow'}]
-    };
+  if (typeof defaultTinyMceConfig !== 'undefined') {
+    Object.assign(default_config, defaultTinyMceConfig);
   }
 
   $.each(default_config, function(index, el) {
