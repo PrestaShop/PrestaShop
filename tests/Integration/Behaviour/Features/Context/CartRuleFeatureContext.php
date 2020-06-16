@@ -183,9 +183,18 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->productFeatureContext->checkProductWithNameExists($productName);
+
+        $restrictedProduct = $this->productFeatureContext->getProductWithName($productName);
         $this->cartRules[$cartRuleName]->product_restriction = true;
-        $this->cartRules[$cartRuleName]->reduction_product = $this->productFeatureContext->getProductWithName($productName)->id;
+        $this->cartRules[$cartRuleName]->reduction_product = $restrictedProduct->id;
         $this->cartRules[$cartRuleName]->save();
+
+        // The reduction_product is not enough, we need to define product rules for condition (this is done by the controller usually)
+        Db::getInstance()->insert('cart_rule_product_rule_group', ['id_cart_rule' => $this->cartRules[$cartRuleName]->id, 'quantity' => 1]);
+        $productRuleGroupId = Db::getInstance()->Insert_ID();
+        Db::getInstance()->insert('cart_rule_product_rule', ['id_product_rule_group' => $productRuleGroupId, 'type' => 'products']);
+        $productRuleId = Db::getInstance()->Insert_ID();
+        Db::getInstance()->insert('cart_rule_product_rule_value', ['id_product_rule' => $productRuleId, 'id_item' => $restrictedProduct->id]);
     }
 
     /**
