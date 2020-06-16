@@ -128,7 +128,7 @@ describe('Set label out-of-stock with allowed/denied backorders', async () => {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `${test.args.action}AllowOrderingOutOfStock`,
+        `${test.args.action}AllowOrderingOutOfStock${index}`,
         baseContext,
       );
 
@@ -159,7 +159,7 @@ describe('Set label out-of-stock with allowed/denied backorders', async () => {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `checkOrderingOutOfStock${test.args.action}`,
+        `checkOrderingOutOfStock${test.args.action}${index}`,
         baseContext,
       );
 
