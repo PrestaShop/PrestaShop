@@ -28,7 +28,7 @@
 
 {% block invoice_options %}
     <div class="col-xl-10">
-        {{ form_start(invoiceOptionsForm, {'method': 'POST', 'action': path('admin_order_invoices_process')}) }}
+        {{ form_start(invoiceOptionsForm, {'method': 'POST', 'action': path('admin_order_invoices_process'), attr: {id: 'form-invoices-options'}}) }}
         <div class="card">
             <h3 class="card-header">
                 <i class="material-icons">settings</i> {{ 'Invoice options'|trans }}
