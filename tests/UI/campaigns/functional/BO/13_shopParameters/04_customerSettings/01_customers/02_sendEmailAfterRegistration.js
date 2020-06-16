@@ -85,7 +85,7 @@ describe('Enable send an email after registration', async () => {
 
   tests.forEach((test, index) => {
     it('should go to \'Shop parameters > Customer Settings\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPageToDisable', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goToCustomerSettingsPage${index}`, baseContext);
 
       await this.pageObjects.dashboardPage.goToSubMenu(
         this.pageObjects.dashboardPage.shopParametersParentLink,

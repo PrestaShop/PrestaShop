@@ -148,7 +148,7 @@ class UpdateLicensesCommand extends Command
                 'tests-legacy/resources/',
                 'tests/E2E/',
                 'tests/Unit/Resources/assets/',
-                'tests/puppeteer/',
+                'tests/UI/',
             ])
             ->ignoreDotFiles(false);
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
