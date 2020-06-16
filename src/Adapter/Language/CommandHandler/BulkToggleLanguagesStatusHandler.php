@@ -48,7 +48,7 @@ final class BulkToggleLanguagesStatusHandler extends AbstractLanguageHandler imp
         foreach ($command->getLanguageIds() as $languageId) {
             $language = $this->getLegacyLanguageObject($languageId);
 
-            $this->assertLanguageIsNotDefault($language, $command);
+            $this->assertLanguageIsDefault($language, $command);
 
             $language->active = $command->getStatus();
 
@@ -62,7 +62,7 @@ final class BulkToggleLanguagesStatusHandler extends AbstractLanguageHandler imp
      * @param Language $language
      * @param BulkToggleLanguagesStatusCommand $command
      */
-    private function assertLanguageIsNotDefault(Language $language, BulkToggleLanguagesStatusCommand $command)
+    private function assertLanguageIsDefault(Language $language, BulkToggleLanguagesStatusCommand $command)
     {
         if (true === $command->getStatus()) {
             return;
