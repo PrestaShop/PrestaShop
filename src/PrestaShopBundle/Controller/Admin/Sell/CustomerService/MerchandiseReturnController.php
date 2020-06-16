@@ -31,9 +31,11 @@ namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\BulkDeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\BulkDeleteMerchandiseReturnDetailException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Query\GetMerchandiseReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult\EditableMerchandiseReturn;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetail;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnProductsFilters;
@@ -186,24 +188,27 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
-     * @todo need to make this work still. Problem is that I need id_customzation and id merchandise return detail
      * I am not sure how to pass both via bulk
      *
      * Deletes cartRules on bulk action
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_merchandise_retuir_index")
-     * @DemoRestricted(redirectRoute="admin_cart_rules_index")
+     * @DemoRestricted(redirectRoute="admin_merchandise_returns_index")
      *
      * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteProductAction(Request $request): RedirectResponse
+    public function bulkDeleteProductAction(int $merchandiseReturnId, Request $request): RedirectResponse
     {
         $merchandiseReturnDetails = $this->getBulkMerchandiseReturnDetailsFromRequest($request);
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteProductFromMerchandiseReturnCommand($merchandiseReturnDetails));
+            $this->getCommandBus()->handle(
+                new BulkDeleteProductFromMerchandiseReturnCommand(
+                    $merchandiseReturnId,
+                    $merchandiseReturnDetails
+                )
+            );
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion.', 'Admin.Notifications.Success')
@@ -212,7 +217,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->redirectToRoute('admin_cart_rules_index');
+        return $this->redirectToRoute('admin_merchandise_returns_index');
     }
 
     /**
@@ -220,17 +225,31 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return array
+     * @return MerchandiseReturnDetail[]
      */
     private function getBulkMerchandiseReturnDetailsFromRequest(Request $request): array
     {
         $merchandiseReturnDetailIds = $request->request->get('merchandise_return_products_merchandise_return_bulk');
-
+        $merchandiseReturnCustomizationIds = $request->request->get('merchandise_return_products_merchandise_return_bulk_id_customization');
         if (!is_array($merchandiseReturnDetailIds)) {
             return [];
         }
 
-        return array_map('intval', $merchandiseReturnDetailIds);
+        $merchandiseReturnDetails = [];
+
+        foreach ($merchandiseReturnDetailIds as $key => $merchandiseReturnDetailId) {
+            $merchandiseReturnDetail = new MerchandiseReturnDetail(
+                (int) $merchandiseReturnDetailId
+            );
+
+            if ($merchandiseReturnCustomizationIds[$key]) {
+                $merchandiseReturnDetail->setCustomizationId((int) $merchandiseReturnCustomizationIds[$key]);
+            }
+
+            $merchandiseReturnDetails[] = $merchandiseReturnDetail;
+        }
+
+        return $merchandiseReturnDetails;
     }
 
     /**
@@ -246,7 +265,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(): array
+    private function getErrorMessages(Exception $e = null): array
     {
         return [
             MerchandiseReturnConstraintException::class => [
@@ -255,6 +274,14 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            BulkDeleteMerchandiseReturnDetailException::class => sprintf(
+                '%s: %s',
+                $this->trans(
+                    'An error occurred while deleting this selection.',
+                    'Admin.Notifications.Error'
+                ),
+                $e instanceof BulkDeleteMerchandiseReturnDetailException ? implode(', ', $e->getMerchandiseReturnDetailIds()) : ''
+            ),
         ];
     }
 }
