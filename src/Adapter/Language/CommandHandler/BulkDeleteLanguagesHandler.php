@@ -26,12 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
-use Configuration;
 use Context;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\BulkDeleteLanguagesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use Shop;
 
