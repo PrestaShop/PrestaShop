@@ -160,6 +160,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $orderDetail,
             $old_quantity,
             $command->getQuantity(),
+            false,
             ($orderInvoice && !empty($orderInvoice->id))
         );
 

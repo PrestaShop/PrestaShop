@@ -36,6 +36,7 @@ use Context;
 use Country;
 use Currency;
 use Customer;
+use Db;
 use Language;
 use Order;
 use OrderCarrier;
@@ -91,10 +92,12 @@ class OrderProductUpdater
      * @param OrderDetail $orderDetail
      * @param int $oldQuantity
      * @param int $newQuantity
-     * @param bool $hasInvoice
+     * @param bool|null $productDeletionMode
+     * @param bool|null $hasInvoice
      *
      * @return Order
      *
+     * @throws OrderException
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
@@ -103,7 +106,8 @@ class OrderProductUpdater
         OrderDetail $orderDetail,
         int $oldQuantity,
         int $newQuantity,
-        bool $hasInvoice = false
+        ?bool $productDeletionMode = false,
+        ?bool $hasInvoice = false
     ): Order {
         $cart = new Cart($order->id_cart);
 
@@ -123,7 +127,7 @@ class OrderProductUpdater
             $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
 
             // Fix differences between cart's cartRules and order's cartRules
-            $cart = $this->syncCartAndOrderCartRules($cart, $order, $newQuantity <= 0);
+            $cart = $this->syncCartAndOrderCartRules($cart, $order, $productDeletionMode);
 
             // Recalculate amounts of cartRules
             $this->recalculateCartRules($cart, $order);
@@ -164,8 +168,10 @@ class OrderProductUpdater
         if (0 === $newQuantity) {
             // Product deletion
             $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $oldQuantity);
+
+            $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
         } else {
-            // Update product in the cart
+            // Update product and customization in the cart
             $updateQuantityResult = $cart->updateQty(
                 abs($deltaQuantity),
                 $orderDetail->product_id,
@@ -353,57 +359,84 @@ class OrderProductUpdater
     }
 
     /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param int $oldQuantity
+     *
+     * @throws OrderException
+     */
+    private function updateCustomizationOnProductDelete(Order $order, OrderDetail $orderDetail, int $oldQuantity): void
+    {
+        if (!(int) $order->getCurrentState()) {
+            throw new OrderException('Could not get a valid Order state before deletion');
+        }
+
+        if ($order->hasBeenDelivered()) {
+            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_returned` = `quantity_returned` + ' . (int) $oldQuantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id);
+        } elseif ($order->hasBeenPaid()) {
+            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_refunded` = `quantity_refunded` + ' . (int) $oldQuantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id);
+        }
+
+        if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
+            throw new OrderException('Could not delete customization from database.');
+        }
+    }
+
+    /**
      * @param Cart $cart
      * @param Order $order
-     * @param bool $delete
+     * @param bool $productDeletionMode
      *
      * @return Cart
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function syncCartAndOrderCartRules(Cart $cart, Order $order, bool $delete = false): Cart
+    private function syncCartAndOrderCartRules(Cart $cart, Order $order, bool $productDeletionMode): Cart
     {
         Context::getContext()->cart = $cart;
         CartRule::autoAddToCart();
         CartRule::autoRemoveFromCart();
-
-        $orderCartRulesData = $order->getCartRules();
-        $orderCartRulesIds = array_map(
-            function (array $orderCartRuleData) { return (int) $orderCartRuleData['id_cart_rule']; },
-            $orderCartRulesData
-        );
 
         $cartRules = $cart->getCartRules();
         $cartRulesIds = array_map(
             function (array $cartRule) { return (int) $cartRule['id_cart_rule']; },
             $cartRules
         );
+        $synchronizedCartRules = [];
 
-        if (count($orderCartRulesIds) === count($cartRulesIds)) {
-            return $cart;
-        }
-
-        if (count($orderCartRulesIds) > count($cartRulesIds)) {
-            if ($delete) { // Product deletion, the extra order cart rules have to be deleted
-                foreach ($order->getCartRules() as $orderCartRule) {
-                    foreach (array_diff($orderCartRulesIds, $cartRulesIds) as $idCartRule) {
-                        if ($idCartRule == $orderCartRule['id_cart_rule']) {
-                            $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
-                            $orderCartRule->delete();
-                        }
-                    }
-                }
-            } else { // desynchronization of cartRules, need to be fixed
-                sort($orderCartRulesIds);
-                sort($cartRulesIds);
-
-                foreach (array_diff($orderCartRulesIds, $cartRulesIds) as $cartRuleId) {
-                    $cart->addCartRule($cartRuleId);
+        foreach ($order->getCartRules() as $orderCartRule) {
+            foreach ($cartRulesIds as $cartRuleId) {
+                if ($cartRuleId == $orderCartRule['id_cart_rule']) {
+                    $synchronizedCartRules[] = $cartRuleId;
+                    // cartRule is on cart and order. Nothing to do
+                    continue 2;
                 }
             }
-        } else {
-            throw new \LogicException('Cart has more cart rules than order. This should never happen.');
+
+            if ($productDeletionMode) {
+                // On deletion mode. Extra cart rules on order have to be deleted
+                $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
+                $orderCartRule->delete();
+            } else {
+                // A cart rule on order but not on the cart
+                $cart->addCartRule((int) $orderCartRule['id_cart_rule']);
+            }
+        }
+
+        if (!$productDeletionMode) {
+            // Some cart rules are missing in the order
+            foreach ($cartRules as $cartRule) {
+                if (!in_array((int) $cartRule['id_cart_rule'], $synchronizedCartRules, true)) {
+                    $order->addCartRule(
+                        (int) $cartRule['id_cart_rule'],
+                        $cartRule['name'],
+                        ['tax_incl' => $cartRule['value_real'], 'tax_excl' => $cartRule['value_tax_exc']],
+                        $order->invoice_number,
+                        $cartRule['free_shipping']
+                    );
+                }
+            }
         }
 
         return $cart;
@@ -422,22 +455,12 @@ class OrderProductUpdater
 
         foreach ($order->getCartRules() as $orderCartRuleData) {
             $orderCartRule = new OrderCartRule((int) $orderCartRuleData['id_order_cart_rule']);
-            $idCartRule = (int) $orderCartRule->id_cart_rule;
-            $cartRule = new CartRule($idCartRule);
-            $values = [
-                'tax_incl' => Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision),
-                'tax_excl' => Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision),
-            ];
+            $cartRule = new CartRule((int) $orderCartRule->id_cart_rule);
 
-            if (
-                ($values['tax_incl'] !== Tools::ps_round($orderCartRule->value, $computingPrecision)) ||
-                ($values['tax_excl'] !== Tools::ps_round($orderCartRule->value_tax_excl, $computingPrecision))
-            ) {
-                $orderCartRule->value = $values['tax_incl'];
-                $orderCartRule->value_tax_excl = $values['tax_excl'];
+            $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
+            $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
 
-                $orderCartRule->update();
-            }
+            $orderCartRule->update();
         }
     }
 

@@ -100,6 +100,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
                 $orderDetail,
                 $orderDetail->product_quantity,
                 0,
+                true,
                 $orderDetail->id_order_invoice != 0
             );
 
