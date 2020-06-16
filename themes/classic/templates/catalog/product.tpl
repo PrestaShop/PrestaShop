@@ -52,7 +52,7 @@
   <section id="main" itemscope itemtype="https://schema.org/Product">
     <meta itemprop="url" content="{$product.url}">
 
-    <div class="row">
+    <div class="row product-container">
       <div class="col-md-6">
         {block name='page_content_container'}
           <section class="page-content" id="content">
