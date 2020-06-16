@@ -95,8 +95,8 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                     ->setOptions([
                         'bulk_field' => 'id_order_detail',
                         'extra_fields' => [
-                            'id_customization'
-                        ]
+                            'id_customization',
+                        ],
                     ])
             )
             ->add(
