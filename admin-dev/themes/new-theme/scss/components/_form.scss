@@ -94,7 +94,8 @@
       outline: none;
     }
   }
- //@todo no idea if adding new class is a good idea, I needed class for form value, add same padding as label
+
+  //@todo no idea if adding new class is a good idea, I needed class for form value, add same padding as label
   .form-control-value{
     padding-top: calc(.375rem + 1px);
   }
