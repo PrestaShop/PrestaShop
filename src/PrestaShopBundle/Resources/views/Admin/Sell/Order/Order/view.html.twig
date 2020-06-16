@@ -32,15 +32,16 @@
 
 
 {% block content %}
-  <div id="order-view-page" data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
+  <div id="order-view-page"
+       data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
     <div class="row d-print-none">
-    {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
+      {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
 
-    {% if displayAdminOrderTopHookContent != '' %}
-      <div class="col-md-12">
-        {{ displayAdminOrderTopHookContent|raw }}
-      </div>
-    {% endif %}
+      {% if displayAdminOrderTopHookContent != '' %}
+        <div class="col-md-12">
+          {{ displayAdminOrderTopHookContent|raw }}
+        </div>
+      {% endif %}
       <div class="order-actions col-md-12">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
       </div>
@@ -84,6 +85,14 @@
         {{ renderhook('displayAdminOrderMainBottom', {'id_order': orderForViewing.id}) }}
       </div>
     </div>
+
+    {% if orderForViewing.sources.sources is not empty %}
+      <div class="product-row row">
+        <div class="col-md-12 left-column">
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/sources.html.twig' %}
+        </div>
+      </div>
+    {% endif %}
 
     {{ renderhook('displayAdminOrder', {'id_order': orderForViewing.id}) }}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}

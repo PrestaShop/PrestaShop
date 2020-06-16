@@ -30,6 +30,7 @@ use Address;
 use Carrier;
 use CartRule;
 use Configuration;
+use ConnectionsSource;
 use Context;
 use Country;
 use Currency;
@@ -71,6 +72,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderReturnsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourceForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourcesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
@@ -189,7 +192,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderPayments($order),
             $this->getOrderMessages($order),
             $this->getOrderPrices($order),
-            $this->getOrderDiscounts($order)
+            $this->getOrderDiscounts($order),
+            $this->getOrderSources($order)
         );
     }
 
@@ -755,6 +759,28 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         }
 
         return new OrderDiscountsForViewing($discountsForViewing);
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return OrderSourcesForViewing
+     */
+    private function getOrderSources(Order $order): OrderSourcesForViewing
+    {
+        $sourcesData = ConnectionsSource::getOrderSources($order->id);
+        $sources = [];
+
+        foreach ($sourcesData as $sourceItem) {
+            $sources[] = new OrderSourceForViewing(
+                $sourceItem['http_referer'],
+                $sourceItem['request_uri'],
+                new DateTimeImmutable($sourceItem['date_add']),
+                $sourceItem['keywords']
+            );
+        }
+
+        return new OrderSourcesForViewing($sources);
     }
 
     /**
