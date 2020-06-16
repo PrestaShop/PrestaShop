@@ -9,7 +9,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
 
     // Header selectors
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
-    this.successfulSettingsUpdateMessage = 'The settings have been successfully updated.';
+    this.successfulSettingsUpdateMessage = 'Update successful';
 
     // Selectors grid panel
     this.gridPanel = '#meta_grid_panel';
@@ -31,9 +31,9 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     // Set up URL form
-    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_friendly_url_${toggle}']`;
-    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_accented_url_${toggle}']`;
-    this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
+    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_set_up_urls_form_friendly_url_${toggle}']`;
+    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_set_up_urls_form_accented_url_${toggle}']`;
+    this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
     // Delete modal
     this.confirmDeleteModal = '#meta-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
