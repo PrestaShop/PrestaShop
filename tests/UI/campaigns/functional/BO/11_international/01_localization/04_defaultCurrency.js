@@ -61,7 +61,7 @@ describe('Update default currency', async () => {
     loginCommon.loginBO();
 
     it('should go to localization page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPageToImportPack', baseContext);
 
       await this.pageObjects.dashboardPage.goToSubMenu(
         this.pageObjects.dashboardPage.internationalParentLink,
@@ -116,7 +116,7 @@ describe('Update default currency', async () => {
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'goToLocalizationPageToChooseDefaultCurrency',
+          `goToLocalizationPageToChooseDefaultCurrency${index}`,
           baseContext,
         );
 
