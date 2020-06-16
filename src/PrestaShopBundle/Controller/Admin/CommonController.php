@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
@@ -362,26 +363,41 @@ class CommonController extends FrameworkBundleAdminController
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
 
-        // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
-        if (!($definitionFactory instanceof FilterableGridDefinitionFactoryInterface)) {
-            /** @var ControllerResponseBuilder $responseBuilder */
-            $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
+        if ($definitionFactory instanceof FilterableGridDefinitionFactoryInterface) {
+            /** @var ResponseBuilder $responseBuilder */
+            $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-            return $controllerResponseBuilder->buildSearchResponse(
+            return $responseBuilder->buildSearchResponse(
                 $definitionFactory,
                 $request,
+                $definitionFactory->getFilterId(),
                 $redirectRoute,
                 $redirectQueryParamsToKeep
             );
         }
 
-        /** @var ResponseBuilder $responseBuilder */
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+        // for backward compatibility with AbstractGridDefinitionFactory
+        // replaced by AbstractFilterableGridDefinitionFactory
+        if ($definitionFactory instanceof AbstractGridDefinitionFactory) {
+            /** @var ResponseBuilder $responseBuilder */
+            $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
-        return $responseBuilder->buildSearchResponse(
+            return $responseBuilder->buildSearchResponse(
+                $definitionFactory,
+                $request,
+                $definitionFactory->getDefinition()->getId(),
+                $redirectRoute,
+                $redirectQueryParamsToKeep
+            );
+        }
+
+        // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
+        /** @var ControllerResponseBuilder $responseBuilder */
+        $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
+
+        return $controllerResponseBuilder->buildSearchResponse(
             $definitionFactory,
             $request,
-            $definitionFactory->getFilterId(),
             $redirectRoute,
             $redirectQueryParamsToKeep
         );
