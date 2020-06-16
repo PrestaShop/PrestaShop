@@ -34,7 +34,7 @@
     <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
     <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
     <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ 'Options'|trans({}, 'Admin.Global') }}</a></li>
-    {% if hookcount('displayAdminProductsExtra') > 0 %}
+    {% if hooksarraycontent(hooks) is not empty %}
       <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
     {% endif %}
   </ul>

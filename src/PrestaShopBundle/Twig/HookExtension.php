@@ -76,6 +76,7 @@ class HookExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFilter('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('hooksarraycontent', [$this, 'hooksArrayContent']),
         ];
     }
 
@@ -90,6 +91,7 @@ class HookExtension extends \Twig_Extension
             new \Twig_SimpleFunction('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('hookcount', [$this, 'hookCount']),
+            new \Twig_SimpleFunction('hooksarraycontent', [$this, 'hooksArrayContent']),
         ];
     }
 
@@ -166,8 +168,32 @@ class HookExtension extends \Twig_Extension
     }
 
     /**
+     * Return the concatenated content of a renderHooksArray response
+     *
+     * @param array $hooksArray the array returned by the renderHooksArray function
+     *
+     * @return string
+     */
+    public function hooksArrayContent($hooksArray)
+    {
+        if (!is_array($hooksArray)) {
+            return '';
+        }
+
+        $content = '';
+
+        foreach ($hooksArray as $hook) {
+            $content .= $hook['content'] ?? '';
+        }
+
+        return $content;
+    }
+
+    /**
      * Count how many listeners will respond to the hook name.
      * Does not trigger the hook, so maybe some listeners could not add a response to the result.
+     *
+     * @deprecated since 1.7.7.0
      *
      * @param string $hookName
      *
@@ -175,6 +201,8 @@ class HookExtension extends \Twig_Extension
      */
     public function hookCount($hookName)
     {
+        @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 1.7.7.0.', E_USER_DEPRECATED);
+
         return count($this->hookDispatcher->getListeners(strtolower($hookName)));
     }
 }

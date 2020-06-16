@@ -111,16 +111,18 @@
   </div>
 </div>
 
-{% if hookcount('displayAdminOrderTabLink') > 0 or hookcount('displayAdminOrderTabContent') > 0 %}
+{% set displayAdminOrderTabLink = renderhook('displayAdminOrderTabLink', {'id_order': orderForViewing.id}) %}
+{% set displayAdminOrderTabContent = renderhook('displayAdminOrderTabContent', {'id_order': orderForViewing.id}) %}
+{% if displayAdminOrderTabLink is not empty or displayAdminOrderTabContent is not empty%}
   <div class="mt-2" id="order_hook_tabs">
     <ul class="nav nav nav-tabs" role="tablist">
       {# Rendering of hook displayAdminOrderTabLink, we expect tab links #}
-      {{ renderhook('displayAdminOrderTabLink', {'id_order': orderForViewing.id}) }}
+      {{ displayAdminOrderTabLink }}
     </ul>
 
     <div class="tab-content">
       {# Rendering of hook displayAdminOrderTabContent, we expect tab contents #}
-      {{ renderhook('displayAdminOrderTabContent', {'id_order': orderForViewing.id}) }}
+      {{ displayAdminOrderTabContent }}
     </div>
   </div>
 {% endif %}
