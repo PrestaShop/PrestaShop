@@ -31,7 +31,7 @@ use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
-use PrestaShopBundle\Translation\ISProvider\TranslationsCatalogueProvider;
+use PrestaShopBundle\Translation\Provider\TranslationsCatalogueProvider;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
