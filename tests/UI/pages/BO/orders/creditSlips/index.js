@@ -20,15 +20,17 @@ module.exports = class CreditSlips extends BOBasePage {
     this.creditSlipsTableRow = row => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
     this.creditSlipDownloadButton = id => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
+
     // By date form
-    this.generateByDateForm = '[name=\'generate_pdf_by_date\']';
+    this.generateByDateForm = '#form-generate-credit-slips-by-date';
     this.dateFromInput = '#generate_pdf_by_date_from';
     this.dateToInput = '#generate_pdf_by_date_to';
-    this.generatePdfByDateButton = `${this.generateByDateForm} .btn.btn-primary`;
+    this.generatePdfByDateButton = `${this.generateByDateForm} .card-footer button`;
+
     // Credit slip options form
-    this.creditSlipOptionsForm = '[name=\'form\']';
-    this.invoicePrefixInput = '#form_options_slip_prefix_1';
-    this.saveCreditSlipOptionsButton = `${this.creditSlipOptionsForm} .btn.btn-primary`;
+    this.creditSlipOptionsForm = '#form-credit-slips-options';
+    this.invoicePrefixInput = '#form_slip_prefix_1';
+    this.saveCreditSlipOptionsButton = `${this.creditSlipOptionsForm} .card-footer button`;
   }
 
   /*
