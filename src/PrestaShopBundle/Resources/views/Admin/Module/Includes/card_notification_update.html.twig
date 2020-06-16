@@ -35,7 +35,7 @@
 {% block addon_description %}
   {% if module.attributes.changeLog is defined %}
     <ul>
-      {% for version, lines in module.attributes.changeLog %}
+      {% for version, lines in module.attributes.changeLog|arrayCast %}
         <li><b>{{ version }}:</b>
           {% for line in lines %}
             {{ line }}<br/>
