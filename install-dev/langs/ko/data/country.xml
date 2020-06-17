@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_country>
+  <country id="DE">
+    <name>독일</name>
+  </country>
+  <country id="AT">
+    <name>오스트리아</name>
+  </country>
+  <country id="BE">
+    <name>벨기에</name>
+  </country>
+  <country id="CA">
+    <name>캐나다</name>
+  </country>
+  <country id="CN">
+    <name>중국</name>
+  </country>
+  <country id="ES">
+    <name>스페인</name>
+  </country>
+  <country id="FI">
+    <name>핀란드</name>
+  </country>
+  <country id="FR">
+    <name>프랑스</name>
+  </country>
+  <country id="GR">
+    <name>그리스</name>
+  </country>
+  <country id="IT">
+    <name>이탈리아</name>
+  </country>
+  <country id="JP">
+    <name>일본</name>
+  </country>
+  <country id="LU">
+    <name>룩셈부르크</name>
+  </country>
+  <country id="NL">
+    <name>네덜란드</name>
+  </country>
+  <country id="PL">
+    <name>폴란드</name>
+  </country>
+  <country id="PT">
+    <name>포르투갈</name>
+  </country>
+  <country id="CZ">
+    <name>체코 공화국</name>
+  </country>
+  <country id="GB">
+    <name>영국</name>
+  </country>
+  <country id="SE">
+    <name>스웨덴</name>
+  </country>
+  <country id="CH">
+    <name>스위스</name>
+  </country>
+  <country id="DK">
+    <name>덴마크</name>
+  </country>
+  <country id="US">
+    <name>미국</name>
+  </country>
+  <country id="HK">
+    <name>홍콩</name>
+  </country>
+  <country id="NO">
+    <name>노르웨이</name>
+  </country>
+  <country id="AU">
+    <name>오스트레일리아</name>
+  </country>
+  <country id="SG">
+    <name>싱가포르</name>
+  </country>
+  <country id="IE">
+    <name>아일랜드</name>
+  </country>
+  <country id="NZ">
+    <name>뉴질랜드</name>
+  </country>
+  <country id="KR">
+    <name>대한민국</name>
+  </country>
+  <country id="IL">
+    <name>이스라엘</name>
+  </country>
+  <country id="ZA">
+    <name>남아프리카</name>
+  </country>
+  <country id="NG">
+    <name>나이지리아</name>
+  </country>
+  <country id="CI">
+    <name>아이보리 코스트</name>
+  </country>
+  <country id="TG">
+    <name>토고</name>
+  </country>
+  <country id="BO">
+    <name>볼리비아</name>
+  </country>
+  <country id="MU">
+    <name>모리셔스</name>
+  </country>
+  <country id="RO">
+    <name>루마니아</name>
+  </country>
+  <country id="SK">
+    <name>슬로바키아</name>
+  </country>
+  <country id="DZ">
+    <name>알제리</name>
+  </country>
+  <country id="AS">
+    <name>아메리칸 사모아</name>
+  </country>
+  <country id="AD">
+    <name>안도라</name>
+  </country>
+  <country id="AO">
+    <name>앙골라</name>
+  </country>
+  <country id="AI">
+    <name>앵귈라</name>
+  </country>
+  <country id="AG">
+    <name>앤티가 바부다</name>
+  </country>
+  <country id="AR">
+    <name>아르헨티나</name>
+  </country>
+  <country id="AM">
+    <name>아르메니아</name>
+  </country>
+  <country id="AW">
+    <name>아루바</name>
+  </country>
+  <country id="AZ">
+    <name>아제르바이잔</name>
+  </country>
+  <country id="BS">
+    <name>바하마</name>
+  </country>
+  <country id="BH">
+    <name>바레인</name>
+  </country>
+  <country id="BD">
+    <name>방글라데시</name>
+  </country>
+  <country id="BB">
+    <name>바베이도스</name>
+  </country>
+  <country id="BY">
+    <name>벨라루스</name>
+  </country>
+  <country id="BZ">
+    <name>벨리즈</name>
+  </country>
+  <country id="BJ">
+    <name>베냉</name>
+  </country>
+  <country id="BM">
+    <name>버뮤다</name>
+  </country>
+  <country id="BT">
+    <name>부탄</name>
+  </country>
+  <country id="BW">
+    <name>보츠와나</name>
+  </country>
+  <country id="BR">
+    <name>브라질</name>
+  </country>
+  <country id="BN">
+    <name>브루나이</name>
+  </country>
+  <country id="BF">
+    <name>부르키나파소</name>
+  </country>
+  <country id="MM">
+    <name>미얀마</name>
+  </country>
+  <country id="BI">
+    <name>부룬디</name>
+  </country>
+  <country id="KH">
+    <name>캄보디아</name>
+  </country>
+  <country id="CM">
+    <name>카메룬</name>
+  </country>
+  <country id="CV">
+    <name>카보베르데</name>
+  </country>
+  <country id="CF">
+    <name>중앙 아프리카 공화국</name>
+  </country>
+  <country id="TD">
+    <name>차드</name>
+  </country>
+  <country id="CL">
+    <name>칠레</name>
+  </country>
+  <country id="CO">
+    <name>콜롬비아</name>
+  </country>
+  <country id="KM">
+    <name>코모로</name>
+  </country>
+  <country id="CD">
+    <name>콩고민주공화국</name>
+  </country>
+  <country id="CG">
+    <name>콩고 공화국</name>
+  </country>
+  <country id="CR">
+    <name>코스타리카</name>
+  </country>
+  <country id="HR">
+    <name>크로아티아</name>
+  </country>
+  <country id="CU">
+    <name>쿠바</name>
+  </country>
+  <country id="CY">
+    <name>키프로스</name>
+  </country>
+  <country id="DJ">
+    <name>지부티</name>
+  </country>
+  <country id="DM">
+    <name>도미니카</name>
+  </country>
+  <country id="DO">
+    <name>도미니카 공화국</name>
+  </country>
+  <country id="TL">
+    <name>티모르레스테</name>
+  </country>
+  <country id="EC">
+    <name>에콰도르</name>
+  </country>
+  <country id="EG">
+    <name>이집트</name>
+  </country>
+  <country id="SV">
+    <name>엘살바도르</name>
+  </country>
+  <country id="GQ">
+    <name>적도 기니</name>
+  </country>
+  <country id="ER">
+    <name>에리트리아</name>
+  </country>
+  <country id="EE">
+    <name>에스토니아</name>
+  </country>
+  <country id="ET">
+    <name>에티오피아</name>
+  </country>
+  <country id="FK">
+    <name>포클랜드 제도(말비나스 군도)</name>
+  </country>
+  <country id="FO">
+    <name>페로 제도</name>
+  </country>
+  <country id="FJ">
+    <name>피지</name>
+  </country>
+  <country id="GA">
+    <name>가봉</name>
+  </country>
+  <country id="GM">
+    <name>감비아</name>
+  </country>
+  <country id="GE">
+    <name>조지아</name>
+  </country>
+  <country id="GH">
+    <name>가나</name>
+  </country>
+  <country id="GD">
+    <name>그레나다</name>
+  </country>
+  <country id="GL">
+    <name>그린란드</name>
+  </country>
+  <country id="GI">
+    <name>지브롤터</name>
+  </country>
+  <country id="GP">
+    <name>과들루프</name>
+  </country>
+  <country id="GU">
+    <name>괌</name>
+  </country>
+  <country id="GT">
+    <name>과테말라</name>
+  </country>
+  <country id="GG">
+    <name>건지</name>
+  </country>
+  <country id="GN">
+    <name>기니</name>
+  </country>
+  <country id="GW">
+    <name>기니비사우</name>
+  </country>
+  <country id="GY">
+    <name>가이아나</name>
+  </country>
+  <country id="HT">
+    <name>아이티</name>
+  </country>
+  <country id="HM">
+    <name>허드 맥도널드 제도</name>
+  </country>
+  <country id="VA">
+    <name>바티칸 시국</name>
+  </country>
+  <country id="HN">
+    <name>온두라스</name>
+  </country>
+  <country id="IS">
+    <name>아이슬란드</name>
+  </country>
+  <country id="IN">
+    <name>인도</name>
+  </country>
+  <country id="ID">
+    <name>인도네시아</name>
+  </country>
+  <country id="IR">
+    <name>이란</name>
+  </country>
+  <country id="IQ">
+    <name>이라크</name>
+  </country>
+  <country id="IM">
+    <name>맨 섬</name>
+  </country>
+  <country id="JM">
+    <name>자메이카</name>
+  </country>
+  <country id="JE">
+    <name>저지</name>
+  </country>
+  <country id="JO">
+    <name>요르단</name>
+  </country>
+  <country id="KZ">
+    <name>카자흐스탄</name>
+  </country>
+  <country id="KE">
+    <name>케냐</name>
+  </country>
+  <country id="KI">
+    <name>키리바시</name>
+  </country>
+  <country id="KP">
+    <name>북한</name>
+  </country>
+  <country id="KW">
+    <name>쿠웨이트</name>
+  </country>
+  <country id="KG">
+    <name>키르기스스탄</name>
+  </country>
+  <country id="LA">
+    <name>라오스</name>
+  </country>
+  <country id="LV">
+    <name>라트비아</name>
+  </country>
+  <country id="LB">
+    <name>레바논</name>
+  </country>
+  <country id="LS">
+    <name>레소토</name>
+  </country>
+  <country id="LR">
+    <name>라이베리아</name>
+  </country>
+  <country id="LY">
+    <name>리비아</name>
+  </country>
+  <country id="LI">
+    <name>리히텐슈타인</name>
+  </country>
+  <country id="LT">
+    <name>리투아니아</name>
+  </country>
+  <country id="MO">
+    <name>마카오</name>
+  </country>
+  <country id="MK">
+    <name>북마케도니아</name>
+  </country>
+  <country id="MG">
+    <name>마다가스카르</name>
+  </country>
+  <country id="MW">
+    <name>말라위</name>
+  </country>
+  <country id="MY">
+    <name>말레이시아</name>
+  </country>
+  <country id="MV">
+    <name>몰디브</name>
+  </country>
+  <country id="ML">
+    <name>말리</name>
+  </country>
+  <country id="MT">
+    <name>몰타</name>
+  </country>
+  <country id="MH">
+    <name>마셜 제도</name>
+  </country>
+  <country id="MQ">
+    <name>마르티니크</name>
+  </country>
+  <country id="MR">
+    <name>모리타니</name>
+  </country>
+  <country id="HU">
+    <name>헝가리</name>
+  </country>
+  <country id="YT">
+    <name>마요트</name>
+  </country>
+  <country id="MX">
+    <name>멕시코</name>
+  </country>
+  <country id="FM">
+    <name>미크로네시아</name>
+  </country>
+  <country id="MD">
+    <name>몰도바</name>
+  </country>
+  <country id="MC">
+    <name>모나코</name>
+  </country>
+  <country id="MN">
+    <name>몽골</name>
+  </country>
+  <country id="ME">
+    <name>몬테네그로</name>
+  </country>
+  <country id="MS">
+    <name>몬트세라트</name>
+  </country>
+  <country id="MA">
+    <name>모로코</name>
+  </country>
+  <country id="MZ">
+    <name>모잠비크</name>
+  </country>
+  <country id="NA">
+    <name>나미비아</name>
+  </country>
+  <country id="NR">
+    <name>나우루</name>
+  </country>
+  <country id="NP">
+    <name>네팔</name>
+  </country>
+  <country id="AN">
+    <name>Netherlands Antilles</name>
+  </country>
+  <country id="NC">
+    <name>뉴칼레도니아</name>
+  </country>
+  <country id="NI">
+    <name>니카라과</name>
+  </country>
+  <country id="NE">
+    <name>니제르</name>
+  </country>
+  <country id="NU">
+    <name>니우에</name>
+  </country>
+  <country id="NF">
+    <name>노퍽섬</name>
+  </country>
+  <country id="MP">
+    <name>북마리아나제도</name>
+  </country>
+  <country id="OM">
+    <name>오만</name>
+  </country>
+  <country id="PK">
+    <name>파키스탄</name>
+  </country>
+  <country id="PW">
+    <name>팔라우</name>
+  </country>
+  <country id="PS">
+    <name>팔레스타인</name>
+  </country>
+  <country id="PA">
+    <name>파나마</name>
+  </country>
+  <country id="PG">
+    <name>파푸아뉴기니</name>
+  </country>
+  <country id="PY">
+    <name>파라과이</name>
+  </country>
+  <country id="PE">
+    <name>페루</name>
+  </country>
+  <country id="PH">
+    <name>필리핀</name>
+  </country>
+  <country id="PN">
+    <name>핏케언 섬</name>
+  </country>
+  <country id="PR">
+    <name>푸에르토리코</name>
+  </country>
+  <country id="QA">
+    <name>카타르</name>
+  </country>
+  <country id="RE">
+    <name>리유니온</name>
+  </country>
+  <country id="RU">
+    <name>러시아</name>
+  </country>
+  <country id="RW">
+    <name>르완다</name>
+  </country>
+  <country id="BL">
+    <name>생바르텔레미</name>
+  </country>
+  <country id="KN">
+    <name>세인트키츠 네비스</name>
+  </country>
+  <country id="LC">
+    <name>세인트루시아</name>
+  </country>
+  <country id="MF">
+    <name>생마르탱</name>
+  </country>
+  <country id="PM">
+    <name>생피에르 미클롱</name>
+  </country>
+  <country id="VC">
+    <name>세인트빈센트그레나딘</name>
+  </country>
+  <country id="WS">
+    <name>사모아</name>
+  </country>
+  <country id="SM">
+    <name>산마리노</name>
+  </country>
+  <country id="ST">
+    <name>상투메 프린시페</name>
+  </country>
+  <country id="SA">
+    <name>사우디아라비아</name>
+  </country>
+  <country id="SN">
+    <name>세네갈</name>
+  </country>
+  <country id="RS">
+    <name>세르비아</name>
+  </country>
+  <country id="SC">
+    <name>세이셸</name>
+  </country>
+  <country id="SL">
+    <name>시에라리온</name>
+  </country>
+  <country id="SI">
+    <name>슬로베니아</name>
+  </country>
+  <country id="SB">
+    <name>솔로몬 제도</name>
+  </country>
+  <country id="SO">
+    <name>소말리아</name>
+  </country>
+  <country id="GS">
+    <name>사우스조지아 사우스샌드위치 제도</name>
+  </country>
+  <country id="LK">
+    <name>스리랑카</name>
+  </country>
+  <country id="SD">
+    <name>수단</name>
+  </country>
+  <country id="SR">
+    <name>수리남</name>
+  </country>
+  <country id="SJ">
+    <name>스발바르제도-얀마웬섬</name>
+  </country>
+  <country id="SZ">
+    <name>스와질란드</name>
+  </country>
+  <country id="SY">
+    <name>시리아</name>
+  </country>
+  <country id="TW">
+    <name>대만</name>
+  </country>
+  <country id="TJ">
+    <name>타지키스탄</name>
+  </country>
+  <country id="TZ">
+    <name>탄자니아</name>
+  </country>
+  <country id="TH">
+    <name>태국</name>
+  </country>
+  <country id="TK">
+    <name>토켈라우</name>
+  </country>
+  <country id="TO">
+    <name>통가</name>
+  </country>
+  <country id="TT">
+    <name>트리니다드 토바고</name>
+  </country>
+  <country id="TN">
+    <name>튀니지</name>
+  </country>
+  <country id="TR">
+    <name>터키</name>
+  </country>
+  <country id="TM">
+    <name>투르크메니스탄</name>
+  </country>
+  <country id="TC">
+    <name>터크스 케이커스 제도</name>
+  </country>
+  <country id="TV">
+    <name>투발루</name>
+  </country>
+  <country id="UG">
+    <name>우간다</name>
+  </country>
+  <country id="UA">
+    <name>우크라이나</name>
+  </country>
+  <country id="AE">
+    <name>아랍에미리트</name>
+  </country>
+  <country id="UY">
+    <name>우루과이</name>
+  </country>
+  <country id="UZ">
+    <name>우즈베키스탄</name>
+  </country>
+  <country id="VU">
+    <name>바누아투</name>
+  </country>
+  <country id="VE">
+    <name>베네수엘라</name>
+  </country>
+  <country id="VN">
+    <name>베트남</name>
+  </country>
+  <country id="VG">
+    <name>영국령 버진아일랜드</name>
+  </country>
+  <country id="VI">
+    <name>미국령 버진아일랜드</name>
+  </country>
+  <country id="WF">
+    <name>왈리스-푸투나 제도</name>
+  </country>
+  <country id="EH">
+    <name>서사하라</name>
+  </country>
+  <country id="YE">
+    <name>예멘</name>
+  </country>
+  <country id="ZM">
+    <name>잠비아</name>
+  </country>
+  <country id="ZW">
+    <name>짐바브웨</name>
+  </country>
+  <country id="AL">
+    <name>알바니아</name>
+  </country>
+  <country id="AF">
+    <name>아프가니스탄</name>
+  </country>
+  <country id="AQ">
+    <name>남극 대륙</name>
+  </country>
+  <country id="BA">
+    <name>보스니아 헤르체고비나</name>
+  </country>
+  <country id="BV">
+    <name>부베섬</name>
+  </country>
+  <country id="IO">
+    <name>영국령 인도양 식민지</name>
+  </country>
+  <country id="BG">
+    <name>불가리아</name>
+  </country>
+  <country id="KY">
+    <name>케이맨 제도</name>
+  </country>
+  <country id="CX">
+    <name>크리스마스섬</name>
+  </country>
+  <country id="CC">
+    <name>코코스 제도</name>
+  </country>
+  <country id="CK">
+    <name>쿡 제도</name>
+  </country>
+  <country id="GF">
+    <name>프랑스령 기아나</name>
+  </country>
+  <country id="PF">
+    <name>프랑스령 폴리네시아</name>
+  </country>
+  <country id="TF">
+    <name>프랑스 남부 지방</name>
+  </country>
+  <country id="AX">
+    <name>올란드 제도</name>
+  </country>
+</entity_country>
