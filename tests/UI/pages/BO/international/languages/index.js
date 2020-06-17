@@ -67,7 +67,7 @@ module.exports = class Languages extends LocalizationBasePage {
 
   /**
    * Get number of elements in grid
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -75,7 +75,7 @@ module.exports = class Languages extends LocalizationBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -110,7 +110,7 @@ module.exports = class Languages extends LocalizationBasePage {
    * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTable(row, column) {
     return this.getTextContent(this.tableColumn(row, column));
@@ -143,7 +143,7 @@ module.exports = class Languages extends LocalizationBasePage {
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteLanguage(row = 1) {
     this.dialogListener(true);
@@ -186,7 +186,7 @@ module.exports = class Languages extends LocalizationBasePage {
   /**
    * Enable / disable Suppliers by Bulk Actions
    * @param toEnable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async bulkEditEnabledColumn(toEnable = true) {
     // Click on Select All
@@ -206,7 +206,7 @@ module.exports = class Languages extends LocalizationBasePage {
 
   /**
    * Delete with bulk actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteWithBulkActions() {
     // Click on Select All

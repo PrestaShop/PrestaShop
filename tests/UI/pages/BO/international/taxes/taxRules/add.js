@@ -33,7 +33,7 @@ module.exports = class AddTaxRules extends BOBasePage {
   /**
    * Fill form for add/edit tax rules group
    * @param taxRuleGroupData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditTaxRulesGroup(taxRuleGroupData) {
     await this.setValue(this.nameInput, taxRuleGroupData.name);
@@ -46,7 +46,7 @@ module.exports = class AddTaxRules extends BOBasePage {
   /**
    * Fill form for add/edit tax rules group
    * @param taxRuleData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditTaxRules(taxRuleData) {
     await this.selectByVisibleText(this.countrySelect, taxRuleData.country);

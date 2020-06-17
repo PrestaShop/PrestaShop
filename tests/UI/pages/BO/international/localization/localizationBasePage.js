@@ -8,7 +8,6 @@ module.exports = class LocalizationBasePage extends BOBasePage {
     this.localizationNavItemLink = '#subtab-AdminLocalization';
     this.languagesNavItemLink = '#subtab-AdminLanguages';
     this.currenciesNavItemLink = '#subtab-AdminCurrencies';
-    this.geolocationNavItemLink = '#subtab-AdminGeolocation';
   }
 
   /* Header Methods */

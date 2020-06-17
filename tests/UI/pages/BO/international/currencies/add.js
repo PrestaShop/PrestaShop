@@ -27,7 +27,7 @@ module.exports = class AddCurrency extends BOBasePage {
   /**
    * Add official currency
    * @param currencyData, currency to add
-   * @return {Promise<textContent>}, successful text message that appears
+   * @returns {Promise<string>}, successful text message that appears
    */
   async addOfficialCurrency(currencyData) {
     // Select currency
@@ -54,7 +54,7 @@ module.exports = class AddCurrency extends BOBasePage {
   /**
    * Create unofficial currency
    * @param currencyData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createUnOfficialCurrency(currencyData) {
     if (!(await this.isCheckboxSelected(this.alternativeCurrencyCheckBox))) {
