@@ -28,6 +28,84 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+
+/**
+ * Adds product to a pack
+ */
 class AddProductToPackCommand
 {
+    /**
+     * @var ProductId
+     */
+    private $productPackId;
+
+    /**
+     * @var ProductId
+     */
+    private $productToPackId;
+
+    /**
+     * @var CombinationId|null
+     */
+    private $combinationToPackId;
+
+    /**
+     * @var int
+     */
+    private $quantity;
+
+    /**
+     * @param int $productPackId
+     * @param int $productToPackId
+     * @param int|null $combinationToPackId
+     * @param int $quantity
+     */
+    public function __construct(
+        int $productPackId,
+        int $productToPackId,
+        int $quantity,
+        ?int $combinationToPackId
+    ) {
+        $this->productPackId = new ProductId($productPackId);
+        $this->productToPackId = new ProductId($productToPackId);
+        $this->quantity = $quantity;
+
+        if ($combinationToPackId !== null) {
+            $this->combinationToPackId = new CombinationId($combinationToPackId);
+        }
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductPackId(): ProductId
+    {
+        return $this->productPackId;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductToPackId(): ProductId
+    {
+        return $this->productToPackId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @return CombinationId|null
+     */
+    public function getCombinationToPackId(): ?CombinationId
+    {
+        return $this->combinationToPackId;
+    }
 }

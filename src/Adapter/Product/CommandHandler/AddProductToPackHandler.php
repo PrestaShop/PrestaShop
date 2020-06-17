@@ -28,17 +28,90 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductToPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductToPackHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackingException;
+use PrestaShopException;
 
 final class AddProductToPackHandler extends AbstractProductHandler implements AddProductToPackHandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(AddProductToPackCommand $command): void
     {
-        // TODO: Implement handle() method.
+        //@todo: ref AdminProductsController::3117 updatePackItems()
+        // Product that is being edited becomes the Pack.
+        $productPack = $this->getProduct($command->getProductPackId());
+        $productToPackId = $command->getProductToPackId()->getValue();
+        $combinationToPackId = $command->getCombinationToPackId();
+
+        if (null === $combinationToPackId) {
+            $combinationToPackId = CombinationId::NO_COMBINATION;
+        }
+
+        try {
+            $this->assertProductIsAvailableForPacking($productToPackId);
+
+            if (false === Pack::deleteItems($productPack->id)) {
+                throw new ProductPackingException(
+                    $this->buildMessageWithCommandInputs('Failed adding product to pack.', $command),
+                    ProductPackingException::FAILED_DELETING_PREVIOUS_PACKS
+                );
+            }
+            //reset cache_default_attribute
+            $productPack->setDefaultAttribute(0);
+            $packed = Pack::addItem($productPack->id, $productToPackId, $command->getQuantity(), $combinationToPackId);
+
+            if (false === $packed) {
+                throw new ProductPackingException(
+                    $this->buildMessageWithCommandInputs('Failed adding product to pack.', $command),
+                    ProductPackingException::FAILED_ADDING_TO_PACK
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                $this->buildMessageWithCommandInputs('Error occurred when trying to add product to pack.', $command),
+                0,
+                $e
+            );
+        }
+    }
+
+    /**
+     * @param int $productToPackId
+     *
+     * @throws ProductPackingException
+     */
+    private function assertProductIsAvailableForPacking(int $productToPackId): void
+    {
+        if (Pack::isPack($productToPackId)) {
+            throw new ProductPackingException(
+                sprintf('Product #%s is a pack itself. It cannot be packed', $productToPackId),
+                ProductPackingException::CANNOT_ADD_PACK_INTO_PACK
+            );
+        }
+    }
+
+    /**
+     * Builds string with ids from command, that will help to identify objects that was being updated in case of error
+     *
+     * @param string $messageBody
+     * @param AddProductToPackCommand $command
+     *
+     * @return string
+     */
+    private function buildMessageWithCommandInputs(string $messageBody, AddProductToPackCommand $command): string
+    {
+        return sprintf(
+            "$messageBody. [packId #%s; productId #%s; combinationId #%s]",
+            $command->getProductPackId()->getValue(),
+            $command->getProductToPackId()->getValue(),
+            $command->getCombinationToPackId()->getValue()
+        );
     }
 }
