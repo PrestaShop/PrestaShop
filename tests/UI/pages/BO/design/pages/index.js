@@ -39,8 +39,8 @@ module.exports = class Pages extends BOBasePage {
     this.confirmDeleteButton = table => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
     // Filters
     this.filterColumn = (table, filterBy) => `${this.gridTable(table)} #${table}_${filterBy}`;
-    this.filterSearchButton = table => `${this.gridTable(table)} button[name='${table}[actions][search]']`;
-    this.filterResetButton = table => `${this.gridTable(table)} button[name='${table}[actions][reset]']`;
+    this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
     // Actions buttons in Row
     this.listTableToggleDropDown = (table, row) => `${this.listTableColumn(table, row, 'actions')}`
       + ' a[data-toggle=\'dropdown\']';
