@@ -133,9 +133,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                 );
             }
 
-            if (null !== $localizedTags) {
-                $this->updateTags($product, $localizedTags);
-            }
+            $this->updateTags($product, $localizedTags);
         } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf(
@@ -162,12 +160,20 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      * @throws CannotUpdateProductException
      * @throws PrestaShopException
      */
-    private function updateTags(Product $product, array $localizedTags)
+    private function updateTags(Product $product, ?array $localizedTags)
     {
+        // don't do anything with tags if its null. (It means it is a partial update and tags aren't changed)
+        if (null === $localizedTags) {
+            return;
+        }
+
         $productId = (int) $product->id;
 
+        // delete all tags for product if array is empty
         if (empty($localizedTags)) {
             $this->deleteAllTagsForProduct($productId);
+
+            return;
         }
 
         foreach ($localizedTags as $langId => $tags) {
@@ -184,13 +190,15 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                 );
             }
 
-            // just leave the tags removed if its empty
+            // validate each tag and remove empty values
+            $this->validateTags($tags, $langId);
+
+            // empty tags means to delete all previous tags, which is already done above.
             if (empty($tags)) {
                 continue;
             }
 
-            $this->validateTags($tags, $langId);
-
+            // assign new tags to product
             if (false === Tag::addTags($langId, $productId, $tags)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to update product #%s tags in lang #%s', $productId, $langId),
@@ -213,7 +221,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
     private function validateTags(array &$tags, int $langId): void
     {
         foreach ($tags as $key => $tag) {
-            //remove empty values
+            //remove empty value
             if (empty($tag)) {
                 unset($tags[$key]);
 
@@ -243,7 +251,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
     {
         if (false === Tag::deleteTagsForProduct($productId)) {
             throw new CannotUpdateProductException(
-                sprintf('Failed to delete product #%s tags', $productId),
+                sprintf('Failed to delete all tags for product #%s', $productId),
                 CannotUpdateProductException::FAILED_UPDATE_OPTIONS
             );
         }
