@@ -65,7 +65,7 @@ class UpdateProductOptionsCommand
     private $showPrice;
 
     /**
-     * @var array|null key value pairs where key is language id and value is the array of tags
+     * @var array|null
      */
     private $localizedTags;
 
@@ -204,7 +204,7 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @param string[] $localizedTags
+     * @param string[] $localizedTags key value pairs where key is language id and value is the array of tags
      *
      * @return UpdateProductOptionsCommand
      */
