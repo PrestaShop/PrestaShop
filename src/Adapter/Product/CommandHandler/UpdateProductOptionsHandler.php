@@ -184,34 +184,50 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                 );
             }
 
+            // just leave the tags removed if its empty
             if (empty($tags)) {
                 continue;
             }
 
-            $validTags = [];
-            foreach ($tags as $tag) {
-                //skip empty values
-                if (empty($tag)) {
-                    continue;
-                }
+            $this->validateTags($tags, $langId);
 
-                //validate tag
-                if (false === Validate::isGenericName($tag)) {
-                    throw new ProductConstraintException(
-                        sprintf(
-                            'Invalid product tag "%s" in language with id "%s"',
-                            $tag,
-                            $langId
-                        )
-                    );
-                }
-                $validTags[] = $tag;
-            }
-
-            if (false === Tag::addTags($langId, $productId, $validTags)) {
+            if (false === Tag::addTags($langId, $productId, $tags)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to update product #%s tags in lang #%s', $productId, $langId),
                     CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+                );
+            }
+        }
+    }
+
+    /**
+     * Validate each tag in provided language and remove the empty values
+     *
+     * @param array &$tags
+     * @param int $langId
+     *
+     * @return void
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateTags(array &$tags, int $langId): void
+    {
+        foreach ($tags as $key => $tag) {
+            //remove empty values
+            if (empty($tag)) {
+                unset($tag[$key]);
+
+                continue;
+            }
+
+            //validate tag
+            if (false === Validate::isGenericName($tag)) {
+                throw new ProductConstraintException(
+                    sprintf(
+                        'Invalid product tag "%s" in language with id "%s"',
+                        $tag,
+                        $langId
+                    )
                 );
             }
         }
