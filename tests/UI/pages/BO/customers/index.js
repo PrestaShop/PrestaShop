@@ -31,8 +31,8 @@ module.exports = class Customers extends BOBasePage {
       + ' i.grid-toggler-icon-not-valid';
     // Filters
     this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
-    this.filterSearchButton = `${this.customersListForm} button[name='customer[actions][search]']`;
-    this.filterResetButton = `${this.customersListForm} button[name='customer[actions][reset]']`;
+    this.filterSearchButton = `${this.customersListForm} .grid-search-button`;
+    this.filterResetButton = `${this.customersListForm} .grid-reset-button`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.customersListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.customersListForm} button.dropdown-toggle`;
