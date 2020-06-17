@@ -179,7 +179,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
             $tags = $this->validateTags($tags, $langId);
 
             // delete all this product tags for this lang
-            if (false === Tag::deleteTagsForProduct($productId, $langId)) {
+            if (false === Tag::deleteProductTagsInLang($productId, $langId)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to delete product #%s previous tags in lang #%s', $productId, $langId),
                     CannotUpdateProductException::FAILED_UPDATE_OPTIONS

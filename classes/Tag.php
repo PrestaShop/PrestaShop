@@ -303,13 +303,40 @@ class TagCore extends ObjectModel
      * Delete tags for product.
      *
      * @param int $idProduct Product ID
-     * @param int|null $langId provide lang id to delete tags only in specific language
      *
      * @return bool
      *
      * @throws PrestaShopDatabaseException
      */
-    public static function deleteTagsForProduct($idProduct, int $langId = null)
+    public static function deleteTagsForProduct($idProduct)
+    {
+        return self::deleteTagsForProduct($idProduct);
+    }
+
+    /**
+     * Delete tags for product in specific language
+     *
+     * @param int $productId
+     * @param int $langId
+     *
+     * @return bool
+     */
+    public static function deleteProductTagsInLang(int $productId, int $langId)
+    {
+        return self::deleteProductTagsInLang($productId, $langId);
+    }
+
+    /**
+     * Deletes product tags.
+     *
+     * @param $idProduct
+     * @param int|null $langId if provided, only deletes tags in specific language
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private static function deleteProductTags($idProduct, int $langId = null)
     {
         $removeWhere = 'id_product = ' . (int) $idProduct;
         $selectTagsToRemove = '
