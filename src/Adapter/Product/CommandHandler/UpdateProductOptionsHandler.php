@@ -167,7 +167,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         $productId = (int) $product->id;
 
         if (empty($localizedTags)) {
-            $this->deleteAllProductTags($productId);
+            $this->deleteAllTagsForProduct($productId);
         }
 
         foreach ($localizedTags as $langId => $tags) {
@@ -239,7 +239,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      * @throws CannotUpdateProductException
      * @throws PrestaShopException
      */
-    private function deleteAllProductTags(int $productId): void
+    private function deleteAllTagsForProduct(int $productId): void
     {
         if (false === Tag::deleteTagsForProduct($productId)) {
             throw new CannotUpdateProductException(
