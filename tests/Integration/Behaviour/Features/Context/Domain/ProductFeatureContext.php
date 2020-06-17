@@ -200,7 +200,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * This is why it needs some additional parsing
      *
      * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
-     *                                   e.g. [1 => 'hello, goodbye', 2 => 'bonjour,Au revoir']
+     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
      * @param ProductForEditing $productForEditing
      */
     private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
