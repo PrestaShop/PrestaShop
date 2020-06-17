@@ -176,7 +176,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
 
         foreach ($localizedTags as $langId => $tags) {
             // validate each tag and remove empty values
-            $this->validateTags($tags, $langId);
+            $tags = $this->validateTags($tags, $langId);
 
             // delete all this product tags for this lang
             if (false === Tag::deleteTagsForProduct($productId, $langId)) {
@@ -202,22 +202,22 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
     }
 
     /**
-     * Validate each tag in provided language and remove empty values
+     * Validate each tag in provided language and rebuild the array removing empty values.
      *
-     * @param array &$tags
+     * @param array $tags
      * @param int $langId
      *
-     * @return void
+     * @return array
      *
      * @throws ProductConstraintException
      */
-    private function validateTags(array &$tags, int $langId): void
+    private function validateTags(array $tags, int $langId): array
     {
-        foreach ($tags as $key => $tag) {
-            //remove empty value
-            if (empty($tag)) {
-                unset($tags[$key]);
+        $validTags = [];
 
+        foreach ($tags as $key => $tag) {
+            //skip empty value
+            if (empty($tag)) {
                 continue;
             }
 
@@ -231,7 +231,11 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                     )
                 );
             }
+
+            $validTags[] = $tag;
         }
+
+        return $validTags;
     }
 
     /**
