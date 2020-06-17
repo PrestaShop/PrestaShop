@@ -28,8 +28,8 @@ module.exports = class WebService extends BOBasePage {
     } i.grid-toggler-icon-not-valid`;
     // Filters
     this.webserviceFilterInput = filterBy => `${this.webserviceListForm} #webservice_key_${filterBy}`;
-    this.filterSearchButton = `${this.webserviceListForm} button[name='webservice_key[actions][search]']`;
-    this.filterResetButton = `${this.webserviceListForm} button[name='webservice_key[actions][reset]']`;
+    this.filterSearchButton = `${this.webserviceListForm} .grid-search-button`;
+    this.filterResetButton = `${this.webserviceListForm} .grid-reset-button`;
     // Delete modal
     this.confirmDeleteModal = '#webservice_key-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;

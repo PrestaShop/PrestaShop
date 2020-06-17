@@ -30,8 +30,8 @@ module.exports = class Employees extends BOBasePage {
     } i.grid-toggler-icon-not-valid`;
     // Filters
     this.employeeFilterInput = filterBy => `${this.employeesListForm} #employee_${filterBy}`;
-    this.filterSearchButton = `${this.employeesListForm} button[name='employee[actions][search]']`;
-    this.filterResetButton = `${this.employeesListForm} button[name='employee[actions][reset]']`;
+    this.filterSearchButton = `${this.employeesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.employeesListForm} .grid-reset-button`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.employeesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.employeesListForm} button.dropdown-toggle`;
