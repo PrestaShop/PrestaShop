@@ -22,13 +22,13 @@ module.exports = class Login extends BOBasePage {
   /**
    * Enter credentials and submit login form
    * @param email
-   * @param pwd
+   * @param password
    * @param waitForNavigation, false if login should fail
    * @returns {Promise<void>}
    */
-  async login(email, pwd, waitForNavigation = true) {
+  async login(email, password, waitForNavigation = true) {
     await this.page.type(this.emailInput, email);
-    await this.page.type(this.passwordInput, pwd);
+    await this.page.type(this.passwordInput, password);
     if (waitForNavigation) {
       await this.clickAndWaitForNavigation(this.submitLoginButton);
     } else {
