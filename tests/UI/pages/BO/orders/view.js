@@ -158,7 +158,7 @@ module.exports = class Order extends BOBasePage {
    * @param quantity
    * @param amount
    * @param shipping
-   * @returns {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async addPartialRefundProduct(productRow, quantity = 0, amount = 0, shipping = 0) {
     await this.setValue(this.refundProductQuantity(productRow), quantity.toString());
