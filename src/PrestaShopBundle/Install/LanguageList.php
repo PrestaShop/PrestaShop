@@ -151,20 +151,32 @@ class LanguageList
         static $countries = null;
 
         if (null === $countries) {
-            $countries = [];
-            $countries_lang = $this->getLanguage()->getCountries();
-            $countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
-            $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'xml/country.xml');
-            if ($xml) {
-                foreach ($xml->entities->country as $country) {
-                    $iso = strtolower((string) $country['iso_code']);
-                    $countries[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
-                }
-            }
-            asort($countries);
+            $countries = $this->getCountriesByLanguage();
         }
 
         return $countries;
+    }
+
+    /**
+     * @param string|null $iso
+     *
+     * @return array
+     */
+    public function getCountriesByLanguage(?string $iso = null): array
+    {
+        $countryList = [];
+        $countries_lang = $this->getLanguage($iso)->getCountries();
+        $countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
+        $xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_ . 'xml/country.xml');
+        if ($xml) {
+            foreach ($xml->entities->country as $country) {
+                $iso = strtolower((string) $country['iso_code']);
+                $countryList[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
+            }
+        }
+        asort($countryList);
+
+        return $countryList;
     }
 
     /**
