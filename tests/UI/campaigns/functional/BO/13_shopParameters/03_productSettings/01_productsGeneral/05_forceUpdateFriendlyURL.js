@@ -19,7 +19,7 @@ const ProductFaker = require('@data/faker/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_forceUpdateFriendlyURL';
+const baseContext = 'functional_BO_shopParameters_productSettings_productsGeneral_forceUpdateFriendlyURL';
 
 let browserContext;
 let page;
@@ -96,7 +96,7 @@ describe('Enable/Disable force update friendly URL', async () => {
         },
     },
   ];
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
       await testContext.addContextItem(
         this,
@@ -127,7 +127,7 @@ describe('Enable/Disable force update friendly URL', async () => {
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
       await this.pageObjects.productSettingsPage.goToSubMenu(
         this.pageObjects.productSettingsPage.catalogParentLink,
