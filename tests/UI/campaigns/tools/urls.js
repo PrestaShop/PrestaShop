@@ -25,6 +25,58 @@
 require('module-alias/register');
 const {DefaultAccount} = require('@data/demo/customer');
 
+/**
+ * Login into BO to access BO Urls
+ * @param page
+ * @return {Promise<void>}
+ */
+const loginBO = async function (page) {
+  await page.type('#email', global.BO.EMAIL);
+  await page.type('#passwd', global.BO.PASSWD);
+
+  await Promise.all([
+    page.click('#submit_login'),
+    page.waitForNavigation({waitUntil: 'load'}),
+  ]);
+
+  const block = await page.$('button.onboarding-button-shut-down');
+
+  if (block !== null) {
+    await page.click('button.onboarding-button-shut-down');
+    await page.waitForSelector('a.onboarding-button-stop', {visible: true});
+    await page.click('a.onboarding-button-stop');
+  }
+};
+
+/**
+ * Login into FO to access user information pages
+ * @param page
+ * @return {Promise<void>}
+ */
+const loginFO = async function (page) {
+  await page.type('#login-form input[name=email]', DefaultAccount.email);
+  await page.type('#login-form input[name=password]', DefaultAccount.password);
+
+  await Promise.all([
+    page.click('#submit-login'),
+    page.waitForNavigation('load'),
+  ]);
+};
+
+/**
+ * Waiting for tinyMCE to load in pages :
+ * Add Product, Add Brand, Add supplier
+ *
+ * @param page
+ * @return {Promise<void>}
+ */
+const waitForTinyMCEToLoad = async function (page) {
+  await page.waitForFunction(
+    'typeof(tinyMCE)!== \'undefined\' && tinyMCE.activeEditor!==undefined',
+    {timeout: 10000},
+  );
+};
+
 module.exports = [
   {
     name: 'BO',
@@ -35,18 +87,7 @@ module.exports = [
         name: 'BO_login',
         url: 'index.php?controller=AdminLogin',
         async customAction(page) {
-          await page.type('#email', global.BO.EMAIL);
-          await page.type('#passwd', global.BO.PASSWD);
-          await Promise.all([
-            page.click('#submit_login'),
-            page.waitForNavigation({waitUntil: 'networkidle0'}),
-          ]);
-          const block = await page.$('button.onboarding-button-shut-down');
-          if (block !== null) {
-            await page.click('button.onboarding-button-shut-down');
-            await page.waitForSelector('a.onboarding-button-stop', {visible: true});
-            await page.click('a.onboarding-button-stop');
-          }
+          await loginBO(page);
         },
       },
       {name: 'BO_dashboard', url: 'index.php?controller=AdminDashboard'},
@@ -56,8 +97,21 @@ module.exports = [
       {name: 'BO_credits_slips', url: 'index.php/sell/orders/credit-slips'},
       {name: 'BO_delivery_slips', url: 'index.php/sell/orders/delivery-slips/'},
       {name: 'BO_products', url: 'index.php/sell/catalog/products'},
+      {
+        name: 'BO_add_product',
+        url: 'index.php/sell/catalog/products/new',
+        async customAction(page) {
+          await waitForTinyMCEToLoad(page);
+        },
+      },
       {name: 'BO_categories', url: 'index.php/sell/catalog/categories'},
-      {name: 'BO_add_category', url: 'index.php/sell/catalog/categories/new'},
+      {
+        name: 'BO_add_category',
+        url: 'index.php/sell/catalog/categories/new',
+        async customAction(page) {
+          await waitForTinyMCEToLoad(page);
+        },
+      },
       {name: 'BO_monitoring', url: 'index.php/sell/catalog/monitoring'},
       {name: 'BO_attributes', url: 'index.php?controller=AdminAttributesGroups'},
       {name: 'BO_add_attribute', url: 'index.php?controller=AdminAttributesGroups&addattribute_group'},
@@ -66,10 +120,22 @@ module.exports = [
       {name: 'BO_add_feature', url: 'index.php?controller=AdminFeatures&addfeature'},
       {name: 'BO_add_feature_value', url: 'index.php?controller=AdminFeatures&addfeature_value'},
       {name: 'BO_brands', url: 'index.php/sell/catalog/brands/'},
-      {name: 'BO_add_brand', url: 'index.php/sell/catalog/brands/new'},
+      {
+        name: 'BO_add_brand',
+        url: 'index.php/sell/catalog/brands/new',
+        async customAction(page) {
+          await waitForTinyMCEToLoad(page);
+        },
+      },
       {name: 'BO_add_brand_address', url: 'index.php/sell/catalog/brands/addresses/new'},
       {name: 'BO_suppliers', url: 'index.php/sell/catalog/suppliers'},
-      {name: 'BO_add_supplier', url: 'index.php/sell/catalog/suppliers/new'},
+      {
+        name: 'BO_add_supplier',
+        url: 'index.php/sell/catalog/suppliers/new',
+        async customAction(page) {
+          await waitForTinyMCEToLoad(page);
+        },
+      },
       {name: 'BO_files', url: 'index.php/sell/attachments'},
       {name: 'BO_add_file', url: 'index.php/sell/attachments/new'},
       {name: 'BO_discounts', url: 'index.php?controller=AdminCartRules'},
@@ -101,7 +167,13 @@ module.exports = [
       {name: 'BO_email_theme', url: 'index.php/improve/design/mail_theme/'},
       {name: 'BO_pages', url: 'index.php/improve/design/cms-pages/'},
       {name: 'BO_add_page_category', url: 'index.php/improve/design/cms-pages/category/new'},
-      {name: 'BO_add_page', url: 'index.php/improve/design/cms-pages/new'},
+      {
+        name: 'BO_add_page',
+        url: 'index.php/improve/design/cms-pages/new',
+        async customAction(page) {
+          await waitForTinyMCEToLoad(page);
+        },
+      },
       {name: 'BO_positions', url: 'index.php/improve/design/modules/positions/'},
       {name: 'BO_transplant_module', url: 'index.php?controller=AdminModulesPositions&addToHook='},
       {name: 'BO_image_settings', url: 'index.php?controller=AdminImages'},
@@ -176,34 +248,62 @@ module.exports = [
     urlPrefix: global.FO.URL,
     description: 'Crawling Front Office',
     urls: [
-      {name: 'FO_homepage', url: 'index.php'},
+      {name: 'FO_homepage_en', url: 'index.php?id_lang=1'},
+      {name: 'FO_homepage_fr', url: 'index.php?id_lang=2'},
       {name: 'FO_login', url: 'index.php?controller=authentication&back=my-account'},
       {
         name: 'FO_my_account',
         url: 'index.php?controller=authentication&back=my-account',
         async customAction(page) {
-          await page.type('#login-form input[name=email]', DefaultAccount.email);
-          await page.type('#login-form input[name=password]', DefaultAccount.password);
-          await page.click('#submit-login');
+          await loginFO(page);
         },
       },
       {
-        name: 'FO_product_1',
+        name: 'FO_product_1_en',
         url: 'index.php?id_product=1&id_product_attribute=1&rewrite=hummingbird-printed-t-shirt'
           + '&controller=product&id_lang=1#/1-size-s/8-color-white',
       },
-      {name: 'FO_category_clothes', url: 'index.php?id_category=3&controller=category&id_lang=1'},
-      {name: 'FO_contact_us', url: 'index.php?controller=contact'},
-      {name: 'FO_prices_drop', url: 'index.php?controller=prices-drop'},
-      {name: 'FO_new_products', url: 'index.php?controller=new-products'},
-      {name: 'FO_best_sales', url: 'index.php?controller=best-sales'},
-      {name: 'FO_search_mug', url: 'index.php?controller=search&s=mug'},
-      {name: 'FO_cms_delivery', url: 'index.php?id_cms=1&controller=cms&id_lang=1'},
-      {name: 'FO_account_informations', url: 'index.php?controller=identity'},
-      {name: 'FO_account_addresses', url: 'index.php?controller=addresses'},
-      {name: 'FO_account_history', url: 'index.php?controller=history'},
-      {name: 'FO_account_credit_slips', url: 'index.php?controller=order-slip'},
-      {name: 'FO_account_gdpr', url: 'index.php?fc=module&module=psgdpr&controller=gdpr&id_lang=1'},
+      {
+        name: 'FO_product_1_fr',
+        url: 'index.php?id_product=1&id_product_attribute=1&rewrite=hummingbird-printed-t-shirt'
+          + '&controller=product&id_lang=2#/1-size-s/8-color-white',
+      },
+      {name: 'FO_category_clothes_en', url: 'index.php?id_category=3&controller=category&id_lang=1'},
+      {name: 'FO_category_clothes_fr', url: 'index.php?id_category=3&controller=category&id_lang=2'},
+      {name: 'FO_contact_us_en', url: 'index.php?controller=contact&id_lang=1'},
+      {name: 'FO_contact_us_fr', url: 'index.php?controller=contact&id_lang=2'},
+      {name: 'FO_prices_drop_en', url: 'index.php?controller=prices-drop&id_lang=1'},
+      {name: 'FO_prices_drop_fr', url: 'index.php?controller=prices-drop&id_lang=2'},
+      {name: 'FO_new_products_en', url: 'index.php?controller=new-products&id_lang=1'},
+      {name: 'FO_new_products_fr', url: 'index.php?controller=new-products&id_lang=2'},
+      {name: 'FO_best_sales_en', url: 'index.php?controller=best-sales&id_lang=1'},
+      {name: 'FO_best_sales_fr', url: 'index.php?controller=best-sales&id_lang=2'},
+      {name: 'FO_search_mug_en', url: 'index.php?controller=search&s=mug&id_lang=1'},
+      {name: 'FO_search_mug_fr', url: 'index.php?controller=search&s=mug&id_lang=2'},
+      {name: 'FO_cms_delivery_en', url: 'index.php?id_cms=1&controller=cms&id_lang=1'},
+      {name: 'FO_cms_delivery_fr', url: 'index.php?id_cms=1&controller=cms&id_lang=2'},
+      {name: 'FO_cms_legal_notice_en', url: 'index.php?id_cms=2&controller=cms&id_lang=1'},
+      {name: 'FO_cms_legal_notice_fr', url: 'index.php?id_cms=2&controller=cms&id_lang=2'},
+      {name: 'FO_cms_terms_and_conditions_en', url: 'index.php?id_cms=3&controller=cms&id_lang=1'},
+      {name: 'FO_cms_terms_and_conditions_fr', url: 'index.php?id_cms=3&controller=cms&id_lang=2'},
+      {name: 'FO_cms_about_us_en', url: 'index.php?id_cms=4&controller=cms&id_lang=1'},
+      {name: 'FO_cms_about_us_fr', url: 'index.php?id_cms=4&controller=cms&id_lang=2'},
+      {name: 'FO_cms_secure_payment_en', url: 'index.php?id_cms=5&controller=cms&id_lang=1'},
+      {name: 'FO_cms_secure_payment_fr', url: 'index.php?id_cms=5&controller=cms&id_lang=2'},
+      {name: 'FO_sitmap_en', url: 'index.php?controller=sitemap&id_lang=1'},
+      {name: 'FO_sitmap_fr', url: 'index.php?controller=sitemap&id_lang=2'},
+      {name: 'FO_stores_en', url: 'index.php?controller=stores&id_lang=1'},
+      {name: 'FO_stores_fr', url: 'index.php?controller=stores&id_lang=2'},
+      {name: 'FO_account_information_en', url: 'index.php?controller=identity&id_lang=1'},
+      {name: 'FO_account_information_fr', url: 'index.php?controller=identity&id_lang=2'},
+      {name: 'FO_account_addresses_en', url: 'index.php?controller=addresses&id_lang=1'},
+      {name: 'FO_account_addresses_fr', url: 'index.php?controller=addresses&id_lang=2'},
+      {name: 'FO_account_history_en', url: 'index.php?controller=history&id_lang=1'},
+      {name: 'FO_account_history_fr', url: 'index.php?controller=history&id_lang=2'},
+      {name: 'FO_account_credit_slips_en', url: 'index.php?controller=order-slip&id_lang=1'},
+      {name: 'FO_account_credit_slips_fr', url: 'index.php?controller=order-slip&id_lang=2'},
+      {name: 'FO_account_gdpr_en', url: 'index.php?fc=module&module=psgdpr&controller=gdpr&id_lang=1'},
+      {name: 'FO_account_gdpr_fr', url: 'index.php?fc=module&module=psgdpr&controller=gdpr&id_lang=2'},
     ],
   },
 ];
