@@ -229,7 +229,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                         $tag,
                         $langId
                     ),
-                    ProductConstraintException::INVALID_TAG,
+                    ProductConstraintException::INVALID_TAG
                 );
             }
 

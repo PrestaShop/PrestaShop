@@ -115,3 +115,9 @@ Feature: Update product options from Back Office (BO)
       When I update product "product3" options with following values:
         | tags       | fr-FR:montre |
       And product "product3" localized "tags" should be "en-US:mechanic,watch;fr-FR:montre"
+
+    Scenario: Update product tags with invalid values
+      Given product "product3" localized "tags" should be "en-US:mechanic,watch;fr-FR:montre"
+      When I update product "product3" options with following values:
+        | tags       | en-US:#<{ |
+      Then I should get error that product tag is invalid

@@ -609,6 +609,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
             'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
+            'tag' => ProductConstraintException::INVALID_TAG,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
