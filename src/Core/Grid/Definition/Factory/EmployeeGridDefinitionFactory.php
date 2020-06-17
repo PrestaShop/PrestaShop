@@ -53,6 +53,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    public const GRID_ID = 'employee';
+
     /**
      * @var string
      */
@@ -83,7 +85,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'employee';
+        return self::GRID_ID;
     }
 
     /**
