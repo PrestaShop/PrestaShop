@@ -206,72 +206,49 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
     {
         $fieldName = 'tags';
-        $isEmpty = true;
-        foreach ($localizedTagStrings as $value) {
-            if (!empty($value)) {
-                //if array contains at least one non empty value inside then it is not empty.
-                $isEmpty = false;
+        $actualLocalizedTags = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
 
-                break;
-            }
-        }
-
-        // when expecting empty values, it will be parsed to array with empty keys,
-        // but in tags case if there are no tags for product it will return empty array without languageId keys
-        // and that would result in assert failure
-        // so in this case an array which contains only empty keys should be considered equal to empty array
-        // therefore we assert actual value against empty array
-        if ($isEmpty) {
-            $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
-            Assert::assertEquals([], $actualValues, 'Expected empty localized tags');
-
-            return;
-        }
-
-        foreach ($localizedTagStrings as $langId => $expectedTagsString) {
-            $expectedTags = explode(',', $expectedTagsString);
-            $actualLocalizedTags = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+        foreach ($localizedTagStrings as $langId => $tagsString) {
             $langIso = Language::getIsoById($langId);
 
-            $nonEmptyExpectedTags = [];
-            foreach ($expectedTags as $expectedTag) {
-                if (!empty($expectedTag)) {
-                    $nonEmptyExpectedTags[] = $expectedTag;
-
-                    continue;
+            if (empty($tagsString)) {
+                // if tags string is empty, then we should not have any actual value in this language
+                if (isset($actualLocalizedTags[$langId])) {
+                    throw new RuntimeException(sprintf(
+                        'Expected no tags in %s language, but got "%s"',
+                        $langIso,
+                        var_export($actualLocalizedTags[$langId], true))
+                    );
                 }
 
-                //each empty tag in language should be considered equal to non-set value of that language
-                Assert::assertTrue(
-                    empty($expectedTag) && !isset($actualLocalizedTags[$langId]),
-                    sprintf('Expected no value of localized tag in "%s" language', $langIso)
-                );
-            }
-
-            if (empty($nonEmptyExpectedTags) && !isset($actualLocalizedTags[$langId])) {
+                // if above code passed it means tags in this lang is empty as expected and we can continue
                 continue;
             }
 
+            // convert filled tags to array
+            $expectedTags = explode(',', $tagsString);
+
+            // All empty values have ben filtered out above, so if this is empty it means it is invalid
             if (!isset($actualLocalizedTags[$langId])) {
                 throw new RuntimeException(sprintf(
-                    'Expected localized tags value is not set in %s language',
+                    'Expected localized tags value "%s" is not set in %s language',
+                    var_export($expectedTags, true),
                     $langIso
                 ));
             }
 
-            $actualTags = $actualLocalizedTags[$langId];
-
-            if ($nonEmptyExpectedTags !== $actualTags) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Expected %s in "%s" language was "%s", but got "%s"',
-                        $fieldName,
-                        $langIso,
-                        var_export($expectedTags, true),
-                        var_export($actualTags, true)
-                    )
-                );
-            }
+            // finally assert if both non-empty values are equal
+            Assert::assertEquals(
+                $expectedTags,
+                $actualLocalizedTags[$langId],
+                sprintf(
+                    'Expected %s in "%s" language was "%s", but got "%s"',
+                    $fieldName,
+                    $langIso,
+                    var_export($expectedTags, true),
+                    var_export($actualLocalizedTags[$langId], true)
+                )
+            );
         }
     }
 
