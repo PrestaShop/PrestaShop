@@ -201,7 +201,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
     }
 
     /**
-     * Validate each tag in provided language and remove the empty values
+     * Validate each tag in provided language and remove empty values
      *
      * @param array &$tags
      * @param int $langId
@@ -215,7 +215,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         foreach ($tags as $key => $tag) {
             //remove empty values
             if (empty($tag)) {
-                unset($tag[$key]);
+                unset($tags[$key]);
 
                 continue;
             }
