@@ -53,7 +53,23 @@ class WebserviceKeyCore extends ObjectModel
             return false;
         }
 
-        return parent::add($autodate = true, $nullValues = false);
+        $result = parent::add($autodate = true, $nullValues = false);
+
+        if ($result) {
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Webservice key created by employee %s %s (%s)',
+                    [
+                        Context::getContext()->employee->firstname,
+                        Context::getContext()->employee->lastname,
+                        Context::getContext()->employee->email,
+                    ],
+                    'Admin.Advparameters.Notification'
+                )
+            );
+        }
+
+        return $result;
     }
 
     public static function keyExists($key)
