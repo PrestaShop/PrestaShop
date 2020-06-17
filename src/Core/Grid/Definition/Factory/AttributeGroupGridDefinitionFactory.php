@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines attribute groups grid
@@ -50,6 +51,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     const GRID_ID = 'attribute_group';
+
+    use BulkDeleteActionTrait;
+
+    use DeleteActionTrait;
 
     /**
      * {@inheritdoc}
@@ -128,19 +133,13 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
                         'route_param_field' => 'id_attribute_group',
                     ])
                     )
-                    ->add((new SubmitRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'route' => 'admin_attribute_groups_delete',
-                        'route_param_name' => 'attributeGroupId',
-                        'route_param_field' => 'id_attribute_group',
-                        'confirm_message' => $this->trans(
-                            'Delete selected item?',
-                            [],
-                            'Admin.Notifications.Warning'
-                        ),
-                    ])
+                    ->add(
+                        $this->buildDeleteAction(
+                            'admin_attribute_groups_delete',
+                            'attributeGroupId',
+                            'id_attribute_group',
+                            Request::METHOD_DELETE
+                        )
                     ),
             ])
             );
@@ -229,13 +228,8 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_attribute_groups_bulk_delete',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
-            );
+              ->add(
+                $this->buildBulkDeleteAction('admin_attribute_groups_bulk_delete')
+              );
     }
 }
