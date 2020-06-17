@@ -175,11 +175,6 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         }
 
         foreach ($localizedTags as $langId => $tags) {
-            // don't do anything with this language tags if its null (equivalent to other partial updates)
-            if (null === $tags) {
-                continue;
-            }
-
             // validate each tag and remove empty values
             $this->validateTags($tags, $langId);
 
