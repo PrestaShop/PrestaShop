@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_country>
+  <country id="DE">
+    <name>ألمانيا</name>
+  </country>
+  <country id="AT">
+    <name>النمسا</name>
+  </country>
+  <country id="BE">
+    <name>بلجيكا</name>
+  </country>
+  <country id="CA">
+    <name>كندا</name>
+  </country>
+  <country id="CN">
+    <name>الصين</name>
+  </country>
+  <country id="ES">
+    <name>إسبانيا</name>
+  </country>
+  <country id="FI">
+    <name>فنلندا</name>
+  </country>
+  <country id="FR">
+    <name>فرنسا</name>
+  </country>
+  <country id="GR">
+    <name>اليونان</name>
+  </country>
+  <country id="IT">
+    <name>إيطاليا</name>
+  </country>
+  <country id="JP">
+    <name>اليابان</name>
+  </country>
+  <country id="LU">
+    <name>لوكسمبورغ</name>
+  </country>
+  <country id="NL">
+    <name>هولندا</name>
+  </country>
+  <country id="PL">
+    <name>بولندا</name>
+  </country>
+  <country id="PT">
+    <name>البرتغال</name>
+  </country>
+  <country id="CZ">
+    <name>جمهورية التشيك</name>
+  </country>
+  <country id="GB">
+    <name>المملكة المتحدة</name>
+  </country>
+  <country id="SE">
+    <name>السويد</name>
+  </country>
+  <country id="CH">
+    <name>سويسرا</name>
+  </country>
+  <country id="DK">
+    <name>الدانمرك</name>
+  </country>
+  <country id="US">
+    <name>الولايات المتحدة</name>
+  </country>
+  <country id="HK">
+    <name>هونغ كونغ</name>
+  </country>
+  <country id="NO">
+    <name>النرويج</name>
+  </country>
+  <country id="AU">
+    <name>أستراليا</name>
+  </country>
+  <country id="SG">
+    <name>سنغافورة</name>
+  </country>
+  <country id="IE">
+    <name>أيرلندا</name>
+  </country>
+  <country id="NZ">
+    <name>نيوزيلندا</name>
+  </country>
+  <country id="KR">
+    <name>كوريا الجنوبية</name>
+  </country>
+  <country id="IL">
+    <name>إسرائيل</name>
+  </country>
+  <country id="ZA">
+    <name>جنوب أفريقيا</name>
+  </country>
+  <country id="NG">
+    <name>نيجيريا</name>
+  </country>
+  <country id="CI">
+    <name>كوت ديفوار</name>
+  </country>
+  <country id="TG">
+    <name>توغو</name>
+  </country>
+  <country id="BO">
+    <name>بوليفيا</name>
+  </country>
+  <country id="MU">
+    <name>موريشيوس</name>
+  </country>
+  <country id="RO">
+    <name>رومانيا</name>
+  </country>
+  <country id="SK">
+    <name>سلوفاكيا</name>
+  </country>
+  <country id="DZ">
+    <name>الجزائر</name>
+  </country>
+  <country id="AS">
+    <name>ساموا الأمريكية</name>
+  </country>
+  <country id="AD">
+    <name>أندورا</name>
+  </country>
+  <country id="AO">
+    <name>أنغولا</name>
+  </country>
+  <country id="AI">
+    <name>أنغويلا</name>
+  </country>
+  <country id="AG">
+    <name>أنتيغوا وبربودا</name>
+  </country>
+  <country id="AR">
+    <name>الأرجنتين</name>
+  </country>
+  <country id="AM">
+    <name>أرمينيا</name>
+  </country>
+  <country id="AW">
+    <name>أروبا</name>
+  </country>
+  <country id="AZ">
+    <name>أذربيجان</name>
+  </country>
+  <country id="BS">
+    <name>جزر البهاما</name>
+  </country>
+  <country id="BH">
+    <name>البحرين</name>
+  </country>
+  <country id="BD">
+    <name>بنغلاديش</name>
+  </country>
+  <country id="BB">
+    <name>بربادوس</name>
+  </country>
+  <country id="BY">
+    <name>بيلاروس</name>
+  </country>
+  <country id="BZ">
+    <name>بليز</name>
+  </country>
+  <country id="BJ">
+    <name>بنين</name>
+  </country>
+  <country id="BM">
+    <name>برمودا</name>
+  </country>
+  <country id="BT">
+    <name>بوتان</name>
+  </country>
+  <country id="BW">
+    <name>بوتسوانا</name>
+  </country>
+  <country id="BR">
+    <name>البرازيل</name>
+  </country>
+  <country id="BN">
+    <name>بروناي</name>
+  </country>
+  <country id="BF">
+    <name>بوركينا فاسو</name>
+  </country>
+  <country id="MM">
+    <name>ميانمار (بورما)</name>
+  </country>
+  <country id="BI">
+    <name>بوروندي</name>
+  </country>
+  <country id="KH">
+    <name>كمبوديا</name>
+  </country>
+  <country id="CM">
+    <name>الكاميرون</name>
+  </country>
+  <country id="CV">
+    <name>الرأس الأخضر</name>
+  </country>
+  <country id="CF">
+    <name>جمهورية أفريقيا الوسطى</name>
+  </country>
+  <country id="TD">
+    <name>تشاد</name>
+  </country>
+  <country id="CL">
+    <name>تشيلي</name>
+  </country>
+  <country id="CO">
+    <name>كولومبيا</name>
+  </country>
+  <country id="KM">
+    <name>جزر القمر</name>
+  </country>
+  <country id="CD">
+    <name>جمهورية الكونغو الديمقراطية</name>
+  </country>
+  <country id="CG">
+    <name>جمهورية الكونغو</name>
+  </country>
+  <country id="CR">
+    <name>كوستاريكا</name>
+  </country>
+  <country id="HR">
+    <name>كرواتيا</name>
+  </country>
+  <country id="CU">
+    <name>كوبا</name>
+  </country>
+  <country id="CY">
+    <name>قبرص</name>
+  </country>
+  <country id="DJ">
+    <name>جيبوتي</name>
+  </country>
+  <country id="DM">
+    <name>دومينيكا</name>
+  </country>
+  <country id="DO">
+    <name>جمهورية الدومينيكان</name>
+  </country>
+  <country id="TL">
+    <name>تيمور الشرقية</name>
+  </country>
+  <country id="EC">
+    <name>الإكوادور</name>
+  </country>
+  <country id="EG">
+    <name>مصر</name>
+  </country>
+  <country id="SV">
+    <name>السلفادور</name>
+  </country>
+  <country id="GQ">
+    <name>غينيا الاستوائية</name>
+  </country>
+  <country id="ER">
+    <name>إريتريا</name>
+  </country>
+  <country id="EE">
+    <name>إستونيا</name>
+  </country>
+  <country id="ET">
+    <name>إثيوبيا</name>
+  </country>
+  <country id="FK">
+    <name>جزر فوكلاند - جزر مالفيناس</name>
+  </country>
+  <country id="FO">
+    <name>جزر فارو</name>
+  </country>
+  <country id="FJ">
+    <name>فيجي</name>
+  </country>
+  <country id="GA">
+    <name>الغابون</name>
+  </country>
+  <country id="GM">
+    <name>غامبيا</name>
+  </country>
+  <country id="GE">
+    <name>جورجيا</name>
+  </country>
+  <country id="GH">
+    <name>غانا</name>
+  </country>
+  <country id="GD">
+    <name>غرينادا</name>
+  </country>
+  <country id="GL">
+    <name>غرينلاند</name>
+  </country>
+  <country id="GI">
+    <name>جبل طارق</name>
+  </country>
+  <country id="GP">
+    <name>غوادلوب</name>
+  </country>
+  <country id="GU">
+    <name>غوام</name>
+  </country>
+  <country id="GT">
+    <name>غواتيمالا</name>
+  </country>
+  <country id="GG">
+    <name>غيرنزي</name>
+  </country>
+  <country id="GN">
+    <name>غينيا</name>
+  </country>
+  <country id="GW">
+    <name>غينيا بيساو</name>
+  </country>
+  <country id="GY">
+    <name>غيانا</name>
+  </country>
+  <country id="HT">
+    <name>هايتي</name>
+  </country>
+  <country id="HM">
+    <name>جزيرة هيرد وجزر ماكدونالد</name>
+  </country>
+  <country id="VA">
+    <name>الفاتيكان</name>
+  </country>
+  <country id="HN">
+    <name>هندوراس</name>
+  </country>
+  <country id="IS">
+    <name>آيسلندا</name>
+  </country>
+  <country id="IN">
+    <name>الهند</name>
+  </country>
+  <country id="ID">
+    <name>إندونيسيا</name>
+  </country>
+  <country id="IR">
+    <name>إيران</name>
+  </country>
+  <country id="IQ">
+    <name>العراق</name>
+  </country>
+  <country id="IM">
+    <name>جزيرة مان</name>
+  </country>
+  <country id="JM">
+    <name>جامايكا</name>
+  </country>
+  <country id="JE">
+    <name>جيرسي</name>
+  </country>
+  <country id="JO">
+    <name>الأردن</name>
+  </country>
+  <country id="KZ">
+    <name>كازاخستان</name>
+  </country>
+  <country id="KE">
+    <name>كينيا</name>
+  </country>
+  <country id="KI">
+    <name>كيريباتي</name>
+  </country>
+  <country id="KP">
+    <name>كوريا الشمالية</name>
+  </country>
+  <country id="KW">
+    <name>الكويت</name>
+  </country>
+  <country id="KG">
+    <name>قيرغيزستان</name>
+  </country>
+  <country id="LA">
+    <name>لاوس</name>
+  </country>
+  <country id="LV">
+    <name>لاتفيا</name>
+  </country>
+  <country id="LB">
+    <name>لبنان</name>
+  </country>
+  <country id="LS">
+    <name>ليسوتو</name>
+  </country>
+  <country id="LR">
+    <name>ليبيريا</name>
+  </country>
+  <country id="LY">
+    <name>ليبيا</name>
+  </country>
+  <country id="LI">
+    <name>ليختنشتاين</name>
+  </country>
+  <country id="LT">
+    <name>ليتوانيا</name>
+  </country>
+  <country id="MO">
+    <name>مكاو</name>
+  </country>
+  <country id="MK">
+    <name>مقدونيا الشمالية</name>
+  </country>
+  <country id="MG">
+    <name>مدغشقر</name>
+  </country>
+  <country id="MW">
+    <name>ملاوي</name>
+  </country>
+  <country id="MY">
+    <name>ماليزيا</name>
+  </country>
+  <country id="MV">
+    <name>جزر المالديف</name>
+  </country>
+  <country id="ML">
+    <name>مالي</name>
+  </country>
+  <country id="MT">
+    <name>مالطا</name>
+  </country>
+  <country id="MH">
+    <name>جزر مارشال</name>
+  </country>
+  <country id="MQ">
+    <name>جزر المارتينيك</name>
+  </country>
+  <country id="MR">
+    <name>موريتانيا</name>
+  </country>
+  <country id="HU">
+    <name>هنغاريا</name>
+  </country>
+  <country id="YT">
+    <name>مايوت</name>
+  </country>
+  <country id="MX">
+    <name>المكسيك</name>
+  </country>
+  <country id="FM">
+    <name>ميكرونيزيا</name>
+  </country>
+  <country id="MD">
+    <name>مولدوفا</name>
+  </country>
+  <country id="MC">
+    <name>موناكو</name>
+  </country>
+  <country id="MN">
+    <name>منغوليا</name>
+  </country>
+  <country id="ME">
+    <name>الجبل الأسود</name>
+  </country>
+  <country id="MS">
+    <name>مونتسرات</name>
+  </country>
+  <country id="MA">
+    <name>المغرب</name>
+  </country>
+  <country id="MZ">
+    <name>موزمبيق</name>
+  </country>
+  <country id="NA">
+    <name>ناميبيا</name>
+  </country>
+  <country id="NR">
+    <name>ناورو</name>
+  </country>
+  <country id="NP">
+    <name>نيبال</name>
+  </country>
+  <country id="AN">
+    <name>Netherlands Antilles</name>
+  </country>
+  <country id="NC">
+    <name>كاليدونيا الجديدة</name>
+  </country>
+  <country id="NI">
+    <name>نيكاراغوا</name>
+  </country>
+  <country id="NE">
+    <name>النيجر</name>
+  </country>
+  <country id="NU">
+    <name>نيوي</name>
+  </country>
+  <country id="NF">
+    <name>جزيرة نورفولك</name>
+  </country>
+  <country id="MP">
+    <name>جزر ماريانا الشمالية</name>
+  </country>
+  <country id="OM">
+    <name>عُمان</name>
+  </country>
+  <country id="PK">
+    <name>باكستان</name>
+  </country>
+  <country id="PW">
+    <name>بالاو</name>
+  </country>
+  <country id="PS">
+    <name>فلسطين</name>
+  </country>
+  <country id="PA">
+    <name>بنما</name>
+  </country>
+  <country id="PG">
+    <name>بابوا غينيا الجديدة</name>
+  </country>
+  <country id="PY">
+    <name>باراغواي</name>
+  </country>
+  <country id="PE">
+    <name>بيرو</name>
+  </country>
+  <country id="PH">
+    <name>الفلبين</name>
+  </country>
+  <country id="PN">
+    <name>جزر بيتكيرن</name>
+  </country>
+  <country id="PR">
+    <name>بورتوريكو</name>
+  </country>
+  <country id="QA">
+    <name>قطر</name>
+  </country>
+  <country id="RE">
+    <name>روينيون</name>
+  </country>
+  <country id="RU">
+    <name>روسيا</name>
+  </country>
+  <country id="RW">
+    <name>رواندا</name>
+  </country>
+  <country id="BL">
+    <name>سان بارتليمي</name>
+  </country>
+  <country id="KN">
+    <name>سانت كيتس ونيفيس</name>
+  </country>
+  <country id="LC">
+    <name>سانت لوسيا</name>
+  </country>
+  <country id="MF">
+    <name>سان مارتن</name>
+  </country>
+  <country id="PM">
+    <name>سان بيير ومكويلون</name>
+  </country>
+  <country id="VC">
+    <name>سانت فنسنت وجزر غرينادين</name>
+  </country>
+  <country id="WS">
+    <name>ساموا</name>
+  </country>
+  <country id="SM">
+    <name>سان مارينو</name>
+  </country>
+  <country id="ST">
+    <name>ساو تومي وبرينسيبي</name>
+  </country>
+  <country id="SA">
+    <name>المملكة العربية السعودية</name>
+  </country>
+  <country id="SN">
+    <name>السنغال</name>
+  </country>
+  <country id="RS">
+    <name>صربيا</name>
+  </country>
+  <country id="SC">
+    <name>سيشل</name>
+  </country>
+  <country id="SL">
+    <name>سيراليون</name>
+  </country>
+  <country id="SI">
+    <name>سلوفينيا</name>
+  </country>
+  <country id="SB">
+    <name>جزر سليمان</name>
+  </country>
+  <country id="SO">
+    <name>الصومال</name>
+  </country>
+  <country id="GS">
+    <name>جورجيا الجنوبية وجزر ساندويتش الجنوبية</name>
+  </country>
+  <country id="LK">
+    <name>سريلانكا</name>
+  </country>
+  <country id="SD">
+    <name>السودان</name>
+  </country>
+  <country id="SR">
+    <name>سورينام</name>
+  </country>
+  <country id="SJ">
+    <name>سفالبارد وجان ماين</name>
+  </country>
+  <country id="SZ">
+    <name>سوازيلاند</name>
+  </country>
+  <country id="SY">
+    <name>سوريا</name>
+  </country>
+  <country id="TW">
+    <name>تايوان</name>
+  </country>
+  <country id="TJ">
+    <name>طاجيكستان</name>
+  </country>
+  <country id="TZ">
+    <name>تنزانيا</name>
+  </country>
+  <country id="TH">
+    <name>تايلاند</name>
+  </country>
+  <country id="TK">
+    <name>توكيلو</name>
+  </country>
+  <country id="TO">
+    <name>تونغا</name>
+  </country>
+  <country id="TT">
+    <name>ترينيداد وتوباغو</name>
+  </country>
+  <country id="TN">
+    <name>تونس</name>
+  </country>
+  <country id="TR">
+    <name>تركيا</name>
+  </country>
+  <country id="TM">
+    <name>تركمانستان</name>
+  </country>
+  <country id="TC">
+    <name>جزر توركس وكايكوس</name>
+  </country>
+  <country id="TV">
+    <name>توفالو</name>
+  </country>
+  <country id="UG">
+    <name>أوغندا</name>
+  </country>
+  <country id="UA">
+    <name>أوكرانيا</name>
+  </country>
+  <country id="AE">
+    <name>الإمارات العربية المتحدة</name>
+  </country>
+  <country id="UY">
+    <name>أورغواي</name>
+  </country>
+  <country id="UZ">
+    <name>أوزبكستان</name>
+  </country>
+  <country id="VU">
+    <name>فانواتو</name>
+  </country>
+  <country id="VE">
+    <name>فنزويلا</name>
+  </country>
+  <country id="VN">
+    <name>فيتنام</name>
+  </country>
+  <country id="VG">
+    <name>جزر فيرجن البريطانية</name>
+  </country>
+  <country id="VI">
+    <name>جزر فيرجن التابعة للولايات المتحدة</name>
+  </country>
+  <country id="WF">
+    <name>جزر والس وفوتونا</name>
+  </country>
+  <country id="EH">
+    <name>الصحراء الغربية</name>
+  </country>
+  <country id="YE">
+    <name>اليمن</name>
+  </country>
+  <country id="ZM">
+    <name>زامبيا</name>
+  </country>
+  <country id="ZW">
+    <name>زيمبابوي</name>
+  </country>
+  <country id="AL">
+    <name>ألبانيا</name>
+  </country>
+  <country id="AF">
+    <name>أفغانستان</name>
+  </country>
+  <country id="AQ">
+    <name>أنتاركتيكا</name>
+  </country>
+  <country id="BA">
+    <name>البوسنة والهرسك</name>
+  </country>
+  <country id="BV">
+    <name>جزيرة بوفيه</name>
+  </country>
+  <country id="IO">
+    <name>الإقليم البريطاني في المحيط الهندي</name>
+  </country>
+  <country id="BG">
+    <name>بلغاريا</name>
+  </country>
+  <country id="KY">
+    <name>جزر كايمان</name>
+  </country>
+  <country id="CX">
+    <name>جزيرة كريسماس</name>
+  </country>
+  <country id="CC">
+    <name>جزر كوكوس (كيلينغ)</name>
+  </country>
+  <country id="CK">
+    <name>جزر كوك</name>
+  </country>
+  <country id="GF">
+    <name>غويانا الفرنسية</name>
+  </country>
+  <country id="PF">
+    <name>بولينيزيا الفرنسية</name>
+  </country>
+  <country id="TF">
+    <name>الأقاليم الجنوبية الفرنسية</name>
+  </country>
+  <country id="AX">
+    <name>جزر آلاند</name>
+  </country>
+</entity_country>
