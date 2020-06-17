@@ -86,7 +86,7 @@ module.exports = class Product extends BOBasePage {
   /**
    * Get Product ID
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getProductIDFromList(row) {
     return this.getNumberFromText(this.productsListTableColumnID(row));
@@ -95,7 +95,7 @@ module.exports = class Product extends BOBasePage {
   /**
    * Get Product Name
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getProductNameFromList(row) {
     return this.getTextContent(this.productsListTableColumnName(row));
@@ -104,7 +104,7 @@ module.exports = class Product extends BOBasePage {
   /**
    * Get Product Reference
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getProductReferenceFromList(row) {
     return this.getTextContent(this.productsListTableColumnReference(row));
@@ -113,7 +113,7 @@ module.exports = class Product extends BOBasePage {
   /**
    * Get Product Category
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getProductCategoryFromList(row) {
     return this.getTextContent(this.productsListTableColumnCategory(row));
@@ -133,9 +133,9 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get Product Price
-   * @param {int} row
-   * @param {boolean} withTaxes
-   * @return Float
+   * @param row
+   * @param withTaxes
+   * @returns {Promise<number>}
    */
   async getProductPriceFromList(row, withTaxes) {
     const selector = withTaxes ? this.productsListTableColumnPriceTTC : this.productsListTableColumnPrice;
@@ -159,7 +159,7 @@ module.exports = class Product extends BOBasePage {
   /**
    * Get Product Quantity
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getProductQuantityFromList(row) {
     return this.getNumberFromText(this.productsListTableColumnQuantity(row));
@@ -168,7 +168,7 @@ module.exports = class Product extends BOBasePage {
   /**
    * Get Product Status
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getProductStatusFromList(row) {
     return this.getTextContent(this.productsListTableColumnStatus(row));
@@ -214,7 +214,7 @@ module.exports = class Product extends BOBasePage {
    * Get Text Column
    * @param columnName
    * @param row
-   * @return {Promise<Float|textContent>}
+   * @returns {Promise<string|number>}
    */
   async getTextColumn(columnName, row) {
     switch (columnName) {
@@ -255,7 +255,7 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get number of products displayed in list
-   * @return integer
+   * @returns {Promise<number>}
    */
   async getNumberOfProductsFromList() {
     const found = await this.elementVisible(this.paginationNextLink, 1000);
@@ -269,7 +269,7 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Get number of products displayed on the page
-   * @return integer
+   * @returns {Promise<number>}
    */
   async getNumberOfProductsOnPage() {
     return (await this.page.$$(this.productRow)).length;
@@ -288,7 +288,7 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -358,7 +358,7 @@ module.exports = class Product extends BOBasePage {
   /**
    * Delete product with dropdown Menu
    * @param productData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteProduct(productData) {
     // Filter By reference first
@@ -378,7 +378,7 @@ module.exports = class Product extends BOBasePage {
 
   /**
    * Delete All products with Bulk Actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteAllProductsWithBulkActions() {
     // Then delete first product and only product shown

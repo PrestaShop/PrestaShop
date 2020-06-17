@@ -19,18 +19,18 @@ module.exports = class ViewBrand extends BOBasePage {
   Methods
    */
   /**
-   * get text from a column
+   * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableAddresses(row, column) {
     return this.getTextContent(this.addressesTableColumn(row, column));
   }
 
   /**
-   * get number of addresses in grid
-   * @return {Promise<integer>}
+   * Get number of addresses in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfAddressesInGrid() {
     return this.getNumberFromText(this.addressesGridHeader);

@@ -92,7 +92,7 @@ module.exports = class Suppliers extends BOBasePage {
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteSupplier(row = 1) {
     this.dialogListener(true);
@@ -107,7 +107,7 @@ module.exports = class Suppliers extends BOBasePage {
   /**
    * Get toggle column value for a row
    * @param row
-   * @return {Promise<string>}
+   * @returns {Promise<boolean>}
    */
   async getToggleColumnValue(row = 1) {
     return this.elementVisible(this.enableColumnValidIcon(row), 100);
@@ -132,7 +132,7 @@ module.exports = class Suppliers extends BOBasePage {
    * get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableSupplier(row, column) {
     return this.getTextContent(this.tableColumn(row, column));
@@ -150,8 +150,8 @@ module.exports = class Suppliers extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -159,7 +159,7 @@ module.exports = class Suppliers extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -202,7 +202,7 @@ module.exports = class Suppliers extends BOBasePage {
   /**
    * Enable / disable Suppliers by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async changeSuppliersEnabledColumnBulkActions(enable = true) {
     // Click on Select All
@@ -222,7 +222,7 @@ module.exports = class Suppliers extends BOBasePage {
 
   /**
    * Delete with bulk actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteWithBulkActions() {
     // Click on Select All
@@ -246,7 +246,7 @@ module.exports = class Suppliers extends BOBasePage {
 
   /**
    * Get alert text message
-   * @returns {Promise<string>|*}
+   * @returns {Promise<string>}
    */
   getAlertTextMessage() {
     return this.getTextContent(this.alertTextBlock);
