@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localizationPack name="Romania" version="1.0">
   <currencies>
-    <currency name="Lei" iso_code="RON" iso_code_num="946" sign="lei" blank="1" conversion_rate="4.27111" format="2" decimals="1"/>
+    <currency name="Lei" iso_code="RON" iso_code_num="946" sign="lei" blank="1" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="ro"/>

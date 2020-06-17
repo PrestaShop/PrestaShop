@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Madagascar" version="1.0">
 	<currencies>
-		<currency name="Ariary" iso_code="MGA" iso_code_num="969" sign="Ar" blank="1" conversion_rate="4078.42" format="2" decimals="0" />
+		<currency name="Ariary" iso_code="MGA" iso_code_num="969" sign="Ar" blank="1" format="2" decimals="0" />
 	</currencies>
 	<languages>
 		<language iso_code="fr" />
