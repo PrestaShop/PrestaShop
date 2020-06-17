@@ -24,12 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+declare(strict_types=1);
 
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
+namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-header("Location: ../");
-exit;
+class OrderSourcesForViewing
+{
+    /** @var OrderSourceForViewing[] */
+    private $sources = [];
+
+    /**
+     * @param OrderSourceForViewing[] $sources
+     */
+    public function __construct(array $sources)
+    {
+        foreach ($sources as $source) {
+            $this->addSource($source);
+        }
+    }
+
+    /**
+     * @return OrderSourceForViewing[]
+     */
+    public function getSources(): array
+    {
+        return $this->sources;
+    }
+
+    /**
+     * @param OrderSourceForViewing $source
+     */
+    private function addSource(OrderSourceForViewing $source): void
+    {
+        $this->sources[] = $source;
+    }
+}

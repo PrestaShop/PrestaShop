@@ -141,7 +141,7 @@ module.exports = class Categories extends BOBasePage {
   async updateToggleColumnValue(row, column, valueWanted = true) {
     await this.waitForVisibleSelector(this.categoriesListTableColumn(row, column), 2000);
     if (await this.getToggleColumnValue(row, column) !== valueWanted) {
-      await this.page.click(this.categoriesListTableColumn(row, column));
+      await this.page.click(`${this.categoriesListTableColumn(row, column)} i`);
       await this.waitForVisibleSelector(
         (
           valueWanted
@@ -267,7 +267,7 @@ module.exports = class Categories extends BOBasePage {
   async changeCategoriesEnabledColumnBulkActions(enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsDiv),
+      this.page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
       this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -288,7 +288,7 @@ module.exports = class Categories extends BOBasePage {
   async deleteCategoriesBulkActions(modeID = '0') {
     // Click on Select All
     await Promise.all([
-      this.page.click(this.selectAllRowsDiv),
+      this.page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
       this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -332,7 +332,7 @@ module.exports = class Categories extends BOBasePage {
     let i = 0;
     while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
       await this.page.hover(this.sortColumnDiv(sortBy));
-      await this.clickAndWaitForNavigation(sortColumnSpanButton);
+      await this.clickAndWaitForNavigation(sortColumnSpanButton, 'networkidle');
       i += 1;
     }
     await this.waitForVisibleSelector(sortColumnDiv);

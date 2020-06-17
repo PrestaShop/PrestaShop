@@ -243,11 +243,12 @@ module.exports = class CommonPage {
   /**
    * Go to Page and wait for navigation
    * @param selector
+   * @param waitUntil, the event to wait after click (load/networkidle/domcontentloaded)
    * @return {Promise<void>}
    */
-  async clickAndWaitForNavigation(selector) {
+  async clickAndWaitForNavigation(selector, waitUntil = 'load') {
     await Promise.all([
-      this.page.waitForNavigation(),
+      this.page.waitForNavigation({waitUntil}),
       this.page.click(selector),
     ]);
   }
