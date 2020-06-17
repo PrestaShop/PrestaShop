@@ -66,7 +66,7 @@ module.exports = class Customers extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
@@ -75,8 +75,8 @@ module.exports = class Customers extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.customerGridTitle);
@@ -84,7 +84,7 @@ module.exports = class Customers extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -160,16 +160,18 @@ module.exports = class Customers extends BOBasePage {
    * get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableCustomers(row, column) {
     return this.getTextContent(this.customersListTableColumn(row, column));
   }
 
   /**
-   * Get all information for a customer in table
+   * * Get all information for a customer in table
    * @param row, row of customer in table
-   * @return {Promise<{object}>}
+   * @param row
+   * @returns {Promise<{firstName: string, lastName: string, newsletter: boolean, socialTitle: string,
+   * id: string, partnerOffers: boolean, email: string, sales: string, status: boolean}>}
    */
   async getCustomerFromTable(row) {
     return {
@@ -234,7 +236,7 @@ module.exports = class Customers extends BOBasePage {
    * Delete Customer
    * @param row, row in table
    * @param allowRegistrationAfterDelete, Deletion method to choose in modal
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCustomer(row, allowRegistrationAfterDelete = true) {
     // Click on dropDown
@@ -254,7 +256,7 @@ module.exports = class Customers extends BOBasePage {
   /**
    * Delete all Customers with Bulk Actions
    * @param allowRegistrationAfterDelete, Deletion method to choose in modal
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCustomersBulkActions(allowRegistrationAfterDelete = true) {
     // Click on Select All
@@ -293,7 +295,7 @@ module.exports = class Customers extends BOBasePage {
   /**
    * Enable / disable customers by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async changeCustomersEnabledColumnBulkActions(enable = true) {
     // Click on Select All
