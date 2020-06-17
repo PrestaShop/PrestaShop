@@ -44,14 +44,6 @@ class LocaleData
     protected $localeCode;
 
     /**
-     * List of available territories
-     * Array of strings (codes).
-     *
-     * @var string[]
-     */
-    protected $territories;
-
-    /**
      * List of available numbering systems
      * Array of strings (codes).
      *
@@ -182,13 +174,6 @@ class LocaleData
                 }
                 $this->currencies[$code]->overrideWith($currencyData);
             }
-        }
-
-        if (null !== $localeData->getTerritories()) {
-            if (null === $this->territories) {
-                $this->territories = [];
-            }
-            $this->territories = array_merge($this->territories, $localeData->getTerritories());
         }
 
         return $this;
@@ -386,26 +371,6 @@ class LocaleData
     public function setCurrencies($currencies)
     {
         $this->currencies = $currencies;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getTerritories()
-    {
-        return $this->territories;
-    }
-
-    /**
-     * @param string[] $territories
-     *
-     * @return LocaleData
-     */
-    public function setTerritories($territories)
-    {
-        $this->territories = $territories;
 
         return $this;
     }
