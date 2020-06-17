@@ -368,6 +368,56 @@ class XmlLoader
     }
 
     /**
+     * Special case for "country" entity.
+     */
+    public function populateEntityCountry()
+    {
+        $xml = $this->loadEntity('country');
+
+        // Read list of fields
+        if (!is_object($xml) || !$xml->fields) {
+            throw new PrestashopInstallerException('List of fields not found for entity coutrny');
+        }
+        $langs = [];
+        $languageList = LanguageList::getInstance();
+        foreach ($this->languages as $id_lang => $iso) {
+            $languageList->setLanguage($iso);
+            $langs[$id_lang] = $languageList->getCountries();
+        }
+
+        // Load all row for current entity and prepare data to be populated
+        $i = 0;
+        foreach ($xml->entities->country as $node) {
+            $data = [];
+            $identifier = (string) $node['id'];
+
+            // Read attributes
+            foreach ($node->attributes() as $k => $v) {
+                if ($k != 'id') {
+                    $data[$k] = (string) $v;
+                }
+            }
+
+            // Load multilang data
+            $data_lang = [];
+            foreach ($langs as $id_lang => $countries) {
+                $data_lang['name'][$id_lang] = $countries[strtolower($identifier)] ?? '';
+            }
+
+            $data = $this->rewriteRelationedData('country', $data);
+            $this->createEntity('country', $identifier, (string) $xml->fields['class'], $data, $data_lang);
+            ++$i;
+
+            if ($i >= 100) {
+                $this->flushDelayedInserts();
+                $i = 0;
+            }
+        }
+
+        $this->flushDelayedInserts();
+    }
+
+    /**
      * Special case for "tag" entity.
      */
     public function populateEntityTag()
