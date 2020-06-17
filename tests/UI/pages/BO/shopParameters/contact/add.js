@@ -43,7 +43,7 @@ module.exports = class AddContact extends BOBasePage {
   /**
    * Fill form for add/edit contact
    * @param contactData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditContact(contactData) {
     await this.setValue(this.titleInputEN, contactData.title);
