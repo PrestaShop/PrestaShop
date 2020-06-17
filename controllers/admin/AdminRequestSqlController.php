@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -127,10 +127,10 @@ class AdminRequestSqlControllerCore extends AdminController
         $this->displayInformation('
 		<strong>' . $this->trans('How do I create a new SQL query?', [], 'Admin.Advparameters.Help') . '</strong><br />
 		<ul>
-			<li>' . $this->trans('Click "Add New".', [], 'Admin.Advparameters.Help') . '</li>
-			<li>' . $this->trans('Fill in the fields and click "Save".', [], 'Admin.Advparameters.Help') . '</li>
-			<li>' . $this->trans('You can then view the query results by clicking on the Edit action in the dropdown menu', [], 'Admin.Advparameters.Help') . ' <i class="icon-pencil"></i></li>
-			<li>' . $this->trans('You can also export the query results as a CSV file by clicking on the Export button', [], 'Admin.Advparameters.Help') . ' <i class="icon-cloud-upload"></i></li>
+			<li>' . $this->trans('Click "%add_new_label%".', ['%add_new_label%' => $this->trans('Add new SQL query', [], 'Admin.Advparameters.Feature')], 'Admin.Advparameters.Help') . '</li>
+			<li>' . $this->trans('Fill in the fields and click "%save_label%".', ['%save_label%' => $this->trans('Save', [], 'Admin.Actions')], 'Admin.Advparameters.Help') . '</li>
+			<li>' . $this->trans('You can then view the query results by clicking on the "%view_label%" action in the dropdown menu', ['%view_label%' => $this->trans('View', [], 'Admin.Global')], 'Admin.Advparameters.Help') . ' <i class="icon-pencil"></i></li>
+			<li>' . $this->trans('You can also export the query results as a CSV file by clicking on the "%export_label%" button', ['%export_label%' => $this->trans('Export', [], 'Admin.Actions')], 'Admin.Advparameters.Help') . ' <i class="icon-cloud-upload"></i></li>
 		</ul>');
 
         $this->addRowAction('export');

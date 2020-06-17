@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
@@ -2587,7 +2587,7 @@ class AdminControllerCore extends Controller
                 if (Tools::getValue('back')) {
                     $helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue('back'));
                 } else {
-                    $helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex . '&token=' . $this->token));
+                    $helper->tpl_vars['back'] = Tools::safeOutput(self::$currentIndex . '&token=' . $this->token);
                 }
             }
             $form = $helper->generateForm($this->fields_form);
@@ -2705,7 +2705,7 @@ class AdminControllerCore extends Controller
         if ($isNewTheme) {
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
-            $this->addJqueryPlugin(['chosen']);
+            $this->addJqueryPlugin(['chosen', 'fancybox']);
         } else {
             //Bootstrap
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/' . $this->bo_css, 'all', 0);
@@ -2921,9 +2921,8 @@ class AdminControllerCore extends Controller
         $notificationsSettings = [
             'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
             'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
-            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
+            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES'),
         ];
-
         $this->context->smarty->assign($notificationsSettings);
 
         Media::addJsDef($notificationsSettings);

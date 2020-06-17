@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
@@ -36,17 +36,21 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines reusable grids for product listing in monitoring page
  */
 abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use DeleteActionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -187,16 +191,13 @@ abstract class AbstractProductGridDefinitionFactory extends AbstractGridDefiniti
                     ])
             )
             ->add(
-                (new LinkRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'route' => 'admin_product_unit_action',
-                        'route_param_name' => 'id',
-                        'route_param_field' => 'id_product',
-                        'extra_route_params' => ['action' => 'delete'],
-                        'confirm_message' => $this->trans('Delete selected item?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildDeleteAction(
+                    'admin_product_unit_action',
+                    'id',
+                    'id_product',
+                    Request::METHOD_POST,
+                    ['action' => 'delete']
+                )
             );
     }
 }

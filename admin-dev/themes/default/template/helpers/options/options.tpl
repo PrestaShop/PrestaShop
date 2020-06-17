@@ -1,10 +1,11 @@
 {**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 
 <div class="leadin">{block name="leadin"}{/block}</div>
@@ -78,7 +78,7 @@
 						<div class="col-lg-12">
 							<p class="help-block">
 								<strong>{l s='Check / Uncheck all'}</strong><br />
-								{l s='You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.'}<br />
+								{l s='You are editing this page for a specific shop or group. Click "%yes_label%" to check all fields, "%no_label%" to uncheck all.' d='Admin.Design.Help' sprintf=['%yes_label%' => {l s='Yes' d='Admin.Global'}, '%no_label%' => {l s='No' d='Admin.Global'}]}<br />
  								{l s='If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.'}
 							</p>
 						</div>

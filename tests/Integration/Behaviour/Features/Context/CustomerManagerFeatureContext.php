@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context;
@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
@@ -182,6 +183,14 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @When I delete customer ":customerReference" with "allow registration after deletion" checked
+     */
+    public function deleteCustomerWithAllowCustomerRegistration($customerReference)
+    {
+        $this->deleteCustomer($customerReference, CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION);
+    }
+
+    /**
      * @When /^I delete customer "(.+)" with method "(.+)"$/
      */
     public function deleteCustomer($customerReference, $methodName)
@@ -199,7 +208,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^if I query customer customer "(.+)" I should get a Customer with properties:$/
+     * @Then /^if I query customer "(.+)" I should get a Customer with properties:$/
      */
     public function assertQueryCustomerProperties($customerReference, TableNode $table)
     {
@@ -221,7 +230,27 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^if I query customer customer "(.+)" I should get an error '(.+)'$/
+     * @Then the customer ":customerReference" should not be found
+     */
+    public function assertCustomerWasNotFound($customerReference)
+    {
+        $this->assertCustomerReferenceExistsInRegistry($customerReference);
+
+        $queryBus = $this->getQueryBus();
+        /* @var EditableCustomer $result */
+        try {
+            $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
+
+            throw new NoExceptionAlthoughExpectedException();
+        } catch (CustomerNotFoundException $e) {
+            return;
+        }
+
+        throw new \Exception('Customer exists');
+    }
+
+    /**
+     * @Then /^if I query customer "(.+)" I should get an error '(.+)'$/
      */
     public function assertQueryReturnsErrormessage($customerReference, $errorMessage)
     {

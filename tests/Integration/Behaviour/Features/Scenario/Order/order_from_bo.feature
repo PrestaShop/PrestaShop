@@ -263,9 +263,12 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have invoice
 
   Scenario: Add order from Back Office with free shipping
-    And I set Free shipping to the cart "dummy_cart"
+    And I create an empty cart "dummy_cart2" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart2"
+    And I set Free shipping to the cart "dummy_cart2"
     And I add order "bo_order2" with the following details:
-      | cart                | dummy_cart          |
+      | cart                | dummy_cart2         |
       | message             | test                |
       | payment module name | dummy_payment       |
       | status              | Payment accepted    |
@@ -274,14 +277,19 @@ Feature: Order from Back Office (BO)
     And order "bo_order2" should have "dummy_payment" payment method
 
   Scenario: Update multiple orders statuses using Bulk actions
-    And I add order "bo_order2" with the following details:
-      | cart                | dummy_cart          |
+    And I create an empty cart "dummy_cart3" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart3"
+    And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart3"
+    And I set Free shipping to the cart "dummy_cart3"
+    And I add order "bo_order3" with the following details:
+      | cart                | dummy_cart3         |
       | message             | test                |
       | payment module name | dummy_payment       |
       | status              | Payment accepted    |
-    When I update orders "bo_order1,bo_order2" statuses to "Delivered"
+    When I update orders "bo_order1,bo_order3" statuses to "Delivered"
     Then order "bo_order1" has status "Delivered"
-    And order "bo_order2" has status "Delivered"
+    Then order "bo_order2" has status "Payment accepted"
+    And order "bo_order3" has status "Delivered"
 
   Scenario: Change order shipping address
     Given I create customer "testFirstName" with following details:

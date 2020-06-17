@@ -1,10 +1,11 @@
 {#**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,13 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% set paginationNum = 8 %}
 {% set isColumnLocationDisplayed = false %}
 {% set isColumnRefundedDisplayed = false %}
 {% for product in orderForViewing.products.products|slice(0, paginationNum) %}
@@ -110,28 +109,41 @@
     </table>
 
     <div class="row mb-3">
-      <div class="col-md-4 text-left d-print-none">
-        {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}
-        <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">
-          <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
-            <li class="page-item disabled" id="orderProductsTablePaginationPrev">
-              <a class="page-link" href="javascript:void(0);" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            {% for numPage in 1..numPages %}
-              <li class="page-item{% if numPage==1 %} active{% endif %}"><span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page="{{ numPage }}">{{ numPage }}</span></li>
-            {% endfor %}
-            <li class="page-item d-none"><span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page=""></span></li>
-            <li class="page-item" id="orderProductsTablePaginationNext">
-              <a class="page-link" href="javascript:void(0);" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+      <div class="col-md-6 text-left d-print-none">
+        <div class="order-product-pagination">
+          <div class="form-group row">
+            <label for="paginator_select_page_limit" class="col-form-label ml-3">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
+            <div class="col">
+              <select id="orderProductsTablePaginationNumberSelector" class="pagination-link custom-select">
+                {% for numPageOption in paginationNumOptions %}
+                  <option value="{{ numPageOption }}"{% if numPageOption == paginationNum %} selected{% endif %}>{{ numPageOption }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          {% set numPages = (orderForViewing.products.products|length / paginationNum)|round(0, 'ceil') %}
+          <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">
+            <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
+              <li class="page-item disabled" id="orderProductsTablePaginationPrev">
+                <a class="page-link" href="javascript:void(0);" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              {% for numPage in 1..numPages %}
+                <li class="page-item{% if numPage==1 %} active{% endif %}"><span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page="{{ numPage }}">{{ numPage }}</span></li>
+              {% endfor %}
+              <li class="page-item d-none"><span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page=""></span></li>
+              <li class="page-item" id="orderProductsTablePaginationNext">
+                <a class="page-link" href="javascript:void(0);" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
       </div>
       <div class="col-xl-8 text-right discount-action">
         {% if not orderForViewing.delivered %}

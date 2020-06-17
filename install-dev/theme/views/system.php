@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
  $this->displayTemplate('header') ?>
 
@@ -32,7 +32,7 @@
 <?php if ($this->tests['required']['success']): ?>
 	<h3 class="okBlock"><?php echo $this->translator->trans('PrestaShop compatibility with your system environment has been verified!', array(), 'Install'); ?></h3>
 <?php else: ?>
-	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "Refresh" to test the compatibility of your new system.', array(), 'Install'); ?></h3>
+	<h3 class="errorBlock"><?php echo $this->translator->trans('Oops! Please correct the item(s) below, and then click "%refresh_label%" to test the compatibility of your new system.', array('%refresh_label%' => $this->trans('Refresh information', array(), 'Install')), 'Install'); ?></h3>
 <?php endif; ?>
 <!-- Display tests results -->
 <?php foreach ($this->tests_render as $type => $categories): ?>
@@ -48,6 +48,6 @@
 	</ul>
 <?php endforeach; ?>
 
-<p><input class="button" value="<?php echo $this->translator->trans('Refresh', array(), 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
+<p><input class="button" value="<?php echo $this->translator->trans('Refresh information', array(), 'Install'); ?> " type="submit" id="req_bt_refresh" /></p>
 
 <?php $this->displayTemplate('footer') ?>

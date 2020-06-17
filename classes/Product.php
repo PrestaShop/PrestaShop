@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 // Deprecated since 1.5.0.1 use Product::CUSTOMIZE_FILE
@@ -30,6 +30,7 @@ define('_CUSTOMIZE_FILE_', 0);
 // Deprecated since 1.5.0.1 use Product::CUSTOMIZE_TEXTFIELD
 define('_CUSTOMIZE_TEXTFIELD_', 1);
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
@@ -112,7 +113,7 @@ class ProductCore extends ObjectModel
     public $unity = null;
 
     /** @var float price for product's unity */
-    public $unit_price;
+    public $unit_price = 0;
 
     /** @var float price for product's unity ratio */
     public $unit_price_ratio = 0;
@@ -242,7 +243,7 @@ class ProductCore extends ObjectModel
     /**
      * @var int TaxRulesGroup identifier
      */
-    public $id_tax_rules_group = 1;
+    public $id_tax_rules_group;
 
     /**
      * @var int
@@ -642,6 +643,14 @@ class ProductCore extends ObjectModel
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         parent::__construct($id_product, $id_lang, $id_shop);
+
+        $unitPriceRatio = new Number((string) $this->unit_price_ratio);
+        $price = new Number((string) $this->price);
+
+        if ($unitPriceRatio->isGreaterThanZero()) {
+            $this->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
+        }
+
         if ($full && $this->id) {
             if (!$context) {
                 $context = Context::getContext();
@@ -5523,6 +5532,13 @@ class ProductCore extends ObjectModel
 
         $row['ecotax_rate'] = (float) Tax::getProductEcotaxRate($context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
+        if (!isset($row['cover_image_id'])) {
+            $cover = static::getCover($row['id_product']);
+            if (isset($cover['id_image'])) {
+                $row['cover_image_id'] = $cover['id_image'];
+            }
+        }
+
         Hook::exec('actionGetProductPropertiesAfter', [
             'id_lang' => $id_lang,
             'product' => &$row,
@@ -5536,7 +5552,11 @@ class ProductCore extends ObjectModel
             $row['unit_price_ratio'] = $row['price_tax_exc'] / $unitPrice;
         }
 
-        $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
+        if (isset($row['unit_price_ratio'])) {
+            $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
+        } else {
+            $row['unit_price'] = 0.0;
+        }
 
         self::$productPropertiesCache[$cache_key] = $row;
 

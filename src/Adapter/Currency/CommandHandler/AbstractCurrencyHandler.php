@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,22 +17,24 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
+use Configuration;
 use Currency;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotUpdateCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\DefaultCurrencyInMultiShopException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
@@ -40,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Shop;
 
 /**
  * Class AbstractCurrencyHandler is responsible for encapsulating common behavior for legacy currency object model.
@@ -235,5 +239,46 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
         }
 
         throw new LanguageNotFoundException(new LanguageId($langId));
+    }
+
+    /**
+     * @param int $currencyId
+     * @param int $defaultCurrencyId
+     *
+     * @throws CannotDeleteDefaultCurrencyException
+     */
+    protected function assertDefaultCurrencyIsNotBeingRemovedOrDisabled(int $currencyId, int $defaultCurrencyId)
+    {
+        if ($currencyId === $defaultCurrencyId) {
+            throw new CannotDeleteDefaultCurrencyException(sprintf('Currency with id "%s" is the default currency and cannot be deleted or disabled.', $currencyId));
+        }
+    }
+
+    /**
+     * Prevents from removing the currency from any shop context.
+     *
+     * @param Currency $currency
+     *
+     * @throws DefaultCurrencyInMultiShopException
+     */
+    protected function assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop(Currency $currency)
+    {
+        $allShopIds = Shop::getShops(false, null, true);
+
+        foreach ($allShopIds as $shopId) {
+            $shopDefaultCurrencyId = (int) Configuration::get(
+                'PS_CURRENCY_DEFAULT',
+                null,
+                null,
+                $shopId
+            );
+
+            if ((int) $currency->id !== $shopDefaultCurrencyId) {
+                continue;
+            }
+
+            $shop = new Shop($shopId);
+            throw new DefaultCurrencyInMultiShopException($currency->name, $shop->name, sprintf('Currency with id %s cannot be removed or disabled from shop with id %s because its the default currency.', $currency->id, $shopId), DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY);
+        }
     }
 }

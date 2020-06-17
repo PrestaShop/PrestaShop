@@ -1,10 +1,11 @@
 {**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 
 {if !$message.id_employee}
@@ -53,8 +53,8 @@
 			</h4>
 		{/if}
 		<span class="message-date">&nbsp;<i class="icon-calendar"></i> - {dateFormat date=$message.date_add full=0} - <i class="icon-time"></i> {$message.date_add|substr:11:5}</span>
-		{if isset($message.file_name)} <span class="message-product">&nbsp;<i class="icon-link"></i> <a href="{$message.file_name|escape:'html':'UTF-8'}" class="_blank">{l s="Attachment" d='Admin.Catalog.Feature'}</a></span>{/if}
-		{if isset($message.product_name)} <span class="message-attachment">&nbsp;<i class="icon-book"></i> <a href="{$message.product_link|escape:'html':'UTF-8'}" class="_blank">{l s="Product" d='Admin.Global'} {$message.product_name|escape:'html':'UTF-8'} </a></span>{/if}
+		{if isset($message.file_name)} <span class="message-product">&nbsp;<i class="icon-link"></i> <a href="{$message.file_name|escape:'html':'UTF-8'}" target="_blank" rel="noopener noreferrer nofollow">{l s="Attachment" d='Admin.Catalog.Feature'}</a></span>{/if}
+		{if isset($message.product_name)} <span class="message-attachment">&nbsp;<i class="icon-book"></i> <a href="{$message.product_link|escape:'html':'UTF-8'}" target="_blank" rel="noopener noreferrer nofollow">{l s="Product" d='Admin.Global'} {$message.product_name|escape:'html':'UTF-8'} </a></span>{/if}
 		<p class="message-item-text">{$message.message|escape:'html':'UTF-8'|nl2br}</p>
 	</div>
 </div>

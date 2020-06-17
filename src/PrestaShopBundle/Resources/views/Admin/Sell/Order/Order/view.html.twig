@@ -1,10 +1,11 @@
 {#**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
 {% set use_regular_h1_structure = false %}
@@ -32,15 +32,16 @@
 
 
 {% block content %}
-  <div id="order-view-page" data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
+  <div id="order-view-page"
+       data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
     <div class="row d-print-none">
-    {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
+      {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
 
-    {% if displayAdminOrderTopHookContent != '' %}
-      <div class="col-md-12">
-        {{ displayAdminOrderTopHookContent|raw }}
-      </div>
-    {% endif %}
+      {% if displayAdminOrderTopHookContent != '' %}
+        <div class="col-md-12">
+          {{ displayAdminOrderTopHookContent|raw }}
+        </div>
+      {% endif %}
       <div class="order-actions col-md-12">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
       </div>
@@ -84,6 +85,14 @@
         {{ renderhook('displayAdminOrderMainBottom', {'id_order': orderForViewing.id}) }}
       </div>
     </div>
+
+    {% if orderForViewing.sources.sources is not empty %}
+      <div class="product-row row">
+        <div class="col-md-12 left-column">
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/sources.html.twig' %}
+        </div>
+      </div>
+    {% endif %}
 
     {{ renderhook('displayAdminOrder', {'id_order': orderForViewing.id}) }}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig' %}

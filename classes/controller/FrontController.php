@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class FrontControllerCore extends Controller
 {
@@ -329,8 +330,15 @@ class FrontControllerCore extends Controller
             }
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
-                $id_country = $has_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country) ?
-                    (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)) : (int) Tools::getCountry();
+                if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
+                    $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
+                } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                        && Validate::isLanguageIsoCode($array[0])) {
+                    $id_country = (int) Country::getByIso($array[0], true);
+                } else {
+                    $id_country = Tools::getCountry();
+                }
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 
@@ -718,7 +726,7 @@ class FrontControllerCore extends Controller
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
             $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
-            if (!in_array(Tools::getRemoteAddr(), $allowed_ips)) {
+            if (!IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
