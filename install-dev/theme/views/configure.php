@@ -101,7 +101,7 @@
 
     <!-- Enable SSL -->
     <div class="field clearfix">
-        <label class="aligned"><?php echo $this->translator->trans('Enable SSL', array(), 'Admin.Shopparameters.Feature'); ?></label>
+        <label class="aligned"><?php echo $this->translator->trans('Enable SSL', array(), 'Install'); ?></label>
         <div class="contentinput">
             <label>
                 <input value="1" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '1'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
