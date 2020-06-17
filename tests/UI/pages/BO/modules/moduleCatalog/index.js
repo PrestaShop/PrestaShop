@@ -34,7 +34,7 @@ module.exports = class moduleCatalog extends BOBasePage {
   /**
    * Install Module and waiting for Successful massage
    * @param moduleName, Name of module
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async installModule(moduleName) {
     await this.page.click(this.installModuleButton(moduleName));
