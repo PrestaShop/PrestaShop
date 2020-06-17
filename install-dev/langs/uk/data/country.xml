@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_country>
+  <country id="DE">
+    <name>Німеччина</name>
+  </country>
+  <country id="AT">
+    <name>Австрія</name>
+  </country>
+  <country id="BE">
+    <name>Бельґія</name>
+  </country>
+  <country id="CA">
+    <name>Канада</name>
+  </country>
+  <country id="CN">
+    <name>Китай</name>
+  </country>
+  <country id="ES">
+    <name>Іспанія</name>
+  </country>
+  <country id="FI">
+    <name>Фінляндія</name>
+  </country>
+  <country id="FR">
+    <name>Франція</name>
+  </country>
+  <country id="GR">
+    <name>Греція</name>
+  </country>
+  <country id="IT">
+    <name>Італія</name>
+  </country>
+  <country id="JP">
+    <name>Японія</name>
+  </country>
+  <country id="LU">
+    <name>Люксембурґ</name>
+  </country>
+  <country id="NL">
+    <name>Нідерланди</name>
+  </country>
+  <country id="PL">
+    <name>Польща</name>
+  </country>
+  <country id="PT">
+    <name>Портуґалія</name>
+  </country>
+  <country id="CZ">
+    <name>Чеська Республіка</name>
+  </country>
+  <country id="GB">
+    <name>Велика Британія</name>
+  </country>
+  <country id="SE">
+    <name>Швеція</name>
+  </country>
+  <country id="CH">
+    <name>Швейцарія</name>
+  </country>
+  <country id="DK">
+    <name>Данія</name>
+  </country>
+  <country id="US">
+    <name>США</name>
+  </country>
+  <country id="HK">
+    <name>Гонконг</name>
+  </country>
+  <country id="NO">
+    <name>Норвеґія</name>
+  </country>
+  <country id="AU">
+    <name>Австралія</name>
+  </country>
+  <country id="SG">
+    <name>Сінгапур</name>
+  </country>
+  <country id="IE">
+    <name>Ірландія</name>
+  </country>
+  <country id="NZ">
+    <name>Нова Зеландія</name>
+  </country>
+  <country id="KR">
+    <name>Південна Корея</name>
+  </country>
+  <country id="IL">
+    <name>Ізраїль</name>
+  </country>
+  <country id="ZA">
+    <name>Південно-Африканська Республіка</name>
+  </country>
+  <country id="NG">
+    <name>Нігерія</name>
+  </country>
+  <country id="CI">
+    <name>Берег Слонової Кістки</name>
+  </country>
+  <country id="TG">
+    <name>Того</name>
+  </country>
+  <country id="BO">
+    <name>Болівія</name>
+  </country>
+  <country id="MU">
+    <name>Маврікій</name>
+  </country>
+  <country id="RO">
+    <name>Румунія</name>
+  </country>
+  <country id="SK">
+    <name>Словаччина</name>
+  </country>
+  <country id="DZ">
+    <name>Алжир</name>
+  </country>
+  <country id="AS">
+    <name>Американське Самоа</name>
+  </country>
+  <country id="AD">
+    <name>Андорра</name>
+  </country>
+  <country id="AO">
+    <name>Ангола</name>
+  </country>
+  <country id="AI">
+    <name>Анґілья</name>
+  </country>
+  <country id="AG">
+    <name>Антиґуа і Барбуда</name>
+  </country>
+  <country id="AR">
+    <name>Аргентина</name>
+  </country>
+  <country id="AM">
+    <name>Вірменія</name>
+  </country>
+  <country id="AW">
+    <name>Аруба</name>
+  </country>
+  <country id="AZ">
+    <name>Азербайджан</name>
+  </country>
+  <country id="BS">
+    <name>Багамські Острови</name>
+  </country>
+  <country id="BH">
+    <name>Бахрейн</name>
+  </country>
+  <country id="BD">
+    <name>Бангладеш</name>
+  </country>
+  <country id="BB">
+    <name>Барбадос</name>
+  </country>
+  <country id="BY">
+    <name>Білорусь</name>
+  </country>
+  <country id="BZ">
+    <name>Беліз</name>
+  </country>
+  <country id="BJ">
+    <name>Бенін</name>
+  </country>
+  <country id="BM">
+    <name>Бермудські Острови</name>
+  </country>
+  <country id="BT">
+    <name>Бутан</name>
+  </country>
+  <country id="BW">
+    <name>Ботсвана</name>
+  </country>
+  <country id="BR">
+    <name>Бразілія</name>
+  </country>
+  <country id="BN">
+    <name>Бруней</name>
+  </country>
+  <country id="BF">
+    <name>Буркіна-Фасо</name>
+  </country>
+  <country id="MM">
+    <name>Мʼянма (Бірма)</name>
+  </country>
+  <country id="BI">
+    <name>Бурунді</name>
+  </country>
+  <country id="KH">
+    <name>Камбоджа</name>
+  </country>
+  <country id="CM">
+    <name>Камерун</name>
+  </country>
+  <country id="CV">
+    <name>Кабо-Верде</name>
+  </country>
+  <country id="CF">
+    <name>Центральноафриканська Республіка</name>
+  </country>
+  <country id="TD">
+    <name>Чад</name>
+  </country>
+  <country id="CL">
+    <name>Чілі</name>
+  </country>
+  <country id="CO">
+    <name>Колумбія</name>
+  </country>
+  <country id="KM">
+    <name>Комори</name>
+  </country>
+  <country id="CD">
+    <name>Конго (ДРК)</name>
+  </country>
+  <country id="CG">
+    <name>Конго (Республіка)</name>
+  </country>
+  <country id="CR">
+    <name>Коста-Ріка</name>
+  </country>
+  <country id="HR">
+    <name>Хорватія</name>
+  </country>
+  <country id="CU">
+    <name>Куба</name>
+  </country>
+  <country id="CY">
+    <name>Кіпр</name>
+  </country>
+  <country id="DJ">
+    <name>Джибуті</name>
+  </country>
+  <country id="DM">
+    <name>Домініка</name>
+  </country>
+  <country id="DO">
+    <name>Домініканська Республіка</name>
+  </country>
+  <country id="TL">
+    <name>Східний Тимор</name>
+  </country>
+  <country id="EC">
+    <name>Еквадор</name>
+  </country>
+  <country id="EG">
+    <name>Єгипет</name>
+  </country>
+  <country id="SV">
+    <name>Сальвадор</name>
+  </country>
+  <country id="GQ">
+    <name>Екваторіальна Гвінея</name>
+  </country>
+  <country id="ER">
+    <name>Еритрея</name>
+  </country>
+  <country id="EE">
+    <name>Естонія</name>
+  </country>
+  <country id="ET">
+    <name>Ефіопія</name>
+  </country>
+  <country id="FK">
+    <name>Фолклендські (Мальвінські) Острови</name>
+  </country>
+  <country id="FO">
+    <name>Фарерські Острови</name>
+  </country>
+  <country id="FJ">
+    <name>Фіджі</name>
+  </country>
+  <country id="GA">
+    <name>Габон</name>
+  </country>
+  <country id="GM">
+    <name>Гамбія</name>
+  </country>
+  <country id="GE">
+    <name>Грузія</name>
+  </country>
+  <country id="GH">
+    <name>Гана</name>
+  </country>
+  <country id="GD">
+    <name>Ґренада</name>
+  </country>
+  <country id="GL">
+    <name>Ґренландія</name>
+  </country>
+  <country id="GI">
+    <name>Ґібралтар</name>
+  </country>
+  <country id="GP">
+    <name>Ґваделупа</name>
+  </country>
+  <country id="GU">
+    <name>Ґуам</name>
+  </country>
+  <country id="GT">
+    <name>Ґватемала</name>
+  </country>
+  <country id="GG">
+    <name>Ґернсі</name>
+  </country>
+  <country id="GN">
+    <name>Гвінея</name>
+  </country>
+  <country id="GW">
+    <name>Гвінея-Бісау</name>
+  </country>
+  <country id="GY">
+    <name>Ґайана</name>
+  </country>
+  <country id="HT">
+    <name>Гаїті</name>
+  </country>
+  <country id="HM">
+    <name>Острови Герд і Макдоналд</name>
+  </country>
+  <country id="VA">
+    <name>Ватикан</name>
+  </country>
+  <country id="HN">
+    <name>Гондурас</name>
+  </country>
+  <country id="IS">
+    <name>Ісландія</name>
+  </country>
+  <country id="IN">
+    <name>Індія</name>
+  </country>
+  <country id="ID">
+    <name>Індонезія</name>
+  </country>
+  <country id="IR">
+    <name>Іран</name>
+  </country>
+  <country id="IQ">
+    <name>Ірак</name>
+  </country>
+  <country id="IM">
+    <name>Острів Мен</name>
+  </country>
+  <country id="JM">
+    <name>Ямайка</name>
+  </country>
+  <country id="JE">
+    <name>Джерсі</name>
+  </country>
+  <country id="JO">
+    <name>Йорданія</name>
+  </country>
+  <country id="KZ">
+    <name>Казахстан</name>
+  </country>
+  <country id="KE">
+    <name>Кенія</name>
+  </country>
+  <country id="KI">
+    <name>Кірібаті</name>
+  </country>
+  <country id="KP">
+    <name>Північна Корея</name>
+  </country>
+  <country id="KW">
+    <name>Кувейт</name>
+  </country>
+  <country id="KG">
+    <name>Киргизстан</name>
+  </country>
+  <country id="LA">
+    <name>Лаос</name>
+  </country>
+  <country id="LV">
+    <name>Латвія</name>
+  </country>
+  <country id="LB">
+    <name>Ліван</name>
+  </country>
+  <country id="LS">
+    <name>Лесото</name>
+  </country>
+  <country id="LR">
+    <name>Ліберія</name>
+  </country>
+  <country id="LY">
+    <name>Лівія</name>
+  </country>
+  <country id="LI">
+    <name>Ліхтенштейн</name>
+  </country>
+  <country id="LT">
+    <name>Литва</name>
+  </country>
+  <country id="MO">
+    <name>Макао</name>
+  </country>
+  <country id="MK">
+    <name>Північна Македонія</name>
+  </country>
+  <country id="MG">
+    <name>Мадагаскар</name>
+  </country>
+  <country id="MW">
+    <name>Малаві</name>
+  </country>
+  <country id="MY">
+    <name>Малайзія</name>
+  </country>
+  <country id="MV">
+    <name>Мальдіви</name>
+  </country>
+  <country id="ML">
+    <name>Малі</name>
+  </country>
+  <country id="MT">
+    <name>Мальта</name>
+  </country>
+  <country id="MH">
+    <name>Маршаллові Острови</name>
+  </country>
+  <country id="MQ">
+    <name>Мартініка</name>
+  </country>
+  <country id="MR">
+    <name>Мавританія</name>
+  </country>
+  <country id="HU">
+    <name>Угорщина</name>
+  </country>
+  <country id="YT">
+    <name>Майотта</name>
+  </country>
+  <country id="MX">
+    <name>Мексика</name>
+  </country>
+  <country id="FM">
+    <name>Федеративні Штати Мікронезії</name>
+  </country>
+  <country id="MD">
+    <name>Молдова</name>
+  </country>
+  <country id="MC">
+    <name>Монако</name>
+  </country>
+  <country id="MN">
+    <name>Монголія</name>
+  </country>
+  <country id="ME">
+    <name>Чорногорія</name>
+  </country>
+  <country id="MS">
+    <name>Монтсеррат</name>
+  </country>
+  <country id="MA">
+    <name>Марокко</name>
+  </country>
+  <country id="MZ">
+    <name>Мозамбік</name>
+  </country>
+  <country id="NA">
+    <name>Намібія</name>
+  </country>
+  <country id="NR">
+    <name>Науру</name>
+  </country>
+  <country id="NP">
+    <name>Непал</name>
+  </country>
+  <country id="AN">
+    <name>Netherlands Antilles</name>
+  </country>
+  <country id="NC">
+    <name>Нова Каледонія</name>
+  </country>
+  <country id="NI">
+    <name>Нікараґуа</name>
+  </country>
+  <country id="NE">
+    <name>Нігер</name>
+  </country>
+  <country id="NU">
+    <name>Ніуе</name>
+  </country>
+  <country id="NF">
+    <name>Острів Норфолк</name>
+  </country>
+  <country id="MP">
+    <name>Північні Маріанські Острови</name>
+  </country>
+  <country id="OM">
+    <name>Оман</name>
+  </country>
+  <country id="PK">
+    <name>Пакистан</name>
+  </country>
+  <country id="PW">
+    <name>Палау</name>
+  </country>
+  <country id="PS">
+    <name>Палестина</name>
+  </country>
+  <country id="PA">
+    <name>Панама</name>
+  </country>
+  <country id="PG">
+    <name>Папуа-Нова Ґвінея</name>
+  </country>
+  <country id="PY">
+    <name>Параґвай</name>
+  </country>
+  <country id="PE">
+    <name>Перу</name>
+  </country>
+  <country id="PH">
+    <name>Філіппіни</name>
+  </country>
+  <country id="PN">
+    <name>Острови Піткерн</name>
+  </country>
+  <country id="PR">
+    <name>Пуерто-Ріко</name>
+  </country>
+  <country id="QA">
+    <name>Катар</name>
+  </country>
+  <country id="RE">
+    <name>Реюньйон</name>
+  </country>
+  <country id="RU">
+    <name>Росія</name>
+  </country>
+  <country id="RW">
+    <name>Руанда</name>
+  </country>
+  <country id="BL">
+    <name>Сен-Бартельмі</name>
+  </country>
+  <country id="KN">
+    <name>Сент-Кітс і Невіс</name>
+  </country>
+  <country id="LC">
+    <name>Сент-Люсія</name>
+  </country>
+  <country id="MF">
+    <name>Сен-Мартен</name>
+  </country>
+  <country id="PM">
+    <name>Сен-Пʼєр і Мікелон</name>
+  </country>
+  <country id="VC">
+    <name>Сент-Вінсент і Ґренадіни</name>
+  </country>
+  <country id="WS">
+    <name>Самоа</name>
+  </country>
+  <country id="SM">
+    <name>Сан-Маріно</name>
+  </country>
+  <country id="ST">
+    <name>Сан-Томе і Прінсіпі</name>
+  </country>
+  <country id="SA">
+    <name>Саудівська Аравія</name>
+  </country>
+  <country id="SN">
+    <name>Сенегал</name>
+  </country>
+  <country id="RS">
+    <name>Сербія</name>
+  </country>
+  <country id="SC">
+    <name>Сейшельські Острови</name>
+  </country>
+  <country id="SL">
+    <name>Сьєрра-Леоне</name>
+  </country>
+  <country id="SI">
+    <name>Словенія</name>
+  </country>
+  <country id="SB">
+    <name>Соломонові Острови</name>
+  </country>
+  <country id="SO">
+    <name>Сомалі</name>
+  </country>
+  <country id="GS">
+    <name>Південна Джорджія та Південні Сандвічеві Острови</name>
+  </country>
+  <country id="LK">
+    <name>Шрі-Ланка</name>
+  </country>
+  <country id="SD">
+    <name>Судан</name>
+  </country>
+  <country id="SR">
+    <name>Сурінам</name>
+  </country>
+  <country id="SJ">
+    <name>Шпіцберген та Ян-Маєн</name>
+  </country>
+  <country id="SZ">
+    <name>Свазіленд</name>
+  </country>
+  <country id="SY">
+    <name>Сирія</name>
+  </country>
+  <country id="TW">
+    <name>Тайвань</name>
+  </country>
+  <country id="TJ">
+    <name>Таджикистан</name>
+  </country>
+  <country id="TZ">
+    <name>Танзанія</name>
+  </country>
+  <country id="TH">
+    <name>Таїланд</name>
+  </country>
+  <country id="TK">
+    <name>Токелау</name>
+  </country>
+  <country id="TO">
+    <name>Тонґа</name>
+  </country>
+  <country id="TT">
+    <name>Трінідад і Тобаґо</name>
+  </country>
+  <country id="TN">
+    <name>Туніс</name>
+  </country>
+  <country id="TR">
+    <name>Туреччина</name>
+  </country>
+  <country id="TM">
+    <name>Туркменістан</name>
+  </country>
+  <country id="TC">
+    <name>Острови Теркс і Кайкос</name>
+  </country>
+  <country id="TV">
+    <name>Тувалу</name>
+  </country>
+  <country id="UG">
+    <name>Уганда</name>
+  </country>
+  <country id="UA">
+    <name>Україна</name>
+  </country>
+  <country id="AE">
+    <name>Обʼєднані Арабські Емірати</name>
+  </country>
+  <country id="UY">
+    <name>Уруґвай</name>
+  </country>
+  <country id="UZ">
+    <name>Узбекистан</name>
+  </country>
+  <country id="VU">
+    <name>Вануату</name>
+  </country>
+  <country id="VE">
+    <name>Венесуела</name>
+  </country>
+  <country id="VN">
+    <name>Вʼєтнам</name>
+  </country>
+  <country id="VG">
+    <name>Британські Віргінські острови</name>
+  </country>
+  <country id="VI">
+    <name>Віргінські острови, США</name>
+  </country>
+  <country id="WF">
+    <name>Уолліс і Футуна</name>
+  </country>
+  <country id="EH">
+    <name>Західна Сахара</name>
+  </country>
+  <country id="YE">
+    <name>Ємен</name>
+  </country>
+  <country id="ZM">
+    <name>Замбія</name>
+  </country>
+  <country id="ZW">
+    <name>Зімбабве</name>
+  </country>
+  <country id="AL">
+    <name>Албанія</name>
+  </country>
+  <country id="AF">
+    <name>Афганістан</name>
+  </country>
+  <country id="AQ">
+    <name>Антарктика</name>
+  </country>
+  <country id="BA">
+    <name>Боснія і Герцеґовина</name>
+  </country>
+  <country id="BV">
+    <name>Острів Буве</name>
+  </country>
+  <country id="IO">
+    <name>Британська територія в Індійському Океані</name>
+  </country>
+  <country id="BG">
+    <name>Болгарія</name>
+  </country>
+  <country id="KY">
+    <name>Кайманові Острови</name>
+  </country>
+  <country id="CX">
+    <name>Острів Різдва</name>
+  </country>
+  <country id="CC">
+    <name>Кокосові (Кілінґ) Острови</name>
+  </country>
+  <country id="CK">
+    <name>Острови Кука</name>
+  </country>
+  <country id="GF">
+    <name>Французька Ґвіана</name>
+  </country>
+  <country id="PF">
+    <name>Французька Полінезія</name>
+  </country>
+  <country id="TF">
+    <name>Французькі Південні Території</name>
+  </country>
+  <country id="AX">
+    <name>Аландські Острови</name>
+  </country>
+</entity_country>

@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_country>
+  <country id="DE">
+    <name>জার্মানি</name>
+  </country>
+  <country id="AT">
+    <name>অস্ট্রিয়া</name>
+  </country>
+  <country id="BE">
+    <name>বেলজিয়াম</name>
+  </country>
+  <country id="CA">
+    <name>কানাডা</name>
+  </country>
+  <country id="CN">
+    <name>চীন</name>
+  </country>
+  <country id="ES">
+    <name>স্পেন</name>
+  </country>
+  <country id="FI">
+    <name>ফিনল্যান্ড</name>
+  </country>
+  <country id="FR">
+    <name>ফ্রান্স</name>
+  </country>
+  <country id="GR">
+    <name>গ্রীস</name>
+  </country>
+  <country id="IT">
+    <name>ইতালি</name>
+  </country>
+  <country id="JP">
+    <name>জাপান</name>
+  </country>
+  <country id="LU">
+    <name>লাক্সেমবার্গ</name>
+  </country>
+  <country id="NL">
+    <name>নেদারল্যান্ডস</name>
+  </country>
+  <country id="PL">
+    <name>পোল্যান্ড</name>
+  </country>
+  <country id="PT">
+    <name>পর্তুগাল</name>
+  </country>
+  <country id="CZ">
+    <name>চেক প্রজাতন্ত্র</name>
+  </country>
+  <country id="GB">
+    <name>ইউ কে</name>
+  </country>
+  <country id="SE">
+    <name>সুইডেন</name>
+  </country>
+  <country id="CH">
+    <name>সুইজারল্যান্ড</name>
+  </country>
+  <country id="DK">
+    <name>ডেনমার্ক</name>
+  </country>
+  <country id="US">
+    <name>ইউ এস</name>
+  </country>
+  <country id="HK">
+    <name>হংকং</name>
+  </country>
+  <country id="NO">
+    <name>নরওয়ে</name>
+  </country>
+  <country id="AU">
+    <name>অস্ট্রেলিয়া</name>
+  </country>
+  <country id="SG">
+    <name>সিঙ্গাপুর</name>
+  </country>
+  <country id="IE">
+    <name>আয়ারল্যান্ড</name>
+  </country>
+  <country id="NZ">
+    <name>নিউজিল্যান্ড</name>
+  </country>
+  <country id="KR">
+    <name>দক্ষিণ কোরিয়া</name>
+  </country>
+  <country id="IL">
+    <name>ইজরায়েল</name>
+  </country>
+  <country id="ZA">
+    <name>দক্ষিণ আফ্রিকা</name>
+  </country>
+  <country id="NG">
+    <name>নাইজেরিয়া</name>
+  </country>
+  <country id="CI">
+    <name>আইভরি কোস্ট</name>
+  </country>
+  <country id="TG">
+    <name>টোগো</name>
+  </country>
+  <country id="BO">
+    <name>বলিভিয়া</name>
+  </country>
+  <country id="MU">
+    <name>মরিশাস</name>
+  </country>
+  <country id="RO">
+    <name>রোমানিয়া</name>
+  </country>
+  <country id="SK">
+    <name>স্লোভাকিয়া</name>
+  </country>
+  <country id="DZ">
+    <name>আলজেরিয়া</name>
+  </country>
+  <country id="AS">
+    <name>আমেরিকান সামোয়া</name>
+  </country>
+  <country id="AD">
+    <name>আন্ডোরা</name>
+  </country>
+  <country id="AO">
+    <name>অ্যাঙ্গোলা</name>
+  </country>
+  <country id="AI">
+    <name>এ্যাঙ্গুইলা</name>
+  </country>
+  <country id="AG">
+    <name>অ্যান্টিগুয়া ও বারবুডা</name>
+  </country>
+  <country id="AR">
+    <name>আর্জেন্টিনা</name>
+  </country>
+  <country id="AM">
+    <name>আর্মেনিয়া</name>
+  </country>
+  <country id="AW">
+    <name>আরুবা</name>
+  </country>
+  <country id="AZ">
+    <name>আজারবাইজান</name>
+  </country>
+  <country id="BS">
+    <name>বাহামা দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="BH">
+    <name>বাহরাইন</name>
+  </country>
+  <country id="BD">
+    <name>বাংলাদেশ</name>
+  </country>
+  <country id="BB">
+    <name>বারবাদোস</name>
+  </country>
+  <country id="BY">
+    <name>বেলারুশ</name>
+  </country>
+  <country id="BZ">
+    <name>বেলিজ</name>
+  </country>
+  <country id="BJ">
+    <name>বেনিন</name>
+  </country>
+  <country id="BM">
+    <name>বারমুডা</name>
+  </country>
+  <country id="BT">
+    <name>ভুটান</name>
+  </country>
+  <country id="BW">
+    <name>বতসোয়ানা</name>
+  </country>
+  <country id="BR">
+    <name>ব্রাজিল</name>
+  </country>
+  <country id="BN">
+    <name>ব্রুনেই</name>
+  </country>
+  <country id="BF">
+    <name>বুরকিনা ফাসো</name>
+  </country>
+  <country id="MM">
+    <name>মায়ানমার (বার্মা)</name>
+  </country>
+  <country id="BI">
+    <name>বুরুন্ডি</name>
+  </country>
+  <country id="KH">
+    <name>কম্বোডিয়া</name>
+  </country>
+  <country id="CM">
+    <name>ক্যামেরুন</name>
+  </country>
+  <country id="CV">
+    <name>কেপভার্দে</name>
+  </country>
+  <country id="CF">
+    <name>মধ্য আফ্রিকার প্রজাতন্ত্র</name>
+  </country>
+  <country id="TD">
+    <name>চাদ</name>
+  </country>
+  <country id="CL">
+    <name>চিলি</name>
+  </country>
+  <country id="CO">
+    <name>কলম্বিয়া</name>
+  </country>
+  <country id="KM">
+    <name>কমোরোস</name>
+  </country>
+  <country id="CD">
+    <name>কঙ্গো(DRC)</name>
+  </country>
+  <country id="CG">
+    <name>কঙ্গো (প্রজাতন্ত্র)</name>
+  </country>
+  <country id="CR">
+    <name>কোস্টারিকা</name>
+  </country>
+  <country id="HR">
+    <name>ক্রোয়েশিয়া</name>
+  </country>
+  <country id="CU">
+    <name>কিউবা</name>
+  </country>
+  <country id="CY">
+    <name>সাইপ্রাস</name>
+  </country>
+  <country id="DJ">
+    <name>জিবুতি</name>
+  </country>
+  <country id="DM">
+    <name>ডোমিনিকা</name>
+  </country>
+  <country id="DO">
+    <name>ডোমেনিকান প্রজাতন্ত্র</name>
+  </country>
+  <country id="TL">
+    <name>পূর্ব তিমুর</name>
+  </country>
+  <country id="EC">
+    <name>ইকুয়েডর</name>
+  </country>
+  <country id="EG">
+    <name>মিশর</name>
+  </country>
+  <country id="SV">
+    <name>এল সালভেদর</name>
+  </country>
+  <country id="GQ">
+    <name>নিরক্ষীয় গিনি</name>
+  </country>
+  <country id="ER">
+    <name>ইরিত্রিয়া</name>
+  </country>
+  <country id="EE">
+    <name>এস্তোনিয়া</name>
+  </country>
+  <country id="ET">
+    <name>ইথিওপিয়া</name>
+  </country>
+  <country id="FK">
+    <name>ফকল্যান্ড আইল্যান্ড ( ইসল্যাস মাসভেনিস)</name>
+  </country>
+  <country id="FO">
+    <name>ফ্যারও দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="FJ">
+    <name>ফিজি</name>
+  </country>
+  <country id="GA">
+    <name>গ্যাবন</name>
+  </country>
+  <country id="GM">
+    <name>গাম্বিয়া</name>
+  </country>
+  <country id="GE">
+    <name>জর্জিয়া</name>
+  </country>
+  <country id="GH">
+    <name>ঘানা</name>
+  </country>
+  <country id="GD">
+    <name>গ্রেনাডা</name>
+  </country>
+  <country id="GL">
+    <name>গ্রীনল্যান্ড</name>
+  </country>
+  <country id="GI">
+    <name>জিব্রাল্টার</name>
+  </country>
+  <country id="GP">
+    <name>গুয়াদেলৌপ</name>
+  </country>
+  <country id="GU">
+    <name>গুয়াম</name>
+  </country>
+  <country id="GT">
+    <name>গুয়াতেমালা</name>
+  </country>
+  <country id="GG">
+    <name>গুয়ার্নসি</name>
+  </country>
+  <country id="GN">
+    <name>গিনি</name>
+  </country>
+  <country id="GW">
+    <name>গিনি-বিসাউ</name>
+  </country>
+  <country id="GY">
+    <name>গিয়ানা</name>
+  </country>
+  <country id="HT">
+    <name>হাইতি</name>
+  </country>
+  <country id="HM">
+    <name>হার্ড এবং ম্যাকডোনাল্ড দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="VA">
+    <name>ভ্যাটিকান সিটি</name>
+  </country>
+  <country id="HN">
+    <name>হন্ডুরাস</name>
+  </country>
+  <country id="IS">
+    <name>আইসল্যান্ড</name>
+  </country>
+  <country id="IN">
+    <name>ভারত</name>
+  </country>
+  <country id="ID">
+    <name>ইন্দোনেশিয়া</name>
+  </country>
+  <country id="IR">
+    <name>ইরান</name>
+  </country>
+  <country id="IQ">
+    <name>ইরাক</name>
+  </country>
+  <country id="IM">
+    <name>আইল অফ ম্যান</name>
+  </country>
+  <country id="JM">
+    <name>জামাইকা</name>
+  </country>
+  <country id="JE">
+    <name>জার্সি</name>
+  </country>
+  <country id="JO">
+    <name>জর্ডন</name>
+  </country>
+  <country id="KZ">
+    <name>কাজাখস্তান</name>
+  </country>
+  <country id="KE">
+    <name>কেনিয়া</name>
+  </country>
+  <country id="KI">
+    <name>কিরিবাতি</name>
+  </country>
+  <country id="KP">
+    <name>উত্তর কোরিয়া</name>
+  </country>
+  <country id="KW">
+    <name>কুয়েত</name>
+  </country>
+  <country id="KG">
+    <name>কিরগিজিস্তান</name>
+  </country>
+  <country id="LA">
+    <name>লাওস</name>
+  </country>
+  <country id="LV">
+    <name>লাত্ভিয়া</name>
+  </country>
+  <country id="LB">
+    <name>লেবানন</name>
+  </country>
+  <country id="LS">
+    <name>লেসোথো</name>
+  </country>
+  <country id="LR">
+    <name>লাইবেরিয়া</name>
+  </country>
+  <country id="LY">
+    <name>লিবিয়া</name>
+  </country>
+  <country id="LI">
+    <name>লিচেনস্টেইন</name>
+  </country>
+  <country id="LT">
+    <name>লিথুয়ানিয়া</name>
+  </country>
+  <country id="MO">
+    <name>ম্যাকাও</name>
+  </country>
+  <country id="MK">
+    <name>উত্তর ম্যাসেডোনিয়া</name>
+  </country>
+  <country id="MG">
+    <name>মাদাগাস্কার</name>
+  </country>
+  <country id="MW">
+    <name>মালাউই</name>
+  </country>
+  <country id="MY">
+    <name>মালয়েশিয়া</name>
+  </country>
+  <country id="MV">
+    <name>মালদ্বীপ</name>
+  </country>
+  <country id="ML">
+    <name>মালি</name>
+  </country>
+  <country id="MT">
+    <name>মাল্টা</name>
+  </country>
+  <country id="MH">
+    <name>মার্শাল দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="MQ">
+    <name>মার্টিনিক</name>
+  </country>
+  <country id="MR">
+    <name>মরিতানিয়া</name>
+  </country>
+  <country id="HU">
+    <name>হাঙ্গেরি</name>
+  </country>
+  <country id="YT">
+    <name>মায়োত্তে</name>
+  </country>
+  <country id="MX">
+    <name>মেক্সিকো</name>
+  </country>
+  <country id="FM">
+    <name>মাইক্রোনেশিয়া</name>
+  </country>
+  <country id="MD">
+    <name>মলডোভা</name>
+  </country>
+  <country id="MC">
+    <name>মোনাকো</name>
+  </country>
+  <country id="MN">
+    <name>মঙ্গোলিয়া</name>
+  </country>
+  <country id="ME">
+    <name>মন্টিনিগ্রো</name>
+  </country>
+  <country id="MS">
+    <name>মন্টসেরাট</name>
+  </country>
+  <country id="MA">
+    <name>মোরক্কো</name>
+  </country>
+  <country id="MZ">
+    <name>মোজাম্বিক</name>
+  </country>
+  <country id="NA">
+    <name>নামিবিয়া</name>
+  </country>
+  <country id="NR">
+    <name>নাউরু</name>
+  </country>
+  <country id="NP">
+    <name>নেপাল</name>
+  </country>
+  <country id="AN">
+    <name>Netherlands Antilles</name>
+  </country>
+  <country id="NC">
+    <name>নিউ ক্যালেডোনিয়া</name>
+  </country>
+  <country id="NI">
+    <name>নিকারাগুয়া</name>
+  </country>
+  <country id="NE">
+    <name>নাইজার</name>
+  </country>
+  <country id="NU">
+    <name>নিউয়ে</name>
+  </country>
+  <country id="NF">
+    <name>নরফোক দ্বীপ</name>
+  </country>
+  <country id="MP">
+    <name>উত্তরাঞ্চলীয় মারিয়ানা দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="OM">
+    <name>ওমান</name>
+  </country>
+  <country id="PK">
+    <name>পাকিস্তান</name>
+  </country>
+  <country id="PW">
+    <name>পালাউ</name>
+  </country>
+  <country id="PS">
+    <name>ফিলিস্তিন</name>
+  </country>
+  <country id="PA">
+    <name>পানামা</name>
+  </country>
+  <country id="PG">
+    <name>পাপুয়া নিউ গিনি</name>
+  </country>
+  <country id="PY">
+    <name>প্যারাগুয়ে</name>
+  </country>
+  <country id="PE">
+    <name>পেরু</name>
+  </country>
+  <country id="PH">
+    <name>ফিলিপাইন</name>
+  </country>
+  <country id="PN">
+    <name>পিটকেয়ার্ন দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="PR">
+    <name>পুয়ের্তো রিকো</name>
+  </country>
+  <country id="QA">
+    <name>কাতার</name>
+  </country>
+  <country id="RE">
+    <name>রিইউনিয়ন</name>
+  </country>
+  <country id="RU">
+    <name>রাশিয়া</name>
+  </country>
+  <country id="RW">
+    <name>রুয়ান্ডা</name>
+  </country>
+  <country id="BL">
+    <name>সেন্ট বারথেলিমি</name>
+  </country>
+  <country id="KN">
+    <name>সেন্ট কিটস ও নেভিস</name>
+  </country>
+  <country id="LC">
+    <name>সেন্ট লুসিয়া</name>
+  </country>
+  <country id="MF">
+    <name>সেন্ট মার্টিন</name>
+  </country>
+  <country id="PM">
+    <name>সেন্ট পিয়ের ও মিকুয়েলন</name>
+  </country>
+  <country id="VC">
+    <name>সেন্ট ভিনসেন্ট ও গ্রেনাডিনস</name>
+  </country>
+  <country id="WS">
+    <name>সামোয়া</name>
+  </country>
+  <country id="SM">
+    <name>সান মারিনো</name>
+  </country>
+  <country id="ST">
+    <name>সাওটোমা ও প্রিন্সিপি</name>
+  </country>
+  <country id="SA">
+    <name>সৌদি আরব</name>
+  </country>
+  <country id="SN">
+    <name>সেনেগাল</name>
+  </country>
+  <country id="RS">
+    <name>সার্বিয়া</name>
+  </country>
+  <country id="SC">
+    <name>সিসিলি</name>
+  </country>
+  <country id="SL">
+    <name>সিয়েরা লিওন</name>
+  </country>
+  <country id="SI">
+    <name>স্লোভানিয়া</name>
+  </country>
+  <country id="SB">
+    <name>সলোমন দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="SO">
+    <name>সোমালিয়া</name>
+  </country>
+  <country id="GS">
+    <name>দক্ষিণ জর্জিয়া ও দক্ষিণ স্যান্ডউইচ দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="LK">
+    <name>শ্রীলঙ্কা</name>
+  </country>
+  <country id="SD">
+    <name>সুদান</name>
+  </country>
+  <country id="SR">
+    <name>সুরিনাম</name>
+  </country>
+  <country id="SJ">
+    <name>স্বালবার্ড ও জান মেয়েন</name>
+  </country>
+  <country id="SZ">
+    <name>সোয়াজিল্যান্ড</name>
+  </country>
+  <country id="SY">
+    <name>সিরিয়া</name>
+  </country>
+  <country id="TW">
+    <name>তাইওয়ান</name>
+  </country>
+  <country id="TJ">
+    <name>তাজিকিস্তান</name>
+  </country>
+  <country id="TZ">
+    <name>তাঞ্জানিয়া</name>
+  </country>
+  <country id="TH">
+    <name>থাইল্যান্ড</name>
+  </country>
+  <country id="TK">
+    <name>টোকেলাউ</name>
+  </country>
+  <country id="TO">
+    <name>টোঙ্গা</name>
+  </country>
+  <country id="TT">
+    <name>ত্রিনিনাদ ও টোব্যাগো</name>
+  </country>
+  <country id="TN">
+    <name>তিউনিসিয়া</name>
+  </country>
+  <country id="TR">
+    <name>তুরস্ক</name>
+  </country>
+  <country id="TM">
+    <name>তুর্কমেনিস্তান</name>
+  </country>
+  <country id="TC">
+    <name>তুর্কস ও কাইকোস দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="TV">
+    <name>টুভালু</name>
+  </country>
+  <country id="UG">
+    <name>উগান্ডা</name>
+  </country>
+  <country id="UA">
+    <name>ইউক্রেন</name>
+  </country>
+  <country id="AE">
+    <name>সংযুক্ত আরব আমিরাত</name>
+  </country>
+  <country id="UY">
+    <name>উরুগুয়ে</name>
+  </country>
+  <country id="UZ">
+    <name>উজবেকিস্তান</name>
+  </country>
+  <country id="VU">
+    <name>ভানুয়াটু</name>
+  </country>
+  <country id="VE">
+    <name>ভেনেজুয়েলা</name>
+  </country>
+  <country id="VN">
+    <name>ভিয়েতনাম</name>
+  </country>
+  <country id="VG">
+    <name>ব্রিটিশ ভার্জিন দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="VI">
+    <name>মার্কিন যুক্তরাষ্ট্রের ভার্জিন দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="WF">
+    <name>ওয়ালিস ও ফুটুনা</name>
+  </country>
+  <country id="EH">
+    <name>পশ্চিম সাহারা</name>
+  </country>
+  <country id="YE">
+    <name>ইয়েমেন</name>
+  </country>
+  <country id="ZM">
+    <name>জাম্বিয়া</name>
+  </country>
+  <country id="ZW">
+    <name>জিম্বাবোয়ে</name>
+  </country>
+  <country id="AL">
+    <name>আলবেনিয়া</name>
+  </country>
+  <country id="AF">
+    <name>আফগানিস্তান</name>
+  </country>
+  <country id="AQ">
+    <name>অ্যান্টার্কটিকা</name>
+  </country>
+  <country id="BA">
+    <name>বসনিয়া ও হার্জেগোভিনা</name>
+  </country>
+  <country id="BV">
+    <name>বোভেট দ্বীপ</name>
+  </country>
+  <country id="IO">
+    <name>ব্রিটিশ ভারত মহাসাগরীয় অঞ্চল</name>
+  </country>
+  <country id="BG">
+    <name>বুলগেরিয়া</name>
+  </country>
+  <country id="KY">
+    <name>কেম্যান দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="CX">
+    <name>ক্রিসমাস দ্বীপ</name>
+  </country>
+  <country id="CC">
+    <name>কোকোস (কিলিং) দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="CK">
+    <name>কুক দ্বীপপুঞ্জ</name>
+  </country>
+  <country id="GF">
+    <name>ফরাসী গায়ানা</name>
+  </country>
+  <country id="PF">
+    <name>ফরাসী পলিনেশিয়া</name>
+  </country>
+  <country id="TF">
+    <name>ফরাসী দক্ষিণাঞ্চল</name>
+  </country>
+  <country id="AX">
+    <name>আলান্ড দ্বীপপুঞ্জ</name>
+  </country>
+</entity_country>
