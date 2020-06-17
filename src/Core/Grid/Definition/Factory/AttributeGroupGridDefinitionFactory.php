@@ -228,7 +228,7 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-              ->add(
+            ->add(
                 $this->buildBulkDeleteAction('admin_attribute_groups_bulk_delete')
               );
     }
