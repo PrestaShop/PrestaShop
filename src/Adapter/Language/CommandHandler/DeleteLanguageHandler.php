@@ -47,8 +47,8 @@ final class DeleteLanguageHandler extends AbstractLanguageHandler implements Del
     {
         $language = $this->getLegacyLanguageObject($command->getLanguageId());
 
-        $this->assertLanguageIsNotDefault($language);
-        $this->assertLanguageIsNotInUse($language);
+        $this->assertIsNotDefaultLanguage($language);
+        $this->assertIsNotInUseLanguage($language);
 
         // language must be deleted in "ALL SHOPS" context
         Shop::setContext(Shop::CONTEXT_ALL);
