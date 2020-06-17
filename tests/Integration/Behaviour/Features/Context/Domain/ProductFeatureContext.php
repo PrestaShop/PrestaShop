@@ -636,7 +636,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'visibility' => 'options.visibility',
             'available_for_order' => 'options.availableForOrder',
             'online_only' => 'options.onlineOnly',
-            'show_price' => 'options.toShowPrice',
+            'show_price' => 'options.showPrice',
             'condition' => 'options.condition',
             'isbn' => 'options.isbn',
             'upc' => 'options.upc',

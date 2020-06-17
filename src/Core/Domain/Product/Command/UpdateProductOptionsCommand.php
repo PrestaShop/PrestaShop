@@ -178,7 +178,7 @@ class UpdateProductOptionsCommand
     /**
      * @return bool|null
      */
-    public function toShowPrice(): ?bool
+    public function showPrice(): ?bool
     {
         return $this->showPrice;
     }

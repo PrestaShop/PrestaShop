@@ -154,7 +154,7 @@ class ProductOptions
     /**
      * @return bool
      */
-    public function toShowPrice(): bool
+    public function showPrice(): bool
     {
         return $this->showPrice;
     }

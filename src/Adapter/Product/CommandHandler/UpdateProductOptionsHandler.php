@@ -82,8 +82,8 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
             $this->fieldsToUpdate['online_only'] = true;
         }
 
-        if (null !== $command->toShowPrice()) {
-            $product->show_price = $command->toShowPrice();
+        if (null !== $command->showPrice()) {
+            $product->show_price = $command->showPrice();
             $this->fieldsToUpdate['show_price'] = true;
         }
 
