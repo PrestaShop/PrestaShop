@@ -293,6 +293,13 @@ class Reader implements ReaderInterface
                 $localeData->getLocaleCode() . '-' . $xmlLocaleData->identity->territory['type']
             );
         }
+        if (isset($xmlLocaleData->localeDisplayNames->territories)) {
+            $territories = [];
+            foreach ($xmlLocaleData->localeDisplayNames->territories->children() as $territory) {
+                $territories[(string) $territory->attributes()->type] = (string) $territory;
+            }
+            $localeData->setTerritories($territories);
+        }
 
         // Numbers
         $numbersData = $xmlLocaleData->numbers;
