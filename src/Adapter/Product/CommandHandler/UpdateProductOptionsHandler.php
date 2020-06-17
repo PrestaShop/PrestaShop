@@ -53,7 +53,12 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         $this->fillUpdatableFieldsWithCommandData($product, $command);
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
-        $this->performUpdate($product, $command->getLocalizedTags());
+        $this->performUpdate($product);
+
+        // don't do anything with tags if its null. (It means it is a partial update and tags aren't changed)
+        if (null !== $command->getLocalizedTags()) {
+            $this->updateTags($product, $command->getLocalizedTags());
+        }
     }
 
     /**
@@ -120,7 +125,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      * @throws CannotUpdateProductException
      * @throws ProductException
      */
-    private function performUpdate(Product $product, ?array $localizedTags)
+    private function performUpdate(Product $product)
     {
         try {
             if (false === $product->update()) {
@@ -132,8 +137,6 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                     CannotUpdateProductException::FAILED_UPDATE_OPTIONS
                 );
             }
-
-            $this->updateTags($product, $localizedTags);
         } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf(
@@ -160,13 +163,8 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      * @throws CannotUpdateProductException
      * @throws PrestaShopException
      */
-    private function updateTags(Product $product, ?array $localizedTags)
+    private function updateTags(Product $product, array $localizedTags)
     {
-        // don't do anything with tags if its null. (It means it is a partial update and tags aren't changed)
-        if (null === $localizedTags) {
-            return;
-        }
-
         $productId = (int) $product->id;
 
         // delete all tags for product if array is empty
@@ -182,6 +180,9 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                 continue;
             }
 
+            // validate each tag and remove empty values
+            $this->validateTags($tags, $langId);
+
             // delete all this product tags for this lang
             if (false === Tag::deleteTagsForProduct($productId, $langId)) {
                 throw new CannotUpdateProductException(
@@ -189,9 +190,6 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                     CannotUpdateProductException::FAILED_UPDATE_OPTIONS
                 );
             }
-
-            // validate each tag and remove empty values
-            $this->validateTags($tags, $langId);
 
             // empty tags means to delete all previous tags, which is already done above.
             if (empty($tags)) {
