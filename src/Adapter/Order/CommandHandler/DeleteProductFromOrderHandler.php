@@ -108,8 +108,6 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
                 throw new OrderException('An error occurred while attempting to delete product from order.');
             }
 
-            $order = $order->refreshShippingCost();
-
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
             $this->contextStateManager->restoreContext();
