@@ -18,8 +18,8 @@ module.exports = class Currencies extends LocalizationBasePage {
 
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #currency_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='currency[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='currency[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
