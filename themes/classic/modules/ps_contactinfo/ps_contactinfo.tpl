@@ -27,7 +27,7 @@
   <div class="hidden-sm-down">
     <p class="h4 text-uppercase block-contact-title">{l s='Store information' d='Shop.Theme.Global'}</p>
       {$contact_infos.address.formatted nofilter}
-      {if $contact_infos.phone}
+      {if $contact_infos.phone && $display_phone}
         <br>
         {* [1][/1] is for a HTML tag. *}
         {l s='Call us: [1]%phone%[/1]'

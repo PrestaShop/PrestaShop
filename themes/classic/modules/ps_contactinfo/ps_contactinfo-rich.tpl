@@ -29,7 +29,7 @@
     <div class="icon"><i class="material-icons">&#xE55F;</i></div>
     <div class="data">{$contact_infos.address.formatted nofilter}</div>
   </div>
-  {if $contact_infos.phone}
+  {if $contact_infos.phone && $display_phone}
     <hr/>
     <div class="block">
       <div class="icon"><i class="material-icons">&#xE0CD;</i></div>
