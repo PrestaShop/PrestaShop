@@ -13,8 +13,8 @@ module.exports = class Monitoring extends BOBasePage {
     this.gridHeaderTitle = table => `${this.gridPanel(table)} div.card-header h3`;
     // Filters
     this.filterColumn = (table, filterBY) => `${this.gridTable(table)} #${table}_${filterBY}`;
-    this.filterSearchButton = table => `${this.gridTable(table)} button[name='${table}[actions][search]']`;
-    this.filterResetButton = table => `${this.gridTable(table)} button[name='${table}[actions][reset]']`;
+    this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
     // Table
     this.tableBody = table => `${this.gridTable(table)} tbody`;
     this.tableRow = (table, row) => `${this.tableBody(table)} tr:nth-child(${row})`;
@@ -206,6 +206,7 @@ module.exports = class Monitoring extends BOBasePage {
 
   /**
    * Get toggle column value for a row
+   * @param table
    * @param row
    * @return {Promise<string>}
    */
@@ -216,6 +217,7 @@ module.exports = class Monitoring extends BOBasePage {
   // Sort methods
   /**
    * Get content from all rows
+   * @param table
    * @param column
    * @return {Promise<[]>}
    */
@@ -234,6 +236,7 @@ module.exports = class Monitoring extends BOBasePage {
 
   /**
    * Sort table
+   * @param table
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}

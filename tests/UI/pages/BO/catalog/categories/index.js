@@ -34,8 +34,8 @@ module.exports = class Categories extends BOBasePage {
     } i.grid-toggler-icon-not-valid`;
     // Filters
     this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
-    this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
-    this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
+    this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.categoriesListForm} .grid-reset-button`;
     // Bulk Actions
     this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters div.md-checkbox`;
     this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;

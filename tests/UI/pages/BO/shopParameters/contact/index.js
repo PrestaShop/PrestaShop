@@ -18,8 +18,8 @@ module.exports = class Contacts extends BOBasePage {
     this.contactsListTableColumn = (row, column) => `${this.contactsListTableRow(row)} td.column-${column}`;
     // Filters
     this.contactFilterInput = filterBy => `${this.contactsListForm} #contact_${filterBy}`;
-    this.filterSearchButton = `${this.contactsListForm} button[name='contact[actions][search]']`;
-    this.filterResetButton = `${this.contactsListForm} button[name='contact[actions][reset]']`;
+    this.filterSearchButton = `${this.contactsListForm} .grid-search-button`;
+    this.filterResetButton = `${this.contactsListForm} .grid-reset-button`;
     // Actions buttons in Row
     this.contactsListTableActionsColumn = row => this.contactsListTableColumn(row, 'actions');
     this.listTableToggleDropDown = row => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;

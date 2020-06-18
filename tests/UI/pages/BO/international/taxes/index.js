@@ -27,8 +27,8 @@ module.exports = class Taxes extends BOBasePage {
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.taxesFilterColumnInput = filterBy => `${this.taxesGridTable} #tax_${filterBy}`;
-    this.resetFilterButton = `${this.taxesGridTable} button[name='tax[actions][reset]']`;
-    this.searchFilterButton = `${this.taxesGridTable} button[name='tax[actions][search]']`;
+    this.resetFilterButton = `${this.taxesGridTable} .grid-reset-button`;
+    this.searchFilterButton = `${this.taxesGridTable} .grid-search-button`;
     this.taxesGridRow = row => `${this.taxesGridTable} tbody tr:nth-child(${row})`;
     this.taxesGridColumn = (row, column) => `${this.taxesGridRow(row)} td.column-${column}`;
     this.taxesGridActionsColumn = row => this.taxesGridColumn(row, 'actions');

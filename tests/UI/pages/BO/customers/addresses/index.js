@@ -24,8 +24,8 @@ module.exports = class Addresses extends BOBasePage {
     this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a[href*='edit']`;
     // Filters
     this.addressFilterColumnInput = filterBy => `${this.addressesListForm} #address_${filterBy}`;
-    this.filterSearchButton = `${this.addressesListForm} button[name='address[actions][search]']`;
-    this.filterResetButton = `${this.addressesListForm} button[name='address[actions][reset]']`;
+    this.filterSearchButton = `${this.addressesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.addressesListForm} .grid-reset-button`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;

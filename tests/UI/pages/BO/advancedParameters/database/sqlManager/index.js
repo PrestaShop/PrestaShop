@@ -26,8 +26,8 @@ module.exports = class SqlManager extends BOBasePage {
     this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
     // Filters
     this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
-    this.filterSearchButton = `${this.sqlQueryListForm} button[name='sql_request[actions][search]']`;
-    this.filterResetButton = `${this.sqlQueryListForm} button[name='sql_request[actions][reset]']`;
+    this.filterSearchButton = `${this.sqlQueryListForm} .grid-search-button`;
+    this.filterResetButton = `${this.sqlQueryListForm} .grid-reset-button`;
 
     // Delete modal
     this.confirmDeleteModal = '#sql_request-grid-confirm-modal';
