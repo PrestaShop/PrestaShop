@@ -1510,14 +1510,14 @@ class WebserviceRequestCore
         $object = null;
 
         $ids = [];
-        $ids2 = [];
+        $forceIds = [];
         foreach ($xmlEntities as $entity) {
             // To cast in string allow to check null values
             if ((string) $entity->id != '') {
                 $ids[] = (int) $entity->id;
             }
             if ((int) $entity->force_id > 0) {
-                $ids2[] = (int) $entity->force_id;
+                $forceIds[] = (int) $entity->force_id;
             }
         }
         if ($this->method == 'PUT') {
@@ -1534,7 +1534,7 @@ class WebserviceRequestCore
                 return false;
             }
         } elseif ($this->method == 'POST' && count($ids) > 0) {
-            if (count($ids2) < count($ids)) {
+            if (count($forceIds) < count($ids)) {
                 $this->setError(400, 'id is forbidden when adding a new resource', 91);
 
                 return false;
