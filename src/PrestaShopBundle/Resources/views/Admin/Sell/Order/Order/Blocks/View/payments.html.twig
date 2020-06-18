@@ -42,7 +42,7 @@
           {% if orderForViewing.brothers.brothers is not empty %}
 
             {% set firstBrother = orderForViewing.brothers.brothers|first %}
-            {% if orderForViewing.brothers.brothers|length === 1 %}
+            {% if orderForViewing.brothers.brothers|length == 1 %}
               <br/>{{ 'This warning also concerns order '|trans({}, 'Admin.Orderscustomers.Notification') }}
             {% else %}
               <br/>{{ 'This warning also concerns the following orders:'|trans({}, 'Admin.Orderscustomers.Notification') }}
