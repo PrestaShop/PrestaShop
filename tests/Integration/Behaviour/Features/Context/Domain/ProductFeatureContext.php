@@ -96,16 +96,28 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add standard product :productReference to a pack :packReference
+     * @When I add standard product :productReference to a pack :packReference with quantity of :quantity
+     * @When I pack :quantity standard product :productReference to a pack of :packReference
      *
-     * @param string $packReference
      * @param string $productReference
+     * @param string $packReference
+     * @param int $quantity
      */
-    public function addProductToPack(string $productReference, string $packReference)
+    public function addProductToPack(int $quantity, string $productReference, string $packReference)
     {
         $packId = $this->getSharedStorage()->get($packReference);
         $productId = $this->getSharedStorage()->get($productReference);
-        //@todo:
+
+        try {
+            $this->getCommandBus()->handle(new AddProductToPackCommand(
+                $packId,
+                $productId,
+                $quantity,
+                null
+            ));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -608,15 +620,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function assertProductType(string $productReference, string $productTypeName)
     {
         $editableProduct = $this->getProductForEditing($productReference);
-        if ($productTypeName !== $editableProduct->getBasicInformation()->getType()->getValue()) {
-            throw new RuntimeException(
-                sprintf(
-                    'Product type is not as expected. Expected %s but go %s instead',
-                    $productTypeName,
-                    $editableProduct->getBasicInformation()->getType()->getValue()
-                )
-            );
-        }
+        Assert::assertEquals(
+            $productTypeName,
+            $editableProduct->getBasicInformation()->getType()->getValue(),
+            sprintf(
+                'Product type is not as expected. Expected %s but got %s instead',
+                $productTypeName,
+                $editableProduct->getBasicInformation()->getType()->getValue()
+            )
+        );
     }
 
     /**

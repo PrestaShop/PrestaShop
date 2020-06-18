@@ -46,7 +46,7 @@ final class AddProductToPackHandler extends AbstractProductHandler implements Ad
     {
         //@todo: ref AdminProductsController::3117 updatePackItems()
         // Product that is being edited becomes the Pack.
-        $productPack = $this->getProduct($command->getPackId());
+        $pack = $this->getProduct($command->getPackId());
         $productId = $command->getProductId()->getValue();
         $combinationId = $command->getCombinationId();
 
@@ -57,15 +57,16 @@ final class AddProductToPackHandler extends AbstractProductHandler implements Ad
         try {
             $this->assertProductIsAvailableForPacking($productId);
 
-            if (false === Pack::deleteItems($productPack->id)) {
+            if (false === Pack::deleteItems($pack->id)) {
                 throw new ProductPackingException(
                     $this->buildMessageWithCommandInputs('Failed adding product to pack.', $command),
                     ProductPackingException::FAILED_DELETING_PREVIOUS_PACKS
                 );
             }
             //reset cache_default_attribute
-            $productPack->setDefaultAttribute(0);
-            $packed = Pack::addItem($productPack->id, $productId, $command->getQuantity(), $combinationId);
+            $pack->setDefaultAttribute(0);
+            $packed = Pack::addItem($pack->id, $productId, $command->getQuantity(), $combinationId);
+            Pack::resetStaticCache();
 
             if (false === $packed) {
                 throw new ProductPackingException(
