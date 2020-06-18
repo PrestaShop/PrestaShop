@@ -41,7 +41,7 @@ use Tag;
 class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateProductTagsHandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(UpdateProductTagsCommand $command): void
     {

@@ -72,6 +72,7 @@ class UpdateProductTagsCommand
 
     /**
      * @param array $localizedTags
+     *
      * @throws ProductConstraintException
      */
     private function setLocalizedTagsList(array $localizedTags): void

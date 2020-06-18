@@ -37,9 +37,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 use Product;
-use Tag;
 
 /**
  * Handles UpdateProductOptionsCommand using legacy object models
@@ -64,7 +64,9 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      */
     public function handle(UpdateProductOptionsCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
+        $productId = $command->getProductId();
+
+        $product = $this->getProduct($productId);
         $this->fillUpdatableFieldsWithCommandData($product, $command);
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
@@ -72,9 +74,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
 
         // don't do anything with tags if its null. (It means it is a partial update and tags aren't changed)
         if (null !== $command->getLocalizedTags()) {
-            $this->updateProductTagsHandler->handle(
-                new UpdateProductTagsCommand((int) $product->id, $command->getLocalizedTags())
-            );
+            $this->updateTags($productId, $command->getLocalizedTags());
         }
     }
 
@@ -165,5 +165,19 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                 $e
             );
         }
+    }
+
+    /**
+     * Invokes the handler to update product tags
+     *
+     * @param ProductId $productId
+     * @param array $localizedTagsList
+     */
+    private function updateTags(ProductId $productId, array $localizedTagsList)
+    {
+        $this->updateProductTagsHandler->handle(new UpdateProductTagsCommand(
+            $productId->getValue(),
+            $localizedTagsList
+        ));
     }
 }
