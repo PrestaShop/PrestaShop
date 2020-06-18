@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShopDatabaseException;
 use PrestashopInstallerException;
+use SimpleXMLElement;
 
 class XmlLoader
 {
@@ -375,7 +376,7 @@ class XmlLoader
         $xml = $this->loadEntity('country');
 
         // Read list of fields
-        if (!is_object($xml) || !$xml->fields) {
+        if (empty($xml->fields)) {
             throw new PrestashopInstallerException('List of fields not found for entity coutrny');
         }
         $langs = [];
@@ -387,30 +388,32 @@ class XmlLoader
 
         // Load all row for current entity and prepare data to be populated
         $i = 0;
-        foreach ($xml->entities->country as $node) {
-            $data = [];
-            $identifier = (string) $node['id'];
+        if (!empty($xml->entities->country) && $xml->entities->country instanceof SimpleXMLElement) {
+            foreach ($xml->entities->country as $node) {
+                $data = [];
+                $identifier = (string) $node['id'];
 
-            // Read attributes
-            foreach ($node->attributes() as $k => $v) {
-                if ($k != 'id') {
-                    $data[$k] = (string) $v;
+                // Read attributes
+                foreach ($node->attributes() as $k => $v) {
+                    if ($k != 'id') {
+                        $data[$k] = (string) $v;
+                    }
                 }
-            }
 
-            // Load multilang data
-            $data_lang = [];
-            foreach ($langs as $id_lang => $countries) {
-                $data_lang['name'][$id_lang] = $countries[strtolower($identifier)] ?? '';
-            }
+                // Load multilang data
+                $data_lang = [];
+                foreach ($langs as $id_lang => $countries) {
+                    $data_lang['name'][$id_lang] = $countries[strtolower($identifier)] ?? '';
+                }
 
-            $data = $this->rewriteRelationedData('country', $data);
-            $this->createEntity('country', $identifier, (string) $xml->fields['class'], $data, $data_lang);
-            ++$i;
+                $data = $this->rewriteRelationedData('country', $data);
+                $this->createEntity('country', $identifier, (string) $xml->fields['class'], $data, $data_lang);
+                ++$i;
 
-            if ($i >= 100) {
-                $this->flushDelayedInserts();
-                $i = 0;
+                if ($i >= 100) {
+                    $this->flushDelayedInserts();
+                    $i = 0;
+                }
             }
         }
 
