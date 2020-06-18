@@ -95,6 +95,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I add product :productReference to a pack :packReference
+     *
+     * @param string $packReference
+     * @param string $productReference
+     */
+    public function addProductToPack(string $productReference, string $packReference)
+    {
+        //@todo:
+    }
+
+    /**
      * @When I update product :productReference basic information with following values:
      *
      * @param string $productReference
