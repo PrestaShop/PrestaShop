@@ -64,7 +64,7 @@ class WebserviceKeyCore extends ObjectModel
                         Context::getContext()->employee->lastname,
                         Context::getContext()->employee->email,
                     ],
-                    'Admin.Advparameters.Notification'
+                    'Admin.Advparameters.Feature'
                 )
             );
         }
