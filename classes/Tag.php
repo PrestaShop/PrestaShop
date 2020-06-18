@@ -310,7 +310,7 @@ class TagCore extends ObjectModel
      */
     public static function deleteTagsForProduct($idProduct)
     {
-        return self::deleteTagsForProduct($idProduct);
+        return self::deleteProductTags($idProduct);
     }
 
     /**
@@ -323,7 +323,7 @@ class TagCore extends ObjectModel
      */
     public static function deleteProductTagsInLang(int $productId, int $langId)
     {
-        return self::deleteProductTagsInLang($productId, $langId);
+        return self::deleteProductTags($productId, $langId);
     }
 
     /**
