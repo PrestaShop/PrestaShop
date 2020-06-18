@@ -55,8 +55,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    use BulkDeleteActionTrait;
-
     use DeleteActionTrait;
 
     const GRID_ID = 'attribute';
