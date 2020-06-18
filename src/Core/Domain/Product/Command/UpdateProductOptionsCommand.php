@@ -126,6 +126,18 @@ class UpdateProductOptionsCommand
     }
 
     /**
+     * @param string $visibility
+     *
+     * @return UpdateProductOptionsCommand
+     */
+    public function setVisibility(string $visibility): UpdateProductOptionsCommand
+    {
+        $this->visibility = new ProductVisibility($visibility);
+
+        return $this;
+    }
+
+    /**
      * @param bool $availableForOrder
      *
      * @return UpdateProductOptionsCommand
