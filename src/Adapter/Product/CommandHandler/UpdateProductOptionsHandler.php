@@ -30,13 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTagsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 use Product;
 
@@ -45,19 +42,6 @@ use Product;
  */
 final class UpdateProductOptionsHandler extends AbstractProductHandler implements UpdateProductOptionsHandlerInterface
 {
-    /**
-     * @var UpdateProductTagsHandlerInterface
-     */
-    private $updateProductTagsHandler;
-
-    /**
-     * @param UpdateProductTagsHandlerInterface $updateProductTagsHandler
-     */
-    public function __construct(UpdateProductTagsHandlerInterface $updateProductTagsHandler)
-    {
-        $this->updateProductTagsHandler = $updateProductTagsHandler;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -70,11 +54,6 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
         $this->performUpdate($product);
-
-        // don't do anything with tags if its null. (It means it is a partial update and tags aren't changed)
-        if (null !== $command->getLocalizedTags()) {
-            $this->updateTags($productId, $command->getLocalizedTags());
-        }
     }
 
     /**
@@ -164,19 +143,5 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                 $e
             );
         }
-    }
-
-    /**
-     * Invokes the handler to update product tags
-     *
-     * @param ProductId $productId
-     * @param array $localizedTagsList
-     */
-    private function updateTags(ProductId $productId, array $localizedTagsList)
-    {
-        $this->updateProductTagsHandler->handle(new UpdateProductTagsCommand(
-            $productId->getValue(),
-            $localizedTagsList
-        ));
     }
 }

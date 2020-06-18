@@ -105,8 +105,6 @@ services:
 
     prestashop.adapter.product.command_handler.update_product_options_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
-      arguments:
-        - '@prestashop.adapter.product.command_handler.update_product_tags_handler'
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand

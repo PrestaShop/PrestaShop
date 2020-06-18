@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -293,6 +294,31 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update product :productReference tags with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductTags(string $productReference, TableNode $table)
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $data = $table->getRowsHash();
+
+        $localizedTagStrings = $this->parseLocalizedArray($data['tags']);
+        $localizedTagsList = [];
+
+        foreach ($localizedTagStrings as $langId => $localizedTagString) {
+            $localizedTagsList[$langId] = explode(',', $localizedTagString);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new UpdateProductTagsCommand($productId, $localizedTagsList));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @param array $data
      * @param UpdateProductOptionsCommand $command
      */
@@ -340,17 +366,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($data['mpn'])) {
             $command->setMpn($data['mpn']);
-        }
-
-        if (isset($data['tags'])) {
-            $localizedTagStrings = $this->parseLocalizedArray($data['tags']);
-            $localizedTagsList = [];
-
-            foreach ($localizedTagStrings as $langId => $localizedTagString) {
-                $localizedTagsList[$langId] = explode(',', $localizedTagString);
-            }
-
-            $command->setLocalizedTagsList($localizedTagsList);
         }
     }
 

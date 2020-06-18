@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Mpn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
@@ -64,11 +62,6 @@ class UpdateProductOptionsCommand
      * @var bool|null
      */
     private $showPrice;
-
-    /**
-     * @var LocalizedTags[]|null
-     */
-    private $localizedTags;
 
     /**
      * @var ProductCondition|null
@@ -122,18 +115,6 @@ class UpdateProductOptionsCommand
     public function getVisibility(): ?ProductVisibility
     {
         return $this->visibility;
-    }
-
-    /**
-     * @param ProductVisibility $visibility
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setVisibility(string $visibility): UpdateProductOptionsCommand
-    {
-        $this->visibility = new ProductVisibility($visibility);
-
-        return $this;
     }
 
     /**
@@ -192,26 +173,6 @@ class UpdateProductOptionsCommand
     public function setShowPrice(bool $showPrice): UpdateProductOptionsCommand
     {
         $this->showPrice = $showPrice;
-
-        return $this;
-    }
-
-    /**
-     * @return array[]|null
-     */
-    public function getLocalizedTags(): ?array
-    {
-        return $this->localizedTags;
-    }
-
-    /**
-     * @param string[] $localizedTagsList key value pairs where key is language id and value is the array of tags
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setLocalizedTagsList(array $localizedTagsList): UpdateProductOptionsCommand
-    {
-        $this->localizedTags = $localizedTagsList;
 
         return $this;
     }
