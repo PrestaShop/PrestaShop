@@ -231,7 +231,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             }
 
             // convert filled tags to array
-            $expectedTags = explode(',', $tagsString);
+            $expectedTags = array_map('trim', explode(',', $tagsString));
             $valueInLangExists = false;
             foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
                 if ($actualLocalizedTags->getLanguageId() !== $langId) {
@@ -347,8 +347,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $localizedTagsList = [];
 
             foreach ($localizedTagStrings as $langId => $localizedTagString) {
-                $tags = explode(',', $localizedTagString);
-                $localizedTagsList[$langId] = $tags;
+                $localizedTagsList[$langId] = explode(',', $localizedTagString);
             }
 
             $command->setLocalizedTagsList($localizedTagsList);
