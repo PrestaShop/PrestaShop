@@ -279,9 +279,9 @@
                 {{ form.vars.default_locale.iso_code }}
             </button>
 
-            <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+            <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
                 {% for locale in locales %}
-                    <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
+                    <span class="dropdown-item js-locale-item locale-iso-code-{{ locale.iso_code }}" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
                 {% endfor %}
             </div>
         </div>
@@ -319,7 +319,7 @@
 
         <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
-            <span class="dropdown-item js-locale-item"
+            <span class="dropdown-item js-locale-item locale-iso-code-{{ locale.iso_code }}"
                   data-locale="{{ locale.iso_code }}"
             >
               {{ locale.name }}
@@ -667,9 +667,9 @@
         >
           {{ form.vars.default_locale.iso_code }}
         </button>
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
-            <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
+            <span class="dropdown-item js-locale-item locale-iso-code-{{ locale.iso_code }}" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
         </div>
       </div>
