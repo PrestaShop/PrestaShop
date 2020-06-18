@@ -20,8 +20,8 @@ module.exports = class WebService extends BOBasePage {
     this.webserviceListTableColumnAction = row => this.webserviceListTableColumn(row, 'actions');
     this.webserviceListTableToggleDropDown = row => `${this.webserviceListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.webserviceListTableDeleteLink = row => `${this.webserviceListTableColumnAction(row)} a[data-url]`;
-    this.webserviceListTableEditLink = row => `${this.webserviceListTableColumnAction(row)} a[href*='edit']`;
+    this.webserviceListTableDeleteLink = row => `${this.webserviceListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.webserviceListTableEditLink = row => `${this.webserviceListTableColumnAction(row)} a.grid-edit-row-link`;
     this.webserviceListColumnValidIcon = row => `${this.webserviceListTableColumn(row, 'active')
     } i.grid-toggler-icon-valid`;
     this.webserviceListColumnNotValidIcon = row => `${this.webserviceListTableColumn(row, 'active')

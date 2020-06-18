@@ -18,13 +18,11 @@ module.exports = class Customers extends BOBasePage {
     this.customersListTableRow = row => `${this.customersListForm} tbody tr:nth-child(${row})`;
     this.customersListTableColumn = (row, column) => `${this.customersListTableRow(row)} td.column-${column}`;
     this.customersListTableActionsColumn = row => this.customersListTableColumn(row, 'actions');
-    this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)}`
-      + ' a[data-original-title=\'Edit\']';
+    this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)} a.grid-edit-row-link`;
     this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)}`
       + ' a[data-toggle=\'dropdown\']';
-    this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a[href*='/view']`;
-    this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)}`
-      + ' a[data-customer-delete-url]';
+    this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a.grid-view-row-link`;
+    this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)} a.grid-delete-row-link`;
     this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
       + ' i.grid-toggler-icon-valid';
     this.customersListColumnNotValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`

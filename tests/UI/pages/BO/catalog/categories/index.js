@@ -23,11 +23,11 @@ module.exports = class Categories extends BOBasePage {
     this.categoriesListTableToggleDropDown = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a[data-toggle='dropdown']`;
     this.categoriesListTableDeleteLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[data-category-delete-url]`;
+    } a.grid-delete-row-link`;
     this.categoriesListTableViewLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[data-original-title='View']`;
+    } a.grid-view-row-link`;
     this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[href*='edit']`;
+    } a.grid-edit-row-link`;
     this.categoriesListColumnValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
     } i.grid-toggler-icon-valid`;
     this.categoriesListColumnNotValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
