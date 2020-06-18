@@ -57,19 +57,4 @@ final class BulkToggleLanguagesStatusHandler extends AbstractLanguageHandler imp
             }
         }
     }
-
-    /**
-     * @param Language $language
-     * @param BulkToggleLanguagesStatusCommand $command
-     */
-    private function assertLanguageIsNotDefault(Language $language, BulkToggleLanguagesStatusCommand $command)
-    {
-        if (true === $command->getStatus()) {
-            return;
-        }
-
-        if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
-            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be disabled', $language->iso_code), DefaultLanguageException::CANNOT_DISABLE_ERROR);
-        }
-    }
 }

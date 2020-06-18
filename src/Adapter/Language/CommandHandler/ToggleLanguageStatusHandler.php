@@ -55,19 +55,4 @@ final class ToggleLanguageStatusHandler extends AbstractLanguageHandler implemen
             throw new LanguageException(sprintf('Failed to toggle language "%s" to status %s', $language->id, var_export($command->getStatus(), true)));
         }
     }
-
-    /**
-     * @param Language $language
-     * @param ToggleLanguageStatusCommand $command
-     */
-    private function assertLanguageIsNotDefault(Language $language, ToggleLanguageStatusCommand $command)
-    {
-        if (true === $command->getStatus()) {
-            return;
-        }
-
-        if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
-            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be disabled', $language->iso_code), DefaultLanguageException::CANNOT_DISABLE_ERROR);
-        }
-    }
 }
