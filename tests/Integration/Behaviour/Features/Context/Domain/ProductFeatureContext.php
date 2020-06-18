@@ -40,12 +40,15 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackingException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -96,27 +99,32 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add standard product :productReference to a pack :packReference with quantity of :quantity
-     * @When I pack :quantity standard product :productReference to a pack of :packReference
+     * @When I pack :quantity :type product :productReference to a pack of :packReference
      *
+     * @param string $type
+     * @param int $quantity
      * @param string $productReference
      * @param string $packReference
-     * @param int $quantity
      */
-    public function addProductToPack(int $quantity, string $productReference, string $packReference)
+    public function addProductToPack(string $type, int $quantity, string $productReference, string $packReference)
     {
-        $packId = $this->getSharedStorage()->get($packReference);
-        $productId = $this->getSharedStorage()->get($productReference);
+        if (ProductType::TYPE_STANDARD == $type || ProductType::TYPE_PACK === $type) {
+            $packId = $this->getSharedStorage()->get($packReference);
+            $productId = $this->getSharedStorage()->get($productReference);
 
-        try {
-            $this->getCommandBus()->handle(new AddProductToPackCommand(
-                $packId,
-                $productId,
-                $quantity,
-                null
-            ));
-        } catch (ProductException $e) {
-            $this->lastException = $e;
+            try {
+                $this->getCommandBus()->handle(new AddProductToPackCommand(
+                    $packId,
+                    $productId,
+                    $quantity,
+                    null
+                ));
+            } catch (ProductException $e) {
+                $this->lastException = $e;
+            }
+        } else {
+            throw new RuntimeException(sprintf('Invalid type %s', $type));
+            //@todo; case for combinational product later
         }
     }
 
@@ -628,6 +636,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $productTypeName,
                 $editableProduct->getBasicInformation()->getType()->getValue()
             )
+        );
+    }
+
+    /**
+     * @Then I should get error that I cannot add pack into a pack
+     */
+    public function assertAddingPackToPackError()
+    {
+        $this->assertLastErrorIs(
+            ProductPackingException::class,
+            ProductPackingException::CANNOT_ADD_PACK_INTO_PACK
         );
     }
 
