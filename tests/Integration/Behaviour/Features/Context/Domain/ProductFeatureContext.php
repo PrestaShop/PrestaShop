@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
@@ -207,19 +208,23 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
     {
         $fieldName = 'tags';
-        $actualLocalizedTags = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+        /** @var LocalizedTagsDto[] $actualLocalizedTags */
+        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
 
         foreach ($localizedTagStrings as $langId => $tagsString) {
             $langIso = Language::getIsoById($langId);
 
             if (empty($tagsString)) {
                 // if tags string is empty, then we should not have any actual value in this language
-                if (isset($actualLocalizedTags[$langId])) {
-                    throw new RuntimeException(sprintf(
-                        'Expected no tags in %s language, but got "%s"',
-                        $langIso,
-                        var_export($actualLocalizedTags[$langId], true))
-                    );
+                /** @var LocalizedTagsDto $actualLocalizedTags */
+                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                    if ($actualLocalizedTags->getLanguageId() === $langId) {
+                        throw new RuntimeException(sprintf(
+                                'Expected no tags in %s language, but got "%s"',
+                                $langIso,
+                                var_export($actualLocalizedTags->getTags(), true))
+                        );
+                    }
                 }
 
                 // if above code passed it means tags in this lang is empty as expected and we can continue
@@ -228,28 +233,35 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             // convert filled tags to array
             $expectedTags = explode(',', $tagsString);
+            $valueInLangExists = false;
+            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                if ($actualLocalizedTags->getLanguageId() !== $langId) {
+                    continue;
+                }
 
-            // All empty values have ben filtered out above, so if this is empty it means it is invalid
-            if (!isset($actualLocalizedTags[$langId])) {
+                Assert::assertEquals(
+                    $expectedTags,
+                    $actualLocalizedTags->getTags(),
+                    sprintf(
+                        'Expected %s in "%s" language was "%s", but got "%s"',
+                        $fieldName,
+                        $langIso,
+                        var_export($expectedTags, true),
+                        var_export($actualLocalizedTags->getTags(), true)
+                    )
+                );
+                $valueInLangExists = true;
+            }
+
+            // All empty values have ben filtered out above,
+            // so if this lang value doesn't exist, it means it didn't meet the expectations
+            if (!$valueInLangExists) {
                 throw new RuntimeException(sprintf(
                     'Expected localized tags value "%s" is not set in %s language',
                     var_export($expectedTags, true),
                     $langIso
                 ));
             }
-
-            // finally assert if both non-empty values are equal
-            Assert::assertEquals(
-                $expectedTags,
-                $actualLocalizedTags[$langId],
-                sprintf(
-                    'Expected %s in "%s" language was "%s", but got "%s"',
-                    $fieldName,
-                    $langIso,
-                    var_export($expectedTags, true),
-                    var_export($actualLocalizedTags[$langId], true)
-                )
-            );
         }
     }
 

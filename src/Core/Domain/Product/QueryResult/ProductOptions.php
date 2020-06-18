@@ -54,7 +54,7 @@ class ProductOptions
     private $showPrice;
 
     /**
-     * @var array key value pairs where key is language id and value is the array of tags
+     * @var LocalizedTags[]
      */
     private $localizedTags;
 
@@ -93,7 +93,7 @@ class ProductOptions
      * @param bool $availableForOrder
      * @param bool $onlineOnly
      * @param bool $showPrice
-     * @param array $localizedTags
+     * @param LocalizedTags[] $localizedTags
      * @param string $condition
      * @param string $isbn
      * @param string $upc
@@ -160,7 +160,7 @@ class ProductOptions
     }
 
     /**
-     * @return array
+     * @return LocalizedTags[]
      */
     public function getLocalizedTags(): array
     {

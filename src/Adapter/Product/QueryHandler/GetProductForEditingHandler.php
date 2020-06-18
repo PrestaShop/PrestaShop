@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
@@ -158,7 +159,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             (bool) $product->available_for_order,
             (bool) $product->online_only,
             (bool) $product->show_price,
-            Tag::getProductTags($product->id) ?: [],
+            $this->getLocalizedTagsList((int) $product->id),
             $product->condition,
             $product->isbn,
             $product->upc,
@@ -166,5 +167,27 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $product->mpn,
             $product->reference
         );
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return LocalizedTags[]
+     */
+    private function getLocalizedTagsList(int $productId): array
+    {
+        $tags = Tag::getProductTags($productId);
+
+        if (!$tags) {
+            return [];
+        }
+
+        $localizedTagsList = [];
+
+        foreach ($tags as $langId => $localizedTags) {
+            $localizedTagsList[] = new LocalizedTags((int) $langId, $localizedTags);
+        }
+
+        return $localizedTagsList;
     }
 }
