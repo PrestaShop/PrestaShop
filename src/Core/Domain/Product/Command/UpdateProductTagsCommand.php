@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Updates product tags in provided languages
+ */
 class UpdateProductTagsCommand
 {
     /**

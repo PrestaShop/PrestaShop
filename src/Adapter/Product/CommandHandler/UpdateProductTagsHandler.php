@@ -38,6 +38,9 @@ use PrestaShopException;
 use Product;
 use Tag;
 
+/**
+ * Handles UpdateProductTagsCommand using legacy object model
+ */
 class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateProductTagsHandlerInterface
 {
     /**
