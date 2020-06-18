@@ -13,8 +13,8 @@ module.exports = class EmailThemes extends BOBasePage {
     this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
-    this.columnName = 'td.data-type:nth-child(1)';
-    this.columnActionPreviewLink = 'td.action-type a[href*=\'/preview\']';
+    this.columnName = 'td.column-name';
+    this.columnActionPreviewLink = 'td.action-type a.preview-link';
   }
 
   /* Methods */
