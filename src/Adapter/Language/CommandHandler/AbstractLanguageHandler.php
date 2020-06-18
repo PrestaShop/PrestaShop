@@ -151,7 +151,7 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
     /**
      * @param Language $language
      */
-    protected function assertIsNotInUseLanguage(Language $language)
+    protected function assertLanguageIsNotInUse(Language $language)
     {
         if ($language->id === (int) Context::getContext()->language->id) {
             throw new DefaultLanguageException(sprintf('Used language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR);

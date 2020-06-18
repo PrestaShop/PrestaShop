@@ -52,7 +52,7 @@ final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implement
             $language = $this->getLegacyLanguageObject($languageId);
 
             $this->assertLanguageIsNotDefault($language);
-            $this->assertIsNotInUseLanguage($language);
+            $this->assertLanguageIsNotInUse($language);
 
             if (false === $language->delete()) {
                 throw new LanguageException(sprintf('Failed to delele language "%s"', $language->iso_code));
