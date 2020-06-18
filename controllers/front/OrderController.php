@@ -339,11 +339,11 @@ class OrderControllerCore extends FrontController
             );
 
             $checkoutDeliveryStep
-                ->setRecyclablePackAllowed((bool)Configuration::get('PS_RECYCLABLE_PACK'))
-                ->setGiftAllowed((bool)Configuration::get('PS_GIFT_WRAPPING'))
+                ->setRecyclablePackAllowed((bool) Configuration::get('PS_RECYCLABLE_PACK'))
+                ->setGiftAllowed((bool) Configuration::get('PS_GIFT_WRAPPING'))
                 ->setIncludeTaxes(
-                    !Product::getTaxCalculationMethod((int)$this->context->cart->id_customer)
-                    && (int)Configuration::get('PS_TAX')
+                    !Product::getTaxCalculationMethod((int) $this->context->cart->id_customer)
+                    && (int) Configuration::get('PS_TAX')
                 )
                 ->setDisplayTaxesLabel((Configuration::get('PS_TAX') && !Configuration::get('AEUC_LABEL_TAX_INC_EXC')))
                 ->setGiftCost(
