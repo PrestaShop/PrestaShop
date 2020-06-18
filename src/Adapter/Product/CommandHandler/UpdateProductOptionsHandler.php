@@ -34,10 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOption
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use PrestaShopException;
 use Product;
 use Tag;
-use Validate;
 
 /**
  * Handles UpdateProductOptionsCommand using legacy object models
@@ -159,25 +159,24 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      * If tags in some language are empty, then all previous tags will be deleted and none inserted.
      *
      * @param Product $product
-     * @param array $localizedTags
+     * @param LocalizedTags[] $localizedTagsList
      *
      * @throws CannotUpdateProductException
      * @throws PrestaShopException
      */
-    private function updateTags(Product $product, array $localizedTags)
+    private function updateTags(Product $product, array $localizedTagsList)
     {
         $productId = (int) $product->id;
 
         // delete all tags for product if array is empty
-        if (empty($localizedTags)) {
+        if (empty($localizedTagsList)) {
             $this->deleteAllTagsForProduct($productId);
 
             return;
         }
 
-        foreach ($localizedTags as $langId => $tags) {
-            // validate each tag and remove empty values
-            $tags = $this->validateTags($tags, $langId);
+        foreach ($localizedTagsList as $localizedTags) {
+            $langId = $localizedTags->getLanguageId()->getValue();
 
             // delete all this product tags for this lang
             if (false === Tag::deleteProductTagsInLang($productId, $langId)) {
@@ -188,56 +187,18 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
             }
 
             // empty tags means to delete all previous tags, which is already done above.
-            if (empty($tags)) {
+            if ($localizedTags->isEmpty()) {
                 continue;
             }
 
             // assign new tags to product
-            if (false === Tag::addTags($langId, $productId, $tags)) {
+            if (false === Tag::addTags($langId, $productId, $localizedTags->getTags())) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to update product #%s tags in lang #%s', $productId, $langId),
                     CannotUpdateProductException::FAILED_UPDATE_OPTIONS
                 );
             }
         }
-    }
-
-    /**
-     * Validate each tag in provided language and rebuild the array removing empty values.
-     *
-     * @param array $tags
-     * @param int $langId
-     *
-     * @return array
-     *
-     * @throws ProductConstraintException
-     */
-    private function validateTags(array $tags, int $langId): array
-    {
-        $validTags = [];
-
-        foreach ($tags as $key => $tag) {
-            //skip empty value
-            if (empty($tag)) {
-                continue;
-            }
-
-            //validate tag
-            if (false === Validate::isGenericName($tag)) {
-                throw new ProductConstraintException(
-                    sprintf(
-                        'Invalid product tag "%s" in language with id "%s"',
-                        $tag,
-                        $langId
-                    ),
-                    ProductConstraintException::INVALID_TAG
-                );
-            }
-
-            $validTags[] = $tag;
-        }
-
-        return $validTags;
     }
 
     /**

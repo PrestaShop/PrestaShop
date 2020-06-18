@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -332,13 +333,14 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         if (isset($data['tags'])) {
             $localizedTagStrings = $this->parseLocalizedArray($data['tags']);
-            $localizedTags = [];
+            $localizedTagsList = [];
 
             foreach ($localizedTagStrings as $langId => $localizedTagString) {
-                $localizedTags[$langId] = explode(',', $localizedTagString);
+                $tags = explode(',', $localizedTagString);
+                $localizedTagsList[] = new LocalizedTags($langId, $tags);
             }
 
-            $command->setLocalizedTags($localizedTags);
+            $command->setLocalizedTags($localizedTagsList);
         }
     }
 

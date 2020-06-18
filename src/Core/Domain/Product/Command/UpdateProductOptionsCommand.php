@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Mpn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -65,7 +66,7 @@ class UpdateProductOptionsCommand
     private $showPrice;
 
     /**
-     * @var array|null
+     * @var LocalizedTags[]|null
      */
     private $localizedTags;
 
