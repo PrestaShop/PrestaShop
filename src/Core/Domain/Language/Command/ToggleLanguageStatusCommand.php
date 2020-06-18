@@ -26,13 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Language\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommandInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
  * Enables or disables language based in given status
  */
-class ToggleLanguageStatusCommand
+class ToggleLanguageStatusCommand implements ToggleLanguageStatusCommandInterface
 {
     /**
      * @var bool
