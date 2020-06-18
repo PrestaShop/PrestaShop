@@ -9,12 +9,12 @@ module.exports = class Preferences extends BOBasePage {
 
     // Selectors for currency restrictions
     this.euroCurrencyRestrictionsCheckbox = paymentModule => `#form_currency_restrictions_${paymentModule}_0`;
-    this.currencyRestrictionsSaveButton = '#main-div div:nth-child(1) > div.card-footer button';
+    this.currencyRestrictionsSaveButton = '#form-currency-restrictions-save-button';
     // Selectors for group restrictions
     this.paymentModuleCheckbox = (paymentModule, groupID) => `#form_group_restrictions_${paymentModule}_${groupID}`;
     this.countryRestrictionsCheckbox = (paymentModule, countryID) => '#form_country_restrictions_'
       + `${paymentModule}_${countryID}`;
-    this.groupRestrictionsSaveButton = '#main-div div:nth-child(2) > div.card-footer button';
+    this.groupRestrictionsSaveButton = '#form-group-restrictions-save-button';
   }
 
   /*
