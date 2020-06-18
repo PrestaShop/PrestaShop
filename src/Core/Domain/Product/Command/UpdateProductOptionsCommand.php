@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
@@ -197,7 +198,7 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return string[]|null
+     * @return array[]|null
      */
     public function getLocalizedTags(): ?array
     {
@@ -205,13 +206,13 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @param string[] $localizedTags key value pairs where key is language id and value is the array of tags
+     * @param string[] $localizedTagsList key value pairs where key is language id and value is the array of tags
      *
      * @return UpdateProductOptionsCommand
      */
-    public function setLocalizedTags(array $localizedTags): UpdateProductOptionsCommand
+    public function setLocalizedTagsList(array $localizedTagsList): UpdateProductOptionsCommand
     {
-        $this->localizedTags = $localizedTags;
+        $this->localizedTags = $localizedTagsList;
 
         return $this;
     }

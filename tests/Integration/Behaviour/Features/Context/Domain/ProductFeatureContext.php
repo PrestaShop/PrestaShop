@@ -349,10 +349,10 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             foreach ($localizedTagStrings as $langId => $localizedTagString) {
                 $tags = explode(',', $localizedTagString);
-                $localizedTagsList[] = new LocalizedTags($langId, $tags);
+                $localizedTagsList[$langId] = $tags;
             }
 
-            $command->setLocalizedTags($localizedTagsList);
+            $command->setLocalizedTagsList($localizedTagsList);
         }
     }
 
