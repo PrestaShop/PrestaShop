@@ -127,7 +127,7 @@ module.exports = class Currencies extends LocalizationBasePage {
    */
   async getCurrencyFromTable(row) {
     return {
-      name: await this.getTextColumnFromTableCurrency(row, 'currency'),
+      name: await this.getTextColumnFromTableCurrency(row, 'name'),
       symbol: await this.getTextColumnFromTableCurrency(row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(row, 'iso_code'),
       exchangeRate: await this.getExchangeRateValue(row),

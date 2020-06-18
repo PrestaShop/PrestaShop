@@ -28,7 +28,8 @@
 
 {{ form_start(pdfByDateForm, {
   'method': 'GET',
-  'action': path('_admin_credit_slips_pdf_by_date')})
+  'action': path('_admin_credit_slips_pdf_by_date'),
+  attr: {id: 'form-generate-credit-slips-by-date'}})
 }}
 <div class="card">
   <h3 class="card-header">

@@ -135,26 +135,4 @@ module.exports = {
     }
     return fileText.includes(text);
   },
-
-  /**
-   * Create directory if not exist
-   * @param path
-   * @return {Promise<void>}
-   */
-  async createDirectory(path) {
-    if (!fs.existsSync(path)) await fs.mkdirSync(path);
-  },
-
-  /**
-   * Generate report filename
-   * @return {Promise<string>}
-   */
-  async generateReportFilename() {
-    const curDate = new Date();
-    return `report-${
-      curDate.toJSON().slice(0, 10)}-${
-      curDate.getHours()}-${
-      curDate.getMinutes()}-${
-      curDate.getSeconds()}`;
-  },
 };

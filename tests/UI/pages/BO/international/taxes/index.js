@@ -40,12 +40,12 @@ module.exports = class Taxes extends BOBasePage {
       + ' i.grid-toggler-icon-not-valid';
 
     // Form Taxes Options
-    this.enabledTaxSwitchLabel = id => `label[for='form_options_enable_tax_${id}']`;
-    this.displayTaxInCartSwitchLabel = id => `label[for='form_options_display_tax_in_cart_${id}']`;
-    this.taxAddressTypeSelect = '#form_options_tax_address_type';
-    this.useEcoTaxSwitchLabel = id => `label[for='form_options_use_eco_tax_${id}']`;
-    this.ecoTaxSelect = '#form_options_eco_tax_rule_group';
-    this.saveTaxOptionButton = '.card-footer button';
+    this.enabledTaxSwitchLabel = id => `label[for='form_enable_tax_${id}']`;
+    this.displayTaxInCartSwitchLabel = id => `label[for='form_display_tax_in_cart_${id}']`;
+    this.taxAddressTypeSelect = '#form_tax_address_type';
+    this.useEcoTaxSwitchLabel = id => `label[for='form_use_eco_tax_${id}']`;
+    this.ecoTaxSelect = '#form_eco_tax_rule_group';
+    this.saveTaxOptionButton = '#form-tax-options-save-button';
 
     // Sort Selectors
     this.tableHead = `${this.taxesGridTable} thead`;
@@ -93,7 +93,7 @@ module.exports = class Taxes extends BOBasePage {
   /**
    * Filter list of Taxes
    * @param filterType, input or select to choose method of filter
-   * @param filterBy, colomn to filter
+   * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
