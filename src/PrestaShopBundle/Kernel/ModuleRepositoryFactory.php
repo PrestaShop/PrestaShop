@@ -147,6 +147,10 @@ class ModuleRepositoryFactory
             $this->parameters = $config['parameters'];
         }
 
+        array_walk($this->parameters, function (&$param) {
+            $param = str_replace('%%', '%', $param);
+        });
+
         return $this->parameters;
     }
 }
