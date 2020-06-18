@@ -34,14 +34,17 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -127,6 +130,26 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update product :productReference options with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductOptions(string $productReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $command = new UpdateProductOptionsCommand($productId);
+            $this->setUpdateOptionsCommandData($data, $command);
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
      * @Given /^product "(.+)" localized "(.+)" is "(.+)"$/
      *
@@ -139,21 +162,105 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
+        if ('tags' === $fieldName) {
+            $this->assertLocalizedTags($expectedLocalizedValues, $productForEditing);
+
+            return;
+        }
+
         foreach ($expectedLocalizedValues as $langId => $expectedValue) {
-            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $fieldName)[$langId];
+            $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+            $langIso = Language::getIsoById($langId);
+
+            if (!isset($actualValues[$langId])) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized %s value is not set in %s language',
+                    $fieldName,
+                    $langIso
+                ));
+            }
+
+            $actualValue = $actualValues[$langId];
 
             if ($expectedValue !== $actualValue) {
-                $langIso = Language::getIsoById($langId);
-
                 throw new RuntimeException(
                     sprintf(
                         'Expected %s in "%s" language was "%s", but got "%s"',
                         $fieldName,
                         $langIso,
-                        $expectedValue,
-                        $actualValue
+                        var_export($expectedValue, true),
+                        var_export($actualValue, true)
                     )
                 );
+            }
+        }
+    }
+
+    /**
+     * Product tags differs from other localized properties, because each locale can have an array of tags
+     * (whereas common property will have one value per language)
+     * This is why it needs some additional parsing
+     *
+     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
+     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
+     * @param ProductForEditing $productForEditing
+     */
+    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
+    {
+        $fieldName = 'tags';
+        /** @var LocalizedTagsDto[] $actualLocalizedTags */
+        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+
+        foreach ($localizedTagStrings as $langId => $tagsString) {
+            $langIso = Language::getIsoById($langId);
+
+            if (empty($tagsString)) {
+                // if tags string is empty, then we should not have any actual value in this language
+                /** @var LocalizedTagsDto $actualLocalizedTags */
+                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                    if ($actualLocalizedTags->getLanguageId() === $langId) {
+                        throw new RuntimeException(sprintf(
+                                'Expected no tags in %s language, but got "%s"',
+                                $langIso,
+                                var_export($actualLocalizedTags->getTags(), true))
+                        );
+                    }
+                }
+
+                // if above code passed it means tags in this lang is empty as expected and we can continue
+                continue;
+            }
+
+            // convert filled tags to array
+            $expectedTags = explode(',', $tagsString);
+            $valueInLangExists = false;
+            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                if ($actualLocalizedTags->getLanguageId() !== $langId) {
+                    continue;
+                }
+
+                Assert::assertEquals(
+                    $expectedTags,
+                    $actualLocalizedTags->getTags(),
+                    sprintf(
+                        'Expected %s in "%s" language was "%s", but got "%s"',
+                        $fieldName,
+                        $langIso,
+                        var_export($expectedTags, true),
+                        var_export($actualLocalizedTags->getTags(), true)
+                    )
+                );
+                $valueInLangExists = true;
+            }
+
+            // All empty values have ben filtered out above,
+            // so if this lang value doesn't exist, it means it didn't meet the expectations
+            if (!$valueInLangExists) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized tags value "%s" is not set in %s language',
+                    var_export($expectedTags, true),
+                    $langIso
+                ));
             }
         }
     }
@@ -170,17 +277,120 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
 
-        if (isset($data['active'])) {
-            $status = PrimitiveUtils::castStringBooleanIntoBoolean($data['active']);
-            $statusInWords = $status ? 'enabled' : 'disabled';
-
-            if ((bool) $productForEditing->isActive() !== $status) {
-                throw new RuntimeException(sprintf('Product expected to be %s', $statusInWords));
-            }
-        }
+        $this->assertBoolProperty($productForEditing, $data, 'available_for_order');
+        $this->assertBoolProperty($productForEditing, $data, 'online_only');
+        $this->assertBoolProperty($productForEditing, $data, 'show_price');
+        $this->assertBoolProperty($productForEditing, $data, 'active');
+        $this->assertStringProperty($productForEditing, $data, 'visibility');
+        $this->assertStringProperty($productForEditing, $data, 'condition');
+        $this->assertStringProperty($productForEditing, $data, 'isbn');
+        $this->assertStringProperty($productForEditing, $data, 'upc');
+        $this->assertStringProperty($productForEditing, $data, 'ean13');
+        $this->assertStringProperty($productForEditing, $data, 'mpn');
+        $this->assertStringProperty($productForEditing, $data, 'reference');
 
         $this->assertTaxRulesGroup($data, $productForEditing);
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
+    }
+
+    /**
+     * @param array $data
+     * @param UpdateProductOptionsCommand $command
+     */
+    private function setUpdateOptionsCommandData(array $data, UpdateProductOptionsCommand $command): void
+    {
+        if (isset($data['visibility'])) {
+            $command->setVisibility($data['visibility']);
+        }
+
+        if (isset($data['available_for_order'])) {
+            $command->setAvailableForOrder(PrimitiveUtils::castStringBooleanIntoBoolean($data['available_for_order']));
+        }
+
+        if (isset($data['online_only'])) {
+            $command->setOnlineOnly(PrimitiveUtils::castStringBooleanIntoBoolean($data['online_only']));
+        }
+
+        if (isset($data['show_price'])) {
+            $command->setShowPrice(PrimitiveUtils::castStringBooleanIntoBoolean($data['show_price']));
+        }
+
+        if (isset($data['condition'])) {
+            $command->setCondition($data['condition']);
+        }
+
+        if (isset($data['isbn'])) {
+            $command->setIsbn($data['isbn']);
+        }
+
+        if (isset($data['upc'])) {
+            $command->setUpc($data['upc']);
+        }
+
+        if (isset($data['ean13'])) {
+            $command->setEan13($data['ean13']);
+        }
+
+        if (isset($data['mpn'])) {
+            $command->setMpn($data['mpn']);
+        }
+
+        if (isset($data['reference'])) {
+            $command->setReference($data['reference']);
+        }
+
+        if (isset($data['mpn'])) {
+            $command->setMpn($data['mpn']);
+        }
+
+        if (isset($data['tags'])) {
+            $localizedTagStrings = $this->parseLocalizedArray($data['tags']);
+            $localizedTagsList = [];
+
+            foreach ($localizedTagStrings as $langId => $localizedTagString) {
+                $tags = explode(',', $localizedTagString);
+                $localizedTagsList[] = new LocalizedTags($langId, $tags);
+            }
+
+            $command->setLocalizedTags($localizedTagsList);
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    private function assertBoolProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    private function assertStringProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = $data[$propertyName];
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+        }
     }
 
     /**
@@ -291,17 +501,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
-        if (isset($data['tax_rules_group_id'])) {
-            $expectedGroup = (int) $data['tax_rules_group_id'];
-            $actualGroup = $pricesInfo->getTaxRulesGroupId();
-
-            Assert::assertEquals(
-                $expectedGroup,
-                $actualGroup,
-                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedGroup, $actualGroup)
-            );
-        }
-
         if (isset($data['unity'])) {
             $expectedUnity = $data['unity'];
             $actualUnity = $pricesInfo->getUnity();
@@ -394,72 +593,48 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that product name is invalid
+     * @Then I should get error that product :fieldName is invalid
      */
-    public function assertLastErrorIsInvalidNameConstraint()
+    public function assertConstraintError(string $fieldName): void
     {
         $this->assertLastErrorIs(
             ProductConstraintException::class,
-            ProductConstraintException::INVALID_NAME
+            $this->getConstraintErrorCode($fieldName)
         );
     }
 
     /**
-     * @Then I should get error that product type is invalid
-     */
-    public function assertLastErrorIsInvalidTypeConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_PRODUCT_TYPE
-        );
-    }
-
-    /**
-     * @Then /^I should get error that product "(.+)" is invalid$/
+     * @param string $fieldName
      *
-     * @param string $priceField
+     * @return int
      */
-    public function assertLastPriceErrorConstraint(string $priceField)
+    private function getConstraintErrorCode(string $fieldName): int
     {
-        $priceFieldErrorMap = [
+        $constraintErrorFieldMap = [
+            'type' => ProductConstraintException::INVALID_PRODUCT_TYPE,
+            'name' => ProductConstraintException::INVALID_NAME,
+            'description' => ProductConstraintException::INVALID_DESCRIPTION,
+            'description_short' => ProductConstraintException::INVALID_SHORT_DESCRIPTION,
+            'visibility' => ProductConstraintException::INVALID_VISIBILITY,
+            'condition' => ProductConstraintException::INVALID_CONDITION,
+            'isbn' => ProductConstraintException::INVALID_ISBN,
+            'upc' => ProductConstraintException::INVALID_UPC,
+            'ean13' => ProductConstraintException::INVALID_EAN_13,
+            'mpn' => ProductConstraintException::INVALID_MPN,
+            'reference' => ProductConstraintException::INVALID_REFERENCE,
             'price' => ProductConstraintException::INVALID_PRICE,
             'ecotax' => ProductConstraintException::INVALID_ECOTAX,
             'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
             'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
+            'tag' => ProductConstraintException::INVALID_TAG,
         ];
 
-        if (!array_key_exists($priceField, $priceFieldErrorMap)) {
-            throw new RuntimeException(sprintf('"%s" doesn\'t exist in priceField-errorCode map.', $priceField));
+        if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
+            throw new RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
         }
 
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            $priceFieldErrorMap[$priceField]
-        );
-    }
-
-    /**
-     * @Then I should get error that product description is invalid
-     */
-    public function assertLastErrorIsInvalidDescriptionConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_DESCRIPTION
-        );
-    }
-
-    /**
-     * @Then I should get error that product short description is invalid
-     */
-    public function assertLastErrorIsInvalidShortDescriptionConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_SHORT_DESCRIPTION
-        );
+        return $constraintErrorFieldMap[$fieldName];
     }
 
     /**
@@ -476,6 +651,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'name' => 'basicInformation.localizedNames',
             'description' => 'basicInformation.localizedDescriptions',
             'description_short' => 'basicInformation.localizedShortDescriptions',
+            'active' => 'active',
+            'visibility' => 'options.visibility',
+            'available_for_order' => 'options.availableForOrder',
+            'online_only' => 'options.onlineOnly',
+            'show_price' => 'options.showPrice',
+            'condition' => 'options.condition',
+            'isbn' => 'options.isbn',
+            'upc' => 'options.upc',
+            'ean13' => 'options.ean13',
+            'mpn' => 'options.mpn',
+            'reference' => 'options.reference',
+            'tags' => 'options.localizedTags',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();

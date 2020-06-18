@@ -188,7 +188,7 @@ Feature: Order from Back Office (BO)
       | amount        | -1                      |
       | price         | 16                      |
       | free_shipping | true                    |
-    Then I should get error that product quantity is invalid
+    Then I should get error that product quantity is invalid for order
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
   Scenario: Add product with zero quantity is forbidden
@@ -204,7 +204,7 @@ Feature: Order from Back Office (BO)
       | amount        | -1                      |
       | price         | 16                      |
       | free_shipping | true                    |
-    Then I should get error that product quantity is invalid
+    Then I should get error that product quantity is invalid for order
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
   Scenario: Add product with quantity higher than stock is forbidden
@@ -234,7 +234,7 @@ Feature: Order from Back Office (BO)
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 0                       |
       | price         | 12                      |
-    Then I should get error that product quantity is invalid
+    Then I should get error that product quantity is invalid for order
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
@@ -248,7 +248,7 @@ Feature: Order from Back Office (BO)
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | -1                      |
       | price         | 12                      |
-    Then I should get error that product quantity is invalid
+    Then I should get error that product quantity is invalid for order
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
@@ -295,7 +295,7 @@ Feature: Order from Back Office (BO)
     Given I create customer "testFirstName" with following details:
       | firstName        | testFirstName                      |
       | lastName         | testLastName                       |
-      | email            | test.davidsonas@invertus.eu        |
+      | email            | test@mailexample.eu                |
       | password         | secret                             |
     When I add new address to customer "testFirstName" with following details:
       | Address alias    | test-address                       |

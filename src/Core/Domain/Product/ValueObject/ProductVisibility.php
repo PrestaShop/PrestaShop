@@ -26,44 +26,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Holds product type value
+ * Holds value for product visibility setting
  */
-class ProductType
+class ProductVisibility
 {
-    /**
-     * Standard product
-     */
-    const TYPE_STANDARD = 'standard';
+    const VISIBLE_IN_CATALOG = 'catalog';
+    const VISIBLE_IN_SEARCH = 'search';
+    const VISIBLE_EVERYWHERE = 'both';
+    const INVISIBLE = 'none';
 
-    /**
-     * A pack consists multiple units of product.
-     */
-    const TYPE_PACK = 'pack';
-
-    /**
-     * Items that are not in physical form and can be sold without requiring any shipping
-     * E.g. downloadable photos, videos, software, services etc.
-     */
-    const TYPE_VIRTUAL = 'virtual';
-
-    /**
-     * Product containing combinations of different attributes
-     */
-    const TYPE_COMBINATION = 'combination';
-
-    /**
-     * A list of available types
-     */
-    const AVAILABLE_TYPES = [
-        self::TYPE_STANDARD,
-        self::TYPE_PACK,
-        self::TYPE_VIRTUAL,
-        self::TYPE_COMBINATION,
+    const AVAILABLE_VISIBILITY_VALUES = [
+        self::VISIBLE_IN_CATALOG => self::VISIBLE_IN_CATALOG,
+        self::VISIBLE_IN_SEARCH => self::VISIBLE_IN_SEARCH,
+        self::VISIBLE_EVERYWHERE => self::VISIBLE_EVERYWHERE,
+        self::INVISIBLE => self::INVISIBLE,
     ];
 
     /**
@@ -73,12 +54,10 @@ class ProductType
 
     /**
      * @param string $value
-     *
-     * @throws ProductConstraintException
      */
     public function __construct(string $value)
     {
-        $this->assertProductType($value);
+        $this->assertIsValidVisibilityValue($value);
         $this->value = $value;
     }
 
@@ -91,23 +70,20 @@ class ProductType
     }
 
     /**
-     * @todo: DTO containing validation looks strange
-     *      Consider adding static factories for each type instead of constructor?
-     *
      * @param string $value
      *
      * @throws ProductConstraintException
      */
-    private function assertProductType(string $value): void
+    private function assertIsValidVisibilityValue(string $value): void
     {
-        if (!in_array($value, self::AVAILABLE_TYPES, true)) {
+        if (!in_array($value, self::AVAILABLE_VISIBILITY_VALUES, true)) {
             throw new ProductConstraintException(
                 sprintf(
-                    'Invalid product type %s. Valid types are: [%s]',
+                    'Invalid product visibility "%s". Allowed values are: "%s"',
                     $value,
-                    implode(',', self::AVAILABLE_TYPES)
+                    implode(',', self::AVAILABLE_VISIBILITY_VALUES)
                 ),
-                ProductConstraintException::INVALID_PRODUCT_TYPE
+                ProductConstraintException::INVALID_VISIBILITY
             );
         }
     }

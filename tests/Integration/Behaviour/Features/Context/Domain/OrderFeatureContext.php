@@ -364,7 +364,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that product quantity is invalid
+     * @Then I should get error that product quantity is invalid for order
      */
     public function assertLastErrorIsNegativeProductQuantity()
     {
