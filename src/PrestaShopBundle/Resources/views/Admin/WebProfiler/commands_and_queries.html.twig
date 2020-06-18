@@ -72,6 +72,7 @@
         <tr>
           <th>Command</th>
           <th>Command handler</th>
+          <th>Caller</th>
         </tr>
       </thead>
       <tbody class="sf-toolbar-ajax-request-list">
@@ -80,11 +81,12 @@
             <tr>
               <td>{{ command.command }}</td>
               <td>{{ command.command_handler }}</td>
+              <td>{{ command.trace.file }}@{{ command.trace.line }}</td>
             </tr>
           {% endfor %}
         {% else %}
           <tr>
-            <td colspan="2">No Commands where executed during request.</td>
+            <td colspan="3">No Commands where executed during request.</td>
           </tr>
         {% endif %}
       </tbody>
@@ -95,6 +97,7 @@
         <tr>
           <th>Query</th>
           <th>Query Handler</th>
+          <th>Caller</th>
         </tr>
       </thead>
       <tbody class="sf-toolbar-ajax-request-list">
@@ -103,11 +106,12 @@
           <tr>
             <td>{{ query.query }}</td>
             <td>{{ query.query_handler }}</td>
+            <td>{{ query.trace.file }}@{{ query.trace.line }}</td>
           </tr>
         {% endfor %}
       {% else %}
         <tr>
-          <td colspan="2">No Queries where executed during request.</td>
+          <td colspan="3">No Queries where executed during request.</td>
         </tr>
       {% endif %}
       </tbody>
