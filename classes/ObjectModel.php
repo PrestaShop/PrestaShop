@@ -902,7 +902,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if (empty($definitions['fields']['deleted'])) {
             throw new PrestaShopException('Field "deleted" is missing from definition in object model ' . get_class($this));
         }
-        if (!array_key_exists('deleted', $this)) {
+        if (!property_exists($this, 'deleted')) {
             throw new PrestaShopException('Property "deleted" is missing in object model ' . get_class($this));
         }
         $this->deleted = 1;
