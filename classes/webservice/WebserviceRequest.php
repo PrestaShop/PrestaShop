@@ -1552,12 +1552,14 @@ class WebserviceRequestCore
                     $object = new $this->resourceConfiguration['retrieveData']['className']((int) $attributes->id);
                     if ($object->id) {
                         $this->setError(400, 'id is already used', 92);
+
                         return false;
                     }
-                    if((int) $attributes->force_id>0 ) {
+                    if ((int) $attributes->force_id > 0) {
                         $object->force_id = true;
                     } else {
                         $this->setError(400, 'id is forbidden when adding a new resource', 91);
+
                         return false;
                     }
                 } else {
