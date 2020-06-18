@@ -51,7 +51,7 @@ final class BulkDeleteLanguagesHandler extends AbstractLanguageHandler implement
         foreach ($command->getLanguageIds() as $languageId) {
             $language = $this->getLegacyLanguageObject($languageId);
 
-            $this->assertIsNotDefaultLanguage($language);
+            $this->assertLanguageIsNotDefault($language);
             $this->assertIsNotInUseLanguage($language);
 
             if (false === $language->delete()) {

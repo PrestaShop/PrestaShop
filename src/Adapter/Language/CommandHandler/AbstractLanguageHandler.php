@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingE
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommandInterface;
 
 /**
  * Encapsulates common legacy behavior for adding/editing language
@@ -150,20 +151,25 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
     /**
      * @param Language $language
      */
-    protected function assertIsNotDefaultLanguage(Language $language)
+    protected function assertIsNotInUseLanguage(Language $language)
     {
-        if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
-            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_ERROR);
+        if ($language->id === (int) Context::getContext()->language->id) {
+            throw new DefaultLanguageException(sprintf('Used language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR);
         }
     }
 
     /**
      * @param Language $language
+     * @param ToggleLanguageStatusCommandInterface $command
      */
-    protected function assertIsNotInUseLanguage(Language $language)
+    private function assertLanguageIsNotDefault(Language $language, ToggleLanguageStatusCommandInterface $command = null)
     {
-        if ($language->id === (int) Context::getContext()->language->id) {
-            throw new DefaultLanguageException(sprintf('Used language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR);
+        if ($command != null && true === $command->getStatus()) {
+            return;
+        }
+
+        if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
+            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be disabled', $language->iso_code), DefaultLanguageException::CANNOT_DISABLE_ERROR);
         }
     }
 }
