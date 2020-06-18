@@ -104,6 +104,15 @@ class Database extends AbstractInstall
             }
         }
 
+        if (!$errors) {
+            if (($select_error = Db::checkSelectPrivilege($server, $login, $password, $database, $prefix)) !== true) {
+                $errors[] = $this->translator->trans('Your database login does not have the privileges to select data in table on the database "%s". Ask your hosting provider.', ['%database%' => $database], 'Install');
+                if ($select_error != false) {
+                    $errors[] = $select_error;
+                }
+            }
+        }
+
         if (count($errors)) {
             $this->setError($errors);
         }
