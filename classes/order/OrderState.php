@@ -120,7 +120,7 @@ class OrderStateCore extends ObjectModel
      */
     public static function getOrderStates($id_lang, $filterDeleted = true)
     {
-        $deletedStates = $filterDeleted ? 'WHERE deleted = 0' : '';
+        $deletedStates = $filterDeleted ? ' WHERE deleted = 0' : '';
         $cache_id = 'OrderState::getOrderStates_' . (int) $id_lang;
         $cache_id .= $filterDeleted ? '_filterDeleted' : '';
 
