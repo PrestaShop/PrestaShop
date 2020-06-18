@@ -1510,10 +1510,14 @@ class WebserviceRequestCore
         $object = null;
 
         $ids = [];
+        $ids2 = [];
         foreach ($xmlEntities as $entity) {
             // To cast in string allow to check null values
             if ((string) $entity->id != '') {
                 $ids[] = (int) $entity->id;
+            }
+            if ((int) $entity->force_id > 0) {
+                $ids2[] = (int) $entity->force_id;
             }
         }
         if ($this->method == 'PUT') {
@@ -1530,9 +1534,11 @@ class WebserviceRequestCore
                 return false;
             }
         } elseif ($this->method == 'POST' && count($ids) > 0) {
-            $this->setError(400, 'id is forbidden when adding a new resource', 91);
+            if (count($ids2) < count($ids)) {
+                $this->setError(400, 'id is forbidden when adding a new resource', 91);
 
-            return false;
+                return false;
+            }
         }
 
         $postponeNTreeRegeneration = false;
@@ -1542,7 +1548,21 @@ class WebserviceRequestCore
 
             /* @var ObjectModel $object */
             if ($this->method == 'POST') {
-                $object = new $this->resourceConfiguration['retrieveData']['className']();
+                if ((string) $entity->id != '') {
+                    $object = new $this->resourceConfiguration['retrieveData']['className']((int) $attributes->id);
+                    if ($object->id) {
+                        $this->setError(400, 'id is already used', 92);
+                        return false;
+                    }
+                    if((int) $attributes->force_id>0 ) {
+                        $object->force_id = true;
+                    } else {
+                        $this->setError(400, 'id is forbidden when adding a new resource', 91);
+                        return false;
+                    }
+                } else {
+                    $object = new $this->resourceConfiguration['retrieveData']['className']();
+                }
             } elseif ($this->method == 'PUT') {
                 $object = new $this->resourceConfiguration['retrieveData']['className']((int) $attributes->id);
                 if (!$object->id) {
