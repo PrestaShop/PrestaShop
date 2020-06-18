@@ -39,17 +39,17 @@ class AddProductToPackCommand
     /**
      * @var ProductId
      */
-    private $productPackId;
+    private $packId;
 
     /**
      * @var ProductId
      */
-    private $productToPackId;
+    private $productId;
 
     /**
      * @var CombinationId|null
      */
-    private $combinationToPackId;
+    private $combinationId;
 
     /**
      * @var int
@@ -57,40 +57,40 @@ class AddProductToPackCommand
     private $quantity;
 
     /**
-     * @param int $productPackId
-     * @param int $productToPackId
-     * @param int|null $combinationToPackId
+     * @param int $packId
+     * @param int $productId
+     * @param int|null $combinationId
      * @param int $quantity
      */
     public function __construct(
-        int $productPackId,
-        int $productToPackId,
+        int $packId,
+        int $productId,
         int $quantity,
-        ?int $combinationToPackId
+        ?int $combinationId
     ) {
-        $this->productPackId = new ProductId($productPackId);
-        $this->productToPackId = new ProductId($productToPackId);
+        $this->packId = new ProductId($packId);
+        $this->productId = new ProductId($productId);
         $this->quantity = $quantity;
 
-        if ($combinationToPackId !== null) {
-            $this->combinationToPackId = new CombinationId($combinationToPackId);
+        if ($combinationId !== null) {
+            $this->combinationId = new CombinationId($combinationId);
         }
     }
 
     /**
      * @return ProductId
      */
-    public function getProductPackId(): ProductId
+    public function getPackId(): ProductId
     {
-        return $this->productPackId;
+        return $this->packId;
     }
 
     /**
      * @return ProductId
      */
-    public function getProductToPackId(): ProductId
+    public function getProductId(): ProductId
     {
-        return $this->productToPackId;
+        return $this->productId;
     }
 
     /**
@@ -104,8 +104,8 @@ class AddProductToPackCommand
     /**
      * @return CombinationId|null
      */
-    public function getCombinationToPackId(): ?CombinationId
+    public function getCombinationId(): ?CombinationId
     {
-        return $this->combinationToPackId;
+        return $this->combinationId;
     }
 }

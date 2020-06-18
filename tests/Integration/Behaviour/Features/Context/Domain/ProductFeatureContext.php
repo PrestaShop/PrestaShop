@@ -33,6 +33,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductToPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
@@ -95,13 +96,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add product :productReference to a pack :packReference
+     * @When I add standard product :productReference to a pack :packReference
      *
      * @param string $packReference
      * @param string $productReference
      */
     public function addProductToPack(string $productReference, string $packReference)
     {
+        $packId = $this->getSharedStorage()->get($packReference);
+        $productId = $this->getSharedStorage()->get($productReference);
         //@todo:
     }
 

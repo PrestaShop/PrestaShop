@@ -46,16 +46,16 @@ final class AddProductToPackHandler extends AbstractProductHandler implements Ad
     {
         //@todo: ref AdminProductsController::3117 updatePackItems()
         // Product that is being edited becomes the Pack.
-        $productPack = $this->getProduct($command->getProductPackId());
-        $productToPackId = $command->getProductToPackId()->getValue();
-        $combinationToPackId = $command->getCombinationToPackId();
+        $productPack = $this->getProduct($command->getPackId());
+        $productId = $command->getProductId()->getValue();
+        $combinationId = $command->getCombinationId();
 
-        if (null === $combinationToPackId) {
-            $combinationToPackId = CombinationId::NO_COMBINATION;
+        if (null === $combinationId) {
+            $combinationId = CombinationId::NO_COMBINATION;
         }
 
         try {
-            $this->assertProductIsAvailableForPacking($productToPackId);
+            $this->assertProductIsAvailableForPacking($productId);
 
             if (false === Pack::deleteItems($productPack->id)) {
                 throw new ProductPackingException(
@@ -65,7 +65,7 @@ final class AddProductToPackHandler extends AbstractProductHandler implements Ad
             }
             //reset cache_default_attribute
             $productPack->setDefaultAttribute(0);
-            $packed = Pack::addItem($productPack->id, $productToPackId, $command->getQuantity(), $combinationToPackId);
+            $packed = Pack::addItem($productPack->id, $productId, $command->getQuantity(), $combinationId);
 
             if (false === $packed) {
                 throw new ProductPackingException(
@@ -83,15 +83,15 @@ final class AddProductToPackHandler extends AbstractProductHandler implements Ad
     }
 
     /**
-     * @param int $productToPackId
+     * @param int $productId
      *
      * @throws ProductPackingException
      */
-    private function assertProductIsAvailableForPacking(int $productToPackId): void
+    private function assertProductIsAvailableForPacking(int $productId): void
     {
-        if (Pack::isPack($productToPackId)) {
+        if (Pack::isPack($productId)) {
             throw new ProductPackingException(
-                sprintf('Product #%s is a pack itself. It cannot be packed', $productToPackId),
+                sprintf('Product #%s is a pack itself. It cannot be packed', $productId),
                 ProductPackingException::CANNOT_ADD_PACK_INTO_PACK
             );
         }
@@ -109,9 +109,9 @@ final class AddProductToPackHandler extends AbstractProductHandler implements Ad
     {
         return sprintf(
             "$messageBody. [packId #%s; productId #%s; combinationId #%s]",
-            $command->getProductPackId()->getValue(),
-            $command->getProductToPackId()->getValue(),
-            $command->getCombinationToPackId()->getValue()
+            $command->getPackId()->getValue(),
+            $command->getProductId()->getValue(),
+            $command->getCombinationId()->getValue()
         );
     }
 }
