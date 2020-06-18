@@ -33,7 +33,8 @@ module.exports = class Home extends CommonPage {
   }
 
   /**
-   * go to the home page
+   * Go to the home page
+   * @returns {Promise<void>}
    */
   async goToHomePage() {
     await this.waitForVisibleSelector(this.desktopLogo);
@@ -43,6 +44,7 @@ module.exports = class Home extends CommonPage {
   /**
    * Go to category
    * @param categoryID, category id from the BO
+   * @returns {Promise<void>}
    */
   async goToCategory(categoryID) {
     await this.waitForSelectorAndClick(this.categoryMenu(categoryID));
@@ -52,6 +54,7 @@ module.exports = class Home extends CommonPage {
    * Go to subcategory
    * @param categoryID, category id from the BO
    * @param subCategoryID, subcategory id from the BO
+   * @returns {Promise<void>}
    */
   async goToSubCategory(categoryID, subCategoryID) {
     await this.page.hover(this.categoryMenu(categoryID));
@@ -68,7 +71,7 @@ module.exports = class Home extends CommonPage {
 
   /**
    * Check if customer is connected
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async isCustomerConnected() {
     return this.elementVisible(this.logoutLink, 1000);
@@ -141,7 +144,7 @@ module.exports = class Home extends CommonPage {
   /**
    * Get Title of Block that contains links in footer
    * @param position
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getFooterLinksBlockTitle(position) {
     return this.getTextContent(this.wrapperTitle(position));
@@ -149,7 +152,7 @@ module.exports = class Home extends CommonPage {
 
   /**
    * Get cart notifications number
-   * @returns {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getCartNotificationsNumber() {
     return this.getNumberFromText(this.cartProductsCount);

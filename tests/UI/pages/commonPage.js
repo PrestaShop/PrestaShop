@@ -5,7 +5,7 @@ module.exports = class CommonPage {
 
   /**
    * Get page title
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
   async getPageTitle() {
     return this.page.title();
