@@ -91,6 +91,8 @@ class ProductType
     }
 
     /**
+     * @todo: DTO containing validation looks strange
+     *      Consider adding static factories for each type instead of constructor?
      * @param string $value
      *
      * @throws ProductConstraintException
