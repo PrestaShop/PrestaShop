@@ -11,6 +11,8 @@ Feature: Add cart rule
     Given there is a currency named "currency2" with iso code "CHF" and exchange rate of 1.25
     Given currency "currency1" is the default one
 
+  #  @todo If you need to create cart rule, instead use
+  #  "I create cart rule "cart_rule_1" with the following properties" from Delete cart rule scenario.
   Scenario: Create a cart rule with amount discount
     When I want to create a new cart rule
     And I specify its name in default language as "Promotion"
@@ -47,6 +49,8 @@ Feature: Add cart rule
     And it should give free shipping
     And it should give a reduction of "15" in currency "USD" which is tax included and applies to order without shipping
 
+  #  @todo If you need to create cart rule, instead use
+  #  "I create cart rule "cart_rule_1" with the following properties" from Delete cart rule scenario.
   Scenario: Create a cart rule with percentage discount
     When I want to create a new cart rule
     And I specify its name in default language as "50% off promo"
