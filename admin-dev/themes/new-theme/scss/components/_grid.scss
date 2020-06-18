@@ -72,6 +72,11 @@ table.grid-ordering-column tr.position-row-while-drag {
       color: $primary;
     }
   }
+
+  .btn.tooltip-link {
+    display: flex;
+    align-items: center;
+  }
 }
 
 table .thead-default .column-headers th:last-child .grid-actions-header-text {
