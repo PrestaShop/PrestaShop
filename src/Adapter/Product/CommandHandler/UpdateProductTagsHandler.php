@@ -93,7 +93,7 @@ class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateP
             if (false === Tag::deleteProductTagsInLang($productId, $langId)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to delete product #%s previous tags in lang #%s', $productId, $langId),
-                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+                    CannotUpdateProductException::FAILED_UPDATE_TAGS
                 );
             }
 
@@ -106,7 +106,7 @@ class UpdateProductTagsHandler extends AbstractProductHandler implements UpdateP
             if (false === Tag::addTags($langId, $productId, $localizedTags->getTags())) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to update product #%s tags in lang #%s', $productId, $langId),
-                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+                    CannotUpdateProductException::FAILED_UPDATE_TAGS
                 );
             }
         }
