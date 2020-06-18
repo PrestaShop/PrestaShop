@@ -103,7 +103,8 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         }
 
         if (null !== $command->getMpn()) {
-            $product->mpn = $command->getMpn()->getValue();
+            $product->mpn = $command->getMpn();
+            $this->validateField($product, 'mpn', ProductConstraintException::INVALID_MPN);
             $this->fieldsToUpdate['mpn'] = true;
         }
 

@@ -326,6 +326,10 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $command->setReference($data['reference']);
         }
 
+        if (isset($data['mpn'])) {
+            $command->setMpn($data['mpn']);
+        }
+
         if (isset($data['tags'])) {
             $localizedTagStrings = $this->parseLocalizedArray($data['tags']);
             $localizedTags = [];

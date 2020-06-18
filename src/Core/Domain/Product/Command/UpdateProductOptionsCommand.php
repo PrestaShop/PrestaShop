@@ -90,7 +90,7 @@ class UpdateProductOptionsCommand
     private $ean13;
 
     /**
-     * @var Mpn|null
+     * @var string|null
      */
     private $mpn;
 
@@ -296,9 +296,9 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @return Mpn|null
+     * @return string|null
      */
-    public function getMpn(): ?Mpn
+    public function getMpn(): ?string
     {
         return $this->mpn;
     }
@@ -310,7 +310,7 @@ class UpdateProductOptionsCommand
      */
     public function setMpn(string $mpn): UpdateProductOptionsCommand
     {
-        $this->mpn = new Mpn($mpn);
+        $this->mpn = $mpn;
 
         return $this;
     }
