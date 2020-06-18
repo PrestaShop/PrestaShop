@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Language\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommandInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
@@ -79,7 +80,7 @@ class BulkToggleLanguagesStatusCommand implements ToggleLanguageStatusCommandInt
     private function setLanguages(array $languageIds)
     {
         if (empty($languageIds)) {
-            throw new LanguageConstraintException('Languages must be provided in order to toggle their status');
+            throw new CategoryConstraintException('Languages must be provided in order to toggle their status');
         }
 
         foreach ($languageIds as $languageId) {
