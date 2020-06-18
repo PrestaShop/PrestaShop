@@ -17,8 +17,8 @@ module.exports = class Languages extends LocalizationBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #language_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='language[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='language[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;

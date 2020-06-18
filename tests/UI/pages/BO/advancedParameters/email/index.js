@@ -16,8 +16,8 @@ module.exports = class Email extends BOBasePage {
     this.emailsListForm = '#email_logs_grid_table';
     // Filters
     this.emailFilterColumnInput = filterBy => `#email_logs_${filterBy}`;
-    this.filterSearchButton = `${this.emailsListForm} button[name='email_logs[actions][search]']`;
-    this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
+    this.filterSearchButton = `${this.emailsListForm} .grid-search-button`;
+    this.filterResetButton = `${this.emailsListForm} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.emailsListForm} tbody`;
     this.tableRows = `${this.tableBody} tr`;

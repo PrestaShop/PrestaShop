@@ -23,8 +23,8 @@ module.exports = class Profiles extends BOBasePage {
     this.profilesListTableEditLink = row => `${this.profilesListTableColumnAction(row)} a[href*='edit']`;
     // Filters
     this.profileFilterInput = filterBy => `${this.profilesListForm} #profile_${filterBy}`;
-    this.filterSearchButton = `${this.profilesListForm} button[name='profile[actions][search]']`;
-    this.filterResetButton = `${this.profilesListForm} button[name='profile[actions][reset]']`;
+    this.filterSearchButton = `${this.profilesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.profilesListForm} .grid-reset-button`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.profilesListForm} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.profilesListForm} button.dropdown-toggle`;

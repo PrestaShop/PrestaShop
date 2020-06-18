@@ -10,13 +10,14 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
 
     // Selectors
     this.generalNavItemLink = '#subtab-AdminPreferences';
-    this.switchShopLabel = toggle => `label[for='form_general_enable_shop_${toggle}']`;
-    this.maintenanceTextInputEN = '#form_general_maintenance_text_1_ifr';
-    this.customMaintenanceFrTab = '#form_general_maintenance_text a[data-locale=\'fr\']';
-    this.maintenanceTextInputFR = '#form_general_maintenance_text_2_ifr';
-    this.addMyIPAddressButton = 'form .add_ip_button';
-    this.maintenanceIpInput = '#form_general_maintenance_ip';
-    this.saveFormButton = 'form .card-footer button';
+    this.generalForm = '#form-maintenance';
+    this.switchShopLabel = toggle => `label[for='form_enable_shop_${toggle}']`;
+    this.maintenanceTextInputEN = '#form_maintenance_text_1_ifr';
+    this.customMaintenanceFrTab = `${this.generalForm} a[data-locale='fr']`;
+    this.maintenanceTextInputFR = '#form_maintenance_text_2_ifr';
+    this.addMyIPAddressButton = `${this.generalForm} .add_ip_button`;
+    this.maintenanceIpInput = '#form_maintenance_ip';
+    this.saveFormButton = '#form-maintenance-save-button';
   }
 
   /*

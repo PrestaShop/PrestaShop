@@ -9,11 +9,10 @@ module.exports = class shopParamsGeneral extends BOBasePage {
 
     // Selectors
     this.maintenanceNavItemLink = '#subtab-AdminMaintenance';
-    this.configurationForm = '#configuration_form';
-    this.displaySuppliersLabel = toggle => `label[for='form_general_display_suppliers_${toggle}']`;
-    this.displayBrandsLabel = toggle => `label[for='form_general_display_manufacturers_${toggle}']`;
-    this.enableMultiStoreLabel = toggle => `label[for='form_general_multishop_feature_active_${toggle}']`;
-    this.saveFormButton = `${this.configurationForm} .card-footer button`;
+    this.displaySuppliersLabel = toggle => `label[for='form_display_suppliers_${toggle}']`;
+    this.displayBrandsLabel = toggle => `label[for='form_display_manufacturers_${toggle}']`;
+    this.enableMultiStoreLabel = toggle => `label[for='form_multishop_feature_active_${toggle}']`;
+    this.saveFormButton = '#form-preferences-save-button';
   }
 
   /*

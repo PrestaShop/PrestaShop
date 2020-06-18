@@ -15,9 +15,9 @@ module.exports = class AddPage extends BOBasePage {
     this.pageContentIframe = '#cms_page_content_1_ifr';
     this.indexation = id => `#cms_page_is_indexed_for_search_${id}`;
     this.displayed = id => `label[for='cms_page_is_displayed_${id}']`;
-    this.savePageButton = 'div.card-footer button.ml-3';
-    this.saveAndPreviewPageButton = 'div.card-footer button';
-    this.cancelButton = 'div.card-footer .btn-outline-secondary';
+    this.savePageButton = '#save-button';
+    this.saveAndPreviewPageButton = '#save-and-preview-button';
+    this.cancelButton = '#cancel-link';
   }
 
   /*

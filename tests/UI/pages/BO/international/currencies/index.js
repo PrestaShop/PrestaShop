@@ -18,8 +18,8 @@ module.exports = class Currencies extends LocalizationBasePage {
 
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #currency_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='currency[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='currency[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
@@ -127,7 +127,7 @@ module.exports = class Currencies extends LocalizationBasePage {
    */
   async getCurrencyFromTable(row) {
     return {
-      name: await this.getTextColumnFromTableCurrency(row, 'currency'),
+      name: await this.getTextColumnFromTableCurrency(row, 'name'),
       symbol: await this.getTextColumnFromTableCurrency(row, 'symbol'),
       isoCode: await this.getTextColumnFromTableCurrency(row, 'iso_code'),
       exchangeRate: await this.getExchangeRateValue(row),

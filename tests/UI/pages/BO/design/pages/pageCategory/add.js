@@ -14,7 +14,7 @@ module.exports = class AddPageCategory extends BOBasePage {
     this.metaTitleInput = '#cms_page_category_meta_title_1';
     this.metaDescriptionInput = '#cms_page_category_meta_description_1';
     this.metaKeywordsInput = '#cms_page_category_meta_keywords_1-tokenfield';
-    this.saveCategoryButton = 'div.card-footer button';
+    this.saveCategoryButton = '#save-button';
   }
 
   /*

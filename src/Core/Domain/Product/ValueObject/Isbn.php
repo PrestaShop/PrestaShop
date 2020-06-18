@@ -26,45 +26,24 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 
 /**
- * Holds product type value
+ * Holds product ISBN code value
  */
-class ProductType
+class Isbn
 {
     /**
-     * Standard product
+     * Valid ISBN regex pattern
      */
-    const TYPE_STANDARD = 'standard';
+    const VALID_PATTERN = '/^[0-9-]{0,32}$/';
 
     /**
-     * A pack consists multiple units of product.
+     * Maximum allowed symbols
      */
-    const TYPE_PACK = 'pack';
-
-    /**
-     * Items that are not in physical form and can be sold without requiring any shipping
-     * E.g. downloadable photos, videos, software, services etc.
-     */
-    const TYPE_VIRTUAL = 'virtual';
-
-    /**
-     * Product containing combinations of different attributes
-     */
-    const TYPE_COMBINATION = 'combination';
-
-    /**
-     * A list of available types
-     */
-    const AVAILABLE_TYPES = [
-        self::TYPE_STANDARD,
-        self::TYPE_PACK,
-        self::TYPE_VIRTUAL,
-        self::TYPE_COMBINATION,
-    ];
+    const MAX_LENGTH = 32;
 
     /**
      * @var string
@@ -73,12 +52,10 @@ class ProductType
 
     /**
      * @param string $value
-     *
-     * @throws ProductConstraintException
      */
     public function __construct(string $value)
     {
-        $this->assertProductType($value);
+        $this->assertIsbnIsValid($value);
         $this->value = $value;
     }
 
@@ -91,24 +68,24 @@ class ProductType
     }
 
     /**
-     * @todo: DTO containing validation looks strange
-     *      Consider adding static factories for each type instead of constructor?
-     *
      * @param string $value
      *
      * @throws ProductConstraintException
      */
-    private function assertProductType(string $value): void
+    private function assertIsbnIsValid(string $value): void
     {
-        if (!in_array($value, self::AVAILABLE_TYPES, true)) {
-            throw new ProductConstraintException(
-                sprintf(
-                    'Invalid product type %s. Valid types are: [%s]',
-                    $value,
-                    implode(',', self::AVAILABLE_TYPES)
-                ),
-                ProductConstraintException::INVALID_PRODUCT_TYPE
-            );
+        if (strlen($value) <= self::MAX_LENGTH && preg_match(self::VALID_PATTERN, $value)) {
+            return;
         }
+
+        throw new ProductConstraintException(
+            sprintf(
+                'Invalid ISBN "%s". It should match pattern "%s" and cannot exceed %s symbols',
+                $value,
+                self::VALID_PATTERN,
+                self::MAX_LENGTH
+            ),
+            ProductConstraintException::INVALID_ISBN
+        );
     }
 }
