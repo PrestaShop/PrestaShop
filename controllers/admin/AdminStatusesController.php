@@ -622,10 +622,7 @@ class AdminStatusesControllerCore extends AdminController
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');
             } else {
-                $order_state->deleted = 1;
-                $order_state->update();
-
-                return;
+                return $order_state->softDelete();
             }
         } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
             if (!$this->access('delete')) {
