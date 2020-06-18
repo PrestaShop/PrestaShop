@@ -888,6 +888,29 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * Does a soft delete on current object, using the "deleted" field in DB
+     * If the model object has no "deleted" property or no "deleted" definition field it will throw an exception
+     *
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function softDelete()
+    {
+        $definitions = ObjectModel::getDefinition($this);
+
+        if (empty($definitions['fields']['deleted'])) {
+            throw new PrestaShopException('Field "deleted" is missing from definition in object model ' . get_class($this));
+        }
+        if (!array_key_exists('deleted', $this)) {
+            throw new PrestaShopException('Property "deleted" is missing in object model ' . get_class($this));
+        }
+        $this->deleted = 1;
+
+        return $this->update();
+    }
+
+    /**
      * Toggles object status in database.
      *
      * @return bool Update result
