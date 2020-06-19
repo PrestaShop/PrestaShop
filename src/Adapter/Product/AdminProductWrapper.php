@@ -272,7 +272,7 @@ class AdminProductWrapper
         $id_shop = $specificPriceValues['sp_id_shop'] ?? 0;
         $id_currency = $specificPriceValues['sp_id_currency'] ?? 0;
         $id_country = $specificPriceValues['sp_id_country'] ?? 0;
-        $id_group = $specificPriceValues['sp_id_group'] ? $specificPriceValues['sp_id_group'] : 0;
+        $id_group = $specificPriceValues['sp_id_group'] ?? 0;
         $id_customer = !empty($specificPriceValues['sp_id_customer']['data']) ? $specificPriceValues['sp_id_customer']['data'][0] : 0;
         $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $this->floatParser->fromString($specificPriceValues['sp_price']);
         $from_quantity = $specificPriceValues['sp_from_quantity'];
