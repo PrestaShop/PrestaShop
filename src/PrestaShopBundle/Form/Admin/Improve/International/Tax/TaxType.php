@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
@@ -61,8 +62,24 @@ class TaxType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $invalidCharsText = sprintf(
+            '%s ' . TypedRegexValidator::CATALOG_CHARS,
+            $this->translator->trans('Invalid characters:', [], 'Admin.Notifications.Info')
+        );
+
+        $nameHintText =
+            $this->translator->trans(
+                'Tax name to display in carts and on invoices (e.g. "VAT").',
+                [],
+                'Admin.International.Help'
+            )
+            . PHP_EOL
+            . $invalidCharsText;
+
         $builder
             ->add('name', TranslatableType::class, [
+                'label' => $this->translator->trans('Name', [], 'Admin.Global'),
+                'help' => $nameHintText,
                 'options' => [
                     'constraints' => [
                         new Length([
@@ -83,6 +100,12 @@ class TaxType extends AbstractType
                 ],
             ])
             ->add('rate', TextType::class, [
+                'label' => $this->translator->trans('Rate', [], 'Admin.International.Feature'),
+                'help' => $this->translator->trans(
+                    'Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)',
+                    [],
+                    'Admin.International.Help'
+                ),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
@@ -114,6 +137,7 @@ class TaxType extends AbstractType
                 ],
             ])
             ->add('is_enabled', SwitchType::class, [
+                'label' => $this->translator->trans('Enable', [], 'Admin.Actions'),
                 'required' => false,
             ])
         ;
