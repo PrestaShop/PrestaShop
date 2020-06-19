@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\DeleteProductFromOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use Tools;
 use Validate;
 
 /**
@@ -90,9 +91,8 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
 
         try {
             $result = true;
-            $oldCartRules = $cart->getCartRules();
             $result &= $this->updateCart($orderDetail, $cart);
-            $result &= $this->updateOrderCartRules($order, $cart->getCartRules());
+            $result &= $this->updateOrderCartRules($order, $cart);
             $result &= $this->updateOrderInvoice($orderDetail);
 
             // Reinject quantity in stock
@@ -143,21 +143,32 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      * Remove previous cart rules applied to order
      *
      * @param Order $order
-     * @param array $newCartRules
+     * @param Cart $cart
      *
      * @return bool
      */
-    private function updateOrderCartRules(Order $order, array $newCartRules)
+    private function updateOrderCartRules(Order $order, Cart $cart)
     {
-        foreach ($order->getCartRules() as $orderCartRule) {
+        $computingPrecision = $this->getPrecisionFromCart($cart);
+        $newCartRules = $cart->getCartRules();
+        foreach ($order->getCartRules() as $orderCartRuleData) {
             foreach ($newCartRules as $newCartRule) {
-                if ($newCartRule['id_cart_rule'] == $orderCartRule['id_cart_rule']) {
-                    // Cart rule is still in the cart no need to remove it
+                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
+                    // Cart rule is still in the cart no need to remove it, but we update it as the amount may have changed
+                    $cartRule = new CartRule($newCartRule['id_cart_rule']);
+
+                    $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
+                    $orderCartRule->id_order = $order->id;
+                    $orderCartRule->name = $newCartRule['name'];
+                    $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
+                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
+                    $orderCartRule->save();
                     continue 2;
                 }
             }
 
-            $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
+            // This one is no longer in the new cart rules so we delete it
+            $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
             if (!$orderCartRule->delete()) {
                 return false;
             }

@@ -123,7 +123,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "$15.00"
     Then order "bo_order1" should have following details:
       | total_products           | 38.800 |
       | total_products_wt        | 41.130 |
@@ -180,7 +180,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "$7.50"
     Then order "bo_order1" should have following details:
       | total_products           | 38.800 |
       | total_products_wt        | 41.130 |
@@ -200,7 +200,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 4 products in total
     Then order "bo_order1" should contain 2 product "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct"
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "$15.00"
     Then order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
@@ -389,7 +389,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnWholeOrder"
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnWholeOrder" with amount "$19.40"
     Then order "bo_order1" should have following details:
       | total_products           | 38.800 |
       | total_products_wt        | 41.130 |
@@ -405,6 +405,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnWholeOrder" with amount "$11.90"
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |

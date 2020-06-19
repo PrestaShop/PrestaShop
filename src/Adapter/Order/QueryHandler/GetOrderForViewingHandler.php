@@ -740,7 +740,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $cartRule = new CartRule((int) $discount['id_cart_rule']);
             if ((int) $cartRule->reduction_currency !== $order->id_currency) {
                 $discountAmount = Tools::convertPriceFull(
-                    $isTaxIncluded ? $discount['value'] : $discount['value_tax_excl'],
+                    $discountAmount,
                     new Currency((int) $cartRule->reduction_currency),
                     new Currency((int) $order->id_currency)
                 );

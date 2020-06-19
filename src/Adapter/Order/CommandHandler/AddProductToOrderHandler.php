@@ -52,7 +52,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Product;
 use Shop;
@@ -736,18 +735,5 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if (!$product->checkQty($command->getProductQuantity())) {
             throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
         }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return int
-     */
-    private function getPrecisionFromCart(Cart $cart): int
-    {
-        $computingPrecision = new ComputingPrecision();
-        $currency = new Currency((int) $cart->id_currency);
-
-        return $computingPrecision->getPrecision($currency->precision);
     }
 }

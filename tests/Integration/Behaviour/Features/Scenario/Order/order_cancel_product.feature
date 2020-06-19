@@ -226,7 +226,7 @@ Feature: Cancel Order Product from Back Office (BO)
     Then order "bo_order_cancel_product" should have 9 products in total
     Then order "bo_order_cancel_product" should contain 1 product "Test Product Cart Rule On Select Product"
     Then order "bo_order_cancel_product" should have 1 cart rule
-    Then order "bo_order_cancel_product" should have cart rule "CartRuleAmountOnSelectedProduct"
+    Then order "bo_order_cancel_product" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "$15.00"
     Then order "bo_order_cancel_product" should have following details:
       | total_products           | 110.20 |
       | total_products_wt        | 116.81 |
@@ -293,7 +293,7 @@ Feature: Cancel Order Product from Back Office (BO)
     Then order "bo_order_cancel_product" should have 9 products in total
     Then order "bo_order_cancel_product" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order_cancel_product" should have 1 cart rule
-    Then order "bo_order_cancel_product" should have cart rule "CartRuleAmountOnWholeOrder"
+    Then order "bo_order_cancel_product" should have cart rule "CartRuleAmountOnWholeOrder" with amount "$55.10"
     Then order "bo_order_cancel_product" should have following details:
       | total_products           | 110.20 |
       | total_products_wt        | 116.81 |
@@ -312,7 +312,7 @@ Feature: Cancel Order Product from Back Office (BO)
     Then order "bo_order_cancel_product" should contain 0 product "Test Product Cart Rule On Order"
     # This one works by chance because the cart rules are not cleaned at all, but once they are it still should be present
     Then order "bo_order_cancel_product" should have 1 cart rule
-    Then order "bo_order_cancel_product" should have cart rule "CartRuleAmountOnWholeOrder"
+#    Then order "bo_order_cancel_product" should have cart rule "CartRuleAmountOnWholeOrder" with amount "$47.60"
     # This test doesn't work because cart rules are not updated in cart nor in order
     # @todo This should be fixed along with #19717
     Then order "bo_order_cancel_product" should have following details:

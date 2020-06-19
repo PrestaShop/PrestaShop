@@ -287,12 +287,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :reference should have cart rule :cartRuleName
+     * @Then order :reference should have cart rule :cartRuleName with amount :cartRuleAmount
      *
      * @param string $orderReference
      * @param string $cartRuleName
+     * @param string $cartRuleAmount
      */
-    public function createdOrderShouldHaveCartRule(string $orderReference, string $cartRuleName)
+    public function createdOrderShouldHaveCartRule(string $orderReference, string $cartRuleName, string $cartRuleAmount)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
@@ -303,6 +304,18 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         foreach ($orderDiscountsForViewing as $discount) {
             if ($discount->getName() == $cartRuleName) {
+                if ($cartRuleAmount !== $discount->getAmountFormatted()) {
+                    throw new RuntimeException(
+                        sprintf(
+                            'Order "%s" has cart rule "%s" but amount is %s whereas %s was expected',
+                            $orderReference,
+                            $cartRuleName,
+                            $discount->getAmountFormatted(),
+                            $cartRuleAmount
+                        )
+                    );
+                }
+
                 return;
             }
         }
