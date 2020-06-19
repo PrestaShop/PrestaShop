@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandTypeParser;
  */
 final class ExecutedCommandRegistry
 {
+    private const BACKTRACE_LIMIT = 10;
+
     /**
      * @var array
      */
@@ -110,7 +112,7 @@ final class ExecutedCommandRegistry
      */
     private function getTrace(): array
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::BACKTRACE_LIMIT);
 
         foreach ($trace as $step) {
             if ($step['class'] === TacticianCommandBusAdapter::class
