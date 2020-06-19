@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -230,17 +229,6 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'required' => false,
                     ])
                     ->setAssociatedColumn('profile')
-            )
-            ->add(
-                (new Filter('active', ChoiceType::class))
-                    ->setTypeOptions([
-                        'choices' => [
-                            $this->trans('Yes', [], 'Admin.Global') => 1,
-                            $this->trans('No', [], 'Admin.Global') => 0,
-                        ],
-                        'required' => false,
-                        'choice_translation_domain' => false,
-                    ])
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
             ->setAssociatedColumn('active')
