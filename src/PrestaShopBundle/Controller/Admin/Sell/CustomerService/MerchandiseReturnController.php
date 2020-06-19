@@ -91,12 +91,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
-     * @todo so I still have an issue with this not saving properly. Issue is that it's first POST request which redirects to GET request.
-     * As far as I can see this is caused by the fact that Symfony/PrestaShop deciding that my POST request is in fact SearchGridAction
-     * At this point I am stuck. If i left the redirection somewhere then I can't find it. Maybe the fact that form and grid are in one page?
-     * But then options form + grid wouldn't work either.
-     *
-     * This is caused
      * Edit existing merchandise return
      *
      * @AdminSecurity(
