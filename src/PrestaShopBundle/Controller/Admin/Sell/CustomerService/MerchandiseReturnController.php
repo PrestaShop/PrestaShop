@@ -145,7 +145,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Actions')),
+            'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Orderscustomers.Feature')),
             'merchandiseReturnForm' => $form->createView(),
             'editableMerchandiseReturn' => $editableMerchandiseReturn,
             'merchandiseReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
