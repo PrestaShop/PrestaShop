@@ -575,7 +575,7 @@ ALTER TABLE `PREFIX_cart_rule` CHANGE `reduction_amount` `reduction_amount` DECI
 
 /* group reduction */
 UPDATE `PREFIX_group` SET `reduction` = RIGHT(`reduction`, 6) WHERE LENGTH(`reduction`) > 6;
-ALTER TABLE `PREFIX_group` CHANGE `reduction` `reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00' AFTER `reduction`;
+ALTER TABLE `PREFIX_group` CHANGE `reduction` `reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
 
 /* order_detail reduction_percent, group_reduction & ecotax */
 UPDATE `PREFIX_order_detail` SET `reduction_percent` = RIGHT(`reduction_percent`, 6) WHERE LENGTH(`reduction_percent`) > 6;
