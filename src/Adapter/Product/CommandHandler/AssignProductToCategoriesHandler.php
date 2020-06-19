@@ -33,9 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssignProductToCategoriesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Exception\ProductException;
-use PrestaShopException;
-use Product;
 
 /**
  * Handles AssignProductToCategoriesCommand using legacy object model
@@ -56,29 +53,6 @@ final class AssignProductToCategoriesHandler extends AbstractProductHandler impl
         $product->addToCategories($categoryIds);
         $product->id_category_default = $command->getDefaultCategoryId()->getValue();
 
-        $this->performUpdate($product);
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @throws CannotUpdateProductException
-     */
-    private function performUpdate(Product $product): void
-    {
-        try {
-            if (false === $product->update()) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to assign product #%s to categories', $product->id),
-                    CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf('Error occurred when trying to assign product #%s to categories', $product->id),
-                0,
-                $e
-            );
-        }
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES);
     }
 }

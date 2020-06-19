@@ -79,7 +79,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             return;
         }
 
-        $this->performUpdate($product);
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_PRICES);
     }
 
     /**
@@ -244,35 +244,6 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
                     $unitPrice
                 ),
                 ProductConstraintException::INVALID_UNIT_PRICE
-            );
-        }
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @throws CannotUpdateProductException
-     */
-    private function performUpdate(Product $product): void
-    {
-        try {
-            if (false === $product->update()) {
-                throw new CannotUpdateProductException(
-                    sprintf(
-                        'Failed to update product #%s prices',
-                        $product->id
-                    ),
-                    CannotUpdateProductException::FAILED_UPDATE_PRICES
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CannotUpdateProductException(
-                sprintf(
-                    'Error occurred when trying to update product #%s prices',
-                    $product->id
-                ),
-                CannotUpdateProductException::FAILED_UPDATE_PRICES,
-                $e
             );
         }
     }
