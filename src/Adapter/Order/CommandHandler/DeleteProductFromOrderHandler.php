@@ -174,6 +174,28 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             }
         }
 
+        // Finally add the new cart rules that are not in the Order
+        foreach ($newCartRules as $newCartRule) {
+            foreach ($order->getCartRules() as $orderCartRuleData) {
+                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
+                    // This cart rule is already present no need to add it
+                    continue 2;
+                }
+            }
+
+            // Add missing order cart rule
+            $cartRule = new CartRule($newCartRule['id_cart_rule']);
+
+            $orderCartRule = new OrderCartRule();
+            $orderCartRule->id_order = $order->id;
+            $orderCartRule->id_cart_rule = $newCartRule['id_cart_rule'];
+            $orderCartRule->id_order_invoice = $order->getInvoicesCollection()->getLast();
+            $orderCartRule->name = $newCartRule['name'];
+            $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
+            $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
+            $orderCartRule->save();
+        }
+
         return true;
     }
 
