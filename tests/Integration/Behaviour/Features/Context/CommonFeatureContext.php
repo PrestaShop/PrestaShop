@@ -27,9 +27,11 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
+use Cache;
 use Context;
 use Employee;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
+use Pack;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
@@ -93,6 +95,15 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function getContainer()
     {
         return static::$kernel->getContainer();
+    }
+
+    /**
+     * @AfterFeature @clear-cache-after-feature
+     */
+    public static function clearCache()
+    {
+        Cache::clear();
+        Pack::resetStaticCache();
     }
 
     /**
