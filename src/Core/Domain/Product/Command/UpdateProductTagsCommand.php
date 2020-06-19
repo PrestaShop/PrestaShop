@@ -74,7 +74,7 @@ class UpdateProductTagsCommand
     }
 
     /**
-     * @param array $localizedTags
+     * @param array[] $localizedTags key-value pairs where each key represents language id and value is the array of tags
      *
      * @throws ProductConstraintException
      */
