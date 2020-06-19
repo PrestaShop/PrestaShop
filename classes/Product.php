@@ -3579,19 +3579,8 @@ class ProductCore extends ObjectModel
         $divisor = null,
         $only_reduc = false,
         $usereduc = true,
-        $quantity = 1
-    ) {
-        return Product::getPriceStatic((int) $this->id, $tax, $id_product_attribute, $decimals, $divisor, $only_reduc, $usereduc, $quantity);
-    }
-
-    public function getPublicPrice(
-        $tax = true,
-        $id_product_attribute = null,
-        $decimals = 6,
-        $divisor = null,
-        $only_reduc = false,
-        $usereduc = true,
-        $quantity = 1
+        $quantity = 1,
+        $id_customization = null
     ) {
         $specific_price_output = null;
 
@@ -3612,7 +3601,42 @@ class ProductCore extends ObjectModel
             true,
             true,
             null,
-            false
+            true,
+            $id_customization
+        );
+    }
+
+    public function getPublicPrice(
+        $tax = true,
+        $id_product_attribute = null,
+        $decimals = 6,
+        $divisor = null,
+        $only_reduc = false,
+        $usereduc = true,
+        $quantity = 1,
+        $id_customization = null
+    ) {
+        $specific_price_output = null;
+
+        return Product::getPriceStatic(
+            (int) $this->id,
+            $tax,
+            $id_product_attribute,
+            $decimals,
+            $divisor,
+            $only_reduc,
+            $usereduc,
+            $quantity,
+            false,
+            null,
+            null,
+            null,
+            $specific_price_output,
+            true,
+            true,
+            null,
+            false,
+            $id_customization
         );
     }
 
