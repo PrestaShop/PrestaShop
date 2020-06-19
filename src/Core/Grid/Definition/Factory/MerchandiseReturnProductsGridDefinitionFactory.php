@@ -81,7 +81,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
      */
     protected function getName()
     {
-        return $this->trans('Merchandise Return Products', [], 'Admin.Orderscustomers.Feature');
+        return $this->trans('Merchandise return products', [], 'Admin.Orderscustomers.Feature');
     }
 
     /**
