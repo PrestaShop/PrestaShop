@@ -35,4 +35,4 @@ Feature: Add product to pack from Back Office (BO)
     When I pack 1 pack product "productPack1" to a pack of "productPack2"
     Then I should get error that I cannot add pack into a pack
 
-
+#@todo: add combination product to a pack
