@@ -10,11 +10,11 @@ module.exports = class AddOrderMessage extends BOBasePage {
 
     // Selectors
     this.nameLangButton = '#order_message_name';
-    this.langDropdownDiv = 'div.dropdown-menu[aria-labelledby=\'order_message_name\']';
+    this.langDropdownDiv = 'div.locale-dropdown-menu';
     this.nameLangSpan = lang => `${this.langDropdownDiv} span[data-locale='${lang}']`;
     this.nameInput = id => `#order_message_name_${id}`;
     this.messageTextarea = id => `#order_message_message_${id}`;
-    this.saveButton = 'div.card-footer button';
+    this.saveButton = '#save-button';
   }
 
   /*
