@@ -1941,6 +1941,29 @@ class AdminControllerCore extends Controller
     {
         header('Cache-Control: no-store, no-cache');
 
+        $this->context->smarty->assign([
+            'table' => $this->table,
+            'current' => self::$currentIndex,
+            'token' => $this->token,
+            'host_mode' => (int) defined('_PS_HOST_MODE_'),
+            'stock_management' => (int) Configuration::get('PS_STOCK_MANAGEMENT'),
+            'no_order_tip' => $this->getNotificationTip('order'),
+            'no_customer_tip' => $this->getNotificationTip('customer'),
+            'no_customer_message_tip' => $this->getNotificationTip('customer_message'),
+        ]);
+
+        if ($this->display_header) {
+            $this->context->smarty->assign(
+                'displayBackOfficeHeader',
+                Hook::exec('displayBackOfficeHeader')
+            );
+        }
+
+        $this->context->smarty->assign([
+            'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop'),
+            'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
+        ]);
+
         // Multishop
         $is_multishop = Shop::isFeatureActive();
 
@@ -2803,26 +2826,6 @@ class AdminControllerCore extends Controller
         if ($this->ajax && method_exists($this, 'ajaxPreprocess')) {
             $this->ajaxPreProcess();
         }
-
-        $this->context->smarty->assign([
-            'table' => $this->table,
-            'current' => self::$currentIndex,
-            'token' => $this->token,
-            'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
-            'stock_management' => (int) Configuration::get('PS_STOCK_MANAGEMENT'),
-            'no_order_tip' => $this->getNotificationTip('order'),
-            'no_customer_tip' => $this->getNotificationTip('customer'),
-            'no_customer_message_tip' => $this->getNotificationTip('customer_message'),
-        ]);
-
-        if ($this->display_header) {
-            $this->context->smarty->assign('displayBackOfficeHeader', Hook::exec('displayBackOfficeHeader', []));
-        }
-
-        $this->context->smarty->assign([
-            'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop', []),
-            'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
-        ]);
 
         Employee::setLastConnectionDate($this->context->employee->id);
 
