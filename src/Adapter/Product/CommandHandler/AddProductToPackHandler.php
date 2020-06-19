@@ -54,6 +54,7 @@ final class AddProductToPackHandler extends AbstractProductHandler implements Ad
         }
 
         try {
+            //@todo: there is no quantity check when adding to pack. Should it be considered?
             $this->assertProductIsAvailableForPacking($productId);
 
             if (false === Pack::deleteItems($pack->id)) {
