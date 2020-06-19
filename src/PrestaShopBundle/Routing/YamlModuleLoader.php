@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Routing;
 
 use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -65,8 +66,9 @@ class YamlModuleLoader extends Loader
             $routingFile = $modulePath . '/config/routes.yml';
             if (file_exists($routingFile)) {
                 $loadedRoutes = $this->import($routingFile, 'yaml');
+                $modifiedRoutes = $this->modifyRoutes($loadedRoutes);
 
-                $routes->addCollection($loadedRoutes);
+                $routes->addCollection($modifiedRoutes);
             }
         }
 
@@ -81,5 +83,23 @@ class YamlModuleLoader extends Loader
     public function supports($resource, $type = null)
     {
         return 'module' === $type;
+    }
+
+    /**
+     * @param RouteCollection $routes
+     *
+     * @return RouteCollection
+     */
+    private function modifyRoutes(RouteCollection $routes)
+    {
+        foreach ($routes->getIterator() as $route) {
+            if ($route->hasDefault('_disable_module_prefix') && $route->getDefault('_disable_module_prefix') === true) {
+                continue;
+            }
+
+            $route->setPath('/modules' . $route->getPath());
+        }
+
+        return $routes;
     }
 }
