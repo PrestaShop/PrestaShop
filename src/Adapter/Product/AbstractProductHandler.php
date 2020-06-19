@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -126,6 +127,31 @@ abstract class AbstractProductHandler
                     $product->{$field}
                 ),
                 $errorCode
+            );
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @param int $errorCode
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    protected function performUpdate(Product $product, int $errorCode): void
+    {
+        try {
+            if (false === $product->update()) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to update product #%s', $product->id),
+                    $errorCode
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                sprintf('Error occurred when trying to update product #%s', $product->id),
+                0,
+                $e
             );
         }
     }
