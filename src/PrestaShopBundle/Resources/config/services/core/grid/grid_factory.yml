@@ -66,7 +66,7 @@ services:
     prestashop.core.grid.factory.employee:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         arguments:
-            - '@prestashop.core.grid.definition.factory.employee'
+            - '@prestashop.core.grid.definition.factory.filterable_employee'
             - '@prestashop.core.grid.data_provider.employee'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'

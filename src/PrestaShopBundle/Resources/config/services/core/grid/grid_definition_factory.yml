@@ -72,6 +72,11 @@ services:
             - "@=service('router').generate('admin_employees_index')"
         public: true
 
+    prestashop.core.grid.definition.factory.filterable_employee:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableEmployeeGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
     prestashop.core.grid.definition.factory.contacts:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ContactGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
