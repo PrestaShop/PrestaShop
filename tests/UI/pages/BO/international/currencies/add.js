@@ -17,7 +17,7 @@ module.exports = class AddCurrency extends BOBasePage {
     this.decimalsInput = '#currency_precision';
     this.statusSwitch = id => `label[for='currency_active_${id}']`;
     this.resetDefaultSettingsButton = '#currency_reset_default_settings';
-    this.saveButton = 'div.card-footer button[type=\'submit\']';
+    this.saveButton = '#save-button';
 
     // currency modal
     this.currencyLoadingModal = '#currency_loading_data_modal';

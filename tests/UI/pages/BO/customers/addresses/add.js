@@ -23,7 +23,7 @@ module.exports = class AddAddress extends BOBasePage {
     this.customerAddressCountrySelect = '#customer_address_id_country';
     this.customerAddressPhoneInput = '#customer_address_phone';
     this.customerAddressOtherInput = '#customer_address_other';
-    this.saveAddressButton = 'div.card-footer button';
+    this.saveAddressButton = '#save-button';
   }
 
   /*

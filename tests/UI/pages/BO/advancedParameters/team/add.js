@@ -18,8 +18,8 @@ module.exports = class AddPageEmployee extends BOBasePage {
     this.languageSelect = '#employee_language';
     this.activeSwitchlabel = 'label[for=\'employee_active_%ID\']';
     this.permissionProfileSelect = '#employee_profile';
-    this.saveButton = 'div.card-footer button';
-    this.cancelButton = 'div.card-footer a';
+    this.saveButton = '#save-button';
+    this.cancelButton = '#cancel-link';
   }
 
   /*

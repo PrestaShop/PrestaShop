@@ -18,7 +18,7 @@ module.exports = class AddLanguage extends BOBasePage {
     this.noPictureInput = '#language_no_picture_image';
     this.isRtlSwitch = id => `label[for='language_is_rtl_${id}']`;
     this.statusSwitch = id => `label[for='language_is_active_${id}']`;
-    this.saveButton = 'div.card-footer button';
+    this.saveButton = '#save-button';
   }
 
   /* Methods */

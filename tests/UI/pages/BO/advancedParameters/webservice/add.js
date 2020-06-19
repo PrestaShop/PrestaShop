@@ -13,7 +13,7 @@ module.exports = class AddWebserviceKey extends BOBasePage {
     this.generateButton = 'button.js-generator-btn';
     this.keyDescriptionTextarea = '#webservice_key_description';
     this.statusSwitchLabel = id => `label[for='webservice_key_status_${id}']`;
-    this.saveButton = 'div.card-footer button';
+    this.saveButton = '#save-button';
   }
 
   /*
