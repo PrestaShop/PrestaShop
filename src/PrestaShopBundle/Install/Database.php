@@ -39,7 +39,6 @@ class Database extends AbstractInstall
      * @param string $login
      * @param string $password
      * @param string $prefix
-     * @param string $engine
      * @param bool $clear
      *
      * @return array List of errors
