@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Mpn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
@@ -64,11 +62,6 @@ class UpdateProductOptionsCommand
      * @var bool|null
      */
     private $showPrice;
-
-    /**
-     * @var LocalizedTags[]|null
-     */
-    private $localizedTags;
 
     /**
      * @var ProductCondition|null
@@ -125,7 +118,15 @@ class UpdateProductOptionsCommand
     }
 
     /**
-     * @param ProductVisibility $visibility
+     * @return bool|null
+     */
+    public function isAvailableForOrder(): ?bool
+    {
+        return $this->availableForOrder;
+    }
+
+    /**
+     * @param string $visibility
      *
      * @return UpdateProductOptionsCommand
      */
@@ -134,14 +135,6 @@ class UpdateProductOptionsCommand
         $this->visibility = new ProductVisibility($visibility);
 
         return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isAvailableForOrder(): ?bool
-    {
-        return $this->availableForOrder;
     }
 
     /**
@@ -192,26 +185,6 @@ class UpdateProductOptionsCommand
     public function setShowPrice(bool $showPrice): UpdateProductOptionsCommand
     {
         $this->showPrice = $showPrice;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedTags(): ?array
-    {
-        return $this->localizedTags;
-    }
-
-    /**
-     * @param string[] $localizedTags key value pairs where key is language id and value is the array of tags
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setLocalizedTags(array $localizedTags): UpdateProductOptionsCommand
-    {
-        $this->localizedTags = $localizedTags;
 
         return $this;
     }

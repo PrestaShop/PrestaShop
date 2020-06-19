@@ -45,4 +45,9 @@ class CannotUpdateProductException extends ProductException
      * When product options update fails
      */
     const FAILED_UPDATE_OPTIONS = 30;
+
+    /**
+     * When product tags update fails
+     */
+    const FAILED_UPDATE_TAGS = 40;
 }

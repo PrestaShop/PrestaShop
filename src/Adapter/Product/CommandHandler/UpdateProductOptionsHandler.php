@@ -34,10 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOption
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use PrestaShopException;
 use Product;
-use Tag;
 
 /**
  * Handles UpdateProductOptionsCommand using legacy object models
@@ -49,16 +47,13 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
      */
     public function handle(UpdateProductOptionsCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
+        $productId = $command->getProductId();
+
+        $product = $this->getProduct($productId);
         $this->fillUpdatableFieldsWithCommandData($product, $command);
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
         $this->performUpdate($product);
-
-        // don't do anything with tags if its null. (It means it is a partial update and tags aren't changed)
-        if (null !== $command->getLocalizedTags()) {
-            $this->updateTags($product, $command->getLocalizedTags());
-        }
     }
 
     /**
@@ -146,73 +141,6 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
                 ),
                 0,
                 $e
-            );
-        }
-    }
-
-    /**
-     * Due to this method it is possible to partially update tags in separate languages.
-     *
-     * If all localizedTags array is empty, all previous tags will be deleted.
-     * If tags in some language are null, it will be skipped.
-     * If tags in some language has any values, all previous tags will be deleted and new ones inserted instead
-     * If tags in some language are empty, then all previous tags will be deleted and none inserted.
-     *
-     * @param Product $product
-     * @param LocalizedTags[] $localizedTagsList
-     *
-     * @throws CannotUpdateProductException
-     * @throws PrestaShopException
-     */
-    private function updateTags(Product $product, array $localizedTagsList)
-    {
-        $productId = (int) $product->id;
-
-        // delete all tags for product if array is empty
-        if (empty($localizedTagsList)) {
-            $this->deleteAllTagsForProduct($productId);
-
-            return;
-        }
-
-        foreach ($localizedTagsList as $localizedTags) {
-            $langId = $localizedTags->getLanguageId()->getValue();
-
-            // delete all this product tags for this lang
-            if (false === Tag::deleteProductTagsInLang($productId, $langId)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to delete product #%s previous tags in lang #%s', $productId, $langId),
-                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
-                );
-            }
-
-            // empty tags means to delete all previous tags, which is already done above.
-            if ($localizedTags->isEmpty()) {
-                continue;
-            }
-
-            // assign new tags to product
-            if (false === Tag::addTags($langId, $productId, $localizedTags->getTags())) {
-                throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%s tags in lang #%s', $productId, $langId),
-                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
-                );
-            }
-        }
-    }
-
-    /**
-     * @param int $productId
-     *
-     * @throws CannotUpdateProductException
-     * @throws PrestaShopException
-     */
-    private function deleteAllTagsForProduct(int $productId): void
-    {
-        if (false === Tag::deleteTagsForProduct($productId)) {
-            throw new CannotUpdateProductException(
-                sprintf('Failed to delete all tags for product #%s', $productId),
-                CannotUpdateProductException::FAILED_UPDATE_OPTIONS
             );
         }
     }
