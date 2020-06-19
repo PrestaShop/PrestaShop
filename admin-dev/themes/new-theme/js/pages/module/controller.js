@@ -156,17 +156,17 @@ class AdminModuleController {
   initFilterStatusDropdown() {
     const self = this;
     const body = $('body');
-    body.on('click', self.statusItemSelector, function () {
+    body.on('click', self.statusItemSelector, function() {
       // Get data from li DOM input
       self.currentRefStatus = parseInt($(this).data('status-ref'), 10);
       // Change dropdown label to set it to the current status' displayname
-      $(self.statusSelectorLabelSelector).text($(this).find('a:first').text());
+      $(self.statusSelectorLabelSelector).text($(this).text());
       $(self.statusResetBtnSelector).show();
       self.updateModuleVisibility();
     });
 
-    body.on('click', self.statusResetBtnSelector, function () {
-      $(self.statusSelectorLabelSelector).text($(this).find('a').text());
+    body.on('click', self.statusResetBtnSelector, function() {
+      $(self.statusSelectorLabelSelector).text($(this).text());
       $(this).hide();
       self.currentRefStatus = null;
       self.updateModuleVisibility();
@@ -177,27 +177,29 @@ class AdminModuleController {
     const self = this;
     const body = $('body');
 
-
     body.on('click', self.getBulkCheckboxesSelector(), () => {
       const selector = $(self.bulkActionDropDownSelector);
       if ($(self.getBulkCheckboxesCheckedSelector()).length > 0) {
-        selector.closest('.module-top-menu-item')
-          .removeClass('disabled');
+        selector.closest('.module-top-menu-item').removeClass('disabled');
       } else {
-        selector.closest('.module-top-menu-item')
-          .addClass('disabled');
+        selector.closest('.module-top-menu-item').addClass('disabled');
       }
     });
 
     body.on('click', self.bulkItemSelector, function initializeBodyChange() {
       if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
-        $.growl.warning({message: window.translate_javascripts['Bulk Action - One module minimum']});
+        $.growl.warning({
+          message: window.translate_javascripts['Bulk Action - One module minimum']
+        });
         return;
       }
 
       self.lastBulkAction = $(this).data('ref');
       const modulesListString = self.buildBulkActionModuleList();
-      const actionString = $(this).find(':checked').text().toLowerCase();
+      const actionString = $(this)
+        .find(':checked')
+        .text()
+        .toLowerCase();
       $(self.bulkConfirmModalListSelector).html(modulesListString);
       $(self.bulkConfirmModalActionNameSelector).text(actionString);
 
@@ -210,7 +212,7 @@ class AdminModuleController {
       $(self.bulkConfirmModalSelector).modal('show');
     });
 
-    body.on('click', this.bulkConfirmModalAckBtnSelector, (event) => {
+    body.on('click', this.bulkConfirmModalAckBtnSelector, event => {
       event.preventDefault();
       event.stopPropagation();
       $(self.bulkConfirmModalSelector).modal('hide');
@@ -246,53 +248,50 @@ class AdminModuleController {
 
     $.ajax({
       method: 'GET',
-      url: window.moduleURLs.catalogRefresh,
-    }).done((response) => {
-      if (response.status === true) {
-        if (typeof response.domElements === 'undefined') response.domElements = null;
-        if (typeof response.msg === 'undefined') response.msg = null;
+      url: window.moduleURLs.catalogRefresh
+    })
+      .done(response => {
+        if (response.status === true) {
+          if (typeof response.domElements === 'undefined') response.domElements = null;
+          if (typeof response.msg === 'undefined') response.msg = null;
 
-        const stylesheet = document.styleSheets[0];
-        const stylesheetRule = '{display: none}';
-        const moduleGlobalSelector = '.modules-list';
-        const moduleSortingSelector = '.module-sorting-menu';
-        const requiredSelectorCombination = `${moduleGlobalSelector},${moduleSortingSelector}`;
+          const stylesheet = document.styleSheets[0];
+          const stylesheetRule = '{display: none}';
+          const moduleGlobalSelector = '.modules-list';
+          const moduleSortingSelector = '.module-sorting-menu';
+          const requiredSelectorCombination = `${moduleGlobalSelector},${moduleSortingSelector}`;
 
-        if (stylesheet.insertRule) {
-          stylesheet.insertRule(
-            requiredSelectorCombination
-            + stylesheetRule, stylesheet.cssRules.length,
-          );
-        } else if (stylesheet.addRule) {
-          stylesheet.addRule(
-            requiredSelectorCombination,
-            stylesheetRule,
-            -1,
-          );
-        }
+          if (stylesheet.insertRule) {
+            stylesheet.insertRule(requiredSelectorCombination + stylesheetRule, stylesheet.cssRules.length);
+          } else if (stylesheet.addRule) {
+            stylesheet.addRule(requiredSelectorCombination, stylesheetRule, -1);
+          }
 
-        $(self.placeholderGlobalSelector).fadeOut(800, () => {
-          $.each(response.domElements, (index, element) => {
-            $(element.selector).append(element.content);
+          $(self.placeholderGlobalSelector).fadeOut(800, () => {
+            $.each(response.domElements, (index, element) => {
+              $(element.selector).append(element.content);
+            });
+            $(moduleGlobalSelector)
+              .fadeIn(800)
+              .css('display', 'flex');
+            $(moduleSortingSelector).fadeIn(800);
+            $('[data-toggle="popover"]').popover();
+            self.initCurrentDisplay();
+            self.fetchModulesList();
           });
-          $(moduleGlobalSelector).fadeIn(800).css('display', 'flex');
-          $(moduleSortingSelector).fadeIn(800);
-          $('[data-toggle="popover"]').popover();
-          self.initCurrentDisplay();
-          self.fetchModulesList();
-        });
-      } else {
+        } else {
+          $(self.placeholderGlobalSelector).fadeOut(800, () => {
+            $(self.placeholderFailureMsgSelector).text(response.msg);
+            $(self.placeholderFailureGlobalSelector).fadeIn(800);
+          });
+        }
+      })
+      .fail(response => {
         $(self.placeholderGlobalSelector).fadeOut(800, () => {
-          $(self.placeholderFailureMsgSelector).text(response.msg);
+          $(self.placeholderFailureMsgSelector).text(response.statusText);
           $(self.placeholderFailureGlobalSelector).fadeIn(800);
         });
-      }
-    }).fail((response) => {
-      $(self.placeholderGlobalSelector).fadeOut(800, () => {
-        $(self.placeholderFailureMsgSelector).text(response.statusText);
-        $(self.placeholderFailureGlobalSelector).fadeIn(800);
       });
-    });
   }
 
   fetchModulesList() {
@@ -322,7 +321,7 @@ class AdminModuleController {
           active: parseInt($this.data('active'), 10),
           access: $this.data('last-access'),
           display: $this.hasClass('module-item-list') ? self.DISPLAY_LIST : self.DISPLAY_GRID,
-          container,
+          container
         });
 
         $this.remove();
@@ -361,8 +360,8 @@ class AdminModuleController {
       let aData = a[key];
       let bData = b[key];
       if (key === 'access') {
-        aData = (new Date(aData)).getTime();
-        bData = (new Date(bData)).getTime();
+        aData = new Date(aData).getTime();
+        bData = new Date(bData).getTime();
         aData = Number.isNaN(aData) ? 0 : aData;
         bData = Number.isNaN(bData) ? 0 : bData;
         if (aData === bData) {
@@ -389,19 +388,11 @@ class AdminModuleController {
       const container = $(this);
       const nbModulesInContainer = container.find('.module-item').length;
       if (
-        (
-          self.currentRefCategory
-          && self.currentRefCategory !== String(container.find('.modules-list').data('name'))
-        ) || (
-          self.currentRefStatus !== null
-          && nbModulesInContainer === 0
-        ) || (
-          nbModulesInContainer === 0
-          && String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED
-        ) || (
-          self.currentTagsList.length > 0
-          && nbModulesInContainer === 0
-        )
+        (self.currentRefCategory && self.currentRefCategory !== String(container.find('.modules-list').data('name'))) ||
+        (self.currentRefStatus !== null && nbModulesInContainer === 0) ||
+        (nbModulesInContainer === 0 &&
+          String(container.find('.modules-list').data('name')) === self.CATEGORY_RECENTLY_USED) ||
+        (self.currentTagsList.length > 0 && nbModulesInContainer === 0)
       ) {
         container.hide();
         return;
@@ -416,8 +407,12 @@ class AdminModuleController {
 
     self.updateModuleSorting();
 
-    $(self.recentlyUsedSelector).find('.module-item').remove();
-    $('.modules-list').find('.module-item').remove();
+    $(self.recentlyUsedSelector)
+      .find('.module-item')
+      .remove();
+    $('.modules-list')
+      .find('.module-item')
+      .remove();
 
     // Modules visibility management
     let isVisible;
@@ -430,12 +425,11 @@ class AdminModuleController {
     const counter = {};
     const checkTag = (index, value) => {
       newValue = value.toLowerCase();
-      tagExists |= (
-        currentModule.name.indexOf(newValue) !== -1
-        || currentModule.description.indexOf(newValue) !== -1
-        || currentModule.author.indexOf(newValue) !== -1
-        || currentModule.techName.indexOf(newValue) !== -1
-      );
+      tagExists |=
+        currentModule.name.indexOf(newValue) !== -1 ||
+        currentModule.description.indexOf(newValue) !== -1 ||
+        currentModule.author.indexOf(newValue) !== -1 ||
+        currentModule.techName.indexOf(newValue) !== -1;
     };
 
     for (let i = 0; i < modulesListLength; i += 1) {
@@ -443,9 +437,10 @@ class AdminModuleController {
       if (currentModule.display === self.currentDisplay) {
         isVisible = true;
 
-        moduleCategory = self.currentRefCategory === self.CATEGORY_RECENTLY_USED
-          ? self.CATEGORY_RECENTLY_USED
-          : currentModule.categories;
+        moduleCategory =
+          self.currentRefCategory === self.CATEGORY_RECENTLY_USED
+            ? self.CATEGORY_RECENTLY_USED
+            : currentModule.categories;
 
         // Check for same category
         if (self.currentRefCategory !== null) {
@@ -508,14 +503,15 @@ class AdminModuleController {
 
     $(window).on('beforeunload', () => {
       if (self.isUploadStarted === true) {
-        return 'It seems some critical operation are running, are you sure you want to change page? '
-          + 'It might cause some unexepcted behaviors.';
+        return (
+          'It seems some critical operation are running, are you sure you want to change page? ' +
+          'It might cause some unexepcted behaviors.'
+        );
       }
 
       return undefined;
     });
   }
-
 
   buildBulkActionModuleList() {
     const checkBoxesSelector = this.getBulkCheckboxesCheckedSelector();
@@ -567,8 +563,8 @@ class AdminModuleController {
         beforeSend: () => {
           $(self.addonsLoginButtonSelector).show();
           $('button.btn[type="submit"]', self.addonsConnectForm).hide();
-        },
-      }).done((response) => {
+        }
+      }).done(response => {
         if (response.success === 1) {
           window.location.reload();
         } else {
@@ -593,26 +589,24 @@ class AdminModuleController {
     const dropzone = $('.dropzone');
 
     // Reset modal when click on Retry in case of failure
-    body.on(
-      'click',
-      this.moduleImportFailureRetrySelector,
-      () => {
-        /* eslint-disable-next-line max-len */
-        $(`${self.moduleImportSuccessSelector},${self.moduleImportFailureSelector},${self.moduleImportProcessingSelector}`).fadeOut(() => {
-          /**
-           * Added timeout for a better render of animation
-           * and avoid to have displayed at the same time
-           */
-          setTimeout(() => {
-            $(self.moduleImportStartSelector).fadeIn(() => {
-              $(self.moduleImportFailureMsgDetailsSelector).hide();
-              $(self.moduleImportSuccessConfigureBtnSelector).hide();
-              dropzone.removeAttr('style');
-            });
-          }, 550);
-        });
-      },
-    );
+    body.on('click', this.moduleImportFailureRetrySelector, () => {
+      /* eslint-disable-next-line max-len */
+      $(
+        `${self.moduleImportSuccessSelector},${self.moduleImportFailureSelector},${self.moduleImportProcessingSelector}`
+      ).fadeOut(() => {
+        /**
+         * Added timeout for a better render of animation
+         * and avoid to have displayed at the same time
+         */
+        setTimeout(() => {
+          $(self.moduleImportStartSelector).fadeIn(() => {
+            $(self.moduleImportFailureMsgDetailsSelector).hide();
+            $(self.moduleImportSuccessConfigureBtnSelector).hide();
+            dropzone.removeAttr('style');
+          });
+        }, 550);
+      });
+    });
 
     // Reinit modal on exit, but check if not already processing something
     body.on('hidden.bs.modal', this.dropZoneModalSelector, () => {
@@ -636,10 +630,10 @@ class AdminModuleController {
           event.stopPropagation();
           event.preventDefault();
         }
-      },
+      }
     );
 
-    body.on('click', this.moduleImportSelectFileManualSelector, (event) => {
+    body.on('click', this.moduleImportSelectFileManualSelector, event => {
       event.stopPropagation();
       event.preventDefault();
       /**
@@ -693,7 +687,7 @@ class AdminModuleController {
       error: (file, message) => {
         self.displayOnUploadError(message);
       },
-      complete: (file) => {
+      complete: file => {
         if (file.status !== 'error') {
           const responseObject = $.parseJSON(file.xhr.response);
           if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
@@ -703,7 +697,7 @@ class AdminModuleController {
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;
-      },
+      }
     };
 
     dropzone.dropzone($.extend(dropzoneOptions));
@@ -721,7 +715,9 @@ class AdminModuleController {
 
   animateEndUpload(callback) {
     const self = this;
-    $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
+    $(self.moduleImportProcessingSelector)
+      .finish()
+      .fadeOut(callback);
   }
 
   /**
@@ -775,26 +771,35 @@ class AdminModuleController {
     const modal = self.moduleCardController.replacePrestaTrustPlaceholders(result);
     const moduleName = result.module.attributes.name;
 
-    $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
-    $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
+    $(this.moduleImportConfirmSelector)
+      .html(modal.find('.modal-body').html())
+      .fadeIn();
+    $(this.dropZoneModalFooterSelector)
+      .html(modal.find('.modal-footer').html())
+      .fadeIn();
 
-    $(this.dropZoneModalFooterSelector).find('.pstrust-install').off('click').on('click', () => {
-      $(self.moduleImportConfirmSelector).hide();
-      $(self.dropZoneModalFooterSelector).html('');
-      self.animateStartUpload();
+    $(this.dropZoneModalFooterSelector)
+      .find('.pstrust-install')
+      .off('click')
+      .on('click', () => {
+        $(self.moduleImportConfirmSelector).hide();
+        $(self.dropZoneModalFooterSelector).html('');
+        self.animateStartUpload();
 
-      // Install ajax call
-      $.post(result.module.attributes.urls.install, {'actionParams[confirmPrestaTrust]': '1'})
-        .done((data) => {
-          self.displayOnUploadDone(data[moduleName]);
+        // Install ajax call
+        $.post(result.module.attributes.urls.install, {
+          'actionParams[confirmPrestaTrust]': '1'
         })
-        .fail((data) => {
-          self.displayOnUploadError(data[moduleName]);
-        })
-        .always(() => {
-          self.isUploadStarted = false;
-        });
-    });
+          .done(data => {
+            self.displayOnUploadDone(data[moduleName]);
+          })
+          .fail(data => {
+            self.displayOnUploadError(data[moduleName]);
+          })
+          .always(() => {
+            self.isUploadStarted = false;
+          });
+      });
   }
 
   getBulkCheckboxesSelector() {
@@ -803,7 +808,6 @@ class AdminModuleController {
       : this.bulkActionCheckboxListSelector;
   }
 
-
   getBulkCheckboxesCheckedSelector() {
     return this.currentDisplay === this.DISPLAY_GRID
       ? this.checkedBulkActionGridSelector
@@ -811,9 +815,7 @@ class AdminModuleController {
   }
 
   getModuleItemSelector() {
-    return this.currentDisplay === this.DISPLAY_GRID
-      ? this.moduleItemGridSelector
-      : this.moduleItemListSelector;
+    return this.currentDisplay === this.DISPLAY_GRID ? this.moduleItemGridSelector : this.moduleItemListSelector;
   }
 
   /**
@@ -822,10 +824,7 @@ class AdminModuleController {
    */
   getNotificationsCount() {
     const self = this;
-    $.getJSON(
-      window.moduleURLs.notificationsCount,
-      self.updateNotificationsCount,
-    ).fail(() => {
+    $.getJSON(window.moduleURLs.notificationsCount, self.updateNotificationsCount).fail(() => {
       console.error('Could not retrieve module notifications count.');
     });
   }
@@ -833,10 +832,10 @@ class AdminModuleController {
   updateNotificationsCount(badge) {
     const destinationTabs = {
       to_configure: $('#subtab-AdminModulesNotifications'),
-      to_update: $('#subtab-AdminModulesUpdates'),
+      to_update: $('#subtab-AdminModulesUpdates')
     };
 
-    Object.keys(destinationTabs).forEach((destinationKey) => {
+    Object.keys(destinationTabs).forEach(destinationKey => {
       if (destinationTabs[destinationKey].length !== 0) {
         destinationTabs[destinationKey].find('.notification-counter').text(badge[destinationKey]);
       }
@@ -845,18 +844,14 @@ class AdminModuleController {
 
   initAddonsSearch() {
     const self = this;
-    $('body').on(
-      'click',
-      `${self.addonItemGridSelector}, ${self.addonItemListSelector}`,
-      () => {
-        let searchQuery = '';
-        if (self.currentTagsList.length) {
-          searchQuery = encodeURIComponent(self.currentTagsList.join(' '));
-        }
+    $('body').on('click', `${self.addonItemGridSelector}, ${self.addonItemListSelector}`, () => {
+      let searchQuery = '';
+      if (self.currentTagsList.length) {
+        searchQuery = encodeURIComponent(self.currentTagsList.join(' '));
+      }
 
-        window.open(`${self.baseAddonsUrl}search.php?search_query=${searchQuery}`, '_blank');
-      },
-    );
+      window.open(`${self.baseAddonsUrl}search.php?search_query=${searchQuery}`, '_blank');
+    });
   }
 
   initCategoriesGrid() {
@@ -898,19 +893,19 @@ class AdminModuleController {
   initSortingDropdown() {
     const self = this;
 
-    self.currentSorting = $(this.moduleSortingDropdownSelector).find(':checked').attr('value');
+    self.currentSorting = $(this.moduleSortingDropdownSelector)
+      .find(':checked')
+      .attr('value');
     if (!self.currentSorting) {
       self.currentSorting = 'access-desc';
     }
 
-    $('body').on(
-      'change',
-      self.moduleSortingDropdownSelector,
-      function initializeBodySortingChange() {
-        self.currentSorting = $(this).find(':checked').attr('value');
-        self.updateModuleVisibility();
-      },
-    );
+    $('body').on('change', self.moduleSortingDropdownSelector, function initializeBodySortingChange() {
+      self.currentSorting = $(this)
+        .find(':checked')
+        .attr('value');
+      self.updateModuleVisibility();
+    });
   }
 
   doBulkAction(requestedBulkAction) {
@@ -924,20 +919,16 @@ class AdminModuleController {
       'bulk-enable': 'enable',
       'bulk-disable-mobile': 'disable_mobile',
       'bulk-enable-mobile': 'enable_mobile',
-      'bulk-reset': 'reset',
+      'bulk-reset': 'reset'
     };
 
     // Note no grid selector used yet since we do not needed it at dev time
     // Maybe useful to implement this kind of things later if intended to
     // use this functionality elsewhere but "manage my module" section
     if (typeof bulkActionToUrl[requestedBulkAction] === 'undefined') {
-      $.growl.error(
-        {
-          message: window
-            .translate_javascripts['Bulk Action - Request not found']
-            .replace('[1]', requestedBulkAction),
-        },
-      );
+      $.growl.error({
+        message: window.translate_javascripts['Bulk Action - Request not found'].replace('[1]', requestedBulkAction)
+      });
       return false;
     }
 
@@ -956,7 +947,9 @@ class AdminModuleController {
       moduleTechName = $(this).data('tech-name');
       modulesActions.push({
         techName: moduleTechName,
-        actionMenuObj: $(this).closest('.module-checkbox-bulk-list').next(),
+        actionMenuObj: $(this)
+          .closest('.module-checkbox-bulk-list')
+          .next()
       });
     });
 
@@ -1003,7 +996,7 @@ class AdminModuleController {
         actionMenuLink,
         forceDeletion,
         disableCacheClear,
-        requestEndCallback,
+        requestEndCallback
       );
     }
 
@@ -1030,7 +1023,7 @@ class AdminModuleController {
       $.each(actions, (index, moduleData) => {
         actionMenuLink = $(
           self.moduleCardController.moduleActionMenuLinkSelector + bulkModuleAction,
-          moduleData.actionMenuObj,
+          moduleData.actionMenuObj
         );
         if (actionMenuLink.length > 0) {
           menuLinks.push(actionMenuLink);
@@ -1038,7 +1031,7 @@ class AdminModuleController {
           $.growl.error({
             message: window.translate_javascripts['Bulk Action - Request not available for module']
               .replace('[1]', bulkModuleAction)
-              .replace('[2]', moduleData.techName),
+              .replace('[2]', moduleData.techName)
           });
         }
       });
@@ -1049,28 +1042,24 @@ class AdminModuleController {
 
   initActionButtons() {
     const self = this;
-    $('body').on(
-      'click',
-      self.moduleInstallBtnSelector,
-      function initializeActionButtonsClick(event) {
-        const $this = $(this);
-        const $next = $($this.next());
-        event.preventDefault();
+    $('body').on('click', self.moduleInstallBtnSelector, function initializeActionButtonsClick(event) {
+      const $this = $(this);
+      const $next = $($this.next());
+      event.preventDefault();
 
-        $this.hide();
-        $next.show();
+      $this.hide();
+      $next.show();
 
-        $.ajax({
-          url: $this.data('url'),
-          dataType: 'json',
-        }).done(() => {
-          $next.fadeOut();
-        });
-      },
-    );
+      $.ajax({
+        url: $this.data('url'),
+        dataType: 'json'
+      }).done(() => {
+        $next.fadeOut();
+      });
+    });
 
     // "Upgrade All" button handler
-    $('body').on('click', self.upgradeAllSource, (event) => {
+    $('body').on('click', self.upgradeAllSource, event => {
       event.preventDefault();
 
       if ($(self.upgradeAllTargets).length <= 0) {
@@ -1085,7 +1074,7 @@ class AdminModuleController {
         moduleTechName = moduleItemList.data('tech-name');
         modulesActions.push({
           techName: moduleTechName,
-          actionMenuObj: $('.module-actions', moduleItemList),
+          actionMenuObj: $('.module-actions', moduleItemList)
         });
       });
 
@@ -1098,41 +1087,33 @@ class AdminModuleController {
   initCategorySelect() {
     const self = this;
     const body = $('body');
-    body.on(
-      'click',
-      self.categoryItemSelector,
-      function initializeCategorySelectClick() {
-        // Get data from li DOM input
-        self.currentRefCategory = $(this).data('category-ref');
-        self.currentRefCategory = self.currentRefCategory ? String(self.currentRefCategory).toLowerCase() : null;
-        // Change dropdown label to set it to the current category's displayname
-        $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
-        $(self.categoryResetBtnSelector).show();
-        self.updateModuleVisibility();
-      },
-    );
+    body.on('click', self.categoryItemSelector, function initializeCategorySelectClick() {
+      // Get data from li DOM input
+      self.currentRefCategory = $(this).data('category-ref');
+      self.currentRefCategory = self.currentRefCategory ? String(self.currentRefCategory).toLowerCase() : null;
+      // Change dropdown label to set it to the current category's displayname
+      $(self.categorySelectorLabelSelector).text($(this).data('category-display-name'));
+      $(self.categoryResetBtnSelector).show();
+      self.updateModuleVisibility();
+    });
 
-    body.on(
-      'click',
-      self.categoryResetBtnSelector,
-      function initializeCategoryResetButtonClick() {
-        const rawText = $(self.categorySelector).attr('aria-labelledby');
-        const upperFirstLetter = rawText.charAt(0).toUpperCase();
-        const removedFirstLetter = rawText.slice(1);
-        const originalText = upperFirstLetter + removedFirstLetter;
+    body.on('click', self.categoryResetBtnSelector, function initializeCategoryResetButtonClick() {
+      const rawText = $(self.categorySelector).attr('aria-labelledby');
+      const upperFirstLetter = rawText.charAt(0).toUpperCase();
+      const removedFirstLetter = rawText.slice(1);
+      const originalText = upperFirstLetter + removedFirstLetter;
 
-        $(self.categorySelectorLabelSelector).text(originalText);
-        $(this).hide();
-        self.currentRefCategory = null;
-        self.updateModuleVisibility();
-      },
-    );
+      $(self.categorySelectorLabelSelector).text(originalText);
+      $(this).hide();
+      self.currentRefCategory = null;
+      self.updateModuleVisibility();
+    });
   }
 
   initSearchBlock() {
     const self = this;
     self.pstaggerInput = $('#module-search-bar').pstagger({
-      onTagsChanged: (tagList) => {
+      onTagsChanged: tagList => {
         self.currentTagsList = tagList;
         self.updateModuleVisibility();
       },
@@ -1142,10 +1123,10 @@ class AdminModuleController {
       },
       inputPlaceholder: window.translate_javascripts['Search - placeholder'],
       closingCross: true,
-      context: self,
+      context: self
     });
 
-    $('body').on('click', '.module-addons-search-link', (event) => {
+    $('body').on('click', '.module-addons-search-link', event => {
       event.preventDefault();
       event.stopPropagation();
       window.open($(this).attr('href'), '_blank');
@@ -1158,18 +1139,14 @@ class AdminModuleController {
   initSortingDisplaySwitch() {
     const self = this;
 
-    $('body').on(
-      'click',
-      '.module-sort-switch',
-      function switchSort() {
-        const switchTo = $(this).data('switch');
-        const isAlreadyDisplayed = $(this).hasClass('active-display');
-        if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
-          self.switchSortingDisplayTo(switchTo);
-          self.currentDisplay = switchTo;
-        }
-      },
-    );
+    $('body').on('click', '.module-sort-switch', function switchSort() {
+      const switchTo = $(this).data('switch');
+      const isAlreadyDisplayed = $(this).hasClass('active-display');
+      if (typeof switchTo !== 'undefined' && isAlreadyDisplayed === false) {
+        self.switchSortingDisplayTo(switchTo);
+        self.currentDisplay = switchTo;
+      }
+    });
   }
 
   switchSortingDisplayTo(switchTo) {
