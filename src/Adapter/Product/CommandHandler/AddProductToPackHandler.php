@@ -44,8 +44,7 @@ final class AddProductToPackHandler extends AbstractProductHandler implements Ad
      */
     public function handle(AddProductToPackCommand $command): void
     {
-        //@todo: ref AdminProductsController::3117 updatePackItems()
-        // Product that is being edited becomes the Pack.
+        // Pack will have the id of product which is being edited
         $pack = $this->getProduct($command->getPackId());
         $productId = $command->getProductId()->getValue();
         $combinationId = $command->getCombinationId();
