@@ -32,7 +32,7 @@ module.exports = class Email extends BOBasePage {
     this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
     // Email form
     this.logEmailsLabel = toggle => `label[for='form_log_emails_${toggle}']`;
-    this.saveEmailFormButton = '#form-email-configuration-save-button';
+    this.saveEmailFormButton = '#form-log-email-save-button';
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
     this.sendTestEmailInput = '#test_email_sending_send_email_to';
