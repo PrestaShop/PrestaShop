@@ -28,19 +28,57 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssignProductToCategoriesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Exception\ProductException;
+use PrestaShopException;
+use Product;
 
 /**
  * Handles AssignProductToCategoriesCommand using legacy object model
  */
-final class AssignProductToCategoriesHandler implements AssignProductToCategoriesHandlerInterface
+final class AssignProductToCategoriesHandler extends AbstractProductHandler implements AssignProductToCategoriesHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(AssignProductToCategoriesCommand $command): void
     {
-        // TODO: Implement handle() method.
+        $product = $this->getProduct($command->getProductId());
+
+        $categoryIds = array_map(function (CategoryId $categoryId) {
+            return $categoryId->getValue();
+        }, $command->getCategoryIds());
+
+        $product->addToCategories($categoryIds);
+        $product->id_category_default = $command->getDefaultCategoryId()->getValue();
+
+        $this->performUpdate($product);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws CannotUpdateProductException
+     */
+    private function performUpdate(Product $product): void
+    {
+        try {
+            if (false === $product->update()) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to assign product #%s to categories', $product->id),
+                    CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                sprintf('Error occurred when trying to assign product #%s to categories', $product->id),
+                0,
+                $e
+            );
+        }
     }
 }
