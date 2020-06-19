@@ -82,6 +82,9 @@
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
       {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
     {% endif %}
+    {% if required %}
+      <span class="text-danger">*</span>
+    {% endif %}
     </label>
 
   {%- endif -%}
