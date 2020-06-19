@@ -108,23 +108,25 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      */
     public function addProductToPack(string $type, int $quantity, string $productReference, string $packReference)
     {
-        if (ProductType::TYPE_STANDARD == $type || ProductType::TYPE_PACK === $type) {
-            $packId = $this->getSharedStorage()->get($packReference);
-            $productId = $this->getSharedStorage()->get($productReference);
+        $combinationId = null;
 
-            try {
-                $this->getCommandBus()->handle(new AddProductToPackCommand(
-                    $packId,
-                    $productId,
-                    $quantity,
-                    null
-                ));
-            } catch (ProductException $e) {
-                $this->lastException = $e;
-            }
-        } else {
-            throw new RuntimeException(sprintf('Invalid type %s', $type));
-            //@todo; case for combinational product later
+        if (ProductType::TYPE_COMBINATION === $type) {
+            //@todo: handle combination adding
+//            $combinationId = //get combination id
+        }
+
+        $packId = $this->getSharedStorage()->get($packReference);
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $this->getCommandBus()->handle(new AddProductToPackCommand(
+                $packId,
+                $productId,
+                $quantity,
+                $combinationId
+            ));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
         }
     }
 
