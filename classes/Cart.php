@@ -3791,6 +3791,8 @@ class CartCore extends ObjectModel
 
         $products = $this->getProducts($refresh);
 
+        $specific_price_output = null;
+
         foreach ($products as $key => &$product) {
             $product['price_without_quantity_discount'] = Product::getPriceStatic(
                 $product['id_product'],
@@ -3799,7 +3801,18 @@ class CartCore extends ObjectModel
                 6,
                 null,
                 false,
-                false
+                false,
+                1,
+                false,
+                null,
+                null,
+                null,
+                $specific_price_output,
+                true,
+                true,
+                null,
+                true,
+                $product['id_customization']
             );
 
             if ($product['reduction_type'] == 'amount') {
