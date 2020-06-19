@@ -49,7 +49,7 @@
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            <button class="btn btn-primary">{{ 'Generate PDF file by status'|trans }}</button>
+            <button class="btn btn-primary" id="generate-pdf-by-status-button">{{ 'Generate PDF file by status'|trans }}</button>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@
         <i class="md-checkbox-control"></i>
         {% set badgeType = orders_count > 0 ? 'success' : 'danger' %}
         <span class="badge badge-{{ badgeType }}">{{ orders_count }}</span>
-        <span>
+        <span class="status-name">
           {{- label is not same as(false) ? label|raw -}}
         </span>
       </label>

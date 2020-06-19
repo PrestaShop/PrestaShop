@@ -14,14 +14,14 @@ module.exports = class DeliverySlips extends BOBasePage {
     this.generateByDateForm = '#form-delivery-slips-print-pdf';
     this.dateFromInput = '#slip_pdf_form_date_from';
     this.dateToInput = '#slip_pdf_form_date_to';
-    this.generatePdfByDateButton = `${this.generateByDateForm} .card-footer button`;
+    this.generatePdfByDateButton = `${this.generateByDateForm} #generate-delivery-slip-by-date`;
 
     // Delivery slip options form
     this.deliverySlipForm = '#form-delivery-slips-options';
     this.deliveryPrefixInput = '#form_prefix_1';
     this.deliveryNumberInput = '#form_number';
     this.deliveryEnableProductImage = id => `${this.deliverySlipForm} label[for='form_enable_product_image_${id}']`;
-    this.saveDeliverySlipOptionsButton = `${this.deliverySlipForm} .card-footer button`;
+    this.saveDeliverySlipOptionsButton = `${this.deliverySlipForm} #save-delivery-slip-options-button`;
   }
 
   /*

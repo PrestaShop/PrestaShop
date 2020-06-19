@@ -17,12 +17,12 @@ module.exports = class Invoice extends BOBasePage {
     this.generateByDateForm = '#form-generate-invoices-by-date';
     this.dateFromInput = `${this.generateByDateForm} #form_date_from`;
     this.dateToInput = `${this.generateByDateForm} #form_date_to`;
-    this.generatePdfByDateButton = `${this.generateByDateForm} button`;
+    this.generatePdfByDateButton = `${this.generateByDateForm} #generate-pdf-by-date-button`;
 
     // By order status form
     this.generateByStatusForm = '#form-generate-invoices-by-status';
-    this.statusOrderStateSpan = `${this.generateByStatusForm} span:not(.badge)`;
-    this.generatePdfByStatusButton = `${this.generateByStatusForm} button`;
+    this.statusOrderStateSpan = `${this.generateByStatusForm} span.status-name`;
+    this.generatePdfByStatusButton = `${this.generateByStatusForm} #generate-pdf-by-status-button`;
 
     // Invoice options form
     this.invoiceOptionsForm = '#form-invoices-options';
@@ -33,7 +33,7 @@ module.exports = class Invoice extends BOBasePage {
     this.invoiceNumberInput = '#form_invoice_number';
     this.legalFreeTextInput = '#form_legal_free_text_1';
     this.footerTextInput = '#form_footer_text_1';
-    this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} .btn.btn-primary`;
+    this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} #save-invoices-options-button`;
     this.invoicePrefixInput = '#form_invoice_prefix_1';
     this.invoiceAddCurrentYear = id => `${this.invoiceOptionsForm} label[for='form_add_current_year_${id}']`;
     this.optionYearPositionRadioButton = id => `#form_year_position_${id}`;
