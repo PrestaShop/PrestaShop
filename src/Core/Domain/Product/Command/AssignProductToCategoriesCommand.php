@@ -29,9 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class AssignProductToCategoriesCommand
 {
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
     /**
      * @var CategoryId
      */
@@ -43,12 +49,15 @@ class AssignProductToCategoriesCommand
     private $categoryIds;
 
     /**
+     * @param int $productId
      * @param int $defaultCategoryId
      * @param int[] $categoryIds
      */
-    public function __construct(int $defaultCategoryId, array $categoryIds)
+    public function __construct(int $productId, int $defaultCategoryId, array $categoryIds)
     {
         $this->defaultCategoryId = new CategoryId($defaultCategoryId);
+        $this->productId = new ProductId($productId);
+
         $this->categoryIds = array_map(
             function ($id) {
                 return new CategoryId($id);
@@ -62,6 +71,14 @@ class AssignProductToCategoriesCommand
     public function getDefaultCategoryId(): CategoryId
     {
         return $this->defaultCategoryId;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
     }
 
     /**
