@@ -215,17 +215,6 @@ final class FilterableEmployeeGridDefinitionFactory extends AbstractFilterableGr
                 ])
                 ->setAssociatedColumn('profile')
             )
-            ->add(
-                (new Filter('active', ChoiceType::class))
-                ->setTypeOptions([
-                    'choices' => [
-                        $this->trans('Yes', [], 'Admin.Global') => 1,
-                        $this->trans('No', [], 'Admin.Global') => 0,
-                    ],
-                    'required' => false,
-                    'choice_translation_domain' => false,
-                ])
-            )
             ->add((new Filter('active', YesAndNoChoiceType::class))
                 ->setAssociatedColumn('active')
             )
