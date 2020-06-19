@@ -926,11 +926,12 @@ class OrderCore extends ObjectModel
             $context = Context::getContext();
         }
 
-        $orderStates = OrderState::getOrderStates((int) $context->language->id);
+        $orderStates = OrderState::getOrderStates((int) $context->language->id, false);
         $indexedOrderStates = [];
         foreach ($orderStates as $orderState) {
             $indexedOrderStates[$orderState['id_order_state']] = $orderState;
         }
+
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT o.*,
           (SELECT SUM(od.`product_quantity`) FROM `' . _DB_PREFIX_ . 'order_detail` od WHERE od.`id_order` = o.`id_order`) nb_products,
