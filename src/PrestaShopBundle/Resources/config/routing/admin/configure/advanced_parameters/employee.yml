@@ -13,7 +13,7 @@ admin_employees_search:
     _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:submitFilteremployee
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.employee
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.filterable_employee
     redirectRoute: admin_employees_index
 
 admin_employees_save_options:
