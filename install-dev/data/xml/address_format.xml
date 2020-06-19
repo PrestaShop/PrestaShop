@@ -5,7 +5,7 @@
     <field name="format"/>
   </fields>
   <entities>
-    <address_format id_country="DE">
+    <address_format id="address_format_1" id_country="DE">
       <format>firstname lastname
 company
 vat_number
@@ -15,7 +15,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AT">
+    <address_format id="address_format_2" id_country="AT">
       <format>firstname lastname
 company
 vat_number
@@ -25,7 +25,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BE">
+    <address_format id="address_format_3" id_country="BE">
       <format>firstname lastname
 company
 vat_number
@@ -35,7 +35,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CA">
+    <address_format id="address_format_4" id_country="CA">
       <format>firstname lastname
 company
 address1
@@ -44,7 +44,7 @@ city State:name postcode
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CN">
+    <address_format id="address_format_5" id_country="CN">
       <format>firstname lastname
 company
 vat_number
@@ -54,7 +54,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ES">
+    <address_format id="address_format_6" id_country="ES">
       <format>firstname lastname
 company
 vat_number
@@ -64,7 +64,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="FI">
+    <address_format id="address_format_7" id_country="FI">
       <format>firstname lastname
 company
 vat_number
@@ -74,7 +74,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="FR">
+    <address_format id="address_format_8" id_country="FR">
       <format>firstname lastname
 company
 vat_number
@@ -84,7 +84,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GR">
+    <address_format id="address_format_9" id_country="GR">
       <format>firstname lastname
 company
 vat_number
@@ -94,18 +94,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IT">
-      <format>firstname lastname
-company
-vat_number
-address1
-address2
-postcode city
-State:name
-Country:name
-phone</format>
-    </address_format>
-    <address_format id_country="JP">
+    <address_format id="address_format_10" id_country="IT">
       <format>firstname lastname
 company
 vat_number
@@ -116,7 +105,18 @@ State:name
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LU">
+    <address_format id="address_format_11" id_country="JP">
+      <format>firstname lastname
+company
+vat_number
+address1
+address2
+postcode city
+State:name
+Country:name
+phone</format>
+    </address_format>
+    <address_format id="address_format_12" id_country="LU">
       <format>firstname lastname
 company
 vat_number
@@ -126,7 +126,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NL">
+    <address_format id="address_format_13" id_country="NL">
       <format>firstname lastname
 company
 vat_number
@@ -136,7 +136,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PL">
+    <address_format id="address_format_14" id_country="PL">
       <format>firstname lastname
 company
 vat_number
@@ -146,7 +146,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PT">
+    <address_format id="address_format_15" id_country="PT">
       <format>firstname lastname
 company
 vat_number
@@ -156,7 +156,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CZ">
+    <address_format id="address_format_16" id_country="CZ">
       <format>firstname lastname
 company
 vat_number
@@ -166,7 +166,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GB">
+    <address_format id="address_format_17" id_country="GB">
       <format>firstname lastname
 company
 vat_number
@@ -177,7 +177,7 @@ postcode
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SE">
+    <address_format id="address_format_18" id_country="SE">
       <format>firstname lastname
 company
 vat_number
@@ -187,7 +187,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CH">
+    <address_format id="address_format_19" id_country="CH">
       <format>firstname lastname
 company
 vat_number
@@ -197,7 +197,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="DK">
+    <address_format id="address_format_20" id_country="DK">
       <format>firstname lastname
 company
 vat_number
@@ -207,7 +207,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="US">
+    <address_format id="address_format_21" id_country="US">
       <format>firstname lastname
 company
 address1 address2
@@ -215,7 +215,7 @@ city, State:name postcode
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="HK">
+    <address_format id="address_format_22" id_country="HK">
       <format>firstname lastname
 company
 vat_number
@@ -225,7 +225,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NO">
+    <address_format id="address_format_23" id_country="NO">
       <format>firstname lastname
 company
 vat_number
@@ -235,7 +235,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AU">
+    <address_format id="address_format_24" id_country="AU">
       <format>firstname lastname
 company
 vat_number
@@ -245,7 +245,7 @@ city State:iso_code postcode
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SG">
+    <address_format id="address_format_25" id_country="SG">
       <format>firstname lastname
 company
 vat_number
@@ -255,7 +255,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IE">
+    <address_format id="address_format_26" id_country="IE">
       <format>firstname lastname
 company
 vat_number
@@ -265,7 +265,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NZ">
+    <address_format id="address_format_27" id_country="NZ">
       <format>firstname lastname
 company
 vat_number
@@ -275,7 +275,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KR">
+    <address_format id="address_format_28" id_country="KR">
       <format>firstname lastname
 company
 vat_number
@@ -285,7 +285,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IL">
+    <address_format id="address_format_29" id_country="IL">
       <format>firstname lastname
 company
 vat_number
@@ -295,7 +295,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ZA">
+    <address_format id="address_format_30" id_country="ZA">
       <format>firstname lastname
 company
 vat_number
@@ -305,7 +305,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NG">
+    <address_format id="address_format_31" id_country="NG">
       <format>firstname lastname
 company
 vat_number
@@ -315,7 +315,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CI">
+    <address_format id="address_format_32" id_country="CI">
       <format>firstname lastname
 company
 vat_number
@@ -325,7 +325,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TG">
+    <address_format id="address_format_33" id_country="TG">
       <format>firstname lastname
 company
 vat_number
@@ -335,7 +335,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BO">
+    <address_format id="address_format_34" id_country="BO">
       <format>firstname lastname
 company
 vat_number
@@ -345,7 +345,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MU">
+    <address_format id="address_format_35" id_country="MU">
       <format>firstname lastname
 company
 vat_number
@@ -355,7 +355,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="RO">
+    <address_format id="address_format_36" id_country="RO">
       <format>firstname lastname
 company
 vat_number
@@ -365,7 +365,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SK">
+    <address_format id="address_format_37" id_country="SK">
       <format>firstname lastname
 company
 vat_number
@@ -375,7 +375,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="DZ">
+    <address_format id="address_format_38" id_country="DZ">
       <format>firstname lastname
 company
 vat_number
@@ -385,7 +385,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AS">
+    <address_format id="address_format_39" id_country="AS">
       <format>firstname lastname
 company
 vat_number
@@ -395,7 +395,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AD">
+    <address_format id="address_format_40" id_country="AD">
       <format>firstname lastname
 company
 vat_number
@@ -405,7 +405,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AO">
+    <address_format id="address_format_41" id_country="AO">
       <format>firstname lastname
 company
 vat_number
@@ -415,7 +415,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AI">
+    <address_format id="address_format_42" id_country="AI">
       <format>firstname lastname
 company
 vat_number
@@ -425,7 +425,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AG">
+    <address_format id="address_format_43" id_country="AG">
       <format>firstname lastname
 company
 vat_number
@@ -435,7 +435,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AR">
+    <address_format id="address_format_44" id_country="AR">
       <format>firstname lastname
 company
 vat_number
@@ -446,7 +446,7 @@ State:name
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AM">
+    <address_format id="address_format_45" id_country="AM">
       <format>firstname lastname
 company
 vat_number
@@ -456,7 +456,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AW">
+    <address_format id="address_format_46" id_country="AW">
       <format>firstname lastname
 company
 vat_number
@@ -466,7 +466,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AZ">
+    <address_format id="address_format_47" id_country="AZ">
       <format>firstname lastname
 company
 vat_number
@@ -476,7 +476,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BS">
+    <address_format id="address_format_48" id_country="BS">
       <format>firstname lastname
 company
 vat_number
@@ -486,7 +486,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BH">
+    <address_format id="address_format_49" id_country="BH">
       <format>firstname lastname
 company
 vat_number
@@ -496,7 +496,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BD">
+    <address_format id="address_format_50" id_country="BD">
       <format>firstname lastname
 company
 vat_number
@@ -506,7 +506,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BB">
+    <address_format id="address_format_51" id_country="BB">
       <format>firstname lastname
 company
 vat_number
@@ -516,7 +516,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BY">
+    <address_format id="address_format_52" id_country="BY">
       <format>firstname lastname
 company
 vat_number
@@ -526,7 +526,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BZ">
+    <address_format id="address_format_53" id_country="BZ">
       <format>firstname lastname
 company
 vat_number
@@ -536,7 +536,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BJ">
+    <address_format id="address_format_54" id_country="BJ">
       <format>firstname lastname
 company
 vat_number
@@ -546,7 +546,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BM">
+    <address_format id="address_format_55" id_country="BM">
       <format>firstname lastname
 company
 vat_number
@@ -556,7 +556,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BT">
+    <address_format id="address_format_56" id_country="BT">
       <format>firstname lastname
 company
 vat_number
@@ -566,7 +566,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BW">
+    <address_format id="address_format_57" id_country="BW">
       <format>firstname lastname
 company
 vat_number
@@ -576,7 +576,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BR">
+    <address_format id="address_format_58" id_country="BR">
       <format>firstname lastname
 company
 vat_number
@@ -586,7 +586,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BN">
+    <address_format id="address_format_59" id_country="BN">
       <format>firstname lastname
 company
 vat_number
@@ -596,7 +596,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BF">
+    <address_format id="address_format_60" id_country="BF">
       <format>firstname lastname
 company
 vat_number
@@ -606,7 +606,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MM">
+    <address_format id="address_format_61" id_country="MM">
       <format>firstname lastname
 company
 vat_number
@@ -616,7 +616,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BI">
+    <address_format id="address_format_62" id_country="BI">
       <format>firstname lastname
 company
 vat_number
@@ -626,7 +626,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KH">
+    <address_format id="address_format_63" id_country="KH">
       <format>firstname lastname
 company
 vat_number
@@ -636,7 +636,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CM">
+    <address_format id="address_format_64" id_country="CM">
       <format>firstname lastname
 company
 vat_number
@@ -646,7 +646,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CV">
+    <address_format id="address_format_65" id_country="CV">
       <format>firstname lastname
 company
 vat_number
@@ -656,7 +656,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CF">
+    <address_format id="address_format_66" id_country="CF">
       <format>firstname lastname
 company
 vat_number
@@ -666,7 +666,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TD">
+    <address_format id="address_format_67" id_country="TD">
       <format>firstname lastname
 company
 vat_number
@@ -676,7 +676,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CL">
+    <address_format id="address_format_68" id_country="CL">
       <format>firstname lastname
 company
 vat_number
@@ -686,7 +686,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CO">
+    <address_format id="address_format_69" id_country="CO">
       <format>firstname lastname
 company
 vat_number
@@ -696,7 +696,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KM">
+    <address_format id="address_format_70" id_country="KM">
       <format>firstname lastname
 company
 vat_number
@@ -706,7 +706,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CD">
+    <address_format id="address_format_71" id_country="CD">
       <format>firstname lastname
 company
 vat_number
@@ -716,7 +716,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CG">
+    <address_format id="address_format_72" id_country="CG">
       <format>firstname lastname
 company
 vat_number
@@ -726,7 +726,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CR">
+    <address_format id="address_format_73" id_country="CR">
       <format>firstname lastname
 company
 vat_number
@@ -736,7 +736,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="HR">
+    <address_format id="address_format_74" id_country="HR">
       <format>firstname lastname
 company
 vat_number
@@ -746,7 +746,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CU">
+    <address_format id="address_format_75" id_country="CU">
       <format>firstname lastname
 company
 vat_number
@@ -756,7 +756,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CY">
+    <address_format id="address_format_76" id_country="CY">
       <format>firstname lastname
 company
 vat_number
@@ -766,7 +766,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="DJ">
+    <address_format id="address_format_77" id_country="DJ">
       <format>firstname lastname
 company
 vat_number
@@ -776,7 +776,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="DM">
+    <address_format id="address_format_78" id_country="DM">
       <format>firstname lastname
 company
 vat_number
@@ -786,7 +786,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="DO">
+    <address_format id="address_format_79" id_country="DO">
       <format>firstname lastname
 company
 vat_number
@@ -796,7 +796,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TL">
+    <address_format id="address_format_80" id_country="TL">
       <format>firstname lastname
 company
 vat_number
@@ -806,7 +806,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="EC">
+    <address_format id="address_format_81" id_country="EC">
       <format>firstname lastname
 company
 vat_number
@@ -816,7 +816,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="EG">
+    <address_format id="address_format_82" id_country="EG">
       <format>firstname lastname
 company
 vat_number
@@ -826,7 +826,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SV">
+    <address_format id="address_format_83" id_country="SV">
       <format>firstname lastname
 company
 vat_number
@@ -836,7 +836,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GQ">
+    <address_format id="address_format_84" id_country="GQ">
       <format>firstname lastname
 company
 vat_number
@@ -846,7 +846,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ER">
+    <address_format id="address_format_85" id_country="ER">
       <format>firstname lastname
 company
 vat_number
@@ -856,7 +856,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="EE">
+    <address_format id="address_format_86" id_country="EE">
       <format>firstname lastname
 company
 vat_number
@@ -866,7 +866,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ET">
+    <address_format id="address_format_87" id_country="ET">
       <format>firstname lastname
 company
 vat_number
@@ -876,7 +876,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="FK">
+    <address_format id="address_format_88" id_country="FK">
       <format>firstname lastname
 company
 vat_number
@@ -886,7 +886,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="FO">
+    <address_format id="address_format_89" id_country="FO">
       <format>firstname lastname
 company
 vat_number
@@ -896,7 +896,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="FJ">
+    <address_format id="address_format_90" id_country="FJ">
       <format>firstname lastname
 company
 vat_number
@@ -906,7 +906,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GA">
+    <address_format id="address_format_91" id_country="GA">
       <format>firstname lastname
 company
 vat_number
@@ -916,7 +916,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GM">
+    <address_format id="address_format_92" id_country="GM">
       <format>firstname lastname
 company
 vat_number
@@ -926,7 +926,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GE">
+    <address_format id="address_format_93" id_country="GE">
       <format>firstname lastname
 company
 vat_number
@@ -936,7 +936,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GH">
+    <address_format id="address_format_94" id_country="GH">
       <format>firstname lastname
 company
 vat_number
@@ -946,7 +946,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GD">
+    <address_format id="address_format_95" id_country="GD">
       <format>firstname lastname
 company
 vat_number
@@ -956,7 +956,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GL">
+    <address_format id="address_format_96" id_country="GL">
       <format>firstname lastname
 company
 vat_number
@@ -966,7 +966,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GI">
+    <address_format id="address_format_97" id_country="GI">
       <format>firstname lastname
 company
 vat_number
@@ -976,7 +976,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GP">
+    <address_format id="address_format_98" id_country="GP">
       <format>firstname lastname
 company
 vat_number
@@ -986,7 +986,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GU">
+    <address_format id="address_format_99" id_country="GU">
       <format>firstname lastname
 company
 vat_number
@@ -996,7 +996,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GT">
+    <address_format id="address_format_100" id_country="GT">
       <format>firstname lastname
 company
 vat_number
@@ -1006,7 +1006,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GG">
+    <address_format id="address_format_101" id_country="GG">
       <format>firstname lastname
 company
 vat_number
@@ -1016,7 +1016,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GN">
+    <address_format id="address_format_102" id_country="GN">
       <format>firstname lastname
 company
 vat_number
@@ -1026,7 +1026,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GW">
+    <address_format id="address_format_103" id_country="GW">
       <format>firstname lastname
 company
 vat_number
@@ -1036,7 +1036,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GY">
+    <address_format id="address_format_104" id_country="GY">
       <format>firstname lastname
 company
 vat_number
@@ -1046,7 +1046,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="HT">
+    <address_format id="address_format_105" id_country="HT">
       <format>firstname lastname
 company
 vat_number
@@ -1056,7 +1056,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="VA">
+    <address_format id="address_format_107" id_country="VA">
       <format>firstname lastname
 company
 vat_number
@@ -1066,7 +1066,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="HN">
+    <address_format id="address_format_108" id_country="HN">
       <format>firstname lastname
 company
 vat_number
@@ -1076,7 +1076,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IS">
+    <address_format id="address_format_109" id_country="IS">
       <format>firstname lastname
 company
 vat_number
@@ -1086,7 +1086,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IN">
+    <address_format id="address_format_110" id_country="IN">
       <format>firstname lastname
 company
 vat_number
@@ -1098,7 +1098,7 @@ State:name
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ID">
+    <address_format id="address_format_111" id_country="ID">
       <format>firstname lastname
 company
 vat_number
@@ -1109,7 +1109,7 @@ State:name
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IR">
+    <address_format id="address_format_112" id_country="IR">
       <format>firstname lastname
 company
 vat_number
@@ -1119,7 +1119,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IQ">
+    <address_format id="address_format_113" id_country="IQ">
       <format>firstname lastname
 company
 vat_number
@@ -1129,7 +1129,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IM">
+    <address_format id="address_format_114" id_country="IM">
       <format>firstname lastname
 company
 vat_number
@@ -1139,7 +1139,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="JM">
+    <address_format id="address_format_115" id_country="JM">
       <format>firstname lastname
 company
 vat_number
@@ -1149,7 +1149,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="JE">
+    <address_format id="address_format_116" id_country="JE">
       <format>firstname lastname
 company
 vat_number
@@ -1159,7 +1159,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="JO">
+    <address_format id="address_format_117" id_country="JO">
       <format>firstname lastname
 company
 vat_number
@@ -1169,7 +1169,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KZ">
+    <address_format id="address_format_118" id_country="KZ">
       <format>firstname lastname
 company
 vat_number
@@ -1179,7 +1179,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KE">
+    <address_format id="address_format_119" id_country="KE">
       <format>firstname lastname
 company
 vat_number
@@ -1189,7 +1189,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KI">
+    <address_format id="address_format_120" id_country="KI">
       <format>firstname lastname
 company
 vat_number
@@ -1199,7 +1199,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KP">
+    <address_format id="address_format_121" id_country="KP">
       <format>firstname lastname
 company
 vat_number
@@ -1209,7 +1209,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KW">
+    <address_format id="address_format_122" id_country="KW">
       <format>firstname lastname
 company
 vat_number
@@ -1219,7 +1219,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KG">
+    <address_format id="address_format_123" id_country="KG">
       <format>firstname lastname
 company
 vat_number
@@ -1229,7 +1229,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LA">
+    <address_format id="address_format_124" id_country="LA">
       <format>firstname lastname
 company
 vat_number
@@ -1239,7 +1239,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LV">
+    <address_format id="address_format_125" id_country="LV">
       <format>firstname lastname
 company
 vat_number
@@ -1249,7 +1249,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LB">
+    <address_format id="address_format_126" id_country="LB">
       <format>firstname lastname
 company
 vat_number
@@ -1259,7 +1259,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LS">
+    <address_format id="address_format_127" id_country="LS">
       <format>firstname lastname
 company
 vat_number
@@ -1269,7 +1269,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LR">
+    <address_format id="address_format_128" id_country="LR">
       <format>firstname lastname
 company
 vat_number
@@ -1279,7 +1279,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LY">
+    <address_format id="address_format_129" id_country="LY">
       <format>firstname lastname
 company
 vat_number
@@ -1289,7 +1289,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LI">
+    <address_format id="address_format_130" id_country="LI">
       <format>firstname lastname
 company
 vat_number
@@ -1299,7 +1299,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LT">
+    <address_format id="address_format_131" id_country="LT">
       <format>firstname lastname
 company
 vat_number
@@ -1309,7 +1309,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MO">
+    <address_format id="address_format_132" id_country="MO">
       <format>firstname lastname
 company
 vat_number
@@ -1319,7 +1319,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MK">
+    <address_format id="address_format_133" id_country="MK">
       <format>firstname lastname
 company
 vat_number
@@ -1329,7 +1329,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MG">
+    <address_format id="address_format_134" id_country="MG">
       <format>firstname lastname
 company
 vat_number
@@ -1339,7 +1339,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MW">
+    <address_format id="address_format_135" id_country="MW">
       <format>firstname lastname
 company
 vat_number
@@ -1349,7 +1349,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MY">
+    <address_format id="address_format_136" id_country="MY">
       <format>firstname lastname
 company
 vat_number
@@ -1359,7 +1359,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MV">
+    <address_format id="address_format_137" id_country="MV">
       <format>firstname lastname
 company
 vat_number
@@ -1369,7 +1369,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ML">
+    <address_format id="address_format_138" id_country="ML">
       <format>firstname lastname
 company
 vat_number
@@ -1379,7 +1379,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MT">
+    <address_format id="address_format_139" id_country="MT">
       <format>firstname lastname
 company
 vat_number
@@ -1389,7 +1389,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MH">
+    <address_format id="address_format_140" id_country="MH">
       <format>firstname lastname
 company
 vat_number
@@ -1399,7 +1399,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MQ">
+    <address_format id="address_format_141" id_country="MQ">
       <format>firstname lastname
 company
 vat_number
@@ -1409,7 +1409,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MR">
+    <address_format id="address_format_142" id_country="MR">
       <format>firstname lastname
 company
 vat_number
@@ -1419,7 +1419,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="HU">
+    <address_format id="address_format_143" id_country="HU">
       <format>firstname lastname
 company
 vat_number
@@ -1429,7 +1429,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="YT">
+    <address_format id="address_format_144" id_country="YT">
       <format>firstname lastname
 company
 vat_number
@@ -1439,7 +1439,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MX">
+    <address_format id="address_format_145" id_country="MX">
       <format>firstname lastname
 company
 vat_number
@@ -1450,7 +1450,7 @@ State:name
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="FM">
+    <address_format id="address_format_146" id_country="FM">
       <format>firstname lastname
 company
 vat_number
@@ -1460,7 +1460,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MD">
+    <address_format id="address_format_147" id_country="MD">
       <format>firstname lastname
 company
 vat_number
@@ -1470,7 +1470,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MC">
+    <address_format id="address_format_148" id_country="MC">
       <format>firstname lastname
 company
 vat_number
@@ -1480,7 +1480,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MN">
+    <address_format id="address_format_149" id_country="MN">
       <format>firstname lastname
 company
 vat_number
@@ -1490,7 +1490,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ME">
+    <address_format id="address_format_150" id_country="ME">
       <format>firstname lastname
 company
 vat_number
@@ -1500,7 +1500,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MS">
+    <address_format id="address_format_151" id_country="MS">
       <format>firstname lastname
 company
 vat_number
@@ -1510,7 +1510,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MA">
+    <address_format id="address_format_152" id_country="MA">
       <format>firstname lastname
 company
 vat_number
@@ -1520,7 +1520,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MZ">
+    <address_format id="address_format_153" id_country="MZ">
       <format>firstname lastname
 company
 vat_number
@@ -1530,7 +1530,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NA">
+    <address_format id="address_format_154" id_country="NA">
       <format>firstname lastname
 company
 vat_number
@@ -1540,7 +1540,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NR">
+    <address_format id="address_format_155" id_country="NR">
       <format>firstname lastname
 company
 vat_number
@@ -1550,7 +1550,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NP">
+    <address_format id="address_format_156" id_country="NP">
       <format>firstname lastname
 company
 vat_number
@@ -1560,7 +1560,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NC">
+    <address_format id="address_format_158" id_country="NC">
       <format>firstname lastname
 company
 vat_number
@@ -1570,7 +1570,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NI">
+    <address_format id="address_format_159" id_country="NI">
       <format>firstname lastname
 company
 vat_number
@@ -1580,7 +1580,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NE">
+    <address_format id="address_format_160" id_country="NE">
       <format>firstname lastname
 company
 vat_number
@@ -1590,7 +1590,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NU">
+    <address_format id="address_format_161" id_country="NU">
       <format>firstname lastname
 company
 vat_number
@@ -1600,7 +1600,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="NF">
+    <address_format id="address_format_162" id_country="NF">
       <format>firstname lastname
 company
 vat_number
@@ -1610,7 +1610,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MP">
+    <address_format id="address_format_163" id_country="MP">
       <format>firstname lastname
 company
 vat_number
@@ -1620,7 +1620,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="OM">
+    <address_format id="address_format_164" id_country="OM">
       <format>firstname lastname
 company
 vat_number
@@ -1630,7 +1630,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PK">
+    <address_format id="address_format_165" id_country="PK">
       <format>firstname lastname
 company
 vat_number
@@ -1640,7 +1640,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PW">
+    <address_format id="address_format_166" id_country="PW">
       <format>firstname lastname
 company
 vat_number
@@ -1650,7 +1650,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PS">
+    <address_format id="address_format_167" id_country="PS">
       <format>firstname lastname
 company
 vat_number
@@ -1660,7 +1660,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PA">
+    <address_format id="address_format_168" id_country="PA">
       <format>firstname lastname
 company
 vat_number
@@ -1670,7 +1670,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PG">
+    <address_format id="address_format_169" id_country="PG">
       <format>firstname lastname
 company
 vat_number
@@ -1680,7 +1680,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PY">
+    <address_format id="address_format_170" id_country="PY">
       <format>firstname lastname
 company
 vat_number
@@ -1690,7 +1690,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PE">
+    <address_format id="address_format_171" id_country="PE">
       <format>firstname lastname
 company
 vat_number
@@ -1700,7 +1700,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PH">
+    <address_format id="address_format_172" id_country="PH">
       <format>firstname lastname
 company
 vat_number
@@ -1710,7 +1710,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PN">
+    <address_format id="address_format_173" id_country="PN">
       <format>firstname lastname
 company
 vat_number
@@ -1720,7 +1720,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PR">
+    <address_format id="address_format_174" id_country="PR">
       <format>firstname lastname
 company
 vat_number
@@ -1730,7 +1730,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="QA">
+    <address_format id="address_format_175" id_country="QA">
       <format>firstname lastname
 company
 vat_number
@@ -1740,7 +1740,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="RE">
+    <address_format id="address_format_176" id_country="RE">
       <format>firstname lastname
 company
 vat_number
@@ -1750,7 +1750,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="RU">
+    <address_format id="address_format_177" id_country="RU">
       <format>firstname lastname
 company
 vat_number
@@ -1760,7 +1760,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="RW">
+    <address_format id="address_format_178" id_country="RW">
       <format>firstname lastname
 company
 vat_number
@@ -1770,7 +1770,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BL">
+    <address_format id="address_format_179" id_country="BL">
       <format>firstname lastname
 company
 vat_number
@@ -1780,7 +1780,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KN">
+    <address_format id="address_format_180" id_country="KN">
       <format>firstname lastname
 company
 vat_number
@@ -1790,7 +1790,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LC">
+    <address_format id="address_format_181" id_country="LC">
       <format>firstname lastname
 company
 vat_number
@@ -1800,7 +1800,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="MF">
+    <address_format id="address_format_182" id_country="MF">
       <format>firstname lastname
 company
 vat_number
@@ -1810,7 +1810,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PM">
+    <address_format id="address_format_183" id_country="PM">
       <format>firstname lastname
 company
 vat_number
@@ -1820,7 +1820,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="VC">
+    <address_format id="address_format_184" id_country="VC">
       <format>firstname lastname
 company
 vat_number
@@ -1830,7 +1830,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="WS">
+    <address_format id="address_format_185" id_country="WS">
       <format>firstname lastname
 company
 vat_number
@@ -1840,7 +1840,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SM">
+    <address_format id="address_format_186" id_country="SM">
       <format>firstname lastname
 company
 vat_number
@@ -1850,7 +1850,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ST">
+    <address_format id="address_format_187" id_country="ST">
       <format>firstname lastname
 company
 vat_number
@@ -1860,7 +1860,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SA">
+    <address_format id="address_format_188" id_country="SA">
       <format>firstname lastname
 company
 vat_number
@@ -1870,7 +1870,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SN">
+    <address_format id="address_format_189" id_country="SN">
       <format>firstname lastname
 company
 vat_number
@@ -1880,7 +1880,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="RS">
+    <address_format id="address_format_190" id_country="RS">
       <format>firstname lastname
 company
 vat_number
@@ -1890,7 +1890,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SC">
+    <address_format id="address_format_191" id_country="SC">
       <format>firstname lastname
 company
 vat_number
@@ -1900,7 +1900,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SL">
+    <address_format id="address_format_192" id_country="SL">
       <format>firstname lastname
 company
 vat_number
@@ -1910,7 +1910,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SI">
+    <address_format id="address_format_193" id_country="SI">
       <format>firstname lastname
 company
 vat_number
@@ -1920,7 +1920,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SB">
+    <address_format id="address_format_194" id_country="SB">
       <format>firstname lastname
 company
 vat_number
@@ -1930,7 +1930,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SO">
+    <address_format id="address_format_195" id_country="SO">
       <format>firstname lastname
 company
 vat_number
@@ -1940,7 +1940,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GS">
+    <address_format id="address_format_196" id_country="GS">
       <format>firstname lastname
 company
 vat_number
@@ -1950,7 +1950,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="LK">
+    <address_format id="address_format_197" id_country="LK">
       <format>firstname lastname
 company
 vat_number
@@ -1960,7 +1960,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SD">
+    <address_format id="address_format_198" id_country="SD">
       <format>firstname lastname
 company
 vat_number
@@ -1970,7 +1970,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SR">
+    <address_format id="address_format_199" id_country="SR">
       <format>firstname lastname
 company
 vat_number
@@ -1980,7 +1980,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SJ">
+    <address_format id="address_format_200" id_country="SJ">
       <format>firstname lastname
 company
 vat_number
@@ -1990,7 +1990,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SZ">
+    <address_format id="address_format_201" id_country="SZ">
       <format>firstname lastname
 company
 vat_number
@@ -2000,7 +2000,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="SY">
+    <address_format id="address_format_202" id_country="SY">
       <format>firstname lastname
 company
 vat_number
@@ -2010,7 +2010,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TW">
+    <address_format id="address_format_203" id_country="TW">
       <format>firstname lastname
 company
 vat_number
@@ -2020,7 +2020,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TJ">
+    <address_format id="address_format_204" id_country="TJ">
       <format>firstname lastname
 company
 vat_number
@@ -2030,7 +2030,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TZ">
+    <address_format id="address_format_205" id_country="TZ">
       <format>firstname lastname
 company
 vat_number
@@ -2040,7 +2040,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TH">
+    <address_format id="address_format_206" id_country="TH">
       <format>firstname lastname
 company
 vat_number
@@ -2050,7 +2050,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TK">
+    <address_format id="address_format_207" id_country="TK">
       <format>firstname lastname
 company
 vat_number
@@ -2060,7 +2060,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TO">
+    <address_format id="address_format_208" id_country="TO">
       <format>firstname lastname
 company
 vat_number
@@ -2070,7 +2070,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TT">
+    <address_format id="address_format_209" id_country="TT">
       <format>firstname lastname
 company
 vat_number
@@ -2080,7 +2080,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TN">
+    <address_format id="address_format_210" id_country="TN">
       <format>firstname lastname
 company
 vat_number
@@ -2090,7 +2090,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TR">
+    <address_format id="address_format_211" id_country="TR">
       <format>firstname lastname
 company
 vat_number
@@ -2100,7 +2100,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TM">
+    <address_format id="address_format_212" id_country="TM">
       <format>firstname lastname
 company
 vat_number
@@ -2110,7 +2110,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TC">
+    <address_format id="address_format_213" id_country="TC">
       <format>firstname lastname
 company
 vat_number
@@ -2120,7 +2120,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TV">
+    <address_format id="address_format_214" id_country="TV">
       <format>firstname lastname
 company
 vat_number
@@ -2130,7 +2130,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="UG">
+    <address_format id="address_format_215" id_country="UG">
       <format>firstname lastname
 company
 vat_number
@@ -2140,7 +2140,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="UA">
+    <address_format id="address_format_216" id_country="UA">
       <format>firstname lastname
 company
 vat_number
@@ -2150,7 +2150,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AE">
+    <address_format id="address_format_217" id_country="AE">
       <format>firstname lastname
 company
 vat_number
@@ -2160,7 +2160,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="UY">
+    <address_format id="address_format_218" id_country="UY">
       <format>firstname lastname
 company
 vat_number
@@ -2170,7 +2170,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="UZ">
+    <address_format id="address_format_219" id_country="UZ">
       <format>firstname lastname
 company
 vat_number
@@ -2180,7 +2180,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="VU">
+    <address_format id="address_format_220" id_country="VU">
       <format>firstname lastname
 company
 vat_number
@@ -2190,7 +2190,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="VE">
+    <address_format id="address_format_221" id_country="VE">
       <format>firstname lastname
 company
 vat_number
@@ -2200,7 +2200,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="VN">
+    <address_format id="address_format_222" id_country="VN">
       <format>firstname lastname
 company
 vat_number
@@ -2210,7 +2210,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="VG">
+    <address_format id="address_format_223" id_country="VG">
       <format>firstname lastname
 company
 vat_number
@@ -2220,7 +2220,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="VI">
+    <address_format id="address_format_224" id_country="VI">
       <format>firstname lastname
 company
 vat_number
@@ -2230,7 +2230,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="WF">
+    <address_format id="address_format_225" id_country="WF">
       <format>firstname lastname
 company
 vat_number
@@ -2240,7 +2240,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="EH">
+    <address_format id="address_format_226" id_country="EH">
       <format>firstname lastname
 company
 vat_number
@@ -2250,7 +2250,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="YE">
+    <address_format id="address_format_227" id_country="YE">
       <format>firstname lastname
 company
 vat_number
@@ -2260,7 +2260,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ZM">
+    <address_format id="address_format_228" id_country="ZM">
       <format>firstname lastname
 company
 vat_number
@@ -2270,7 +2270,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="ZW">
+    <address_format id="address_format_229" id_country="ZW">
       <format>firstname lastname
 company
 vat_number
@@ -2280,7 +2280,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AL">
+    <address_format id="address_format_230" id_country="AL">
       <format>firstname lastname
 company
 vat_number
@@ -2290,7 +2290,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AF">
+    <address_format id="address_format_231" id_country="AF">
       <format>firstname lastname
 company
 vat_number
@@ -2300,7 +2300,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AQ">
+    <address_format id="address_format_232" id_country="AQ">
       <format>firstname lastname
 company
 vat_number
@@ -2310,7 +2310,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BA">
+    <address_format id="address_format_233" id_country="BA">
       <format>firstname lastname
 company
 vat_number
@@ -2320,7 +2320,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="IO">
+    <address_format id="address_format_235" id_country="IO">
       <format>firstname lastname
 company
 vat_number
@@ -2330,7 +2330,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="BG">
+    <address_format id="address_format_236" id_country="BG">
       <format>firstname lastname
 company
 vat_number
@@ -2340,7 +2340,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="KY">
+    <address_format id="address_format_237" id_country="KY">
       <format>firstname lastname
 company
 vat_number
@@ -2350,7 +2350,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CX">
+    <address_format id="address_format_238" id_country="CX">
       <format>firstname lastname
 company
 vat_number
@@ -2360,7 +2360,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CC">
+    <address_format id="address_format_239" id_country="CC">
       <format>firstname lastname
 company
 vat_number
@@ -2370,7 +2370,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="CK">
+    <address_format id="address_format_240" id_country="CK">
       <format>firstname lastname
 company
 vat_number
@@ -2380,7 +2380,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="GF">
+    <address_format id="address_format_241" id_country="GF">
       <format>firstname lastname
 company
 vat_number
@@ -2390,7 +2390,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="PF">
+    <address_format id="address_format_242" id_country="PF">
       <format>firstname lastname
 company
 vat_number
@@ -2400,7 +2400,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="TF">
+    <address_format id="address_format_243" id_country="TF">
       <format>firstname lastname
 company
 vat_number
@@ -2410,7 +2410,7 @@ postcode city
 Country:name
 phone</format>
     </address_format>
-    <address_format id_country="AX">
+    <address_format id="address_format_244" id_country="AX">
       <format>firstname lastname
 company
 vat_number

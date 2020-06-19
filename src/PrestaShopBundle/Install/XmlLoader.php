@@ -388,7 +388,7 @@ class XmlLoader
 
         // Load all row for current entity and prepare data to be populated
         $i = 0;
-        if (!empty($xml->entities->country) && $xml->entities->country instanceof SimpleXMLElement) {
+        if ($xml->entities->country instanceof SimpleXMLElement) {
             foreach ($xml->entities->country as $node) {
                 $data = [];
                 $identifier = (string) $node['id'];
