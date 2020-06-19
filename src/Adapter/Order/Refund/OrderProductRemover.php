@@ -149,7 +149,7 @@ class OrderProductRemover
         $order->total_shipping -= $shippingDiffTaxIncl;
         $order->total_shipping_tax_excl -= $shippingDiffTaxExcl;
         $order->total_shipping_tax_incl -= $shippingDiffTaxIncl;
-        $order->total_products -= $shippingDiffTaxExcl;
+        $order->total_products -= $productPriceTaxExcl;
         $order->total_products_wt -= $productPriceTaxIncl;
         $order->total_paid -= $productPriceTaxIncl + $shippingDiffTaxIncl;
         $order->total_paid_tax_incl -= $productPriceTaxIncl + $shippingDiffTaxIncl;
