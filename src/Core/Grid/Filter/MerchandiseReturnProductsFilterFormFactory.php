@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
@@ -92,17 +93,14 @@ final class MerchandiseReturnProductsFilterFormFactory implements GridFilterForm
 
         $queryParams = [];
 
-        if (null !== ($request = $this->requestStack->getCurrentRequest())
-            && $request->attributes->has('merchandiseReturnId')
+        if (null === ($request = $this->requestStack->getCurrentRequest())
+            || !$request->attributes->has('merchandiseReturnId')
         ) {
-            $queryParams['merchandiseReturnId'] = $request->attributes->get('merchandiseReturnId');
+            throw new MerchandiseReturnException('This page needs to have merchandiseReturnId as a parameter');
         }
 
-        if (null !== ($request = $this->requestStack->getCurrentRequest())
-            && $request->attributes->has('merchandiseReturnId')
-        ) {
-            $queryParams['merchandiseReturnId'] = $request->attributes->get('merchandiseReturnId');
-        }
+        $queryParams['merchandiseReturnId'] = $request->attributes->get('merchandiseReturnId');
+
 
         $newMerchandiseReturnFormBuilder->setAction(
             $this->urlGenerator->generate('admin_merchandise_returns_products_filter', $queryParams)
