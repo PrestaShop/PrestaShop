@@ -21,9 +21,8 @@ module.exports = class Employees extends BOBasePage {
     this.employeesListTableColumnAction = row => this.employeesListTableColumn(row, 'actions');
     this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a`
-      + '[data-confirm-button-label=\'Delete\']';
-    this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a[href*='edit']`;
+    this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a.grid-edit-row-link`;
     this.employeesListColumnValidIcon = row => `${this.employeesListTableColumn(row, 'active')
     } i.grid-toggler-icon-valid`;
     this.employeesListColumnNotValidIcon = row => `${this.employeesListTableColumn(row, 'active')

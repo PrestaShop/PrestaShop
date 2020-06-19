@@ -34,7 +34,7 @@ module.exports = class Brands extends BOBasePage {
     this.actionsColumn = (table, row) => `${this.tableRow(table, row)} td.column-actions`;
     this.dropdownToggleButton = (table, row) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = (table, row) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
-    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a[data-url*='/delete']`;
+    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
     // Sort Selectors
     this.tableHead = table => `${this.gridTable(table)} thead`;
     this.sortColumnDiv = (table, column) => `${this.tableHead(table)
@@ -55,8 +55,8 @@ module.exports = class Brands extends BOBasePage {
     this.brandsTableEnableColumn = row => `${this.tableColumn('manufacturer', row, 'active')}`;
     this.brandsEnableColumnValidIcon = row => `${this.brandsTableEnableColumn(row)} i.grid-toggler-icon-valid`;
     this.brandsEnableColumnNotValidIcon = row => `${this.brandsTableEnableColumn(row)} i.grid-toggler-icon-not-valid`;
-    this.viewBrandLink = row => `${this.actionsColumn('manufacturer', row)} a[data-original-title='View']`;
-    this.editBrandLink = row => `${this.dropdownToggleMenu('manufacturer', row)} a[href*='/edit']`;
+    this.viewBrandLink = row => `${this.actionsColumn('manufacturer', row)} a.grid-view-row-link`;
+    this.editBrandLink = row => `${this.dropdownToggleMenu('manufacturer', row)} a.grid-edit-row-link`;
     this.bulkActionsEnableButton = `${this.gridPanel('manufacturer')} #manufacturer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.gridPanel('manufacturer')
     } #manufacturer_grid_bulk_action_disable_selection`;
@@ -64,7 +64,7 @@ module.exports = class Brands extends BOBasePage {
 
     // Brand Addresses Selectors
     this.editBrandAddressLink = row => `${this.actionsColumn('manufacturer_address', row)
-    } a[data-original-title='Edit']`;
+    } a.grid-edit-row-link`;
     this.deleteAddressesButton = `${this.gridPanel('manufacturer_address')
     } #manufacturer_address_grid_bulk_action_delete_selection`;
     // Pagination selectors

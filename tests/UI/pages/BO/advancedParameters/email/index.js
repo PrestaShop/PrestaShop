@@ -23,7 +23,7 @@ module.exports = class Email extends BOBasePage {
     this.tableRows = `${this.tableBody} tr`;
     this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
-    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a[data-url*='delete']`;
+    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a.grid-delete-row-link`;
     this.confirmDeleteModal = '#email_logs-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Bulk Actions

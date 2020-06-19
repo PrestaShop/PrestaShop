@@ -29,7 +29,7 @@
   {% set class = class ~ ' ' ~ attributes.class %}
 {% endif %}
 
-<a class="{{ class }}"
+<a class="{{ class }} grid-{{ action.name|lower }}-row-link"
    href="#"
    data-category-id="{{ record[action.options.category_id_field] }}"
    data-category-delete-url="{{ path(action.options.category_delete_route) }}"

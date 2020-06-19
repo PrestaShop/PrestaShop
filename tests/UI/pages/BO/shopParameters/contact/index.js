@@ -23,8 +23,8 @@ module.exports = class Contacts extends BOBasePage {
     // Actions buttons in Row
     this.contactsListTableActionsColumn = row => this.contactsListTableColumn(row, 'actions');
     this.listTableToggleDropDown = row => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;
-    this.listTableEditLink = row => `${this.contactsListTableActionsColumn(row)} a[href*='edit']`;
-    this.deleteRowLink = row => `${this.contactsListTableActionsColumn(row)} a[data-method='POST']`;
+    this.listTableEditLink = row => `${this.contactsListTableActionsColumn(row)} a.grid-edit-row-link`;
+    this.deleteRowLink = row => `${this.contactsListTableActionsColumn(row)} a.grid-delete-row-link`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.contactsGridPanel} button.js-bulk-actions-btn`;

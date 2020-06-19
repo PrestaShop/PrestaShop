@@ -35,10 +35,10 @@ module.exports = class Suppliers extends BOBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.viewRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View']`;
+    this.viewRowLink = row => `${this.actionsColumn(row)} a.grid-view-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.editRowLink = row => `${this.dropdownToggleMenu(row)} a[href*='/edit']`;
+    this.editRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-edit-row-link`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
     // enable column
     this.enableColumn = row => this.tableColumn(row, 'active');

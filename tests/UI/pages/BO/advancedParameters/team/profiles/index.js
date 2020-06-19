@@ -19,8 +19,8 @@ module.exports = class Profiles extends BOBasePage {
     this.profilesListTableColumnAction = row => this.profilesListTableColumn(row, 'actions');
     this.profilesListTableToggleDropDown = row => `${this.profilesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.profilesListTableDeleteLink = row => `${this.profilesListTableColumnAction(row)} a[data-url]`;
-    this.profilesListTableEditLink = row => `${this.profilesListTableColumnAction(row)} a[href*='edit']`;
+    this.profilesListTableDeleteLink = row => `${this.profilesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.profilesListTableEditLink = row => `${this.profilesListTableColumnAction(row)} a.grid-edit-row-link`;
     // Filters
     this.profileFilterInput = filterBy => `${this.profilesListForm} #profile_${filterBy}`;
     this.filterSearchButton = `${this.profilesListForm} .grid-search-button`;
