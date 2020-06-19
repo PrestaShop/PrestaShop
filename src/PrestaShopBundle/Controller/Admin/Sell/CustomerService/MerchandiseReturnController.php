@@ -188,7 +188,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
-     * I am not sure how to pass both via bulk
      *
      * Deletes cartRules on bulk action
      *
