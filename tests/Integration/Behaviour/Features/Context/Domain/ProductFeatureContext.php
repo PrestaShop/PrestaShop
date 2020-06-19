@@ -48,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as Local
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -233,75 +232,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * Product tags differs from other localized properties, because each locale can have an array of tags
-     * (whereas common property will have one value per language)
-     * This is why it needs some additional parsing
-     *
-     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
-     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
-     * @param ProductForEditing $productForEditing
-     */
-    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
-    {
-        $fieldName = 'tags';
-        /** @var LocalizedTagsDto[] $actualLocalizedTags */
-        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
-
-        foreach ($localizedTagStrings as $langId => $tagsString) {
-            $langIso = Language::getIsoById($langId);
-
-            if (empty($tagsString)) {
-                // if tags string is empty, then we should not have any actual value in this language
-                /** @var LocalizedTagsDto $actualLocalizedTags */
-                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
-                    if ($actualLocalizedTags->getLanguageId() === $langId) {
-                        throw new RuntimeException(sprintf(
-                                'Expected no tags in %s language, but got "%s"',
-                                $langIso,
-                                var_export($actualLocalizedTags->getTags(), true))
-                        );
-                    }
-                }
-
-                // if above code passed it means tags in this lang is empty as expected and we can continue
-                continue;
-            }
-
-            // convert filled tags to array
-            $expectedTags = array_map('trim', explode(',', $tagsString));
-            $valueInLangExists = false;
-            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
-                if ($actualLocalizedTags->getLanguageId() !== $langId) {
-                    continue;
-                }
-
-                Assert::assertEquals(
-                    $expectedTags,
-                    $actualLocalizedTags->getTags(),
-                    sprintf(
-                        'Expected %s in "%s" language was "%s", but got "%s"',
-                        $fieldName,
-                        $langIso,
-                        var_export($expectedTags, true),
-                        var_export($actualLocalizedTags->getTags(), true)
-                    )
-                );
-                $valueInLangExists = true;
-            }
-
-            // All empty values have ben filtered out above,
-            // so if this lang value doesn't exist, it means it didn't meet the expectations
-            if (!$valueInLangExists) {
-                throw new RuntimeException(sprintf(
-                    'Expected localized tags value "%s" is not set in %s language',
-                    var_export($expectedTags, true),
-                    $langIso
-                ));
-            }
-        }
-    }
-
-    /**
      * @Then product :productReference should have following values:
      * @Then product :productReference has following values:
      *
@@ -352,6 +282,136 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         } catch (ProductException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @When I update product :productReference prices with following information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductPrices(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $command = new UpdateProductPricesCommand($this->getSharedStorage()->get($productReference));
+
+        if (isset($data['price'])) {
+            $command->setPrice($data['price']);
+        }
+        if (isset($data['ecotax'])) {
+            $command->setEcotax($data['ecotax']);
+        }
+        if (isset($data['tax rules group'])) {
+            $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['tax rules group'])->id;
+            $command->setTaxRulesGroupId($taxRulesGroupId);
+        }
+        if (isset($data['on_sale'])) {
+            $command->setOnSale(PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']));
+        }
+        if (isset($data['wholesale_price'])) {
+            $command->setWholesalePrice($data['wholesale_price']);
+        }
+        if (isset($data['unit_price'])) {
+            $command->setUnitPrice($data['unit_price']);
+        }
+        if (isset($data['unity'])) {
+            $command->setUnity($data['unity']);
+        }
+
+        try {
+            $this->getQueryBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I update product :productReference prices and apply non-existing tax rules group
+     *
+     * @param string $productReference
+     */
+    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        $command = new UpdateProductPricesCommand($productId);
+        // this id value does not exist, it is used on purpose.
+        $command->setTaxRulesGroupId(50000000);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then product :productReference should be assigned to default category
+     *
+     * @param string $productReference
+     */
+    public function assertProductAssignedToDefaultCategory(string $productReference)
+    {
+        $context = $this->getContainer()->get('prestashop.adapter.legacy.context')->getContext();
+        $defaultCategoryId = (int) $context->shop->id_category;
+
+        $productForEditing = $this->getProductForEditing($productReference);
+        $productCategoriesInfo = $productForEditing->getCategoriesInformation();
+
+        $belongsToDefaultCategory = false;
+        foreach ($productCategoriesInfo->getCategoryIds() as $categoryId) {
+            if ($categoryId === $defaultCategoryId) {
+                $belongsToDefaultCategory = true;
+
+                break;
+            }
+        }
+
+        if ($productCategoriesInfo->getDefaultCategoryId() !== $defaultCategoryId || !$belongsToDefaultCategory) {
+            throw new RuntimeException('Default category is not assigned to product');
+        }
+    }
+
+    /**
+     * @Then product :productReference type should be :productType
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertProductType(string $productReference, string $productTypeName)
+    {
+        $editableProduct = $this->getProductForEditing($productReference);
+        Assert::assertEquals(
+            $productTypeName,
+            $editableProduct->getBasicInformation()->getType()->getValue(),
+            sprintf(
+                'Product type is not as expected. Expected %s but got %s instead',
+                $productTypeName,
+                $editableProduct->getBasicInformation()->getType()->getValue()
+            )
+        );
+    }
+
+    /**
+     * @Then I should get error that I cannot add pack into a pack
+     */
+    public function assertAddingPackToPackError()
+    {
+        $this->assertLastErrorIs(
+            ProductPackingException::class,
+            ProductPackingException::CANNOT_ADD_PACK_INTO_PACK
+        );
+    }
+
+    /**
+     * @Then I should get error that product :fieldName is invalid
+     */
+    public function assertConstraintError(string $fieldName): void
+    {
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            $this->getConstraintErrorCode($fieldName)
+        );
     }
 
     /**
@@ -439,67 +499,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
-        }
-    }
-
-    /**
-     * @When I update product :productReference prices with following information:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function updateProductPrices(string $productReference, TableNode $table)
-    {
-        $data = $table->getRowsHash();
-        $command = new UpdateProductPricesCommand($this->getSharedStorage()->get($productReference));
-
-        if (isset($data['price'])) {
-            $command->setPrice($data['price']);
-        }
-        if (isset($data['ecotax'])) {
-            $command->setEcotax($data['ecotax']);
-        }
-        if (isset($data['tax rules group'])) {
-            $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['tax rules group'])->id;
-            $command->setTaxRulesGroupId($taxRulesGroupId);
-        }
-        if (isset($data['on_sale'])) {
-            $command->setOnSale(PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']));
-        }
-        if (isset($data['wholesale_price'])) {
-            $command->setWholesalePrice($data['wholesale_price']);
-        }
-        if (isset($data['unit_price'])) {
-            $command->setUnitPrice($data['unit_price']);
-        }
-        if (isset($data['unity'])) {
-            $command->setUnity($data['unity']);
-        }
-
-        try {
-            $this->getQueryBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->lastException = $e;
-        }
-    }
-
-    /**
-     * @When I update product :productReference prices and apply non-existing tax rules group
-     *
-     * @param string $productReference
-     */
-    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
-    {
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        $command = new UpdateProductPricesCommand($productId);
-        // this id value does not exist, it is used on purpose.
-        $command->setTaxRulesGroupId(50000000);
-
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->lastException = $e;
         }
     }
 
@@ -595,75 +594,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productReference should be assigned to default category
-     *
-     * @param string $productReference
-     */
-    public function assertProductAssignedToDefaultCategory(string $productReference)
-    {
-        $context = $this->getContainer()->get('prestashop.adapter.legacy.context')->getContext();
-        $defaultCategoryId = (int) $context->shop->id_category;
-
-        $productForEditing = $this->getProductForEditing($productReference);
-        $productCategoriesInfo = $productForEditing->getCategoriesInformation();
-
-        $belongsToDefaultCategory = false;
-        foreach ($productCategoriesInfo->getCategoryIds() as $categoryId) {
-            if ($categoryId === $defaultCategoryId) {
-                $belongsToDefaultCategory = true;
-
-                break;
-            }
-        }
-
-        if ($productCategoriesInfo->getDefaultCategoryId() !== $defaultCategoryId || !$belongsToDefaultCategory) {
-            throw new RuntimeException('Default category is not assigned to product');
-        }
-    }
-
-    /**
-     * @Then product :productReference type should be :productType
-     *
-     * @param string $productReference
-     * @param string $productTypeName
-     */
-    public function assertProductType(string $productReference, string $productTypeName)
-    {
-        $editableProduct = $this->getProductForEditing($productReference);
-        Assert::assertEquals(
-            $productTypeName,
-            $editableProduct->getBasicInformation()->getType()->getValue(),
-            sprintf(
-                'Product type is not as expected. Expected %s but got %s instead',
-                $productTypeName,
-                $editableProduct->getBasicInformation()->getType()->getValue()
-            )
-        );
-    }
-
-    /**
-     * @Then I should get error that I cannot add pack into a pack
-     */
-    public function assertAddingPackToPackError()
-    {
-        $this->assertLastErrorIs(
-            ProductPackingException::class,
-            ProductPackingException::CANNOT_ADD_PACK_INTO_PACK
-        );
-    }
-
-    /**
-     * @Then I should get error that product :fieldName is invalid
-     */
-    public function assertConstraintError(string $fieldName): void
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            $this->getConstraintErrorCode($fieldName)
-        );
-    }
-
-    /**
      * @param string $fieldName
      *
      * @return int
@@ -695,6 +625,75 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $constraintErrorFieldMap[$fieldName];
+    }
+
+    /**
+     * Product tags differs from other localized properties, because each locale can have an array of tags
+     * (whereas common property will have one value per language)
+     * This is why it needs some additional parsing
+     *
+     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
+     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
+     * @param ProductForEditing $productForEditing
+     */
+    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
+    {
+        $fieldName = 'tags';
+        /** @var LocalizedTagsDto[] $actualLocalizedTags */
+        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+
+        foreach ($localizedTagStrings as $langId => $tagsString) {
+            $langIso = Language::getIsoById($langId);
+
+            if (empty($tagsString)) {
+                // if tags string is empty, then we should not have any actual value in this language
+                /** @var LocalizedTagsDto $actualLocalizedTags */
+                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                    if ($actualLocalizedTags->getLanguageId() === $langId) {
+                        throw new RuntimeException(sprintf(
+                                'Expected no tags in %s language, but got "%s"',
+                                $langIso,
+                                var_export($actualLocalizedTags->getTags(), true))
+                        );
+                    }
+                }
+
+                // if above code passed it means tags in this lang is empty as expected and we can continue
+                continue;
+            }
+
+            // convert filled tags to array
+            $expectedTags = array_map('trim', explode(',', $tagsString));
+            $valueInLangExists = false;
+            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                if ($actualLocalizedTags->getLanguageId() !== $langId) {
+                    continue;
+                }
+
+                Assert::assertEquals(
+                    $expectedTags,
+                    $actualLocalizedTags->getTags(),
+                    sprintf(
+                        'Expected %s in "%s" language was "%s", but got "%s"',
+                        $fieldName,
+                        $langIso,
+                        var_export($expectedTags, true),
+                        var_export($actualLocalizedTags->getTags(), true)
+                    )
+                );
+                $valueInLangExists = true;
+            }
+
+            // All empty values have ben filtered out above,
+            // so if this lang value doesn't exist, it means it didn't meet the expectations
+            if (!$valueInLangExists) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized tags value "%s" is not set in %s language',
+                    var_export($expectedTags, true),
+                    $langIso
+                ));
+            }
+        }
     }
 
     /**
