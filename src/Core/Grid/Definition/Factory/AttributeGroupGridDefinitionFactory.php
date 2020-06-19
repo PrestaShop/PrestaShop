@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
