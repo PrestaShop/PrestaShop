@@ -48,7 +48,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Class MerchandiseReturnGridDefinitionFactory builds grid definition for merchandise returns grid.
  */
-final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory implements FilterableGridDefinitionFactoryInterface
+final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
