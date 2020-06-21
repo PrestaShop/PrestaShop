@@ -135,7 +135,7 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others'])) {
+            if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others', 'front'])) {
                 throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
             }
 

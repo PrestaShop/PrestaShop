@@ -26,16 +26,15 @@
 
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Provider\ExternalModuleLegacySystemProvider;
 use PrestaShopBundle\Translation\Provider\SearchProvider;
-use Symfony\Component\Translation\Loader\LoaderInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Tests the search translations provider
  */
-class SearchProviderTest extends TestCase
+class SearchProviderTest extends KernelTestCase
 {
     /**
      * @var SearchProvider
@@ -44,9 +43,9 @@ class SearchProviderTest extends TestCase
 
     protected function setUp()
     {
-        $loader = $this->getMockBuilder(LoaderInterface::class)
-            ->getMock()
-        ;
+        self::bootKernel();
+        $container = self::$kernel->getContainer();
+        $databaseLoader = $container->get('prestashop.translation.database_loader');
         $externalSystemProvider = $this->getMockBuilder(ExternalModuleLegacySystemProvider::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -54,14 +53,23 @@ class SearchProviderTest extends TestCase
 
         $resourcesDir = __DIR__ . '/../../../../Resources/translations';
         $this->provider = new SearchProvider(
-            $loader,
             $externalSystemProvider,
+            $databaseLoader,
             $resourcesDir,
             ''
         );
 
         $this->provider->setDomain('AdminActions');
         $this->provider->setLocale('fr-FR');
+
+        $langId = \Language::getIdByIso('fr');
+        if (!$langId) {
+            $lang = new \Language();
+            $lang->locale = 'fr-FR';
+            $lang->iso_code = 'fr';
+            $lang->name = 'Français';
+            $lang->add();
+        }
     }
 
     public function testItExtractsOnlyTheSelectedCataloguesFromXliffFiles()
@@ -78,5 +86,14 @@ class SearchProviderTest extends TestCase
         $adminTranslations = $catalogue->all('AdminActions');
         $this->assertCount(91, $adminTranslations);
         $this->assertSame('Télécharger le fichier', $catalogue->get('Download file', 'AdminActions'));
+    }
+
+    protected function tearDown()
+    {
+        $langId = \Language::getIdByIso('fr');
+        if ($langId) {
+            (new \Language($langId))->delete();
+        }
+        self::$kernel->shutdown();
     }
 }

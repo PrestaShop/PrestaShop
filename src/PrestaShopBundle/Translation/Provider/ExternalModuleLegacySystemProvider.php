@@ -85,10 +85,6 @@ class ExternalModuleLegacySystemProvider implements SearchProviderInterface
     private $defaultCatalogueCache;
 
     /**
-     * @var string[]
-     */
-    private $filenameFilters;
-    /**
      * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
@@ -115,6 +111,7 @@ class ExternalModuleLegacySystemProvider implements SearchProviderInterface
     public function setLocale(string $locale): ExternalModuleLegacySystemProvider
     {
         $this->locale = $locale;
+        $this->moduleProvider->setLocale($locale);
 
         return $this;
     }
@@ -204,12 +201,12 @@ class ExternalModuleLegacySystemProvider implements SearchProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
     {
         try {
             $translationCatalogue = $this->moduleProvider
                 ->setModuleName($this->moduleName)
-                ->getFilesystemCatalogue()
+                ->getFileTranslatedCatalogue()
             ;
         } catch (FileNotFoundException $exception) {
             $translationCatalogue = $this->buildTranslationCatalogueFromLegacyFiles($this->locale);

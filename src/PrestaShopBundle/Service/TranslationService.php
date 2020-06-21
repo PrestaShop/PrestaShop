@@ -129,18 +129,26 @@ class TranslationService
      */
     public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
     {
-        /**
-         * @var TranslationsCatalogueProvider
-         */
-        $provider = $this->container->get('prestashop.translation.translations_provider');
+        return $this->container->get('prestashop.translation.translations_provider')
+                    ->getCatalogue(
+                        $type,
+                        $this->langToLocale($lang),
+                        $search,
+                        $theme
+                    );
 
-        $provider
-            ->setLocale($this->langToLocale($lang))
-            ->setType($type)
-            ->setTheme($theme)
-        ;
-
-        return $provider->getCatalogue($search);
+//        $factory = $this->container->get('prestashop.translation.translations_factory');
+//
+//        if ($this->requiresThemeTranslationsFactory($theme, $type)) {
+//            if ($this->isDefaultTheme($theme)) {
+//                $type = 'front';
+//            } else {
+//                $type = $theme;
+//                $factory = $this->container->get('prestashop.translation.theme_translations_factory');
+//            }
+//        }
+//
+//        return $factory->createTranslationsArray($type, $this->langToLocale($lang), $theme, $search);
     }
 
     /**
@@ -180,11 +188,6 @@ class TranslationService
          */
         $provider = $this->container->get('prestashop.translation.translations_provider');
 
-        $provider
-            ->setLocale($locale)
-            ->setTheme($theme)
-        ;
-
         $router = $this->container->get('router');
 
         return [
@@ -192,7 +195,7 @@ class TranslationService
                 'edit_url' => $router->generate('api_translation_value_edit'),
                 'reset_url' => $router->generate('api_translation_value_reset'),
             ],
-            'data' => $provider->getDomainCatalogue($domain, $search, $module),
+            'data' => $provider->getDomainCatalogue($locale, $domain, $search, $module, $theme),
         ];
     }
 
