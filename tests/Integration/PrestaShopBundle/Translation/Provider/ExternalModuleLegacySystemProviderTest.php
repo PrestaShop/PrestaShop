@@ -67,6 +67,8 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $smartyExtractor = $container->get('prestashop.translation.extractor.smarty.legacy');
         $twigExtractor = $container->get('prestashop.translation.extractor.twig');
 
+        $moduleProvider->setResourceDirectory($this->getModuleDirectory());
+
         $extractor = new LegacyModuleExtractor(
             $phpExtractor,
             $smartyExtractor,
@@ -98,7 +100,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         array $expected
     ) {
         $this->provider->setLocale($locale);
-        $legacyCatalogue = $this->provider->getFilesystemCatalogue();
+        $legacyCatalogue = $this->provider->getFileTranslatedCatalogue();
 
         $this->assertInstanceOf(MessageCatalogueInterface::class, $legacyCatalogue);
 

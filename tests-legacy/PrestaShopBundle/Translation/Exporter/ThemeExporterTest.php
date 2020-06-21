@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use PrestaShopBundle\Translation\Exporter\ThemeExporter;
+use PrestaShopBundle\Translation\Provider\DefaultCatalogueProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
@@ -123,12 +124,7 @@ class ThemeExporterTest extends TestCase
         $domain = 'ShopActions.' . self::LOCALE;
         $this->assertArrayHasKey($domain, $messages);
 
-        $this->assertArrayHasKey('Edit Product', $messages[$domain]);
-        $this->assertArrayHasKey('Add Product', $messages[$domain]);
         $this->assertArrayHasKey('Delete Product', $messages[$domain]);
-
-        $this->assertArrayHasKey('Override Me', $messages[$domain]);
-        $this->assertSame('Overridden', $messages[$domain]['Override Me']);
 
         $this->assertArrayHasKey('Override Me Twice', $messages[$domain]);
         $this->assertSame('Overridden Twice', $messages[$domain]['Override Me Twice']);
@@ -136,12 +132,35 @@ class ThemeExporterTest extends TestCase
 
     protected function mockThemeExtractor()
     {
-        $this->extractorMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Extractor\ThemeExtractor')
+        $this->extractorMock = $this->getMockBuilder('\PrestaShopBundle\Translation\Extractor\ThemeExtractorCache')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->extractorMock->method('setOutputPath')
-            ->willReturn($this->extractorMock);
+        $cachedFilesPath = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ThemeExporterTest', 'cache']);
+        $this->extractorMock->method('getCachedFilesPath')
+            ->willReturn($cachedFilesPath);
+
+        $temporaryFilesPath = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'ThemeExporterTest', 'temp']);
+        $this->extractorMock->method('getTemporaryFilesPath')
+            ->willReturn($temporaryFilesPath);
+
+        $catalogue = new MessageCatalogue(self::LOCALE);
+        $wordings = [
+            'ShopSomeDomain' => [
+                'Some wording' => 'Some wording',
+                'Some other wording' => 'Some other wording',
+            ],
+            'ShopSomethingElse' => [
+                'Foo' => 'Foo',
+                'Bar' => 'Bar',
+            ],
+        ];
+        foreach ($wordings as $domain => $messages) {
+            $catalogue->add($messages, $domain);
+        }
+
+        $this->extractorMock->method('extract')
+            ->willReturn($catalogue);
     }
 
     protected function mockThemeRepository()
@@ -190,7 +209,7 @@ class ThemeExporterTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->providerMock->method('getCatalogueFromPaths')
+        $this->providerMock->method('getDefaultCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
@@ -202,7 +221,7 @@ class ThemeExporterTest extends TestCase
                 )
             ));
 
-        $this->providerMock->method('getThemeCatalogue')
+        $this->providerMock->method('getFileTranslatedCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
@@ -214,7 +233,7 @@ class ThemeExporterTest extends TestCase
                 )
             ));
 
-        $this->providerMock->method('getDatabaseCatalogue')
+        $this->providerMock->method('getUserTranslatedCatalogue')
             ->willReturn(new MessageCatalogue(
                 self::LOCALE,
                 array(
