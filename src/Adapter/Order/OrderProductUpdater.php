@@ -127,7 +127,7 @@ class OrderProductUpdater
             $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
 
             // Fix differences between cart's cartRules and order's cartRules
-            $cart = $this->syncCartAndOrderCartRules($cart, $order, $productDeletionMode);
+            $this->updateOrderCartRules($order, $cart);
 
             // Recalculate amounts of cartRules
             $this->recalculateCartRules($cart, $order);
@@ -383,63 +383,66 @@ class OrderProductUpdater
     }
 
     /**
-     * @param Cart $cart
-     * @param Order $order
-     * @param bool $productDeletionMode
+     * Remove previous cart rules applied to order
      *
-     * @return Cart
+     * @param Order $order
+     * @param Cart $cart
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function syncCartAndOrderCartRules(Cart $cart, Order $order, bool $productDeletionMode): Cart
+    private function updateOrderCartRules(Order $order, Cart $cart): void
     {
         Context::getContext()->cart = $cart;
         CartRule::autoAddToCart();
         CartRule::autoRemoveFromCart();
 
-        $cartRules = $cart->getCartRules();
-        $cartRulesIds = array_map(
-            function (array $cartRule) { return (int) $cartRule['id_cart_rule']; },
-            $cartRules
-        );
-        $synchronizedCartRules = [];
+        $computingPrecision = $this->getPrecisionFromCart($cart);
+        $newCartRules = $cart->getCartRules();
+        foreach ($order->getCartRules() as $orderCartRuleData) {
+            foreach ($newCartRules as $newCartRule) {
+                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
+                    // Cart rule is still in the cart no need to remove it, but we update it as the amount may have changed
+                    $cartRule = new CartRule($newCartRule['id_cart_rule']);
 
-        foreach ($order->getCartRules() as $orderCartRule) {
-            foreach ($cartRulesIds as $cartRuleId) {
-                if ($cartRuleId == $orderCartRule['id_cart_rule']) {
-                    $synchronizedCartRules[] = $cartRuleId;
-                    // cartRule is on cart and order. Nothing to do
+                    $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
+                    $orderCartRule->id_order = $order->id;
+                    $orderCartRule->name = $newCartRule['name'];
+                    $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
+                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
+                    $orderCartRule->save();
                     continue 2;
                 }
             }
 
-            if ($productDeletionMode) {
-                // On deletion mode. Extra cart rules on order have to be deleted
-                $orderCartRule = new OrderCartRule($orderCartRule['id_order_cart_rule']);
-                $orderCartRule->delete();
-            } else {
-                // A cart rule on order but not on the cart
-                $cart->addCartRule((int) $orderCartRule['id_cart_rule']);
+            // This one is no longer in the new cart rules so we delete it
+            $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
+            if (!$orderCartRule->delete()) {
+                throw new OrderException('Could not delete order cart rule from database.');
             }
         }
 
-        if (!$productDeletionMode) {
-            // Some cart rules are missing in the order
-            foreach ($cartRules as $cartRule) {
-                if (!in_array((int) $cartRule['id_cart_rule'], $synchronizedCartRules, true)) {
-                    $order->addCartRule(
-                        (int) $cartRule['id_cart_rule'],
-                        $cartRule['name'],
-                        ['tax_incl' => $cartRule['value_real'], 'tax_excl' => $cartRule['value_tax_exc']],
-                        $order->invoice_number,
-                        $cartRule['free_shipping']
-                    );
+        // Finally add the new cart rules that are not in the Order
+        foreach ($newCartRules as $newCartRule) {
+            foreach ($order->getCartRules() as $orderCartRuleData) {
+                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
+                    // This cart rule is already present no need to add it
+                    continue 2;
                 }
             }
-        }
 
-        return $cart;
+            // Add missing order cart rule
+            $cartRule = new CartRule($newCartRule['id_cart_rule']);
+
+            $orderCartRule = new OrderCartRule();
+            $orderCartRule->id_order = $order->id;
+            $orderCartRule->id_cart_rule = $newCartRule['id_cart_rule'];
+            $orderCartRule->id_order_invoice = $order->getInvoicesCollection()->getLast();
+            $orderCartRule->name = $newCartRule['name'];
+            $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
+            $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
+            $orderCartRule->save();
+        }
     }
 
     /**
