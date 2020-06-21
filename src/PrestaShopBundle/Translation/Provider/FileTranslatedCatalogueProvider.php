@@ -65,24 +65,22 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
 
     /**
      * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
      */
     public function getCatalogue(): MessageCatalogueInterface
     {
         $catalogue = new MessageCatalogue($this->locale);
         $translationFinder = new TranslationFinder();
-        $localeResourceDirectory = $this->directory . DIRECTORY_SEPARATOR . $this->locale;
+        $localeResourceDirectory = rtrim($this->directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->locale;
 
         foreach ($this->filenameFilters as $filter) {
-            try {
-                $filteredCatalogue = $translationFinder->getCatalogueFromPaths(
-                    [$localeResourceDirectory],
-                    $this->locale,
-                    $filter
-                );
-                $catalogue->addCatalogue($filteredCatalogue);
-            } catch (FileNotFoundException $e) {
-                // there are no translation files, ignore them
-            }
+            $filteredCatalogue = $translationFinder->getCatalogueFromPaths(
+                [$localeResourceDirectory],
+                $this->locale,
+                $filter
+            );
+            $catalogue->addCatalogue($filteredCatalogue);
         }
 
         return $catalogue;
@@ -91,7 +89,7 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     /**
      * @return MessageCatalogueInterface
      */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
     {
         return $this->getCatalogue();
     }
