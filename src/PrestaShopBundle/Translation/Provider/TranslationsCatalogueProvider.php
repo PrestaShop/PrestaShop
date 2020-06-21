@@ -33,21 +33,6 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 class TranslationsCatalogueProvider
 {
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var string|null
-     */
-    private $locale;
-
-    /**
-     * @var string|null
-     */
-    private $theme;
-
-    /**
      * @var TranslationCatalogueProviderFactory
      */
     private $translationCatalogueProviderFactory;
@@ -59,69 +44,37 @@ class TranslationsCatalogueProvider
     }
 
     /**
-     * @param string $type
-     *
-     * @return TranslationsCatalogueProvider
-     */
-    public function setType(string $type): TranslationsCatalogueProvider
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @param string|null $locale
-     *
-     * @return TranslationsCatalogueProvider
-     */
-    public function setLocale(?string $locale): TranslationsCatalogueProvider
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * @param string|null $theme
-     *
-     * @return TranslationsCatalogueProvider
-     */
-    public function setTheme(?string $theme): TranslationsCatalogueProvider
-    {
-        $this->theme = $theme;
-
-        return $this;
-    }
-
-    /**
+     * @param string $locale
      * @param string $domain
      * @param string|array|null $search
      * @param string|null $module
+     * @param string|null $theme
      *
      * @return array
      */
-    public function getDomainCatalogue(string $domain, $search = null, ?string $module = null)
-    {
-        if (null === $this->locale) {
-            throw new \LogicException('Locale cannot be null. Call setLocale first');
-        }
+    public function getDomainCatalogue(
+        string $locale,
+        string $domain,
+        $search = null,
+        ?string $module = null,
+        ?string $theme = null
+    ): array {
         if ('Messages' === $domain) {
             $domain = 'messages';
         }
 
         $provider = $this->translationCatalogueProviderFactory->getDomainCatalogueProvider(
-            $this->locale,
+            $locale,
             $domain,
-            $this->theme,
+            $theme,
             $module
         );
 
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
         $defaultCatalogue = $provider->getDefaultCatalogue()->all($domain);
-        $fileTranslatedCatalogue = $provider->getFilesystemCatalogue()->all($domain);
-        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($this->theme)->all($domain);
+        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue()->all($domain);
+        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($theme)->all($domain);
 
         $domainCatalogue = [];
         foreach ($defaultCatalogue as $key => $message) {
@@ -145,41 +98,41 @@ class TranslationsCatalogueProvider
     }
 
     /**
+     * @param string $type
+     * @param string $locale
      * @param string|array|null $search
+     * @param string|null $theme
      *
      * @return array
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogue($search = null): array
-    {
-        if (null === $this->type) {
-            throw new \LogicException('Translation type cannot be null. Call setType first');
-        }
-        if (null === $this->locale) {
-            throw new \LogicException('Locale cannot be null. Call setLocale first');
-        }
-
+    public function getCatalogue(
+        string $type,
+        string $locale,
+        $search = null,
+        ?string $theme = null
+    ): array {
         $defaultCatalogue = $this->translationCatalogueProviderFactory->getDefaultCatalogueProvider(
-            $this->type,
-            $this->locale,
-            $this->theme
+            $type,
+            $locale,
+            $theme
         )
             ->getDefaultCatalogue();
 
         $fileTranslatedCatalogue = $this->translationCatalogueProviderFactory->getFileTranslatedCatalogueProvider(
-            $this->type,
-            $this->locale,
-            $this->theme
+            $type,
+            $locale,
+            $theme
         )
-            ->getFilesystemCatalogue();
+            ->getFileTranslatedCatalogue();
 
         $userTranslatedCatalogue = $this->translationCatalogueProviderFactory->getUserTranslatedCatalogueProvider(
-            $this->type,
-            $this->locale,
-            $this->theme
+            $type,
+            $locale,
+            $theme
         )
-            ->getUserTranslatedCatalogue($this->theme);
+            ->getUserTranslatedCatalogue($theme);
 
         $translations = [];
 
