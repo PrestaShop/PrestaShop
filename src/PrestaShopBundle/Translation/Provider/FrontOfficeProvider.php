@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 /**
@@ -94,7 +95,7 @@ class FrontOfficeProvider implements ProviderInterface
 
         // Merge catalogues
 
-        $xlfCatalogue = $this->getFilesystemCatalogue();
+        $xlfCatalogue = $this->getFileTranslatedCatalogue();
         $messageCatalogue->addCatalogue($xlfCatalogue);
         unset($xlfCatalogue);
 
@@ -127,14 +128,19 @@ class FrontOfficeProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
     {
-        return (new FileTranslatedCatalogueProvider(
-            $this->locale,
-            $this->resourceDirectory,
-            $this->getFilenameFilters()
-        ))
-            ->getCatalogue();
+        try {
+            return (new FileTranslatedCatalogueProvider(
+                $this->locale,
+                $this->resourceDirectory,
+                $this->getFilenameFilters()
+            ))
+                ->getCatalogue();
+        } catch (FileNotFoundException $e) {
+            // there are no translation files, ignore them
+            return new MessageCatalogue($this->locale);
+        }
     }
 
     /**

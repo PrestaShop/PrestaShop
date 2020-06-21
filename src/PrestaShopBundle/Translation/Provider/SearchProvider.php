@@ -144,7 +144,7 @@ class SearchProvider implements SearchProviderInterface
 
         // Merge catalogues
 
-        $xlfCatalogue = $this->getFilesystemCatalogue();
+        $xlfCatalogue = $this->getFileTranslatedCatalogue();
         $messageCatalogue->addCatalogue($xlfCatalogue);
         unset($xlfCatalogue);
 
@@ -181,7 +181,7 @@ class SearchProvider implements SearchProviderInterface
     /**
      * @return MessageCatalogueInterface
      */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
     {
         try {
             return (new FileTranslatedCatalogueProvider(
@@ -192,7 +192,7 @@ class SearchProvider implements SearchProviderInterface
                 ->getCatalogue();
         } catch (FileNotFoundException $e) {
             return $this->filterCatalogue(
-                $this->externalModuleLegacySystemProvider->getFilesystemCatalogue()
+                $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue()
             );
         }
     }

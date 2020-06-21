@@ -134,7 +134,7 @@ class ThemeExporter
         $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
 
         try {
-            $themeCatalogue = $this->themeProvider->getFilesystemCatalogue();
+            $themeCatalogue = $this->themeProvider->getFileTranslatedCatalogue();
         } catch (FileNotFoundException $exception) {
             // if the theme doesn't have translation files (eg. the default theme)
             $themeCatalogue = new MessageCatalogue($locale);
@@ -207,22 +207,30 @@ class ThemeExporter
     {
         $theme = $this->themeRepository->getInstanceByName($themeName);
 
-        $folderPath = $this->themeExtractor->getCachedFilesPath($theme);
-        $tmpFolderPath = $this->themeExtractor->getTemporaryFilesPath($theme);
+        $cachedFilesPath = $this->themeExtractor->getCachedFilesPath($theme);
+        $temporaryFilesPath = $this->themeExtractor->getTemporaryFilesPath($theme);
 
-        $this->filesystem->remove($folderPath);
-        $this->filesystem->remove($tmpFolderPath);
+        $this->filesystem->remove($cachedFilesPath);
+        $this->filesystem->remove($temporaryFilesPath);
 
-        $tmpExtractPath = $tmpFolderPath . DIRECTORY_SEPARATOR . $locale;
+        $tmpExtractPath = $temporaryFilesPath . DIRECTORY_SEPARATOR . $locale;
 
         $this->filesystem->mkdir($tmpExtractPath);
 
-        $this->themeExtractor
+        $catalogue = $this->themeExtractor
             ->extract($theme, $locale, $rootDir);
 
+        $options = [
+            'path' => $temporaryFilesPath,
+            'default_locale' => $locale,
+            'root_dir' => $rootDir,
+        ];
+
+        $this->dumper->dump($catalogue, $options);
+
         Flattenizer::flatten(
-            $folderPath . DIRECTORY_SEPARATOR . ThemeExtractorInterface::DEFAULT_LOCALE,
             $tmpExtractPath,
+            $cachedFilesPath . DIRECTORY_SEPARATOR . ThemeExtractorInterface::DEFAULT_LOCALE,
             $locale
         );
 
