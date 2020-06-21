@@ -128,18 +128,13 @@ class TranslationService
      */
     public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
     {
-        /**
-         * @var TranslationsCatalogueProvider
-         */
-        $provider = $this->container->get('prestashop.translation.translations_provider');
-
-        $provider
-            ->setLocale($this->langToLocale($lang))
-            ->setType($type)
-            ->setTheme($theme)
-        ;
-
-        return $provider->getCatalogue($search);
+        return $this->container->get('prestashop.translation.translations_provider')
+                    ->getCatalogue(
+                        $type,
+                        $this->langToLocale($lang),
+                        $search,
+                        $theme
+                    );
 
 //        $factory = $this->container->get('prestashop.translation.translations_factory');
 //
@@ -192,11 +187,6 @@ class TranslationService
          */
         $provider = $this->container->get('prestashop.translation.translations_provider');
 
-        $provider
-            ->setLocale($locale)
-            ->setTheme($theme)
-        ;
-
         $router = $this->container->get('router');
 
         return [
@@ -204,7 +194,7 @@ class TranslationService
                 'edit_url' => $router->generate('api_translation_value_edit'),
                 'reset_url' => $router->generate('api_translation_value_reset'),
             ],
-            'data' => $provider->getDomainCatalogue($domain, $search, $module),
+            'data' => $provider->getDomainCatalogue($locale, $domain, $search, $module, $theme),
         ];
     }
 

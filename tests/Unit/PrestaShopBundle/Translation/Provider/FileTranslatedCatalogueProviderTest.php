@@ -80,12 +80,13 @@ class FileTranslatedCatalogueProviderTest extends TestCase
             'ShopSomeDomain',
             'ShopSomethingElse',
         ], $domains);
-        $catalogue = (new FileTranslatedCatalogueProvider(
+
+        $provider = new FileTranslatedCatalogueProvider(
             DefaultCatalogueProvider::DEFAULT_LOCALE,
             self::$tempDir,
             ['#^ShopSomething([A-Z]|\.|$)#']
-        ))
-            ->getCatalogue();
+        );
+        $catalogue = $provider->getCatalogue();
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -93,6 +94,8 @@ class FileTranslatedCatalogueProviderTest extends TestCase
         $this->assertSame([
             'ShopSomethingElse',
         ], $domains);
+
+        $this->assertSame($catalogue->all(), $provider->getFileTranslatedCatalogue()->all());
     }
 
     public function testGetCatalogueMessages()
