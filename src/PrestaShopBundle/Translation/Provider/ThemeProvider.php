@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShopBundle\Translation\Extractor\ThemeExtractorInterface;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Filesystem\Filesystem;
@@ -136,6 +137,10 @@ class ThemeProvider implements ProviderInterface
      */
     public function setThemeName($themeName): ThemeProvider
     {
+        if (empty($themeName)) {
+            throw new \RuntimeException('Theme has not been defined yet for this provider');
+        }
+
         // make sure the theme exists and store it cache
         $this->theme = $this->themeRepository->getInstanceByName($themeName);
 
@@ -175,17 +180,17 @@ class ThemeProvider implements ProviderInterface
      *
      * @return MessageCatalogueInterface
      */
-    public function getMessageCatalogue(): MessageCatalogueInterface
+    public function getMessageCatalogue(?string $themeName = null): MessageCatalogueInterface
     {
         $messageCatalogue = $this->getDefaultCatalogue();
 
         // Merge catalogues
 
-        $xlfCatalogue = $this->getFilesystemCatalogue();
+        $xlfCatalogue = $this->getFileTranslatedCatalogue($themeName);
         $messageCatalogue->addCatalogue($xlfCatalogue);
         unset($xlfCatalogue);
 
-        $databaseCatalogue = $this->getUserTranslatedCatalogue();
+        $databaseCatalogue = $this->getUserTranslatedCatalogue($themeName);
         $messageCatalogue->addCatalogue($databaseCatalogue);
         unset($databaseCatalogue);
 
@@ -222,20 +227,27 @@ class ThemeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(?string $themeName = null): MessageCatalogueInterface
     {
+        $this->setThemeName($themeName);
+
         // load front office catalogue
-        $catalogue = $this->frontOfficeProvider->getFilesystemCatalogue();
+        $catalogue = $this->frontOfficeProvider->getFileTranslatedCatalogue();
 
-        $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider(
-            $this->locale,
-            $this->themeResourcesDirectory,
-            ['*']
-        ))
-            ->getCatalogue();
+        try {
+            $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider(
+                $this->locale,
+                $this->getResourceDirectory(),
+                ['*']
+            ))
+                ->getCatalogue();
 
-        // overwrite with the theme's own catalogue
-        $catalogue->addCatalogue($fileTranslatedCatalogue);
+            // overwrite with the theme's own catalogue
+            $catalogue->addCatalogue($fileTranslatedCatalogue);
+        } catch (FileNotFoundException $e) {
+            // there are no translation files, ignore them
+            return new MessageCatalogue($this->locale);
+        }
 
         return $catalogue;
     }
@@ -247,13 +259,11 @@ class ThemeProvider implements ProviderInterface
      */
     public function getUserTranslatedCatalogue(string $themeName = null): MessageCatalogueInterface
     {
+        $this->setThemeName($themeName);
+
         $translationDomains = ['*'];
         if (!empty($this->domain)) {
             $translationDomains = ['^' . $this->domain];
-        }
-
-        if (null === $themeName) {
-            $themeName = $this->getThemeName();
         }
 
         return (new UserTranslatedCatalogueProvider(
@@ -261,7 +271,7 @@ class ThemeProvider implements ProviderInterface
             $this->locale,
             $translationDomains
         ))
-            ->getCatalogue($themeName);
+            ->getCatalogue($this->themeName);
     }
 
     /**
@@ -280,18 +290,17 @@ class ThemeProvider implements ProviderInterface
         return 'theme';
     }
 
-    /**
-     * @return string
-     *
-     * @throws \RuntimeException
-     */
-    private function getThemeName(): string
+    private function getResourceDirectory()
     {
-        if (empty($this->themeName)) {
-            throw new \RuntimeException('Theme has not been defined yet for this provider');
-        }
+        $resourceDirectory = rtrim($this->themeResourcesDirectory, DIRECTORY_SEPARATOR) .
+            DIRECTORY_SEPARATOR .
+            $this->themeName .
+            DIRECTORY_SEPARATOR .
+            'translations'
+        ;
+        $this->filesystem->mkdir($resourceDirectory);
 
-        return $this->themeName;
+        return $resourceDirectory;
     }
 
     /**

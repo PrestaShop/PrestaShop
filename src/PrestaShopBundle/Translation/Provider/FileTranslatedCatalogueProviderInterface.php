@@ -40,5 +40,5 @@ interface FileTranslatedCatalogueProviderInterface
      *
      * @return MessageCatalogueInterface
      */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface;
+    public function getFileTranslatedCatalogue(): MessageCatalogueInterface;
 }
