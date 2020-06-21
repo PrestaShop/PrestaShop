@@ -71,6 +71,8 @@ class ModuleProvider implements ProviderInterface
     {
         $this->moduleName = $moduleName;
 
+        $this->resourceDirectory = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
+
         return $this;
     }
 
@@ -95,6 +97,18 @@ class ModuleProvider implements ProviderInterface
     }
 
     /**
+     * @param string $resourceDirectory
+     *
+     * @return ModuleProvider
+     */
+    public function setResourceDirectory(string $resourceDirectory): ModuleProvider
+    {
+        $this->resourceDirectory = $resourceDirectory;
+
+        return $this;
+    }
+
+    /**
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
@@ -109,7 +123,7 @@ class ModuleProvider implements ProviderInterface
 
         // Merge catalogues
 
-        $xlfCatalogue = $this->getFilesystemCatalogue();
+        $xlfCatalogue = $this->getFileTranslatedCatalogue();
         $messageCatalogue->addCatalogue($xlfCatalogue);
         unset($xlfCatalogue);
 
@@ -142,7 +156,7 @@ class ModuleProvider implements ProviderInterface
      *
      * @throws FileNotFoundException
      */
-    public function getFilesystemCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
     {
         return (new FileTranslatedCatalogueProvider(
             $this->locale,

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\PhpDumper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -59,9 +60,6 @@ class ThemeExtractorTest extends KernelTestCase
         $this->container = self::$kernel->getContainer();
         $this->filesystem = new Filesystem();
         $this->themeExtractor = $this->container->get('prestashop.translation.theme_extractor');
-
-        $themeProvider = $this->container->get('prestashop.translation.theme_provider');
-        $this->themeExtractor->setThemeProvider($themeProvider);
     }
 
     protected function tearDown()
@@ -79,29 +77,18 @@ class ThemeExtractorTest extends KernelTestCase
 
     public function testExtractWithLegacyFormat()
     {
-        $this->themeExtractor
-            ->addDumper(new PhpDumper())
-            ->setFormat('php')
+        $catalogue = $this->themeExtractor
             ->extract($this->getFakeTheme());
 
-        $legacyTranslationFile = self::$legacyFolder.'/en-US.php';
-        $this->assertTrue($this->filesystem->exists($legacyTranslationFile));
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
     }
 
     public function testExtractWithXliffFormat()
     {
-        $this->themeExtractor
-            ->setOutputPath(self::$xliffFolder)
+        $catalogue = $this->themeExtractor
             ->extract($this->getFakeTheme());
 
-        $isFilesExists = $this->filesystem->exists(array(
-            self::$xliffFolder.'/en-US/Shop/Theme/Actions.xlf',
-            self::$xliffFolder.'/en-US/Shop/Theme/Cart.xlf',
-            self::$xliffFolder.'/en-US/Shop/Theme/Product.xlf',
-            self::$xliffFolder.'/en-US/Shop/Foo/Bar.xlf',
-        ));
-
-        $this->assertTrue($isFilesExists);
+        $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
     }
 
     private function getFakeTheme()
