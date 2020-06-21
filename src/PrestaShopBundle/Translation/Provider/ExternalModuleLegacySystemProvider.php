@@ -84,10 +84,6 @@ class ExternalModuleLegacySystemProvider implements SearchProviderInterface
     private $defaultCatalogueCache;
 
     /**
-     * @var string[]
-     */
-    private $filenameFilters;
-    /**
      * @var DatabaseTranslationLoader
      */
     private $databaseLoader;

@@ -111,7 +111,7 @@ class TranslationCatalogueProviderFactory
 
         return new DefaultCatalogueProvider(
             $locale,
-            $this->getDefaultDirectory($type),
+            $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
             $this->getFilenameFilters($type)
         );
     }
@@ -129,7 +129,7 @@ class TranslationCatalogueProviderFactory
         ?string $theme
     ): FileTranslatedCatalogueProviderInterface {
         if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others', 'external_legacy_module'])) {
-            throw new LogicException("The 'type' parameter is not valid. $type given2");
+            throw new LogicException("The 'type' parameter is not valid. $type given");
         }
         if ('external_legacy_module' === $type) {
             return $this->getExternalLegacyModuleProvider($locale);
@@ -140,7 +140,7 @@ class TranslationCatalogueProviderFactory
 
         return new FileTranslatedCatalogueProvider(
             $locale,
-            $this->getDirectory($type, $locale, $theme),
+            $this->resourceDirectory,
             $this->getFilenameFilters($type)
         );
     }
@@ -158,7 +158,7 @@ class TranslationCatalogueProviderFactory
         ?string $theme
     ): UserTranslatedCatalogueProviderInterface {
         if (!in_array($type, ['modules', 'themes', 'mails', 'mails_body', 'back', 'others', 'external_legacy_module'])) {
-            throw new LogicException("The 'type' parameter is not valid. $type given3");
+            throw new LogicException("The 'type' parameter is not valid. $type given");
         }
 
         if ('external_legacy_module' === $type) {
@@ -279,56 +279,12 @@ class TranslationCatalogueProviderFactory
             case 'mails_body':
                 $filenameFilters = ['#EmailsBody*#'];
                 break;
-            case 'themes':
-                $filenameFilters = ['*'];
-                break;
             case 'others':
                 $filenameFilters = ['#^messages*#'];
                 break;
         }
 
         return $filenameFilters;
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return string
-     */
-    private function getDefaultDirectory(string $type)
-    {
-        return ('themes' === $type) ?
-            $this->themeResourceDirectory :
-            $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default'
-        ;
-    }
-
-    /**
-     * @param string $type
-     * @param string|null $locale
-     * @param string|null $theme
-     *
-     * @return string
-     */
-    private function getDirectory(string $type, ?string $locale, ?string $theme): string
-    {
-        $directory = $this->resourceDirectory;
-
-        if ('themes' === $type) {
-            if (null === $locale) {
-                $directory = implode(
-                    DIRECTORY_SEPARATOR,
-                    [$this->themeResourceDirectory, $theme, 'translations', $this->themeResourceDirectory]
-                );
-            } else {
-                $directory = implode(
-                    DIRECTORY_SEPARATOR,
-                    [$locale, $theme, 'translations', $locale]
-                );
-            }
-        }
-
-        return $directory;
     }
 
     /**
@@ -355,9 +311,6 @@ class TranslationCatalogueProviderFactory
                 break;
             case 'mails_body':
                 $translationDomains = ['EmailsBody*'];
-                break;
-            case 'themes':
-                $translationDomains = ['*'];
                 break;
             case 'others':
                 $translationDomains = ['^messages*'];
