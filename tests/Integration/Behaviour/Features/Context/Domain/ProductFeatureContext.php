@@ -97,8 +97,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I pack :quantity :type product :productReference to a pack of :packReference
-     * @When I add following product quantities to a pack of :packReference:
+     * @When I update pack :packReference with following product quantities:
      *
      * @param string $packReference
      * @param TableNode $table
@@ -124,6 +123,22 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ));
         } catch (ProductException $e) {
             $this->lastException = $e;
+        }
+    }
+
+    public function assertPackContents(string $packReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $packId = $this->getSharedStorage()->get($packReference);
+
+        //@todo: temporary bellow
+        //@todo: How do we retrieve packs - should it be separate query, or just add packed items inside ProductForEditing?
+        $defaultLangId = (int) \Configuration::get('PS_LANG_DEFAULT');
+        $packedProducts = \Pack::getProducts($defaultLangId, 0, 100, 'id_product', 'ASC');
+
+        foreach ($data as $productReference => $quantity) {
+            $packedProductId = $this->getSharedStorage()->get($productReference);
+            //@todo: at least temporary decision to assert tests for now
         }
     }
 
