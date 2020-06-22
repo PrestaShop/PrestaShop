@@ -66,9 +66,7 @@ class YamlModuleLoader extends Loader
             $routingFile = $modulePath . '/config/routes.yml';
             if (file_exists($routingFile)) {
                 $loadedRoutes = $this->import($routingFile, 'yaml');
-                $modifiedRoutes = $this->modifyRoutes($loadedRoutes);
-
-                $routes->addCollection($modifiedRoutes);
+                $routes->addCollection($loadedRoutes);
             }
         }
 
@@ -83,6 +81,16 @@ class YamlModuleLoader extends Loader
     public function supports($resource, $type = null)
     {
         return 'module' === $type;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function import($resource, $type = null)
+    {
+        $loadedRoutes = parent::import($resource, $type);
+
+        return $this->modifyRoutes($loadedRoutes);
     }
 
     /**
