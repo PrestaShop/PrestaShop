@@ -90,46 +90,12 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         // Calculate differences of price (Before / After)
         $diff_price_tax_incl = $total_products_tax_incl - $orderDetail->total_price_tax_incl;
         $diff_price_tax_excl = $total_products_tax_excl - $orderDetail->total_price_tax_excl;
-
-        // Apply change on OrderInvoice
-        if (isset($orderInvoice)) {
-            // If OrderInvoice to use is different, we update the old invoice and new invoice
-            if ($orderDetail->id_order_invoice != $orderInvoice->id) {
-                $old_order_invoice = new OrderInvoice($orderDetail->id_order_invoice);
-                // We remove cost of products
-                $old_order_invoice->total_products -= $orderDetail->total_price_tax_excl;
-                $old_order_invoice->total_products_wt -= $orderDetail->total_price_tax_incl;
-
-                $old_order_invoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
-                $old_order_invoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
-
-                $res &= $old_order_invoice->update();
-
-                $orderInvoice->total_products += $orderDetail->total_price_tax_excl;
-                $orderInvoice->total_products_wt += $orderDetail->total_price_tax_incl;
-
-                $orderInvoice->total_paid_tax_excl += $orderDetail->total_price_tax_excl;
-                $orderInvoice->total_paid_tax_incl += $orderDetail->total_price_tax_incl;
-
-                $orderDetail->id_order_invoice = $orderInvoice->id;
-            }
-        }
-
         if ($diff_price_tax_incl != 0 && $diff_price_tax_excl != 0) {
             $orderDetail->unit_price_tax_excl = $product_price_tax_excl;
             $orderDetail->unit_price_tax_incl = $product_price_tax_incl;
 
             $orderDetail->total_price_tax_incl += $diff_price_tax_incl;
             $orderDetail->total_price_tax_excl += $diff_price_tax_excl;
-
-            if (isset($orderInvoice)) {
-                // Apply changes on OrderInvoice
-                $orderInvoice->total_products += $diff_price_tax_excl;
-                $orderInvoice->total_products_wt += $diff_price_tax_incl;
-
-                $orderInvoice->total_paid_tax_excl += $diff_price_tax_excl;
-                $orderInvoice->total_paid_tax_incl += $diff_price_tax_incl;
-            }
 
             // Apply changes on Order
             $order = new Order($orderDetail->id_order);
@@ -160,14 +126,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $orderDetail,
             $old_quantity,
             $command->getQuantity(),
-            false,
-            ($orderInvoice && !empty($orderInvoice->id))
+            $orderInvoice
         );
-
-        // Save order invoice
-        if (isset($orderInvoice)) {
-            $res &= $orderInvoice->update();
-        }
 
         if (!$res) {
             throw new OrderException('An error occurred while editing the product line.');

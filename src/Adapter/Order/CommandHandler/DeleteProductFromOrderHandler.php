@@ -99,13 +99,8 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
                 $orderDetail,
                 $orderDetail->product_quantity,
                 0,
-                true,
-                $orderDetail->id_order_invoice != 0
+                $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null
             );
-
-            if (!$this->updateOrderInvoice($orderDetail)) {
-                throw new OrderException('An error occurred while attempting to delete product from order.');
-            }
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
@@ -114,27 +109,6 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
         }
 
         $this->contextStateManager->restoreContext();
-    }
-
-    /**
-     * @param OrderDetail $orderDetail
-     *
-     * @return bool
-     */
-    private function updateOrderInvoice(OrderDetail $orderDetail)
-    {
-        if ($orderDetail->id_order_invoice != 0) {
-            $order_invoice = new OrderInvoice($orderDetail->id_order_invoice);
-            // @todo: use https://github.com/PrestaShop/decimal for price computations
-            $order_invoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
-            $order_invoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
-            $order_invoice->total_products -= $orderDetail->total_price_tax_excl;
-            $order_invoice->total_products_wt -= $orderDetail->total_price_tax_incl;
-
-            return $order_invoice->update();
-        }
-
-        return true;
     }
 
     /**

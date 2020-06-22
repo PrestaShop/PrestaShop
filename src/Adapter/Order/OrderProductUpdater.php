@@ -42,6 +42,7 @@ use Order;
 use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
+use OrderInvoice;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
@@ -106,8 +107,7 @@ class OrderProductUpdater
         OrderDetail $orderDetail,
         int $oldQuantity,
         int $newQuantity,
-        ?bool $productDeletionMode = false,
-        ?bool $hasInvoice = false
+        ?OrderInvoice $orderInvoice
     ): Order {
         $cart = new Cart($order->id_cart);
 
@@ -126,17 +126,16 @@ class OrderProductUpdater
             // Update product stocks
             $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
 
-            // Fix differences between cart's cartRules and order's cartRules
+            // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
             $this->updateOrderCartRules($order, $cart);
 
-            // Recalculate amounts of cartRules
-            $this->recalculateCartRules($cart, $order);
-
             // Update prices on the order
-            $order = $this->updateOrderAmounts($cart, $order, $hasInvoice);
+            $order = $this->updateOrderAmounts($cart, $order, ($orderInvoice && !empty($orderInvoice->id)));
 
             // Update weight and shipping infos
             $order = $this->updateOrderShippingInfos($order, new Product((int) $orderDetail->product_id));
+
+            $this->updateOrderInvoice($orderDetail, $orderInvoice);
         } finally {
             $this->contextStateManager->restoreContext();
         }
@@ -371,9 +370,7 @@ class OrderProductUpdater
             throw new OrderException('Could not get a valid Order state before deletion');
         }
 
-        if ($order->hasBeenDelivered()) {
-            Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_returned` = `quantity_returned` + ' . (int) $oldQuantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id);
-        } elseif ($order->hasBeenPaid()) {
+        if ($order->hasBeenPaid()) {
             Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'customization` SET `quantity_refunded` = `quantity_refunded` + ' . (int) $oldQuantity . ' WHERE `id_customization` = ' . (int) $orderDetail->id_customization . ' AND `id_cart` = ' . (int) $order->id_cart . ' AND `id_product` = ' . (int) $orderDetail->product_id);
         }
 
@@ -448,28 +445,6 @@ class OrderProductUpdater
     /**
      * @param Cart $cart
      * @param Order $order
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function recalculateCartRules(Cart $cart, Order $order): void
-    {
-        $computingPrecision = $this->getPrecisionFromCart($cart);
-
-        foreach ($order->getCartRules() as $orderCartRuleData) {
-            $orderCartRule = new OrderCartRule((int) $orderCartRuleData['id_order_cart_rule']);
-            $cartRule = new CartRule((int) $orderCartRule->id_cart_rule);
-
-            $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
-            $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
-
-            $orderCartRule->update();
-        }
-    }
-
-    /**
-     * @param Cart $cart
-     * @param Order $order
      * @param bool $hasInvoice
      *
      * @return Order
@@ -511,6 +486,41 @@ class OrderProductUpdater
         }
 
         return $order;
+    }
+
+    /**
+     * @param OrderDetail $orderDetail
+     * @param OrderInvoice|null $orderInvoice
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateOrderInvoice(OrderDetail $orderDetail, ?OrderInvoice $orderInvoice): void
+    {
+        if ($orderDetail->id_order_invoice != 0) {
+            $orderDetailInvoice = new OrderInvoice($orderDetail->id_order_invoice);
+            // @todo: use https://github.com/PrestaShop/decimal for price computations
+            $orderDetailInvoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
+            $orderDetailInvoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
+            $orderDetailInvoice->total_products -= $orderDetail->total_price_tax_excl;
+            $orderDetailInvoice->total_products_wt -= $orderDetail->total_price_tax_incl;
+
+            $orderDetailInvoice->update();
+        }
+
+        // Apply change on OrderInvoice
+        if (isset($orderInvoice) && $orderDetail->id_order_invoice != $orderInvoice->id) {
+            $orderInvoice->total_products += $orderDetail->total_price_tax_excl;
+            $orderInvoice->total_products_wt += $orderDetail->total_price_tax_incl;
+
+            $orderInvoice->total_paid_tax_excl += $orderDetail->total_price_tax_excl;
+            $orderInvoice->total_paid_tax_incl += $orderDetail->total_price_tax_incl;
+
+            $orderDetail->id_order_invoice = $orderInvoice->id;
+
+            $orderInvoice->update();
+            $orderDetail->update();
+        }
     }
 
     /**
