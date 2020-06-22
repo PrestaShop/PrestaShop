@@ -31,7 +31,7 @@ module.exports = class Files extends BOBasePage {
     this.viewRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-view-row-link`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#attachment_grid_bulk_action_delete_selection';
     this.confirmDeleteModal = '#attachment-grid-confirm-modal';

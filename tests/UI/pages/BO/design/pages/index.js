@@ -30,7 +30,7 @@ module.exports = class Pages extends BOBasePage {
     this.columnNotValidIcon = (table, row) => `${this.listTableColumn(table, row, 'active')}`
       + ' i.grid-toggler-icon-not-valid';
     // Bulk Actions
-    this.selectAllRowsLabel = table => `${this.listForm(table)} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = table => `${this.listForm(table)} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = table => `${this.listForm(table)} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = table => `#${table}_grid_bulk_action_delete_selection`;
     this.bulkActionsEnableButton = table => `#${table}_grid_bulk_action_enable_selection`;

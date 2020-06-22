@@ -27,7 +27,7 @@ module.exports = class Addresses extends BOBasePage {
     this.filterSearchButton = `${this.addressesListForm} .grid-search-button`;
     this.filterResetButton = `${this.addressesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
     // Modal Dialog
