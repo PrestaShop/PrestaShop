@@ -175,7 +175,7 @@ function smartyTranslate($params, $smarty)
         $params['d'] = null;
     }
 
-    if (null !== $params['d']) {
+    if (!empty($params['d'])) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
 
@@ -209,15 +209,12 @@ function smartyTranslate($params, $smarty)
                 return $params['s'];
             }
         }
-    }
 
-    if (($translation = Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d'])) !== $params['s']
-        && $params['mod'] === false) {
-        return $translation;
+        return Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d']);
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
-    
+
     // fix inheritance template filename in case of includes from different cross sources between theme, modules, ...
     $filename = $smarty->template_resource;
     if (!isset($smarty->inheritance->sourceStack[0]) || $filename === $smarty->inheritance->sourceStack[0]->resource) {
