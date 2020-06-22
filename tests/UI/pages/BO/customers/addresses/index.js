@@ -21,7 +21,7 @@ module.exports = class Addresses extends BOBasePage {
     this.addressesListTableToggleDropDown = row => `${this.addressesListTableColumnAction(row)}`
       + ' a[data-toggle=\'dropdown\']';
     this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a.grid-delete-row-link`;
-    this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a.grid-view-row-link`;
+    this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a.grid-edit-row-link`;
     // Filters
     this.addressFilterColumnInput = filterBy => `${this.addressesListForm} #address_${filterBy}`;
     this.filterSearchButton = `${this.addressesListForm} .grid-search-button`;

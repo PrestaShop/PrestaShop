@@ -138,6 +138,7 @@ final class ContactGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->add(
                                 (new LinkRowAction('edit'))
                                     ->setIcon('edit')
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                     ->setOptions([
                                         'route' => 'admin_contacts_edit',
                                         'route_param_name' => 'contactId',
