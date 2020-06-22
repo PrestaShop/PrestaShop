@@ -267,7 +267,7 @@ module.exports = class Categories extends BOBasePage {
   async changeCategoriesEnabledColumnBulkActions(enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
+      this.page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -288,7 +288,7 @@ module.exports = class Categories extends BOBasePage {
   async deleteCategoriesBulkActions(modeID = '0') {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
+      this.page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
