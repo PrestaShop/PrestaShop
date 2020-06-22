@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductToPackCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 
 /**
- * Defines contract for AddProductToPackHandler
+ * Defines contract for UpdateProductPackHandler
  */
-interface AddProductToPackHandlerInterface
+interface UpdateProductPackHandlerInterface
 {
     /**
-     * @param AddProductToPackCommand $command
+     * @param UpdateProductPackCommand $command
      */
-    public function handle(AddProductToPackCommand $command): void;
+    public function handle(UpdateProductPackCommand $command): void;
 }

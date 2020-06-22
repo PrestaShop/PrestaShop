@@ -26,30 +26,20 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Adds product to a pack
+ * Transfers product data
  */
-class AddProductToPackCommand
+class QuantifiedProduct
 {
     /**
      * @var ProductId
      */
-    private $packId;
-
-    /**
-     * @var ProductId
-     */
     private $productId;
-
-    /**
-     * @var CombinationId|null
-     */
-    private $combinationId;
 
     /**
      * @var int
@@ -57,32 +47,23 @@ class AddProductToPackCommand
     private $quantity;
 
     /**
-     * @param int $packId
-     * @param int $productId
-     * @param int|null $combinationId
-     * @param int $quantity
+     * @var CombinationId
      */
-    public function __construct(
-        int $packId,
-        int $productId,
-        int $quantity,
-        ?int $combinationId
-    ) {
-        $this->packId = new ProductId($packId);
-        $this->productId = new ProductId($productId);
-        $this->quantity = $quantity;
-
-        if ($combinationId !== null) {
-            $this->combinationId = new CombinationId($combinationId);
-        }
-    }
+    private $combinationId;
 
     /**
-     * @return ProductId
+     * @param int $productId
+     * @param int $quantity
+     * @param int $combinationId
      */
-    public function getPackId(): ProductId
-    {
-        return $this->packId;
+    public function __construct(
+        int $productId,
+        int $quantity,
+        ?int $combinationId = null
+    ) {
+        $this->productId = new ProductId($productId);
+        $this->quantity = $quantity;
+        $this->combinationId = !$combinationId ?: new CombinationId($combinationId);
     }
 
     /**
@@ -102,9 +83,9 @@ class AddProductToPackCommand
     }
 
     /**
-     * @return CombinationId|null
+     * @return CombinationId
      */
-    public function getCombinationId(): ?CombinationId
+    public function getCombinationId(): CombinationId
     {
         return $this->combinationId;
     }

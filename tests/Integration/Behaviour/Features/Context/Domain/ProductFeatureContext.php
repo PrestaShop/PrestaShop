@@ -33,9 +33,9 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductToPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -118,7 +118,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $this->getCommandBus()->handle(new AddProductToPackCommand(
+            $this->getCommandBus()->handle(new UpdateProductPackCommand(
                 $packId,
                 $productId,
                 $quantity,
