@@ -36,8 +36,8 @@ class LinkedOrdersForViewing
      */
     public function __construct(array $linkedOrders)
     {
-        foreach ($linkedOrders as $brother) {
-            $this->addLinkedOrder($brother);
+        foreach ($linkedOrders as $order) {
+            $this->addLinkedOrder($order);
         }
     }
 
