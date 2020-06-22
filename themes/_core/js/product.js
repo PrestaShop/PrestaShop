@@ -44,11 +44,11 @@ function getProductUpdateUrl() {
   const $quantityWantedInput = $('#quantity_wanted');
 
   if (
-    prestashop !== null &&
-    prestashop.urls !== null &&
-    prestashop.urls.pages !== null &&
-    prestashop.urls.pages.product !== '' &&
-    prestashop.urls.pages.product !== null
+    prestashop !== null
+    && prestashop.urls !== null
+    && prestashop.urls.pages !== null
+    && prestashop.urls.pages.product !== ''
+    && prestashop.urls.pages.product !== null
   ) {
     dfd.resolve(prestashop.urls.pages.product);
 
@@ -67,9 +67,9 @@ function getProductUpdateUrl() {
       {
         ajax: 1,
         action: 'productrefresh',
-        quantity_wanted: $quantityWantedInput.val()
+        quantity_wanted: $quantityWantedInput.val(),
       },
-      formData
+      formData,
     ),
     dataType: 'json',
     success(data) {
@@ -81,9 +81,9 @@ function getProductUpdateUrl() {
       dfd.reject({
         jqXHR,
         textStatus,
-        errorThrown
+        errorThrown,
       });
-    }
+    },
   });
 
   return dfd.promise();
@@ -103,7 +103,7 @@ function updateProduct(event, eventType, updateUrl) {
   let preview = psGetRequestParameter('preview');
 
   if (preview !== null) {
-    preview = '&preview=' + preview;
+    preview = `&preview=${  preview}`;
   } else {
     preview = '';
   }
@@ -128,7 +128,7 @@ function updateProduct(event, eventType, updateUrl) {
   // Most update need to occur (almost) instantly, but in some cases (like keyboard actions)
   // we need to delay the update a bit more
   let updateDelay = 30;
-  if ('updatedProductQuantity' === eventType) {
+  if (eventType === 'updatedProductQuantity') {
     updateDelay = 750;
   }
 
@@ -144,7 +144,7 @@ function updateProduct(event, eventType, updateUrl) {
         ajax: 1,
         action: 'refresh',
         quantity_wanted:
-          eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val()
+          eventType === 'updatedProductCombination' ? $quantityWantedInput.attr('min') : $quantityWantedInput.val(),
       },
       dataType: 'json',
       beforeSend() {
@@ -156,7 +156,7 @@ function updateProduct(event, eventType, updateUrl) {
         if (textStatus !== 'abort' && $('section#main > .ajax-error').length === 0) {
           showError(
             $('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability'),
-            'An error occurred while processing your request'
+            'An error occurred while processing your request',
           );
         }
       },
@@ -171,33 +171,33 @@ function updateProduct(event, eventType, updateUrl) {
         }
 
         $(
-          '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices'
+          '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices',
         )
           .first()
           .replaceWith(data.product_prices);
         $(
-          '.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization, .page-product:not(.modal-open) .product-container .product-customization'
+          '.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization, .page-product:not(.modal-open) .product-container .product-customization',
         )
           .first()
           .replaceWith(data.product_customization);
         $(
-          '.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants, .page-product:not(.modal-open) .product-container .product-variants'
+          '.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants, .page-product:not(.modal-open) .product-container .product-variants',
         )
           .first()
           .replaceWith(data.product_variants);
         $(
-          '.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts, .page-product:not(.modal-open) .product-container .product-discounts'
+          '.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts, .page-product:not(.modal-open) .product-container .product-discounts',
         )
           .first()
           .replaceWith(data.product_discounts);
         $(
-          '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info'
+          '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info',
         )
           .first()
           .replaceWith(data.product_additional_info);
         $('.quickview #product-details, #product-details').replaceWith(data.product_details);
         $(
-          '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags'
+          '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags',
         )
           .first()
           .replaceWith(data.product_flags);
@@ -214,10 +214,10 @@ function updateProduct(event, eventType, updateUrl) {
       complete(jqXHR, textStatus) {
         currentRequest = null;
         currentRequestDelayedId = null;
-      }
+      },
     });
   }).bind(currentRequest, currentRequestDelayedId)),
-    updateDelay;
+  updateDelay;
 }
 
 /**
@@ -240,7 +240,7 @@ function replaceAddToCartSections(data) {
   if ($productAddToCart === null) {
     showError(
       $('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability'),
-      'An error occurred while processing your request'
+      'An error occurred while processing your request',
     );
   }
   const $addProductToCart = $('.product-add-to-cart');
@@ -251,19 +251,19 @@ function replaceAddToCartSections(data) {
   replaceAddToCartSection({
     $addToCartSnippet: $productAddToCart,
     $targetParent: $addProductToCart,
-    targetSelector: productAvailabilitySelector
+    targetSelector: productAvailabilitySelector,
   });
 
   replaceAddToCartSection({
     $addToCartSnippet: $productAddToCart,
     $targetParent: $addProductToCart,
-    targetSelector: productAvailabilityMessageSelector
+    targetSelector: productAvailabilityMessageSelector,
   });
 
   replaceAddToCartSection({
     $addToCartSnippet: $productAddToCart,
     $targetParent: $addProductToCart,
-    targetSelector: productMinimalQuantitySelector
+    targetSelector: productMinimalQuantitySelector,
   });
 }
 
@@ -297,15 +297,15 @@ function showError($container, textError) {
 
 $(document).ready(() => {
   // Listen on all form elements + those who have a data-product-attribute
-  $('body').on('change touchspin.on.startspin', '.product-variants *[name]', e => {
+  $('body').on('change touchspin.on.startspin', '.product-variants *[name]', (e) => {
     prestashop.emit('updateProduct', {
       eventType: 'updatedProductCombination',
       event: e,
       // Following variables are not used anymore, but kept for backward compatibility
       resp: {},
       reason: {
-        productUrl: prestashop.urls.pages.product || ''
-      }
+        productUrl: prestashop.urls.pages.product || '',
+      },
     });
   });
 
@@ -325,15 +325,15 @@ $(document).ready(() => {
       // Following variables are not used anymore, but kept for backward compatibility
       resp: {},
       reason: {
-        productUrl: prestashop.urls.pages.product || ''
-      }
+        productUrl: prestashop.urls.pages.product || '',
+      },
     });
   });
 
   // Refresh all the product content
-  prestashop.on('updateProduct', args => {
-    const eventType = args.eventType;
-    const event = args.event;
+  prestashop.on('updateProduct', (args) => {
+    const {eventType} = args;
+    const {event} = args;
 
     getProductUpdateUrl()
       .done(productUpdateUrl => updateProduct(event, eventType, productUpdateUrl))
@@ -344,7 +344,7 @@ $(document).ready(() => {
       });
   });
 
-  prestashop.on('updatedProduct', args => {
+  prestashop.on('updatedProduct', (args) => {
     if (!args.product_url || !args.id_product_attribute) {
       return;
     }
@@ -366,14 +366,14 @@ $(document).ready(() => {
 
     window.history.replaceState(
       {
-        id_product_attribute: args.id_product_attribute
+        id_product_attribute: args.id_product_attribute,
       },
       pageTitle,
-      args.product_url
+      args.product_url,
     );
   });
 
-  prestashop.on('updateCart', event => {
+  prestashop.on('updateCart', (event) => {
     if (!event || !event.reason || event.reason.linkAction !== 'add-to-cart') {
       return;
     }
