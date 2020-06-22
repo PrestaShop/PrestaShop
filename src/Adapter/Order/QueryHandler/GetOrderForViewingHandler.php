@@ -53,8 +53,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderBrotherForViewing;
-use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderBrothersForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\LinkedOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\LinkedOrdersForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -197,7 +197,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
             $this->getOrderSources($order),
-            $this->getOrderBrothers($order)
+            $this->getLinkedOrders($order)
         );
     }
 
@@ -788,9 +788,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     }
 
     /**
-     * @return OrderBrothersForViewing
+     * @return LinkedOrdersForViewing
      */
-    private function getOrderBrothers(Order $order): OrderBrothersForViewing
+    private function getLinkedOrders(Order $order): LinkedOrdersForViewing
     {
         $brothersData = $order->getBrother();
         $brothers = [];
@@ -806,14 +806,14 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
             $orderState = new OrderState($brotherItem->current_state);
 
-            $brothers[] = new OrderBrotherForViewing(
+            $brothers[] = new LinkedOrderForViewing(
                 $brotherItem->id,
                 $orderState->name[$brotherItem->id_lang],
                 $totalAmount
             );
         }
 
-        return new OrderBrothersForViewing($brothers);
+        return new LinkedOrdersForViewing($brothers);
     }
 
     /**

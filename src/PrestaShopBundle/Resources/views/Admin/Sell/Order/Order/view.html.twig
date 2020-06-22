@@ -94,8 +94,8 @@
       </div>
     {% endif %}
 
-    {% if orderForViewing.brothers.brothers is not empty %}
-      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/brothers.html.twig' %}
+    {% if orderForViewing.linkedOrders.linkedOrders is not empty %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/linked_orders.html.twig' %}
     {% endif %}
 
     {{ renderhook('displayAdminOrder', {'id_order': orderForViewing.id}) }}

@@ -26,34 +26,34 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
-class OrderBrothersForViewing
+class LinkedOrdersForViewing
 {
-    /** @var OrderBrotherForViewing[] */
-    private $brothers = [];
+    /** @var LinkedOrderForViewing[] */
+    private $linkedOrders = [];
 
     /**
-     * @param OrderBrotherForViewing[] $brothers
+     * @param LinkedOrderForViewing[] $linkedOrders
      */
-    public function __construct(array $brothers)
+    public function __construct(array $linkedOrders)
     {
-        foreach ($brothers as $brother) {
-            $this->addBrother($brother);
+        foreach ($linkedOrders as $brother) {
+            $this->addLinkedOrder($brother);
         }
     }
 
     /**
-     * @return OrderBrotherForViewing[]
+     * @return LinkedOrderForViewing[]
      */
-    public function getBrothers(): array
+    public function getLinkedOrders(): array
     {
-        return $this->brothers;
+        return $this->linkedOrders;
     }
 
     /**
-     * @param OrderBrotherForViewing $brother
+     * @param LinkedOrderForViewing $order
      */
-    private function addBrother(OrderBrotherForViewing $brother): void
+    private function addLinkedOrder(LinkedOrderForViewing $order): void
     {
-        $this->brothers[] = $brother;
+        $this->linkedOrders[] = $order;
     }
 }

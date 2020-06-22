@@ -29,10 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
 /**
- * Used in order page view to display 'order brothers': orders related/linked
+ * Used in order page view to display 'linked orders': orders linked
  * to the order being displayed
+ *
+ * Two orders are linked if they are the result of an Order Split
  */
-class OrderBrotherForViewing
+class LinkedOrderForViewing
 {
     /**
      * @var int
