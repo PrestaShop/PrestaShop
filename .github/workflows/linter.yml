@@ -16,5 +16,4 @@ jobs:
         uses: docker://github/super-linter:v2.1.1
         env:
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_ANSIBLE: false
           DEFAULT_BRANCH: develop
