@@ -26,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
-use Configuration;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\ToggleLanguageStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 
 /**
