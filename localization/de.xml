@@ -94,7 +94,7 @@
       <taxRule iso_code_country="se" id_tax="2"/>
       <taxRule iso_code_country="uk" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="DE Foodstuff Rate (7%)">
+    <taxRulesGroup name="DE Foodstuff Rate (5%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -123,7 +123,7 @@
       <taxRule iso_code_country="se" id_tax="2"/>
       <taxRule iso_code_country="uk" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="DE Books Rate (7%)">
+    <taxRulesGroup name="DE Books Rate (5%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
