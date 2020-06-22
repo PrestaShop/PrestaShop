@@ -28,7 +28,6 @@ namespace LegacyTests\Unit\Adapter\Module\Tab;
 
 use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
-use PrestaShopBundle\Routing\YamlModuleLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -54,7 +53,7 @@ class ModuleTabRegisterTest extends UnitTestCase
             // Non-existing class file, must throw an exception
             array(
                 'class_name' => 'AdminMissing',
-                'exception' => 'Class "AdminMissingController" not found in controllers/admin',
+                'exception' => 'Class "AdminMissingController" not found in controllers/admin nor routing file',
             ),
         ),
         'symfony' => array(
@@ -65,7 +64,11 @@ class ModuleTabRegisterTest extends UnitTestCase
             ),
         ),
         // No tabs by default, the undeclared one comes from the routing parsing
-        'undeclared_symfony' => array(),
+        'undeclared_symfony' => array(
+            array(
+                'class_name' => 'UndeclaredLegacyController',
+            ),
+        ),
     );
 
     protected $moduleAdminControllers = array(

@@ -162,16 +162,7 @@ class ModuleTabRegister
             }
         }, $tabs);
 
-        $legacyControllersFilenames = $this->getModuleAdminControllersFilename($moduleName);
-        $legacyControllers = array_map(function ($legacyControllersFilename) {
-            return str_replace('Controller.php', '', $legacyControllersFilename);
-        }, $legacyControllersFilenames);
-        $legacyControllers = $legacyControllers ?? [];
-
-        $routingControllers = $this->getModuleControllersFromRouting($moduleName);
-        $routingControllers = $routingControllers ?? [];
-
-        $detectedControllers = array_merge($legacyControllers, $routingControllers);
+        $detectedControllers = $this->getDetectedModuleControllers($moduleName);
         foreach ($detectedControllers as $adminControllerName) {
             if (in_array($adminControllerName, $tabsNames)) {
                 continue;
@@ -191,6 +182,30 @@ class ModuleTabRegister
     }
 
     /**
+     * Returns a list of all detected controllers, either from admin/controllers folder
+     * or from the routing file.
+     *
+     * @param string $moduleName
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    protected function getDetectedModuleControllers(string $moduleName): array
+    {
+        $legacyControllersFilenames = $this->getModuleAdminControllersFilename($moduleName);
+        $legacyControllers = array_map(function ($legacyControllersFilename) {
+            return str_replace('Controller.php', '', $legacyControllersFilename);
+        }, $legacyControllersFilenames);
+        $legacyControllers = $legacyControllers ?? [];
+
+        $routingControllers = $this->getModuleControllersFromRouting($moduleName);
+        $routingControllers = $routingControllers ?? [];
+
+        return array_merge($legacyControllers, $routingControllers);
+    }
+
+    /**
      * Check mandatory data for tab registration, such as class name and class exists.
      *
      * @param string $moduleName
@@ -206,10 +221,13 @@ class ModuleTabRegister
         if (null === $className) {
             throw new Exception('Missing class name of tab');
         }
+
         // Check controller exists
-        if (empty($data->get('route_name')) && !in_array($className . 'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
-            throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
+        $detectedControllers = $this->getDetectedModuleControllers($moduleName);
+        if (empty($data->get('route_name')) && !in_array($className, $detectedControllers)) {
+            throw new Exception(sprintf('Class "%sController" not found in controllers/admin nor routing file', $className));
         }
+
         // Deprecation check
         if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
             $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
