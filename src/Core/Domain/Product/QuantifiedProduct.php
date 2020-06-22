@@ -63,7 +63,7 @@ class QuantifiedProduct
     ) {
         $this->productId = new ProductId($productId);
         $this->quantity = $quantity;
-        $this->combinationId = !$combinationId ?: new CombinationId($combinationId);
+        $this->combinationId = $combinationId ? new CombinationId($combinationId) : null;
     }
 
     /**
@@ -83,9 +83,9 @@ class QuantifiedProduct
     }
 
     /**
-     * @return CombinationId
+     * @return CombinationId|null
      */
-    public function getCombinationId(): CombinationId
+    public function getCombinationId(): ?CombinationId
     {
         return $this->combinationId;
     }

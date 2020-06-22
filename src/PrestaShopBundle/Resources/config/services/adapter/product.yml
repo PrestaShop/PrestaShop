@@ -113,4 +113,4 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPackHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\ProductPackCommand
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand

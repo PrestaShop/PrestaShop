@@ -53,7 +53,7 @@ class UpdateProductPackCommand
      */
     public function __construct(int $packId, array $products)
     {
-        $this->packId = $packId;
+        $this->packId = new ProductId($packId);
         $this->setProducts($products);
     }
 
@@ -79,10 +79,11 @@ class UpdateProductPackCommand
     private function setProducts(array $products): void
     {
         foreach ($products as $product) {
+            //@todo: shouldn't i validate the quantity, at least if its greater than zero?
             $this->products[] = new QuantifiedProduct(
-                $product['id'],
+                $product['product_id'],
                 $product['quantity'],
-                $product['combination_id']
+                isset($product['combination_id']) ? $product['combination_id'] : null
             );
         }
     }

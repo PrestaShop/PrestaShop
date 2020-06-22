@@ -47,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -99,30 +98,29 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I pack :quantity :type product :productReference to a pack of :packReference
+     * @When I add following product quantities to a pack of :packReference:
      *
-     * @param string $type
-     * @param int $quantity
-     * @param string $productReference
      * @param string $packReference
+     * @param TableNode $table
      */
-    public function addProductToPack(string $type, int $quantity, string $productReference, string $packReference)
+    public function updateProductPack(string $packReference, TableNode $table)
     {
-        $combinationId = null;
+        $data = $table->getRowsHash();
 
-        if (ProductType::TYPE_COMBINATION === $type) {
-            //@todo: handle combination adding
-//            $combinationId = //get combination id
+        $products = [];
+        foreach ($data as $productReference => $quantity) {
+            $products[] = [
+                'product_id' => $this->getSharedStorage()->get($productReference),
+                'quantity' => (int) $quantity,
+            ];
         }
 
         $packId = $this->getSharedStorage()->get($packReference);
-        $productId = $this->getSharedStorage()->get($productReference);
 
         try {
             $this->getCommandBus()->handle(new UpdateProductPackCommand(
                 $packId,
-                $productId,
-                $quantity,
-                $combinationId
+                $products
             ));
         } catch (ProductException $e) {
             $this->lastException = $e;
