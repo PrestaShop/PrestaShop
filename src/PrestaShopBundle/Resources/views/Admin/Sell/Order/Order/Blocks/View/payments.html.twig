@@ -43,7 +43,7 @@
 
             {% set firstLinkedOrder = orderForViewing.linkedOrders.linkedOrders|first %}
             {% if orderForViewing.linkedOrders.linkedOrders|length == 1 %}
-              <br/>{{ 'This warning also concerns order '|trans({}, 'Admin.Orderscustomers.Notification') }}
+              <br/>{{ 'This warning also concerns order:'|trans({}, 'Admin.Orderscustomers.Notification') }}
             {% else %}
               <br/>{{ 'This warning also concerns the following orders:'|trans({}, 'Admin.Orderscustomers.Notification') }}
             {% endif %}
