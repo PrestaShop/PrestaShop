@@ -29,6 +29,7 @@ namespace LegacyTests\Unit\Adapter\Module\Tab;
 use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabRegister;
 use PrestaShopBundle\Routing\YamlModuleLoader;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Route;
@@ -154,7 +155,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->sfKernel->getContainer()->get('translator'),
                 $this->buildFilesystemMock(),
                 $this->languages,
-                $this->buildYamlModuleLoaderMock(),
+                $this->buildRoutingConfigLoaderMock(),
             ))
             ->getMock();
         $this->tabRegister
@@ -186,15 +187,15 @@ class ModuleTabRegisterTest extends UnitTestCase
         return $filesystemMock;
     }
 
-    protected function buildYamlModuleLoaderMock()
+    protected function buildRoutingConfigLoaderMock()
     {
-        $moduleRoutingLoader = $this->getMockBuilder(YamlModuleLoader::class)
-            ->setMethods(['import'])
+        $moduleRoutingLoader = $this->getMockBuilder(LoaderInterface::class)
+            ->setMethods(['import', 'load', 'supports', 'getResolver', 'setResolver'])
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        // We only need to mock the import method, it returns a RouteCollection, by default it returns a useless
+        // We only need to mock the import method, it returns a RouteCollection, by default the mock returns a useless
         // Route object, but ONLY for the undeclared_symfony module it returns an additional one with the _legacy_controller
         // option that will add an undeclared controller
         $moduleRoutingLoader

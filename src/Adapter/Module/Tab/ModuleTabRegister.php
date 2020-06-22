@@ -30,8 +30,8 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Routing\YamlModuleLoader;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -82,9 +82,9 @@ class ModuleTabRegister
     private $languages;
 
     /**
-     * @var YamlModuleLoader
+     * @var LoaderInterface
      */
-    private $moduleRoutingLoader;
+    private $routingConfigLoader;
 
     /**
      * @param TabRepository $tabRepository
@@ -93,7 +93,7 @@ class ModuleTabRegister
      * @param TranslatorInterface $translator
      * @param Filesystem $filesystem
      * @param array $languages
-     * @param YamlModuleLoader $moduleRoutingLoader
+     * @param LoaderInterface $routingConfigLoader
      */
     public function __construct(
         TabRepository $tabRepository,
@@ -102,7 +102,7 @@ class ModuleTabRegister
         TranslatorInterface $translator,
         Filesystem $filesystem,
         array $languages,
-        YamlModuleLoader $moduleRoutingLoader
+        LoaderInterface $routingConfigLoader
     ) {
         $this->langRepository = $langRepository;
         $this->tabRepository = $tabRepository;
@@ -110,7 +110,7 @@ class ModuleTabRegister
         $this->translator = $translator;
         $this->filesystem = $filesystem;
         $this->languages = $languages;
-        $this->moduleRoutingLoader = $moduleRoutingLoader;
+        $this->routingConfigLoader = $routingConfigLoader;
     }
 
     /**
@@ -270,7 +270,7 @@ class ModuleTabRegister
         }
 
         $routingControllers = [];
-        $moduleRoutes = $this->moduleRoutingLoader->import($routingFile, 'module');
+        $moduleRoutes = $this->routingConfigLoader->import($routingFile, 'yaml');
         foreach ($moduleRoutes->getIterator() as $route) {
             $legacyController = $route->getDefault('_legacy_controller');
             if (!empty($legacyController)) {
