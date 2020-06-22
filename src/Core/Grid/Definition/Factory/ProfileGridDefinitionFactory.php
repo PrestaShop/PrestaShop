@@ -128,6 +128,7 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'actions' => (new RowActionCollection())
                     ->add((new LinkRowAction('edit'))
                     ->setIcon('edit')
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setOptions([
                         'route' => 'admin_profiles_edit',
                         'route_param_name' => 'profileId',
