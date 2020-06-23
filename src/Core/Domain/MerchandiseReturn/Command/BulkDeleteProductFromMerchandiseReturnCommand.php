@@ -30,11 +30,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetail;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnProduct;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 
 /**
- * Deletes products from given order.
+ * Deletes products from given merchandise return.
  */
 class BulkDeleteProductFromMerchandiseReturnCommand
 {
@@ -44,48 +44,48 @@ class BulkDeleteProductFromMerchandiseReturnCommand
     private $merchandiseReturnId;
 
     /**
-     * @var MerchandiseReturnDetail[]
+     * @var MerchandiseReturnProduct[]
      */
-    private $merchandiseReturnDetails;
+    private $merchandiseReturnProducts;
 
     /**
      * @param int $merchandiseReturnId
-     * @param MerchandiseReturnDetail[] $merchandiseReturnDetails
+     * @param MerchandiseReturnProduct[] $merchandiseReturnProducts
      *
      * @throws MerchandiseReturnException
      * @throws MerchandiseReturnConstraintException
      */
     public function __construct(
         int $merchandiseReturnId,
-        array $merchandiseReturnDetails
+        array $merchandiseReturnProducts
     ) {
         $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
-        $this->setMerchandiseReturnDetails($merchandiseReturnDetails);
+        $this->setMerchandiseReturnProducts($merchandiseReturnProducts);
     }
 
     /**
-     * @param MerchandiseReturnDetail[] $merchandiseReturnDetails
+     * @param MerchandiseReturnProduct[] $merchandiseReturnProducts
      *
      * @throws MerchandiseReturnException
      */
-    private function setMerchandiseReturnDetails(array $merchandiseReturnDetails): void
+    private function setMerchandiseReturnProducts(array $merchandiseReturnProducts): void
     {
-        foreach ($merchandiseReturnDetails as $merchandiseReturnDetail) {
-            if (!$merchandiseReturnDetail instanceof MerchandiseReturnDetail) {
+        foreach ($merchandiseReturnProducts as $merchandiseReturnProduct) {
+            if (!$merchandiseReturnProduct instanceof MerchandiseReturnProduct) {
                 throw new MerchandiseReturnConstraintException(
-                    'merchandise return details array must instances of MerchandiseReturnDetail'
+                    'merchandise return details array must instances of MerchandiseReturnProduct'
                 );
             }
-            $this->merchandiseReturnDetails[] = $merchandiseReturnDetail;
+            $this->merchandiseReturnProducts[] = $merchandiseReturnProduct;
         }
     }
 
     /**
-     * @return MerchandiseReturnDetail[]
+     * @return MerchandiseReturnProduct[]
      */
-    public function getMerchandiseReturnDetails(): array
+    public function getMerchandiseReturnProducts(): array
     {
-        return $this->merchandiseReturnDetails;
+        return $this->merchandiseReturnProducts;
     }
 
     /**

@@ -69,7 +69,7 @@ class MerchandiseReturnDetailId
     private function assertIsIntegerGreaterThanZero($value)
     {
         if (!is_int($value) || 0 >= $value) {
-            throw new MerchandiseReturnConstraintException(sprintf('Invalid merchandise return detail id "%s".', var_export($value, true)));
+            throw new MerchandiseReturnConstraintException(sprintf('Invalid merchandise return product id "%s".', var_export($value, true)));
         }
     }
 }

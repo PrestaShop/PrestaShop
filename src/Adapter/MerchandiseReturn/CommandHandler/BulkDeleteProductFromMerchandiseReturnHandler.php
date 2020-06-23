@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\BulkDeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\BulkDeleteProductFromMerchandiseReturnHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\BulkDeleteMerchandiseReturnDetailException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\BulkDeleteMerchandiseReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 
 class BulkDeleteProductFromMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler implements BulkDeleteProductFromMerchandiseReturnHandlerInterface
@@ -43,20 +43,20 @@ class BulkDeleteProductFromMerchandiseReturnHandler extends AbstractMerchandiseR
     {
         $errors = [];
 
-        foreach ($command->getMerchandiseReturnDetails() as $merchandiseReturnDetail) {
+        foreach ($command->getMerchandiseReturnProducts() as $merchandiseReturnProduct) {
             try {
-                $this->deleteMerchandiseReturnDetail(
+                $this->deleteMerchandiseReturnProduct(
                     $command->getMerchandiseReturnId(),
-                    $merchandiseReturnDetail->getMerchandiseReturnDetailId(),
-                    $merchandiseReturnDetail->getCustomizationId()
+                    $merchandiseReturnProduct->getMerchandiseReturnDetailId(),
+                    $merchandiseReturnProduct->getCustomizationId()
                 );
             } catch (MerchandiseReturnException $e) {
-                $errors[] = $merchandiseReturnDetail->getMerchandiseReturnDetailId()->getValue();
+                $errors[] = $merchandiseReturnProduct->getMerchandiseReturnDetailId()->getValue();
             }
         }
 
         if (!empty($errors)) {
-            throw new BulkDeleteMerchandiseReturnDetailException($errors, 'Failed to delete some of merchandise return products');
+            throw new BulkDeleteMerchandiseReturnProductException($errors, 'Failed to delete some of merchandise return products');
         }
     }
 }

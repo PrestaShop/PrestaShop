@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseR
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
 
 /**
- * @todo I am not sure about naming, since technically it's detail not a product
- * Maybe DeleteMerchandiseReturnDetailCommand? and don't use FromMerchandiseReturn
  * Deletes product from given order.
  */
 class DeleteProductFromMerchandiseReturnCommand

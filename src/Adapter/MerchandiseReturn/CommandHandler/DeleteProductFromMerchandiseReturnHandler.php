@@ -31,18 +31,18 @@ namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\MerchandiseReturn\AbstractMerchandiseReturnHandler;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command\DeleteProductFromMerchandiseReturnCommand;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\CommandHandler\DeleteProductFromMerchandiseReturnHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnDetailException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnProductException;
 
 class DeleteProductFromMerchandiseReturnHandler extends AbstractMerchandiseReturnHandler implements DeleteProductFromMerchandiseReturnHandlerInterface
 {
     /**
      * {@inheritdoc}
      *
-     * @throws DeleteMerchandiseReturnDetailException
+     * @throws DeleteMerchandiseReturnProductException
      */
     public function handle(DeleteProductFromMerchandiseReturnCommand $command): void
     {
-        $this->deleteMerchandiseReturnDetail(
+        $this->deleteMerchandiseReturnProduct(
             $command->getMerchandiseReturnId(),
             $command->getMerchandiseReturnDetailId(),
             $command->getCustomizationId()

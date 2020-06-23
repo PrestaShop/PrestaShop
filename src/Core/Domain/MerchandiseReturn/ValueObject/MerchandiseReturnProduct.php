@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject;
 /**
  * Provides merchandise return id
  */
-class MerchandiseReturnDetail
+class MerchandiseReturnProduct
 {
     /**
      * @var MerchandiseReturnDetailId
@@ -67,9 +67,9 @@ class MerchandiseReturnDetail
     /**
      * @param CustomizationId|null $customizationId
      *
-     * @return MerchandiseReturnDetail
+     * @return MerchandiseReturnProduct
      */
-    public function setCustomizationId(int $customizationId): MerchandiseReturnDetail
+    public function setCustomizationId(int $customizationId): MerchandiseReturnProduct
     {
         $this->customizationId = new CustomizationId($customizationId);
 
