@@ -48,4 +48,18 @@ Feature: Add product to pack from Back Office (BO)
       | productPack1   | 1               |
     Then I should get error that I cannot add pack into a pack
 
+  Scenario: I add virtual and standard product to the same pack
+    Given I add product productPack4 with following information:
+      | name       | en-US: mixed pack           |
+      | is_virtual | false                       |
+    Given product "product2" type should be standard
+    And product "product3" type should be virtual
+    When I update pack productPack4 with following product quantities:
+      | product2 | 2 |
+      | product3 | 3 |
+    Then product "productPack4" type should be pack
+    And pack productPack4 should contain following product quantities:
+      | product2   | 2                          |
+      | product3   | 3                          |
+
 #@todo: add combination product to a pack
