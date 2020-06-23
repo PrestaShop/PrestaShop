@@ -268,7 +268,7 @@ class AdminProductWrapper
     public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
         // ---- data formatting ----
-        $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
+        $id_product_attribute = $specificPriceValues['sp_id_product_attribute'] ?? 0;
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
         $id_currency = $specificPriceValues['sp_id_currency'] ? $specificPriceValues['sp_id_currency'] : 0;
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;
