@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-
 /**
  * Exception for merchandise return product query
  */
