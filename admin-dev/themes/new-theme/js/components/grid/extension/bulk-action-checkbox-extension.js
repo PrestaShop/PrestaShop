@@ -41,17 +41,6 @@ export default class BulkActionCheckboxExtension {
   }
 
   /**
-   * @todo I am not sure if its the best way to do this. Basically the issue is that right now
-   * checkbox gets checked due to native label -> input interaction(clicking on label checks input)
-   * If I create multiple inputs they won't activate. One idea I had is to try to create multilple labels,
-   * but that needs to position them in one place and make sure they are all clicked, probably a worse solution.
-   *
-   * In this case I prevent original action from happening, and instead toggle inputs via javascript.
-   * I am not 100% this will not lead to some issues so needs to be carefully tested.
-   *
-   * Other alternative I can see for multiple inputs is to add them as datas, but it would need to change
-   * whole form submiting process, so this is not an idea I am fond of.
-   *
    * Handles input selection when there is more then one input per checkbox
    *
    * @param {Grid} grid
