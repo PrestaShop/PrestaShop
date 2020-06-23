@@ -81,6 +81,16 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         return $orderReturn;
     }
 
+    /**
+     * @param MerchandiseReturnId $merchandiseReturnId
+     * @param MerchandiseReturnDetailId $merchandiseReturnDetailId
+     * @param CustomizationId|null $customizationId
+     *
+     * @throws DeleteMerchandiseReturnProductException
+     * @throws MerchandiseReturnNotFoundException
+     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     */
     protected function deleteMerchandiseReturnProduct(
         MerchandiseReturnId $merchandiseReturnId,
         MerchandiseReturnDetailId $merchandiseReturnDetailId,
@@ -89,31 +99,58 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
         $this->assertOrderReturnWasFound($merchandiseReturnId, $orderReturn);
 
-        /**
-         * @todo I am not sure if this is the right solution, but one alternative was do do an if
-         * If I would not validate customizationId inside valueObject and simply let 0 pass from gridDefinitionFactory
-         * it would also work. However this way when using this command to delete order detail I would need to pass 0 if there no customization
-         * which is not exactly good practice right? I guess I could also set $customizationId as 0 by default, in that case I couldn't use ValueObject.
-         */
-
-        /**
-         * Sets customizationIdValue as 0 as this is default value passed in deleteOrderReturnDetail for id customization
-         * if there is no customization we don't want to pass anything there
-         *
-         * @var int
-         */
-        $customizationIdValue = 0;
-        if ($customizationId !== null) {
-            $customizationIdValue = $customizationId->getValue();
-        }
         if ((int) ($orderReturn->countProduct()) <= 1) {
             throw new DeleteMerchandiseReturnProductException('Can\'t delete last product from merchandise return');
         }
 
+        if ($customizationId !== null) {
+            $this->deleteOrderReturnDetailWithCustomization(
+                $merchandiseReturnId,
+                $merchandiseReturnDetailId,
+                $customizationId
+            );
+        } else {
+            $this->deleteOrderReturnDetail(
+                $merchandiseReturnId,
+                $merchandiseReturnDetailId
+            );
+        }
+    }
+
+    /**
+     * @param MerchandiseReturnId $merchandiseReturnId
+     * @param MerchandiseReturnDetailId $merchandiseReturnDetailId
+     * @param CustomizationId $customizationId
+     *
+     * @throws DeleteMerchandiseReturnProductException
+     */
+    private function deleteOrderReturnDetailWithCustomization(
+        MerchandiseReturnId $merchandiseReturnId,
+        MerchandiseReturnDetailId $merchandiseReturnDetailId,
+        CustomizationId $customizationId
+    ): void{
         if (!OrderReturn::deleteOrderReturnDetail(
             $merchandiseReturnId->getValue(),
             $merchandiseReturnDetailId->getValue(),
-            $customizationIdValue
+            $customizationId->getValue()
+        )) {
+            throw new DeleteMerchandiseReturnProductException('Failed to delete merchandise return detail');
+        }
+    }
+
+    /**
+     * @param MerchandiseReturnId $merchandiseReturnId
+     * @param MerchandiseReturnDetailId $merchandiseReturnDetailId
+     *
+     * @throws DeleteMerchandiseReturnProductException
+     */
+    private function deleteOrderReturnDetail(
+        MerchandiseReturnId $merchandiseReturnId,
+        MerchandiseReturnDetailId $merchandiseReturnDetailId
+    ): void{
+        if (!OrderReturn::deleteOrderReturnDetail(
+            $merchandiseReturnId->getValue(),
+            $merchandiseReturnDetailId->getValue()
         )) {
             throw new DeleteMerchandiseReturnProductException('Failed to delete merchandise return detail');
         }
