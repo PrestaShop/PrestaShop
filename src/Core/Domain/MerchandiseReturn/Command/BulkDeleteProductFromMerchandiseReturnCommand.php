@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnProduct;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnProduct;
 
 /**
  * Deletes products from given merchandise return.
@@ -73,7 +73,7 @@ class BulkDeleteProductFromMerchandiseReturnCommand
         foreach ($merchandiseReturnProducts as $merchandiseReturnProduct) {
             if (!$merchandiseReturnProduct instanceof MerchandiseReturnProduct) {
                 throw new MerchandiseReturnConstraintException(
-                    'merchandise return details array must instances of MerchandiseReturnProduct'
+                    'BulkDeleteProductFromMerchandiseReturnCommand expects an instances of MerchandiseReturnProduct'
                 );
             }
             $this->merchandiseReturnProducts[] = $merchandiseReturnProduct;

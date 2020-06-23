@@ -182,7 +182,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
     }
 
     /**
-     *
      * Deletes cartRules on bulk action
      *
      * @DemoRestricted(redirectRoute="admin_merchandise_returns_index")
