@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnProductException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnProductQueryException;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
@@ -56,16 +58,24 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
     const GRID_ID = 'merchandise_return_products';
 
     /**
-     * @var RequestStack
+     * @var int
      */
-    private $requestStack;
+    private $merchandiseReturnId;
 
+    /**
+     * MerchandiseReturnProductsGridDefinitionFactory constructor.
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param RequestStack $requestStack
+     */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         RequestStack $requestStack
     ) {
         parent::__construct($hookDispatcher);
-        $this->requestStack = $requestStack;
+        try {
+            $this->setMerchandiseReturnId($requestStack);
+        } catch (MerchandiseReturnProductException $e) {
+        }
     }
 
     /**
@@ -158,13 +168,6 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
      */
     protected function getFilters()
     {
-        /* @todo need to do something if merchandiseReturnId not found. Redirect to index? */
-        if (null !== ($request = $this->requestStack->getCurrentRequest())
-            && $request->attributes->has('merchandiseReturnId')
-        ) {
-            $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
-        }
-
         return (new FilterCollection())
             ->add((new Filter('reference', TextType::class))
             ->setTypeOptions([
@@ -198,11 +201,11 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
                 'reset_route_params' => [
                     'filterId' => self::GRID_ID,
-                    'merchandiseReturnId' => $merchandiseReturnId,
+                    'merchandiseReturnId' => $this->merchandiseReturnId,
                 ],
                 'redirect_route' => 'admin_merchandise_returns_edit',
                 'redirect_route_params' => [
-                    'merchandiseReturnId' => $merchandiseReturnId,
+                    'merchandiseReturnId' => $this->merchandiseReturnId,
                 ],
             ])
             ->setAssociatedColumn('actions')
@@ -215,13 +218,6 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
      */
     protected function getBulkActions()
     {
-        /* @todo need to do something if merchandiseReturnId not found. Redirect to index? */
-        if (null !== ($request = $this->requestStack->getCurrentRequest())
-            && $request->attributes->has('merchandiseReturnId')
-        ) {
-            $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
-        }
-
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('delete_selection'))
@@ -229,7 +225,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                     ->setOptions([
                         'submit_route' => 'admin_merchandise_returns_delete_product_bulk',
                         'route_params' => [
-                            'merchandiseReturnId' => $merchandiseReturnId,
+                            'merchandiseReturnId' => $this->merchandiseReturnId,
                         ],
                         'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
                         'modal_options' => new ModalOptions([
@@ -240,5 +236,23 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                     ])
             )
             ;
+    }
+
+    /**
+     * Sets cms page category parent id directly from request attribute. On not found case, it assigns the default one.
+     *
+     * @param RequestStack $requestStack
+     *
+     * @throws MerchandiseReturnProductException
+     */
+    private function setMerchandiseReturnId(RequestStack $requestStack): void
+    {
+        $request = $requestStack->getCurrentRequest();
+
+        if (null !== $request && $request->attributes->has('merchandiseReturnId')) {
+            $this->merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
+        } else {
+            throw new MerchandiseReturnProductException('merchandiseReturnId attribute does not exist');
+        }
     }
 }
