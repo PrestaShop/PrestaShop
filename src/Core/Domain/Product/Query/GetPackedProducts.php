@@ -44,16 +44,16 @@ class GetPackedProducts
     /**
      * @var LanguageId
      */
-    private $langId;
+    private $languageId;
 
     /**
      * @param int $packId id of product which represents the pack
-     * @param int $langId
+     * @param int $languageId
      */
-    public function __construct(int $packId, int $langId)
+    public function __construct(int $packId, int $languageId)
     {
         $this->packId = new ProductId($packId);
-        $this->langId = new LanguageId($langId);
+        $this->languageId = new LanguageId($languageId);
     }
 
     /**
@@ -67,8 +67,8 @@ class GetPackedProducts
     /**
      * @return LanguageId
      */
-    public function getLangId(): LanguageId
+    public function getLanguageId(): LanguageId
     {
-        return $this->langId;
+        return $this->languageId;
     }
 }

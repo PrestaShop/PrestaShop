@@ -44,7 +44,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     public function handle(GetPackedProducts $query): array
     {
         $packId = $query->getPackId()->getValue();
-        $langId = $query->getLangId()->getValue();
+        $langId = $query->getLanguageId()->getValue();
 
         $packedItems = Pack::getItems($packId, $langId);
 
