@@ -85,8 +85,7 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         MerchandiseReturnId $merchandiseReturnId,
         MerchandiseReturnDetailId $merchandiseReturnDetailId,
         ?CustomizationId $customizationId
-    ): void
-    {
+    ): void {
         $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
         $this->assertOrderReturnWasFound($merchandiseReturnId, $orderReturn);
 
