@@ -48,6 +48,7 @@ class GetPackedProducts
 
     /**
      * @param int $packId id of product which represents the pack
+     * @param int $langId
      */
     public function __construct(int $packId, int $langId)
     {

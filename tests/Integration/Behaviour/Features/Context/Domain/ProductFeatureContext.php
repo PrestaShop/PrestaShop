@@ -41,10 +41,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackingException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use Product;
@@ -137,27 +139,25 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
         $packId = $this->getSharedStorage()->get($packReference);
 
-        //@todo: temporary bellow
-        //@todo: How do we retrieve packs - should it be separate query, or just add packed items inside ProductForEditing?
         $defaultLangId = (int) \Configuration::get('PS_LANG_DEFAULT');
-        $packedProducts = \Pack::getItems($packId, $defaultLangId);
+        $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId, $defaultLangId));
         $notExistingProducts = [];
 
         foreach ($data as $productReference => $quantity) {
             $expectedQty = (int) $quantity;
             $expectedPackedProductId = $this->getSharedStorage()->get($productReference);
-
             $foundProduct = false;
-            foreach ($packedProducts as $key => $packedProduct) {
-                $packedProductId = (int) $packedProduct->id;
-                $actualQty = (int) $packedProduct->pack_quantity;
 
+            /**
+             * @var int $key
+             * @var PackedProduct $packedProduct */
+            foreach ($packedProducts as $key => $packedProduct) {
                 //@todo: check && combination id when asserting combinations.
-                if ($packedProductId === $expectedPackedProductId) {
+                if ($packedProduct->getProductId() === $expectedPackedProductId) {
                     $foundProduct = true;
                     Assert::assertEquals(
                         $expectedQty,
-                        $actualQty,
+                        $packedProduct->getQuantity(),
                         sprintf('Unexpected quantity of packed product "%s"', $productReference)
                     );
 
