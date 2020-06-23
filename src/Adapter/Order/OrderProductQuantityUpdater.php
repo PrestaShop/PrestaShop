@@ -61,7 +61,7 @@ use Warehouse;
  * Increase or decrease quantity of an order's product.
  * Recalculate cart rules, order's prices and shipping infos.
  */
-class OrderProductUpdater
+class OrderProductQuantityUpdater
 {
     /**
      * @var OrderAmountUpdater

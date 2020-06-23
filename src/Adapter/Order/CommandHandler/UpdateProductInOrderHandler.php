@@ -32,7 +32,7 @@ use Order;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Adapter\Order\OrderProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
@@ -47,13 +47,13 @@ use Validate;
 final class UpdateProductInOrderHandler extends AbstractOrderHandler implements UpdateProductInOrderHandlerInterface
 {
     /**
-     * @var OrderProductUpdater
+     * @var OrderProductQuantityUpdater
      */
-    private $orderProductUpdater;
+    private $orderProductQuantityUpdater;
 
-    public function __construct(OrderProductUpdater $orderProductUpdater)
+    public function __construct(OrderProductQuantityUpdater $orderProductQuantityUpdater)
     {
-        $this->orderProductUpdater = $orderProductUpdater;
+        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
     }
 
     /**
@@ -110,7 +110,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         }
 
         // Update quantity and amounts
-        $order = $this->orderProductUpdater->update($order, $orderDetail, $product_quantity, $orderInvoice);
+        $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $product_quantity, $orderInvoice);
 
         if (!$res) {
             throw new OrderException('An error occurred while editing the product line.');

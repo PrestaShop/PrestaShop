@@ -36,7 +36,7 @@ use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
-use PrestaShop\PrestaShop\Adapter\Order\OrderProductUpdater;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
@@ -59,9 +59,9 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
      */
     private $orderAmountUpdater;
     /**
-     * @var OrderProductUpdater
+     * @var OrderProductQuantityUpdater
      */
-    private $orderProductUpdater;
+    private $orderProductQuantityUpdater;
 
     /**
      * @param ContextStateManager $contextStateManager
@@ -69,11 +69,11 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
     public function __construct(
         ContextStateManager $contextStateManager,
         OrderAmountUpdater $orderAmountUpdater,
-        OrderProductUpdater $orderProductUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater
     ) {
         $this->contextStateManager = $contextStateManager;
         $this->orderAmountUpdater = $orderAmountUpdater;
-        $this->orderProductUpdater = $orderProductUpdater;
+        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
     }
 
     /**
@@ -94,7 +94,7 @@ final class DeleteProductFromOrderHandler extends AbstractOrderCommandHandler im
             ->setCustomer(new Customer($order->id_customer));
 
         try {
-            $order = $this->orderProductUpdater->update(
+            $order = $this->orderProductQuantityUpdater->update(
                 $order,
                 $orderDetail,
                 0,
