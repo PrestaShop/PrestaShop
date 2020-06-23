@@ -50,7 +50,7 @@ final class AssignProductToCategoriesHandler extends AbstractProductHandler impl
             return $categoryId->getValue();
         }, $command->getCategoryIds());
 
-        $product->addToCategories($categoryIds);
+        $product->updateCategories($categoryIds);
         $product->id_category_default = $command->getDefaultCategoryId()->getValue();
 
         $this->performUpdate($product, CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES);
