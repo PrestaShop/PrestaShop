@@ -35,6 +35,10 @@ class GetOrderDetailCustomization
      */
     private $orderDetailId;
 
+    /**
+     * GetOrderDetailCustomization constructor.
+     * @param int $orderDetailId
+     */
     public function __construct(int $orderDetailId)
     {
         $this->orderDetailId = $orderDetailId;
