@@ -41,5 +41,5 @@ interface GetMerchandiseReturnForEditingHandlerInterface
      *
      * @return EditableMerchandiseReturn
      */
-    public function handle(GetMerchandiseReturnForEditing $query);
+    public function handle(GetMerchandiseReturnForEditing $query): EditableMerchandiseReturn;
 }

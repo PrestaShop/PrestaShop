@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\MerchandiseReturn;
 
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnDetailException;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchandiseReturnProductException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MissingMerchandiseReturnRequiredFieldsException;
@@ -81,11 +81,12 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         return $orderReturn;
     }
 
-    protected function deleteMerchandiseReturnDetail(
+    protected function deleteMerchandiseReturnProduct(
         MerchandiseReturnId $merchandiseReturnId,
         MerchandiseReturnDetailId $merchandiseReturnDetailId,
         ?CustomizationId $customizationId
-    ) {
+    ): void
+    {
         $orderReturn = new OrderReturn($merchandiseReturnId->getValue());
         $this->assertOrderReturnWasFound($merchandiseReturnId, $orderReturn);
 
@@ -107,7 +108,7 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
             $customizationIdValue = $customizationId->getValue();
         }
         if ((int) ($orderReturn->countProduct()) <= 1) {
-            throw new DeleteMerchandiseReturnDetailException('Can\'t delete last product from merchandise return');
+            throw new DeleteMerchandiseReturnProductException('Can\'t delete last product from merchandise return');
         }
 
         if (!OrderReturn::deleteOrderReturnDetail(
@@ -115,7 +116,7 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
             $merchandiseReturnDetailId->getValue(),
             $customizationIdValue
         )) {
-            throw new DeleteMerchandiseReturnDetailException('Failed to delete merchandise return detail');
+            throw new DeleteMerchandiseReturnProductException('Failed to delete merchandise return detail');
         }
     }
 

@@ -28,6 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
 
-class DeleteMerchandiseReturnDetailException extends MerchandiseReturnException
+class DeleteMerchandiseReturnProductException extends MerchandiseReturnException
 {
 }
