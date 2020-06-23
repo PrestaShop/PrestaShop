@@ -324,6 +324,29 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productReference should be assigned to following categories:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertProductCategories(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+        $actualCategoryIds = array_map('intval', Product::getProductCategories($productId));
+        sort($actualCategoryIds);
+
+        $expectedCategoriesRef = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
+        $expectedCategoryIds = array_map(function ($categoryReference) {
+            return $this->getSharedStorage()->get($categoryReference);
+        }, $expectedCategoriesRef);
+        sort($actualCategoryIds);
+
+        $diff = array_diff($actualCategoryIds, $expectedCategoryIds);
+        Assert::assertEmpty($diff, 'Unexpected categories assigned to product');
+    }
+
+    /**
      * Product tags differs from other localized properties, because each locale can have an array of tags
      * (whereas common property will have one value per language)
      * This is why it needs some additional parsing
