@@ -58,7 +58,7 @@ class DeleteProductFromMerchandiseReturnCommand
      *
      * @param int $merchandiseReturnId
      * @param int $merchandiseReturnDetailId
-     * @param null|int $customizationId
+     * @param int|null $customizationId
      *
      * @throws MerchandiseReturnConstraintException
      */
