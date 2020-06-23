@@ -465,17 +465,17 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCategoryExistsByName(string $categoryReference, string $categoryName)
     {
-        $foundCategories = Category::searchByName($this->defaultLanguageId, $categoryName);
+        $foundCategory = Category::searchByName($this->defaultLanguageId, $categoryName, true);
 
-        $category = reset($foundCategories);
+        if (!$foundCategory || $foundCategory['name'] !== $categoryName) {
+            throw new RuntimeException(sprintf(
+                'Category "%s" named "%s" was not found',
+                $categoryReference,
+                $categoryName
+            ));
+        }
 
-        Assert::assertEquals(
-            $category['name'],
-            $categoryName,
-            'Category "%s" named "%s" was not found'
-        );
-
-        $this->getSharedStorage()->set($categoryReference, (int) $category['id_category']);
+        $this->getSharedStorage()->set($categoryReference, (int) $foundCategory['id_category']);
     }
 
     /**
