@@ -55,6 +55,7 @@ class FilterMerchandiseReturnProductsSearchCriteriaListener
 
     /**
      * @param FilterSearchCriteriaEvent $event
+     *
      * @throws Exception
      */
     public function onFilterSearchCriteria(FilterSearchCriteriaEvent $event)
@@ -85,7 +86,6 @@ class FilterMerchandiseReturnProductsSearchCriteriaListener
             $filters['merchandise_return_id'] = $merchandiseReturnId;
         } else {
             throw new MerchandiseReturnProductQueryException('Request is needed for merchandise return product list');
-
         }
 
         $newSearchCriteria = new $searchCriteriaClass([

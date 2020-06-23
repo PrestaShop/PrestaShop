@@ -128,7 +128,7 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
         MerchandiseReturnId $merchandiseReturnId,
         MerchandiseReturnDetailId $merchandiseReturnDetailId,
         CustomizationId $customizationId
-    ): void{
+    ): void {
         if (!OrderReturn::deleteOrderReturnDetail(
             $merchandiseReturnId->getValue(),
             $merchandiseReturnDetailId->getValue(),
@@ -147,7 +147,7 @@ abstract class AbstractMerchandiseReturnHandler extends AbstractObjectModelHandl
     private function deleteOrderReturnDetail(
         MerchandiseReturnId $merchandiseReturnId,
         MerchandiseReturnDetailId $merchandiseReturnDetailId
-    ): void{
+    ): void {
         if (!OrderReturn::deleteOrderReturnDetail(
             $merchandiseReturnId->getValue(),
             $merchandiseReturnDetailId->getValue()
