@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Class CMerchandiseReturnColumn defines column that renders customization data for merchandise return products
  */
 final class MerchandiseReturnCustomizationColumn extends AbstractColumn
 {

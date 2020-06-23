@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -120,11 +121,15 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
      */
     private function getMerchandiseReturnProductsQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        if (null !== ($request = $this->requestStack->getCurrentRequest())
-            && $request->attributes->has('merchandiseReturnId')
+        $merchandiseReturnId = null;
+
+        if (null === ($request = $this->requestStack->getCurrentRequest())
+            || !$request->attributes->has('merchandiseReturnId')
         ) {
-            $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
+            throw new MerchandiseReturnException('This page needs to have merchandiseReturnId as a parameter');
         }
+
+        $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
 
         $queryBuilder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'order_return_detail', 'ord')
