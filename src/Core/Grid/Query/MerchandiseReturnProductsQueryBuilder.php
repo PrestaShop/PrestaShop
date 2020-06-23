@@ -121,16 +121,6 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
      */
     private function getMerchandiseReturnProductsQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $merchandiseReturnId = null;
-
-        if (null === ($request = $this->requestStack->getCurrentRequest())
-            || !$request->attributes->has('merchandiseReturnId')
-        ) {
-            throw new MerchandiseReturnException('This page needs to have merchandiseReturnId as a parameter');
-        }
-
-        $merchandiseReturnId = $request->attributes->get('merchandiseReturnId');
-
         $queryBuilder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'order_return_detail', 'ord')
             ->leftJoin(
@@ -145,9 +135,7 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
                 'o',
                 'od.id_order = o.id_order'
             )
-            ->where('ord.id_order_return = :order_return_id')
-            ->setParameter('context_language_id', $this->contextLanguageId)
-            ->setParameter('order_return_id', $merchandiseReturnId);
+            ->setParameter('context_language_id', $this->contextLanguageId);
 
         $this->applyFilters($searchCriteria->getFilters(), $queryBuilder);
 
@@ -168,7 +156,7 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
             'quantity',
             'customization_name',
             'customization_value',
-            'merchandiseReturnId',
+            'merchandise_return_id',
         ];
 
         foreach ($filters as $filterName => $filterValue) {
@@ -176,7 +164,7 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
                 continue;
             }
 
-            if ($filterName === 'merchandiseReturnId') {
+            if ($filterName === 'merchandise_return_id') {
                 $qb->andWhere('ord.`id_order_return` LIKE :' . $filterName);
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
