@@ -69,7 +69,7 @@ class WebserviceController extends FrameworkBundleAdminController
         $configurationWarnings = $this->lookForWarnings();
 
         $webserviceConfiguration = $this->get('prestashop.admin.webservice.form_data_provider')->getData();
-        $webserviceIsEnabled = $webserviceConfiguration['webservice_configuration']['enable_webservice'];
+        $webserviceIsEnabled = $webserviceConfiguration['enable_webservice'];
         $webserviceStatus = [
             'enabled' => $webserviceIsEnabled,
             'isFunctional' => true,
@@ -77,11 +77,8 @@ class WebserviceController extends FrameworkBundleAdminController
         ];
 
         if ($webserviceIsEnabled) {
-            $expectedWebserviceEntryPoint = $request->getSchemeAndHttpHost() . self::WEBSERVICE_ENTRY_ENDPOINT;
-            $webServiceEntryPointIsReachable = $this->checkWebserviceEndpoint($expectedWebserviceEntryPoint);
-
-            $webserviceStatus['endpoint'] = $expectedWebserviceEntryPoint;
-            $webserviceStatus['isFunctional'] = $webServiceEntryPointIsReachable;
+            $webserviceStatus['endpoint'] = $request->getSchemeAndHttpHost() . self::WEBSERVICE_ENTRY_ENDPOINT;
+            $webserviceStatus['isFunctional'] = $this->checkWebserviceEndpoint($webserviceStatus['endpoint']);
         }
 
         return $this->render(
@@ -101,7 +98,7 @@ class WebserviceController extends FrameworkBundleAdminController
      *
      * @return bool
      */
-    private function checkWebserviceEndpoint($url): bool
+    private function checkWebserviceEndpoint(?string $url): bool
     {
         if ($url === null) {
             return false;
@@ -116,9 +113,9 @@ class WebserviceController extends FrameworkBundleAdminController
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($httpCode >= 200 && $httpCode < 300) {
+        if ($httpCode >= Response::HTTP_OK && $httpCode < Response::HTTP_MULTIPLE_CHOICES) {
             return true;
-        } elseif ($httpCode == 401) {
+        } elseif ($httpCode == Response::HTTP_UNAUTHORIZED) {
             return true;
         }
 

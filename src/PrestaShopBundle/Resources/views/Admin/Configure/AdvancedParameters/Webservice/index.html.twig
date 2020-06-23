@@ -34,12 +34,12 @@
     'desc': 'Add new webservice key'|trans({}, 'Admin.Advparameters.Feature'),
     'icon': 'add_circle_outline'
   }
-  } %}
+} %}
 
 {% block content %}
 
   {% block webservice_list_notifications %}
-    {% if configurationWarnings is not empty %}
+    {% if configurationWarnings is not empty  %}
       <div class="row">
         <div class="col">
           <div class="alert alert-warning" role="alert">
@@ -52,7 +52,15 @@
     {% endif %}
   {% endblock %}
 
+  <div class="row">
+    <div class="col">
+      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
+    </div>
+  </div>
+
   {% block webservice_api_status %}
+    {% set devdocUrl = 'https://devdocs.prestashop.com/1.7/development/webservice/' %}
+
     {% if webserviceStatus['enabled'] == true %}
       <div class="card">
         <h3 class="card-header">
@@ -61,28 +69,25 @@
         <div class="card-block">
           <div class="card-text">
             <p>
-              Webservice is enabled. Main entry point is
+              {{ 'Webservice is enabled. Main entry point is' |trans }}
               <a href="{{ webserviceStatus['endpoint'] }}">
                 {{ webserviceStatus['endpoint'] }}
               </a>
             </p>
             {% if webserviceStatus['isFunctional'] == true %}
               <p>
-                Developer documentation can be found <a
-                  href="https://devdocs.prestashop.com/1.7/development/webservice/">
-                  here
-                </a>.
+                {{ "Developer documentation can be found [1]here[/1]."|trans({
+                  '[1]': '<a href="'~devdocUrl~'">', '[/1]': "</a>"
+                }, 'Admin.Advparameters.Feature')|raw }}
               </p>
             {% else %}
               <p>
-                It seems webservice endpoint is not functional.
-                If you are using httpd/apache2, you need to enable URL Rewriting.
+                {{ 'It seems webservice endpoint is not functional. If you are using httpd/apache2, you need to enable URL Rewriting.'|trans }}
               </p>
               <p>
-                Read the <a
-                  href="https://devdocs.prestashop.com/1.7/development/webservice/">
-                  developer documentation
-                </a> to find how.
+                {{ "Read the [1]developer documentation[/1] to find how."|trans({
+                  '[1]': '<a href="'~devdocUrl~'">', '[/1]': "</a>"
+                }, 'Admin.Advparameters.Feature')|raw }}
               </p>
             {% endif %}
 
@@ -92,35 +97,20 @@
     {% endif %}
   {% endblock %}
 
-  <div class="row">
+  <div class="row justify-content-center">
     <div class="col">
-      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
+      {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+
+      {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
+
+      {% block webservice_configuration_form_rest %}
+        {{ form_rest(webserviceConfigurationForm) }}
+      {% endblock %}
+
+      {{ form_end(webserviceConfigurationForm) }}
     </div>
   </div>
-
-  <div class="row justify-content-center">
-    <div class="row">
-      <div class="col">
-        {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
-      </div>
-    </div>
-
-    {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
-
-    <div class="row justify-content-center">
-      <div class="col">
-        {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
-
-        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
-
-        {% block webservice_configuration_form_rest %}
-          {{ form_rest(webserviceConfigurationForm) }}
-        {% endblock %}
-
-        {{ form_end(webserviceConfigurationForm) }}
-      </div>
-    </div>
-    {% endblock %}
+{% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
