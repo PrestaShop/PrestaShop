@@ -58,6 +58,7 @@ $(document).ready(() => {
         $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
         $('.cart-voucher').replaceWith(resp.cart_voucher);
         $('.cart-overview').replaceWith(resp.cart_detailed);
+        $('.cart-summary-top').replaceWith(resp.cart_summary_top);
 
         $('#product_customization_id').val(0);
 
