@@ -109,25 +109,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $res &= $order->update();
         }
 
-        $old_quantity = $orderDetail->product_quantity;
-
-        $orderDetail->product_quantity = $product_quantity;
-        $orderDetail->reduction_percent = 0;
-
-        // update taxes
-        $res &= $orderDetail->updateTaxAmount($order);
-
-        // Save order detail
-        $res &= $orderDetail->update();
-
         // Update quantity and amounts
-        $order = $this->orderProductUpdater->update(
-            $order,
-            $orderDetail,
-            $old_quantity,
-            $command->getQuantity(),
-            $orderInvoice
-        );
+        $order = $this->orderProductUpdater->update($order, $orderDetail, $product_quantity, $orderInvoice);
 
         if (!$res) {
             throw new OrderException('An error occurred while editing the product line.');

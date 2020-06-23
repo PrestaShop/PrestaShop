@@ -91,10 +91,8 @@ class OrderProductUpdater
     /**
      * @param Order $order
      * @param OrderDetail $orderDetail
-     * @param int $oldQuantity
      * @param int $newQuantity
-     * @param bool|null $productDeletionMode
-     * @param bool|null $hasInvoice
+     * @param OrderInvoice|null $orderInvoice
      *
      * @return Order
      *
@@ -105,7 +103,6 @@ class OrderProductUpdater
     public function update(
         Order $order,
         OrderDetail $orderDetail,
-        int $oldQuantity,
         int $newQuantity,
         ?OrderInvoice $orderInvoice
     ): Order {
@@ -120,6 +117,15 @@ class OrderProductUpdater
         ;
 
         try {
+            $oldQuantity = $orderDetail->product_quantity;
+
+            $orderDetail->product_quantity = $newQuantity;
+            $orderDetail->reduction_percent = 0;
+            // update taxes
+            $orderDetail->updateTaxAmount($order);
+
+            $orderDetail->update();
+
             // Update quantity on the cart and stock
             $cart = $this->updateProductQuantity($cart, $order, $orderDetail, $oldQuantity, $newQuantity);
 
