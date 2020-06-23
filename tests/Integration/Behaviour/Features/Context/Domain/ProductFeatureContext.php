@@ -149,7 +149,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $foundProduct = false;
 
             /**
-             * @var int $key
+             * @var int
              * @var PackedProduct $packedProduct */
             foreach ($packedProducts as $key => $packedProduct) {
                 //@todo: check && combination id when asserting combinations.
