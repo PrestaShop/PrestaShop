@@ -32,7 +32,7 @@ module.exports = class Employees extends BOBasePage {
     this.filterSearchButton = `${this.employeesListForm} .grid-search-button`;
     this.filterResetButton = `${this.employeesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.employeesListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.employeesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.employeesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.employeesListForm} #employee_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.employeesListForm} #employee_grid_bulk_action_disable_selection`;

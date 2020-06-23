@@ -32,7 +32,7 @@ module.exports = class Customers extends BOBasePage {
     this.filterSearchButton = `${this.customersListForm} .grid-search-button`;
     this.filterResetButton = `${this.customersListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.customersListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.customersListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.customersListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.customersListForm} #customer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.customersListForm} #customer_grid_bulk_action_disable_selection`;

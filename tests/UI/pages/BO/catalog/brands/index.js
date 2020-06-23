@@ -18,7 +18,7 @@ module.exports = class Brands extends BOBasePage {
     this.gridTable = table => `#${table}_grid_table`;
     this.gridHeaderTitle = table => `${this.gridPanel(table)} h3.card-header-title`;
     // Bulk Actions
-    this.selectAllRowsLabel = table => `${this.gridPanel(table)} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = table => `${this.gridPanel(table)} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = table => `${this.gridPanel(table)} button.js-bulk-actions-btn`;
     this.confirmDeleteModal = table => `#${table}_grid_confirm_modal`;
     this.confirmDeleteButton = 'button.btn-confirm-submit';
