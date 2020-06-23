@@ -308,7 +308,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
         $categoryReferences = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
 
-        $categoryIds = array_map(function ($reference) {
+        $categoryIds = array_map(function (string $reference) {
             return $this->getSharedStorage()->get($reference);
         }, $categoryReferences);
 
@@ -337,7 +337,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         sort($actualCategoryIds);
 
         $expectedCategoriesRef = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
-        $expectedCategoryIds = array_map(function ($categoryReference) {
+        $expectedCategoryIds = array_map(function (string $categoryReference) {
             return $this->getSharedStorage()->get($categoryReference);
         }, $expectedCategoriesRef);
         sort($actualCategoryIds);
