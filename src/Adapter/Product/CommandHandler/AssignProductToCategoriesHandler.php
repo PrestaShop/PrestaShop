@@ -50,6 +50,7 @@ final class AssignProductToCategoriesHandler extends AbstractProductHandler impl
             return $categoryId->getValue();
         }, $command->getCategoryIds());
 
+        //@todo: should make sure that Home category is always in a list?
         $product->updateCategories($categoryIds);
         $product->id_category_default = $command->getDefaultCategoryId()->getValue();
 
