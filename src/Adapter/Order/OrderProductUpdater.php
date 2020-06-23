@@ -117,7 +117,7 @@ class OrderProductUpdater
         ;
 
         try {
-            $oldQuantity = $orderDetail->product_quantity;
+            $oldQuantity = (int) $orderDetail->product_quantity;
 
             $orderDetail->product_quantity = $newQuantity;
             $orderDetail->reduction_percent = 0;
