@@ -78,7 +78,7 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetPackedProductsHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProductsHandler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts
 
     prestashop.adapter.product.command_handler.add_product_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler
