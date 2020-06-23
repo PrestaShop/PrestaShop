@@ -126,6 +126,12 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
     }
 
+    /**
+     * @Then pack :packReference should contain following product quantities:
+     *
+     * @param string $packReference
+     * @param TableNode $table
+     */
     public function assertPackContents(string $packReference, TableNode $table)
     {
         $data = $table->getRowsHash();
@@ -134,11 +140,52 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         //@todo: temporary bellow
         //@todo: How do we retrieve packs - should it be separate query, or just add packed items inside ProductForEditing?
         $defaultLangId = (int) \Configuration::get('PS_LANG_DEFAULT');
-        $packedProducts = \Pack::getProducts($defaultLangId, 0, 100, 'id_product', 'ASC');
+        $packedProducts = \Pack::getItems($packId, $defaultLangId);
+        $notExistingProducts = [];
 
         foreach ($data as $productReference => $quantity) {
-            $packedProductId = $this->getSharedStorage()->get($productReference);
-            //@todo: at least temporary decision to assert tests for now
+            $expectedQty = (int) $quantity;
+            $expectedPackedProductId = $this->getSharedStorage()->get($productReference);
+
+            $foundProduct = false;
+            foreach ($packedProducts as $key => $packedProduct) {
+                $packedProductId = (int) $packedProduct->id;
+                $actualQty = (int) $packedProduct->pack_quantity;
+
+                //@todo: check && combination id when asserting combinations.
+                if ($packedProductId === $expectedPackedProductId) {
+                    $foundProduct = true;
+                    Assert::assertEquals(
+                        $expectedQty,
+                        $actualQty,
+                        sprintf('Unexpected quantity of packed product "%s"', $productReference)
+                    );
+
+                    //unset asserted product to check if there was any excessive actual products after loops
+                    unset($packedProducts[$key]);
+                    break;
+                }
+            }
+
+            if (!$foundProduct) {
+                $notExistingProducts[$productReference] = $quantity;
+            }
+        }
+
+        if (!empty($notExistingProducts)) {
+            throw new RuntimeException(sprintf(
+                'Failed to find following packed products: %s',
+                implode(',', array_keys($notExistingProducts))
+            ));
+        }
+
+        if (!empty($packedProducts)) {
+            throw new RuntimeException(sprintf(
+                'Following packed products were not expected: %s',
+                implode(',', array_map(function ($packedProduct) {
+                    return $packedProduct->name;
+                }, $packedProducts))
+            ));
         }
     }
 

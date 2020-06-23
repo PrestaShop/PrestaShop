@@ -21,8 +21,7 @@ Feature: Add product to pack from Back Office (BO)
     And pack "productPack1" should contain following product quantities:
       | product2        | 5                      |
 
-
-  Scenario: I add virtual product to a pack
+  Scenario: I add virtual products to a pack
     Given I add product "productPack2" with following information:
       | name       | en-US: street photos        |
       | is_virtual | false                       |
@@ -30,10 +29,17 @@ Feature: Add product to pack from Back Office (BO)
     And I add product "product3" with following information:
       | name       | en-US: summerstreet         |
       | is_virtual | true                        |
+    And I add product "product4" with following information:
+      | name       | en-US: winterstreet         |
+      | is_virtual | true                        |
     And product "product3" type should be virtual
     When I update pack "productPack2" with following product quantities:
       | product3   | 3                           |
+      | product4   | 20                          |
     Then product "productPack2" type should be pack
+    And pack productPack2 should contain following product quantities:
+      | product3   | 3                           |
+      | product4   | 20                          |
 
   Scenario: I add pack product to a pack
     Given product "productPack1" type should be pack
