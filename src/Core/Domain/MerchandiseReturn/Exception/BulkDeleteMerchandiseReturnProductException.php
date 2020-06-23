@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception;
 
 use Exception;
 
-class BulkDeleteMerchandiseReturnDetailException extends MerchandiseReturnException
+class BulkDeleteMerchandiseReturnProductException extends MerchandiseReturnException
 {
     /**
      * @var int[]
