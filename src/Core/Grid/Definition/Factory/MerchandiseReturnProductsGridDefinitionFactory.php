@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnProductException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnProductQueryException;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
@@ -64,6 +63,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
 
     /**
      * MerchandiseReturnProductsGridDefinitionFactory constructor.
+     *
      * @param HookDispatcherInterface $hookDispatcher
      * @param RequestStack $requestStack
      */
