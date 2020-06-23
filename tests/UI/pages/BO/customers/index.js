@@ -57,8 +57,8 @@ module.exports = class Customers extends BOBasePage {
     this.deleteCustomerModalMethodInput = id => `${this.deleteCustomerModal} #delete_customers_delete_method_${id}`;
     // Grid Actions
     this.customerGridActionsButton = '#customer-grid-actions-button';
-    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'customer-grid-actions-button\']';
-    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    this.gridActionDropDownMenu = '#customer-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#customer-grid-action-export';
   }
 
   /*

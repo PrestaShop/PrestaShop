@@ -43,8 +43,8 @@ module.exports = class Brands extends BOBasePage {
 
     // Grid Actions
     this.gridActionButton = table => `#${table}-grid-actions-button`;
-    this.gridActionDropDownMenu = table => `div.dropdown-menu[aria-labelledby='${table}-grid-actions-button']`;
-    this.gridActionExportLink = table => `${this.gridActionDropDownMenu(table)} a[href*='/export']`;
+    this.gridActionDropDownMenu = table => `#${table}-grid-actions-dropdown-menu`;
+    this.gridActionExportLink = table => `#${table}-grid-action-export`;
 
     // Delete modal
     this.confirmDeleteModal = table => `#${table}-grid-confirm-modal`;
