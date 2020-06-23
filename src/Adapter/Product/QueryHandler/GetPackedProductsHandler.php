@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
+use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetPackedProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
@@ -45,7 +46,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
         $packId = $query->getPackId()->getValue();
         $langId = $query->getLangId()->getValue();
 
-        $packedItems = \Pack::getItems($packId, $langId);
+        $packedItems = Pack::getItems($packId, $langId);
 
         $packedProducts = [];
         foreach ($packedItems as $packedItem) {
