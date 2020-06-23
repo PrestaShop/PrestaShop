@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
@@ -57,15 +58,19 @@ class DeleteProductFromMerchandiseReturnCommand
      *
      * @param int $merchandiseReturnId
      * @param int $merchandiseReturnDetailId
-     * @param int $customizationId
+     * @param null|int $customizationId
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException
+     * @throws MerchandiseReturnConstraintException
      */
-    public function __construct(int $merchandiseReturnId, int $merchandiseReturnDetailId, int $customizationId = 0)
+    public function __construct(int $merchandiseReturnId, int $merchandiseReturnDetailId, ?int $customizationId = null)
     {
         $this->merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
         $this->merchandiseReturnDetailId = new MerchandiseReturnDetailId($merchandiseReturnDetailId);
-        if ($customizationId !== 0) {
+
+        /**
+         * @param int $customizationId must remain null if customizationId is 0
+         */
+        if ($customizationId !== 0 && $customizationId !== null) {
             $this->customizationId = new CustomizationId($customizationId);
         }
     }
