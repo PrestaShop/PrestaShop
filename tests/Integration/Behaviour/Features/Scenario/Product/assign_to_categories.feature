@@ -15,3 +15,15 @@ Feature: Assign product to categories from Back Office (BO)
     When I assign product product1 to following categories:
       | categories       | [men, clothes] |
       | default category | clothes        |
+
+  Scenario: I assign disabled categories for product
+    Given I add product "product2" with following information:
+      | name       | en-US: ring of wealth |
+      | is_virtual | false                 |
+    And category "women" in default language named "Women" exists
+    And category "accessories" in default language named "Accessories" exists
+    And I disable category "women"
+    And I disable category "accessories"
+    When I assign product product2 to following categories:
+      | categories       | [women, accessories] |
+      | default category | women                |
