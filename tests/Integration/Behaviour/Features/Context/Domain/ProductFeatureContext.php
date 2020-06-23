@@ -127,7 +127,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then pack :packReference should contain following product quantities:
+     * @Then pack :packReference should contain products with following quantities:
      *
      * @param string $packReference
      * @param TableNode $table

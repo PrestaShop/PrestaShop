@@ -18,7 +18,7 @@ Feature: Add product to pack from Back Office (BO)
     When I update pack "productPack1" with following product quantities:
       | product2        | 5                      |
     Then product "productPack1" type should be pack
-    And pack "productPack1" should contain following product quantities:
+    And pack "productPack1" should contain products with following quantities:
       | product2        | 5                      |
 
   Scenario: I add virtual products to a pack
@@ -37,7 +37,7 @@ Feature: Add product to pack from Back Office (BO)
       | product3   | 3                           |
       | product4   | 20                          |
     Then product "productPack2" type should be pack
-    And pack productPack2 should contain following product quantities:
+    And pack productPack2 should contain products with following quantities:
       | product3   | 3                           |
       | product4   | 20                          |
 
@@ -58,7 +58,7 @@ Feature: Add product to pack from Back Office (BO)
       | product2 | 2 |
       | product3 | 3 |
     Then product "productPack4" type should be pack
-    And pack productPack4 should contain following product quantities:
+    And pack productPack4 should contain products with following quantities:
       | product2   | 2                          |
       | product3   | 3                          |
 
