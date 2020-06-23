@@ -340,10 +340,9 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $expectedCategoryIds = array_map(function (string $categoryReference) {
             return $this->getSharedStorage()->get($categoryReference);
         }, $expectedCategoriesRef);
-        sort($actualCategoryIds);
+        sort($expectedCategoryIds);
 
-        $diff = array_diff($actualCategoryIds, $expectedCategoryIds);
-        Assert::assertEmpty($diff, 'Unexpected categories assigned to product');
+        Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
     }
 
     /**
