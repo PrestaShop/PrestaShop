@@ -22,7 +22,7 @@ module.exports = class AddCustomer extends BOBasePage {
     this.groupAccessCheckkbox = id => `#customer_group_ids_${id}`;
     this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
-    this.saveCustomerButton = 'div.card-footer button';
+    this.saveCustomerButton = '#save-button';
   }
 
   /*

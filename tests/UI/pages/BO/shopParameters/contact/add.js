@@ -17,7 +17,7 @@ module.exports = class AddContact extends BOBasePage {
     this.enableSaveMessagesLabel = id => `label[for='contact_is_messages_saving_enabled_${id}']`;
     this.descriptionTextareaEN = '#contact_description_1';
     this.descriptionTextareaFR = '#contact_description_2';
-    this.saveContactButton = 'div.card-footer button';
+    this.saveContactButton = '#save-button';
   }
 
   /*

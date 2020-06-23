@@ -16,7 +16,7 @@ module.exports = class AddTax extends BOBasePage {
     this.inputLangChoiceSpan = lang => `div.dropdown-menu span[data-locale='${lang}']`;
     this.rateInput = '#tax_rate';
     this.enabledSwitchLabel = id => `label[for='tax_is_enabled_${id}']`;
-    this.saveTaxButton = 'div.card-footer button';
+    this.saveTaxButton = '#save-button';
   }
   /*
   Methods
