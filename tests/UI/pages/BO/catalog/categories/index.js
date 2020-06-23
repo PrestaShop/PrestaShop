@@ -52,8 +52,8 @@ module.exports = class Categories extends BOBasePage {
     this.deleteCategoryModalModeInput = id => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
     // Grid Actions
     this.categoryGridActionsButton = '#category-grid-actions-button';
-    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'category-grid-actions-button\']';
-    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    this.gridActionDropDownMenu = '#category-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#category-grid-action-export';
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.categoryGridPanel} .col-form-label`;

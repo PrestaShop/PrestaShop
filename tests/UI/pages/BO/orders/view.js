@@ -11,7 +11,7 @@ module.exports = class Order extends BOBasePage {
     // Order page
     this.orderProductsTable = '#orderProductsTable';
     this.orderProductsRowTable = row => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
-    this.editProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Edit']`;
+    this.editProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
     this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input#edit_product_row_quantity`;
