@@ -58,8 +58,9 @@ class WebserviceKeyCore extends ObjectModel
         if ($result) {
             PrestaShopLogger::addLog(
                 Context::getContext()->getTranslator()->trans(
-                    'Webservice key created by employee %s %s (%s)',
+                    'Webservice key created by employee "%d" %s %s (%s)',
                     [
+                        Context::getContext()->employee->id,
                         Context::getContext()->employee->firstname,
                         Context::getContext()->employee->lastname,
                         Context::getContext()->employee->email,
