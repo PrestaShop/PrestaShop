@@ -10,11 +10,18 @@ Feature: Assign product to categories from Back Office (BO)
       | name       | en-US: eastern european tracksuit  |
       | is_virtual | false                              |
     And product "product1" should be assigned to default category
+    And category "home" in default language named "Home" exists
+    Then product product1 should be assigned to following categories:
+      | categories | [home]               |
+      | default category | home           |
     And category "men" in default language named "Men" exists
     And category "clothes" in default language named "Clothes" exists
     When I assign product product1 to following categories:
       | categories       | [men, clothes] |
       | default category | clothes        |
+    Then product product1 should be assigned to following categories:
+      | categories | [home, men, clothes]       |
+      | default category | clothes              |
 
   Scenario: I assign disabled categories for product
     Given I add product "product2" with following information:
@@ -26,4 +33,7 @@ Feature: Assign product to categories from Back Office (BO)
     And I disable category "accessories"
     When I assign product product2 to following categories:
       | categories       | [women, accessories] |
+      | default category | women                |
+    Then product product2 should be assigned to following categories:
+      | categories | [home, women, accessories] |
       | default category | women                |
