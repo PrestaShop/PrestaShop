@@ -53,7 +53,7 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
             $packedProducts[] = new PackedProduct(
                 (int) $packedItem->id,
                 (int) $packedItem->pack_quantity,
-                $packedItem->id_pack_product_attribute ? (int) $packedItem->id_pack_product_attribute : null
+                (int) $packedItem->id_pack_product_attribute
             );
         }
 

@@ -44,19 +44,19 @@ class PackedProduct
     private $quantity;
 
     /**
-     * @var int|null
+     * @var int
      */
     private $combinationId;
 
     /**
      * @param int $productId
      * @param int $quantity
-     * @param int|null $combinationId
+     * @param int $combinationId
      */
     public function __construct(
         int $productId,
         int $quantity,
-        ?int $combinationId
+        int $combinationId
     ) {
         $this->productId = $productId;
         $this->quantity = $quantity;
@@ -80,9 +80,9 @@ class PackedProduct
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getCombinationId(): ?int
+    public function getCombinationId(): int
     {
         return $this->combinationId;
     }
