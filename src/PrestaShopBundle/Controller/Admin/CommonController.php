@@ -41,6 +41,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use ReflectionClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -363,29 +364,27 @@ class CommonController extends FrameworkBundleAdminController
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
 
-        if ($definitionFactory instanceof FilterableGridDefinitionFactoryInterface) {
-            /** @var ResponseBuilder $responseBuilder */
-            $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+        $filterId = null;
 
-            return $responseBuilder->buildSearchResponse(
-                $definitionFactory,
-                $request,
-                $definitionFactory->getFilterId(),
-                $redirectRoute,
-                $redirectQueryParamsToKeep
-            );
+        if ($definitionFactory instanceof FilterableGridDefinitionFactoryInterface) {
+            $filterId = $definitionFactory->getFilterId();
+        } elseif ($definitionFactory instanceof AbstractGridDefinitionFactory) {
+            // for backward compatibility for AbstractGridDefinitionFactory
+            // using ::GRID_ID (that has been replaced by AbstractFilterableGridDefinitionFactory)
+            $reflect = new ReflectionClass($definitionFactory);
+            if (array_key_exists('GRID_ID', $reflect->getConstants())) {
+                $filterId = $definitionFactory::GRID_ID;
+            }
         }
 
-        // for backward compatibility with AbstractGridDefinitionFactory
-        // replaced by AbstractFilterableGridDefinitionFactory
-        if ($definitionFactory instanceof AbstractGridDefinitionFactory) {
+        if (null !== $filterId) {
             /** @var ResponseBuilder $responseBuilder */
             $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
 
             return $responseBuilder->buildSearchResponse(
                 $definitionFactory,
                 $request,
-                $definitionFactory->getDefinition()->getId(),
+                $filterId,
                 $redirectRoute,
                 $redirectQueryParamsToKeep
             );
