@@ -138,9 +138,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
         $packId = $this->getSharedStorage()->get($packReference);
-
-        $defaultLangId = (int) \Configuration::get('PS_LANG_DEFAULT');
-        $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId, $defaultLangId));
+        $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
         $notExistingProducts = [];
 
         foreach ($data as $productReference => $quantity) {

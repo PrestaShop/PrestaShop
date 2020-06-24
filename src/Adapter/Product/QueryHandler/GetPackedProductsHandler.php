@@ -39,14 +39,26 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
 {
     /**
+     * @var int
+     */
+    private $defaultLangId;
+
+    /**
+     * @param int $defaultLangId
+     */
+    public function __construct(int $defaultLangId)
+    {
+        $this->defaultLangId = $defaultLangId;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(GetPackedProducts $query): array
     {
         $packId = $query->getPackId()->getValue();
-        $langId = $query->getLanguageId()->getValue();
 
-        $packedItems = Pack::getItems($packId, $langId);
+        $packedItems = Pack::getItems($packId, $this->defaultLangId);
 
         $packedProducts = [];
         foreach ($packedItems as $packedItem) {
