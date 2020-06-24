@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPackHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackingException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
@@ -56,9 +56,9 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
         }
 
         if (false === Pack::deleteItems($packId)) {
-            throw new ProductPackingException(
+            throw new ProductPackException(
                 sprintf('Failed deleting previous products from pack #%s before adding new ones', $packId),
-                ProductPackingException::FAILED_DELETING_PREVIOUS_PACKS
+                ProductPackException::FAILED_DELETING_PREVIOUS_PACKS
             );
         }
 
@@ -77,9 +77,9 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
                 $packed = Pack::addItem($packId, $productId, $productForPacking->getQuantity(), $combinationId);
 
                 if (false === $packed) {
-                    throw new ProductPackingException(
+                    throw new ProductPackException(
                         $this->appendIdsToMessage('Failed adding product to pack.', $productForPacking, $packId),
-                        ProductPackingException::FAILED_ADDING_TO_PACK
+                        ProductPackException::FAILED_ADDING_TO_PACK
                     );
                 }
             } catch (PrestaShopException $e) {
@@ -97,14 +97,14 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
     /**
      * @param int $productId
      *
-     * @throws ProductPackingException
+     * @throws ProductPackException
      */
     private function assertProductIsAvailableForPacking(int $productId): void
     {
         if (Pack::isPack($productId)) {
-            throw new ProductPackingException(
+            throw new ProductPackException(
                 sprintf('Product #%s is a pack itself. It cannot be packed', $productId),
-                ProductPackingException::CANNOT_ADD_PACK_INTO_PACK
+                ProductPackException::CANNOT_ADD_PACK_INTO_PACK
             );
         }
     }

@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackingException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -458,8 +458,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function assertAddingPackToPackError()
     {
         $this->assertLastErrorIs(
-            ProductPackingException::class,
-            ProductPackingException::CANNOT_ADD_PACK_INTO_PACK
+            ProductPackException::class,
+            ProductPackException::CANNOT_ADD_PACK_INTO_PACK
         );
     }
 

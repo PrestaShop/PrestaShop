@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 /**
  * Thrown when some product packing actions fails
  */
-class ProductPackingException extends ProductException
+class ProductPackException extends ProductException
 {
     /**
      * When fails to add product to pack
@@ -47,4 +47,9 @@ class ProductPackingException extends ProductException
      * When trying to pack a product which is already a pack itself
      */
     const CANNOT_ADD_PACK_INTO_PACK = 30;
+
+    /**
+     * When packed product quantity is invalid
+     */
+    const INVALID_QUANTITY = 40;
 }

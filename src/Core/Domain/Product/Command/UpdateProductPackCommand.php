@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -79,10 +80,27 @@ class UpdateProductPackCommand
     private function setProducts(array $products): void
     {
         foreach ($products as $product) {
+            $this->assertQuantity($product['quantity']);
+
             $this->products[] = new QuantifiedProduct(
                 $product['product_id'],
                 $product['quantity'],
                 isset($product['combination_id']) ? $product['combination_id'] : null
+            );
+        }
+    }
+
+    /**
+     * @param int $quantity
+     *
+     * @throws ProductPackException
+     */
+    private function assertQuantity(int $quantity): void
+    {
+        if ($quantity < 0) {
+            throw new ProductPackException(
+                sprintf('Pack product quantity cannot be negative. Got "%s"', $quantity),
+            ProductPackException::INVALID_QUANTITY
             );
         }
     }
