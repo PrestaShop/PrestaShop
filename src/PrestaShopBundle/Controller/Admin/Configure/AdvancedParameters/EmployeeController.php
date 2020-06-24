@@ -350,14 +350,14 @@ class EmployeeController extends FrameworkBundleAdminController
         $isRestrictedAccess = $formAccessChecker->isRestrictedAccess((int) $employeeId);
         $canAccessAddonsConnect = $formAccessChecker->canAccessAddonsConnect();
 
-        try {
-            $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
-                'is_restricted_access' => $isRestrictedAccess,
-                'is_for_editing' => true,
-                'show_addons_connect_button' => $canAccessAddonsConnect,
-            ]);
+        $employeeForm = $this->getEmployeeFormBuilder()->getFormFor((int) $employeeId, [], [
+            'is_restricted_access' => $isRestrictedAccess,
+            'is_for_editing' => true,
+            'show_addons_connect_button' => $canAccessAddonsConnect,
+        ]);
+        $employeeForm->handleRequest($request);
 
-            $employeeForm->handleRequest($request);
+        try {
             $result = $this->getEmployeeFormHandler()->handleFor((int) $employeeId, $employeeForm);
 
             if ($result->isSubmitted() && $result->isValid()) {

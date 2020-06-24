@@ -376,9 +376,9 @@ class CmsPageController extends FrameworkBundleAdminController
         $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
         $cmsCategoryParentId = null;
 
+        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+        $cmsPageCategoryForm->handleRequest($request);
         try {
-            $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
-            $cmsPageCategoryForm->handleRequest($request);
             $result = $this->getCmsPageCategoryFormHandler()->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
 
             if ($result->isSubmitted() && $result->isValid()) {

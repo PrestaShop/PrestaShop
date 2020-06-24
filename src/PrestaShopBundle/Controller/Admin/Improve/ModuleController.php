@@ -155,11 +155,10 @@ class ModuleController extends ModuleAbstractController
 
         if ($tabModulesList) {
             $tabModulesList = explode(',', $tabModulesList);
-            $modulesListUnsorted = $this->getModulesByInstallation(
-                $tabModulesList,
-                $request->request->get('admin_list_from_source')
-            );
         }
+        $modulesListUnsorted = $this->getModulesByInstallation(
+            $tabModulesList
+        );
 
         $installed = $uninstalled = [];
 

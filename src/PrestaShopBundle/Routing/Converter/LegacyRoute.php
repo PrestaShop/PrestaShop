@@ -54,6 +54,21 @@ class LegacyRoute
     private $controllersActions;
 
     /**
+     * LegacyRoute constructor.
+     *
+     * @param string $routeName
+     * @param array $legacyLinks
+     * @param array $routeParameters
+     */
+    public function __construct($routeName, array $legacyLinks, array $routeParameters)
+    {
+        $this->routeName = $routeName;
+        $this->routeParameters = $routeParameters;
+        $this->legacyLinks = $this->buildLegacyLinks($legacyLinks);
+        $this->controllersActions = $this->buildControllerActions($this->legacyLinks, $routeName);
+    }
+
+    /**
      * @param string|null $action
      *
      * @return bool
@@ -83,22 +98,7 @@ class LegacyRoute
             $legacyParameters = $routeDefaults['_legacy_parameters'];
         }
 
-        return new static($routeName, $legacyLinks, $legacyParameters);
-    }
-
-    /**
-     * LegacyRoute constructor.
-     *
-     * @param string $routeName
-     * @param array $legacyLinks
-     * @param array $routeParameters
-     */
-    public function __construct($routeName, array $legacyLinks, array $routeParameters)
-    {
-        $this->routeName = $routeName;
-        $this->routeParameters = $routeParameters;
-        $this->legacyLinks = $this->buildLegacyLinks($legacyLinks);
-        $this->controllersActions = $this->buildControllerActions($this->legacyLinks, $routeName);
+        return new self($routeName, $legacyLinks, $legacyParameters);
     }
 
     /**

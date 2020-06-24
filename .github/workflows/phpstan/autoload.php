@@ -81,6 +81,7 @@ $constantsToDefine = [
     '_PS_BASE_URL_' => 'string',
     '_MODULE_DIR_' => 'string',
     '_THEME_PROD_PIC_DIR_' => 'string',
+    '_NEW_COOKIE_KEY_' => 'string',
 ];
 
 foreach ($constantsToDefine as $key => $value) {

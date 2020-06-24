@@ -76,7 +76,7 @@ class SortOrder
      */
     public static function random()
     {
-        return new static('', '', 'random');
+        return new self('', '', 'random');
     }
 
     /**
@@ -122,7 +122,7 @@ class SortOrder
     {
         list($entity, $field, $direction) = explode('.', $sortOrderConfiguration);
 
-        return new static($entity, $field, $direction);
+        return new self($entity, $field, $direction);
     }
 
     /**

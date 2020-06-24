@@ -33,6 +33,6 @@ class InvalidLanguageException extends \RuntimeException
 
     public static function localeNotFound($locale)
     {
-        return new static(sprintf('The locale "%s" is not available', $locale), self::LOCALE_NOT_FOUND);
+        return new self(sprintf('The locale "%s" is not available', $locale), self::LOCALE_NOT_FOUND);
     }
 }

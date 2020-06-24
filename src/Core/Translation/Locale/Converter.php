@@ -27,6 +27,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Translation\Locale;
 
+use Exception;
+
 /**
  * Helper to manipulate the locales (IETF language tag) specific to PrestaShop
  *

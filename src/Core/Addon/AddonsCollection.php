@@ -66,7 +66,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public static function createFrom(array $addons)
     {
-        return new static($addons);
+        return new self($addons);
     }
 
     /**

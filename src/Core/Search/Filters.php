@@ -52,7 +52,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public static function buildDefaults()
     {
-        return new static(static::getDefaults());
+        return new self(static::getDefaults());
     }
 
     /**

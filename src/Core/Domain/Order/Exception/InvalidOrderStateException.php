@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Exception;
 
+use Throwable;
+
 /**
  * Thrown when the order state is incompatible with an action (ex: standard
  * refund on an order not paid yet).
