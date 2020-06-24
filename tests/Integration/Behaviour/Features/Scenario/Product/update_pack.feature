@@ -62,4 +62,11 @@ Feature: Add product to pack from Back Office (BO)
       | product2   | 2                          |
       | product3   | 3                          |
 
+    Scenario: I add product with negative quantity to a pack
+      Given product "product2" type should be standard
+      Then product "productPack4" type should be pack
+      When I update pack productPack4 with following product quantities:
+        | product2 | -10                        |
+        | product3 | 3                          |
+      Then I should get error that product for packing quantity is invalid
 #@todo: add combination product to a pack

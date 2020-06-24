@@ -453,6 +453,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that product for packing quantity is invalid
+     */
+    public function assertPackProductQuantityError()
+    {
+        $this->assertLastErrorIs(
+            ProductPackException::class,
+            ProductPackException::INVALID_QUANTITY
+        );
+    }
+
+    /**
      * @Then I should get error that I cannot add pack into a pack
      */
     public function assertAddingPackToPackError()
