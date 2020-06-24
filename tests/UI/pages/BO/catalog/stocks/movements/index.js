@@ -54,7 +54,7 @@ module.exports = class Movements extends BOBasePage {
    * Get text from column in table
    * @param row
    * @param column
-   * @return {Promise<string|float>}
+   * @return {Promise<string|number>}
    */
   async getTextColumnFromTable(row, column) {
     switch (column) {

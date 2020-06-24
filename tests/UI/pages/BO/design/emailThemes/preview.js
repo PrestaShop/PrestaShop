@@ -18,7 +18,7 @@ module.exports = class PreviewEmailTheme extends BOBasePage {
 
   /**
    * Get number of layouts in grid
-   * @return {Promise<*>}
+   * @return {Promise<number>}
    */
   async getNumberOfLayoutInGrid() {
     return (await this.page.$$(this.tableRows)).length;

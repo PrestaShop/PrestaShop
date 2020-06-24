@@ -66,7 +66,7 @@ module.exports = class AddSeoUrl extends BOBasePage {
   }
 
   /**
-   *
+   * Create/Edit seo page
    * @param seoPageData
    * @return {Promise<void>}
    */

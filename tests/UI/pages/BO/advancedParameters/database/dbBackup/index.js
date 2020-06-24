@@ -26,7 +26,6 @@ module.exports = class DbBackup extends BOBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.viewRowLink = row => `${this.actionsColumn(row)} a[[href*='backups/view']`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
@@ -41,7 +40,7 @@ module.exports = class DbBackup extends BOBasePage {
   /* Header methods */
   /**
    * Go to db Backup page
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToSqlManagerPage() {
     await this.clickAndWaitForNavigation(this.sqlManagerSubTabLink);
@@ -50,7 +49,7 @@ module.exports = class DbBackup extends BOBasePage {
   /* Form and grid methods */
   /**
    * Get number of backups
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -58,7 +57,7 @@ module.exports = class DbBackup extends BOBasePage {
 
   /**
    * Create new db backup
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createDbDbBackup() {
     await Promise.all([
@@ -82,18 +81,9 @@ module.exports = class DbBackup extends BOBasePage {
   }
 
   /**
-   * View Backup
-   * @param row
-   * @return {Promise<void>}
-   */
-  async viewBackup(row) {
-    await this.clickAndWaitForNavigation(this.viewRowLink(row));
-  }
-
-  /**
    * Delete backup
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteBackup(row) {
     await Promise.all([
@@ -119,7 +109,7 @@ module.exports = class DbBackup extends BOBasePage {
 
   /**
    * Delete with bulk actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteWithBulkActions() {
     this.dialogListener(true);

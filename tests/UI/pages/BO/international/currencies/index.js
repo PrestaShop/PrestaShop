@@ -29,7 +29,6 @@ module.exports = class Currencies extends LocalizationBasePage {
     // enable column
     this.enableColumn = row => this.tableColumn(row, 'active');
     this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
-    this.enableColumnNotValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-not-valid`;
     // Actions buttons in row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
@@ -85,7 +84,7 @@ module.exports = class Currencies extends LocalizationBasePage {
 
   /**
    * get number of elements in grid
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -93,7 +92,7 @@ module.exports = class Currencies extends LocalizationBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -105,7 +104,7 @@ module.exports = class Currencies extends LocalizationBasePage {
    * get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableCurrency(row, column) {
     return this.getTextContent(this.tableColumn(row, column));
@@ -114,7 +113,7 @@ module.exports = class Currencies extends LocalizationBasePage {
   /**
    * Get exchange rate value
    * @param row
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getExchangeRateValue(row) {
     return this.getNumberFromText(this.tableColumn(row, 'conversion_rate'));
@@ -123,7 +122,7 @@ module.exports = class Currencies extends LocalizationBasePage {
   /**
    * Get currency row from table
    * @param row
-   * @return {Promise<object>}
+   * @returns {Promise<{symbol: string, isoCode: string, exchangeRate: number, name: string, enabled: string}>}
    */
   async getCurrencyFromTable(row) {
     return {
@@ -162,7 +161,7 @@ module.exports = class Currencies extends LocalizationBasePage {
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCurrency(row = 1) {
     await Promise.all([

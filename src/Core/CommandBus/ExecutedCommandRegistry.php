@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\CommandBus;
 
 use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandTypeParser;
@@ -33,6 +35,8 @@ use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandTypeParser;
  */
 final class ExecutedCommandRegistry
 {
+    private const BACKTRACE_LIMIT = 10;
+
     /**
      * @var array
      */
@@ -58,24 +62,28 @@ final class ExecutedCommandRegistry
      * @param object $command
      * @param object $handler
      */
-    public function register($command, $handler)
+    public function register($command, $handler): void
     {
         $commandClass = get_class($command);
         $handlerClass = get_class($handler);
 
         $type = $this->commandTypeParser->parse($commandClass);
 
+        $trace = $this->getTrace();
+
         switch ($type) {
             case 'Command':
                 $this->registry['commands'][] = [
                     'command' => $commandClass,
                     'command_handler' => $handlerClass,
+                    'trace' => $trace,
                 ];
                 break;
             case 'Query':
                 $this->registry['queries'][] = [
                     'query' => $commandClass,
                     'query_handler' => $handlerClass,
+                    'trace' => $trace,
                 ];
                 break;
         }
@@ -84,7 +92,7 @@ final class ExecutedCommandRegistry
     /**
      * @return array
      */
-    public function getExecutedCommands()
+    public function getExecutedCommands(): array
     {
         return $this->registry['commands'];
     }
@@ -92,8 +100,34 @@ final class ExecutedCommandRegistry
     /**
      * @return array
      */
-    public function getExecutedQueries()
+    public function getExecutedQueries(): array
     {
         return $this->registry['queries'];
+    }
+
+    /**
+     * Returns the file and line that invoked the handle method
+     *
+     * @return array
+     */
+    private function getTrace(): array
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, self::BACKTRACE_LIMIT);
+
+        foreach ($trace as $step) {
+            if ($step['class'] === TacticianCommandBusAdapter::class
+                && $step['function'] === 'handle'
+            ) {
+                return [
+                    'file' => $step['file'],
+                    'line' => $step['line'],
+                ];
+            }
+        }
+
+        return [
+            'file' => 'Unknown',
+            'line' => 0,
+        ];
     }
 }

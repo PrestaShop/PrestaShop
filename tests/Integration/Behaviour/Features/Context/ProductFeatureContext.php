@@ -37,6 +37,7 @@ use Pack;
 use Product;
 use SpecificPrice;
 use StockAvailable;
+use TaxRulesGroup;
 
 class ProductFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -173,6 +174,8 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $product->price = $price;
         $product->name = $productName;
         $product->quantity = $productQuantity;
+        // Use same default tax rules group as products from fixtures to have the same tax rate
+        $product->id_tax_rules_group = TaxRulesGroup::getIdByName('US-FL Rate (6%)');
         $product->add();
         StockAvailable::setQuantity((int) $product->id, 0, $product->quantity);
 

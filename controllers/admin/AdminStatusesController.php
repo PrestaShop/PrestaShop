@@ -35,7 +35,7 @@ class AdminStatusesControllerCore extends AdminController
         $this->table = 'order_state';
         $this->className = 'OrderState';
         $this->lang = true;
-        $this->deleted = false;
+        $this->deleted = true;
         $this->colorOnBackground = false;
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->imageType = 'gif';
@@ -622,7 +622,7 @@ class AdminStatusesControllerCore extends AdminController
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');
             } else {
-                return parent::postProcess();
+                return $order_state->softDelete();
             }
         } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
             if (!$this->access('delete')) {

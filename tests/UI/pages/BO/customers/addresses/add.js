@@ -31,10 +31,10 @@ module.exports = class AddAddress extends BOBasePage {
    */
 
   /**
-     * Fill form for add/edit address
-     * @param addressData
-     * @return {Promise<textContent>}
-     */
+   * Fill form for add/edit address
+   * @param addressData
+   * @returns {Promise<string>}
+   */
   async createEditAddress(addressData) {
     if (await this.elementVisible(this.customerEmailInput, 2000)) {
       await this.setValue(this.customerEmailInput, addressData.email);

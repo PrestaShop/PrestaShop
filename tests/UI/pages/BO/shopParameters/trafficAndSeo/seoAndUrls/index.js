@@ -53,7 +53,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTable(row, column) {
     return this.getTextContent(this.tableColumn(row, column));
@@ -71,7 +71,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteSeoUrlPage(row = 1) {
     await Promise.all([
@@ -110,7 +110,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -118,7 +118,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();

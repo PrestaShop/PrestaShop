@@ -26,7 +26,7 @@ module.exports = class Category extends FOBasePage {
 
   /**
    * Get number of products displayed in category page
-   * @return {Promise<int>}
+   * @return {Promise<number>}
    */
   async getNumberOfProductsDisplayed() {
     return (await this.page.$$(this.productItemListDiv)).length;

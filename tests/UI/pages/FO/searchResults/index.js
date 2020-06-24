@@ -13,6 +13,7 @@ module.exports = class SearchResults extends FOBasePage {
   /**
    * Go to the product page
    * @param id, product id
+   * @returns {Promise<void>}
    */
   async goToProductPage(id) {
     await this.clickAndWaitForNavigation(this.productImg(id));

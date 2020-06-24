@@ -26,12 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Cart;
+use Currency;
 use Customer;
 use Group;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopException;
 
 /**
@@ -86,5 +89,18 @@ abstract class AbstractOrderHandler
         $customer = new Customer($order->id_customer);
 
         return Group::getPriceDisplayMethod((int) $customer->id_default_group);
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return int
+     */
+    protected function getPrecisionFromCart(Cart $cart): int
+    {
+        $computingPrecision = new ComputingPrecision();
+        $currency = new Currency((int) $cart->id_currency);
+
+        return $computingPrecision->getPrecision($currency->precision);
     }
 }

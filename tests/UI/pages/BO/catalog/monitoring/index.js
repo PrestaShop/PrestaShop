@@ -53,7 +53,7 @@ module.exports = class Monitoring extends BOBasePage {
   /**
    * Get number of element in table grid
    * @param table, which table to get number of element from
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(table) {
     return this.getNumberFromText(this.gridHeaderTitle(table));
@@ -73,7 +73,7 @@ module.exports = class Monitoring extends BOBasePage {
   /**
    * Reset Filter And get number of elements in list
    * @param table, which table to reset
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(table) {
     await this.resetFilter(table);
@@ -111,20 +111,10 @@ module.exports = class Monitoring extends BOBasePage {
    * @param table, which table to get text from
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTable(table, row, column) {
     return this.getTextContent(this.tableColumn(table, row, column));
-  }
-
-  /**
-   * Go to edit element page in table
-   * @param table
-   * @param row, Which row of the list
-   * @return {Promise<void>}
-   */
-  async goToEditElementPage(table, row) {
-    await this.clickAndWaitForNavigation(this.editRowLink(table, row));
   }
 
   /**
@@ -144,7 +134,7 @@ module.exports = class Monitoring extends BOBasePage {
    * Delete Row in table
    * @param table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteProductInGrid(table, row) {
     await this.openDropdownMenu(table, row);
@@ -189,7 +179,7 @@ module.exports = class Monitoring extends BOBasePage {
    * @param table
    * @param row, row to delete
    * @param deletionModePosition, which mode to choose for delete
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteCategoryInGrid(table, row, deletionModePosition) {
     this.dialogListener(true);
@@ -208,7 +198,7 @@ module.exports = class Monitoring extends BOBasePage {
    * Get toggle column value for a row
    * @param table
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(table, row = 1) {
     return this.elementVisible(this.enableColumnValidIcon(table, row), 100);

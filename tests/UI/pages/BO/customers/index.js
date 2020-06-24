@@ -25,8 +25,6 @@ module.exports = class Customers extends BOBasePage {
     this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)} a.grid-delete-row-link`;
     this.customersListColumnValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
       + ' i.grid-toggler-icon-valid';
-    this.customersListColumnNotValidIcon = (row, column) => `${this.customersListTableColumn(row, column)}`
-      + ' i.grid-toggler-icon-not-valid';
     // Filters
     this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
     this.filterSearchButton = `${this.customersListForm} .grid-search-button`;
@@ -66,7 +64,7 @@ module.exports = class Customers extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
@@ -75,8 +73,8 @@ module.exports = class Customers extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.customerGridTitle);
@@ -84,7 +82,7 @@ module.exports = class Customers extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -94,7 +92,7 @@ module.exports = class Customers extends BOBasePage {
   /**
    * Filter list of customers
    * @param filterType, input or select to choose method of filter
-   * @param filterBy, colomn to filter
+   * @param filterBy, column to filter
    * @param value, value to filter with
    * @return {Promise<void>}
    */
@@ -134,7 +132,7 @@ module.exports = class Customers extends BOBasePage {
    * Get Value of columns Enabled, Newsletter or Partner Offers
    * @param row, row in table
    * @param column, column to check
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(row, column) {
     await this.waitForVisibleSelector(this.customersListTableColumn(row, column), 2000);
@@ -160,16 +158,18 @@ module.exports = class Customers extends BOBasePage {
    * get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableCustomers(row, column) {
     return this.getTextContent(this.customersListTableColumn(row, column));
   }
 
   /**
-   * Get all information for a customer in table
+   * * Get all information for a customer in table
    * @param row, row of customer in table
-   * @return {Promise<{object}>}
+   * @param row
+   * @returns {Promise<{firstName: string, lastName: string, newsletter: boolean, socialTitle: string,
+   * id: string, partnerOffers: boolean, email: string, sales: string, status: boolean}>}
    */
   async getCustomerFromTable(row) {
     return {
@@ -234,7 +234,7 @@ module.exports = class Customers extends BOBasePage {
    * Delete Customer
    * @param row, row in table
    * @param allowRegistrationAfterDelete, Deletion method to choose in modal
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCustomer(row, allowRegistrationAfterDelete = true) {
     // Click on dropDown
@@ -254,7 +254,7 @@ module.exports = class Customers extends BOBasePage {
   /**
    * Delete all Customers with Bulk Actions
    * @param allowRegistrationAfterDelete, Deletion method to choose in modal
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCustomersBulkActions(allowRegistrationAfterDelete = true) {
     // Click on Select All
@@ -293,7 +293,7 @@ module.exports = class Customers extends BOBasePage {
   /**
    * Enable / disable customers by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async changeCustomersEnabledColumnBulkActions(enable = true) {
     // Click on Select All
@@ -323,7 +323,7 @@ module.exports = class Customers extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
     while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
-      await this.clickAndWaitForNavigation(sortColumnSpanButton, 'networkidle');
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
     await this.waitForVisibleSelector(sortColumnDiv);

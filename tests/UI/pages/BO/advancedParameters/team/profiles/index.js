@@ -49,7 +49,7 @@ module.exports = class Profiles extends BOBasePage {
 
   /**
    * Go to new profile page
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToAddNewProfilePage() {
     await this.clickAndWaitForNavigation(this.addNewProfileLink);
@@ -59,7 +59,7 @@ module.exports = class Profiles extends BOBasePage {
    * get text from a column from table
    * @param row
    * @param column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTable(row, column) {
     return this.getTextContent(this.profilesListTableColumn(row, column));
@@ -67,7 +67,7 @@ module.exports = class Profiles extends BOBasePage {
 
   /**
    * get number of elements in grid
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.profileGridTitle);
@@ -75,7 +75,7 @@ module.exports = class Profiles extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<textContent>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
@@ -87,7 +87,7 @@ module.exports = class Profiles extends BOBasePage {
   /**
    * Go to Edit profile page
    * @param row, row in table
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToEditProfilePage(row) {
     // Click on edit
@@ -99,7 +99,7 @@ module.exports = class Profiles extends BOBasePage {
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async filterProfiles(filterType, filterBy, value = '') {
     switch (filterType) {
@@ -119,7 +119,7 @@ module.exports = class Profiles extends BOBasePage {
   /**
    * Delete profile
    * @param row, row in table
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteProfile(row) {
     // Click on dropDown
@@ -148,7 +148,7 @@ module.exports = class Profiles extends BOBasePage {
 
   /**
    * Delete all profiles with Bulk Actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteBulkActions() {
     this.dialogListener();
@@ -199,7 +199,7 @@ module.exports = class Profiles extends BOBasePage {
   /**
    * Get content from all rows
    * @param column
-   * @return {Promise<[]>}
+   * @returns {Promise<[]>}
    */
   async getAllRowsColumnContent(column) {
     const rowsNumber = await this.getNumberOfElementInGrid();
@@ -218,7 +218,7 @@ module.exports = class Profiles extends BOBasePage {
    * Sort table
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async sortTable(sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;

@@ -79,7 +79,7 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Update number of days
    * @param numberOfDays
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async updateNumberOfDays(numberOfDays) {
     await this.setValue(this.newDaysNumberInput, numberOfDays.toString());
@@ -90,7 +90,7 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Update max size of short description
    * @param size
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async UpdateMaxSizeOfSummary(size) {
     await this.setValue(this.maxSizeShortDescriptionInput, size.toString());
@@ -134,7 +134,7 @@ module.exports = class productSettings extends BOBasePage {
   /**
    * Enable/ Disable display available quantities
    * @param toEnable
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async setDisplayAvailableQuantitiesStatus(toEnable = true) {
     await this.waitForSelectorAndClick(this.switchDisplayAvailableQuantities(toEnable ? 1 : 0));

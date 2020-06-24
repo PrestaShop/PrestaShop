@@ -23,15 +23,6 @@ module.exports = class shopParamsMaintenance extends BOBasePage {
   /*
   Methods
    */
-
-  /**
-   * Change Tab to general in Shop Parameters Maintenance Page
-   * @return {Promise<void>}
-   */
-  async goToSubTabGeneral() {
-    await this.clickAndWaitForNavigation(this.generalNavItemLink);
-  }
-
   /**
    * Enable / disable shop
    * @param toEnable, true to enable and false to disable

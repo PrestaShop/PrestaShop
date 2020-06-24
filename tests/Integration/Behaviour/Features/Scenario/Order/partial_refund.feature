@@ -454,7 +454,7 @@ Feature: Refund Order from Back Office (BO)
       | Mug Today is a good day     | 1                        | 3.5456889623154870  |
     Then "bo_order_refund" has 1 credit slips
     Then "bo_order_refund" last credit slip is:
-      | amount                  | 14.09     |
+      | amount                  | 14.091378 |
       | shipping_cost_amount    | 0.0       |
       | total_shipping_tax_incl | 0.0       |
       | total_shipping_tax_excl | 0.0       |

@@ -36,8 +36,6 @@ module.exports = class Taxes extends BOBasePage {
     this.taxesGridColumnToggleDropDown = row => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
     this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a.grid-delete-row-link`;
     this.toggleColumnValidIcon = (row, column) => `${this.taxesGridColumn(row, column)} i.grid-toggler-icon-valid`;
-    this.toggleColumnNotValidIcon = (row, column) => `${this.taxesGridColumn(row, column)}`
-      + ' i.grid-toggler-icon-not-valid';
 
     // Form Taxes Options
     this.enabledTaxSwitchLabel = id => `label[for='form_enable_tax_${id}']`;
@@ -65,7 +63,7 @@ module.exports = class Taxes extends BOBasePage {
 
   /**
    * Reset Filter in table
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (await this.elementVisible(this.resetFilterButton, 2000)) {
@@ -74,8 +72,8 @@ module.exports = class Taxes extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -83,7 +81,7 @@ module.exports = class Taxes extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -142,7 +140,7 @@ module.exports = class Taxes extends BOBasePage {
    * get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableTaxes(row, column) {
     return this.getTextContent(this.taxesGridColumn(row, column));
@@ -183,7 +181,7 @@ module.exports = class Taxes extends BOBasePage {
   /**
    * Delete Tax
    * @param row, row in table
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteTax(row) {
     // Add listener to dialog to accept deletion
@@ -207,7 +205,7 @@ module.exports = class Taxes extends BOBasePage {
   /**
    * Enable / disable taxes by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async changeTaxesEnabledColumnBulkActions(enable = true) {
     // Click on Select All
@@ -227,7 +225,7 @@ module.exports = class Taxes extends BOBasePage {
 
   /**
    * Delete all Taxes with Bulk Actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteTaxesBulkActions() {
     // Click on Select All
@@ -260,7 +258,7 @@ module.exports = class Taxes extends BOBasePage {
   /**
    * Update Tax Options
    * @param taxOptionData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async updateTaxOption(taxOptionData) {
     if (taxOptionData.enabled) {
@@ -325,7 +323,7 @@ module.exports = class Taxes extends BOBasePage {
   /**
    * Select pagination limit
    * @param number
-   * @returns {Promise<string >}
+   * @returns {Promise<string>}
    */
   async selectPaginationLimit(number) {
     await this.selectByVisibleText(this.paginationLimitSelect, number);

@@ -41,7 +41,7 @@ module.exports = class AddTax extends BOBasePage {
   /**
    * Fill form for add/edit tax
    * @param taxData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditTax(taxData) {
     await this.changeInputLanguage('en');

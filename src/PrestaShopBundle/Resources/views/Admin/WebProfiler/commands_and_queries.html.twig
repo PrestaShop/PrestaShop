@@ -64,50 +64,56 @@
 {% endblock %}
 
 {% block panel %}
-  <h2>Commands / Queries</h2>
+  <h2>Commands</h2>
 
   <div class="sf-toolbar-info-piece">
-    <table class="sf-toolbar-ajax-requests">
+    <table id="cqrs-commands-log">
       <thead>
         <tr>
           <th>Command</th>
-          <th>Command handler</th>
+          <th>Command Handler</th>
+          <th>Called from</th>
         </tr>
       </thead>
       <tbody class="sf-toolbar-ajax-request-list">
         {% if collector.executedCommands is not empty %}
           {% for command in collector.executedCommands %}
             <tr>
-              <td>{{ command.command }}</td>
-              <td>{{ command.command_handler }}</td>
+              <td class="text-small">{{ command.command }}</td>
+              <td class="text-small">{{ command.command_handler }}</td>
+              <td class="text-small">{{ command.trace.file }}:{{ command.trace.line }}</td>
             </tr>
           {% endfor %}
         {% else %}
           <tr>
-            <td colspan="2">No Commands where executed during request.</td>
+            <td colspan="3" class="font-normal">No Commands where executed during request.</td>
           </tr>
         {% endif %}
       </tbody>
     </table>
 
-    <table class="sf-toolbar-ajax-requests">
+    <h2>Queries</h2>
+
+    <table id="cqrs-queries-log">
       <thead>
         <tr>
           <th>Query</th>
           <th>Query Handler</th>
+          <th>Called from</th>
         </tr>
       </thead>
       <tbody class="sf-toolbar-ajax-request-list">
       {% if collector.executedQueries is not empty %}
         {% for query in collector.executedQueries %}
           <tr>
-            <td>{{ query.query }}</td>
-            <td>{{ query.query_handler }}</td>
+            <td class="text-small">{{ query.query }}</td>
+            <td class="text-small">{{ query.query_handler }}</td>
+            <td class="text-small">{{ query.trace.file }}:{{ query.trace.line }}</td>
           </tr>
         {% endfor %}
       {% else %}
         <tr>
-          <td colspan="2">No Queries where executed during request.</td>
+          <td colspan="3" class="font-normal">No Queries where executed during request.</td>
         </tr>
       {% endif %}
       </tbody>

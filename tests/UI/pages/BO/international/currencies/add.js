@@ -9,15 +9,12 @@ module.exports = class AddCurrency extends BOBasePage {
 
     // Selectors
     this.currencySelect = '#currency_selected_iso_code';
-    this.selectResultOption = id => `li.select2-results__option:nth-child(${id})`;
     this.alternativeCurrencyCheckBox = '#currency_unofficial';
     this.currencyNameInput = id => `#currency_names_${id}`;
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
-    this.decimalsInput = '#currency_precision';
     this.statusSwitch = id => `label[for='currency_active_${id}']`;
-    this.resetDefaultSettingsButton = '#currency_reset_default_settings';
-    this.saveButton = '#save-button';
+    this.saveButton = 'div.card-footer button[type=\'submit\']';
 
     // currency modal
     this.currencyLoadingModal = '#currency_loading_data_modal';
@@ -30,7 +27,7 @@ module.exports = class AddCurrency extends BOBasePage {
   /**
    * Add official currency
    * @param currencyData, currency to add
-   * @return {Promise<textContent>}, successful text message that appears
+   * @returns {Promise<string>}, successful text message that appears
    */
   async addOfficialCurrency(currencyData) {
     // Select currency
@@ -57,7 +54,7 @@ module.exports = class AddCurrency extends BOBasePage {
   /**
    * Create unofficial currency
    * @param currencyData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createUnOfficialCurrency(currencyData) {
     if (!(await this.isCheckboxSelected(this.alternativeCurrencyCheckBox))) {

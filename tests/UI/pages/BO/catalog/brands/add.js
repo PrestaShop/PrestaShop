@@ -33,7 +33,7 @@ module.exports = class AddBrand extends BOBasePage {
   /**
    * Create or edit Brand
    * @param brandData
-   * @return {Promise<void>}
+   * @returns {Promise<string>}
    */
   async createEditBrand(brandData) {
     // Fill Name

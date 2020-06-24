@@ -33,7 +33,7 @@ module.exports = class LinkWidgets extends BOBasePage {
   /**
    * Get Number of element in grid
    * @param hookId, table to get number from
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(hookId) {
     return this.getNumberFromText(this.gridHeaderTitle(hookId));
@@ -43,7 +43,7 @@ module.exports = class LinkWidgets extends BOBasePage {
    * Delete link widget
    * @param hookId, table to delete from
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteLinkWidget(hookId, row) {
     this.dialogListener(true);

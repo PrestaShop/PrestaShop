@@ -98,9 +98,9 @@ module.exports = class Brands extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
+   * Get number of elements in grid
    * @param table
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(table) {
     return this.getNumberFromText(this.gridHeaderTitle(table));
@@ -109,7 +109,7 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Reset Filter And get number of elements in list
    * @param table, what table to reset
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(table) {
     await this.resetFilter(table);
@@ -268,7 +268,7 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Delete Brand
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteBrand(row = '1') {
     return this.deleteRowInTable('manufacturer', row);
@@ -277,7 +277,7 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Delete Brand Address
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteBrandAddress(row = '1') {
     return this.deleteRowInTable('manufacturer_address', row);
@@ -286,7 +286,7 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Enable / disable brands by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async changeBrandsEnabledColumnBulkActions(enable = true) {
     // Click on Select All
@@ -307,7 +307,7 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Delete with bulk actions
    * @param table, in which table
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteWithBulkActions(table) {
     // Click on Select All
@@ -333,21 +333,21 @@ module.exports = class Brands extends BOBasePage {
   }
 
   /**
-   * get text from a column
+   * Get text from a column
    * @param table, manufacturer or address
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTable(table, row, column) {
     return this.getTextContent(this.tableColumn(table, row, column));
   }
 
   /**
-   * get text from a column from table brand
+   * Get text from a column from table brand
    * @param row
    * @param column
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTableBrands(row, column) {
     return this.getTextColumnFromTable('manufacturer', row, column);
@@ -365,7 +365,7 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Get all information from categories table
    * @param row
-   * @return {Promise<{object}>}
+   * @return {Promise<{addresses: string, name: string, logo: string, id: string, products: string, status: string}>}
    */
   async getBrandFromTable(row) {
     return {
@@ -379,10 +379,10 @@ module.exports = class Brands extends BOBasePage {
   }
 
   /**
-   * get text from a column from table addresses
+   * Get text from a column from table addresses
    * @param row
    * @param column
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTableAddresses(row, column) {
     return this.getTextColumnFromTable('manufacturer_address', row, column);
@@ -473,7 +473,7 @@ module.exports = class Brands extends BOBasePage {
 
   /**
    * Get alert text message
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   getAlertTextMessage() {
     return this.getTextContent(this.alertTextBlock);
@@ -508,14 +508,6 @@ module.exports = class Brands extends BOBasePage {
   }
 
   /**
-   * Export brand addresses data to csv file
-   * @return {Promise<*>}
-   */
-  async exportAddressesDataToCsv() {
-    return this.exportDataToCsv('manufacturer_address');
-  }
-
-  /**
    * Get category from table in csv format
    * @param row
    * @return {Promise<string>}
@@ -543,7 +535,7 @@ module.exports = class Brands extends BOBasePage {
    * Select pagination limit
    * @param table
    * @param number
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async selectPaginationLimit(table, number) {
     await this.selectByVisibleText(this.paginationLimitSelect, number);
@@ -553,7 +545,7 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Click on next
    * @param table
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async paginationNext(table) {
     await this.clickAndWaitForNavigation(this.paginationNextLink(table));
@@ -563,7 +555,7 @@ module.exports = class Brands extends BOBasePage {
   /**
    * Click on previous
    * @param table
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
   async paginationPrevious(table) {
     await this.clickAndWaitForNavigation(this.paginationPreviousLink(table));

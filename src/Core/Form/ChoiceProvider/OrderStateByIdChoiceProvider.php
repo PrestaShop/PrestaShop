@@ -26,15 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderStateDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class OrderStateByIdChoiceProvider provides order state choices with ID values.
  */
-final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
+final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface, ConfigurableFormChoiceProviderInterface
 {
     /**
      * @var int language ID
@@ -52,30 +54,45 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
     private $colorBrightnessCalculator;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param int $languageId language ID
      * @param OrderStateDataProviderInterface $orderStateDataProvider
+     * @param ColorBrightnessCalculator $colorBrightnessCalculator
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         $languageId,
         OrderStateDataProviderInterface $orderStateDataProvider,
-        ColorBrightnessCalculator $colorBrightnessCalculator
+        ColorBrightnessCalculator $colorBrightnessCalculator,
+        TranslatorInterface $translator
     ) {
         $this->languageId = $languageId;
         $this->orderStateDataProvider = $orderStateDataProvider;
         $this->colorBrightnessCalculator = $colorBrightnessCalculator;
+        $this->translator = $translator;
     }
 
     /**
      * Get order state choices.
      *
+     * @param array $options
+     *
      * @return array
      */
-    public function getChoices()
+    public function getChoices(array $options = [])
     {
         $orderStates = $this->orderStateDataProvider->getOrderStates($this->languageId);
         $choices = [];
 
         foreach ($orderStates as $orderState) {
+            if ($orderState['deleted'] == 1 && (empty($options['current_state']) || $options['current_state'] != $orderState['id_order_state'])) {
+                continue;
+            }
+            $orderState['name'] .= $orderState['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], 'Admin.Global') : '';
             $choices[$orderState['name']] = $orderState['id_order_state'];
         }
 
@@ -93,6 +110,7 @@ final class OrderStateByIdChoiceProvider implements FormChoiceProviderInterface,
         $attrs = [];
 
         foreach ($orderStates as $orderState) {
+            $orderState['name'] .= $orderState['deleted'] == 1 ? ' ' . $this->translator->trans('(deleted)', [], 'Admin.Global') : '';
             $attrs[$orderState['name']]['data-background-color'] = $orderState['color'];
             $attrs[$orderState['name']]['data-is-bright'] = $this->colorBrightnessCalculator->isBright($orderState['color']);
         }
