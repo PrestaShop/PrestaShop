@@ -198,7 +198,7 @@ class Module implements ModuleInterface
         if ($this->instance === null) {
             // We try to instantiate the legacy class if not done yet
             try {
-                $this->instanciateLegacyModule($this->attributes->get('name'));
+                $this->instanciateLegacyModule();
             } catch (\Exception $e) {
                 $this->disk->set('is_valid', false);
 

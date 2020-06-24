@@ -76,6 +76,11 @@ class Install extends AbstractInstall
     protected $bootstrapFile = null;
 
     /**
+     * @var array
+     */
+    public $xml_loader_ids = [];
+
+    /**
      * The path of the settings file we want to use for the installation.
      *
      * @var string

@@ -28,8 +28,18 @@ namespace PrestaShop\PrestaShop\Core\Foundation\Database;
 
 class EntityMetaData
 {
-    private $tableName;
+    /**
+     * @var string|null
+     */
+    private $entityClassName;
+    /**
+     * @var array|null
+     */
     private $primaryKeyFieldnames;
+    /**
+     * @var string|null
+     */
+    private $tableName;
 
     public function setTableName($name)
     {
@@ -43,6 +53,11 @@ class EntityMetaData
         return $this->tableName;
     }
 
+    /**
+     * @param array $primaryKeyFieldnames
+     *
+     * @return self
+     */
     public function setPrimaryKeyFieldNames(array $primaryKeyFieldnames)
     {
         $this->primaryKeyFieldnames = $primaryKeyFieldnames;
