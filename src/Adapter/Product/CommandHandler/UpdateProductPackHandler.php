@@ -67,10 +67,11 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
 
         foreach ($productsForPacking as $productForPacking) {
             $productId = $productForPacking->getProductId()->getValue();
-            $combinationId = $productForPacking->getCombinationId();
 
-            if (null === $combinationId) {
+            if (null === $productForPacking->getCombinationId()) {
                 $combinationId = CombinationId::NO_COMBINATION;
+            } else {
+                $combinationId = $productForPacking->getCombinationId();
             }
 
             try {
@@ -120,11 +121,15 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
      */
     private function appendIdsToMessage(string $messageBody, QuantifiedProduct $product, int $packId): string
     {
+        if ($product->getCombinationId()) {
+            $combinationId = sprintf(' combinationId #%s', $product->getCombinationId()->getValue());
+        }
+
         return sprintf(
-            "$messageBody. [packId #%s; productId #%s; combinationId #%s]",
+            "$messageBody. [packId #%s; productId #%s;%s]",
             $packId,
             $product->getProductId()->getValue(),
-            $product->getCombinationId()->getValue()
+            isset($combinationId) ? $combinationId : ''
         );
     }
 }
