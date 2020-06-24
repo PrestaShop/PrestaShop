@@ -239,7 +239,7 @@ class LegacyContext
      * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array Languages
+     * @return array<int|Language> Languages
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {

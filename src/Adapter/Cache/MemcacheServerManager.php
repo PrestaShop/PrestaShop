@@ -92,7 +92,9 @@ class MemcacheServerManager
             return is_array($version) && false === in_array('255.255.255', $version, true);
         }
 
-        return true === @memcache_connect($serverIp, $serverPort);
+        $memcache = new Memcache();
+
+        return true === $memcache->connect($serverIp, $serverPort);
     }
 
     /**
