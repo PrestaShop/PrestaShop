@@ -27,5 +27,5 @@ jobs:
           restore-keys: "php-7.3-phpstan-"
 
       - name: Run phpstan
-        run: phpstan analyse -c phpstan.neon.dist --autoload-file .github/workflows/phpstan/autoload.php --level=0 "src"
+        run: phpstan analyse -c phpstan.neon.dist --autoload-file .github/workflows/phpstan/autoload.php --level=1 "src"
         #  --error-format github

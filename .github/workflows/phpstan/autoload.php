@@ -79,7 +79,8 @@ $constantsToDefine = [
     '_PS_OS_COD_VALIDATION_' => 'int',
     '_PS_THEME_DIR_' => 'string',
     '_PS_BASE_URL_' => 'string',
-    '_MODULE_DIR_' => 'string'
+    '_MODULE_DIR_' => 'string',
+    '_THEME_PROD_PIC_DIR_' => 'string',
 ];
 
 foreach ($constantsToDefine as $key => $value) {
