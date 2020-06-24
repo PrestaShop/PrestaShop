@@ -5,7 +5,7 @@ module.exports = class CommonPage {
 
   /**
    * Get page title
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
   async getPageTitle() {
     return this.page.title();
@@ -67,7 +67,7 @@ module.exports = class CommonPage {
   /**
    * Is checkBox have checked status
    * @param selector, checkbox to check
-   * @return boolean, true if checked, false if not
+   * @returns {Promise<boolean>}
    */
   async elementChecked(selector) {
     return this.page.$eval(selector, el => el.checked);
@@ -90,7 +90,7 @@ module.exports = class CommonPage {
    * Is element visible
    * @param selector, element to check
    * @param timeout, how much should we wait
-   * @return boolean, true if visible, false if not
+   * @returns {Promise<boolean>}, true if visible, false if not
    */
   async elementVisible(selector, timeout = 10) {
     try {
@@ -105,7 +105,7 @@ module.exports = class CommonPage {
    * Is element not visible
    * @param selector, element to check
    * @param timeout, how much should we wait
-   * @return boolean, true if visible, false if not
+   * @returns {Promise<boolean>}, true if visible, false if not
    */
   async elementNotVisible(selector, timeout = 10) {
     try {
@@ -202,11 +202,11 @@ module.exports = class CommonPage {
     await this.page.$eval(selector, el => el.scrollIntoView());
   }
 
-
   /**
    * Select option in select by visible text
-   * @param selector, id of select
-   * @param textValue, text in option to select
+   * @param selector
+   * @param textValue
+   * @returns {Promise<void>}
    */
   async selectByVisibleText(selector, textValue) {
     let found = false;
@@ -231,7 +231,7 @@ module.exports = class CommonPage {
    * To get a number from text
    * @param selector
    * @param timeout
-   * @return integer
+   * @returns {Promise<number>}
    */
   async getNumberFromText(selector, timeout = 0) {
     await this.page.waitForTimeout(timeout);
@@ -251,17 +251,6 @@ module.exports = class CommonPage {
       this.page.waitForNavigation({waitUntil}),
       this.page.click(selector),
     ]);
-  }
-
-  /**
-   * Replace All occurrences in string
-   * @param str, string to update
-   * @param find, what to replace
-   * @param replace, value to replace with
-   * @return {Promise<*>}
-   */
-  async replaceAll(str, find, replace) {
-    return str.replace(new RegExp(find, 'g'), replace);
   }
 
   /**

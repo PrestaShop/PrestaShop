@@ -78,7 +78,7 @@ module.exports = class moduleManager extends BOBasePage {
   /**
    * Get status of module (enable/disable)
    * @param moduleName
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async isModuleEnabled(moduleName) {
     return this.elementNotVisible(this.disableModuleButton(moduleName), 1000);
@@ -86,7 +86,7 @@ module.exports = class moduleManager extends BOBasePage {
 
   /**
    * Get all modules status
-   * @return {Promise<void>}
+   * @returns {Promise<[]>}
    */
   async getAllModulesStatus() {
     const modulesStatus = [];

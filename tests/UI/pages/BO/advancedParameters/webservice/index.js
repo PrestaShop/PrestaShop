@@ -38,15 +38,15 @@ module.exports = class WebService extends BOBasePage {
 
   /**
    * Go to new webservice key page
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToAddNewWebserviceKeyPage() {
     await this.clickAndWaitForNavigation(this.addNewWebserviceLink);
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.webserviceGridTitle);
@@ -54,7 +54,7 @@ module.exports = class WebService extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
@@ -67,7 +67,7 @@ module.exports = class WebService extends BOBasePage {
    * get text from a column from table
    * @param row
    * @param column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTable(row, column) {
     return this.getTextContent(this.webserviceListTableColumn(row, column));
@@ -76,7 +76,7 @@ module.exports = class WebService extends BOBasePage {
   /**
    * Go to edit webservice key page
    * @param row, row in table
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToEditWebservicePage(row) {
     await this.clickAndWaitForNavigation(this.webserviceListTableEditLink(row));
@@ -87,7 +87,7 @@ module.exports = class WebService extends BOBasePage {
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async filterWebserviceTable(filterType, filterBy, value = '') {
     switch (filterType) {
@@ -107,7 +107,7 @@ module.exports = class WebService extends BOBasePage {
   /**
    * Get Value of column displayed
    * @param row, row in table
-   * @return {Promise<boolean|true>}
+   * @returns {Promise<boolean>}
    */
   async getToggleColumnValue(row) {
     return this.elementVisible(this.webserviceListColumnValidIcon(row), 100);
@@ -117,7 +117,7 @@ module.exports = class WebService extends BOBasePage {
    * Quick edit toggle column value
    * @param row, row in table
    * @param valueWanted, Value wanted in column
-   * @return {Promise<boolean>} return true if action is done, false otherwise
+   * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
     await this.waitForVisibleSelector(this.webserviceListTableColumn(row, 'active'), 2000);
@@ -134,7 +134,7 @@ module.exports = class WebService extends BOBasePage {
   /**
    * Delete webservice key
    * @param row, row in table
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteWebserviceKey(row) {
     this.dialogListener();

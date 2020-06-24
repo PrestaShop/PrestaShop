@@ -38,9 +38,9 @@ module.exports = class AddOrderMessage extends BOBasePage {
   }
 
   /**
-   *
+   * Add/Edit order message
    * @param orderMessageData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async addEditOrderMessage(orderMessageData) {
     // Change lang to 'en' than set inputs value

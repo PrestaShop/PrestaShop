@@ -13,7 +13,6 @@ module.exports = class AddPageEmployee extends BOBasePage {
     this.lastNameInput = '#employee_lastname';
     this.emailInput = '#employee_email';
     this.passwordInput = '#employee_password';
-    this.defaultPageSelect = '#employee_default_page';
     this.defaultPageSpan = '.select2-selection[aria-labelledby=\'select2-employee_default_page-container\']';
     this.languageSelect = '#employee_language';
     this.activeSwitchlabel = 'label[for=\'employee_active_%ID\']';
@@ -29,7 +28,7 @@ module.exports = class AddPageEmployee extends BOBasePage {
   /**
    * Fill form for add/edit page Employee
    * @param employeeData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditEmployee(employeeData) {
     await this.setValue(this.firstNameInput, employeeData.firstName);
@@ -48,7 +47,7 @@ module.exports = class AddPageEmployee extends BOBasePage {
   /**
    * Select default Page
    * @param defaultPage
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async selectDefaultPage(defaultPage) {
     await Promise.all([
@@ -61,7 +60,7 @@ module.exports = class AddPageEmployee extends BOBasePage {
 
   /**
    * Cancel page
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async cancel() {
     await this.clickAndWaitForNavigation(this.cancelButton);

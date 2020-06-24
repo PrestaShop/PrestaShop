@@ -74,7 +74,7 @@ module.exports = class Categories extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
@@ -83,8 +83,8 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.categoryGridTitle);
@@ -92,7 +92,7 @@ module.exports = class Categories extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -125,7 +125,7 @@ module.exports = class Categories extends BOBasePage {
    * Get Value of column Displayed
    * @param row, row in table
    * @param column, column to check
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(row, column) {
     return this.elementVisible(this.categoriesListColumnValidIcon(row, column), 100);
@@ -156,10 +156,10 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
-   * get text from a column
+   * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableCategories(row, column) {
     return this.getTextContent(this.categoriesListTableColumn(row, column));
@@ -168,7 +168,7 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Get all information from categories table
    * @param row
-   * @return {Promise<{object}>}
+   * @returns {Promise<{name: string, description: string, id: string, position: *, status: boolean}>}
    */
   async getCategoryFromTable(row) {
     return {
@@ -229,7 +229,7 @@ module.exports = class Categories extends BOBasePage {
    * Delete Category
    * @param row, row in table
    * @param modeID, Deletion method to choose in modal
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCategory(row, modeID = '0') {
     // Click on dropDown
@@ -262,7 +262,7 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Enable / disable categories by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async changeCategoriesEnabledColumnBulkActions(enable = true) {
     // Click on Select All
@@ -283,7 +283,7 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Delete all Categories with Bulk Actions
    * @param modeID, Deletion mode ID to choose in modal
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCategoriesBulkActions(modeID = '0') {
     // Click on Select All

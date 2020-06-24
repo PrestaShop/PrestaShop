@@ -18,7 +18,6 @@ module.exports = class AddProduct extends BOBasePage {
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
     this.productPriceTtcInput = '#form_step1_price_ttc_shortcut';
-    this.productPriceHtInput = '#form_step1_price_shortcut';
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
@@ -63,11 +62,10 @@ module.exports = class AddProduct extends BOBasePage {
    */
 
   /**
-   * @override
    * Set value on tinyMce textarea
    * @param selector
    * @param value
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async setValueOnTinymceInput(selector, value) {
     // Select all
@@ -115,7 +113,7 @@ module.exports = class AddProduct extends BOBasePage {
 
   /**
    * Save product and close the growl message linked to
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async saveProduct() {
     await this.page.click(this.saveProductButton);
@@ -125,7 +123,7 @@ module.exports = class AddProduct extends BOBasePage {
   /**
    * Create basic product
    * @param productData
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async createEditBasicProduct(productData) {
     await this.setBasicSetting(productData);
@@ -136,7 +134,7 @@ module.exports = class AddProduct extends BOBasePage {
   /**
    * Set Combinations for product
    * @param productData
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async setCombinationsInProduct(productData) {
     await this.page.click(this.productWithCombinationsInput);
@@ -226,7 +224,7 @@ module.exports = class AddProduct extends BOBasePage {
 
   /**
    * Delete product
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteProduct() {
     await Promise.all([
@@ -322,7 +320,7 @@ module.exports = class AddProduct extends BOBasePage {
 
   /**
    * Get friendly URL
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string>}
    */
   async getFriendlyURL() {
     await this.reloadPage();

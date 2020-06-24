@@ -33,7 +33,7 @@ module.exports = class AddCategory extends BOBasePage {
   /**
    * Fill form for add/edit category
    * @param categoryData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditCategory(categoryData) {
     await this.setValue(this.nameInput, categoryData.name);

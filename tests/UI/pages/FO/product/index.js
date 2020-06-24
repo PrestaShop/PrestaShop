@@ -33,7 +33,7 @@ module.exports = class Product extends FOBasePage {
 
   /**
    * Get Product information (Product name, price, description)
-   * @returns {Promise<object>}
+   * @returns {Promise<{price: (number), name: (string), description: (string)}>}
    */
   async getProductInformation() {
     return {
@@ -74,7 +74,7 @@ module.exports = class Product extends FOBasePage {
 
   /**
    * Is quantity displayed
-   * @returns {Promise<boolean|true>}
+   * @returns {Promise<boolean>}
    */
   async isQuantityDisplayed() {
     await this.waitForSelectorAndClick(this.productDetail);

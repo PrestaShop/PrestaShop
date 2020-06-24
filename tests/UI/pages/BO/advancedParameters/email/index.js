@@ -53,7 +53,7 @@ module.exports = class Email extends BOBasePage {
 
   /**
    * Get total of email created
-   * @return {Promise<int>}
+   * @returns {Promise<number>}
    */
   async getTotalElementInGrid() {
     return this.getNumberFromText(this.emailGridTitle);
@@ -61,7 +61,7 @@ module.exports = class Email extends BOBasePage {
 
   /**
    * Get number of elements in grid (displayed in one page)
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return (await this.page.$$(`${this.tableRows}:not(.empty_row)`)).length;
@@ -69,7 +69,7 @@ module.exports = class Email extends BOBasePage {
 
   /**
    * Reset and get number of lines
-   * @returns {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
@@ -83,7 +83,7 @@ module.exports = class Email extends BOBasePage {
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async filterEmailLogs(filterType, filterBy, value = '') {
     await this.resetFilter();
@@ -105,7 +105,7 @@ module.exports = class Email extends BOBasePage {
    * Get text from column
    * @param columnName
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   getTextColumn(columnName, row) {
     return this.getTextContent(this.tableColumn(row, columnName === 'id_lang' ? 'language' : columnName));
@@ -159,7 +159,7 @@ module.exports = class Email extends BOBasePage {
   /**
    * Send a test email
    * @param email
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async sendTestEmail(email) {
     await this.setValue(this.sendTestEmailInput, email);

@@ -28,7 +28,7 @@ module.exports = class AddBrandAddress extends BOBasePage {
   /**
    * Create or edit Brand Address
    * @param brandAddressData
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async createEditBrandAddress(brandAddressData) {
     // Fill information data

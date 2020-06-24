@@ -58,8 +58,8 @@ module.exports = class SqlManager extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.sqlQueryGridTitle);
@@ -67,7 +67,7 @@ module.exports = class SqlManager extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();

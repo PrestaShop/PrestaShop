@@ -45,15 +45,15 @@ module.exports = class Employees extends BOBasePage {
 
   /**
    * Go to new Page Employee page
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToAddNewEmployeePage() {
     await this.clickAndWaitForNavigation(this.addNewEmployeeLink);
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.employeeGridTitle);
@@ -61,7 +61,7 @@ module.exports = class Employees extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
@@ -71,10 +71,10 @@ module.exports = class Employees extends BOBasePage {
   }
 
   /**
-   * get text from a column from table
+   * Get text from a column from table
    * @param row
    * @param column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTable(row, column) {
     return this.getTextContent(this.employeesListTableColumn(row, column));
@@ -83,7 +83,7 @@ module.exports = class Employees extends BOBasePage {
   /**
    * Go to Edit employee page
    * @param row, row in table
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToEditEmployeePage(row) {
     await this.clickAndWaitForNavigation(this.employeesListTableEditLink(row));
@@ -94,7 +94,7 @@ module.exports = class Employees extends BOBasePage {
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async filterEmployees(filterType, filterBy, value = '') {
     switch (filterType) {
@@ -114,7 +114,7 @@ module.exports = class Employees extends BOBasePage {
   /**
    * Get Value of column Displayed
    * @param row, row in table
-   * @return {Promise<boolean|true>}
+   * @returns {Promise<boolean>}
    */
   async getToggleColumnValue(row) {
     return this.elementVisible(this.employeesListColumnValidIcon(row), 100);
@@ -124,7 +124,7 @@ module.exports = class Employees extends BOBasePage {
    * Quick edit toggle column value
    * @param row, row in table
    * @param valueWanted, Value wanted in column
-   * @return {Promise<boolean>} return true if action is done, false otherwise
+   * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
   async updateToggleColumnValue(row, valueWanted = true) {
     await this.waitForVisibleSelector(this.employeesListTableColumn(row, 'active'), 2000);
@@ -141,7 +141,7 @@ module.exports = class Employees extends BOBasePage {
   /**
    * Delete employee
    * @param row, row in table
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteEmployee(row) {
     this.dialogListener();
@@ -160,7 +160,7 @@ module.exports = class Employees extends BOBasePage {
   /**
    * Enable / disable employees by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async changeEnabledColumnBulkActions(enable = true) {
     // Click on Select All
@@ -180,7 +180,7 @@ module.exports = class Employees extends BOBasePage {
 
   /**
    * Delete all employees with Bulk Actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteBulkActions() {
     this.dialogListener();
@@ -201,7 +201,7 @@ module.exports = class Employees extends BOBasePage {
 
   /**
    * Go to Profiles page
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToProfilesPage() {
     await this.clickAndWaitForNavigation(this.profilesTab);

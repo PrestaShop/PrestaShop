@@ -13,7 +13,6 @@ module.exports = class moduleCatalog extends BOBasePage {
     this.searchModuleButton = '#module-search-button';
     this.moduleBloc = moduleName => `#modules-list-container-all div[data-name='${moduleName}']:not([style])`;
     this.installModuleButton = moduleName => `${this.moduleBloc(moduleName)} form>button.module_action_menu_install`;
-    this.configureModuleButton = moduleName => `${this.moduleBloc(moduleName)} div.module-actions>a`;
   }
 
   /*
@@ -35,7 +34,7 @@ module.exports = class moduleCatalog extends BOBasePage {
   /**
    * Install Module and waiting for Successful massage
    * @param moduleName, Name of module
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async installModule(moduleName) {
     await this.page.click(this.installModuleButton(moduleName));

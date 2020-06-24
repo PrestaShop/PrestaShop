@@ -36,7 +36,7 @@ module.exports = class CreditSlips extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
@@ -45,8 +45,8 @@ module.exports = class CreditSlips extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.creditSlipsGridTitle);
@@ -54,7 +54,7 @@ module.exports = class CreditSlips extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -90,7 +90,7 @@ module.exports = class CreditSlips extends BOBasePage {
    * get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableCreditSlips(row, column) {
     return this.getTextContent(this.creditSlipsTableColumn(row, column));
