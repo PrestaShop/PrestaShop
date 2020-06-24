@@ -316,10 +316,8 @@ class MailCore extends ObjectModel
                           self::mimeEncode($addrName);
                 $message->addTo(self::toPunycode($addr), $addrName);
             }
-            $toPlugin = $to[0];
         } else {
             /* Simple recipient, one address */
-            $toPlugin = $to;
             $toName = (($toName == null || $toName == $to) ? '' : self::mimeEncode($toName));
             $message->addTo(self::toPunycode($to), $toName);
         }
@@ -561,6 +559,12 @@ class MailCore extends ObjectModel
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
+            
+            $toPlugin = $message->getTo();
+            if (is_array($toPlugin)) {
+                $toPlugin = array_shift(array_keys($toPlugin));
+            }
+            
             $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
