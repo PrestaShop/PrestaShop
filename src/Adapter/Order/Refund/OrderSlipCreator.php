@@ -252,7 +252,7 @@ class OrderSlipCreator
             }
 
             $product_tax_incl_line = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price) * $quantity, $precision);
-
+            $product_tax_incl = 0;
             switch ($this->configuration->get('PS_ROUND_TYPE')) {
                 case Order::ROUND_ITEM:
                     $product_tax_incl = Tools::ps_round($tax_calculator->{$add_or_remove . 'Taxes'}($price), $precision) * $quantity;

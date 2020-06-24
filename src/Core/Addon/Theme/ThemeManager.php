@@ -90,6 +90,11 @@ class ThemeManager implements AddonManagerInterface
     private $finder;
 
     /**
+     * @var string
+     */
+    private $sandbox;
+
+    /**
      * @var ThemeRepository
      */
     private $themeRepository;

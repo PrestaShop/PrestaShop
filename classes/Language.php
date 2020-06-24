@@ -643,7 +643,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param int|false $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array[] Language information
+     * @return array<int|Language> Language information
      */
     public static function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {

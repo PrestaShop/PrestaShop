@@ -42,6 +42,11 @@ class SupplierRepository
     private $connection;
 
     /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
      * @var string
      */
     private $tablePrefix;

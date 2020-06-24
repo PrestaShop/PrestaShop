@@ -137,6 +137,7 @@ class LegacyLogger implements LoggerInterface
      */
     public function log($level, $message, array $context = [])
     {
+        $pslevel = 0;
         switch ($level) {
             case Logger::EMERGENCY:
             case Logger::ALERT:

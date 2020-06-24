@@ -22,6 +22,9 @@ requireFileIfItExists(_PS_ROOT_DIR_ . '/tools/smarty/Smarty.class.php');
 require_once _PS_ROOT_DIR_ . '/config/defines.inc.php';
 require_once _PS_ROOT_DIR_ . '/config/autoload.php';
 require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
+require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
+require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
+require_once _PS_ROOT_DIR_ . '/var/SymfonyRequirements.php';
 
 // Make sure loader php-parser is coming from php stan composer
 
@@ -47,6 +50,17 @@ $loader->register(true);
 // Ignoring the error pattern with this value will throw another error if not found
 // during the checks.
 $constantsToDefine = [
+    '_LEGACY_PS_CREATION_DATE_' => 'string',
+    '_LEGACY_PS_CACHE_ENABLED_' => 'bool',
+    '_LEGACY_PS_CACHING_SYSTEM_' => 'string',
+    '_LEGACY_COOKIE_KEY_' => 'string',
+    '_LEGACY_COOKIE_IV_' => 'string',
+    '_LEGACY_DB_PREFIX_' => 'string',
+    '_LEGACY_DB_SERVER_' => 'string',
+    '_LEGACY_DB_USER_' => 'string',
+    '_LEGACY_DB_PASSWD_' => 'string',
+    '_LEGACY_DB_NAME_' => 'string',
+    '_LEGACY_MYSQL_ENGINE_' => 'string',
     '_DB_SERVER_' => 'string',
     '_DB_NAME_' => 'string',
     '_DB_USER_' => 'string',
@@ -60,6 +74,14 @@ $constantsToDefine = [
     '_THEME_COL_DIR_' => 'string',
     '_PARENT_THEME_NAME_' => 'string',
     '__PS_BASE_URI__' => 'string',
+    '_PS_API_URL_' => 'string',
+    '_PS_INSTALL_PATH_' => 'string',
+    '_PS_INSTALL_DATA_PATH_' => 'string',
+    '_PS_INSTALL_LANGS_PATH_' => 'string',
+    '_PS_INSTALL_FIXTURES_PATH_' => 'string',
+    '_PS_INSTALL_VERSION_' => 'string',
+    '_PS_INSTALLER_PHP_UPGRADE_DIR_' => 'string',
+    '_PS_INSTALLER_SQL_UPGRADE_DIR_' => 'string',
     '_PS_PRICE_DISPLAY_PRECISION_' => 'int',
     '_PS_PRICE_COMPUTE_PRECISION_' => 'string',
     '_PS_OS_CHEQUE_' => 'int',
@@ -80,12 +102,17 @@ $constantsToDefine = [
     '_PS_THEME_DIR_' => 'string',
     '_PS_BASE_URL_' => 'string',
     '_MODULE_DIR_' => 'string',
+    '_THEME_PROD_DIR_' => 'string',
     '_THEME_PROD_PIC_DIR_' => 'string',
+    '_NEW_COOKIE_KEY_' => 'string',
 ];
 
 foreach ($constantsToDefine as $key => $value) {
     if (!defined($key)) {
         switch ($value) {
+            case 'bool':
+                define($key, false);
+                break;
             case 'int':
                 define($key, 1);
                 break;
