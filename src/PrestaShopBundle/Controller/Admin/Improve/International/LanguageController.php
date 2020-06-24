@@ -150,12 +150,11 @@ class LanguageController extends FrameworkBundleAdminController
         $languageFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.language_form_handler');
         $languageFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.language_form_builder');
 
+        $languageForm = $languageFormBuilder->getFormFor((int) $languageId, [], [
+            'is_for_editing' => true,
+        ]);
+        $languageForm->handleRequest($request);
         try {
-            $languageForm = $languageFormBuilder->getFormFor((int) $languageId, [], [
-                'is_for_editing' => true,
-            ]);
-            $languageForm->handleRequest($request);
-
             $result = $languageFormHandler->handleFor((int) $languageId, $languageForm);
 
             if ($result->isSubmitted() && $result->isValid()) {

@@ -77,19 +77,11 @@ final class PerformanceFormHandler
             ->add('add_memcache_server', MemcacheServerType::class)
             ->setData($this->formDataProvider->getData());
 
-        $this->hookDispatcher->dispatchWithParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
-
         return $formBuilder->setData($formBuilder->getData())->getForm();
     }
 
     public function save(array $data)
     {
-        $errors = $this->formDataProvider->setData($data);
-        $this->hookDispatcher->dispatchWithParameters(
-            'actionPerformancePageFormSave',
-            ['errors' => &$errors, 'form_data' => &$data]
-        );
-
-        return $errors;
+        return $this->formDataProvider->setData($data);
     }
 }

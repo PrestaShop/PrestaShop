@@ -26,6 +26,10 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use Context;
+use Currency;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -37,6 +41,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -44,15 +49,28 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ProductCombination extends CommonAbstractType
 {
-    private $translator;
-    private $contextLegacy;
+    /**
+     * @var Configuration
+     */
     private $configuration;
+    /**
+     * @var Context
+     */
+    public $contextLegacy;
+    /**
+     * @var Currency
+     */
+    public $currency;
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
 
     /**
      * Constructor.
      *
-     * @param object $translator
-     * @param object $legacyContext
+     * @param TranslatorInterface $translator
+     * @param LegacyContext $legacyContext
      */
     public function __construct($translator, $legacyContext)
     {
