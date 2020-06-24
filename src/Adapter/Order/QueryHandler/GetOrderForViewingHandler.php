@@ -808,7 +808,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
             $brothers[] = new LinkedOrderForViewing(
                 $brotherItem->id,
-                $orderState->name[$brotherItem->id_lang],
+                $orderState->name[$this->context->language->getId()],
                 $totalAmount
             );
         }
