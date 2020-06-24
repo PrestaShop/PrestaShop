@@ -332,7 +332,7 @@ module.exports = class Categories extends BOBasePage {
     let i = 0;
     while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
       await this.page.hover(this.sortColumnDiv(sortBy));
-      await this.clickAndWaitForNavigation(sortColumnSpanButton, 'networkidle');
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
     await this.waitForVisibleSelector(sortColumnDiv);
