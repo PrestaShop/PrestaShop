@@ -325,7 +325,7 @@ module.exports = class Customers extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
     let i = 0;
     while (await this.elementNotVisible(sortColumnDiv, 1000) && i < 2) {
-      await this.clickAndWaitForNavigation(sortColumnSpanButton, 'networkidle');
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
     await this.waitForVisibleSelector(sortColumnDiv);
