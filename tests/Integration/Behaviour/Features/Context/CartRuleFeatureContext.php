@@ -109,8 +109,14 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $this->createCartRule($cartRuleName, 0, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser);
     }
 
-    protected function createCartRule($cartRuleName, $percent, $amount, $priority, $cartRuleQuantity, $cartRuleQuantityPerUser)
-    {
+    protected function createCartRule(
+        $cartRuleName,
+        $percent,
+        $amount,
+        $priority,
+        $cartRuleQuantity,
+        $cartRuleQuantityPerUser
+    ) {
         $cartRule = new CartRule();
         $cartRule->reduction_percent = $percent;
         $cartRule->reduction_amount = $amount;
