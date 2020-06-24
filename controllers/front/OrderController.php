@@ -116,6 +116,8 @@ class OrderControllerCore extends FrontController
         $session = $this->getCheckoutSession();
 
         $this->checkoutProcess = $this->buildCheckoutProcess($session, $translator);
+        
+        Hook::exec('actionCheckoutRender', array('checkoutProcess' => &$this->checkoutProcess));
     }
 
     /**
