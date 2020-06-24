@@ -79,7 +79,6 @@ class UpdateProductPackCommand
     private function setProducts(array $products): void
     {
         foreach ($products as $product) {
-            //@todo: shouldn't i validate the quantity, at least if its greater than zero?
             $this->products[] = new QuantifiedProduct(
                 $product['product_id'],
                 $product['quantity'],
