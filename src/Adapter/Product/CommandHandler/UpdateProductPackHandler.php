@@ -42,27 +42,22 @@ use PrestaShopException;
 final class UpdateProductPackHandler extends AbstractProductHandler implements UpdateProductPackHandlerInterface
 {
     /**
-     * @var int product id which represents the pack
-     */
-    private $packId;
-
-    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductPackCommand $command): void
     {
         $productsForPacking = $command->getProducts();
         $pack = $this->getProduct($command->getPackId());
-        $this->packId = (int) $pack->id;
+        $packId = (int) $pack->id;
 
         // validate all products first
         foreach ($productsForPacking as $productForPacking) {
             $this->assertProductIsAvailableForPacking($productForPacking->getProductId()->getValue());
         }
 
-        if (false === Pack::deleteItems($pack->id)) {
+        if (false === Pack::deleteItems($packId)) {
             throw new ProductPackingException(
-                sprintf('Failed deleting previous products from pack #%s before adding new ones', $pack->id),
+                sprintf('Failed deleting previous products from pack #%s before adding new ones', $packId),
                 ProductPackingException::FAILED_DELETING_PREVIOUS_PACKS
             );
         }
@@ -79,17 +74,17 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
             }
 
             try {
-                $packed = Pack::addItem($pack->id, $productId, $productForPacking->getQuantity(), $combinationId);
+                $packed = Pack::addItem($packId, $productId, $productForPacking->getQuantity(), $combinationId);
 
                 if (false === $packed) {
                     throw new ProductPackingException(
-                        $this->buildMessageWithCommandInputs('Failed adding product to pack.', $productForPacking),
+                        $this->appendIdsToMessage('Failed adding product to pack.', $productForPacking, $packId),
                         ProductPackingException::FAILED_ADDING_TO_PACK
                     );
                 }
             } catch (PrestaShopException $e) {
                 throw new ProductException(
-                    $this->buildMessageWithCommandInputs('Error occurred when trying to add product to pack.', $productForPacking),
+                    $this->appendIdsToMessage('Error occurred when trying to add product to pack.', $productForPacking, $packId),
                     0,
                     $e
                 );
@@ -119,14 +114,15 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
      *
      * @param string $messageBody
      * @param QuantifiedProduct $product
+     * @param int $packId
      *
      * @return string
      */
-    private function buildMessageWithCommandInputs(string $messageBody, QuantifiedProduct $product): string
+    private function appendIdsToMessage(string $messageBody, QuantifiedProduct $product, int $packId): string
     {
         return sprintf(
             "$messageBody. [packId #%s; productId #%s; combinationId #%s]",
-            $this->packId,
+            $packId,
             $product->getProductId()->getValue(),
             $product->getCombinationId()->getValue()
         );
