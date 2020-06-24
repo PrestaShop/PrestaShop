@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
@@ -50,7 +51,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 /**
  * Class FilterableEmployeeGridDefinitionFactory creates grid definition for Employee data.
  */
-final class FilterableEmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
+final class FilterableEmployeeGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     public const GRID_ID = 'employee';
 
