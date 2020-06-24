@@ -49,7 +49,12 @@ class ProductPackException extends ProductException
     const CANNOT_ADD_PACK_INTO_PACK = 30;
 
     /**
-     * When packed product quantity is invalid
+     * When product for packing quantity is invalid
      */
     const INVALID_QUANTITY = 40;
+
+    /**
+     * When provided list of products for packing is empty
+     */
+    const EMPTY_PRODUCT_LIST_FOR_PACKING = 50;
 }

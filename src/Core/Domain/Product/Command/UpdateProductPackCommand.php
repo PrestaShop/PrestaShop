@@ -79,6 +79,13 @@ class UpdateProductPackCommand
      */
     private function setProducts(array $products): void
     {
+        if (empty($products)) {
+            throw new ProductPackException(
+                'Empty products list provided for packing',
+                ProductPackException::EMPTY_PRODUCT_LIST_FOR_PACKING
+            );
+        }
+
         foreach ($products as $product) {
             $this->assertQuantity($product['quantity']);
 
