@@ -26,12 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
+use Configuration;
 use Context;
 use ImageManager;
 use ImageType;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommandInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CopyingNoPictureException;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageImageUploadingException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
@@ -143,5 +146,30 @@ abstract class AbstractLanguageHandler extends AbstractObjectModelHandler
         }
 
         return $language;
+    }
+
+    /**
+     * @param Language $language
+     */
+    protected function assertLanguageIsNotInUse(Language $language)
+    {
+        if ($language->id === (int) Context::getContext()->language->id) {
+            throw new DefaultLanguageException(sprintf('Used language "%s" cannot be deleted', $language->iso_code), DefaultLanguageException::CANNOT_DELETE_IN_USE_ERROR);
+        }
+    }
+
+    /**
+     * @param Language $language
+     * @param ToggleLanguageStatusCommandInterface $command
+     */
+    protected function assertLanguageIsNotDefault(Language $language, ToggleLanguageStatusCommandInterface $command = null)
+    {
+        if ($command != null && true === $command->getStatus()) {
+            return;
+        }
+
+        if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
+            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be disabled', $language->iso_code), DefaultLanguageException::CANNOT_DISABLE_ERROR);
+        }
     }
 }

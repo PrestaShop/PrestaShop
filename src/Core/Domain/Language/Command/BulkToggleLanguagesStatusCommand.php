@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 /**
  * Enables/disables languages status
  */
-class BulkToggleLanguagesStatusCommand
+class BulkToggleLanguagesStatusCommand implements ToggleLanguageStatusCommandInterface
 {
     /**
      * @var LanguageId[]
