@@ -73,6 +73,18 @@ Feature: Assign product to categories from Back Office (BO)
         | categories       | [women, idontexist1] |
         | default category | accessories          |
       Then I should get error that assigning product to categories failed
-      Then product product3 should be assigned to following categories:
+      And product product3 should be assigned to following categories:
+        | categories       | [women, accessories] |
+        | default category | accessories          |
+
+    Scenario: I assign new categories providing non-existing default category
+      Given product product3 should be assigned to following categories:
+        | categories       | [women, accessories] |
+        | default category | accessories          |
+      When I assign product product3 to following categories including non-existing ones:
+        | categories       | [women]              |
+        | default category | idontexist2          |
+      Then I should get error that assigning product to categories failed
+      And product product3 should be assigned to following categories:
         | categories       | [women, accessories] |
         | default category | accessories          |

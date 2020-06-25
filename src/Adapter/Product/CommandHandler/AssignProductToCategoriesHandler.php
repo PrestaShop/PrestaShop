@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use Category;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoriesCommand;
@@ -88,6 +89,13 @@ final class AssignProductToCategoriesHandler extends AbstractProductHandler impl
     private function updateCategories(Product $product, array $categoryIds): void
     {
         try {
+            if (false === Category::categoriesExists($categoryIds)) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to update product #%s categories. Some of categories doesn\'t exist.', $product->id),
+                    CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
+                );
+            }
+
             if (false === $product->updateCategories($categoryIds)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to update product #%s categories', $product->id),
