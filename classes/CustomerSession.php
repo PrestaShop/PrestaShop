@@ -68,7 +68,7 @@ class CustomerSessionCore extends ObjectModel implements SessionInterface
      */
     public function getUserId()
     {
-        return $this->id_customer;
+        return (int) $this->id_customer;
     }
 
     /**

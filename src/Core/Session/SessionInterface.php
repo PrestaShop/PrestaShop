@@ -69,4 +69,14 @@ interface SessionInterface
      * @return string
      */
     public function getToken(): string;
+
+    /**
+     * Adds current object to the database.
+     */
+    public function add();
+
+    /**
+     * Deletes current object from database.
+     */
+    public function delete();
 }

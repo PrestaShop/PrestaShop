@@ -465,9 +465,9 @@ class CookieCore
     public function registerSession(SessionInterface $session)
     {
         if (isset($this->id_employee)) {
-            $session->setUserId($this->id_employee);
+            $session->setUserId((int) $this->id_employee);
         } elseif (isset($this->id_customer)) {
-            $session->setUserId($this->id_customer);
+            $session->setUserId((int) $this->id_customer);
         } else {
             throw new CoreException('Invalid user id');
         }
@@ -517,8 +517,8 @@ class CookieCore
             $session !== null
             && $session->getToken() === $this->session_token
             && (
-                $this->id_employee === $session->getUserId()
-                || $this->id_customer === $session->getUserId()
+                (int) $this->id_employee === $session->getUserId()
+                || (int) $this->id_customer === $session->getUserId()
             )
         ;
     }

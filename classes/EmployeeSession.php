@@ -68,7 +68,7 @@ class EmployeeSessionCore extends ObjectModel implements SessionInterface
      */
     public function getUserId()
     {
-        return $this->id_employee;
+        return (int) $this->id_employee;
     }
 
     /**
