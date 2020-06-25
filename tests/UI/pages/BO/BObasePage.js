@@ -14,7 +14,6 @@ module.exports = class BOBasePage extends CommonPage {
     this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
 
     // top navbar
-    this.headerLogoImage = '#header_logo';
     this.userProfileIconNonMigratedPages = '#employee_infos';
     this.userProfileIcon = '#header_infos #header-employee-container';
     this.userProfileLogoutLink = 'a#header_logout';
@@ -147,7 +146,6 @@ module.exports = class BOBasePage extends CommonPage {
     this.confirmationModal = '#confirmation_modal.show';
     this.modalDialog = `${this.confirmationModal} .modal-dialog`;
     this.modalDialogYesButton = `${this.modalDialog} button.continue`;
-    this.modalDialogNoButton = `${this.modalDialog} button.cancel`;
 
     // Symfony Toolbar
     this.sfToolbarMainContentDiv = "div[id*='sfToolbarMainContent']";
@@ -155,7 +153,6 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Sidebar
     this.rightSidebar = '#right-sidebar';
-    this.closeHelpSidebarButton = `${this.rightSidebar} div.quicknav-header a`;
     this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
   }
 

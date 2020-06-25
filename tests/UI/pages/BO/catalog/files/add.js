@@ -19,9 +19,9 @@ module.exports = class AddFile extends BOBasePage {
 
   /* Methods */
   /**
-   *  Create or edit file
+   * Create or edit file
    * @param fileData
-   * @return {Promise<void>}
+   * @returns {Promise<string>}
    */
   async createEditFile(fileData) {
     // Fill name and description in english

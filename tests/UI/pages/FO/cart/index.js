@@ -22,6 +22,7 @@ module.exports = class Cart extends FOBasePage {
   /**
    * Get Product detail from cart (product name, price, quantity)
    * @param row, product row in cart
+   * @returns {Promise<{quantity: (number), price: (string), name: (string)}>}
    */
   async getProductDetail(row) {
     return {
@@ -33,6 +34,7 @@ module.exports = class Cart extends FOBasePage {
 
   /**
    * Click on Proceed to checkout button
+   * @returns {Promise<void>}
    */
   async clickOnProceedToCheckout() {
     await this.waitForVisibleSelector(this.proceedToCheckoutButton);
@@ -43,6 +45,7 @@ module.exports = class Cart extends FOBasePage {
    * To edit the product quantity
    * @param productID
    * @param quantity
+   * @returns {Promise<void>}
    */
   async editProductQuantity(productID, quantity) {
     await this.setValue(this.productQuantity(productID), quantity.toString());
@@ -51,10 +54,10 @@ module.exports = class Cart extends FOBasePage {
   }
 
   /**
-   * To get a number from text
+   * Get a number from text
    * @param selector
    * @param timeout
-   * @return integer
+   * @returns {Promise<number>}
    */
   async getPriceFromText(selector, timeout = 0) {
     await this.page.waitForTimeout(timeout);
@@ -65,7 +68,7 @@ module.exports = class Cart extends FOBasePage {
 
   /**
    * Get price TTC
-   * @returns {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getTTCPrice() {
     return this.getPriceFromText(this.cartTotalTTC);

@@ -24,7 +24,7 @@ module.exports = class AddWebserviceKey extends BOBasePage {
    * Fill form for add/edit webservice key
    * @param webserviceData
    * @param toGenerate
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditWebservice(webserviceData, toGenerate = true) {
     if (toGenerate) await this.page.click(this.generateButton);

@@ -31,7 +31,6 @@ module.exports = class Checkout extends FOBasePage {
     this.addressStepAddress1Input = `${this.addressStepSection} input[name='address1']`;
     this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
     this.addressStepCityInput = `${this.addressStepSection} input[name='city']`;
-    this.addressStepCountrySelect = `${this.addressStepSection} select[name='id_country']`;
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
     // Shipping method step
@@ -52,7 +51,7 @@ module.exports = class Checkout extends FOBasePage {
 
   /**
    * Check if we are in checkout Page
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async isCheckoutPage() {
     return this.elementVisible(this.checkoutPageBody, 1000);
@@ -61,7 +60,8 @@ module.exports = class Checkout extends FOBasePage {
   /**
    * Check if step is complete
    * @param stepSelector, step to check is complete
-   * @return {Promise<boolean|true>}
+   * @param stepSelector
+   * @returns {Promise<boolean>}
    */
   async isStepCompleted(stepSelector) {
     return this.elementVisible(`${stepSelector}.-complete`, 1000);
@@ -69,7 +69,7 @@ module.exports = class Checkout extends FOBasePage {
 
   /**
    * Go to Delivery Step and check that Address step is complete
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async goToDeliveryStep() {
     await this.clickAndWaitForNavigation(this.addressStepContinueButton);

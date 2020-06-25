@@ -24,7 +24,7 @@ module.exports = class AddPageCategory extends BOBasePage {
   /**
    * Fill form for add/edit page category
    * @param pageCategoryData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditPageCategory(pageCategoryData) {
     await this.setValue(this.nameInput, pageCategoryData.name);

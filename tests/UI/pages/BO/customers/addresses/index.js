@@ -49,7 +49,7 @@ module.exports = class Addresses extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
@@ -58,8 +58,8 @@ module.exports = class Addresses extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.addressGridTitle);
@@ -67,7 +67,7 @@ module.exports = class Addresses extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -97,7 +97,7 @@ module.exports = class Addresses extends BOBasePage {
   }
 
   /**
-   * get text from a column
+   * Get text from a column
    * @param row, row in table
    * @param column, which column
    * @return {Promise<string>}
@@ -140,8 +140,8 @@ module.exports = class Addresses extends BOBasePage {
 
   /**
    * Delete address
-   * @param row, row in table
-   * @return {Promise<textContent>}
+   * @param row
+   * @returns {Promise<string>}
    */
   async deleteAddress(row) {
     this.dialogListener();

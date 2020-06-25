@@ -73,7 +73,7 @@ module.exports = class Stocks extends BOBasePage {
 
   /**
    * Get the total number of products
-   * @returns {Promise<int>}
+   * @returns {Promise<number>}
    */
   async getTotalNumberOfProducts() {
     await this.waitForVisibleSelector(this.searchButton, 2000);
@@ -94,7 +94,7 @@ module.exports = class Stocks extends BOBasePage {
 
   /**
    * Get the number of lines in the main table
-   * @returns {Promise<int>}
+   * @returns {Promise<number>}
    */
   async getNumberOfProductsFromList() {
     await this.waitForVisibleSelector(this.searchButton, 2000);
@@ -104,7 +104,7 @@ module.exports = class Stocks extends BOBasePage {
 
   /**
    * Get number of products pages stocks page
-   * @return {Promise<int>}
+   * @returns {Promise<number>}
    */
   async getProductsPagesLength() {
     return (await this.page.$$(this.paginationListItem)).length;
@@ -125,7 +125,7 @@ module.exports = class Stocks extends BOBasePage {
 
   /**
    * Remove all filter tags in the basic search input
-   * @returns {Promise<void>}
+   * @returns {Promise<number>}
    */
   async resetFilter() {
     const closeButtons = await this.page.$$(this.searchTagsListCloseSpan);
@@ -155,7 +155,7 @@ module.exports = class Stocks extends BOBasePage {
    * get text from column in table
    * @param row
    * @param column, only 3 column are implemented : name, reference, supplier
-   * @return {Promise<integer|textContent>}
+   * @return {Promise<integer|string>}
    */
   async getTextColumnFromTableStocks(row, column) {
     switch (column) {
@@ -176,20 +176,6 @@ module.exports = class Stocks extends BOBasePage {
     }
   }
 
-
-  /**
-   * Get all products names from table
-   * @return {Promise<[]>}
-   */
-  async getAllProductsName() {
-    const productsNames = [];
-    const numberOfProductsInlist = await (await this.page.$$(this.productRows)).length;
-    for (let row = 1; row <= numberOfProductsInlist; row++) {
-      await productsNames.push(await this.getTextColumnFromTableStocks(row, 'name'));
-    }
-    return productsNames;
-  }
-
   /**
    * Get
    * @param row, row in table
@@ -207,7 +193,7 @@ module.exports = class Stocks extends BOBasePage {
    * Update Stock value by setting input value
    * @param row, row in table
    * @param value, value to add/subtract from quantity
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async updateRowQuantityWithInput(row, value) {
     await this.setValue(this.productRowQuantityColumnInput(row), value.toString());
@@ -223,7 +209,7 @@ module.exports = class Stocks extends BOBasePage {
   /**
    * Bulk Edit quantity by setting input value
    * @param value
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async bulkEditQuantityWithInput(value) {
     // Select All products
@@ -285,14 +271,5 @@ module.exports = class Stocks extends BOBasePage {
       this.page.click(this.advancedFiltersButton),
       this.waitForVisibleSelector(`${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
     ]);
-  }
-
-  /**
-   * Reset and get number of products in list
-   * @return {Promise<int>}
-   */
-  async resetAndGetNumberOfProductsFromList() {
-    await this.reloadPage();
-    return this.getTotalNumberOfProducts();
   }
 };

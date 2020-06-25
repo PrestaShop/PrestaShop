@@ -30,7 +30,7 @@ module.exports = class PsEmailSubscription extends BOBasePage {
 
   /**
    * Get number of newsletter registrations
-   * @return {Promise<int>}
+   * @returns {Promise<number>}
    */
   async getNumberOfNewsletterRegistration() {
     if (await this.elementVisible(this.newsletterTableEmptyColumn, 1000)) {

@@ -109,7 +109,7 @@ module.exports = class Pages extends BOBasePage {
    * Delete row in table
    * @param table
    * @param row, row in table
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteRowInTable(table, row) {
     // Click on dropDown
@@ -129,7 +129,7 @@ module.exports = class Pages extends BOBasePage {
   /**
    * Delete all rows in table with Bulk Actions
    * @param table
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteWithBulkActions(table) {
     // Add listener to dialog to accept deletion
@@ -166,7 +166,7 @@ module.exports = class Pages extends BOBasePage {
    * Get Value of column Displayed in table
    * @param table
    * @param row, row in table
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(table, row) {
     return this.elementVisible(this.columnValidIcon(table, row), 100);
@@ -195,7 +195,7 @@ module.exports = class Pages extends BOBasePage {
    * Enable / disable column by Bulk Actions
    * @param table
    * @param enable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async changeEnabledColumnBulkActions(table, enable = true) {
     // Click on Select All
@@ -280,7 +280,7 @@ module.exports = class Pages extends BOBasePage {
   /**
    * Get content from all rows table cms page
    * @param column
-   * @return {Promise<string[]|int[]>}
+   * @returns {Promise<string[]>}
    */
   getAllRowsColumnContentTableCmsPage(column) {
     return this.getAllRowsColumnContent('cms_page', column);
@@ -289,7 +289,7 @@ module.exports = class Pages extends BOBasePage {
   /**
    * get number of elements in grid
    * @param table
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(table) {
     return this.getNumberFromText(this.gridTitle(table));
@@ -398,7 +398,7 @@ module.exports = class Pages extends BOBasePage {
   /**
    * Select category pagination limit
    * @param number
-   * @returns {Promise<string >}
+   * @returns {Promise<string>}
    */
   async selectCategoryPaginationLimit(number) {
     await this.selectByVisibleText(this.categoriesPaginationLimitSelect, number);
@@ -426,7 +426,7 @@ module.exports = class Pages extends BOBasePage {
   /**
    * Select pages pagination limit
    * @param number
-   * @returns {Promise<string >}
+   * @returns {Promise<string>}
    */
   async selectPagesPaginationLimit(number) {
     await this.selectByVisibleText(this.pagesPaginationLimitSelect, number);

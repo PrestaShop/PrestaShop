@@ -225,7 +225,7 @@ describe('Sort list of empty categories', async () => {
       });
 
       it('should go to \'catalog > monitoring\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPageToDelete', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToMonitoringPageToDelete${index}`, baseContext);
 
         await this.pageObjects.categoriesPage.goToSubMenu(
           this.pageObjects.dashboardPage.catalogParentLink,

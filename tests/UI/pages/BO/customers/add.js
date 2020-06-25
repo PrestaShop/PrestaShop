@@ -19,7 +19,7 @@ module.exports = class AddCustomer extends BOBasePage {
     this.dayOfBirthSelect = 'select#customer_birthday_day';
     this.enabledSwitchLabel = id => `label[for='customer_is_enabled_${id}']`;
     this.partnerOffersSwitchLabel = id => `label[for='customer_is_partner_offers_subscribed_${id}']`;
-    this.groupAccessCheckkbox = id => `#customer_group_ids_${id}`;
+    this.groupAccessCheckbox = id => `#customer_group_ids_${id}`;
     this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
     this.saveCustomerButton = '#save-button';
@@ -63,14 +63,14 @@ module.exports = class AddCustomer extends BOBasePage {
         await this.changeCheckboxValue(this.selectAllGroupAccessCheckbox);
         break;
       case 'Guest':
-        await this.changeCheckboxValue(this.groupAccessCheckkbox(0), false);
-        await this.changeCheckboxValue(this.groupAccessCheckkbox(2), false);
-        await this.changeCheckboxValue(this.groupAccessCheckkbox(1));
+        await this.changeCheckboxValue(this.groupAccessCheckbox(0), false);
+        await this.changeCheckboxValue(this.groupAccessCheckbox(2), false);
+        await this.changeCheckboxValue(this.groupAccessCheckbox(1));
         break;
       case 'Visitor':
-        await this.changeCheckboxValue(this.groupAccessCheckkbox(1), false);
-        await this.changeCheckboxValue(this.groupAccessCheckkbox(2), false);
-        await this.changeCheckboxValue(this.groupAccessCheckkbox(0));
+        await this.changeCheckboxValue(this.groupAccessCheckbox(1), false);
+        await this.changeCheckboxValue(this.groupAccessCheckbox(2), false);
+        await this.changeCheckboxValue(this.groupAccessCheckbox(0));
         break;
       default:
         throw new Error(`${customerGroup} was not found as a group access`);

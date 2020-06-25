@@ -246,7 +246,7 @@ describe('Sort list of disabled products', async () => {
         await testContext.addContextItem(
           this,
           `testIdentifier${index}`,
-          'resetInProductsPage',
+          `resetInProductsPage${index}`,
           baseContext,
         );
 

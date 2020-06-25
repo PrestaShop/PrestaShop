@@ -17,7 +17,7 @@ module.exports = class ViewSQLQuery extends BOBasePage {
    */
   /**
    * Get SQL query result number
-   * @returns {integer}
+   * @returns {Promise<number>}
    */
   getSQLQueryResultNumber() {
     return this.getNumberFromText(this.sqlQueryResultTitle);

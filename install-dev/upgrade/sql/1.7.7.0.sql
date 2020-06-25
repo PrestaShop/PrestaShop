@@ -544,7 +544,7 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayFooterCategory', 'Category footer', 'This hook adds new blocks under the products listing in a category/search', '1'),
   (NULL, 'displayBackOfficeOrderActions', 'Admin Order Actions', 'This hook displays content in the order view page after action buttons (or aliased to side column in migrated page)', '1'),
   (NULL, 'actionAdminAdminPreferencesControllerPostProcessBefore', 'On post-process in Admin Preferences', 'This hook is called on Admin Preferences post-process before processing the form', '1'),
-  (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields', 'This hook allows to display extra field values added in an address form using hook ''additionalCustomerAddressFields''', '1')
+  (NULL, 'displayAdditionalCustomerAddressFields', 'Display additional customer address fields', 'This hook allows to display extra field values added in an address form using hook ''additionalCustomerAddressFields''', '1'),
   (NULL, 'displayAdminProductsExtra', 'Admin Product Extra Module Tab', 'This hook displays extra content in the Module tab on the product edit page', '1')
 ;
 
@@ -556,6 +556,48 @@ INSERT INTO `PREFIX_hook_alias` (`name`, `alias`) VALUES
 /* Add refund amount on order detail, and fill new columns via data in order_slip_detail table */
 ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `original_wholesale_price`;
 ALTER TABLE `PREFIX_order_detail` ADD `total_refunded_tax_incl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000' AFTER `total_refunded_tax_excl`;
+
+ALTER TABLE `PREFIX_group_reduction` CHANGE `reduction` `reduction` DECIMAL(5, 4) NOT NULL DEFAULT '0.0000';
+ALTER TABLE `PREFIX_product_group_reduction_cache` CHANGE `reduction` `reduction` DECIMAL(5, 4) NOT NULL DEFAULT '0.0000';
+ALTER TABLE `PREFIX_order_slip` CHANGE `amount` `amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_slip` CHANGE `shipping_cost_amount` `shipping_cost_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_payment` CHANGE `amount` `amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* attribute_impact price */
+UPDATE `PREFIX_attribute_impact` SET `price` = RIGHT(`price`, 17) WHERE LENGTH(`price`) > 17;
+ALTER TABLE `PREFIX_attribute_impact` CHANGE `price` `price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* cart_rule minimum_amount & reduction_amount */
+UPDATE `PREFIX_cart_rule` SET `minimum_amount` = RIGHT(`minimum_amount`, 17) WHERE LENGTH(`minimum_amount`) > 17;
+UPDATE `PREFIX_cart_rule` SET `reduction_amount` = RIGHT(`reduction_amount`, 17) WHERE LENGTH(`reduction_amount`) > 17;
+ALTER TABLE `PREFIX_cart_rule` CHANGE `minimum_amount` `minimum_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_cart_rule` CHANGE `reduction_amount` `reduction_amount` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* group reduction */
+UPDATE `PREFIX_group` SET `reduction` = RIGHT(`reduction`, 6) WHERE LENGTH(`reduction`) > 6;
+ALTER TABLE `PREFIX_group` CHANGE `reduction` `reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
+
+/* order_detail reduction_percent, group_reduction & ecotax */
+UPDATE `PREFIX_order_detail` SET `reduction_percent` = RIGHT(`reduction_percent`, 6) WHERE LENGTH(`reduction_percent`) > 6;
+UPDATE `PREFIX_order_detail` SET `group_reduction` = RIGHT(`group_reduction`, 6) WHERE LENGTH(`group_reduction`) > 6;
+UPDATE `PREFIX_order_detail` SET `ecotax` = RIGHT(`ecotax`, 18) WHERE LENGTH(`ecotax`) > 18;
+ALTER TABLE `PREFIX_order_detail` CHANGE `reduction_percent` `reduction_percent` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
+ALTER TABLE `PREFIX_order_detail` CHANGE `group_reduction` `group_reduction` DECIMAL(5, 2) NOT NULL DEFAULT '0.00';
+ALTER TABLE `PREFIX_order_detail` CHANGE `ecotax` `ecotax` DECIMAL(17, 6) NOT NULL DEFAULT '0.000000';
+
+/* product additional_shipping_cost */
+UPDATE `PREFIX_product` SET `additional_shipping_cost` = RIGHT(`additional_shipping_cost`, 17) WHERE LENGTH(`additional_shipping_cost`) > 17;
+ALTER TABLE `PREFIX_product` CHANGE `additional_shipping_cost` `additional_shipping_cost` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* product_shop additional_shipping_cost */
+UPDATE `PREFIX_product_shop` SET `additional_shipping_cost` = RIGHT(`additional_shipping_cost`, 17) WHERE LENGTH(`additional_shipping_cost`) > 17;
+ALTER TABLE `PREFIX_product_shop` CHANGE `additional_shipping_cost` `additional_shipping_cost` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+
+/* order_cart_rule value & value_tax_excl */
+UPDATE `PREFIX_order_cart_rule` SET `value` = RIGHT(`value`, 17) WHERE LENGTH(`value`) > 17;
+UPDATE `PREFIX_order_cart_rule` SET `value_tax_excl` = RIGHT(`value_tax_excl`, 17) WHERE LENGTH(`value_tax_excl`) > 17;
+ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value` `value` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
+ALTER TABLE `PREFIX_order_cart_rule` CHANGE `value_tax_excl` `value_tax_excl` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000';
 
 UPDATE
     `PREFIX_order_detail` `od`

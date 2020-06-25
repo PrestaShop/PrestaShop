@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,9 +34,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 class UpdateOrderStatusType extends AbstractType
 {
     /**
-     * @var array
+     * @var ConfigurableFormChoiceProviderInterface
      */
-    private $statusChoices;
+    private $statusChoiceProvider;
 
     /**
      * @var array
@@ -43,24 +44,28 @@ class UpdateOrderStatusType extends AbstractType
     private $statusChoiceAttributes;
 
     /**
-     * @param array $statusChoices
+     * @param ConfigurableFormChoiceProviderInterface $statusChoices
      * @param array $statusChoiceAttributes
      */
     public function __construct(
-        array $statusChoices,
+        ConfigurableFormChoiceProviderInterface $statusChoiceProvider,
         array $statusChoiceAttributes
     ) {
-        $this->statusChoices = $statusChoices;
+        $this->statusChoiceProvider = $statusChoiceProvider;
         $this->statusChoiceAttributes = $statusChoiceAttributes;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $choiceProviderParams = [];
+        if (!empty($options['data']['new_order_status_id'])) {
+            $choiceProviderParams = ['current_state' => $options['data']['new_order_status_id']];
+        }
         $builder
             ->add('new_order_status_id', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => false,
-                'choices' => $this->statusChoices,
+                'choices' => $this->statusChoiceProvider->getChoices($choiceProviderParams),
                 'choice_attr' => $this->statusChoiceAttributes,
                 'translation_domain' => false,
             ])

@@ -9,7 +9,6 @@ module.exports = class Suppliers extends BOBasePage {
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors header
-    this.brandsNavItemLink = '#subtab-AdminManufacturers';
     this.newSupplierLink = '#page-header-desc-configuration-add';
 
     // Selectors grid panel
@@ -43,7 +42,6 @@ module.exports = class Suppliers extends BOBasePage {
     // enable column
     this.enableColumn = row => this.tableColumn(row, 'active');
     this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
-    this.enableColumnNotValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-not-valid`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -60,14 +58,6 @@ module.exports = class Suppliers extends BOBasePage {
    */
 
   /* Header Methods */
-  /**
-   * Go to Tab Brands
-   * @return {Promise<void>}
-   */
-  async goToSubTabBrands() {
-    await this.clickAndWaitForNavigation(this.brandsNavItemLink);
-  }
-
   /**
    * Go to New Supplier Page
    * @return {Promise<void>}
@@ -120,7 +110,7 @@ module.exports = class Suppliers extends BOBasePage {
   /**
    * Get toggle column value for a row
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(row = 1) {
     return this.elementVisible(this.enableColumnValidIcon(row), 100);
@@ -145,7 +135,7 @@ module.exports = class Suppliers extends BOBasePage {
    * get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTableSupplier(row, column) {
     return this.getTextContent(this.tableColumn(row, column));
@@ -163,8 +153,8 @@ module.exports = class Suppliers extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -172,7 +162,7 @@ module.exports = class Suppliers extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -215,7 +205,7 @@ module.exports = class Suppliers extends BOBasePage {
   /**
    * Enable / disable Suppliers by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async changeSuppliersEnabledColumnBulkActions(enable = true) {
     // Click on Select All
@@ -235,7 +225,7 @@ module.exports = class Suppliers extends BOBasePage {
 
   /**
    * Delete with bulk actions
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteWithBulkActions() {
     // Click on Select All
@@ -267,7 +257,7 @@ module.exports = class Suppliers extends BOBasePage {
 
   /**
    * Get alert text message
-   * @returns {Promise<string>|*}
+   * @return {Promise<string>}
    */
   getAlertTextMessage() {
     return this.getTextContent(this.alertTextBlock);

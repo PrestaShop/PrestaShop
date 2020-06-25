@@ -100,7 +100,7 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -109,7 +109,7 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Get number of orders in grid
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -128,7 +128,7 @@ module.exports = class Order extends BOBasePage {
    * Get text from Column
    * @param columnName
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumn(columnName, row) {
     if (columnName === 'osname') {
@@ -140,7 +140,8 @@ module.exports = class Order extends BOBasePage {
   /**
    * Get all row information from orders table
    * @param row
-   * @return {Promise<object>}
+   * @returns {Promise<{reference: string, newClient: string, delivery: string,
+   * totalPaid: string, payment: string, id: *, customer: string, status: string}>}
    */
   async getOrderFromTable(row) {
     return {

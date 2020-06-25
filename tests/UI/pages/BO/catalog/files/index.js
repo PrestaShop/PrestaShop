@@ -88,7 +88,7 @@ module.exports = class Files extends BOBasePage {
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteFile(row = 1) {
     this.dialogListener(true);
@@ -111,7 +111,7 @@ module.exports = class Files extends BOBasePage {
    * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTable(row, column) {
     return this.getTextContent(this.tableColumn(row, column));
@@ -130,7 +130,7 @@ module.exports = class Files extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -138,7 +138,7 @@ module.exports = class Files extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -160,7 +160,7 @@ module.exports = class Files extends BOBasePage {
 
   /**
    * Delete all files in table with Bulk Actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteFilesBulkActions() {
     // Click on Select All
