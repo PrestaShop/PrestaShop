@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssignProductToCategoriesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShopException;
+use Product;
 
 /**
  * Handles AssignProductToCategoriesCommand using legacy object model
@@ -45,15 +48,58 @@ final class AssignProductToCategoriesHandler extends AbstractProductHandler impl
     public function handle(AssignProductToCategoriesCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
+        $defaultCategoryId = $command->getDefaultCategoryId()->getValue();
+        $categoryIds = $this->formatCategoryIdsList($command);
 
+        $this->updateCategories($product, $categoryIds);
+
+        $product->id_category_default = $defaultCategoryId;
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES);
+    }
+
+    /**
+     * Re-map array to contain scalar values instead of object,
+     * append default category id to the list
+     * and filter-out duplicate values
+     *
+     * @param AssignProductToCategoriesCommand $command
+     *
+     * @return int[]
+     */
+    private function formatCategoryIdsList(AssignProductToCategoriesCommand $command): array
+    {
         $categoryIds = array_map(function (CategoryId $categoryId) {
             return $categoryId->getValue();
         }, $command->getCategoryIds());
 
-        //@todo: should make sure that Home category is always in a list?
-        $product->updateCategories($categoryIds);
-        $product->id_category_default = $command->getDefaultCategoryId()->getValue();
+        $categoryIds[] = $command->getDefaultCategoryId()->getValue();
+        $categoryIds = array_unique($categoryIds, SORT_NUMERIC);
 
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES);
+        return $categoryIds;
+    }
+
+    /**
+     * @param Product $product
+     * @param array $categoryIds
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    private function updateCategories(Product $product, array $categoryIds): void
+    {
+        try {
+            if (false === $product->updateCategories($categoryIds)) {
+                throw new CannotUpdateProductException(
+                    sprintf('Failed to update product #%s categories', $product->id),
+                    CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new ProductException(
+                sprintf('Error occurred when trying to update product #%s categories', $product->id),
+                0,
+                $e
+            );
+        }
     }
 }
