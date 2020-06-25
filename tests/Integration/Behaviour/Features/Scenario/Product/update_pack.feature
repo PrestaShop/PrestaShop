@@ -41,6 +41,15 @@ Feature: Add product to pack from Back Office (BO)
       | product3   | 3                           |
       | product4   | 20                          |
 
+  Scenario: I update pack by removing one of the products
+    Given pack productPack2 should contain products with following quantities:
+      | product3   | 3                           |
+      | product4   | 20                          |
+    When I update pack "productPack2" with following product quantities:
+      | product3   | 3                           |
+    And pack productPack2 should contain products with following quantities:
+      | product3   | 3                           |
+
   Scenario: I add pack product to a pack
     Given product "productPack1" type should be pack
     And product "productPack2" type should be pack
