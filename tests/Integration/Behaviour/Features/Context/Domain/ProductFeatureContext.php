@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
@@ -156,7 +157,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             /**
              * @var int
-             * @var PackedProduct $packedProduct */
+             * @var PackedProduct $packedProduct
+             */
             foreach ($packedProducts as $key => $packedProduct) {
                 //@todo: check && combination id when asserting combinations.
                 if ($packedProduct->getProductId() === $expectedPackedProductId) {
@@ -312,15 +314,11 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             return $this->getSharedStorage()->get($reference);
         }, $categoryReferences);
 
-        try {
-            $this->getCommandBus()->handle(new AssignProductToCategoriesCommand(
-                $this->getSharedStorage()->get($productReference),
-                $this->getSharedStorage()->get($data['default category']),
-                $categoryIds
-            ));
-        } catch (ProductException $e) {
-            $this->lastException = $e;
-        }
+        $this->assignProductToCategories(
+            $this->getSharedStorage()->get($productReference),
+            $this->getSharedStorage()->get($data['default category']),
+            $categoryIds
+        );
     }
 
     /**
@@ -343,6 +341,47 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         sort($expectedCategoryIds);
 
         Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
+    }
+
+    /**
+     * @When I assign product :productReference to following categories including non-existing ones:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assignToCategoriesIncludingNonExistingOnes(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $categoryReferences = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
+
+        // this random number is used on purpose to mimic non existing category id
+        $lastNonExistingId = 50000;
+        $categoryIds = [];
+        foreach ($categoryReferences as $categoryReference) {
+            if ($this->getSharedStorage()->exists($categoryReference)) {
+                $categoryIds[] = $this->getSharedStorage()->get($categoryReference);
+            } else {
+                $categoryIds[] = $lastNonExistingId;
+                ++$lastNonExistingId;
+            }
+        }
+
+        $this->assignProductToCategories(
+            $this->getSharedStorage()->get($productReference),
+            $this->getSharedStorage()->get($data['default category']),
+            $categoryIds
+        );
+    }
+
+    /**
+     * @Then I should get error that assigning product to categories failed
+     */
+    public function assertFailedUpdateCategoriesError()
+    {
+        $this->assertLastErrorIs(
+            CannotUpdateProductException::class,
+            CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
+        );
     }
 
     /**
@@ -902,5 +941,23 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId
         ));
+    }
+
+    /**
+     * @param int $productId
+     * @param int $defaultCategoryId
+     * @param array $categoryIds
+     */
+    private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
+    {
+        try {
+            $this->getCommandBus()->handle(new AssignProductToCategoriesCommand(
+                $productId,
+                $defaultCategoryId,
+                $categoryIds
+            ));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 }
