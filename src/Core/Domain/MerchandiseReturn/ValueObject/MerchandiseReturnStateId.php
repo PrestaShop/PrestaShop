@@ -51,7 +51,7 @@ class MerchandiseReturnStateId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->id;
     }
@@ -59,11 +59,11 @@ class MerchandiseReturnStateId
     /**
      * Validates that the value is integer and is greater than zero
      *
-     * @param $value
+     * @param int $value
      *
      * @throws MerchandiseReturnOrderStateConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function assertIsIntegerGreaterThanZero($value): void
     {
         if (0 >= $value) {
             throw new MerchandiseReturnOrderStateConstraintException(sprintf('Invalid merchandise return order state id "%s".', $value));
