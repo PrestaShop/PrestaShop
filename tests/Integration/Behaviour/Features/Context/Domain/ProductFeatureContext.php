@@ -596,7 +596,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($productCategoriesInfo->getDefaultCategoryId() !== $defaultCategoryId || !$belongsToDefaultCategory) {
-            throw new RuntimeException('Default category is not assigned to product');
+            throw new RuntimeException('Product is not assigned to default category');
         }
     }
 
