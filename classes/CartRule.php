@@ -1238,9 +1238,9 @@ class CartRuleCore extends ObjectModel
                     foreach ($context->cart->getProducts() as $product) {
                         if ($product['id_product'] == $this->reduction_product) {
                             if ($this->reduction_tax) {
-                                $max_reduction_amount = (float) $product['price_wt'];
+                                $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price_wt'];
                             } else {
-                                $max_reduction_amount = (float) $product['price'];
+                                $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price'];
                             }
                             $reduction_amount = min($reduction_amount, $max_reduction_amount);
                             break;

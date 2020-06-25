@@ -127,7 +127,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 5 products in total
     Then order "bo_order1" should contain 3 products "Test Product Cart Rule On Select Product"
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "$15.00"
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "$45.00"
     Then order "bo_order1" should have following details:
       | total_products           | 68.800 |
       | total_products_wt        | 72.930 |

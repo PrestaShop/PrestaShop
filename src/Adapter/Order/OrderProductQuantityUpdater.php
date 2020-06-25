@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use Address;
+use Cache;
 use Cart;
 use CartRule;
 use Configuration;
@@ -397,6 +398,8 @@ class OrderProductQuantityUpdater
     private function updateOrderCartRules(Order $order, Cart $cart): void
     {
         Context::getContext()->cart = $cart;
+        CartRule::resetStaticCache();
+        Cache::clean('getContextualValue_*');
         CartRule::autoAddToCart();
         CartRule::autoRemoveFromCart();
 
