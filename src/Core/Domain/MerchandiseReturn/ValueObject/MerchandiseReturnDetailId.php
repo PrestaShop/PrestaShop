@@ -45,7 +45,7 @@ class MerchandiseReturnDetailId
      *
      * @throws MerchandiseReturnConstraintException
      */
-    public function __construct($id)
+    public function __construct(int $id)
     {
         $this->assertIsIntegerGreaterThanZero($id);
         $this->id = $id;
@@ -68,8 +68,8 @@ class MerchandiseReturnDetailId
      */
     private function assertIsIntegerGreaterThanZero($value)
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new MerchandiseReturnConstraintException(sprintf('Invalid merchandise return product id "%s".', var_export($value, true)));
+        if (0 >= $value) {
+            throw new MerchandiseReturnConstraintException(sprintf('Invalid merchandise return product id "%s".', $value));
         }
     }
 }
