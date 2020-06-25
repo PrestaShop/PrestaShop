@@ -78,7 +78,6 @@ class MerchandiseReturnProduct
      * @param int $customizationId
      *
      * @return MerchandiseReturnProduct
-     *
      */
     public function setCustomizationId(int $customizationId): MerchandiseReturnProduct
     {
