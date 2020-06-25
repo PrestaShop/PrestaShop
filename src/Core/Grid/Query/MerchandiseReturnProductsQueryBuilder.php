@@ -47,10 +47,6 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
     private $searchCriteriaApplicator;
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
 
     /**
      * @param Connection $connection
@@ -62,21 +58,11 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        int $contextLanguageId,
-        /*
-         * @todo
-         * I need RequestStack to get merchandiseReturnId to query builder.
-         * I saw that categoryQueryBuilder uses filters for this purpose and it ends up using
-         * FilterCategorySearchCriteriaListener I wonder should I approach it the same way or stick to request stack?
-         * The filter way could be cleaner, but I still will use Request stack in DefinitionFactory so is it worth to
-         * do it via FilterSearchCriteriaListener here?
-         */
-        RequestStack $requestStack
+        int $contextLanguageId
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextLanguageId = $contextLanguageId;
-        $this->requestStack = $requestStack;
     }
 
     /**
@@ -85,8 +71,7 @@ final class MerchandiseReturnProductsQueryBuilder extends AbstractDoctrineQueryB
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getMerchandiseReturnProductsQueryBuilder($searchCriteria);
-        $qb
-            ->select('
+        $qb->select('
             ord.id_order_return,
             ord.id_order_detail,
             ord.product_quantity,
