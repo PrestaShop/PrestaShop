@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class MerchandiseReturnQueryBuilder builds queries for merchandise returns grid data.
