@@ -65,8 +65,8 @@ class MerchandiseReturnStateId
      */
     private function assertIsIntegerGreaterThanZero($value)
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new MerchandiseReturnOrderStateConstraintException(sprintf('Invalid merchandise return order state id "%s".', var_export($value, true)));
+        if (0 >= $value) {
+            throw new MerchandiseReturnOrderStateConstraintException(sprintf('Invalid merchandise return order state id "%s".', $value));
         }
     }
 }
