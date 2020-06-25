@@ -7,6 +7,10 @@ Feature: Assign product to categories from Back Office (BO)
 
   Background:
     Given category "home" in default language named "Home" exists
+    And category "men" in default language named "Men" exists
+    And category "clothes" in default language named "Clothes" exists
+    And category "women" in default language named "Women" exists
+    And category "accessories" in default language named "Accessories" exists
 
   Scenario: I assign categories for product
     Given I add product "product1" with following information:
@@ -16,8 +20,6 @@ Feature: Assign product to categories from Back Office (BO)
     Then product product1 should be assigned to following categories:
       | categories | [home]               |
       | default category | home           |
-    And category "men" in default language named "Men" exists
-    And category "clothes" in default language named "Clothes" exists
     When I assign product product1 to following categories:
       | categories       | [home, men, clothes] |
       | default category | clothes        |
@@ -29,8 +31,6 @@ Feature: Assign product to categories from Back Office (BO)
     Given I add product "product2" with following information:
       | name       | en-US: ring of wealth |
       | is_virtual | false                 |
-    And category "women" in default language named "Women" exists
-    And category "accessories" in default language named "Accessories" exists
     And I disable category "women"
     And I disable category "accessories"
     When I assign product product2 to following categories:
@@ -50,3 +50,18 @@ Feature: Assign product to categories from Back Office (BO)
     Then product product2 should be assigned to following categories:
       | categories       | [home, women]              |
       | default category | women                      |
+
+  Scenario: I assign default category which is not in the list of categories
+    Given I add product "product3" with following information:
+      | name       | en-US: golden bracelet |
+      | is_virtual | false                  |
+    And product product3 should be assigned to following categories:
+      | categories       | [home]              |
+      | default category | home                |
+    When I assign product product3 to following categories:
+      | categories       | [women]              |
+      | default category | accessories          |
+    Then product product3 should be assigned to following categories:
+      | categories       | [women, accessories] |
+      | default category | accessories          |
+    
