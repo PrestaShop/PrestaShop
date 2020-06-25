@@ -49,6 +49,12 @@ class MerchandiseReturnProductsGridDataFactory implements GridDataFactoryInterfa
      */
     private $getOrderDetailCustomizationHandler;
 
+    /**
+     * MerchandiseReturnProductsGridDataFactory constructor.
+     *
+     * @param GridDataFactoryInterface $merchandiseReturnProductsGridDataFactory
+     * @param GetOrderDetailCustomizationHandlerInterface $getOrderDetailCustomizationHandler
+     */
     public function __construct(
         GridDataFactoryInterface $merchandiseReturnProductsGridDataFactory,
         GetOrderDetailCustomizationHandlerInterface $getOrderDetailCustomizationHandler
