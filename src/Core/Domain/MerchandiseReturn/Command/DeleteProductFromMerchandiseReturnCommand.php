@@ -68,7 +68,7 @@ class DeleteProductFromMerchandiseReturnCommand
         $this->merchandiseReturnDetailId = new MerchandiseReturnDetailId($merchandiseReturnDetailId);
 
         /**
-         * @param null|int $customizationId must remain null if customizationId is 0
+         * @param int|null $customizationId must remain null if customizationId is 0
          */
         if ($customizationId !== 0 && $customizationId !== null) {
             $this->customizationId = new CustomizationId($customizationId);

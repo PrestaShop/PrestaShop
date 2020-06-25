@@ -57,8 +57,7 @@ class MerchandiseReturnType extends AbstractType
     public function __construct(
         array $stateChoices,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->stateChoices = $stateChoices;
         $this->translator = $translator;
     }
@@ -72,7 +71,7 @@ class MerchandiseReturnType extends AbstractType
             ->add('merchandise_return_order_state', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->stateChoices,
-                'label' => $this->translator->trans('Order status', [], 'Admin.Shopparameters.Feature')
+                'label' => $this->translator->trans('Order status', [], 'Admin.Shopparameters.Feature'),
             ])
         ;
     }
