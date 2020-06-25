@@ -57,8 +57,8 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
 
         if (false === Pack::deleteItems($packId)) {
             throw new ProductPackException(
-                sprintf('Failed deleting previous products from pack #%s before adding new ones', $packId),
-                ProductPackException::FAILED_DELETING_PREVIOUS_PACKS
+                sprintf('Failed deleting products from pack #%s', $packId),
+                ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK
             );
         }
 
@@ -93,6 +93,8 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
                 Pack::resetStaticCache();
             }
         }
+        // reset cache also if products array is empty and in-loop cache resetting isn't reached
+        Pack::resetStaticCache();
     }
 
     /**

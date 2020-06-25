@@ -118,16 +118,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         $packId = $this->getSharedStorage()->get($packReference);
 
-        $this->updatePack($packId, $products);
+        $this->upsertPack($packId, $products);
     }
 
     /**
-     * @When I update pack :packReference not providing any products for packing
+     * @When I clean pack :packReference
      */
-    public function updateProductPackProvidingNoProducts(string $packReference)
+    public function cleanPack(string $packReference)
     {
         $packId = $this->getSharedStorage()->get($packReference);
-        $this->updatePack($packId, []);
+
+        try {
+            $this->getCommandBus()->handle(UpdateProductPackCommand::cleanPack($packId));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -453,17 +458,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that provided products list for packing is empty
-     */
-    public function assertEmptyProductsForPackingError()
-    {
-        $this->assertLastErrorIs(
-            ProductPackException::class,
-            ProductPackException::EMPTY_PRODUCT_LIST_FOR_PACKING
-        );
-    }
-
-    /**
      * @Then I should get error that product for packing quantity is invalid
      */
     public function assertPackProductQuantityError()
@@ -551,10 +545,10 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param int $packId
      * @param array $products
      */
-    private function updatePack(int $packId, array $products): void
+    private function upsertPack(int $packId, array $products): void
     {
         try {
-            $this->getCommandBus()->handle(new UpdateProductPackCommand(
+            $this->getCommandBus()->handle(UpdateProductPackCommand::upsertPack(
                 $packId,
                 $products
             ));

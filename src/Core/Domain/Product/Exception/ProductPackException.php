@@ -39,9 +39,9 @@ class ProductPackException extends ProductException
     const FAILED_ADDING_TO_PACK = 10;
 
     /**
-     * When fails to delete previous packs of product
+     * When fails to delete products from a pack
      */
-    const FAILED_DELETING_PREVIOUS_PACKS = 20;
+    const FAILED_DELETING_PRODUCTS_FROM_PACK = 20;
 
     /**
      * When trying to pack a product which is already a pack itself
@@ -52,9 +52,4 @@ class ProductPackException extends ProductException
      * When product for packing quantity is invalid
      */
     const INVALID_QUANTITY = 40;
-
-    /**
-     * When provided list of products for packing is empty
-     */
-    const EMPTY_PRODUCT_LIST_FOR_PACKING = 50;
 }
