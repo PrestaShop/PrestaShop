@@ -58,7 +58,10 @@ class TabCore extends ObjectModel
     /** @var string Icon font */
     public $icon;
 
-    const TAB_MODULE_LIST_URL = _PS_TAB_MODULE_LIST_URL_;
+    /**
+     * @deprecated Since 1.7.7
+     */
+    const TAB_MODULE_LIST_URL = '';
 
     /**
      * @see ObjectModel::$definition
