@@ -52,7 +52,7 @@ class MerchandiseReturnStateChoiceProvider implements FormChoiceProviderInterfac
      *
      * @return array
      */
-    public function getChoices()
+    public function getChoices(): array
     {
         $choices = [];
         $orderStates = OrderReturnState::getOrderReturnStates($this->contextLangId);
