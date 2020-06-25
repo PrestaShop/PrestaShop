@@ -2744,5 +2744,10 @@
       <title>On post-process in Admin Improve Shipping Preferences Controller</title>
       <description>This hook is called on Admin Improve Shipping Preferences post-process before processing any form</description>
     </hook>
+    <hook id="actionPresentProductListing">
+      <name>actionPresentProductListing</name>
+      <title>Product Listing Presenter</title>
+      <description>This hook is called before a product listing is presented</description>
+    </hook>
   </entities>
 </entity_hook>
