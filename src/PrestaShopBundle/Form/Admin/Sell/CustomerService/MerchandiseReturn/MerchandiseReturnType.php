@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Form type for merchandise returns options
@@ -43,13 +44,23 @@ class MerchandiseReturnType extends AbstractType
     private $stateChoices;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * MerchandiseReturnType constructor.
      *
      * @param array $stateChoices
+     * @param TranslatorInterface $translator
      */
-    public function __construct(array $stateChoices)
+    public function __construct(
+        array $stateChoices,
+        TranslatorInterface $translator
+    )
     {
         $this->stateChoices = $stateChoices;
+        $this->translator = $translator;
     }
 
     /**
@@ -61,6 +72,7 @@ class MerchandiseReturnType extends AbstractType
             ->add('merchandise_return_order_state', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->stateChoices,
+                'label' => $this->translator->trans('Order status', [], 'Admin.Shopparameters.Feature')
             ])
         ;
     }
