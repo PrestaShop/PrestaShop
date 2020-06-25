@@ -72,10 +72,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
         RequestStack $requestStack
     ) {
         parent::__construct($hookDispatcher);
-        try {
-            $this->setMerchandiseReturnId($requestStack);
-        } catch (MerchandiseReturnProductException $e) {
-        }
+        $this->setMerchandiseReturnId($requestStack);
     }
 
     /**
