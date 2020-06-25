@@ -42,7 +42,7 @@ class CustomizationId
      *
      * @throws MerchandiseReturnConstraintException
      */
-    public function __construct($id)
+    public function __construct(int $id)
     {
         $this->assertIsIntegerGreaterThanZero($id);
         $this->id = $id;
@@ -51,7 +51,7 @@ class CustomizationId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->id;
     }
@@ -59,14 +59,14 @@ class CustomizationId
     /**
      * Validates that the value is integer and is greater than zero
      *
-     * @param $value
+     * @param int $value
      *
      * @throws MerchandiseReturnConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function assertIsIntegerGreaterThanZero(int $value): void
     {
-        if (!is_int($value) || 0 >= $value) {
-            throw new MerchandiseReturnConstraintException(sprintf('Invalid customization id "%s".', var_export($value, true)));
+        if (0 >= $value) {
+            throw new MerchandiseReturnConstraintException(sprintf('Invalid customization id "%s".', $value));
         }
     }
 }

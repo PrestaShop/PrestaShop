@@ -66,7 +66,7 @@ final class MerchandiseReturnFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * Merchandise Return don't have a create option
+     * Merchandise Return doesn't have a create option
      *
      * @param array $data
      */
