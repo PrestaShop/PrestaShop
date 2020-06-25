@@ -83,18 +83,22 @@ class TaxOptionsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('enable_tax', SwitchType::class, [
-            'label' => $this->translator->trans('Enable tax', [], 'Admin.International.Feature'),
-            'help' => $this->translator->trans(
-                'Select whether or not to include tax on purchases.',
-                [],
-                'Admin.International.Help'
-            ),
-            'required' => false,
-            'attr' => [
-                'class' => 'js-enable-tax',
-            ],
-        ])
+        $builder->add(
+            'enable_tax',
+            SwitchType::class,
+            [
+                'label' => $this->translator->trans('Enable tax', [], 'Admin.International.Feature'),
+                'help' => $this->translator->trans(
+                    'Select whether or not to include tax on purchases.',
+                    [],
+                    'Admin.International.Help'
+                ),
+                'required' => false,
+                'attr' => [
+                    'class' => 'js-enable-tax',
+                ],
+            ]
+        )
             ->add('display_tax_in_cart', SwitchType::class, [
                 'label' => $this->translator->trans(
                     'Display tax in the shopping cart',
