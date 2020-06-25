@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add
 @reset-database-before-feature
+@clear-cache-after-feature
 @add
 Feature: Add basic product from Back Office (BO)
   As a BO user
