@@ -36,7 +36,7 @@ interface EditMerchandiseReturnHandlerInterface
     /**
      * @param EditMerchandiseReturnCommand $command
      *
-     * @return EditableMerchandiseReturn
+     * @return void
      */
     public function handle(EditMerchandiseReturnCommand $command): void;
 }
