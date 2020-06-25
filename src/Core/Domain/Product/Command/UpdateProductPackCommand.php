@@ -52,7 +52,7 @@ class UpdateProductPackCommand
      *
      * @param int $packId the id of product which becomes the pack after it contains packed items
      *
-     * @return static
+     * @return UpdateProductPackCommand
      */
     public static function cleanPack(int $packId): self
     {
@@ -61,13 +61,13 @@ class UpdateProductPackCommand
 
     /**
      * Builds command to upsert pack with new products list.
-     * Provided products should replace all previous products in the pack
+     * Provided products will replace all previous products in the pack
      *
      * @param int $packId the id of product which becomes the pack after it contains packed items
      * @param array $products array of elements where each element contains product information
      *                        which allows building @var QuantifiedProduct
      *
-     * @return static
+     * @return UpdateProductPackCommand
      */
     public static function upsertPack(int $packId, array $products): self
     {
