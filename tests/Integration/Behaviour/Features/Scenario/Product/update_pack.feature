@@ -79,10 +79,12 @@ Feature: Add product to pack from Back Office (BO)
         | product3 | 3                          |
       Then I should get error that product for packing quantity is invalid
 
-    Scenario: I don't provide any products for packing
-      Given product "product2" type should be standard
-      When I update pack product2 not providing any products for packing
-      Then I should get error that provided products list for packing is empty
-      And product "product2" type should be standard
+    Scenario: I remove all products from existing pack
+      Given product "productPack4" type should be pack
+      And pack productPack4 should contain products with following quantities:
+        | product2   | 2                          |
+        | product3   | 3                          |
+      When I update pack productPack4 not providing any products for packing
+      Then product "productPack4" type should be standard
 
 #@todo: add combination product to a pack

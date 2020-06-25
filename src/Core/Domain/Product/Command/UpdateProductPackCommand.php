@@ -45,7 +45,7 @@ class UpdateProductPackCommand
     /**
      * @var QuantifiedProduct[]
      */
-    private $products;
+    private $products = [];
 
     /**
      * @param int $packId the id of product which becomes the pack after it contains packed items
@@ -79,13 +79,6 @@ class UpdateProductPackCommand
      */
     private function setProducts(array $products): void
     {
-        if (empty($products)) {
-            throw new ProductPackException(
-                'Empty products list provided for packing',
-                ProductPackException::EMPTY_PRODUCT_LIST_FOR_PACKING
-            );
-        }
-
         foreach ($products as $product) {
             $this->assertQuantity($product['quantity']);
 

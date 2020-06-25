@@ -453,17 +453,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that provided products list for packing is empty
-     */
-    public function assertEmptyProductsForPackingError()
-    {
-        $this->assertLastErrorIs(
-            ProductPackException::class,
-            ProductPackException::EMPTY_PRODUCT_LIST_FOR_PACKING
-        );
-    }
-
-    /**
      * @Then I should get error that product for packing quantity is invalid
      */
     public function assertPackProductQuantityError()
