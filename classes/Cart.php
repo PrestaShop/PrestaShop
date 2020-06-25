@@ -487,6 +487,15 @@ class CartCore extends ObjectModel
         $virtual_context = Context::getContext()->cloneContext();
         $virtual_context->cart = $this;
 
+        // set base cart total values, they will be updated and used for percentage cart rules (because percentage cart rules
+        // are applied to the cart total's value after previously applied cart rules)
+        $virtual_context->virtualTotalTaxExcluded = $virtual_context->cart->getOrderTotal(false, self::ONLY_PRODUCTS);
+        if (Tax::excludeTaxeOption()) {
+            $virtual_context->virtualTotalTaxIncluded = $virtual_context->virtualTotalTaxExcluded;
+        } else {
+            $virtual_context->virtualTotalTaxIncluded = $virtual_context->cart->getOrderTotal(true, self::ONLY_PRODUCTS);
+        }
+
         foreach ($result as &$row) {
             $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
             $row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
