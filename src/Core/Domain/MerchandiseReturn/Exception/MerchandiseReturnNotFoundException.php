@@ -46,8 +46,12 @@ class MerchandiseReturnNotFoundException extends MerchandiseReturnException
      * @param int $code
      * @param \Exception|null $previous
      */
-    public function __construct(MerchandiseReturnId $merchandiseReturnId, $message = '', $code = 0, $previous = null)
-    {
+    public function __construct(
+        MerchandiseReturnId $merchandiseReturnId,
+        string $message = '',
+        int $code = 0,
+        $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
         $this->merchandiseReturnId = $merchandiseReturnId;
     }

@@ -82,7 +82,7 @@ final class MerchandiseReturnProductsFilterFormFactory implements GridFilterForm
             FormType::class
         );
 
-        /* @var FormInterface $categoryFormItem */
+        /* @var FormInterface $merchandiseReturnFormItem */
         foreach ($merchandiseReturnFilterForm as $merchandiseReturnFormItem) {
             $newMerchandiseReturnFormBuilder->add(
                 $merchandiseReturnFormItem->getName(),
