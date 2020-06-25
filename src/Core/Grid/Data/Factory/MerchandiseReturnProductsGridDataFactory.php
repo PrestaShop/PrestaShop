@@ -86,7 +86,7 @@ class MerchandiseReturnProductsGridDataFactory implements GridDataFactoryInterfa
      *
      * @return array
      */
-    private function applyModification(array $merchandiseReturnProducts)
+    private function applyModification(array $merchandiseReturnProducts): array
     {
         $modifiedMerchandiseReturnProducts = [];
         foreach ($merchandiseReturnProducts as $merchandiseReturnProduct) {
