@@ -355,20 +355,26 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $categoryReferences = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
 
         // this random number is used on purpose to mimic non existing category id
-        $lastNonExistingId = 50000;
+        $nonExistingCategoryId = 50000;
         $categoryIds = [];
         foreach ($categoryReferences as $categoryReference) {
             if ($this->getSharedStorage()->exists($categoryReference)) {
                 $categoryIds[] = $this->getSharedStorage()->get($categoryReference);
             } else {
-                $categoryIds[] = $lastNonExistingId;
-                ++$lastNonExistingId;
+                $categoryIds[] = $nonExistingCategoryId;
+                ++$nonExistingCategoryId;
             }
+        }
+
+        if ($this->getSharedStorage()->exists($data['default category'])) {
+            $defaultCategoryId = $this->getSharedStorage()->get($data['default category']);
+        } else {
+            $defaultCategoryId = $nonExistingCategoryId;
         }
 
         $this->assignProductToCategories(
             $this->getSharedStorage()->get($productReference),
-            $this->getSharedStorage()->get($data['default category']),
+            $defaultCategoryId,
             $categoryIds
         );
     }
