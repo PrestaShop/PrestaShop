@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
+
 /**
  * Provides merchandise return id
  */
@@ -43,6 +45,13 @@ class MerchandiseReturnProduct
      */
     private $customizationId;
 
+    /**
+     * MerchandiseReturnProduct constructor.
+     *
+     * @param int $merchandiseReturnDetailId
+     *
+     * @throws MerchandiseReturnConstraintException
+     */
     public function __construct(int $merchandiseReturnDetailId)
     {
         $this->merchandiseReturnDetailId = new MerchandiseReturnDetailId($merchandiseReturnDetailId);
@@ -65,9 +74,11 @@ class MerchandiseReturnProduct
     }
 
     /**
-     * @param CustomizationId|null $customizationId
+     * @param int $customizationId
      *
      * @return MerchandiseReturnProduct
+     *
+     * @throws MerchandiseReturnConstraintException
      */
     public function setCustomizationId(int $customizationId): MerchandiseReturnProduct
     {

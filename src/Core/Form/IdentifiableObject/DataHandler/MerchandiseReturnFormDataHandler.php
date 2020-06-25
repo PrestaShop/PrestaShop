@@ -46,9 +46,8 @@ final class MerchandiseReturnFormDataHandler implements FormDataHandlerInterface
     /**
      * @param CommandBusInterface $bus
      */
-    public function __construct(
-        CommandBusInterface $bus
-    ) {
+    public function __construct(CommandBusInterface $bus)
+    {
         $this->bus = $bus;
     }
 
@@ -58,35 +57,18 @@ final class MerchandiseReturnFormDataHandler implements FormDataHandlerInterface
     public function update($merchandiseReturnId, array $data): void
     {
         $merchandiseReturnId = new MerchandiseReturnId($merchandiseReturnId);
-        $command = $this->buildMerchandiseReturnEditCommand($merchandiseReturnId, $data);
-
-        $this->bus->handle($command);
-    }
-
-    /**
-     * @param MerchandiseReturnId $merchandiseReturnId
-     * @param array $data
-     *
-     * @return EditMerchandiseReturnCommand
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnOrderStateConstraintException
-     */
-    private function buildMerchandiseReturnEditCommand(MerchandiseReturnId $merchandiseReturnId, array $data): EditMerchandiseReturnCommand
-    {
         $merchandiseReturnStateId = new MerchandiseReturnStateId((int) $data['merchandise_return_order_state']);
         $command = (new EditMerchandiseReturnCommand($merchandiseReturnId))
             ->setMerchandiseReturnStateId($merchandiseReturnStateId)
-        ;
+            ;
 
-        return $command;
+        $this->bus->handle($command);
     }
 
     /**
      * Merchandise Return don't have a create option
      *
      * @param array $data
-     *
-     * @return mixed ID of identifiable object
      */
     public function create(array $data): void
     {

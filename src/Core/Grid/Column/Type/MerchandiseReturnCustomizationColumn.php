@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class CMerchandiseReturnColumn defines column that renders customization data for merchandise return products
  */
-final class MerchandiseReturnCustomizationColumn extends AbstractColumn
+class MerchandiseReturnCustomizationColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
