@@ -84,7 +84,7 @@ Feature: Add product to pack from Back Office (BO)
       And pack productPack4 should contain products with following quantities:
         | product2   | 2                          |
         | product3   | 3                          |
-      When I update pack productPack4 not providing any products for packing
+      When I clean pack productPack4
       Then product "productPack4" type should be standard
 
 #@todo: add combination product to a pack

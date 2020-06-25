@@ -48,14 +48,36 @@ class UpdateProductPackCommand
     private $products = [];
 
     /**
+     * Builds command to remove all items from the pack
+     *
+     * @param int $packId the id of product which becomes the pack after it contains packed items
+     *
+     * @return static
+     */
+    public static function cleanPack(int $packId): self
+    {
+        return new self($packId, []);
+    }
+
+    /**
+     * Builds command to upsert pack with new products list.
+     * Provided products should replace all previous products in the pack
+     *
      * @param int $packId the id of product which becomes the pack after it contains packed items
      * @param array $products array of elements where each element contains product information
      *                        which allows building @var QuantifiedProduct
+     *
+     * @return static
      */
-    public function __construct(int $packId, array $products)
+    public static function upsertPack(int $packId, array $products): self
     {
-        $this->packId = new ProductId($packId);
-        $this->setProducts($products);
+        if (empty($products)) {
+            throw new ProductPackException(
+                'Empty array of products provided. Use UpdateProductPackCommand::cleanPack to empty the pack.'
+            );
+        }
+
+        return new self($packId, $products);
     }
 
     /**
@@ -72,6 +94,18 @@ class UpdateProductPackCommand
     public function getProducts(): array
     {
         return $this->products;
+    }
+
+    /**
+     * Use static factories to build this command
+     *
+     * @param int $packId
+     * @param array $products
+     */
+    private function __construct(int $packId, array $products)
+    {
+        $this->packId = new ProductId($packId);
+        $this->setProducts($products);
     }
 
     /**
