@@ -359,6 +359,8 @@ class ContextCore
         $this->cookie->id_cart = (int) $this->cart->id;
         $this->cookie->write();
         $this->cart->autosetProductAddress();
+
+        $this->cookie->registerSession(new CustomerSession());
     }
 
     /**
