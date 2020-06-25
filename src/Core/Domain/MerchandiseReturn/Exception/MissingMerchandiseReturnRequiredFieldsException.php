@@ -41,8 +41,12 @@ class MissingMerchandiseReturnRequiredFieldsException extends MerchandiseReturnE
      * @param int $code
      * @param \Exception|null $previous
      */
-    public function __construct(array $missingFields, $message = '', $code = 0, $previous = null)
-    {
+    public function __construct(
+        array $missingFields,
+        string $message = '',
+        int $code = 0,
+        $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
         $this->missingFields = $missingFields;
     }

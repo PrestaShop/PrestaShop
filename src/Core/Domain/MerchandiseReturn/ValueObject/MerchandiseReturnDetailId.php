@@ -54,7 +54,7 @@ class MerchandiseReturnDetailId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->id;
     }
@@ -62,14 +62,14 @@ class MerchandiseReturnDetailId
     /**
      * Validates that the value is integer and is greater than zero
      *
-     * @param $value
+     * @param int $value
      *
      * @throws MerchandiseReturnConstraintException
      */
-    private function assertIsIntegerGreaterThanZero($value)
+    private function assertIsIntegerGreaterThanZero(int $value): void
     {
         if (0 >= $value) {
-            throw new MerchandiseReturnConstraintException(sprintf('Invalid merchandise return product id "%s".', $value));
+            throw new MerchandiseReturnConstraintException(sprintf('Invalid merchandise return detail id "%s".', $value));
         }
     }
 }
