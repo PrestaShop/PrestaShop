@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 
 /**
  * Provides merchandise return id
@@ -78,7 +79,6 @@ class MerchandiseReturnProduct
      *
      * @return MerchandiseReturnProduct
      *
-     * @throws MerchandiseReturnConstraintException
      */
     public function setCustomizationId(int $customizationId): MerchandiseReturnProduct
     {
