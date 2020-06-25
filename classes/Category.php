@@ -499,9 +499,7 @@ class CategoryCore extends ObjectModel
             // update by batch of 5000 categories
             $chunks = array_chunk($queries, 5000);
             foreach ($chunks as $chunk) {
-                $sqlChunk = array_map(function ($value) {
-                    return '(' . rtrim(implode(',', $value)) . ')';
-                }, $chunk);
+                $sqlChunk = array_map(function ($value) { return '(' . rtrim(implode(',', $value)) . ')'; }, $chunk);
                 Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'category` (id_category, nleft, nright)
                 VALUES ' . rtrim(implode(',', $sqlChunk), ',') . '
                 ON DUPLICATE KEY UPDATE nleft=VALUES(nleft), nright=VALUES(nright)');
@@ -692,15 +690,15 @@ class CategoryCore extends ObjectModel
         }
 
         $cacheId = 'Category::getAllCategoriesName_' . md5(
-                (int) $idRootCategory .
-                (int) $idLang .
-                (int) $active .
-                (int) $useShopRestriction .
-                (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
-                (isset($sqlFilter) ? $sqlFilter : '') .
-                (isset($orderBy) ? $orderBy : '') .
-                (isset($limit) ? $limit : '')
-            );
+            (int) $idRootCategory .
+            (int) $idLang .
+            (int) $active .
+            (int) $useShopRestriction .
+            (isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '') .
+            (isset($sqlFilter) ? $sqlFilter : '') .
+            (isset($orderBy) ? $orderBy : '') .
+            (isset($limit) ? $limit : '')
+        );
 
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS(
@@ -1027,7 +1025,7 @@ class CategoryCore extends ObjectModel
 				LEFT JOIN `' . _DB_PREFIX_ . 'product` p
 					ON p.`id_product` = cp.`id_product`
 				' . Shop::addSqlAssociation('product', 'p') .
-            (Combination::isFeatureActive() ? ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
+                (Combination::isFeatureActive() ? ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
 				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
 				' . Product::sqlStock('p', 0) . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl
@@ -1045,9 +1043,9 @@ class CategoryCore extends ObjectModel
 					ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE product_shop.`id_shop` = ' . (int) $context->shop->id . '
 					AND cp.`id_category` = ' . (int) $this->id
-            . ($active ? ' AND product_shop.`active` = 1' : '')
-            . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-            . ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
+                    . ($active ? ' AND product_shop.`active` = 1' : '')
+                    . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
+                    . ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;
