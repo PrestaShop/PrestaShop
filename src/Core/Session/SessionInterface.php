@@ -36,7 +36,7 @@ interface SessionInterface
      *
      * @return int
      */
-    public function getId(): int;
+    public function getId();
 
     /**
      * Set session user id
@@ -45,14 +45,14 @@ interface SessionInterface
 
      * @return void
      */
-    public function setUserId(int $id): void;
+    public function setUserId($id);
 
     /**
      * Returns session user id
      *
      * @return int
      */
-    public function getUserId(): int;
+    public function getUserId();
 
     /**
      * Set session token
@@ -61,14 +61,14 @@ interface SessionInterface
      *
      * @return void
      */
-    public function setToken(string $string): void;
+    public function setToken($string);
 
     /**
      * Returns session token
      *
      * @return string
      */
-    public function getToken(): string;
+    public function getToken();
 
     /**
      * Adds current object to the database.
