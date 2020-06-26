@@ -128,3 +128,9 @@ services:
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand
+
+    prestashop.adapter.product.command_handler.add_customization_field_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddCustomizationFieldHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand
