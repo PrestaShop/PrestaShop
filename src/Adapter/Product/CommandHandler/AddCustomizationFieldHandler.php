@@ -42,6 +42,17 @@ final class AddCustomizationFieldHandler implements AddCustomizationFieldHandler
      */
     public function handle(AddCustomizationFieldCommand $command): CustomizationFieldId
     {
-        // TODO: Implement handle() method.
+        $customizationField = new \CustomizationField();
+
+        $customizationField->id_product = $command->getProductId()->getValue();
+        $customizationField->type = $command->getType();
+        $customizationField->required = $command->isRequired();
+        $customizationField->is_module = $command->isAddedByModule();
+        $customizationField->name = $command->getLocalizedNames();
+        $customizationField->is_deleted = $command->isDeleted();
+
+        $customizationField->add();
+
+        return new CustomizationFieldId((int) $customizationField->id);
     }
 }
