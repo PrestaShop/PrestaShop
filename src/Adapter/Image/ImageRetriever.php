@@ -32,6 +32,7 @@ use ImageType;
 use Language;
 use Link;
 use Product;
+use Configuration;
 
 /**
  * This class is mainly responsible of Product images.
@@ -167,6 +168,7 @@ class ImageRetriever
             $imageFolderPath,
             $id_image . '.' . $ext,
         ]);
+        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         foreach ($image_types as $image_type) {
             $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
@@ -181,6 +183,21 @@ class ImageRetriever
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
+            }
+            
+            if ($generateHighDpiImages) {
+                $resizedImagePathHighDpi = implode(DIRECTORY_SEPARATOR, [
+                    $imageFolderPath,
+                    $id_image . '-' . $image_type['name'] . '2x.' . $ext,
+                ]);
+                if (!file_exists($resizedImagePathHighDpi)) {
+                    ImageManager::resize(
+                            $mainImagePath,
+                            $resizedImagePathHighDpi,
+                            (int) $image_type['width'] * 2,
+                            (int) $image_type['height'] * 2
+                    );
+                }
             }
 
             $url = $this->link->$getImageURL(
