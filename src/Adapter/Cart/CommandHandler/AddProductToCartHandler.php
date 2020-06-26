@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddProductToCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationFieldsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddProductToCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductQuantityInCartHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
@@ -41,9 +41,9 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 final class AddProductToCartHandler extends AbstractCartHandler implements AddProductToCartHandlerInterface
 {
     /**
-     * @var AddCustomizationFieldsHandlerInterface
+     * @var AddCustomizationHandlerInterface
      */
-    private $addCustomizationFieldsHandler;
+    private $addCustomizationHandler;
 
     /**
      * @var UpdateProductQuantityInCartHandlerInterface
@@ -51,14 +51,14 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
     private $updateProductQuantityInCartHandler;
 
     /**
-     * @param AddCustomizationFieldsHandlerInterface $addCustomizationFieldsHandler
+     * @param AddCustomizationHandlerInterface $addCustomizationHandler
      * @param UpdateProductQuantityInCartHandlerInterface $updateProductQuantityInCartHandler
      */
     public function __construct(
-        AddCustomizationFieldsHandlerInterface $addCustomizationFieldsHandler,
+        AddCustomizationHandlerInterface $addCustomizationHandler,
         UpdateProductQuantityInCartHandlerInterface $updateProductQuantityInCartHandler
     ) {
-        $this->addCustomizationFieldsHandler = $addCustomizationFieldsHandler;
+        $this->addCustomizationHandler = $addCustomizationHandler;
         $this->updateProductQuantityInCartHandler = $updateProductQuantityInCartHandler;
     }
 
@@ -73,7 +73,7 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
         $customizationId = null;
 
         if (!empty($command->getCustomizationsByFieldIds())) {
-            $customizationId = $this->addCustomizationFieldsHandler->handle(new AddCustomizationFieldsCommand(
+            $customizationId = $this->addCustomizationHandler->handle(new AddCustomizationCommand(
                 $cartIdValue,
                 $command->getProductId()->getValue(),
                 $command->getCustomizationsByFieldIds()
@@ -103,7 +103,10 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
     private function assertQuantityIsPositiveInt(int $quantity): void
     {
         if (0 > $quantity) {
-            throw new CartConstraintException(sprintf('Quantity must be positive integer, but %s given.', $quantity), CartConstraintException::INVALID_QUANTITY);
+            throw new CartConstraintException(
+                sprintf('Quantity must be positive integer, but %s given.', $quantity),
+                CartConstraintException::INVALID_QUANTITY
+            );
         }
     }
 }
