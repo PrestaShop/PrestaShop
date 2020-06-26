@@ -192,10 +192,10 @@ class ImageRetriever
                 ]);
                 if (!file_exists($resizedImagePathHighDpi)) {
                     ImageManager::resize(
-                            $mainImagePath,
-                            $resizedImagePathHighDpi,
-                            (int) $image_type['width'] * 2,
-                            (int) $image_type['height'] * 2
+                        $mainImagePath,
+                        $resizedImagePathHighDpi,
+                        (int) $image_type['width'] * 2,
+                        (int) $image_type['height'] * 2
                     );
                 }
             }
