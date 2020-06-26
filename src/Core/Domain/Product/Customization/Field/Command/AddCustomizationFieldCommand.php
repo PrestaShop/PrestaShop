@@ -79,9 +79,9 @@ class AddCustomizationFieldCommand
         int $productId,
         int $type,
         bool $required,
-        bool $addedByModule,
         array $localizedNames,
-        bool $deleted
+        bool $addedByModule = false,
+        bool $deleted = false
     ) {
         $this->assertCustomizationType($type);
         $this->productId = new ProductId($productId);

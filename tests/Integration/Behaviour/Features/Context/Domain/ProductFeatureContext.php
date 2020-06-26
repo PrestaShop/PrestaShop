@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
@@ -547,6 +549,36 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $command = new UpdateProductPricesCommand($productId);
         // this id value does not exist, it is used on purpose.
         $command->setTaxRulesGroupId(50000000);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I add following customization field to product :productReference:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function addCustomizationField(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $type = CustomizationSettings::TYPE_TEXT === $data['type'] ? CustomizationSettings::TYPE_TEXT : CustomizationSettings::TYPE_FILE;
+
+        $addedByModule = isset($data['is added by module']) ? PrimitiveUtils::castStringBooleanIntoBoolean($data['is added by module']) : false;
+        $deleted = isset($data['is deleted']) ? PrimitiveUtils::castStringBooleanIntoBoolean($data['is deleted']) : false;
+
+        $command = new AddCustomizationFieldCommand(
+            $this->getSharedStorage()->get($productReference),
+            $type,
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['is required']),
+            $this->parseLocalizedArray($data['name']),
+            $addedByModule,
+            $deleted
+        );
 
         try {
             $this->getCommandBus()->handle($command);
