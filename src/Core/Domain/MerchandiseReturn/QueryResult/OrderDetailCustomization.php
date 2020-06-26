@@ -30,7 +30,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\QueryResult;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Product;
 
-/** @todo at this point duplicate of PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing */
+/**
+ * @todo duplicate of PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing
+ * May be merged latter but need to be sure that MerchandiseReturnOrderDetail and OrderDetail are the same thing
+ */
 class OrderDetailCustomization
 {
     /**
