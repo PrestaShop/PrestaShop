@@ -26,20 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
-use Configuration;
 use Customization;
 use Hook;
 use Order;
-use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
-use Product;
 use StockAvailable;
 use Validate;
 
@@ -48,6 +46,16 @@ use Validate;
  */
 final class UpdateProductInOrderHandler extends AbstractOrderHandler implements UpdateProductInOrderHandlerInterface
 {
+    /**
+     * @var OrderProductQuantityUpdater
+     */
+    private $orderProductQuantityUpdater;
+
+    public function __construct(OrderProductQuantityUpdater $orderProductQuantityUpdater)
+    {
+        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -82,46 +90,12 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         // Calculate differences of price (Before / After)
         $diff_price_tax_incl = $total_products_tax_incl - $orderDetail->total_price_tax_incl;
         $diff_price_tax_excl = $total_products_tax_excl - $orderDetail->total_price_tax_excl;
-
-        // Apply change on OrderInvoice
-        if (isset($orderInvoice)) {
-            // If OrderInvoice to use is different, we update the old invoice and new invoice
-            if ($orderDetail->id_order_invoice != $orderInvoice->id) {
-                $old_order_invoice = new OrderInvoice($orderDetail->id_order_invoice);
-                // We remove cost of products
-                $old_order_invoice->total_products -= $orderDetail->total_price_tax_excl;
-                $old_order_invoice->total_products_wt -= $orderDetail->total_price_tax_incl;
-
-                $old_order_invoice->total_paid_tax_excl -= $orderDetail->total_price_tax_excl;
-                $old_order_invoice->total_paid_tax_incl -= $orderDetail->total_price_tax_incl;
-
-                $res &= $old_order_invoice->update();
-
-                $orderInvoice->total_products += $orderDetail->total_price_tax_excl;
-                $orderInvoice->total_products_wt += $orderDetail->total_price_tax_incl;
-
-                $orderInvoice->total_paid_tax_excl += $orderDetail->total_price_tax_excl;
-                $orderInvoice->total_paid_tax_incl += $orderDetail->total_price_tax_incl;
-
-                $orderDetail->id_order_invoice = $orderInvoice->id;
-            }
-        }
-
         if ($diff_price_tax_incl != 0 && $diff_price_tax_excl != 0) {
             $orderDetail->unit_price_tax_excl = $product_price_tax_excl;
             $orderDetail->unit_price_tax_incl = $product_price_tax_incl;
 
             $orderDetail->total_price_tax_incl += $diff_price_tax_incl;
             $orderDetail->total_price_tax_excl += $diff_price_tax_excl;
-
-            if (isset($orderInvoice)) {
-                // Apply changes on OrderInvoice
-                $orderInvoice->total_products += $diff_price_tax_excl;
-                $orderInvoice->total_products_wt += $diff_price_tax_incl;
-
-                $orderInvoice->total_paid_tax_excl += $diff_price_tax_excl;
-                $orderInvoice->total_paid_tax_incl += $diff_price_tax_incl;
-            }
 
             // Apply changes on Order
             $order = new Order($orderDetail->id_order);
@@ -135,45 +109,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $res &= $order->update();
         }
 
-        $old_quantity = $orderDetail->product_quantity;
-
-        $orderDetail->product_quantity = $product_quantity;
-        $orderDetail->reduction_percent = 0;
-
-        // update taxes
-        $res &= $orderDetail->updateTaxAmount($order);
-
-        // Save order detail
-        $res &= $orderDetail->update();
-
-        // Update weight SUM
-        $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-        if (Validate::isLoadedObject($order_carrier)) {
-            $order_carrier->weight = (float) $order->getTotalWeight();
-            $res &= $order_carrier->update();
-            if ($res) {
-                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
-            }
-        }
-
-        // Save order invoice
-        if (isset($orderInvoice)) {
-            $res &= $orderInvoice->update();
-        }
-
-        // Update product available quantity
-        StockAvailable::updateQuantity(
-            $orderDetail->product_id,
-            $orderDetail->product_attribute_id,
-            $old_quantity - $orderDetail->product_quantity,
-            $order->id_shop
-        );
-
-        $product = new Product($orderDetail->product_id);
-
-        if (!$product->is_virtual) {
-            $order = $order->refreshShippingCost();
-        }
+        // Update quantity and amounts
+        $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $product_quantity, $orderInvoice);
 
         if (!$res) {
             throw new OrderException('An error occurred while editing the product line.');
