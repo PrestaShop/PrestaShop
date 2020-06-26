@@ -66,13 +66,13 @@ abstract class AbstractProductHandler
 
             if ((int) $product->id !== $productIdValue) {
                 throw new ProductNotFoundException(sprintf(
-                    'Product #%s was not found',
+                    'Product #%d was not found',
                     $productIdValue
                 ));
             }
         } catch (PrestaShopException $e) {
             throw new ProductException(
-                sprintf('Error occurred when trying to get product #%s', $productId),
+                sprintf('Error occurred when trying to get product #%d', $productId),
                 0,
                 $e
             );
@@ -98,7 +98,7 @@ abstract class AbstractProductHandler
             if (true !== $product->validateField($field, $value, $langId)) {
                 throw new ProductConstraintException(
                     sprintf(
-                        'Invalid localized product %s for language with id "%s"',
+                        'Invalid localized product %d for language with id "%d"',
                         $field,
                         $langId
                     ),
@@ -143,13 +143,13 @@ abstract class AbstractProductHandler
         try {
             if (false === $product->update()) {
                 throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%s', $product->id),
+                    sprintf('Failed to update product #%d', $product->id),
                     $errorCode
                 );
             }
         } catch (PrestaShopException $e) {
             throw new ProductException(
-                sprintf('Error occurred when trying to update product #%s', $product->id),
+                sprintf('Error occurred when trying to update product #%d', $product->id),
                 0,
                 $e
             );

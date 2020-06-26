@@ -180,7 +180,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
             if (!$taxRulesGroup->id) {
                 throw new ProductConstraintException(
                     sprintf(
-                        'Invalid tax rules group id "%s". Group doesn\'t exist',
+                        'Invalid tax rules group id "%d". Group doesn\'t exist',
                         $taxRulesGroupId
                     ),
                     ProductConstraintException::INVALID_TAX_RULES_GROUP_ID
@@ -189,7 +189,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         } catch (PrestaShopException $e) {
             throw new ProductException(
                 sprintf(
-                    'Error occurred when trying to load tax rules group #%s for product',
+                    'Error occurred when trying to load tax rules group #%d for product',
                     $taxRulesGroupId
                 ),
                 0,
@@ -240,7 +240,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         if ($unitPrice->isLowerThanZero()) {
             throw new ProductConstraintException(
                 sprintf(
-                    'Invalid product unit_price. Got "%s"',
+                    'Invalid product unit_price. Got "%d"',
                     $unitPrice
                 ),
                 ProductConstraintException::INVALID_UNIT_PRICE

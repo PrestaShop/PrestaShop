@@ -74,7 +74,7 @@ final class AssignProductToCategoriesHandler extends AbstractProductHandler impl
         }, $command->getCategoryIds());
 
         $categoryIds[] = $command->getDefaultCategoryId()->getValue();
-        $categoryIds = array_unique($categoryIds, SORT_NUMERIC);
+        $categoryIds = array_unique($categoryIds, SORT_REGULAR);
 
         return $categoryIds;
     }
@@ -91,20 +91,20 @@ final class AssignProductToCategoriesHandler extends AbstractProductHandler impl
         try {
             if (false === Category::categoriesExists($categoryIds)) {
                 throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%s categories. Some of categories doesn\'t exist.', $product->id),
+                    sprintf('Failed to update product #%d categories. Some of categories doesn\'t exist.', $product->id),
                     CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
                 );
             }
 
             if (false === $product->updateCategories($categoryIds)) {
                 throw new CannotUpdateProductException(
-                    sprintf('Failed to update product #%s categories', $product->id),
+                    sprintf('Failed to update product #%d categories', $product->id),
                     CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
                 );
             }
         } catch (PrestaShopException $e) {
             throw new ProductException(
-                sprintf('Error occurred when trying to update product #%s categories', $product->id),
+                sprintf('Error occurred when trying to update product #%d categories', $product->id),
                 0,
                 $e
             );

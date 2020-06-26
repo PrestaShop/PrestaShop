@@ -1622,7 +1622,7 @@ class CategoryCore extends ObjectModel
             return false;
         }
 
-        $categoryIds = array_map('intval', $categoryIds);
+        $categoryIds = array_map('intval', array_unique($categoryIds, SORT_REGULAR));
         $categoryIdsFormatted = implode(',', $categoryIds);
 
         $result = Db::getInstance()->query('
@@ -1631,11 +1631,7 @@ class CategoryCore extends ObjectModel
             WHERE c.id_category IN (' . $categoryIdsFormatted . ')
         ')->fetch();
 
-        if (count($categoryIds) === (int) $result['categories_found']) {
-            return true;
-        }
-
-        return false;
+        return count($categoryIds) === (int) $result['categories_found'];
     }
 
     /**
