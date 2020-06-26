@@ -176,7 +176,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                 [
                     'merchandiseReturnId' => $merchandiseReturnId,
                 ]
-            );
+        );
     }
 
     /**
