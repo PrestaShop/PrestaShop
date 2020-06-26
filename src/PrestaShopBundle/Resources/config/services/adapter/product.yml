@@ -65,3 +65,60 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled
+
+    prestashop.adapter.product.command_handler.get_product_for_editing_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
+      arguments:
+        - '@prestashop.core.util.number.number_extractor'
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
+
+    prestashop.adapter.product.command_handler.get_packed_products_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetPackedProductsHandler
+      arguments:
+        - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts
+
+    prestashop.adapter.product.command_handler.add_product_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler
+      arguments:
+        - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+        - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
+
+    prestashop.adapter.product.command_handler.update_product_basic_information_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductBasicInformationHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand
+
+    prestashop.adapter.product.command_handler.update_product_prices_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPricesHandler
+      arguments:
+        - '@prestashop.core.util.number.number_extractor'
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
+
+    prestashop.adapter.product.command_handler.update_product_tags_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTagsHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand
+
+    prestashop.adapter.product.command_handler.update_product_options_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand
+
+    prestashop.adapter.product.command_handler.update_product_pack_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPackHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand

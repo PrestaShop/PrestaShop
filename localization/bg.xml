@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <localizationPack name="Bulgaria" version="1.0">
   <currencies>
-    <currency name="Lev" iso_code="BGN" iso_code_num="975" sign="лв" blank="1" conversion_rate="1.95580" format="2" decimals="1"/>
+    <currency name="Lev" iso_code="BGN" iso_code_num="975" sign="лв" blank="1" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="bg"/>

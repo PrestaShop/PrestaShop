@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
@@ -1944,6 +1944,29 @@ class AdminControllerCore extends Controller
     {
         header('Cache-Control: no-store, no-cache');
 
+        $this->context->smarty->assign([
+            'table' => $this->table,
+            'current' => self::$currentIndex,
+            'token' => $this->token,
+            'host_mode' => (int) defined('_PS_HOST_MODE_'),
+            'stock_management' => (int) Configuration::get('PS_STOCK_MANAGEMENT'),
+            'no_order_tip' => $this->getNotificationTip('order'),
+            'no_customer_tip' => $this->getNotificationTip('customer'),
+            'no_customer_message_tip' => $this->getNotificationTip('customer_message'),
+        ]);
+
+        if ($this->display_header) {
+            $this->context->smarty->assign(
+                'displayBackOfficeHeader',
+                Hook::exec('displayBackOfficeHeader')
+            );
+        }
+
+        $this->context->smarty->assign([
+            'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop'),
+            'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
+        ]);
+
         // Multishop
         $is_multishop = Shop::isFeatureActive();
 
@@ -2186,7 +2209,6 @@ class AdminControllerCore extends Controller
         $this->getLanguages();
 
         $this->initToolbar();
-        $this->initTabModuleList();
         $this->initPageHeaderToolbar();
 
         $this->context->smarty->assign([
@@ -2204,54 +2226,28 @@ class AdminControllerCore extends Controller
 
     /**
      * Init tab modules list and add button in toolbar.
+     *
+     * @deprecated since 1.7.7.0
      */
     protected function initTabModuleList()
     {
-        if (!$this->isFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400)) {
-            @file_put_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, Tools::addonsRequest('must-have'));
-        }
-        if (!$this->isFresh(Module::CACHE_FILE_TAB_MODULES_LIST, 604800)) {
-            $this->refresh(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
-        }
-
-        $this->tab_modules_list = Tab::getTabModulesList($this->id);
-
-        if (is_array($this->tab_modules_list['default_list']) && count($this->tab_modules_list['default_list'])) {
-            $this->filter_modules_list = $this->tab_modules_list['default_list'];
-        } elseif (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
-            $this->addToolBarModulesListButton();
-            $this->addPageHeaderToolBarModulesListButton();
-            $this->context->smarty->assign([
-                'tab_modules_list' => implode(',', $this->tab_modules_list['slider_list']),
-                'admin_module_ajax_url' => $this->context->link->getAdminLink('AdminModules'),
-                'back_tab_modules_list' => $this->context->link->getAdminLink(Tools::getValue('controller')),
-                'tab_modules_open' => (int) Tools::getValue('tab_modules_open'),
-            ]);
-        }
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
+    /**
+     * @deprecated since 1.7.7.0
+     */
     protected function addPageHeaderToolBarModulesListButton()
     {
-        $this->filterTabModuleList();
-
-        if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
-            $this->page_header_toolbar_btn['modules-list'] = [
-                'href' => $this->getAdminModulesUrl(),
-                'desc' => $this->trans('Recommended Modules'),
-            ];
-        }
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
+    /**
+     * @deprecated since 1.7.7.0
+     */
     protected function addToolBarModulesListButton()
     {
-        $this->filterTabModuleList();
-
-        if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list'])) {
-            $this->toolbar_btn['modules-list'] = [
-                'href' => $this->getAdminModulesUrl(),
-                'desc' => $this->trans('Recommended Modules'),
-            ];
-        }
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
     protected function getAdminModulesUrl()
@@ -2259,65 +2255,12 @@ class AdminControllerCore extends Controller
         return $this->context->link->getAdminLink('AdminModulesCatalog');
     }
 
+    /**
+     * @deprecated since 1.7.7.0
+     */
     protected function filterTabModuleList()
     {
-        static $list_is_filtered = null;
-
-        if ($list_is_filtered !== null) {
-            return;
-        }
-
-        if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400)) {
-            file_put_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
-        }
-
-        if (!$this->isFresh(Module::CACHE_FILE_ALL_COUNTRY_MODULES_LIST, 86400)) {
-            file_put_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_ALL_COUNTRY_MODULES_LIST, Tools::addonsRequest('native_all'));
-        }
-
-        if (!$this->isFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400)) {
-            @file_put_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, Tools::addonsRequest('must-have'));
-        }
-
-        libxml_use_internal_errors(true);
-
-        $country_module_list = file_get_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-        $must_have_module_list = file_get_contents(_PS_ROOT_DIR_ . Module::CACHE_FILE_MUST_HAVE_MODULES_LIST);
-        $all_module_list = [];
-
-        if (!empty($country_module_list) && $country_module_list_xml = @simplexml_load_string($country_module_list)) {
-            $country_module_list_array = [];
-            if (is_object($country_module_list_xml->module)) {
-                foreach ($country_module_list_xml->module as $k => $m) {
-                    $all_module_list[] = (string) $m->name;
-                }
-            }
-        } else {
-            foreach (libxml_get_errors() as $error) {
-                $this->errors[] = $this->trans('Error found : %1$s in country_module_list.xml file.', [$error->message], 'Admin.Modules.Notification');
-            }
-        }
-
-        libxml_clear_errors();
-
-        if (!empty($must_have_module_list) && $must_have_module_list_xml = @simplexml_load_string($must_have_module_list)) {
-            $must_have_module_list_array = [];
-            if (is_object($country_module_list_xml->module)) {
-                foreach ($must_have_module_list_xml->module as $l => $mo) {
-                    $all_module_list[] = (string) $mo->name;
-                }
-            }
-        } else {
-            foreach (libxml_get_errors() as $error) {
-                $this->errors[] = $this->trans('Error found : %1$s in must_have_module_list.xml file.', [$error->message], 'Admin.Modules.Notification');
-            }
-        }
-
-        libxml_clear_errors();
-
-        $this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $all_module_list);
-
-        $list_is_filtered = true;
+        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
     /**
@@ -2587,7 +2530,7 @@ class AdminControllerCore extends Controller
                 if (Tools::getValue('back')) {
                     $helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue('back'));
                 } else {
-                    $helper->tpl_vars['back'] = Tools::safeOutput(Tools::getValue(self::$currentIndex . '&token=' . $this->token));
+                    $helper->tpl_vars['back'] = Tools::safeOutput(self::$currentIndex . '&token=' . $this->token);
                 }
             }
             $form = $helper->generateForm($this->fields_form);
@@ -2705,7 +2648,7 @@ class AdminControllerCore extends Controller
         if ($isNewTheme) {
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
-            $this->addJqueryPlugin(['chosen']);
+            $this->addJqueryPlugin(['chosen', 'fancybox']);
         } else {
             //Bootstrap
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/' . $this->bo_css, 'all', 0);
@@ -2717,7 +2660,7 @@ class AdminControllerCore extends Controller
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-migrate-3.1.0.min.js');
             // implement $.browser object and live method, that has been removed since jquery 1.9
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
-            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.0.3.min.js');
+            $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.1.1.min.js');
 
             $this->addJqueryPlugin(['scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox']);
             $this->addJqueryPlugin('growl', null, false);
@@ -2884,26 +2827,6 @@ class AdminControllerCore extends Controller
             $this->ajaxPreProcess();
         }
 
-        $this->context->smarty->assign([
-            'table' => $this->table,
-            'current' => self::$currentIndex,
-            'token' => $this->token,
-            'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
-            'stock_management' => (int) Configuration::get('PS_STOCK_MANAGEMENT'),
-            'no_order_tip' => $this->getNotificationTip('order'),
-            'no_customer_tip' => $this->getNotificationTip('customer'),
-            'no_customer_message_tip' => $this->getNotificationTip('customer_message'),
-        ]);
-
-        if ($this->display_header) {
-            $this->context->smarty->assign('displayBackOfficeHeader', Hook::exec('displayBackOfficeHeader', []));
-        }
-
-        $this->context->smarty->assign([
-            'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop', []),
-            'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
-        ]);
-
         Employee::setLastConnectionDate($this->context->employee->id);
 
         $this->initProcess();
@@ -2921,9 +2844,8 @@ class AdminControllerCore extends Controller
         $notificationsSettings = [
             'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
             'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
-            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
+            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES'),
         ];
-
         $this->context->smarty->assign($notificationsSettings);
 
         Media::addJsDef($notificationsSettings);

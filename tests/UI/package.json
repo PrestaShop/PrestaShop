@@ -1,0 +1,57 @@
+{
+  "name": "ui-tests",
+  "version": "1.0.0",
+  "description": "User interface tests",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "linkchecker": "./node_modules/mocha/bin/mocha campaigns/tools/linkchecker.js",
+    "lint": "eslint  --fix --ignore-path .gitignore .",
+    "specific-test": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
+    "sanity-tests": "./node_modules/mocha/bin/mocha --file campaigns/utils/setup.js campaigns/sanity/*",
+    "sanity-travis": "./node_modules/mocha/bin/mocha --bail --file campaigns/utils/setup.js campaigns/sanity/*",
+    "functional-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/*"
+  },
+  "_moduleAliases": {
+    "@pages": "pages",
+    "@commonTests": "campaigns/commonTests",
+    "@data": "campaigns/data",
+    "@utils": "campaigns/utils",
+    "@tools": "campaigns/tools"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrestaShop/PrestaShop.git"
+  },
+  "keywords": [
+    "playwright",
+    "sanity",
+    "functional"
+  ],
+  "author": "PrestaShop",
+  "license": "OSL-3.0",
+  "bugs": {
+    "url": "https://github.com/PrestaShop/PrestaShop/issues"
+  },
+  "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "chai-string": "^1.5.0",
+    "eslint-config-prestashop": "0.0.2",
+    "faker": "^4.1.0",
+    "js-image-generator": "^1.0.2",
+    "mocha": "^6.1.4",
+    "mochawesome": "^2.3.0",
+    "module-alias": "^2.2.2",
+    "pdfjs-dist": "^2.3.200",
+    "playwright": "^1.0.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-html": "^6.0.2",
+    "eslint-plugin-import": "^2.20.2"
+  }
+}

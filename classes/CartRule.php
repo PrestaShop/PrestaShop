@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -1133,11 +1133,11 @@ class CartRuleCore extends ObjectModel
         if (in_array($filter, [CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION])) {
             $order_package_products_total = 0;
             if ((float) $this->reduction_amount > 0
-                || $this->reduction_percent && $this->reduction_product == 0) {
+                || (float) $this->reduction_percent && $this->reduction_product == 0) {
                 $order_package_products_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package_products);
             }
             // Discount (%) on the whole order
-            if ($this->reduction_percent && $this->reduction_product == 0) {
+            if ((float) $this->reduction_percent && $this->reduction_product == 0) {
                 // Do not give a reduction on free products!
                 $order_total = $order_package_products_total;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
@@ -1161,7 +1161,7 @@ class CartRuleCore extends ObjectModel
             }
 
             // Discount (%) on a specific product
-            if ($this->reduction_percent && $this->reduction_product > 0) {
+            if ((float) $this->reduction_percent && $this->reduction_product > 0) {
                 foreach ($package_products as $product) {
                     if ($product['id_product'] == $this->reduction_product && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                         $reduction_value += ($use_tax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
@@ -1170,7 +1170,7 @@ class CartRuleCore extends ObjectModel
             }
 
             // Discount (%) on the cheapest product
-            if ($this->reduction_percent && $this->reduction_product == -1) {
+            if ((float) $this->reduction_percent && $this->reduction_product == -1) {
                 $minPrice = false;
                 $cheapest_product = null;
                 foreach ($all_products as $product) {
@@ -1200,13 +1200,13 @@ class CartRuleCore extends ObjectModel
             }
 
             // Discount (%) on the selection of products
-            if ($this->reduction_percent && $this->reduction_product == -2) {
+            if ((float) $this->reduction_percent && $this->reduction_product == -2) {
                 $selected_products_reduction = 0;
                 $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
-                        if (in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
-                            || in_array($product['id_product'] . '-0', $selected_products)
+                        if ((in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+                                || in_array($product['id_product'] . '-0', $selected_products))
                             && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special)) {
                             $price = $product['price'];
                             if ($use_tax) {
@@ -1232,7 +1232,22 @@ class CartRuleCore extends ObjectModel
                     }
                 }
 
-                $reduction_amount = $this->reduction_amount;
+                $reduction_amount = (float) $this->reduction_amount;
+                // If the cart rule is restricted to one product it can't exceed this product price
+                if ($this->reduction_product > 0) {
+                    foreach ($context->cart->getProducts() as $product) {
+                        if ($product['id_product'] == $this->reduction_product) {
+                            if ($this->reduction_tax) {
+                                $max_reduction_amount = (float) $product['price_wt'];
+                            } else {
+                                $max_reduction_amount = (float) $product['price'];
+                            }
+                            $reduction_amount = min($reduction_amount, $max_reduction_amount);
+                            break;
+                        }
+                    }
+                }
+
                 // If we need to convert the voucher value to the cart currency
                 if (isset($context->currency) && $this->reduction_currency != $context->currency->id) {
                     $voucherCurrency = new Currency($this->reduction_currency);
@@ -1296,7 +1311,7 @@ class CartRuleCore extends ObjectModel
                         }
                     }
                     /*
-                     * Reduction on the cheapest or on the selection is not really meaningful and has been disabled in the backend
+                     * Reduction on the cheapest or on the selection is not really meaningful and has been disabled in the backend, it only applies with percent
                      * Please keep this code, so it won't be considered as a bug
                      * elseif ($this->reduction_product == -1)
                      * elseif ($this->reduction_product == -2)

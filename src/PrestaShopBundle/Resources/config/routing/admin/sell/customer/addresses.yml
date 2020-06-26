@@ -44,7 +44,7 @@ admin_order_addresses_edit:
   path: /order/{orderId}/{addressType}/edit
   methods: [GET, POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editOrder
+    _controller: PrestaShopBundle:Admin\Sell\Address\Address:editOrderAddress
     _legacy_controller: AdminAddresses
   requirements:
     orderId: \d+

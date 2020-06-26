@@ -7,6 +7,7 @@
         "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-intl": "*",
+        "ext-mbstring": "*",
         "ext-zip": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -50,7 +51,7 @@
         "prestashop/dashgoals": "^2",
         "prestashop/dashproducts": "^2",
         "prestashop/dashtrends": "^2",
-        "prestashop/decimal": "^1.2",
+        "prestashop/decimal": "^1.3",
         "prestashop/graphnvd3": "^2",
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",
@@ -113,7 +114,6 @@
         "swiftmailer/swiftmailer": "~6.2",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
-        "symfony/polyfill-mbstring": "^1.12",
         "symfony/polyfill-php73": "^1.10",
         "symfony/swiftmailer-bundle": "^3.1",
         "symfony/symfony": ">=3.4.37",
@@ -171,13 +171,13 @@
             "@php ./tests-legacy/create-test-db.php"
         ],
         "test-all": [
-            "composer phpunit-admin",
-            "composer phpunit-legacy",
-            "composer unit-tests",
-            "composer phpunit-sf",
-            "composer integration-tests",
-            "composer phpunit-controllers",
-            "composer integration-behaviour-tests"
+            "@composer phpunit-admin",
+            "@composer phpunit-legacy",
+            "@composer unit-tests",
+            "@composer phpunit-sf",
+            "@composer integration-tests",
+            "@composer phpunit-controllers",
+            "@composer integration-behaviour-tests"
         ],
         "phpunit-legacy": [
             "@composer create-test-db",

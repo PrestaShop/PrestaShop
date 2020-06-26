@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
@@ -2802,10 +2802,12 @@ class AdminTranslationsControllerCore extends AdminController
         }
 
         $core_mails = $this->getMailFiles($i18n_dir, 'core_mail');
+        $core_mails['subject'] = $this->getSubjectMailContent($i18n_dir);
 
         foreach ($modules_has_mails as $module_name => $module_path) {
             $module_path = rtrim($module_path, '/');
             $module_mails[$module_name] = $this->getMailFiles($module_path . '/mails/' . $this->lang_selected->iso_code . '/', 'module_mail');
+            $module_mails[$module_name]['subject'] = $core_mails['subject'];
             $module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), $module_name, $module_name);
         }
 
@@ -3307,5 +3309,30 @@ class AdminTranslationsControllerCore extends AdminController
         $this->ajaxRender(
             AdminTranslationsController::getEmailHTML($email)
         );
+    }
+
+    /**
+     * @param $directory : name of directory
+     *
+     * @return array
+     */
+    protected function getSubjectMailContent($directory)
+    {
+        $subject_mail_content = [];
+        if (Tools::file_exists_cache($directory . '/lang.php')) {
+            // we need to include this even if already included (no include once)
+            include $directory . '/lang.php';
+            foreach ($GLOBALS[$this->translations_informations[$this->type_selected]['var']] as $key => $subject) {
+                ++$this->total_expression;
+                $subject = str_replace('\n', ' ', $subject);
+                $subject = str_replace("\\'", "\'", $subject);
+                $subject_mail_content[$key]['trad'] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
+                $subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
+            }
+        } else {
+            $this->errors[] = $this->trans('Email subject translation file not found in %path%', ['%path%' => $directory], 'Admin.International.Notification');
+        }
+
+        return $subject_mail_content;
     }
 }

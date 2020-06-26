@@ -49,6 +49,11 @@
   input[type="number"] {
     width: 80px;
   }
+  .order-product-pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
 }
 
 #addProductTableRow,

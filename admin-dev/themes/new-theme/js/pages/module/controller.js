@@ -1,10 +1,11 @@
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 const {$} = window;
@@ -39,7 +39,6 @@ class AdminModuleController {
     this.moduleCardController = moduleCardController;
 
     this.DEFAULT_MAX_RECENTLY_USED = 10;
-    this.DEFAULT_MAX_PER_CATEGORIES = 6;
     this.DISPLAY_GRID = 'grid';
     this.DISPLAY_LIST = 'list';
     this.CATEGORY_RECENTLY_USED = 'recently-used';
@@ -68,9 +67,6 @@ class AdminModuleController {
     this.addonsCardList = null;
 
     this.moduleShortList = '.module-short-list';
-    // See more & See less selector
-    this.seeMoreSelector = '.see-more';
-    this.seeLessSelector = '.see-less';
 
     // Selectors into vars to make it easier to change them while keeping same code logic
     this.moduleItemGridSelector = '.module-item-grid';
@@ -155,7 +151,6 @@ class AdminModuleController {
     this.initFilterStatusDropdown();
     this.fetchModulesList();
     this.getNotificationsCount();
-    this.initializeSeeMore();
   }
 
   initFilterStatusDropdown() {
@@ -225,16 +220,11 @@ class AdminModuleController {
 
   initBOEventRegistering() {
     window.BOEvent.on('Module Disabled', this.onModuleDisabled, this);
-    window.BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
   }
 
   onModuleDisabled() {
     const self = this;
     self.getModuleItemSelector();
-
-    $('.modules-list').each(() => {
-      self.updateTotalResults();
-    });
   }
 
   initPlaceholderMechanism() {
@@ -418,11 +408,6 @@ class AdminModuleController {
       }
 
       container.show();
-      if (nbModulesInContainer >= self.DEFAULT_MAX_PER_CATEGORIES) {
-        container.find(`${self.seeMoreSelector}, ${self.seeLessSelector}`).show();
-      } else {
-        container.find(`${self.seeMoreSelector}, ${self.seeLessSelector}`).hide();
-      }
     });
   }
 
@@ -495,8 +480,6 @@ class AdminModuleController {
             if (counter[moduleCategory] >= self.DEFAULT_MAX_RECENTLY_USED) {
               isVisible &= self.currentCategoryDisplay[moduleCategory];
             }
-          } else if (counter[moduleCategory] >= self.DEFAULT_MAX_PER_CATEGORIES) {
-            isVisible &= self.currentCategoryDisplay[moduleCategory];
           }
 
           counter[moduleCategory] += 1;
@@ -518,8 +501,6 @@ class AdminModuleController {
     if (self.currentTagsList.length) {
       $('.modules-list').append(this.currentDisplay === self.DISPLAY_GRID ? this.addonsCardGrid : this.addonsCardList);
     }
-
-    self.updateTotalResults();
   }
 
   initPageChangeProtection() {
@@ -1201,62 +1182,6 @@ class AdminModuleController {
     $(`#module-sort-${switchTo}`).addClass('module-sort-active');
     this.currentDisplay = switchTo;
     this.updateModuleVisibility();
-  }
-
-  initializeSeeMore() {
-    const self = this;
-
-    $(`${self.moduleShortList} ${self.seeMoreSelector}`).on('click', function seeMore() {
-      self.currentCategoryDisplay[$(this).data('category')] = true;
-      $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeLessSelector).removeClass('d-none');
-      self.updateModuleVisibility();
-    });
-
-    $(`${self.moduleShortList} ${self.seeLessSelector}`).on('click', function seeMore() {
-      self.currentCategoryDisplay[$(this).data('category')] = false;
-      $(this).addClass('d-none');
-      $(this).closest(self.moduleShortList).find(self.seeMoreSelector).removeClass('d-none');
-      self.updateModuleVisibility();
-    });
-  }
-
-  updateTotalResults() {
-    const self = this;
-    const replaceFirstWordBy = (element, value) => {
-      const explodedText = element.text().split(' ');
-      explodedText[0] = value;
-      element.text(explodedText.join(' '));
-    };
-
-    // If there are some shortlist: each shortlist count the modules on the next container.
-    const $shortLists = $('.module-short-list');
-    if ($shortLists.length > 0) {
-      $shortLists.each(function shortLists() {
-        const $this = $(this);
-        replaceFirstWordBy(
-          $this.find('.module-search-result-wording'),
-          $this.next('.modules-list').find('.module-item').length,
-        );
-      });
-
-      // If there is no shortlist: the wording directly update from the only module container.
-    } else {
-      const modulesCount = $('.modules-list').find('.module-item').length;
-      replaceFirstWordBy($('.module-search-result-wording'), modulesCount);
-
-      const selectorToToggle = (self.currentDisplay === self.DISPLAY_LIST)
-        ? this.addonItemListSelector
-        : this.addonItemGridSelector;
-      $(selectorToToggle).toggle(modulesCount !== (this.modulesList.length / 2));
-
-      if (modulesCount === 0) {
-        $('.module-addons-search-link').attr(
-          'href',
-          `${this.baseAddonsUrl}search.php?search_query=${encodeURIComponent(this.currentTagsList.join(' '))}`,
-        );
-      }
-    }
   }
 }
 
