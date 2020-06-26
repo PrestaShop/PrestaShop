@@ -467,7 +467,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $foundCategory = Category::searchByName($this->defaultLanguageId, $categoryName, true);
 
-        if (!$foundCategory || $foundCategory['name'] !== $categoryName) {
+        if (!isset($foundCategory['name']) || $foundCategory['name'] !== $categoryName) {
             throw new RuntimeException(sprintf(
                 'Category "%s" named "%s" was not found',
                 $categoryReference,
