@@ -240,7 +240,7 @@ final class UpdateProductPricesHandler extends AbstractProductHandler implements
         if ($unitPrice->isLowerThanZero()) {
             throw new ProductConstraintException(
                 sprintf(
-                    'Invalid product unit_price. Got "%d"',
+                    'Invalid product unit_price. Got "%s"',
                     $unitPrice
                 ),
                 ProductConstraintException::INVALID_UNIT_PRICE

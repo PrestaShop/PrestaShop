@@ -128,7 +128,7 @@ final class UpdateProductPackHandler extends AbstractProductHandler implements U
         }
 
         return sprintf(
-            "$messageBody. [packId #%d; productId #%d;%d]",
+            "$messageBody. [packId #%d; productId #%d;%s]",
             $packId,
             $product->getProductId()->getValue(),
             isset($combinationId) ? $combinationId : ''
