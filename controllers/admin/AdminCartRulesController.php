@@ -671,7 +671,7 @@ class AdminCartRulesControllerCore extends AdminController
                             $value = $carrier['id_carrier'] . ' - ' . Configuration::get('PS_SHOP_NAME');
                         } else {
                             $value = $carrier['id_carrier'] . ' - ' . $carrier['name'];
-                            if ($carrier['name']) {
+                            if ($carrier['delay']) {
                                 $value .= ' (' . $carrier['delay'] . ')';
                             }
                         }
