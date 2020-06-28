@@ -85,6 +85,11 @@ class ProductSearchQuery
     private $sortOrder;
 
     /**
+     * @var int
+     */
+    private $minQuantity;
+
+    /**
      * ProductSearchQuery constructor.
      */
     public function __construct()
@@ -290,5 +295,25 @@ class ProductSearchQuery
     public function getEncodedFacets()
     {
         return $this->encodedFacets;
+    }
+
+    /**
+     * @param $minQuantity
+     *
+     * @return $this
+     */
+    public function setMinQuantity($minQuantity)
+    {
+        $this->minQuantity = (int) $minQuantity;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinQuantity()
+    {
+        return $this->minQuantity;
     }
 }
