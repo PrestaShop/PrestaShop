@@ -39,6 +39,10 @@
   {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
 {% endset %}
 
+{% set internalNoteTitle %}
+  {{ 'Internal Notes'|trans({}, 'Admin.Ordercustomers.Feature') }}
+{% endset %}
+
 <div class="mt-2">
   <ul class="nav nav nav-tabs d-print-none" role="tablist">
     <li class="nav-item">
@@ -63,6 +67,12 @@
       <a class="nav-link" id="orderReturnsTab" data-toggle="tab" href="#orderReturnsTabContent" role="tab" aria-controls="orderReturnsTabContent" aria-expanded="true" aria-selected="false">
         <i class="material-icons">replay</i>
         {{ merchantReturnsTitle }}
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="internalNoteTab" data-toggle="tab" href="#internalNoteTabContent" role="tab" aria-controls="internalNoteTabContent" aria-expanded="true" aria-selected="false">
+        <i class="material-icons">visibility_off</i>
+        {{ internalNoteTitle }}
       </a>
     </li>
   </ul>
@@ -105,6 +115,16 @@
         {% endblock %}
         {% block body %}
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
+        {% endblock %}
+      {% endembed %}
+    </div>
+    <div class="tab-pane d-print-block fade" id="internalNoteTabContent" role="tabpanel" aria-labelledby="internalNoteTab">
+      {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
+        {% block header %}
+          {{ internalNoteTitle }}
+        {% endblock %}
+        {% block body %}
+          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_internal_note.html.twig' %}
         {% endblock %}
       {% endembed %}
     </div>
