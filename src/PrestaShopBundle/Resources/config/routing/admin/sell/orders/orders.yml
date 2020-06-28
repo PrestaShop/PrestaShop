@@ -352,3 +352,15 @@ admin_orders_display_customization_image:
     type: \d+
     name: \w+
     value: \w+
+
+admin_orders_set_internal_note:
+  path: /{orderId}/set-internal-note
+  methods: [POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Order/Order:setInternalNote
+    _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:updateInternalNote
+    _legacy_parameters:
+      id_order: orderId
+  requirements:
+    orderId: \d+
