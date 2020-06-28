@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderComma
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ResendOrderEmailCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\SendProcessOrderEmailCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
@@ -88,6 +89,7 @@ use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderAddressType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrderCurrencyType;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Form\Admin\Sell\Order\EditProductRowType;
+use PrestaShopBundle\Form\Admin\Sell\Order\InternalNoteType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType;
 use PrestaShopBundle\Form\Admin\Sell\Order\OrderPaymentType;
 use PrestaShopBundle\Form\Admin\Sell\Order\UpdateOrderShippingType;
@@ -455,6 +457,10 @@ class OrderController extends FrameworkBundleAdminController
             'symbol' => $orderCurrency->symbol,
         ]);
 
+        $internalNoteForm = $this->createForm(InternalNoteType::class, [
+            'note' => $orderForViewing->getNote(),
+        ]);
+
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $backOfficeOrderButtons = new ActionsBarButtonsCollection();
 
@@ -514,6 +520,7 @@ class OrderController extends FrameworkBundleAdminController
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
             'paginationNum' => $paginationNum,
             'paginationNumOptions' => $paginationNumOptions,
+            'internalNoteForm' => $internalNoteForm->createView(),
         ]);
     }
 
@@ -1520,6 +1527,54 @@ class OrderController extends FrameworkBundleAdminController
             return $this->file($filePath, $fileName);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_orders_view', [
+            'orderId' => $orderId,
+        ]);
+    }
+
+    /**
+     * Set order internal note.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_orders_index"
+     * )
+     *
+     * @param $orderId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function setInternalNoteAction($orderId, Request $request)
+    {
+        $internalNoteForm = $this->createForm(InternalNoteType::class);
+        $internalNoteForm->handleRequest($request);
+
+        if ($internalNoteForm->isSubmitted()) {
+            $data = $internalNoteForm->getData();
+
+            try {
+                $this->getCommandBus()->handle(new SetInternalOrderNoteCommand(
+                    (int) $orderId,
+                    $data['note']
+                ));
+
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json([
+                        'success' => true,
+                        'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+                    ]);
+                }
+
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            } catch (OrderException $e) {
+                $this->addFlash(
+                    'error',
+                    $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+                );
+            }
         }
 
         return $this->redirectToRoute('admin_orders_view', [
