@@ -174,6 +174,11 @@ class OrderCore extends ObjectModel
     public $round_type;
 
     /**
+     * @var string Internal order note, what is only available in BO.
+     */
+    public $note;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -225,6 +230,7 @@ class OrderCore extends ObjectModel
             'reference' => ['type' => self::TYPE_STRING],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
         ],
     ];
 
@@ -256,6 +262,7 @@ class OrderCore extends ObjectModel
                 'getter' => 'getWsShippingNumber',
                 'setter' => 'setWsShippingNumber',
             ],
+            'note' => [],
         ],
         'associations' => [
             'order_rows' => ['resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
