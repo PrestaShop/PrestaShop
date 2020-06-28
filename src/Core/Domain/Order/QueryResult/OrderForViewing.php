@@ -178,6 +178,11 @@ class OrderForViewing
     private $sources;
 
     /**
+     * @var string
+     */
+    private $note;
+
+    /**
      * @param int $orderId
      * @param int $currencyId
      * @param int $carrierId
@@ -193,6 +198,7 @@ class OrderForViewing
      * @param bool $isDelivered
      * @param bool $isShipped
      * @param bool $invoiceManagementIsEnabled
+     * @param string $note
      * @param DateTimeImmutable $createdAt
      * @param OrderCustomerForViewing|null $customer
      * @param OrderShippingAddressForViewing $shippingAddress
@@ -224,6 +230,7 @@ class OrderForViewing
         bool $isDelivered,
         bool $isShipped,
         bool $invoiceManagementIsEnabled,
+        string $note,
         DateTimeImmutable $createdAt,
         ?OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
@@ -268,6 +275,7 @@ class OrderForViewing
         $this->shopId = $shopId;
         $this->invoiceManagementIsEnabled = $invoiceManagementIsEnabled;
         $this->sources = $sources;
+        $this->note = $note;
     }
 
     /**
@@ -520,5 +528,13 @@ class OrderForViewing
         }
 
         return $this->prices->getShippingRefundableAmountRaw()->isGreaterThanZero();
+    }
+
+    /**
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
     }
 }
