@@ -79,6 +79,11 @@ class ProductForEditing
     private $productSeoOptions;
 
     /**
+     * @var ProductStock
+     */
+    private $stock;
+
+    /**
      * @param int $productId
      * @param bool $active
      * @param ProductCustomizationOptions $customizationOptions
@@ -88,6 +93,7 @@ class ProductForEditing
      * @param ProductOptions $options
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
+     * @param ProductStock $stock
      */
     public function __construct(
         int $productId,
@@ -98,7 +104,8 @@ class ProductForEditing
         ProductPricesInformation $pricesInformation,
         ProductOptions $options,
         ProductShippingInformation $shippingInformation,
-        ProductSeoOptions $productSeoOptions
+        ProductSeoOptions $productSeoOptions,
+        ProductStock $stock
     ) {
         $this->productId = $productId;
         $this->active = $active;
@@ -109,6 +116,7 @@ class ProductForEditing
         $this->options = $options;
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
+        $this->stock = $stock;
     }
 
     /**
@@ -181,5 +189,13 @@ class ProductForEditing
     public function getProductSeoOptions(): ProductSeoOptions
     {
         return $this->productSeoOptions;
+    }
+
+    /**
+     * @return ProductStock
+     */
+    public function getStock(): ProductStock
+    {
+        return $this->stock;
     }
 }

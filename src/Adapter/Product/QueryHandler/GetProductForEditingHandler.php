@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
@@ -72,7 +73,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
-        $product = $this->getProduct($query->getProductId());
+        $product = $this->getFullProduct($query->getProductId());
 
         return new ProductForEditing(
             (int) $product->id,
@@ -83,7 +84,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $this->getPricesInformation($product),
             $this->getOptions($product),
             $this->getShippingInformation($product),
-            $this->getSeoOptions($product)
+            $this->getSeoOptions($product),
+            $this->getProductStock($product)
         );
     }
 
@@ -266,6 +268,20 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
             $product->link_rewrite,
             $product->redirect_type,
             (int) $product->id_type_redirected
+        );
+    }
+
+    /**
+     * Returns the product stock infos, it's important that the Product is fetched with full data
+     *
+     * @param Product $product
+     *
+     * @return ProductStock
+     */
+    private function getProductStock(Product $product): ProductStock
+    {
+        return new ProductStock(
+            $product->advanced_stock_management
         );
     }
 }
