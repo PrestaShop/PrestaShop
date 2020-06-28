@@ -47,9 +47,9 @@ class UpdateProductStockCommand
     private $useAdvancedStockManagement;
 
     /**
-     * @var int|null
+     * @var bool|null
      */
-    private $dependsOnStockType;
+    private $dependsOnStock;
 
     /**
      * @var int|null
@@ -138,21 +138,21 @@ class UpdateProductStockCommand
     }
 
     /**
-     * @return int|null
+     * @return bool|null
      */
-    public function getDependsOnStockType(): ?int
+    public function dependsOnStock(): ?bool
     {
-        return $this->dependsOnStockType;
+        return $this->dependsOnStock;
     }
 
     /**
-     * @param int $dependsOnStockType
+     * @param bool $dependsOnStock
      *
      * @return UpdateProductStockCommand
      */
-    public function setDependsOnStockType(int $dependsOnStockType): UpdateProductStockCommand
+    public function setDependsOnStock(bool $dependsOnStock): UpdateProductStockCommand
     {
-        $this->dependsOnStockType = $dependsOnStockType;
+        $this->dependsOnStock = $dependsOnStock;
 
         return $this;
     }
