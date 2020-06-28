@@ -34,10 +34,27 @@ class ProductStockException extends ProductException
      * Code is used when an advanced stock action is performed while
      * advanced stock managed is disabled
      */
-    const ADVANCED_STOCK_MANAGEMENT_DISABLED = 10;
+    const ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED = 10;
+
+    /**
+     * Code is used when an advanced stock action is performed while
+     * advanced stock managed is disabled on the product
+     */
+    const ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED = 20;
 
     /**
      * Code is used the StockAvailable info for a product is not found in database
      */
-    const NOT_FOUND = 20;
+    const NOT_FOUND = 30;
+
+    /**
+     * Code is used when trying to link a pack stock with its product and one of them
+     * has no advanced stock
+     */
+    const INCOMPATIBLE_PACK_STOCK_TYPE = 40;
+
+    /**
+     * Code is sent when the StockAvailable object cannot be saved
+     */
+    const CANNOT_SAVE_STOCK_AVAILABLE = 50;
 }

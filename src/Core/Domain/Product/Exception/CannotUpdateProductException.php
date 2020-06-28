@@ -80,4 +80,9 @@ class CannotUpdateProductException extends ProductException
      * When product seo options update fails
      */
     const FAILED_UPDATE_SEO = 100;
+
+    /**
+     * When stock update fails
+     */
+    const FAILED_UPDATE_STOCK = 110;
 }
