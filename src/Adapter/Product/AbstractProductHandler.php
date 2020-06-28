@@ -62,10 +62,36 @@ abstract class AbstractProductHandler
      */
     protected function getProduct(ProductId $productId): Product
     {
+        return $this->getProductObject($productId, false);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Product
+     *
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     */
+    protected function getFullProduct(ProductId $productId): Product
+    {
+        return $this->getProductObject($productId, true);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param bool $full
+     *
+     * @return Product
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     */
+    private function getProductObject(ProductId $productId, bool $full): Product
+    {
         $productIdValue = $productId->getValue();
 
         try {
-            $product = new Product($productIdValue);
+            $product = new Product($productIdValue, $full);
 
             if ((int) $product->id !== $productIdValue) {
                 throw new ProductNotFoundException(sprintf(
