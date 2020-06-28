@@ -84,6 +84,11 @@ class ProductForEditing
     private $associatedAttachmentIds;
 
     /**
+     * @var ProductStock
+     */
+    private $stock;
+
+    /**
      * @param int $productId
      * @param bool $active
      * @param ProductCustomizationOptions $customizationOptions
@@ -94,6 +99,7 @@ class ProductForEditing
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
      * @param array $associatedAttachmentIds
+     * @param ProductStock $stock
      */
     public function __construct(
         int $productId,
@@ -105,7 +111,8 @@ class ProductForEditing
         ProductOptions $options,
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
-        array $associatedAttachmentIds
+        array $associatedAttachmentIds,
+        ProductStock $stock
     ) {
         $this->productId = $productId;
         $this->active = $active;
@@ -117,6 +124,7 @@ class ProductForEditing
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
         $this->associatedAttachmentIds = $associatedAttachmentIds;
+        $this->stock = $stock;
     }
 
     /**
@@ -197,5 +205,13 @@ class ProductForEditing
     public function getAssociatedAttachmentIds(): array
     {
         return $this->associatedAttachmentIds;
+    }
+
+    /**
+     * @return ProductStock
+     */
+    public function getStock(): ProductStock
+    {
+        return $this->stock;
     }
 }
