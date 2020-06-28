@@ -85,4 +85,9 @@ class CannotUpdateProductException extends ProductException
      * When product attachments association update fails
      */
     const FAILED_UPDATE_ATTACHMENTS = 110;
+
+    /**
+     * When stock update fails
+     */
+    const FAILED_UPDATE_STOCK = 120;
 }
