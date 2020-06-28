@@ -343,6 +343,7 @@ abstract class PaymentModuleCore extends Module
                         self::DEBUG_MODE,
                         $order_status,
                         $id_order_state,
+                        '',
                         isset($package['id_carrier']) ? $package['id_carrier'] : null
                     );
                     $order = $orderData['order'];
@@ -947,6 +948,7 @@ abstract class PaymentModuleCore extends Module
         $debug,
         $order_status,
         $id_order_state,
+        $note,
         $carrierId = null
     ) {
         $order = new Order();
@@ -1019,6 +1021,8 @@ abstract class PaymentModuleCore extends Module
 
         $order->invoice_date = '0000-00-00 00:00:00';
         $order->delivery_date = '0000-00-00 00:00:00';
+
+        $order->note = $note;
 
         if ($debug) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order is about to be added', 1, null, 'Cart', (int) $cart->id, true);
