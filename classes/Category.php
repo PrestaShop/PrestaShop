@@ -959,7 +959,8 @@ class CategoryCore extends ObjectModel
         $random = false,
         $randomNumberProducts = 1,
         $checkAccess = true,
-        Context $context = null
+        Context $context = null,
+        $minQuantity = null
     ) {
         if (!$context) {
             $context = Context::getContext();
@@ -978,10 +979,12 @@ class CategoryCore extends ObjectModel
 					FROM `' . _DB_PREFIX_ . 'product` p
 					' . Shop::addSqlAssociation('product', 'p') . '
 					LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON p.`id_product` = cp.`id_product`
+					' . Product::sqlStock('p', 0) . '
 					WHERE cp.`id_category` = ' . (int) $this->id .
                 ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') .
                 ($active ? ' AND product_shop.`active` = 1' : '') .
-                ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
+                ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '') .
+                ($minQuantity ? ' AND IFNULL(stock.quantity, 0) >= ' . (int) $minQuantity : '');
 
             return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
@@ -1045,7 +1048,8 @@ class CategoryCore extends ObjectModel
 					AND cp.`id_category` = ' . (int) $this->id
                     . ($active ? ' AND product_shop.`active` = 1' : '')
                     . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
-                    . ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
+                    . ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '')
+                    . ($minQuantity ? ' AND IFNULL(stock.quantity, 0) >= ' . (int) $minQuantity : '');
 
         if ($random === true) {
             $sql .= ' ORDER BY RAND() LIMIT ' . (int) $randomNumberProducts;

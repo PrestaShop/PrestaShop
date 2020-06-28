@@ -76,7 +76,10 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
                 $type !== 'products',
                 true,
                 true,
-                $query->getResultsPerPage()
+                $query->getResultsPerPage(),
+                true,
+                null,
+                $query->getMinQuantity()
             );
         } else {
             return $this->category->getProducts(
@@ -85,7 +88,13 @@ class CategoryProductSearchProvider implements ProductSearchProviderInterface
                 $query->getResultsPerPage(),
                 $query->getSortOrder()->toLegacyOrderBy(),
                 $query->getSortOrder()->toLegacyOrderWay(),
-                $type !== 'products'
+                $type !== 'products',
+                true,
+                false,
+                1,
+                true,
+                null,
+                $query->getMinQuantity()
             );
         }
     }
