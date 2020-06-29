@@ -18,6 +18,6 @@ Feature: Update product customization fields in Back Office (BO)
       | type               | text                                |
       | name               | en-US: back text                    |
       | is required        | true                                |
-    When I update product product1 customization fields with following defined fields:
+    When I update product product1 with following defined customization fields:
       | customizationField1 |
       | customizationField2 |
