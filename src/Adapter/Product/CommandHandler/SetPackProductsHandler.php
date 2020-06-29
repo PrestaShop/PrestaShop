@@ -34,7 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetPackProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShopException;
 
@@ -102,14 +103,14 @@ final class SetPackProductsHandler extends AbstractProductHandler implements Set
     /**
      * @param int $productId
      *
-     * @throws ProductPackException
+     * @throws ProductPackConstraintException
      */
     private function assertProductIsAvailableForPacking(int $productId): void
     {
         if (Pack::isPack($productId)) {
-            throw new ProductPackException(
+            throw new ProductPackConstraintException(
                 sprintf('Product #%d is a pack itself. It cannot be packed', $productId),
-                ProductPackException::CANNOT_ADD_PACK_INTO_PACK
+                ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
             );
         }
     }
