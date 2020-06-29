@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\PackSettings;
 use PrestaShopException;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -137,6 +138,10 @@ class UpdateProductStockCommandHandler extends AbstractProductHandler implements
             );
         }
         $this->updateProductField($product, 'advanced_stock_management', false);
+
+        if (null !== $command->getPackStockType()) {
+            $this->updateProductField($product, 'pack_stock_type', $this->getLegacyPackStockType($command->getPackStockType()->getValue()));
+        }
 
         // Now apply updates
         $this->applyPartialUpdate($product, 'stock', CannotUpdateProductException::FAILED_UPDATE_STOCK);
@@ -263,5 +268,25 @@ class UpdateProductStockCommandHandler extends AbstractProductHandler implements
             'You cannot link your pack to product stock because one of them has no advanced stock enabled',
             ProductStockException::INCOMPATIBLE_PACK_STOCK_TYPE
         );
+    }
+
+    /**
+     * @param string $stockType
+     *
+     * @return int
+     */
+    private function getLegacyPackStockType(string $stockType): int
+    {
+        switch ($stockType) {
+            case PackSettings::STOCK_TYPE_PACK_ONLY:
+                return Pack::STOCK_TYPE_PACK_ONLY;
+            case PackSettings::STOCK_TYPE_PRODUCTS_ONLY:
+                return Pack::STOCK_TYPE_PRODUCTS_ONLY;
+            case PackSettings::STOCK_TYPE_BOTH:
+                return Pack::STOCK_TYPE_PACK_BOTH;
+            case PackSettings::STOCK_TYPE_DEFAULT:
+            default:
+                return Pack::STOCK_TYPE_DEFAULT;
+        }
     }
 }
