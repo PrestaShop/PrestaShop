@@ -33,8 +33,8 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
@@ -330,8 +330,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     public function assertProductCategories(string $productReference, TableNode $table)
     {
         $data = $table->getRowsHash();
-        $productId = $this->getSharedStorage()->get($productReference);
-        $actualCategoryIds = array_map('intval', Product::getProductCategories($productId));
+        $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
+        $actualCategoryIds = $productForEditing->getCategoriesInformation()->getCategoryIds();
         sort($actualCategoryIds);
 
         $expectedCategoriesRef = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
@@ -340,6 +340,10 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }, $expectedCategoriesRef);
         sort($expectedCategoryIds);
 
+        $expectedDefaultCategoryId = $this->getSharedStorage()->get($data['default category']);
+        $actualDefaultCategoryId = $productForEditing->getCategoriesInformation()->getDefaultCategoryId();
+
+        Assert::assertEquals($expectedDefaultCategoryId, $actualDefaultCategoryId, 'Unexpected default category assigned to product');
         Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
     }
 
