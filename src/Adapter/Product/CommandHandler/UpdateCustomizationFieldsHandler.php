@@ -35,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\UpdateCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CustomizationField;
 
+/**
+ * Handles @var UpdateCustomizationFieldsCommand using legacy object model
+ */
 class UpdateCustomizationFieldsHandler extends AbstractProductHandler implements UpdateCustomizationFieldsHandlerInterface
 {
     /**
@@ -42,6 +45,9 @@ class UpdateCustomizationFieldsHandler extends AbstractProductHandler implements
      */
     private $addCustomizationFieldHandler;
 
+    /**
+     * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
+     */
     public function __construct(AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler)
     {
         $this->addCustomizationFieldHandler = $addCustomizationFieldHandler;
@@ -59,7 +65,7 @@ class UpdateCustomizationFieldsHandler extends AbstractProductHandler implements
             if ($customizationField->getCustomizationFieldId()) {
                 //@todo: update
             } else {
-                //@todo: if it worth having separate handler?
+                //@todo: is it worth having separate handler?
                 $this->addCustomizationFieldHandler->handle(new AddCustomizationFieldCommand(
                     $command->getProductId()->getValue(),
                     $customizationField->getType(),
