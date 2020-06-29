@@ -1,9 +1,9 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
-module.exports = class Login extends FOBasePage {
-  constructor(page) {
-    super(page);
+class Login extends FOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Login';
 
@@ -34,72 +34,87 @@ module.exports = class Login extends FOBasePage {
 
   /**
    * Login in FO
+   * @param page
    * @param customer
    * @return {Promise<void>}
    */
-  async customerLogin(customer) {
-    await this.setValue(this.emailInput, customer.email);
-    await this.setValue(this.passwordInput, customer.password);
-    await this.clickAndWaitForNavigation(this.signInButton);
+  async customerLogin(page, customer) {
+    await this.setValue(page, this.emailInput, customer.email);
+    await this.setValue(page, this.passwordInput, customer.password);
+    await this.clickAndWaitForNavigation(page, this.signInButton);
   }
 
   /**
    * Create new customer account
+   * @param page
    * @param customer
    * @returns {Promise<void>}
    */
-  async createAccount(customer) {
-    await this.waitForSelectorAndClick(this.displayRegisterFormLink);
-    await this.waitForSelectorAndClick(this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2));
-    await this.setValue(this.firstNameInput, customer.firstName);
-    await this.setValue(this.lastNameInput, customer.lastName);
-    await this.setValue(this.newEmailInput, customer.email);
-    await this.setValue(this.newPasswordInput, customer.password);
-    await this.setValue(this.birthdateInput, `${customer.monthOfBirth}/${customer.dayOfBirth}/${customer.yearOfBirth}`);
-    await this.page.click(this.customerPrivacyCheckbox);
-    if (await this.elementVisible(this.psgdprCheckbox, 500)) {
-      await this.page.click(this.psgdprCheckbox);
+  async createAccount(page, customer) {
+    await this.waitForSelectorAndClick(page, this.displayRegisterFormLink);
+    await this.waitForSelectorAndClick(page, this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2));
+    await this.setValue(page, this.firstNameInput, customer.firstName);
+    await this.setValue(page, this.lastNameInput, customer.lastName);
+    await this.setValue(page, this.newEmailInput, customer.email);
+    await this.setValue(page, this.newPasswordInput, customer.password);
+
+    await this.setValue(
+      page,
+      this.birthdateInput,
+      `${customer.monthOfBirth}/${customer.dayOfBirth}/${customer.yearOfBirth}`,
+    );
+
+    await page.click(this.customerPrivacyCheckbox);
+    if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
+      await page.click(this.psgdprCheckbox);
     }
-    await this.page.click(this.saveButton);
+    await page.click(this.saveButton);
   }
 
   /**
    * Go to create account page
+   * @param page
    * @returns {Promise<void>}
    */
-  async goToCreateAccountPage() {
-    await this.waitForSelectorAndClick(this.displayRegisterFormLink);
+  async goToCreateAccountPage(page) {
+    await this.waitForSelectorAndClick(page, this.displayRegisterFormLink);
   }
 
   /**
    * Is partner offer required
+   * @param page
    * @returns {Promise<boolean>}
    */
-  async isPartnerOfferRequired() {
-    return this.elementVisible(`${this.partnerOfferCheckbox}:required`, 1000);
+  async isPartnerOfferRequired(page) {
+    return this.elementVisible(page, `${this.partnerOfferCheckbox}:required`, 1000);
   }
 
   /**
    * Is birth date input visible
+   * @param page
    * @returns {Promise<boolean>}
    */
-  async isBirthDateVisible() {
-    return this.elementVisible(this.birthdateInput, 1000);
+  async isBirthDateVisible(page) {
+    return this.elementVisible(page, this.birthdateInput, 1000);
   }
 
   /**
    * Is partner offer visible
+   * @param page
    * @returns {Promise<boolean>}
    */
-  async isPartnerOfferVisible() {
-    return this.elementVisible(this.partnerOfferCheckbox, 1000);
+  async isPartnerOfferVisible(page) {
+    return this.elementVisible(page, this.partnerOfferCheckbox, 1000);
   }
 
   /**
    * Is company input visible
+   * @param page
    * @returns {Promise<boolean>}
    */
-  async isCompanyInputVisible() {
-    return this.elementVisible(this.companyInput, 1000);
+  async isCompanyInputVisible(page) {
+    return this.elementVisible(page, this.companyInput, 1000);
   }
-};
+}
+
+module.exports = new Login();

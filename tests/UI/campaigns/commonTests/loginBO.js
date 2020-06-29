@@ -22,27 +22,26 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+require('module-alias/register');
 const {expect} = require('chai');
 const testContext = require('@utils/testContext');
+const loginPage = require('@pages/BO/login');
+const dashboardPage = require('@pages/BO/dashboard');
 
 module.exports = {
-  loginBO() {
-    it('should login in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'loginBO');
-      await this.pageObjects.loginPage.goTo(global.BO.URL);
-      await this.pageObjects.loginPage.login(global.BO.EMAIL, global.BO.PASSWD);
-      const pageTitle = await this.pageObjects.dashboardPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.dashboardPage.pageTitle);
-      await this.pageObjects.dashboardPage.closeOnboardingModal();
-    });
+  async loginBO(mochaContext, page) {
+    await testContext.addContextItem(mochaContext, 'testIdentifier', 'loginBO');
+    await loginPage.goTo(page, global.BO.URL);
+    await loginPage.login(page, global.BO.EMAIL, global.BO.PASSWD);
+    const pageTitle = await dashboardPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    await dashboardPage.closeOnboardingModal(page);
   },
 
-  logoutBO() {
-    it('should log out from BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'logoutBO');
-      await this.pageObjects.dashboardPage.logoutBO();
-      const pageTitle = await this.pageObjects.loginPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.loginPage.pageTitle);
-    });
+  async logoutBO(mochaContext, page) {
+    await testContext.addContextItem(mochaContext, 'testIdentifier', 'logoutBO');
+    await dashboardPage.logoutBO(page);
+    const pageTitle = await loginPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(loginPage.pageTitle);
   },
 };

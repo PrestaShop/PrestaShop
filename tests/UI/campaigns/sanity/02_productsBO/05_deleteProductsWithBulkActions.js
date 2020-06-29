@@ -8,14 +8,12 @@ const testContext = require('@utils/testContext');
 const baseContext = 'sanity_productsBO_deleteProductsWithBulkActions';
 
 // importing pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ProductsPage = require('@pages/BO/catalog/products');
-const AddProductPage = require('@pages/BO/catalog/products/add');
+const dashboardPage = require('@pages/BO/dashboard');
+const productsPage = require('@pages/BO/catalog/products');
+const addProductPage = require('@pages/BO/catalog/products/add');
+
 const ProductFaker = require('@data/faker/product');
 
-let browserContext;
-let page;
 const productToCreate = {
   name: 'product To Delete 1',
   type: 'Standard product',
@@ -24,15 +22,8 @@ const firstProductData = new ProductFaker(productToCreate);
 productToCreate.name = 'product To Delete 2';
 const secondProductData = new ProductFaker(productToCreate);
 
-// creating pages objects in a function
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    productsPage: new ProductsPage(page),
-    addProductPage: new AddProductPage(page),
-  };
-};
+let browserContext;
+let page;
 
 // Create 2 Standard products in BO and Delete it with Bulk Actions
 describe('Create Standard product in BO and Delete it with Bulk Actions', async () => {
@@ -40,67 +31,75 @@ describe('Create Standard product in BO and Delete it with Bulk Actions', async 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
+
   // Steps
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage1', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.productsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.productsLink,
     );
 
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    const pageTitle = await productsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
-    await this.pageObjects.productsPage.resetFilterCategory();
-    const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+
+    await productsPage.resetFilterCategory(page);
+    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  const productsData = [firstProductData, secondProductData];
-  productsData.forEach((productData, index) => {
+  [firstProductData, secondProductData].forEach((productData, index) => {
     it('should create new product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `createProduct${index + 1}`, baseContext);
-      await this.pageObjects.productsPage.goToAddProductPage();
-      const createProductMessage = await this.pageObjects.addProductPage.createEditBasicProduct(productData);
-      await expect(createProductMessage).to.equal(this.pageObjects.addProductPage.settingUpdatedMessage);
+
+      await productsPage.goToAddProductPage(page);
+      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
 
     it('should go to Products page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToProductsPageAfterCreate${index + 1}`, baseContext);
 
-      await this.pageObjects.addProductPage.goToSubMenu(
-        this.pageObjects.addProductPage.catalogParentLink,
-        this.pageObjects.addProductPage.productsLink,
+      await addProductPage.goToSubMenu(
+        page,
+        addProductPage.catalogParentLink,
+        addProductPage.productsLink,
       );
 
-      const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
   });
 
   it('should delete products with bulk Actions', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
+
     // Filter By reference first
-    await this.pageObjects.productsPage.filterProducts('name', 'product To Delete ');
-    const deleteTextResult = await this.pageObjects.productsPage.deleteAllProductsWithBulkActions();
-    await expect(deleteTextResult).to.equal(this.pageObjects.productsPage.productMultiDeletedSuccessfulMessage);
+    await productsPage.filterProducts(page, 'name', 'product To Delete ');
+    const deleteTextResult = await productsPage.deleteAllProductsWithBulkActions(page);
+    await expect(deleteTextResult).to.equal(productsPage.productMultiDeletedSuccessfulMessage);
   });
 
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersLast', baseContext);
-    await this.pageObjects.productsPage.resetFilterCategory();
-    const numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+
+    await productsPage.resetFilterCategory(page);
+    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
 });
