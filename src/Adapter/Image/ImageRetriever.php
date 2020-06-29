@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
+use Configuration;
 use Image;
 use ImageManager;
 use ImageType;
 use Language;
 use Link;
 use Product;
-use Configuration;
 
 /**
  * This class is mainly responsible of Product images.
@@ -184,7 +184,7 @@ class ImageRetriever
                     (int) $image_type['height']
                 );
             }
-            
+
             if ($generateHighDpiImages) {
                 $resizedImagePathHighDpi = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
