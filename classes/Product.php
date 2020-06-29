@@ -3044,7 +3044,7 @@ class ProductCore extends ObjectModel
      * @param string|null $order_way
      * @param Context|null $context
      *
-     * @return array|int|false New products, total of product if $count is true, false if it fail
+     * @return array|int|false Products on sale, total of product if $count is true, false if it fail
      */
     public static function getOnsaleProducts($id_lang, $page_number = 0, $nb_products = 10, $count = false, $order_by = null, $order_way = null, Context $context = null)
     {
