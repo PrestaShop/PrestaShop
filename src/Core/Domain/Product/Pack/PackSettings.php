@@ -26,56 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack;
 
-class ProductStock
+class PackSettings
 {
     /**
-     * @var bool
+     * Stock type: only based on pack quantity
      */
-    private $useAdvancedStockManagement;
+    const STOCK_TYPE_PACK_ONLY = 'stock_type_pack_only';
 
     /**
-     * @var bool
+     * Stock type: only based on products quantity
      */
-    private $dependsOnStock;
+    const STOCK_TYPE_PRODUCTS_ONLY = 'stock_type_products_only';
 
     /**
-     * @var string
+     * Stock type: based on products and pack quantity
      */
-    private $packStockType;
-
-    public function __construct(
-        bool $useAdvancedStockManagement,
-        bool $dependsOnStock,
-        string $packStockType
-    ) {
-        $this->useAdvancedStockManagement = $useAdvancedStockManagement;
-        $this->dependsOnStock = $dependsOnStock;
-        $this->packStockType = $packStockType;
-    }
+    const STOCK_TYPE_BOTH = 'stock_type_both';
 
     /**
-     * @return bool
+     * Stock type: based on configuration default value
      */
-    public function useAdvancedStockManagement(): bool
-    {
-        return $this->useAdvancedStockManagement;
-    }
-
-    /**
-     * @return bool
-     */
-    public function dependsOnStock(): bool
-    {
-        return $this->dependsOnStock;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPackStockType(): string
-    {
-        return $this->packStockType;
-    }
+    const STOCK_TYPE_DEFAULT = 'stock_type_default';
 }
