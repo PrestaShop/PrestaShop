@@ -413,7 +413,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update product :productReference customization fields with following defined fields:
+     * @When I update product :productReference with following defined customization fields:
      *
      * @param string $productReference
      * @param TableNode $table
