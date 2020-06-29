@@ -325,6 +325,12 @@ Feature: Order from Back Office (BO)
     When I change order "bo_order1" shipping address to "test-address"
     Then order "bo_order1" shipping address should be "test-address"
 
+  Scenario: Change order internal note
+    When I change order "bo_order1" note to "Test note."
+    Then order "bo_order1" note should be "Test note."
+    When I change order "bo_order1" note to ""
+    Then order "bo_order1" note should be ""
+
   Scenario: Edit a product that doesn't exist in catalogue anymore
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Mug Today is a good day |
