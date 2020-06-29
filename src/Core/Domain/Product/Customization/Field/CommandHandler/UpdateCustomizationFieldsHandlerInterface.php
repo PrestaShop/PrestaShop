@@ -30,7 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandH
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldsCommand;
 
-//@todo: rename to UpdateProductCustomizationFieldsHandler if we have dedicated handlers for single Field?
+/**
+ * Defines contract to handle @var UpdateCustomizationFieldsCommand
+ */
 interface UpdateCustomizationFieldsHandlerInterface
 {
     /**
