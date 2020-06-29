@@ -366,6 +366,8 @@ class ModuleController extends ModuleAbstractController
                 $deniedAccess = $this->checkPermissions(
                     [
                         PageVoter::LEVEL_UPDATE,
+                        PageVoter::LEVEL_CREATE,
+                        PageVoter::LEVEL_DELETE,
                     ]
                 );
                 break;
@@ -373,6 +375,7 @@ class ModuleController extends ModuleAbstractController
                 $deniedAccess = $this->checkPermissions(
                     [
                         PageVoter::LEVEL_CREATE,
+                        PageVoter::LEVEL_DELETE,
                     ]
                 );
                 break;
