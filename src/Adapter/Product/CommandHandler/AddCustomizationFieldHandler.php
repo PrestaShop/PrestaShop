@@ -49,7 +49,6 @@ final class AddCustomizationFieldHandler implements AddCustomizationFieldHandler
         $customizationField->required = $command->isRequired();
         $customizationField->is_module = $command->isAddedByModule();
         $customizationField->name = $command->getLocalizedNames();
-        $customizationField->is_deleted = $command->isDeleted();
 
         $customizationField->add();
 

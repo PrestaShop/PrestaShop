@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject\CustomizationFieldId;
 
 /**
  * Updates single customization field
@@ -36,9 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class UpdateCustomizationFieldCommand
 {
     /**
-     * @var ProductId
+     * @var CustomizationFieldId
      */
-    private $productId;
+    private $customizationFieldId;
 
     /**
      * @var int|null
@@ -61,24 +61,19 @@ class UpdateCustomizationFieldCommand
     private $localizedNames;
 
     /**
-     * @var bool|null
+     * @param int $customizationFieldId
      */
-    private $deleted;
-
-    /**
-     * @param int $productId
-     */
-    public function __construct(int $productId)
+    public function __construct(int $customizationFieldId)
     {
-        $this->productId = new ProductId($productId);
+        $this->customizationFieldId = new CustomizationFieldId($customizationFieldId);
     }
 
     /**
-     * @return ProductId
+     * @return CustomizationFieldId
      */
-    public function getProductId(): ProductId
+    public function getCustomizationFieldId(): CustomizationFieldId
     {
-        return $this->productId;
+        return $this->customizationFieldId;
     }
 
     /**
@@ -157,26 +152,6 @@ class UpdateCustomizationFieldCommand
     public function setLocalizedNames(?array $localizedNames): UpdateCustomizationFieldCommand
     {
         $this->localizedNames = $localizedNames;
-
-        return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isDeleted(): ?bool
-    {
-        return $this->deleted;
-    }
-
-    /**
-     * @param bool|null $deleted
-     *
-     * @return UpdateCustomizationFieldCommand
-     */
-    public function setDeleted(?bool $deleted): UpdateCustomizationFieldCommand
-    {
-        $this->deleted = $deleted;
 
         return $this;
     }
