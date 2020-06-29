@@ -420,3 +420,9 @@ Feature: Order from Back Office (BO)
       | Postal code      | 12345                              |
     When I change order "bo_order1" shipping address to "test-address"
     Then order "bo_order1" shipping address should be "test-address"
+
+  Scenario: Change order internal note
+    When I change order "bo_order1" note to "Test note."
+    Then order "bo_order1" note should be "Test note."
+    When I change order "bo_order1" note to ""
+    Then order "bo_order1" note should be ""
