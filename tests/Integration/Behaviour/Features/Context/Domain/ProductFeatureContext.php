@@ -29,19 +29,19 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
+use CustomizationField as CustomizationFieldEntity;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
@@ -558,33 +558,58 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add following customization field to product :productReference:
+     * @When I update product :productReference customization fields with following defined fields:
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function addCustomizationField(string $productReference, TableNode $table)
+    public function updateCustomizationFields(string $productReference, TableNode $table)
     {
-        $data = $table->getRowsHash();
-        $type = CustomizationSettings::TYPE_TEXT === $data['type'] ? CustomizationSettings::TYPE_TEXT : CustomizationSettings::TYPE_FILE;
+        $fieldReferences = array_keys($table->getRowsHash());
+        $fieldsForUpdate = [];
 
-        $addedByModule = isset($data['is added by module']) ? PrimitiveUtils::castStringBooleanIntoBoolean($data['is added by module']) : false;
-        $deleted = isset($data['is deleted']) ? PrimitiveUtils::castStringBooleanIntoBoolean($data['is deleted']) : false;
-
-        $command = new AddCustomizationFieldCommand(
-            $this->getSharedStorage()->get($productReference),
-            $type,
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['is required']),
-            $this->parseLocalizedArray($data['name']),
-            $addedByModule,
-            $deleted
-        );
+        /** @var CustomizationFieldEntity $fieldReference */
+        foreach ($fieldReferences as $fieldReference) {
+            $fieldEntity = $this->getSharedStorage()->get($fieldReference);
+            $fieldsForUpdate[] = [
+                'id' => $fieldEntity->id,
+                'type' => $fieldEntity->type,
+                'localized_names' => $fieldEntity->name,
+                'is_required' => $fieldEntity->required,
+                'added_by_module' => $fieldEntity->is_module,
+            ];
+        }
 
         try {
-            $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $fieldsForUpdate
+            ));
         } catch (ProductException $e) {
             $this->lastException = $e;
         }
+    }
+
+    /**
+     * @When I define following customization field as :customizationFieldDefinition:
+     *
+     * @param string $customizationFieldReference
+     * @param TableNode $table
+     */
+    public function defineCustomizationField(string $customizationFieldReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+
+        $customizationField = new CustomizationFieldEntity();
+        $customizationField->type = (int) $data['type'];
+        $customizationField->name = $this->parseLocalizedArray($data['name']);
+        $customizationField->required = PrimitiveUtils::castStringBooleanIntoBoolean($data['is required']);
+        $customizationField->is_module = isset($data['added by module']) ?
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['added by module']) :
+            false
+        ;
+
+        $this->getSharedStorage()->set($customizationFieldReference, $customizationField);
     }
 
     /**
