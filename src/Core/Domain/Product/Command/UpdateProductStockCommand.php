@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -52,7 +54,7 @@ class UpdateProductStockCommand
     private $dependsOnStock;
 
     /**
-     * @var int|null
+     * @var PackStockType|null
      */
     private $packStockType;
 
@@ -158,21 +160,23 @@ class UpdateProductStockCommand
     }
 
     /**
-     * @return int|null
+     * @return PackStockType|null
      */
-    public function getPackStockType(): ?int
+    public function getPackStockType(): ?PackStockType
     {
         return $this->packStockType;
     }
 
     /**
-     * @param int $packStockType
+     * @param string $packStockType
      *
      * @return UpdateProductStockCommand
+     *
+     * @throws ProductPackConstraintException
      */
-    public function setPackStockType(int $packStockType): UpdateProductStockCommand
+    public function setPackStockType(string $packStockType): UpdateProductStockCommand
     {
-        $this->packStockType = $packStockType;
+        $this->packStockType = new PackStockType($packStockType);
 
         return $this;
     }
