@@ -24,17 +24,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\UpdateCustomizationFieldHandlerInterface;
 
 /**
- * Defines contract to handle @var UpdateCustomizationFieldCommand
+ * Updates single customization field using legacy object model
  */
-interface UpdateCustomizationFieldHandlerInterface
+class UpdateCustomizationFieldHandler implements UpdateCustomizationFieldHandlerInterface
 {
     /**
-     * @param UpdateCustomizationFieldCommand $command
+     * {@inheritdoc}
      */
-    public function handle(UpdateCustomizationFieldCommand $command): void;
+    public function handle(UpdateCustomizationFieldCommand $command): void
+    {
+        // TODO: Implement handle() method.
+    }
 }
