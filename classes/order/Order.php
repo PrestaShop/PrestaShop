@@ -174,7 +174,7 @@ class OrderCore extends ObjectModel
     public $round_type;
 
     /**
-     * @var string Internal order note, what is only available in BO.
+     * @var string internal order note, what is only available in BO
      */
     public $note;
 
