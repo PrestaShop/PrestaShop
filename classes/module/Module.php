@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2019 PrestaShop and Contributors
+ * 2007-2020 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to https://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @copyright 2007-2020 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -3435,7 +3435,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return array Array of errors
      */
-    public function validateDashConfig(array $config): array
+    public function validateDashConfig(array $config)
     {
         return [];
     }
@@ -3447,7 +3447,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return bool Determines if the save returns an error
      */
-    public function saveDashConfig(array $config): bool
+    public function saveDashConfig(array $config)
     {
         return false;
     }
