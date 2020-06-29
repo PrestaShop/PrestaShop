@@ -151,6 +151,14 @@ class SitemapControllerCore extends FrontController
             ],
         ];
 
+		$links[] = [
+            [
+                'id' => 'onsale-products-page',
+                'label' => $this->trans('Products on sale', [], 'Shop.Theme.Catalog'),
+                'url' => $this->context->link->getPageLink('onsale-products'),
+            ],
+        ];
+
         if (Configuration::isCatalogMode() && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
             $links[] = [
                 'id' => 'best-sales-page',

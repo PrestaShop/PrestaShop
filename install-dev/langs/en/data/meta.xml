@@ -36,6 +36,12 @@
     <keywords/>
     <url_rewrite>new-products</url_rewrite>
   </meta>
+  <meta id="onsale-products" id_shop="1">
+    <title>Products on sale</title>
+    <description>Products we have on sale.</description>
+    <keywords/>
+    <url_rewrite>onsale-products</url_rewrite>
+  </meta>
   <meta id="password" id_shop="1">
     <title>Forgot your password</title>
     <description>Enter the e-mail address you use to sign in to receive an e-mail with a new password</description>

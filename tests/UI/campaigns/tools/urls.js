@@ -252,6 +252,8 @@ module.exports = [
       {name: 'FO_prices_drop_fr', url: 'index.php?controller=prices-drop&id_lang=2'},
       {name: 'FO_new_products_en', url: 'index.php?controller=new-products&id_lang=1'},
       {name: 'FO_new_products_fr', url: 'index.php?controller=new-products&id_lang=2'},
+	  {name: 'FO_onsale_products_en', url: 'index.php?controller=onsale-products&id_lang=1'},
+      {name: 'FO_onsale_products_fr', url: 'index.php?controller=onsale-products&id_lang=2'},
       {name: 'FO_best_sales_en', url: 'index.php?controller=best-sales&id_lang=1'},
       {name: 'FO_best_sales_fr', url: 'index.php?controller=best-sales&id_lang=2'},
       {name: 'FO_search_mug_en', url: 'index.php?controller=search&s=mug&id_lang=1'},

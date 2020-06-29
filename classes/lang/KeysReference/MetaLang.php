@@ -28,6 +28,7 @@ trans('Best sales', 'Shop.Navigation');
 trans('Contact us', 'Shop.Navigation');
 trans('Manufacturers', 'Shop.Navigation');
 trans('New products', 'Shop.Navigation');
+trans('Products on sale', 'Shop.Navigation');
 trans('Forgot your password', 'Shop.Navigation');
 trans('Prices drop', 'Shop.Navigation');
 trans('Sitemap', 'Shop.Navigation');
@@ -59,6 +60,8 @@ trans('Brand list', 'Shop.Navigation');
 
 trans('Our new products', 'Shop.Navigation');
 
+trans('Products we have on sale', 'Shop.Navigation');
+
 trans('Enter the e-mail address you use to sign in to receive an e-mail with a new password', 'Shop.Navigation');
 
 trans('On-sale products', 'Shop.Navigation');
@@ -71,6 +74,7 @@ trans('best-sales', 'Shop.Navigation');
 trans('contact-us', 'Shop.Navigation');
 trans('manufacturers', 'Shop.Navigation');
 trans('new-products', 'Shop.Navigation');
+trans('onsale-products', 'Shop.Navigation');
 trans('password-recovery', 'Shop.Navigation');
 trans('prices-drop', 'Shop.Navigation');
 trans('sitemap', 'Shop.Navigation');

@@ -19,6 +19,7 @@
         <meta meta_page="index" left="0" right="0"/>
         <meta meta_page="manufacturer" left="1" right="0"/>
         <meta meta_page="new-products" left="1" right="0"/>
+		<meta meta_page="onsale-products" left="1" right="0"/>
         <meta meta_page="password" left="0" right="0"/>
         <meta meta_page="prices-drop" left="1" right="0"/>
         <meta meta_page="sitemap" left="1" right="0"/>

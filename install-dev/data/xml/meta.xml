@@ -28,6 +28,10 @@
 			<page>new-products</page>
 			<configurable>1</configurable>
 		</meta>
+		<meta id="onsale-products">
+			<page>onsale-products</page>
+			<configurable>1</configurable>
+		</meta>
 		<meta id="password">
 			<page>password</page>
 			<configurable>1</configurable>
