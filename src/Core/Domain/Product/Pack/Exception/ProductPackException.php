@@ -26,56 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception;
 
-class ProductStock
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+
+class ProductPackException extends ProductException
 {
-    /**
-     * @var bool
-     */
-    private $useAdvancedStockManagement;
-
-    /**
-     * @var bool
-     */
-    private $dependsOnStock;
-
-    /**
-     * @var string
-     */
-    private $packStockType;
-
-    public function __construct(
-        bool $useAdvancedStockManagement,
-        bool $dependsOnStock,
-        string $packStockType
-    ) {
-        $this->useAdvancedStockManagement = $useAdvancedStockManagement;
-        $this->dependsOnStock = $dependsOnStock;
-        $this->packStockType = $packStockType;
-    }
-
-    /**
-     * @return bool
-     */
-    public function useAdvancedStockManagement(): bool
-    {
-        return $this->useAdvancedStockManagement;
-    }
-
-    /**
-     * @return bool
-     */
-    public function dependsOnStock(): bool
-    {
-        return $this->dependsOnStock;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPackStockType(): string
-    {
-        return $this->packStockType;
-    }
 }

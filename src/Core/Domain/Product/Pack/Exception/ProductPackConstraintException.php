@@ -26,12 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception;
 
 /**
  * Thrown when some product packing actions fails
  */
-class ProductPackException extends ProductException
+class ProductPackConstraintException extends ProductPackException
 {
     /**
      * When fails to add product to pack
@@ -52,4 +52,9 @@ class ProductPackException extends ProductException
      * When product for packing quantity is invalid
      */
     const INVALID_QUANTITY = 40;
+
+    /**
+     * When invalid pack stock type is used
+     */
+    const INVALID_STOCK_TYPE = 50;
 }
