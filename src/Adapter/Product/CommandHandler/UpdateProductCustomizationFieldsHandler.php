@@ -28,12 +28,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use CustomizationField as CustomizationFieldEntity;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\AddCustomizationFieldHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\UpdateCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\UpdateProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * Handles @var UpdateProductCustomizationFieldsCommand using legacy object model
@@ -46,38 +54,78 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
     private $addCustomizationFieldHandler;
 
     /**
-     * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
+     * @var UpdateCustomizationFieldHandlerInterface
      */
-    public function __construct(AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler)
-    {
+    private $updateCustomizationFieldHandler;
+
+    /**
+     * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
+     * @param UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler
+     */
+    public function __construct(
+        AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler,
+        UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler
+    ) {
         $this->addCustomizationFieldHandler = $addCustomizationFieldHandler;
+        $this->updateCustomizationFieldHandler = $updateCustomizationFieldHandler;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(UpdateProductCustomizationFieldsCommand $command): void
     {
         $this->handleDeletion($command);
 
-        /** @var CustomizationField $customizationField */
         foreach ($command->getCustomizationFields() as $customizationField) {
             if ($customizationField->getCustomizationFieldId()) {
-                //@todo: update
+                $this->handleUpdate($command->getProductId(), $customizationField);
             } else {
-                //@todo: is it worth having separate handler?
-                $this->addCustomizationFieldHandler->handle(new AddCustomizationFieldCommand(
-                    $command->getProductId()->getValue(),
-                    $customizationField->getType(),
-                    $customizationField->isRequired(),
-                    $customizationField->getLocalizedNames(),
-                    $customizationField->isAddedByModule(),
-                    false
-                ));
+                $this->handleCreation($command->getProductId(), $customizationField);
             }
         }
     }
 
+    /**
+     * @param ProductId $productId
+     * @param CustomizationField $customizationField
+     */
+    public function handleCreation(ProductId $productId, CustomizationField $customizationField): void
+    {
+        $this->addCustomizationFieldHandler->handle(new AddCustomizationFieldCommand(
+            $productId->getValue(),
+            $customizationField->getType(),
+            $customizationField->isRequired(),
+            $customizationField->getLocalizedNames(),
+            $customizationField->isAddedByModule(),
+            false
+        ));
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CustomizationField $customizationField
+     */
+    private function handleUpdate(ProductId $productId, CustomizationField $customizationField): void
+    {
+        $command = new UpdateCustomizationFieldCommand($productId->getValue());
+        $command->setType($customizationField->getType());
+        $command->setRequired($customizationField->isRequired());
+        $command->setLocalizedNames($customizationField->getLocalizedNames());
+        $command->setAddedByModule($customizationField->isAddedByModule());
+        $command->setDeleted(false);
+
+        $this->updateCustomizationFieldHandler->handle($command);
+    }
+
+    /**
+     * @param UpdateProductCustomizationFieldsCommand $command
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws ProductException
+     * @throws ProductNotFoundException
+     */
     private function handleDeletion(UpdateProductCustomizationFieldsCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
@@ -91,12 +139,17 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
         $fieldIdsForDeletion = array_diff($existingFieldIds, $providedFieldsIds);
 
         foreach ($fieldIdsForDeletion as $fieldId) {
-            $customizationFieldEntity = new \CustomizationField($fieldId);
+            $customizationFieldEntity = new CustomizationFieldEntity($fieldId);
 
+            $successfullyDeleted = false;
             if (in_array($fieldId, $usedFieldIds)) {
-                $customizationFieldEntity->softDelete();
+                $successfullyDeleted = $customizationFieldEntity->softDelete();
             } else {
-                $customizationFieldEntity->delete();
+                $successfullyDeleted = $customizationFieldEntity->delete();
+            }
+
+            if (!$successfullyDeleted) {
+                //@throw e
             }
         }
     }
