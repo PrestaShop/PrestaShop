@@ -613,6 +613,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productReference should have following customization fields:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertDefinedCustomizationFields(string $productReference, TableNode $table)
+    {
+        $expectedFieldReferences = array_keys($table->getRowsHash());
+        //@todo: implement query for customization fields
+    }
+
+    /**
      * @Then product :productReference should be assigned to default category
      *
      * @param string $productReference
