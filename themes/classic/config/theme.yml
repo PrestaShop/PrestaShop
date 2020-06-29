@@ -134,5 +134,6 @@ theme_settings:
     category: layout-left-column
     best-sales: layout-left-column
     new-products: layout-left-column
+    onsale-products: layout-left-column
     prices-drop: layout-left-column
     contact: layout-left-column
