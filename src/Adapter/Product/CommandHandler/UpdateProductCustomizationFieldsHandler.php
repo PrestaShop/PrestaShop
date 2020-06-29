@@ -30,15 +30,15 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\AddCustomizationFieldHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\UpdateCustomizationFieldsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\UpdateProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CustomizationField;
 
 /**
- * Handles @var UpdateCustomizationFieldsCommand using legacy object model
+ * Handles @var UpdateProductCustomizationFieldsCommand using legacy object model
  */
-class UpdateCustomizationFieldsHandler extends AbstractProductHandler implements UpdateCustomizationFieldsHandlerInterface
+class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler implements UpdateProductCustomizationFieldsHandlerInterface
 {
     /**
      * @var AddCustomizationFieldHandlerInterface
@@ -56,7 +56,7 @@ class UpdateCustomizationFieldsHandler extends AbstractProductHandler implements
     /**
      * {@inheritDoc}
      */
-    public function handle(UpdateCustomizationFieldsCommand $command): void
+    public function handle(UpdateProductCustomizationFieldsCommand $command): void
     {
         $this->handleDeletion($command);
 
@@ -78,7 +78,7 @@ class UpdateCustomizationFieldsHandler extends AbstractProductHandler implements
         }
     }
 
-    private function handleDeletion(UpdateCustomizationFieldsCommand $command): void
+    private function handleDeletion(UpdateProductCustomizationFieldsCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
 

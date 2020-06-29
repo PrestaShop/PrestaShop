@@ -26,51 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateProductCustomizationFieldsCommand;
 
 /**
- * Updates product customization fields
+ * Defines contract to handle @var UpdateProductCustomizationFieldsCommand
  */
-class UpdateCustomizationFieldsCommand
+interface UpdateProductCustomizationFieldsHandlerInterface
 {
     /**
-     * @var ProductId
+     * @param UpdateProductCustomizationFieldsCommand $command
      */
-    private $productId;
-
-    /**
-     * @var CustomizationField[]
-     */
-    private $customizationFields;
-
-    /**
-     * @param ProductId $productId
-     * @param CustomizationField[] $customizationFields
-     */
-    public function __construct(
-        ProductId $productId,
-        array $customizationFields
-    ) {
-        $this->productId = $productId;
-        $this->customizationFields = $customizationFields;
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return CustomizationField[]
-     */
-    public function getCustomizationFields(): array
-    {
-        return $this->customizationFields;
-    }
+    public function handle(UpdateProductCustomizationFieldsCommand $command): void;
 }

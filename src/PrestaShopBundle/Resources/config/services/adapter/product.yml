@@ -136,9 +136,9 @@ services:
           command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand
 
     prestashop.adapter.product.command_handler.update_customization_fields_handler:
-      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCustomizationFieldsHandler
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdatePorductCustomizationFieldsHandler
       arguments:
         - '@prestashop.adapter.product.command_handler.add_customization_field_handler'
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldsCommand
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateProductCustomizationFieldsCommand
