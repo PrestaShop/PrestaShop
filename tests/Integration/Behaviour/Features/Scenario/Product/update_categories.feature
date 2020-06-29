@@ -1,9 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags assign-categories
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-categories
 @reset-database-before-feature
-@assign-categories
-Feature: Assign product to categories from Back Office (BO)
+@update-categories
+Feature: Update product categories from Back Office (BO)
   As a BO user
-  I need to be able to assign product to categories from BO
+  I need to be able to update product categories from BO
 
   Background:
     Given category "home" in default language named "Home" exists
@@ -69,7 +69,7 @@ Feature: Assign product to categories from Back Office (BO)
       Given product product3 should be assigned to following categories:
         | categories       | [women, accessories] |
         | default category | accessories          |
-      When I assign product product3 to following categories including non-existing ones:
+      When I assign product product3 to following categories:
         | categories       | [women, idontexist1] |
         | default category | accessories          |
       Then I should get error that assigning product to categories failed
@@ -81,7 +81,7 @@ Feature: Assign product to categories from Back Office (BO)
       Given product product3 should be assigned to following categories:
         | categories       | [women, accessories] |
         | default category | accessories          |
-      When I assign product product3 to following categories including non-existing ones:
+      When I assign product product3 to following categories:
         | categories       | [women]              |
         | default category | idontexist2          |
       Then I should get error that assigning product to categories failed

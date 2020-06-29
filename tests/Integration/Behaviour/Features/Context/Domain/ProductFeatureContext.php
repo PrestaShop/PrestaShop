@@ -300,28 +300,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I assign product :productReference to following categories:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function assignToCategories(string $productReference, TableNode $table)
-    {
-        $data = $table->getRowsHash();
-        $categoryReferences = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
-
-        $categoryIds = array_map(function (string $reference) {
-            return $this->getSharedStorage()->get($reference);
-        }, $categoryReferences);
-
-        $this->assignProductToCategories(
-            $this->getSharedStorage()->get($productReference),
-            $this->getSharedStorage()->get($data['default category']),
-            $categoryIds
-        );
-    }
-
-    /**
      * @Then product :productReference should be assigned to following categories:
      *
      * @param string $productReference
@@ -348,7 +326,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I assign product :productReference to following categories including non-existing ones:
+     * @When I assign product :productReference to following categories:
      *
      * @param string $productReference
      * @param TableNode $table
