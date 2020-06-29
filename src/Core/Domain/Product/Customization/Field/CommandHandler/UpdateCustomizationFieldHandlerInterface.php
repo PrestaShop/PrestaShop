@@ -24,19 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldsCommand;
-
-/**
- * Defines contract to handle @var UpdateCustomizationFieldsCommand
- */
-interface UpdateCustomizationFieldsHandlerInterface
+interface UpdateCustomizationFieldHandlerInterface
 {
-    /**
-     * @param UpdateCustomizationFieldsCommand $command
-     */
-    public function handle(UpdateCustomizationFieldsCommand $command): void;
+    
 }
