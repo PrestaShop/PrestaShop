@@ -21,3 +21,6 @@ Feature: Update product customization fields in Back Office (BO)
     When I update product product1 with following defined customization fields:
       | customizationField1 |
       | customizationField2 |
+    And product product1 should have following customization fields:
+      | customizationField1 |
+      | customizationField2 |
