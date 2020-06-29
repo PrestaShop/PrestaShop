@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class AssignProductToCategoriesCommand
+class UpdateProductCategoriesCommand
 {
     /**
      * @var ProductId

@@ -33,7 +33,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
@@ -957,7 +957,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
     {
         try {
-            $this->getCommandBus()->handle(new AssignProductToCategoriesCommand(
+            $this->getCommandBus()->handle(new UpdateProductCategoriesCommand(
                 $productId,
                 $defaultCategoryId,
                 $categoryIds

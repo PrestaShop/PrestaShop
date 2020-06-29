@@ -31,22 +31,22 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use Category;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoriesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssignProductToCategoriesHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductCategoriesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShopException;
 use Product;
 
 /**
- * Handles AssignProductToCategoriesCommand using legacy object model
+ * Handles @var UpdateProductCategoriesCommand using legacy object model
  */
-final class AssignProductToCategoriesHandler extends AbstractProductHandler implements AssignProductToCategoriesHandlerInterface
+final class UpdateProductCategoriesHandler extends AbstractProductHandler implements UpdateProductCategoriesHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(AssignProductToCategoriesCommand $command): void
+    public function handle(UpdateProductCategoriesCommand $command): void
     {
         $product = $this->getProduct($command->getProductId());
         $defaultCategoryId = $command->getDefaultCategoryId()->getValue();
@@ -63,11 +63,11 @@ final class AssignProductToCategoriesHandler extends AbstractProductHandler impl
      * append default category id to the list
      * and filter-out duplicate values
      *
-     * @param AssignProductToCategoriesCommand $command
+     * @param UpdateProductCategoriesCommand $command
      *
      * @return int[]
      */
-    private function formatCategoryIdsList(AssignProductToCategoriesCommand $command): array
+    private function formatCategoryIdsList(UpdateProductCategoriesCommand $command): array
     {
         $categoryIds = array_map(function (CategoryId $categoryId) {
             return $categoryId->getValue();

@@ -28,15 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 
 /**
  * Defines contract for AssignProductToCategoriesHandler
  */
-interface AssignProductToCategoriesHandlerInterface
+interface UpdateProductCategoriesHandlerInterface
 {
     /**
-     * @param AssignProductToCategoriesCommand $command
+     * @param UpdateProductCategoriesCommand $command
      */
-    public function handle(AssignProductToCategoriesCommand $command): void;
+    public function handle(UpdateProductCategoriesCommand $command): void;
 }

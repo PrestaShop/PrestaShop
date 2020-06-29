@@ -123,8 +123,8 @@ services:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand
 
-    prestashop.adapter.product.command_handler.assign_product_to_categories_handler:
-      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoriesHandler
+    prestashop.adapter.product.command_handler.update_product_categories_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductCategoriesHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoriesCommand
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand
