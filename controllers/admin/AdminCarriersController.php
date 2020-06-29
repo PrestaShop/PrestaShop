@@ -492,6 +492,11 @@ class AdminCarriersControllerCore extends AdminController
             }
             parent::postProcess();
         } elseif (isset($_GET['isFree' . $this->table])) {
+            if (!$this->access('edit')) {
+                $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
+                return;
+            }
+
             $this->processIsFree();
         } else {
             // if deletion : removes the carrier from the warehouse/carrier association
