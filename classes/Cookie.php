@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 use Defuse\Crypto\Key;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
 class CookieCore
 {
@@ -246,7 +248,8 @@ class CookieCore
      */
     public function logout()
     {
-        $this->_content = array();
+        $this->deleteSession();
+        $this->_content = [];
         $this->encryptAndSetCookie();
         unset($_COOKIE[$this->_name]);
         $this->_modified = true;
@@ -452,5 +455,92 @@ class CookieCore
     public function exists()
     {
         return isset($_COOKIE[$this->_name]);
+    }
+
+    /**
+     * Register a new session
+     *
+     * @param SessionInterface $session
+     */
+    public function registerSession(SessionInterface $session)
+    {
+        if (isset($this->id_employee)) {
+            $session->setUserId((int) $this->id_employee);
+        } elseif (isset($this->id_customer)) {
+            $session->setUserId((int) $this->id_customer);
+        } else {
+            throw new CoreException('Invalid user id');
+        }
+
+        $session->setToken(sha1(time() . uniqid()));
+        $session->add();
+
+        $this->session_id = $session->getId();
+        $this->session_token = $session->getToken();
+    }
+
+    /**
+     * Delete session
+     *
+     * @return bool
+     */
+    public function deleteSession()
+    {
+        if (!isset($this->session_id)) {
+            return false;
+        }
+
+        $session = $this->getSession($this->session_id);
+        if ($session !== null) {
+            $session->delete();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if this session is still alive
+     *
+     * @return bool
+     */
+    public function isSessionAlive()
+    {
+        if (!isset($this->session_id, $this->session_token)) {
+            return false;
+        }
+
+        $session = $this->getSession($this->session_id);
+
+        return
+            $session !== null
+            && $session->getToken() === $this->session_token
+            && (
+                (int) $this->id_employee === $session->getUserId()
+                || (int) $this->id_customer === $session->getUserId()
+            )
+        ;
+    }
+
+    /**
+     * Retrieve session based on a session id and the employee or
+     * customer id
+     *
+     * @return SessionInterface|null
+     */
+    public function getSession($sessionId)
+    {
+        if (isset($this->id_employee)) {
+            $session = new EmployeeSession($sessionId);
+        } elseif (isset($this->id_customer)) {
+            $session = new CustomerSession($sessionId);
+        }
+
+        if (!empty($session->getId())) {
+            return $session;
+        }
+
+        return null;
     }
 }

@@ -1187,7 +1187,13 @@ class CustomerCore extends ObjectModel
         }
 
         /* Customer is valid only if it can be load and if object password is the same as database one */
-        return $this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd);
+        return
+            $this->logged == 1
+            && $this->id
+            && Validate::isUnsignedId($this->id)
+            && Customer::checkPassword($this->id, $this->passwd)
+            && Context::getContext()->cookie->isSessionAlive()
+        ;
     }
 
     /**
