@@ -42,6 +42,7 @@ final class CustomizationSettings
     const TYPE_TEXT = 1;
 
     /**
+     * @todo: VO for types?
      * Available customization types
      */
     const AVAILABLE_TYPES = [self::TYPE_FILE, self::TYPE_TEXT];

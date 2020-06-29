@@ -91,6 +91,7 @@ class UpdateCustomizationFieldCommand
      */
     public function setType(?int $type): UpdateCustomizationFieldCommand
     {
+        //@todo: validate type
         $this->type = $type;
 
         return $this;
