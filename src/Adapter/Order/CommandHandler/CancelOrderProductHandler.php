@@ -27,19 +27,18 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
-use Configuration;
 use Customization;
 use Hook;
 use Order;
 use OrderCarrier;
 use OrderDetail;
-use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
+use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
-use StockAvailable;
 use Validate;
+
 
 /**
  * @internal
@@ -47,19 +46,19 @@ use Validate;
 final class CancelOrderProductHandler extends AbstractOrderCommandHandler implements CancelOrderProductHandlerInterface
 {
     /**
-     * @var OrderProductRemover
+     * @var OrderProductQuantityUpdater
      */
-    private $orderProductRemover;
+    private $orderProductQuantityUpdater;
 
     /**
      * CancelOrderProductHandler constructor.
      *
-     * @param OrderProductRemover $orderProductRemover
+     * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      */
     public function __construct(
-        OrderProductRemover $orderProductRemover
+        OrderProductQuantityUpdater $orderProductQuantityUpdater
     ) {
-        $this->orderProductRemover = $orderProductRemover;
+        $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
     }
 
     /**
@@ -73,12 +72,11 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
 
         $cartId = Cart::getCartIdByOrderId($command->getOrderId()->getValue());
         $customizationQuantities = Customization::countQuantityByCart($cartId);
-        $details = [];
         $orderDetails = $this->getOrderDetails($command);
 
+        // check cancel quantity for regular product is valid
         if (!empty($orderDetails['productsOrderDetails'])) {
             foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
-                $details[] = $orderDetail;
                 $customizationQuantity = 0;
                 $cancelQuantity = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
                 if (array_key_exists($orderDetail->product_id, $customizationQuantities) && array_key_exists($orderDetail->product_attribute_id, $customizationQuantities[$orderDetail->product_id])) {
@@ -91,6 +89,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             }
         }
 
+        // check cancel quantity for customized product is valid
         if (!empty($orderDetails['customizedProductsOrderDetail'])) {
             $customizationList = [];
             foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
@@ -114,29 +113,17 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         if (!empty($orderDetails['productsOrderDetails'])) {
             foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
                 $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
-                $this->reinjectQuantity($orderDetail, $qty_cancel_product);
-
-                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $qty_cancel_product);
-
-                // Update weight SUM
-                $order_carrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-                if (Validate::isLoadedObject($order_carrier)) {
-                    $order_carrier->weight = (float) $order->getTotalWeight();
-                    if ($order_carrier->update()) {
-                        $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
-                    }
-                }
-
-                if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($orderDetail->product_id)) {
-                    StockAvailable::synchronize($orderDetail->product_id);
-                }
+                $newQuantity = (int) $orderDetail->product_quantity - (int) $qty_cancel_product;
+                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, null);
                 Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
             }
         }
         if (!empty($orderDetails['customizedProductsOrderDetail'])) {
             foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
-                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $qtyCancelProduct);
+                $newQuantity = (int) $orderDetail->product_quantity - (int) $qtyCancelProduct;
+
+                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, null);
             }
         }
     }
