@@ -30,10 +30,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject\CustomizationFieldId;
 
+/**
+ * Transfers customization field data
+ */
 class CustomizationField
 {
     /**
-     * @var null|CustomizationFieldId
+     * @var CustomizationFieldId|null
      */
     private $customizationFieldId;
 
@@ -58,21 +61,22 @@ class CustomizationField
     private $addedByModule;
 
     /**
-     * @param CustomizationFieldId|null $customizationFieldId
+     * @param int|null $customizationFieldId
      * @param int $type
      * @param string[] $localizedNames
      * @param bool $required
      * @param bool $addedByModule
      */
     public function __construct(
-        ?CustomizationFieldId $customizationFieldId,
+        ?int $customizationFieldId,
         int $type,
         array $localizedNames,
         bool $required,
-        bool $addedByModule
+        bool $addedByModule = false
     ) {
-        $this->customizationFieldId = $customizationFieldId;
+        $this->customizationFieldId = $customizationFieldId ? new CustomizationFieldId($customizationFieldId) : null;
         $this->type = $type;
+        //@todo: assert localized structure?
         $this->localizedNames = $localizedNames;
         $this->required = $required;
         $this->addedByModule = $addedByModule;
