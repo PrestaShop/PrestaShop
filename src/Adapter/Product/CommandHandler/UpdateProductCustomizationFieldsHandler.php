@@ -31,9 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use CustomizationField as CustomizationFieldEntity;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\DeleteCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\AddCustomizationFieldHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\UpdateCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\UpdateProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CustomizationField;
@@ -57,21 +59,30 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
      * @var UpdateCustomizationFieldHandlerInterface
      */
     private $updateCustomizationFieldHandler;
+    /**
+     * @var DeleteCustomizationFieldHandlerInterface
+     */
+    private $deleteCustomizationFieldHandler;
 
     /**
      * @param AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler
      * @param UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler
+     * @param DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler
      */
     public function __construct(
         AddCustomizationFieldHandlerInterface $addCustomizationFieldHandler,
-        UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler
+        UpdateCustomizationFieldHandlerInterface $updateCustomizationFieldHandler,
+        DeleteCustomizationFieldHandlerInterface $deleteCustomizationFieldHandler
     ) {
         $this->addCustomizationFieldHandler = $addCustomizationFieldHandler;
         $this->updateCustomizationFieldHandler = $updateCustomizationFieldHandler;
+        $this->deleteCustomizationFieldHandler = $deleteCustomizationFieldHandler;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * Creates, updates or deletes customization fields depending on differences of existing and provided fields
      */
     public function handle(UpdateProductCustomizationFieldsCommand $command): void
     {
@@ -121,8 +132,6 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
     /**
      * @param UpdateProductCustomizationFieldsCommand $command
      *
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
      * @throws ProductException
      * @throws ProductNotFoundException
      */
@@ -130,7 +139,6 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
     {
         $product = $this->getProduct($command->getProductId());
 
-        $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
         $existingFieldIds = array_map('intval', $product->getCustomizationFieldIds());
         $providedFieldsIds = array_map(function (CustomizationField $field) {
             return $field->getCustomizationFieldId() ? $field->getCustomizationFieldId()->getValue() : null;
@@ -139,18 +147,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
         $fieldIdsForDeletion = array_diff($existingFieldIds, $providedFieldsIds);
 
         foreach ($fieldIdsForDeletion as $fieldId) {
-            $customizationFieldEntity = new CustomizationFieldEntity($fieldId);
-
-            $successfullyDeleted = false;
-            if (in_array($fieldId, $usedFieldIds)) {
-                $successfullyDeleted = $customizationFieldEntity->softDelete();
-            } else {
-                $successfullyDeleted = $customizationFieldEntity->delete();
-            }
-
-            if (!$successfullyDeleted) {
-                //@throw e
-            }
+            $this->deleteCustomizationFieldHandler->handle(new DeleteCustomizationFieldCommand($fieldId));
         }
     }
 }
