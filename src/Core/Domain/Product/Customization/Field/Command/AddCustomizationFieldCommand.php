@@ -63,25 +63,18 @@ class AddCustomizationFieldCommand
     private $localizedNames;
 
     /**
-     * @var bool
-     */
-    private $deleted;
-
-    /**
      * @param int $productId
      * @param int $type
      * @param bool $required
      * @param bool $addedByModule
      * @param string[] $localizedNames
-     * @param bool $deleted soft deletion indicator. "True" means it is deleted.
      */
     public function __construct(
         int $productId,
         int $type,
         bool $required,
         array $localizedNames,
-        bool $addedByModule = false,
-        bool $deleted = false
+        bool $addedByModule = false
     ) {
         $this->assertCustomizationType($type);
         $this->productId = new ProductId($productId);
@@ -89,7 +82,6 @@ class AddCustomizationFieldCommand
         $this->required = $required;
         $this->addedByModule = $addedByModule;
         $this->localizedNames = $localizedNames;
-        $this->deleted = $deleted;
     }
 
     /**
@@ -149,13 +141,5 @@ class AddCustomizationFieldCommand
     public function getLocalizedNames(): array
     {
         return $this->localizedNames;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDeleted(): bool
-    {
-        return $this->deleted;
     }
 }
