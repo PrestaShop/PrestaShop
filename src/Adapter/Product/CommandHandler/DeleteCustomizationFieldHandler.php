@@ -44,7 +44,7 @@ use PrestaShopException;
 final class DeleteCustomizationFieldHandler extends AbstractProductHandler implements DeleteCustomizationFieldHandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle(DeleteCustomizationFieldCommand $command): void
     {
@@ -69,7 +69,6 @@ final class DeleteCustomizationFieldHandler extends AbstractProductHandler imple
                 $e
             );
         }
-
 
         if (!$successfullyDeleted) {
             throw new CannotDeleteCustomizationFieldException(sprintf(
