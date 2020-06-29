@@ -84,7 +84,7 @@ class UpdateProductCustomizationFieldsCommand
                 isset($customizationField['id']) ? (int) $customizationField['id'] : null,
                 (int) $customizationField['type'],
                 $customizationField['localized_names'],
-                (bool) $customizationField['required'],
+                (bool) $customizationField['is_required'],
                 $byModule
             );
         }
