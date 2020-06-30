@@ -87,7 +87,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
 
         foreach ($command->getCustomizationFields() as $customizationField) {
             if ($customizationField->getCustomizationFieldId()) {
-                $this->handleUpdate($command->getProductId(), $customizationField);
+                $this->handleUpdate($customizationField);
             } else {
                 $this->handleCreation($command->getProductId(), $customizationField);
             }
@@ -110,12 +110,11 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
     }
 
     /**
-     * @param ProductId $productId
      * @param CustomizationField $customizationField
      */
-    private function handleUpdate(ProductId $productId, CustomizationField $customizationField): void
+    private function handleUpdate(CustomizationField $customizationField): void
     {
-        $command = new UpdateCustomizationFieldCommand($productId->getValue());
+        $command = new UpdateCustomizationFieldCommand($customizationField->getCustomizationFieldId());
         $command->setType($customizationField->getType());
         $command->setRequired($customizationField->isRequired());
         $command->setLocalizedNames($customizationField->getLocalizedNames());
