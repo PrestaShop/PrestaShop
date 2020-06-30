@@ -56,7 +56,7 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
 
         $product->id_category_default = $defaultCategoryId;
         $product->setFieldsToUpdate(['id_category_default']);
-        
+
         $this->performUpdate($product, CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES);
     }
 
