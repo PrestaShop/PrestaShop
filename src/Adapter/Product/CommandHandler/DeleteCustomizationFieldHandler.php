@@ -46,22 +46,22 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
      */
     public function handle(DeleteCustomizationFieldCommand $command): void
     {
-        $fieldIdValue = $command->getCustomizationFieldId()->getValue();
-        $customizationField = $this->getCustomizationField($fieldIdValue);
-        $product = $this->getProduct(new ProductId($customizationField->id_product));
+        $fieldEntity = $this->getCustomizationField($command->getCustomizationFieldId());
+        $fieldId = (int) $fieldEntity->id;
+        $product = $this->getProduct(new ProductId($fieldEntity->id_product));
         $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
 
         try {
-            if (in_array($fieldIdValue, $usedFieldIds)) {
-                $successfullyDeleted = $customizationField->softDelete();
+            if (in_array($fieldId, $usedFieldIds)) {
+                $successfullyDeleted = $fieldEntity->softDelete();
             } else {
-                $successfullyDeleted = $customizationField->delete();
+                $successfullyDeleted = $fieldEntity->delete();
             }
         } catch (PrestaShopException $e) {
             throw new CustomizationFieldException(
                 sprintf(
                     'Error occurred when trying to delete customization field #%d',
-                    $fieldIdValue
+                    $fieldId
                 ),
                 0,
                 $e
@@ -71,7 +71,7 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
         if (!$successfullyDeleted) {
             throw new CannotDeleteCustomizationFieldException(sprintf(
                 'Failed deleting customization field #%d',
-                    $fieldIdValue
+                    $fieldId
                 )
             );
         }
