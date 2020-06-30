@@ -6135,6 +6135,23 @@ class ProductCore extends ObjectModel
     /**
      * @return array
      */
+    public function getNonDeletedCustomizationFieldIds()
+    {
+        if (!Customization::isFeatureActive()) {
+            return [];
+        }
+
+        return Db::getInstance()->executeS('
+            SELECT `id_customization_field`, `type`, `required`
+            FROM `' . _DB_PREFIX_ . 'customization_field`
+            WHERE `is_deleted` = 0
+            AND `id_product` = ' . (int) $this->id)
+        ;
+    }
+
+    /**
+     * @return array
+     */
     public function getRequiredCustomizableFields()
     {
         if (!Customization::isFeatureActive()) {
