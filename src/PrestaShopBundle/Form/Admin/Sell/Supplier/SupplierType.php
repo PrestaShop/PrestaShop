@@ -86,8 +86,8 @@ class SupplierType extends TranslatorAwareType
      */
     private $isMultistoreEnabled;
 
-    /** 
-     * @var Router 
+    /**
+     * @var Router
      */
     private $router;
 
