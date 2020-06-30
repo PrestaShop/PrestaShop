@@ -49,4 +49,11 @@ class PackSettings
      * Stock type: based on configuration default value
      */
     const STOCK_TYPE_DEFAULT = 'stock_type_default';
+
+    const ALLOWED_PACK_STOCK_TYPES = [
+        PackSettings::STOCK_TYPE_PACK_ONLY,
+        PackSettings::STOCK_TYPE_PRODUCTS_ONLY,
+        PackSettings::STOCK_TYPE_BOTH,
+        PackSettings::STOCK_TYPE_DEFAULT,
+    ];
 }
