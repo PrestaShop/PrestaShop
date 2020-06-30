@@ -100,7 +100,7 @@ class UpdateCustomizationFieldCommand
     /**
      * @return bool|null
      */
-    public function getRequired(): ?bool
+    public function isRequired(): ?bool
     {
         return $this->required;
     }
@@ -146,7 +146,7 @@ class UpdateCustomizationFieldCommand
     }
 
     /**
-     * @param string[]|null $localizedNames
+     * @param string[]|null $localizedNames [key => value] pairs where key is language id and value is the name in that language
      *
      * @return UpdateCustomizationFieldCommand
      */

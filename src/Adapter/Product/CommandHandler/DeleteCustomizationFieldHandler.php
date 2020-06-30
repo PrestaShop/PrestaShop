@@ -29,19 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\DeleteCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception\CustomizationFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception\CustomizationFieldNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 
 /**
  * Handles @var DeleteCustomizationFieldCommand using legacy object model
  */
-final class DeleteCustomizationFieldHandler extends AbstractProductHandler implements DeleteCustomizationFieldHandlerInterface
+final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements DeleteCustomizationFieldHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -49,7 +49,7 @@ final class DeleteCustomizationFieldHandler extends AbstractProductHandler imple
     public function handle(DeleteCustomizationFieldCommand $command): void
     {
         $fieldIdValue = $command->getCustomizationFieldId()->getValue();
-        $customizationField = $this->loadCustomizationField($fieldIdValue);
+        $customizationField = $this->getCustomizationField($fieldIdValue);
         $product = $this->getProduct(new ProductId($customizationField->id_product));
         $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
 
@@ -77,35 +77,5 @@ final class DeleteCustomizationFieldHandler extends AbstractProductHandler imple
                 )
             );
         }
-    }
-
-    /**
-     * @param int $fieldId
-     *
-     * @return CustomizationField
-     *
-     * @throws CustomizationFieldException
-     * @throws CustomizationFieldNotFoundException
-     */
-    private function loadCustomizationField(int $fieldId): CustomizationField
-    {
-        try {
-            $field = new CustomizationField($fieldId);
-
-            if ((int) $field->id !== $fieldId) {
-                throw new CustomizationFieldNotFoundException(sprintf(
-                    'Customization field #%d was not found',
-                    $fieldId
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CustomizationFieldException(
-                sprintf('Error occurred when trying to get customization field #%d', $fieldId),
-                0,
-                $e
-            );
-        }
-
-        return $field;
     }
 }
