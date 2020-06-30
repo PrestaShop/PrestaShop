@@ -31,32 +31,35 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShopException;
 
 abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
 {
     /**
-     * @param int $fieldId
+     * @param CustomizationFieldId $fieldId
      *
      * @return CustomizationField
      *
      * @throws CustomizationFieldException
      * @throws CustomizationFieldNotFoundException
      */
-    protected function getCustomizationField(int $fieldId): CustomizationField
+    protected function getCustomizationField(CustomizationFieldId $fieldId): CustomizationField
     {
-        try {
-            $field = new CustomizationField($fieldId);
+        $fieldIdValue = $fieldId->getValue();
 
-            if ((int) $field->id !== $fieldId) {
+        try {
+            $field = new CustomizationField($fieldIdValue);
+
+            if ((int) $field->id !== $fieldIdValue) {
                 throw new CustomizationFieldNotFoundException(sprintf(
                     'Customization field #%d was not found',
-                    $fieldId
+                    $fieldIdValue
                 ));
             }
         } catch (PrestaShopException $e) {
             throw new CustomizationFieldException(
-                sprintf('Error occurred when trying to get customization field #%d', $fieldId),
+                sprintf('Error occurred when trying to get customization field #%d', $fieldIdValue),
                 0,
                 $e
             );

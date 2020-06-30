@@ -28,19 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryHandler\GetProductCustomizationFieldsHandlerInterface;
 
 /**
  * Defines cotnract to handle @var GetProductCustomizationFields query
  */
-final class GetProductCustomizationFieldsHandler implements GetProductCustomizationFieldsHandlerInterface
+final class GetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements GetProductCustomizationFieldsHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(GetProductCustomizationFields $query): array
     {
-        // TODO: Implement handle() method.
+        $productId = $query->getProductId();
+        $product = $this->getProduct($productId);
     }
 }

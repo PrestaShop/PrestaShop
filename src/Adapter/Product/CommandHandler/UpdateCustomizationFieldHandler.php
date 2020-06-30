@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
@@ -45,13 +46,8 @@ class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler 
      */
     public function handle(UpdateCustomizationFieldCommand $command): void
     {
-        $fieldIdValue = $command->getCustomizationFieldId()->getValue();
-        $fieldEntity = $this->getCustomizationField($fieldIdValue);
-
-        $fieldEntity->type = $command->getCustomizationFieldId()->getValue();
-        $fieldEntity->is_module = $command->isAddedByModule();
-        $fieldEntity->required = $command->isRequired();
-        $fieldEntity->name = $command->getLocalizedNames();
+        $fieldEntity = $this->getCustomizationField($command->getCustomizationFieldId());
+        $this->fillEntityWithCommandData($command, $fieldEntity);
 
         if (!$fieldEntity->validateFields(false) || !$fieldEntity->validateFieldsLang(false)) {
             throw new CannotUpdateCustomizationFieldException('Customization field contains invalid values');
@@ -69,6 +65,29 @@ class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler 
                 'Error occurred when trying to update customization field #%d',
                 $fieldEntity->id
             ));
+        }
+    }
+
+    /**
+     * @param UpdateCustomizationFieldCommand $command
+     * @param CustomizationField $field
+     */
+    private function fillEntityWithCommandData(UpdateCustomizationFieldCommand $command, CustomizationField $field): void
+    {
+        if (null !== $command->getType()) {
+            $field->type = $command->getType()->getValue();
+        }
+
+        if (null !== $command->isAddedByModule()) {
+            $field->is_module = $command->isAddedByModule();
+        }
+
+        if (null !== $command->isRequired()) {
+            $field->required = $command->isRequired();
+        }
+
+        if (null !== $command->getLocalizedNames()) {
+            $field->name = $command->getLocalizedNames();
         }
     }
 }
