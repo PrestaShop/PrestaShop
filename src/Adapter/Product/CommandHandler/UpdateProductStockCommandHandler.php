@@ -83,7 +83,7 @@ class UpdateProductStockCommandHandler extends AbstractProductHandler implements
      */
     private function handleAdvancedStock(UpdateProductStockCommand $command, Product $product): void
     {
-        $productHasAdvancedStock = $this->getProductAdvancedStockEnabled($command, $product);
+        $productHasAdvancedStock = null !== $command->useAdvancedStockManagement() ? $command->useAdvancedStockManagement() : $product->advanced_stock_management;
 
         $stockAvailable = $this->getOrCreateStockAvailable($command);
         if (null !== $command->dependsOnStock()) {
@@ -101,6 +101,11 @@ class UpdateProductStockCommandHandler extends AbstractProductHandler implements
         $this->updateProductField($product, 'advanced_stock_management', $productHasAdvancedStock);
         if (!$productHasAdvancedStock) {
             $stockAvailable->depends_on_stock = false;
+        }
+
+        if (null !== $command->getPackStockType()) {
+            $this->checkPackStockType($command, $product);
+            $this->updateProductField($product, 'pack_stock_type', $this->getLegacyPackStockType($command->getPackStockType()->getValue()));
         }
 
         // Now apply updates
@@ -227,34 +232,21 @@ class UpdateProductStockCommandHandler extends AbstractProductHandler implements
      * @param UpdateProductStockCommand $command
      * @param Product $product
      *
-     * @return bool
-     */
-    private function getProductAdvancedStockEnabled(
-        UpdateProductStockCommand $command,
-        Product $product
-    ): bool {
-        if (null !== $command->useAdvancedStockManagement()) {
-            return $command->useAdvancedStockManagement();
-        }
-
-        return (bool) $product->advanced_stock_management;
-    }
-
-    /**
-     * @param UpdateProductStockCommand $command
-     * @param Product $product
-     *
      * @throws ProductStockException
      */
     private function checkPackStockType(UpdateProductStockCommand $command, Product $product): void
     {
+        $dependsOnStock = null !== $command->dependsOnStock() ? $command->dependsOnStock() : $product->depends_on_stock;
         // If the product doesn't depend on stock or is not a Pack no problem
-        if (!$command->dependsOnStock() || !Pack::isPack($product->id)) {
+        if (!$dependsOnStock || !Pack::isPack($product->id)) {
             return;
         }
 
         // Get pack stock type (or default configuration if needed)
         $packStockType = $product->pack_stock_type;
+        if (null !== $command->getPackStockType()) {
+            $packStockType = $this->getLegacyPackStockType($command->getPackStockType()->getValue());
+        }
         if ($packStockType === Pack::STOCK_TYPE_DEFAULT) {
             $packStockType = (int) $this->configuration->get('PS_PACK_STOCK_TYPE');
         }
