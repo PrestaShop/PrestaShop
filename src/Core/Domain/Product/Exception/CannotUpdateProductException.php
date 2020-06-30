@@ -54,5 +54,5 @@ class CannotUpdateProductException extends ProductException
     /**
      * When failed to assign product categories
      */
-    const FAILED_ASSIGN_TO_CATEGORIES = 50;
+    const FAILED_UPDATE_CATEGORIES = 50;
 }

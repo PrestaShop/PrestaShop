@@ -368,7 +368,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $this->assertLastErrorIs(
             CannotUpdateProductException::class,
-            CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
+            CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
         );
     }
 

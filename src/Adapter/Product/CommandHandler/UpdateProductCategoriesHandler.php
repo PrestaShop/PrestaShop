@@ -57,7 +57,7 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
         $product->id_category_default = $defaultCategoryId;
         $product->setFieldsToUpdate(['id_category_default']);
 
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES);
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CATEGORIES);
     }
 
     /**
@@ -94,14 +94,14 @@ final class UpdateProductCategoriesHandler extends AbstractProductHandler implem
             if (false === Category::categoriesExists($categoryIds)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to update product #%d categories. Some of categories doesn\'t exist.', $product->id),
-                    CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
+                    CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
                 );
             }
 
             if (false === $product->updateCategories($categoryIds)) {
                 throw new CannotUpdateProductException(
                     sprintf('Failed to update product #%d categories', $product->id),
-                    CannotUpdateProductException::FAILED_ASSIGN_TO_CATEGORIES
+                    CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
                 );
             }
         } catch (PrestaShopException $e) {
