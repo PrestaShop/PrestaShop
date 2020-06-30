@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -42,7 +42,7 @@ class AddCustomizationFieldCommand
     private $productId;
 
     /**
-     * @var CustomizationType
+     * @var CustomizationFieldType
      */
     private $type;
 
@@ -76,7 +76,7 @@ class AddCustomizationFieldCommand
         bool $addedByModule = false
     ) {
         $this->productId = new ProductId($productId);
-        $this->type = new CustomizationType($type);
+        $this->type = new CustomizationFieldType($type);
         $this->required = $required;
         $this->addedByModule = $addedByModule;
         $this->localizedNames = $localizedNames;
@@ -91,9 +91,9 @@ class AddCustomizationFieldCommand
     }
 
     /**
-     * @return CustomizationType
+     * @return CustomizationFieldType
      */
-    public function getType(): CustomizationType
+    public function getType(): CustomizationFieldType
     {
         return $this->type;
     }
