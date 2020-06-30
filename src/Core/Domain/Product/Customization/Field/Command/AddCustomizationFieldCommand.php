@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception\CustomizationFieldConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -43,7 +44,7 @@ class AddCustomizationFieldCommand
     private $productId;
 
     /**
-     * @var int
+     * @var CustomizationType
      */
     private $type;
 
@@ -76,31 +77,11 @@ class AddCustomizationFieldCommand
         array $localizedNames,
         bool $addedByModule = false
     ) {
-        $this->assertCustomizationType($type);
         $this->productId = new ProductId($productId);
-        $this->type = $type;
+        $this->type = new CustomizationType($type);
         $this->required = $required;
         $this->addedByModule = $addedByModule;
         $this->localizedNames = $localizedNames;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CustomizationFieldConstraintException
-     */
-    private function assertCustomizationType(int $value): void
-    {
-        if (!in_array($value, CustomizationSettings::AVAILABLE_TYPES)) {
-            throw new CustomizationFieldConstraintException(
-                sprintf(
-                    'Invalid customization type value %d. Available types are: %s',
-                    $value,
-                    implode(',', CustomizationSettings::AVAILABLE_TYPES)
-                ),
-                CustomizationFieldConstraintException::INVALID_TYPE
-            );
-        }
     }
 
     /**
@@ -112,9 +93,9 @@ class AddCustomizationFieldCommand
     }
 
     /**
-     * @return int
+     * @return CustomizationType
      */
-    public function getType(): int
+    public function getType(): CustomizationType
     {
         return $this->type;
     }

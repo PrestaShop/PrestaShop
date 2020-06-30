@@ -32,22 +32,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 final class CustomizationSettings
 {
     /**
-     * Value representing customization file type
-     */
-    const TYPE_FILE = 0;
-
-    /**
-     * Value representing customization text type
-     */
-    const TYPE_TEXT = 1;
-
-    /**
-     * @todo: VO for types?
-     * Available customization types
-     */
-    const AVAILABLE_TYPES = [self::TYPE_FILE, self::TYPE_TEXT];
-
-    /**
      * Maximum allowed length for customization text field value
      */
     const MAX_TEXT_LENGTH = 255;

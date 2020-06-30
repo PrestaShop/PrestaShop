@@ -45,4 +45,9 @@ class CustomizationConstraintException extends CustomizationException
      * When customization id is invalid
      */
     const INVALID_ID = 3;
+
+    /**
+     * When customization type is invalid
+     */
+    const INVALID_TYPE = 4;
 }

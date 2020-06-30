@@ -81,10 +81,10 @@ class UpdateProductCustomizationFieldsCommand
             $byModule = isset($customizationField['added_by_module']) ? (bool) $customizationField['added_by_module'] : false;
 
             $this->customizationFields[] = new CustomizationField(
-                isset($customizationField['id']) ? (int) $customizationField['id'] : null,
                 (int) $customizationField['type'],
                 $customizationField['localized_names'],
                 (bool) $customizationField['is_required'],
+                isset($customizationField['id']) ? (int) $customizationField['id'] : null,
                 $byModule
             );
         }
