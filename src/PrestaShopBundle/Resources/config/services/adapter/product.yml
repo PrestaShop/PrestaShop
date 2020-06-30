@@ -133,19 +133,19 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddCustomizationFieldHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand
 
     prestashop.adapter.product.command_handler.update_customization_field_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateCustomizationFieldHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldCommand
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand
 
     prestashop.adapter.product.command_handler.delete_customization_field_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteCustomizationFieldHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\DeleteCustomizationFieldCommand
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand
 
     prestashop.adapter.product.command_handler.update_product_customization_fields_handler:
       class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductCustomizationFieldsHandler
@@ -161,4 +161,4 @@ services:
       class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductCustomizationFieldsHandler
       tags:
         - name: tactician.handler
-          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Query\GetProductCustomizationFields
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields
