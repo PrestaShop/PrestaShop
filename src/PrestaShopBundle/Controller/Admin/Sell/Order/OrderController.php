@@ -1608,11 +1608,11 @@ class OrderController extends FrameworkBundleAdminController
                 if ($request->isXmlHttpRequest()) {
                     return $this->json([
                         'success' => true,
-                        'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+                        'message' => $this->trans('Update successful', 'Admin.Notifications.Success'),
                     ]);
                 }
 
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
             } catch (OrderException $e) {
                 $this->addFlash(
                     'error',
