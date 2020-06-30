@@ -41,6 +41,8 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
+    const GENERIC_NAME_CHARS = '<>={}';
+
     /**
      * @var CharacterCleaner
      */
