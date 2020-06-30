@@ -29,7 +29,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use Context;
-use CustomizationField as CustomizationFieldEntity;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
@@ -42,6 +41,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
@@ -558,25 +560,30 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update product :productReference with following defined customization fields:
+     * @When I update product :productReference with following customization fields:
      *
      * @param string $productReference
      * @param TableNode $table
      */
     public function updateCustomizationFields(string $productReference, TableNode $table)
     {
-        $fieldReferences = array_keys($table->getRowsHash());
+        $customizationFields = $table->getColumnsHash();
         $fieldsForUpdate = [];
 
-        /** @var CustomizationFieldEntity $fieldReference */
-        foreach ($fieldReferences as $fieldReference) {
-            $fieldEntity = $this->getSharedStorage()->get($fieldReference);
+        foreach ($customizationFields as $customizationField) {
+            $reference = $customizationField['reference'];
+            $id = $this->getSharedStorage()->exists($reference) ? $this->getSharedStorage()->get($reference) : null;
+            $addedByModule = isset($customizationField['added by module']) ?
+                PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']) :
+                false
+            ;
+
             $fieldsForUpdate[] = [
-                'id' => $fieldEntity->id,
-                'type' => $fieldEntity->type,
-                'localized_names' => $fieldEntity->name,
-                'is_required' => $fieldEntity->required,
-                'added_by_module' => $fieldEntity->is_module,
+                'id' => $id,
+                'type' => $customizationField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT,
+                'localized_names' => $this->parseLocalizedArray($customizationField['name']),
+                'is_required' => $customizationField['is required'],
+                'added_by_module' => $addedByModule,
             ];
         }
 
@@ -591,37 +598,71 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I define following customization field as :customizationFieldDefinition:
-     *
-     * @param string $customizationFieldReference
-     * @param TableNode $table
-     */
-    public function defineCustomizationField(string $customizationFieldReference, TableNode $table)
-    {
-        $data = $table->getRowsHash();
-
-        $customizationField = new CustomizationFieldEntity();
-        $customizationField->type = (int) $data['type'];
-        $customizationField->name = $this->parseLocalizedArray($data['name']);
-        $customizationField->required = PrimitiveUtils::castStringBooleanIntoBoolean($data['is required']);
-        $customizationField->is_module = isset($data['added by module']) ?
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['added by module']) :
-            false
-        ;
-
-        $this->getSharedStorage()->set($customizationFieldReference, $customizationField);
-    }
-
-    /**
      * @Then product :productReference should have following customization fields:
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertDefinedCustomizationFields(string $productReference, TableNode $table)
+    public function assertCustomizationFields(string $productReference, TableNode $table)
     {
-        $expectedFieldReferences = array_keys($table->getRowsHash());
-        //@todo: implement query for customization fields
+        $data = $table->getColumnsHash();
+        /** @var CustomizationField[] $actualFields */
+        $actualFields = $this->getQueryBus()->handle(new GetProductCustomizationFields(
+            $this->getSharedStorage()->get($productReference)
+        ));
+
+        foreach ($data as $expectedField) {
+            //@todo: no way to save customization field ID when adding one, so it will never find one here :(??
+            $expectedId = $this->getSharedStorage()->get($expectedField['reference']);
+
+            foreach ($actualFields as $key => $actualField) {
+                if ($expectedId === $actualField->getCustomizationFieldId()) {
+                    $expectedType = $expectedField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT;
+                    $expectedLocalizedNames = $this->parseLocalizedArray($expectedField['name']);
+                    $expectedRequired = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['is required']);
+                    Assert::assertEquals($expectedType, $actualField->getType(), 'Unexpected customization type');
+                    Assert::assertEquals(
+                        $expectedLocalizedNames,
+                        $actualField->getLocalizedNames(),
+                        sprintf('Unexpected product "%s" customization field name', $productReference)
+                    );
+
+                    if ($expectedRequired !== $actualField->isRequired()) {
+                        throw new RuntimeException(
+                            sprintf(
+                                'Expected customization field #%d to be %s',
+                                $expectedRequired ? 'required' : 'not required'
+                            )
+                        );
+                    }
+
+                    if (isset($expectedField['added by module'])) {
+                        $expectedByModule = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['added by module']);
+                        if ($expectedByModule !== $actualField->isAddedByModule()) {
+                            throw new RuntimeException(
+                                sprintf(
+                                    'Expected customization field #%d to be added %s',
+                                    $actualField->getCustomizationFieldId(),
+                                    $expectedByModule ? 'by module' : 'not by module'
+                                )
+                            );
+                        }
+                    }
+                    //unset this asserted customization field so we can check if there any left after loop
+                    unset($actualFields[$key]);
+
+                    continue;
+                }
+            }
+        }
+
+        if (!empty($actualFields)) {
+            throw new RuntimeException(sprintf(
+                'Product "%s" contains unexpected customization fields: %s',
+                $productReference,
+                var_export($actualFields)
+            ));
+        }
     }
 
     /**
