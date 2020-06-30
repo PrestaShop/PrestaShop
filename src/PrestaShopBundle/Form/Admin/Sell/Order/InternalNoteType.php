@@ -61,7 +61,7 @@ class InternalNoteType extends AbstractType
                 'required' => false,
                 'empty_data' => '',
                 'attr' => [
-                    'placeholder' => $this->translator->trans('Add a internal note to order. Visible only in Back Office.', [], 'Admin.Orderscustomers.Feature'),
+                    'placeholder' => $this->translator->trans('Add an internal note to the order. Visible only in the back office.', [], 'Admin.Orderscustomers.Feature'),
                 ],
             ]);
     }
