@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use CustomizationField;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception\CustomizationFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception\CustomizationFieldNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
 use PrestaShopException;
 
 abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler

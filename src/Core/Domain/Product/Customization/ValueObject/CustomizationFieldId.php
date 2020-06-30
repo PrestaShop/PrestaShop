@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject;
 
 /**
  * Holds Customization Field Identification value

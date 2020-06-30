@@ -26,35 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization;
 
 /**
- * Adds customization field to a product
+ * Transfers customization field data
  */
-class AddCustomizationFieldCommand
+class CustomizationField
 {
     /**
-     * @var ProductId
-     */
-    private $productId;
-
-    /**
-     * @var CustomizationType
+     * @var int
      */
     private $type;
-
-    /**
-     * @var bool
-     */
-    private $required;
-
-    /**
-     * @var bool
-     */
-    private $addedByModule;
 
     /**
      * @var string[]
@@ -62,40 +44,63 @@ class AddCustomizationFieldCommand
     private $localizedNames;
 
     /**
-     * @param int $productId
+     * @var bool
+     */
+    private $required;
+
+    /**
+     * @var int|null
+     */
+    private $customizationFieldId;
+
+    /**
+     * @var bool
+     */
+    private $addedByModule;
+
+    /**
      * @param int $type
-     * @param bool $required
-     * @param bool $addedByModule
      * @param string[] $localizedNames
+     * @param bool $required
+     * @param int|null $customizationFieldId
+     * @param bool $addedByModule
      */
     public function __construct(
-        int $productId,
         int $type,
-        bool $required,
         array $localizedNames,
+        bool $required,
+        ?int $customizationFieldId = null,
         bool $addedByModule = false
     ) {
-        $this->productId = new ProductId($productId);
-        $this->type = new CustomizationType($type);
-        $this->required = $required;
-        $this->addedByModule = $addedByModule;
+        $this->type = $type;
         $this->localizedNames = $localizedNames;
+        $this->required = $required;
+        $this->customizationFieldId = $customizationFieldId ? $customizationFieldId : null;
+        $this->addedByModule = $addedByModule;
     }
 
     /**
-     * @return ProductId
+     * @return int|null
      */
-    public function getProductId(): ProductId
+    public function getCustomizationFieldId(): ?int
     {
-        return $this->productId;
+        return $this->customizationFieldId;
     }
 
     /**
-     * @return CustomizationType
+     * @return int
      */
-    public function getType(): CustomizationType
+    public function getType(): int
     {
         return $this->type;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
     }
 
     /**
@@ -112,13 +117,5 @@ class AddCustomizationFieldCommand
     public function isAddedByModule(): bool
     {
         return $this->addedByModule;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
-    {
-        return $this->localizedNames;
     }
 }

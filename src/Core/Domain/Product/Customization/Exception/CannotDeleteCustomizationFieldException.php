@@ -26,20 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
 
 /**
- * Thrown when customization field constraints are violated
+ * Is thrown when customization field deletion fails
  */
-class CustomizationFieldConstraintException extends CustomizationFieldException
+class CannotDeleteCustomizationFieldException extends CustomizationFieldException
 {
-    /**
-     * When CustomizationFieldId is invalid
-     */
-    const INVALID_ID = 1;
-
-    /**
-     * When Customization type is invalid
-     */
-    const INVALID_TYPE = 2;
 }

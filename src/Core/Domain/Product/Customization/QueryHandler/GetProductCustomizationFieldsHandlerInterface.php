@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Query\GetProductCustomizationFields;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\QueryResult\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 
 interface GetProductCustomizationFieldsHandlerInterface
 {
