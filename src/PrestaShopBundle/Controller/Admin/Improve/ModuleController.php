@@ -796,7 +796,7 @@ class ModuleController extends ModuleAbstractController
      *
      * @return JsonResponse
      */
-    private function checkPermission(string $pageVoter)
+    private function checkPermission($pageVoter)
     {
         if (!$this->isGranted($pageVoter, self::CONTROLLER_NAME)) {
             return new JsonResponse(
