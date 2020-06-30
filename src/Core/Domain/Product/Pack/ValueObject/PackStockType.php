@@ -33,13 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\PackSettings;
 
 class PackStockType
 {
-    const ALLOWED_PACK_STOCK_TYPES = [
-        PackSettings::STOCK_TYPE_PACK_ONLY,
-        PackSettings::STOCK_TYPE_PRODUCTS_ONLY,
-        PackSettings::STOCK_TYPE_BOTH,
-        PackSettings::STOCK_TYPE_DEFAULT,
-    ];
-
     /**
      * @var string
      */
@@ -70,12 +63,12 @@ class PackStockType
      */
     private function setStockType(string $stockType): void
     {
-        if (!in_array($stockType, self::ALLOWED_PACK_STOCK_TYPES)) {
+        if (!in_array($stockType, PackSettings::ALLOWED_PACK_STOCK_TYPES)) {
             throw new ProductPackConstraintException(
                 sprintf(
                     'Cannot use product pack stock type %s, allowed values are: %s',
                     $stockType,
-                    implode(', ', self::ALLOWED_PACK_STOCK_TYPES)
+                    implode(', ', PackSettings::ALLOWED_PACK_STOCK_TYPES)
                 ),
                 ProductPackConstraintException::INVALID_STOCK_TYPE
             );
