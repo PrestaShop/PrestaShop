@@ -6141,12 +6141,16 @@ class ProductCore extends ObjectModel
             return [];
         }
 
-        return Db::getInstance()->executeS('
-            SELECT `id_customization_field`, `type`, `required`
+        $results = Db::getInstance()->executeS('
+            SELECT `id_customization_field`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `is_deleted` = 0
             AND `id_product` = ' . (int) $this->id)
         ;
+
+        return array_map(function($result) {
+            return (int) $result['id_customization_field'];
+        }, $results);
     }
 
     /**
