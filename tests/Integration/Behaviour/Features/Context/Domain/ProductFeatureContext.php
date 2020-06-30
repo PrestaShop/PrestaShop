@@ -571,18 +571,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $fieldsForUpdate = [];
 
         foreach ($customizationFields as $customizationField) {
-            $reference = $customizationField['reference'];
-            $id = $this->getSharedStorage()->exists($reference) ? $this->getSharedStorage()->get($reference) : null;
+            $fieldId = empty($customizationField['customization id']) ? null : (int) $customizationField['customization id'];
+
             $addedByModule = isset($customizationField['added by module']) ?
                 PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']) :
                 false
             ;
 
             $fieldsForUpdate[] = [
-                'id' => $id,
+                'id' => $fieldId,
                 'type' => $customizationField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT,
                 'localized_names' => $this->parseLocalizedArray($customizationField['name']),
-                'is_required' => $customizationField['is required'],
+                'is_required' => PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['is required']),
                 'added_by_module' => $addedByModule,
             ];
         }
@@ -611,12 +611,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $this->getSharedStorage()->get($productReference)
         ));
 
+        $notFoundExpectedFields = [];
+
         foreach ($data as $expectedField) {
-            //@todo: no way to save customization field ID when adding one, so it will never find one here :(??
-            $expectedId = $this->getSharedStorage()->get($expectedField['reference']);
+            $expectedId = (int) $expectedField['customization id'];
+            $foundExpectedField = false;
 
             foreach ($actualFields as $key => $actualField) {
                 if ($expectedId === $actualField->getCustomizationFieldId()) {
+                    $foundExpectedField = true;
                     $expectedType = $expectedField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT;
                     $expectedLocalizedNames = $this->parseLocalizedArray($expectedField['name']);
                     $expectedRequired = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['is required']);
@@ -631,6 +634,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                         throw new RuntimeException(
                             sprintf(
                                 'Expected customization field #%d to be %s',
+                                $expectedId,
                                 $expectedRequired ? 'required' : 'not required'
                             )
                         );
@@ -654,6 +658,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                     continue;
                 }
             }
+
+            if (!$foundExpectedField) {
+                $notFoundExpectedFields[] = $expectedField;
+            }
+        }
+
+        if (!empty($notFoundExpectedFields)) {
+            throw new RuntimeException(sprintf(
+                'Following customization fields were not found for product %s: %s',
+                $productReference,
+                var_export($notFoundExpectedFields)
+            ));
         }
 
         if (!empty($actualFields)) {

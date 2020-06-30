@@ -44,7 +44,7 @@ class UpdateProductCustomizationFieldsCommand
     /**
      * @var CustomizationField[]
      */
-    private $customizationFields;
+    private $customizationFields = [];
 
     /**
      * @param int $productId
