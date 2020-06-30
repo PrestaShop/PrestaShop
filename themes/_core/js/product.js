@@ -307,10 +307,10 @@ function showError($container, textError) {
 }
 
 $(document).ready(() => {
-  const $productActions = $('.product-actions');
+  const $productActions = $(prestashop.selectors.product.actions);
 
   // Listen on all form elements + those who have a data-product-attribute
-  $('body').on('change touchspin.on.startspin', '.product-variants *[name]', (e) => {
+  $('body').on('change touchspin.on.startspin', prestashop.selectors.product.variants + ' *[name]', (e) => {
     formChanged = true;
 
     prestashop.emit('updateProduct', {
@@ -336,7 +336,7 @@ $(document).ready(() => {
       return;
     }
 
-    const $form = $('.product-actions').find('form:first');
+    const $form = $(prestashop.selectors.product.actions).find('form:first');
 
     if (event.state && event.state.form) {
       event.state.form.forEach(function (pair) {
@@ -362,7 +362,7 @@ $(document).ready(() => {
   /**
    * Button has been removed on classic theme, but event triggering has been kept for compatibility
    */
-  $('body').on('click', '.product-refresh', (e, extraParameters) => {
+  $('body').on('click', prestashop.selectors.product.refresh, (e, extraParameters) => {
     e.preventDefault();
     let eventType = 'updatedProductCombination';
 
