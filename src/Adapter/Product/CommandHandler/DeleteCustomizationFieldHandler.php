@@ -48,7 +48,7 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
     {
         $fieldEntity = $this->getCustomizationField($command->getCustomizationFieldId());
         $fieldId = (int) $fieldEntity->id;
-        $product = $this->getProduct(new ProductId($fieldEntity->id_product));
+        $product = $this->getProduct(new ProductId($fieldId));
         $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
 
         try {

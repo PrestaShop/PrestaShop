@@ -133,7 +133,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationField
     {
         $product = $this->getProduct($command->getProductId());
 
-        $existingFieldIds = array_map('intval', $product->getCustomizationFieldIds());
+        $existingFieldIds = array_map('intval', $product->getNonDeletedCustomizationFieldIds());
         $providedFieldsIds = array_map(function (CustomizationField $field) {
             return $field->getCustomizationFieldId();
         }, $command->getCustomizationFields());
