@@ -10,17 +10,11 @@ Feature: Update product customization fields in Back Office (BO)
       | name       | en-US: nice customizable t-shirt  |
       | is_virtual | false                             |
     And product "product1" type should be standard
-    When I define following customization field as customizationField1:
-      | type               | text                                |
-      | name               | en-US: front text                   |
-      | is required        | true                                |
-    And I define following customization field as customizationField2:
-      | type               | text                                |
-      | name               | en-US: back text                    |
-      | is required        | true                                |
-    When I update product product1 with following defined customization fields:
-      | customizationField1 |
-      | customizationField2 |
-    And product product1 should have following customization fields:
-      | customizationField1 |
-      | customizationField2 |
+    When I update product product1 with following customization fields:
+      | reference             | type    | name                    | is required |
+      | customization1        | text    | en-US:front-text        | true        |
+      | customization2        | text    | en-US:back-text         | false       |
+    Then product product1 should have following customization fields:
+      | reference             | type    | name                    | is required |
+      | customization1        | text    | en-US:front-text        | true        |
+      | customization2        | text    | en-US:back-text         | false       |
