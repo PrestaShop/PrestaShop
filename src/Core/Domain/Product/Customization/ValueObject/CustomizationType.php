@@ -79,7 +79,7 @@ class CustomizationType
      */
     private function assertAvailableType(int $value): void
     {
-        if (!in_array($value,self::AVAILABLE_TYPES)) {
+        if (!in_array($value, self::AVAILABLE_TYPES)) {
             throw new CustomizationConstraintException(
                 sprintf(
                     'Invalid customization type "%d". Available types are: %d',

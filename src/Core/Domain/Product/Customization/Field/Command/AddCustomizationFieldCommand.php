@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception\CustomizationFieldConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 

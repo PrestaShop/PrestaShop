@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject\CustomizationFieldId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
 
 /**
  * Transfers customization field data
