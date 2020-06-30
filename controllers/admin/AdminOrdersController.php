@@ -885,6 +885,7 @@ class AdminOrdersControllerCore extends AdminController
 
                     // Redirect if no errors
                     if (!count($this->errors)) {
+                        Hook::exec('actionOrderPartialReturn', array('order' => $order));
                         Tools::redirectAdmin(self::$currentIndex . '&id_order=' . $order->id . '&vieworder&conf=30&token=' . $this->token);
                     }
                 } else {
