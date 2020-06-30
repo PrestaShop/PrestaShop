@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductCustomizationFieldsHandlerInterface;
@@ -45,7 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Handles @var UpdateProductCustomizationFieldsCommand using legacy object model
  */
-class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler implements UpdateProductCustomizationFieldsHandlerInterface
+class UpdateProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements UpdateProductCustomizationFieldsHandlerInterface
 {
     /**
      * @var AddCustomizationFieldHandlerInterface
@@ -136,7 +137,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
 
         $existingFieldIds = array_map('intval', $product->getCustomizationFieldIds());
         $providedFieldsIds = array_map(function (CustomizationField $field) {
-            return $field->getCustomizationFieldId() ? $field->getCustomizationFieldId()->getValue() : null;
+            return $field->getCustomizationFieldId();
         }, $command->getCustomizationFields());
 
         $fieldIdsForDeletion = array_diff($existingFieldIds, $providedFieldsIds);
