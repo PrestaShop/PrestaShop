@@ -84,6 +84,7 @@ final class AddCustomizationHandler extends AbstractCartHandler implements AddCu
             }
 
             try {
+                //@Todo: use CustomizationFieldType::TYPE_TEXT
                 if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
                     $this->assertCustomTextField($customizationFieldId, $customizationValues[$customizationFieldId]);
 

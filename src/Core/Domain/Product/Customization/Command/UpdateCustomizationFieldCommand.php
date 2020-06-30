@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 
 /**
  * Updates single customization field
@@ -42,7 +42,7 @@ class UpdateCustomizationFieldCommand
     private $customizationFieldId;
 
     /**
-     * @var CustomizationType|null
+     * @var CustomizationFieldType|null
      */
     private $type;
 
@@ -78,9 +78,9 @@ class UpdateCustomizationFieldCommand
     }
 
     /**
-     * @return CustomizationType|null
+     * @return CustomizationFieldType|null
      */
-    public function getType(): ?CustomizationType
+    public function getType(): ?CustomizationFieldType
     {
         return $this->type;
     }
@@ -92,7 +92,7 @@ class UpdateCustomizationFieldCommand
      */
     public function setType(int $type): UpdateCustomizationFieldCommand
     {
-        $this->type = new CustomizationType($type);
+        $this->type = new CustomizationFieldType($type);
 
         return $this;
     }

@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
 
 /**
  * Holds value of customization type
  */
-class CustomizationType
+class CustomizationFieldType
 {
     /**
      * Value representing customization file type
@@ -75,18 +75,18 @@ class CustomizationType
     /**
      * @param int $value
      *
-     * @throws CustomizationConstraintException
+     * @throws CustomizationFieldConstraintException
      */
     private function assertAvailableType(int $value): void
     {
         if (!in_array($value, self::AVAILABLE_TYPES)) {
-            throw new CustomizationConstraintException(
+            throw new CustomizationFieldConstraintException(
                 sprintf(
                     'Invalid customization type "%d". Available types are: %d',
                     $value,
                     implode(',', self::AVAILABLE_TYPES)
                 ),
-                CustomizationConstraintException::INVALID_TYPE
+                CustomizationFieldConstraintException::INVALID_TYPE
             );
         }
     }
