@@ -26,33 +26,20 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
 
 /**
- * Gets product customization fields
+ * Thrown when customization field constraints are violated
  */
-class GetProductCustomizationFields
+class CustomizationFieldConstraintException extends CustomizationFieldException
 {
     /**
-     * @var ProductId
+     * When CustomizationFieldId is invalid
      */
-    private $productId;
+    const INVALID_ID = 1;
 
     /**
-     * @param int $productId
+     * When Customization type is invalid
      */
-    public function __construct(int $productId)
-    {
-        $this->productId = new ProductId($productId);
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
+    const INVALID_TYPE = 2;
 }

@@ -24,20 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject\CustomizationFieldId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
 
 /**
- * Defines contract to handle @var AddCustomizationFieldCommand
+ * Thrown when customization field update fails
  */
-interface AddCustomizationFieldHandlerInterface
+class CannotUpdateCustomizationFieldException extends CustomizationFieldException
 {
-    /**
-     * @param AddCustomizationFieldCommand $command
-     *
-     * @return CustomizationFieldId
-     */
-    public function handle(AddCustomizationFieldCommand $command): CustomizationFieldId;
 }

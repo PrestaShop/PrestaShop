@@ -26,33 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject\CustomizationFieldId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
 
 /**
- * Deletes customization field
+ * Base exception for customization field subdomain
  */
-class DeleteCustomizationFieldCommand
+class CustomizationFieldException extends CustomizationException
 {
-    /**
-     * @var CustomizationFieldId
-     */
-    private $customizationFieldId;
-
-    /**
-     * @param int $customizationFieldId
-     */
-    public function __construct(int $customizationFieldId)
-    {
-        $this->customizationFieldId = new CustomizationFieldId($customizationFieldId);
-    }
-
-    /**
-     * @return CustomizationFieldId
-     */
-    public function getCustomizationFieldId(): CustomizationFieldId
-    {
-        return $this->customizationFieldId;
-    }
 }

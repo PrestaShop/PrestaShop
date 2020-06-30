@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception;
 
 /**
- * Is thrown when customization field deletion fails
+ * Thrown when expected customization field is not found
  */
-class CannotDeleteCustomizationFieldException extends CustomizationFieldException
+class CustomizationFieldNotFoundException extends CustomizationFieldException
 {
 }
