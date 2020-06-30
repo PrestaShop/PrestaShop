@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-categories
 @reset-database-before-feature
+@clear-cache-before-feature
 @update-categories
 Feature: Update product categories from Back Office (BO)
   As a BO user

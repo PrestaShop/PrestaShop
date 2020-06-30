@@ -28,10 +28,12 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use AppKernel;
 use Cache;
+use Category;
 use Context;
 use Employee;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use Pack;
+use Product;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CommonFeatureContext extends AbstractPrestaShopFeatureContext
@@ -100,10 +102,17 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @AfterFeature @clear-cache-after-feature
      */
-    public static function clearCache()
+    public static function clearCacheAfterFeature()
     {
-        Cache::clear();
-        Pack::resetStaticCache();
+        self::clearCache();
+    }
+
+    /**
+     * @BeforeFeature @clear-cache-before-feature
+     */
+    public static function clearCacheBeforeFeature()
+    {
+        self::clearCache();
     }
 
     /**
@@ -125,5 +134,16 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function clearEntityManager()
     {
         $this::getContainer()->get('doctrine.orm.entity_manager')->clear();
+    }
+
+    /**
+     * Clears cache
+     */
+    private static function clearCache(): void
+    {
+        Cache::clear();
+        Pack::resetStaticCache();
+        Category::resetStaticCache();
+        Product::resetStaticCache();
     }
 }
