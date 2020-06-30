@@ -39,7 +39,7 @@ class CustomizationFieldConstraintException extends CustomizationFieldException
     const INVALID_ID = 1;
 
     /**
-     * When Customization type is invalid
+     * When customization type is invalid
      */
-    const INVALID_TYPE = 2;
+    const INVALID_TYPE = 4;
 }
