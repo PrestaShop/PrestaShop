@@ -55,7 +55,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
         $this->session->database_password = trim(Tools::getValue('dbPassword'));
         $this->session->database_prefix = trim(Tools::getValue('db_prefix'));
         $this->session->database_clear = Tools::getValue('database_clear');
-
         $this->session->rewrite_engine = Tools::getValue('rewrite_engine');
     }
 
