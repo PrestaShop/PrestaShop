@@ -211,7 +211,7 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => $this->getAddressCommonConstraints(),
             ])
             ->add('post_code', TextType::class, [
-                'label' => $this->trans('Zip/postal code', 'Admin.Global'),
+                'label' => $this->trans('Zip/Postal code', 'Admin.Global'),
                 'required' => false,
                 'constraints' => [
                     new TypedRegex([
