@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;

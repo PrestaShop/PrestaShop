@@ -29,14 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCustomizationFieldsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateCustomizationFieldCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateCustomizationFieldHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\UpdateProductCustomizationFieldsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
