@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
 
 /**
  * Updates single customization field
@@ -41,7 +42,7 @@ class UpdateCustomizationFieldCommand
     private $customizationFieldId;
 
     /**
-     * @var int|null
+     * @var CustomizationType|null
      */
     private $type;
 
@@ -77,22 +78,21 @@ class UpdateCustomizationFieldCommand
     }
 
     /**
-     * @return int|null
+     * @return CustomizationType|null
      */
-    public function getType(): ?int
+    public function getType(): ?CustomizationType
     {
         return $this->type;
     }
 
     /**
-     * @param int|null $type
+     * @param int $type
      *
      * @return UpdateCustomizationFieldCommand
      */
-    public function setType(?int $type): UpdateCustomizationFieldCommand
+    public function setType(int $type): UpdateCustomizationFieldCommand
     {
-        //@todo: validate type
-        $this->type = $type;
+        $this->type = new CustomizationType($type);
 
         return $this;
     }
@@ -120,7 +120,7 @@ class UpdateCustomizationFieldCommand
     /**
      * @return bool|null
      */
-    public function getAddedByModule(): ?bool
+    public function isAddedByModule(): ?bool
     {
         return $this->addedByModule;
     }

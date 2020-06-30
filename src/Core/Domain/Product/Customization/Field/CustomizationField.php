@@ -29,17 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
 
 /**
  * Transfers customization field data
  */
 class CustomizationField
 {
-    /**
-     * @var CustomizationFieldId|null
-     */
-    private $customizationFieldId;
-
     /**
      * @var int
      */
@@ -56,36 +52,40 @@ class CustomizationField
     private $required;
 
     /**
-     * @var bool @todo: do I need this field? Check what it does
+     * @var int|null
+     */
+    private $customizationFieldId;
+
+    /**
+     * @var bool
      */
     private $addedByModule;
 
     /**
-     * @param int|null $customizationFieldId
      * @param int $type
      * @param string[] $localizedNames
      * @param bool $required
+     * @param int|null $customizationFieldId
      * @param bool $addedByModule
      */
     public function __construct(
-        ?int $customizationFieldId,
         int $type,
         array $localizedNames,
         bool $required,
+        ?int $customizationFieldId = null,
         bool $addedByModule = false
     ) {
-        $this->customizationFieldId = $customizationFieldId ? new CustomizationFieldId($customizationFieldId) : null;
         $this->type = $type;
-        //@todo: assert localized structure?
         $this->localizedNames = $localizedNames;
         $this->required = $required;
+        $this->customizationFieldId = $customizationFieldId ? $customizationFieldId : null;
         $this->addedByModule = $addedByModule;
     }
 
     /**
-     * @return CustomizationFieldId|null
+     * @return int|null
      */
-    public function getCustomizationFieldId(): ?CustomizationFieldId
+    public function getCustomizationFieldId(): ?int
     {
         return $this->customizationFieldId;
     }
