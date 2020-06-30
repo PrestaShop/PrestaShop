@@ -105,8 +105,7 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
             $customizationField->getType(),
             $customizationField->isRequired(),
             $customizationField->getLocalizedNames(),
-            $customizationField->isAddedByModule(),
-            false
+            $customizationField->isAddedByModule()
         ));
     }
 
@@ -121,7 +120,6 @@ class UpdateProductCustomizationFieldsHandler extends AbstractProductHandler imp
         $command->setRequired($customizationField->isRequired());
         $command->setLocalizedNames($customizationField->getLocalizedNames());
         $command->setAddedByModule($customizationField->isAddedByModule());
-        $command->setDeleted(false);
 
         $this->updateCustomizationFieldHandler->handle($command);
     }
