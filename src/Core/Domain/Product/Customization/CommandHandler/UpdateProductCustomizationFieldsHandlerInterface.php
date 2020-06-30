@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
 
 /**
  * Defines contract to handle @var UpdateProductCustomizationFieldsCommand
