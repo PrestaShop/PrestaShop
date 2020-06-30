@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField as CustomizationFieldEntity;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\AddCustomizationFieldCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler\AddCustomizationFieldHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
 /**
  * Handles @var AddCustomizationFieldCommand using legacy object model

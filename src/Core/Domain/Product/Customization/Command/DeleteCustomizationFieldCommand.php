@@ -24,17 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\DeleteCustomizationFieldCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
 /**
- * Defines contract to handle @var DeleteCustomizationFieldCommand
+ * Deletes customization field
  */
-interface DeleteCustomizationFieldHandlerInterface
+class DeleteCustomizationFieldCommand
 {
     /**
-     * @param DeleteCustomizationFieldCommand $command
+     * @var CustomizationFieldId
      */
-    public function handle(DeleteCustomizationFieldCommand $command): void;
+    private $customizationFieldId;
+
+    /**
+     * @param int $customizationFieldId
+     */
+    public function __construct(int $customizationFieldId)
+    {
+        $this->customizationFieldId = new CustomizationFieldId($customizationFieldId);
+    }
+
+    /**
+     * @return CustomizationFieldId
+     */
+    public function getCustomizationFieldId(): CustomizationFieldId
+    {
+        return $this->customizationFieldId;
+    }
 }

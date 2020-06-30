@@ -26,13 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Base exception for customization field subdomain
+ * Gets product customization fields
  */
-class CustomizationFieldException extends CustomizationException
+class GetProductCustomizationFields
 {
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
 }

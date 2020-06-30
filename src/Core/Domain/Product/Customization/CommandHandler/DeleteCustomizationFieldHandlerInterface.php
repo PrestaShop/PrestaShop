@@ -24,17 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\Command\UpdateCustomizationFieldCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustomizationFieldCommand;
 
 /**
- * Defines contract to handle @var UpdateCustomizationFieldCommand
+ * Defines contract to handle @var DeleteCustomizationFieldCommand
  */
-interface UpdateCustomizationFieldHandlerInterface
+interface DeleteCustomizationFieldHandlerInterface
 {
     /**
-     * @param UpdateCustomizationFieldCommand $command
+     * @param DeleteCustomizationFieldCommand $command
      */
-    public function handle(UpdateCustomizationFieldCommand $command): void;
+    public function handle(DeleteCustomizationFieldCommand $command): void;
 }

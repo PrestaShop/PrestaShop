@@ -26,27 +26,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Field\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Transfers product customization field data
+ * Adds customization field to a product
  */
-class CustomizationField
+class AddCustomizationFieldCommand
 {
     /**
-     * @var int
+     * @var ProductId
      */
-    private $customizationFieldId;
+    private $productId;
 
     /**
-     * @var int
+     * @var CustomizationType
      */
     private $type;
-
-    /**
-     * @var string[]
-     */
-    private $localizedNames;
 
     /**
      * @var bool
@@ -59,48 +57,45 @@ class CustomizationField
     private $addedByModule;
 
     /**
-     * @param int $customizationFieldId
+     * @var string[]
+     */
+    private $localizedNames;
+
+    /**
+     * @param int $productId
      * @param int $type
-     * @param string[] $localizedNames
      * @param bool $required
      * @param bool $addedByModule
+     * @param string[] $localizedNames
      */
     public function __construct(
-        int $customizationFieldId,
+        int $productId,
         int $type,
-        array $localizedNames,
         bool $required,
-        bool $addedByModule
+        array $localizedNames,
+        bool $addedByModule = false
     ) {
-        $this->customizationFieldId = $customizationFieldId;
-        $this->type = $type;
-        $this->localizedNames = $localizedNames;
+        $this->productId = new ProductId($productId);
+        $this->type = new CustomizationType($type);
         $this->required = $required;
         $this->addedByModule = $addedByModule;
+        $this->localizedNames = $localizedNames;
     }
 
     /**
-     * @return int
+     * @return ProductId
      */
-    public function getCustomizationFieldId(): int
+    public function getProductId(): ProductId
     {
-        return $this->customizationFieldId;
+        return $this->productId;
     }
 
     /**
-     * @return int
+     * @return CustomizationType
      */
-    public function getType(): int
+    public function getType(): CustomizationType
     {
         return $this->type;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
-    {
-        return $this->localizedNames;
     }
 
     /**
@@ -117,5 +112,13 @@ class CustomizationField
     public function isAddedByModule(): bool
     {
         return $this->addedByModule;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
     }
 }
