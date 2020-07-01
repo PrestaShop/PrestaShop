@@ -53,7 +53,7 @@
 
 {% block form_row -%}
   {% spaceless %}
-    <div class="{{ block('form_row_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+    <div class="{{ block('form_row_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}"{% if (visible is defined and not visible) %} style="display: none;"{% endif %}>
       {{ form_label(form) }}
       <div class="{{ block('form_group_class') }}">
         {{ form_widget(form) }}

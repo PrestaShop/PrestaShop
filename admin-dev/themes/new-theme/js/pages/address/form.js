@@ -40,11 +40,15 @@ $(document).ready(() => {
       company: addressFormMap.addressCompanyInput,
     },
   );
+
+  const addressStateBlock = $(addressFormMap.addressStateBlock).closest('.form-group.row');
+
   new CountryStateSelectionToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressStateSelect,
-    addressFormMap.addressStateBlock,
+    addressStateBlock,
   );
+
   new CountryDniRequiredToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressDniInput,
