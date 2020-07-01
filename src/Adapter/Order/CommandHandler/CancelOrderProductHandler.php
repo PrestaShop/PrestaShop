@@ -130,7 +130,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         if (!empty($orderDetails['productsOrderDetails'])) {
             foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
                 $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
-                $newQuantity = (int) $orderDetail->product_quantity - (int) $qty_cancel_product;
+                $newQuantity = max((int) $orderDetail->product_quantity - (int) $qty_cancel_product, 0);
                 $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
                 $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
                 Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
@@ -139,7 +139,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
         if (!empty($orderDetails['customizedProductsOrderDetail'])) {
             foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
-                $newQuantity = (int) $orderDetail->product_quantity - (int) $qtyCancelProduct;
+                $newQuantity = max((int) $orderDetail->product_quantity - (int) $qtyCancelProduct, 0);
                 $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
                 $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
             }
