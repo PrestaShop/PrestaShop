@@ -102,10 +102,11 @@ class ThemeProviderTest extends KernelTestCase
             self::THEMES_DIR
         );
 
-        $provider->setLocale(DefaultCatalogueProvider::DEFAULT_LOCALE);
-
         // load catalogue from Xliff files within the theme
-        $catalogue = $provider->getFileTranslatedCatalogue($this->themeName);
+        $catalogue = $provider->getFileTranslatedCatalogue(
+            DefaultCatalogueProvider::DEFAULT_LOCALE,
+            $this->themeName
+        );
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
@@ -146,10 +147,8 @@ class ThemeProviderTest extends KernelTestCase
             self::THEMES_DIR
         );
 
-        $provider->setThemeName($this->themeName);
-
         // load catalogue from Xliff files within the theme
-        $catalogue = $provider->getDefaultCatalogue($shouldEmptyCatalogue);
+        $catalogue = $provider->getDefaultCatalogue($shouldEmptyCatalogue, $this->themeName);
 
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
