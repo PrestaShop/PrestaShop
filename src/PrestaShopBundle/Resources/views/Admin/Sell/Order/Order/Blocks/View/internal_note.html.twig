@@ -23,12 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div class="card-body clearfix">
-  <div class="alert alert-info" role="alert">
-    <p class="alert-text">
-      {{ 'Internal note is only visible in the back office.'|trans({}, 'Admin.Ordercustomers.Help') }}
-    </p>
-  </div>
-
   {{ form_start(internalNoteForm, {'action': path('admin_orders_set_internal_note', {'orderId': orderForViewing.getId()})}) }}
     {{ form_widget(internalNoteForm.note) }}
 
