@@ -177,26 +177,19 @@ class OrderProductQuantityUpdater
             return $cart;
         }
 
-        if (0 === $newQuantity) {
-            // Product deletion
-            $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $oldQuantity);
+        // Update product and customization in the cart
+        $updateQuantityResult = $cart->updateQty(
+            abs($deltaQuantity),
+            $orderDetail->product_id,
+            $orderDetail->product_attribute_id,
+            false,
+            $deltaQuantity > 0 ? 'down' : 'up'
+        );
 
-            $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
-        } else {
-            // Update product and customization in the cart
-            $updateQuantityResult = $cart->updateQty(
-                abs($deltaQuantity),
-                $orderDetail->product_id,
-                $orderDetail->product_attribute_id,
-                false,
-                $deltaQuantity > 0 ? 'down' : 'up'
-            );
-
-            if (-1 === $updateQuantityResult) {
-                throw new \LogicException('Minimum quantity is not respected');
-            } elseif (true !== $updateQuantityResult) {
-                throw new \LogicException('Something went wrong');
-            }
+        if (-1 === $updateQuantityResult) {
+            throw new \LogicException('Minimum quantity is not respected');
+        } elseif (true !== $updateQuantityResult) {
+            throw new \LogicException('Something went wrong');
         }
 
         return $cart;
