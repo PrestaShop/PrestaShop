@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
+use Cart;
 use CartRule;
 use Configuration;
 use Currency;
@@ -222,6 +223,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                throw new OrderException('The discount type is invalid.');
         }
 
+        $cart = Cart::getCartByOrderId($order->id);
         $result = true;
         foreach ($cartRules as &$cartRule) {
             // @todo: move to separate private method
@@ -229,8 +231,12 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             $cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
             $cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
             $cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = $command->getCartRuleName();
-            $cartRuleObj->quantity = 0;
+            // This a one time cart rule, for a specific user that can only be used once
+            $cartRuleObj->id_customer = $cart->id_customer;
+            $cartRuleObj->quantity = 1;
             $cartRuleObj->quantity_per_user = 1;
+            $cartRuleObj->active = 0;
+            $cartRuleObj->highlight = 0;
 
             if ($command->getCartRuleType() === OrderDiscountType::DISCOUNT_PERCENT) {
                 $cartRuleObj->reduction_percent = $discountValue;
@@ -240,13 +246,13 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 $cartRuleObj->free_shipping = 1;
             }
 
-            $cartRuleObj->active = 0;
-
             if ($result = $cartRuleObj->add()) {
                 $cartRule['id'] = $cartRuleObj->id;
             } else {
                 break;
             }
+            // It's important to add the cart rule to the cart Or it will be ignored when cart performs AutoRemove AddAdd
+            $cart->addCartRule($cartRuleObj->id);
         }
 
         if ($result) {

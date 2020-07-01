@@ -259,7 +259,7 @@ Feature: Cancel Order Product from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  Scenario: Add discount to whole order, when a product is cancelled the discount should still be present
+  Scenario: Add discount to all orders, when a product is cancelled the discount should still be present
     Given I add order "bo_order_cancel_product" with the following details:
       | cart                | dummy_cart                 |
       | message             | test                       |
@@ -284,7 +284,7 @@ Feature: Cancel Order Product from Back Office (BO)
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
     Given there is a cart rule named "CartRuleAmountOnWholeOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    And cart rule "CartRuleAmountOnWholeOrder" is applied on order
+    And cart rule "CartRuleAmountOnWholeOrder" is applied on every order
     When I add products to order "bo_order_cancel_product" with new invoice and the following products details:
       | name          | Test Product Cart Rule On Order |
       | amount        | 1                               |
