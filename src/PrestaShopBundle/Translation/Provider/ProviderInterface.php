@@ -28,20 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Translation\Provider;
 
-use Symfony\Component\Translation\MessageCatalogueInterface;
-
 /**
  * Define contract to retrieve translations.
  */
-interface ProviderInterface extends DefaultCatalogueProviderInterface, FileTranslatedCatalogueProviderInterface, UserTranslatedCatalogueProviderInterface
+interface ProviderInterface
 {
-    /**
-     * Returns the fully translated message catalogue
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getMessageCatalogue(): MessageCatalogueInterface;
-
     /**
      * Returns the provider's unique identifier
      *
