@@ -72,12 +72,11 @@ class Database extends AbstractInstall
                     if (!Db::checkEncoding($server, $login, $password)) {
                         $errors[] = $this->translator->trans('Cannot convert database data to utf-8', [], 'Install') . $dbtype;
                     }
-
                     // Check if a table with same prefix already exists
                     if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix)) {
                         $errors[] = $this->translator->trans('At least one table with same prefix was already found, please change your prefix or drop your database', [], 'Install');
                     }
-                    if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true) {
+                    if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix, $this->getBestEngine($server, $database, $login, $password))) !== true) {
                         $errors[] = $this->translator->trans('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', ['%database%' => $database], 'Install');
                         if ($create_error != false) {
                             $errors[] = $create_error;
