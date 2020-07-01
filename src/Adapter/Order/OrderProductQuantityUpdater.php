@@ -120,6 +120,19 @@ class OrderProductQuantityUpdater
         try {
             $oldQuantity = (int) $orderDetail->product_quantity;
 
+            // Perform deletion first, we don't want the OrderDetail to be saved with a quantity 0, this could lead to bugs
+            if (0 === $newQuantity) {
+                // Product deletion
+                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $oldQuantity);
+                $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
+            } else {
+                $orderDetail->product_quantity = $newQuantity;
+                $orderDetail->reduction_percent = 0;
+                // update taxes
+                $orderDetail->updateTaxAmount($order);
+                $orderDetail->update();
+            }
+
             // Update quantity on the cart and stock
             $cart = $this->updateProductQuantity($cart, $order, $orderDetail, $oldQuantity, $newQuantity);
 
@@ -170,12 +183,6 @@ class OrderProductQuantityUpdater
 
             $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
         } else {
-            $orderDetail->product_quantity = $newQuantity;
-            $orderDetail->reduction_percent = 0;
-            // update taxes
-            $orderDetail->updateTaxAmount($order);
-            $orderDetail->update();
-
             // Update product and customization in the cart
             $updateQuantityResult = $cart->updateQty(
                 abs($deltaQuantity),
