@@ -44,10 +44,6 @@ class FrontOfficeProvider implements ProviderInterface
     protected $resourceDirectory;
 
     /**
-     * @var string locale
-     */
-    protected $locale;
-    /**
      * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
@@ -61,18 +57,6 @@ class FrontOfficeProvider implements ProviderInterface
     }
 
     /**
-     * @param string $locale
-     *
-     * @return FrontOfficeProvider
-     */
-    public function setLocale(string $locale): FrontOfficeProvider
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getIdentifier()
@@ -81,74 +65,48 @@ class FrontOfficeProvider implements ProviderInterface
     }
 
     /**
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
-     */
-    public function getMessageCatalogue(): MessageCatalogueInterface
-    {
-        if (null === $this->locale) {
-            throw new \LogicException('Locale cannot be null. Call setLocale first');
-        }
-
-        $messageCatalogue = $this->getDefaultCatalogue();
-
-        // Merge catalogues
-
-        $xlfCatalogue = $this->getFileTranslatedCatalogue();
-        $messageCatalogue->addCatalogue($xlfCatalogue);
-        unset($xlfCatalogue);
-
-        $databaseCatalogue = $this->getUserTranslatedCatalogue();
-        $messageCatalogue->addCatalogue($databaseCatalogue);
-        unset($databaseCatalogue);
-
-        return $messageCatalogue;
-    }
-
-    /**
+     * @param string $locale
      * @param bool $empty
      *
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
+    public function getDefaultCatalogue(string $locale, bool $empty = true): MessageCatalogueInterface
     {
         return (new DefaultCatalogueProvider(
-            $this->locale,
             $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
             $this->getFilenameFilters()
         ))
-            ->getCatalogue($empty);
+            ->getCatalogue($locale, $empty);
     }
 
     /**
-     * @return MessageCatalogueInterface
+     * @param string $locale
      *
-     * @throws FileNotFoundException
+     * @return MessageCatalogueInterface
      */
-    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
         try {
             return (new FileTranslatedCatalogueProvider(
-                $this->locale,
                 $this->resourceDirectory,
                 $this->getFilenameFilters()
             ))
-                ->getCatalogue();
+                ->getCatalogue($locale);
         } catch (FileNotFoundException $e) {
             // there are no translation files, ignore them
-            return new MessageCatalogue($this->locale);
+            return new MessageCatalogue($locale);
         }
     }
 
     /**
+     * @param string $locale
      * @param string|null $themeName
      *
      * @return MessageCatalogueInterface
      */
-    public function getUserTranslatedCatalogue(string $themeName = null): MessageCatalogueInterface
+    public function getUserTranslatedCatalogue(string $locale, ?string $themeName = null): MessageCatalogueInterface
     {
         if (null === $themeName) {
             $themeName = self::DEFAULT_THEME_NAME;
@@ -161,10 +119,9 @@ class FrontOfficeProvider implements ProviderInterface
 
         return (new UserTranslatedCatalogueProvider(
             $this->databaseLoader,
-            $this->locale,
             $translationDomains
         ))
-            ->getCatalogue($themeName);
+            ->getCatalogue($locale, $themeName);
     }
 
     /**

@@ -76,11 +76,10 @@ class DefaultCatalogueProviderTest extends TestCase
     public function testGetCatalogueFilters()
     {
         $catalogue = (new DefaultCatalogueProvider(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         ))
-            ->getCatalogue();
+            ->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -90,11 +89,10 @@ class DefaultCatalogueProviderTest extends TestCase
             'ShopSomethingElse',
         ], $domains);
         $provider = new DefaultCatalogueProvider(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
             self::$tempDir,
             ['#^ShopSomething([A-Z]|\.|$)#']
         );
-        $catalogue = $provider->getCatalogue();
+        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -103,18 +101,20 @@ class DefaultCatalogueProviderTest extends TestCase
             'ShopSomethingElse',
         ], $domains);
 
-        $this->assertSame($catalogue->all(), $provider->getDefaultCatalogue()->all());
+        $this->assertSame(
+            $catalogue->all(),
+            $provider->getDefaultCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE)->all()
+        );
     }
 
     public function testGetCatalogueMessages()
     {
         $provider = new DefaultCatalogueProvider(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue();
+        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $messages = $catalogue->all();
         sort($messages);
@@ -125,12 +125,11 @@ class DefaultCatalogueProviderTest extends TestCase
     public function testGetCatalogueEmpty()
     {
         $provider = new DefaultCatalogueProvider(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue(true);
+        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE, true);
 
         $messages = $catalogue->all();
         sort($messages);
@@ -138,12 +137,11 @@ class DefaultCatalogueProviderTest extends TestCase
         $this->assertSame(array_values(self::$wordings), $messages);
 
         $provider = new DefaultCatalogueProvider(
-            'ab-AB',
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue(true);
+        $catalogue = $provider->getCatalogue('ab-AB', true);
 
         $messages = $catalogue->all();
         sort($messages);

@@ -32,17 +32,12 @@ use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface, UserTranslatedCatalogueProviderInterface
+class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
 {
     /**
      * @var DatabaseTranslationLoader
      */
     private $databaseLoader;
-
-    /**
-     * @var string
-     */
-    private $locale;
 
     /**
      * @var array
@@ -51,27 +46,26 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
 
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
-        string $locale,
         array $translationDomains
     ) {
         $this->databaseLoader = $databaseLoader;
-        $this->locale = $locale;
         $this->translationDomains = $translationDomains;
     }
 
     /**
+     * @param string $locale
      * @param string|null $themeName
      *
      * @return MessageCatalogueInterface
      */
-    public function getCatalogue(?string $themeName = null): MessageCatalogueInterface
+    public function getCatalogue(string $locale, ?string $themeName = null): MessageCatalogueInterface
     {
-        $catalogue = new MessageCatalogue($this->locale);
+        $catalogue = new MessageCatalogue($locale);
 
         foreach ($this->translationDomains as $translationDomain) {
             $domainCatalogue = $this->databaseLoader->load(
                 null,
-                $this->locale,
+                $locale,
                 $translationDomain,
                 $themeName
             );
@@ -85,12 +79,13 @@ class UserTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     }
 
     /**
+     * @param string $locale
      * @param string|null $themeName
      *
      * @return MessageCatalogueInterface
      */
-    public function getUserTranslatedCatalogue(?string $themeName = null): MessageCatalogueInterface
+    public function getUserTranslatedCatalogue(string $locale, ?string $themeName = null): MessageCatalogueInterface
     {
-        return $this->getCatalogue($themeName);
+        return $this->getCatalogue($locale, $themeName);
     }
 }

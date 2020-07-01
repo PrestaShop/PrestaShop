@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 declare(strict_types=1);
@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface, FileTranslatedCatalogueProviderInterface
+class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInterface
 {
     /**
      * @var string
@@ -45,39 +45,34 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     private $filenameFilters = [];
 
     /**
-     * @var string
-     */
-    private $locale;
-
-    /**
      * DefaultCatalogueProvider constructor.
      *
-     * @param string $locale
      * @param string $directory
      * @param array $filenameFilters
      */
-    public function __construct(string $locale, string $directory, array $filenameFilters)
+    public function __construct(string $directory, array $filenameFilters)
     {
-        $this->locale = $locale;
         $this->directory = $directory;
         $this->filenameFilters = $filenameFilters;
     }
 
     /**
+     * @param string $locale
+     *
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
      */
-    public function getCatalogue(): MessageCatalogueInterface
+    public function getCatalogue(string $locale): MessageCatalogueInterface
     {
-        $catalogue = new MessageCatalogue($this->locale);
+        $catalogue = new MessageCatalogue($locale);
         $translationFinder = new TranslationFinder();
-        $localeResourceDirectory = rtrim($this->directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->locale;
+        $localeResourceDirectory = rtrim($this->directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $locale;
 
         foreach ($this->filenameFilters as $filter) {
             $filteredCatalogue = $translationFinder->getCatalogueFromPaths(
                 [$localeResourceDirectory],
-                $this->locale,
+                $locale,
                 $filter
             );
             $catalogue->addCatalogue($filteredCatalogue);
@@ -87,10 +82,14 @@ class FileTranslatedCatalogueProvider implements TranslationCatalogueProviderInt
     }
 
     /**
+     * @param string $locale
+     *
      * @return MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
      */
-    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(string $locale): MessageCatalogueInterface
     {
-        return $this->getCatalogue();
+        return $this->getCatalogue($locale);
     }
 }
