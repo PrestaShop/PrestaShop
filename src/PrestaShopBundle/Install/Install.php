@@ -489,10 +489,13 @@ class Install extends AbstractInstall
 
             // Install custom SQL data (db_data.sql file)
             if (file_exists(_PS_INSTALL_DATA_PATH_ . 'db_data.sql')) {
+                $allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci');
+                $collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
                 $sql_loader = new SqlLoader();
                 $sql_loader->setMetaData(array(
                     'PREFIX_' => _DB_PREFIX_,
                     'ENGINE_TYPE' => _MYSQL_ENGINE_,
+                    'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation)) ? '' : 'COLLATE ' . $collation_database,
                 ));
 
                 $sql_loader->parse_file(_PS_INSTALL_DATA_PATH_ . 'db_data.sql', false);
