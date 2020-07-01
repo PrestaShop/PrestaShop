@@ -54,24 +54,13 @@ class ThemeExtractor implements ThemeExtractorInterface
         $catalogue = new MessageCatalogue($locale);
 
         $this->smartyExtractor->extract(
-            $this->getThemeDirectory($theme),
+            rtrim($theme->getDirectory(), '/'),
             $catalogue
         );
 
         $catalogue = $this->normalize($catalogue);
 
         return $catalogue;
-    }
-
-    /**
-     * @param Theme $theme
-     *
-     * @return string
-     */
-    private function getThemeDirectory(Theme $theme)
-    {
-        // remove trailing "/"
-        return preg_replace('#/+$#', '', $theme->getDirectory());
     }
 
     /**

@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Translation\Provider;
 /**
  * Provide an Message Catalogue from the Database
  *
- * @deprecated Since 1.7.6.5, no longer used
+ * @deprecated Since 1.7.7.0, no longer used
  */
 interface DatabaseCatalogueInterface
 {
