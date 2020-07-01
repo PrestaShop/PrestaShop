@@ -317,7 +317,7 @@ class CustomerAddressType extends AbstractType
                 ],
             ])
             ->add('postcode', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => $this->translator->trans('Zip/Postal code', [], 'Admin.Global'),
                 'empty_data' => '',
                 'constraints' => [
