@@ -27,6 +27,7 @@ import 'bootstrap/dist/js/bootstrap.min';
 import 'flexibility';
 import 'bootstrap-touchspin';
 import 'jquery-touchswipe';
+import './selectors';
 
 import './responsive';
 import './checkout';
