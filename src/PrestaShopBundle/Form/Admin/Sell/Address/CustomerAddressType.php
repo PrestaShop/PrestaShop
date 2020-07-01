@@ -122,10 +122,9 @@ class CustomerAddressType extends AbstractType
                         'message' => $this->translator->trans('This field is invalid', [], 'Admin.Notifications.Error'),
                     ]),
                     new ExistingCustomerEmail(),
-                    'attr' => [
-                        'class' => 'js-manufacturer-country-select',
-                        'data-customer-information-url' => $this->router->generate('admin_customer_for_address_information'),
-                    ],
+                ],
+                'attr' => [
+                    'data-customer-information-url' => $this->router->generate('admin_customer_for_address_information'),
                 ],
             ]);
         } else {
@@ -133,29 +132,29 @@ class CustomerAddressType extends AbstractType
         }
 
         $builder->add('dni', TextType::class, [
-                'label' => $this->translator->trans('Identification number', [], 'Admin.Orderscustomers.Feature'),
-                'help' => $this->translator->trans(
-                    'The national ID card number of this person, or a unique tax identification number.',
-                    [],
-                    'Admin.Orderscustomers.Help'
-                ),
-                'required' => false,
-                'empty_data' => '',
-                'constraints' => [
-                    new CleanHtml(),
-                    new TypedRegex([
-                        'type' => TypedRegex::TYPE_DNI_LITE,
-                    ]),
-                    new Length([
-                        'max' => AddressConstraint::MAX_DNI_LENGTH,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters',
-                            ['%limit%' => AddressConstraint::MAX_DNI_LENGTH],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
+            'label' => $this->translator->trans('Identification number', [], 'Admin.Orderscustomers.Feature'),
+            'help' => $this->translator->trans(
+                'The national ID card number of this person, or a unique tax identification number.',
+                [],
+                'Admin.Orderscustomers.Help'
+            ),
+            'required' => false,
+            'empty_data' => '',
+            'constraints' => [
+                new CleanHtml(),
+                new TypedRegex([
+                    'type' => TypedRegex::TYPE_DNI_LITE,
+                ]),
+                new Length([
+                    'max' => AddressConstraint::MAX_DNI_LENGTH,
+                    'maxMessage' => $this->translator->trans(
+                        'This field cannot be longer than %limit% characters',
+                        ['%limit%' => AddressConstraint::MAX_DNI_LENGTH],
+                        'Admin.Notifications.Error'
+                    ),
+                ]),
+            ],
+        ])
             ->add('alias', TextType::class, [
                 'label' => $this->translator->trans('Address alias', [], 'Admin.Orderscustomers.Feature'),
                 'help' => $genericInvalidCharsMessage,
