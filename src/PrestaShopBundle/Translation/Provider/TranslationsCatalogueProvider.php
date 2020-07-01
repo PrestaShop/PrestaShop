@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 declare(strict_types=1);
@@ -33,75 +33,110 @@ use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 class TranslationsCatalogueProvider
 {
     /**
-     * @var TranslationCatalogueProviderFactory
+     * @var TranslationsProvider
      */
-    private $translationCatalogueProviderFactory;
+    private $translationProvider;
+    /**
+     * @var ThemeProvider
+     */
+    private $themeProvider;
+    /**
+     * @var SearchProvider
+     */
+    private $searchProvider;
+    /**
+     * @var ExternalModuleLegacySystemProvider
+     */
+    private $externalModuleLegacySystemProvider;
 
     public function __construct(
-        TranslationCatalogueProviderFactory $translationCatalogueProviderFactory
+        TranslationsProvider $translationProvider,
+        ThemeProvider $themeProvider,
+        SearchProvider $searchProvider,
+        ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider
     ) {
-        $this->translationCatalogueProviderFactory = $translationCatalogueProviderFactory;
+        $this->translationProvider = $translationProvider;
+        $this->themeProvider = $themeProvider;
+        $this->searchProvider = $searchProvider;
+        $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
     }
 
     /**
      * @param string $locale
      * @param string $domain
-     * @param string|array|null $search
-     * @param string|null $module
+     * @param array $search
      * @param string|null $theme
+     *
+     * @return array
+     */
+    public function getThemeDomainCatalogue(
+        string $locale,
+        string $domain,
+        string $theme,
+        array $search = []
+    ): array {
+        if ('Messages' === $domain) {
+            $domain = 'messages';
+        }
+        $provider = $this->themeProvider;
+
+        $defaultCatalogue = $provider->getDefaultCatalogue($locale, $theme)->all($domain);
+        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale, $theme)->all($domain);
+        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale, $theme, $domain)->all($domain);
+
+        $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
+
+        return $this->normalizeCatalogue(
+            $defaultCatalogue,
+            $fileTranslatedCatalogue,
+            $userTranslatedCatalogue,
+            $treeDomain,
+            $search
+        );
+    }
+
+    /**
+     * @param string $locale
+     * @param string $domain
+     * @param array $search
+     * @param string|null $theme
+     * @param string|null $module
      *
      * @return array
      */
     public function getDomainCatalogue(
         string $locale,
         string $domain,
-        $search = null,
-        ?string $module = null,
-        ?string $theme = null
+        array $search = [],
+        ?string $theme = null,
+        ?string $module = null
     ): array {
         if ('Messages' === $domain) {
             $domain = 'messages';
         }
+        $provider = $this->searchProvider;
 
-        $provider = $this->translationCatalogueProviderFactory->getDomainCatalogueProvider(
-            $locale,
-            $domain,
-            $theme,
-            $module
-        );
+        $defaultCatalogue = $provider->getDefaultCatalogue($locale, $domain, $module)->all($domain);
+        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale, $domain, $module)->all($domain);
+        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale, $domain, $theme)->all($domain);
 
         $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
 
-        $defaultCatalogue = $provider->getDefaultCatalogue()->all($domain);
-        $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue()->all($domain);
-        $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($theme)->all($domain);
-
-        $domainCatalogue = [];
-        foreach ($defaultCatalogue as $key => $message) {
-            $messageData = [
-                'default' => $key,
-                'xliff' => (array_key_exists($key, $fileTranslatedCatalogue) ? $fileTranslatedCatalogue[$key] : null),
-                'database' => (array_key_exists($key, $userTranslatedCatalogue) ? $userTranslatedCatalogue[$key] : null),
-                'tree_domain' => $treeDomain,
-            ];
-            // if search is empty or is in catalog default|xliff|database
-            if (empty($search) || $this->dataContainsSearchWord($messageData, $search)) {
-                if (empty($messageData['xliff']) && empty($messageData['database'])) {
-                    array_unshift($domainCatalogue, $messageData);
-                } else {
-                    $domainCatalogue[] = $messageData;
-                }
-            }
-        }
-
-        return $domainCatalogue;
+        return $this->normalizeCatalogue(
+            $defaultCatalogue,
+            $fileTranslatedCatalogue,
+            $userTranslatedCatalogue,
+            $treeDomain,
+            $search
+        );
     }
 
     /**
      * @param string $type
      * @param string $locale
-     * @param string|array|null $search
+     * @param array $search
      * @param string|null $theme
+     * @param string|null $module
      *
      * @return array
      *
@@ -110,29 +145,29 @@ class TranslationsCatalogueProvider
     public function getCatalogue(
         string $type,
         string $locale,
-        $search = null,
-        ?string $theme = null
+        array $search = [],
+        ?string $theme = null,
+        ?string $module = null
     ): array {
-        $defaultCatalogue = $this->translationCatalogueProviderFactory->getDefaultCatalogueProvider(
-            $type,
-            $locale,
-            $theme
-        )
-            ->getDefaultCatalogue();
+        if ('external_legacy_module' === $type) {
+            $provider = $this->externalModuleLegacySystemProvider;
 
-        $fileTranslatedCatalogue = $this->translationCatalogueProviderFactory->getFileTranslatedCatalogueProvider(
-            $type,
-            $locale,
-            $theme
-        )
-            ->getFileTranslatedCatalogue();
+            $defaultCatalogue = $provider->getDefaultCatalogue($locale, $module, true);
+            $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale, $module);
+            $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale, $module);
+        } elseif ('themes' === $type) {
+            $provider = $this->themeProvider;
 
-        $userTranslatedCatalogue = $this->translationCatalogueProviderFactory->getUserTranslatedCatalogueProvider(
-            $type,
-            $locale,
-            $theme
-        )
-            ->getUserTranslatedCatalogue($theme);
+            $defaultCatalogue = $provider->getDefaultCatalogue($locale, $theme, true);
+            $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale, $theme);
+            $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale, $theme);
+        } else {
+            $provider = $this->translationProvider;
+
+            $defaultCatalogue = $provider->getDefaultCatalogue($type, $locale, true);
+            $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($type, $locale);
+            $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($type, $locale);
+        }
 
         $translations = [];
 
@@ -175,6 +210,43 @@ class TranslationsCatalogueProvider
     }
 
     /**
+     * @param array $defaultCatalogue
+     * @param array $fileTranslatedCatalogue
+     * @param array $userTranslatedCatalogue
+     * @param array $treeDomain
+     * @param array $search
+     *
+     * @return array
+     */
+    private function normalizeCatalogue(
+        array $defaultCatalogue,
+        array $fileTranslatedCatalogue,
+        array $userTranslatedCatalogue,
+        array $treeDomain,
+        ?array $search = []
+    ) {
+        $domainCatalogue = [];
+        foreach ($defaultCatalogue as $key => $message) {
+            $messageData = [
+                'default' => $key,
+                'xliff' => (array_key_exists($key, $fileTranslatedCatalogue) ? $fileTranslatedCatalogue[$key] : null),
+                'database' => (array_key_exists($key, $userTranslatedCatalogue) ? $userTranslatedCatalogue[$key] : null),
+                'tree_domain' => $treeDomain,
+            ];
+            // if search is empty or is in catalog default|xliff|database
+            if (empty($search) || $this->dataContainsSearchWord($messageData, $search)) {
+                if (empty($messageData['xliff']) && empty($messageData['database'])) {
+                    array_unshift($domainCatalogue, $messageData);
+                } else {
+                    $domainCatalogue[] = $messageData;
+                }
+            }
+        }
+
+        return $domainCatalogue;
+    }
+
+    /**
      * Check if data contains search word.
      *
      * @param array $data
@@ -200,6 +272,12 @@ class TranslationsCatalogueProvider
         return false;
     }
 
+    /**
+     * @param array $data
+     * @param string $search
+     *
+     * @return bool
+     */
     private function elementContainsSearchWord(array $data, string $search): bool
     {
         return (false !== strpos(strtolower((string) $data['default']), $search)) ||
