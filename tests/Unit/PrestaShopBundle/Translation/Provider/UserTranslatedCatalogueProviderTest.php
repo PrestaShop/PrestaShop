@@ -67,11 +67,10 @@ class UserTranslatedCatalogueProviderTest extends TestCase
     {
         $provider = new UserTranslatedCatalogueProvider(
             $this->databaseLoader,
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
             ['^ShopSomeDomain([A-Za-z]|$)']
         );
 
-        $catalogue = $provider->getCatalogue();
+        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -81,6 +80,9 @@ class UserTranslatedCatalogueProviderTest extends TestCase
             'ShopSomethingElse',
         ], $domains);
 
-        $this->assertSame($catalogue->all(), $provider->getUserTranslatedCatalogue()->all());
+        $this->assertSame(
+            $catalogue->all(),
+            $provider->getUserTranslatedCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE)->all()
+        );
     }
 }

@@ -37,24 +37,9 @@ use Symfony\Component\Validator\Validation;
 class TranslationService
 {
     /**
-     * @deprecated Since 1.7.7.0
-     */
-    const DEFAULT_THEME = 'classic';
-
-    /**
      * @var Container
      */
     public $container;
-
-    /**
-     * @var string
-     */
-    private $defaultTheme;
-
-    public function __construct($defaultTheme)
-    {
-        $this->defaultTheme = $defaultTheme;
-    }
 
     /**
      * @param string $lang
@@ -121,80 +106,76 @@ class TranslationService
      *
      * @param string $lang
      * @param string $type
-     * @param string $theme
-     * @param string|null $search
+     * @param array $search
+     * @param string|null $theme
      *
      * @return array
      */
-    public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
+    public function getTranslationsCatalogue(string $lang, string $type, array $search, ?string $theme, ?string $module)
     {
-        return $this->container->get('prestashop.translation.translations_provider')
+        return $this->container->get('prestashop.translation.translations_catalogue_provider')
                     ->getCatalogue(
                         $type,
                         $this->langToLocale($lang),
                         $search,
-                        $theme
+                        $theme,
+                        $module
                     );
-
-//        $factory = $this->container->get('prestashop.translation.translations_factory');
-//
-//        if ($this->requiresThemeTranslationsFactory($theme, $type)) {
-//            if ($this->isDefaultTheme($theme)) {
-//                $type = 'front';
-//            } else {
-//                $type = $theme;
-//                $factory = $this->container->get('prestashop.translation.theme_translations_factory');
-//            }
-//        }
-//
-//        return $factory->createTranslationsArray($type, $this->langToLocale($lang), $theme, $search);
-    }
-
-    /**
-     * @param string|null $theme
-     * @param string $type
-     *
-     * @return bool
-     */
-    private function requiresThemeTranslationsFactory($theme, $type)
-    {
-        return $type === 'themes' && null !== $theme;
     }
 
     /**
      * List translations for a specific domain.
      *
-     * @todo: we need module information here
-     * @todo: we need to improve the Vuejs application to send the information
-     *
      * @param string $locale
      * @param string $domain
      * @param string|null $theme
-     * @param string|array|null $search
+     * @param array $search
      * @param string|null $module
      *
      * @return array
+     *
+     * @throws Exception
+     * @todo: we need to improve the Vuejs application to send the information
+     *
+     * @todo: we need module information here
      */
     public function listDomainTranslation(
         string $locale,
         string $domain,
+        array $search,
         ?string $theme = null,
-        $search = null,
         ?string $module = null
     ): array {
         /**
          * @var TranslationsCatalogueProvider
          */
-        $provider = $this->container->get('prestashop.translation.translations_provider');
+        $catalogueProvider = $this->container->get('prestashop.translation.translations_catalogue_provider');
 
         $router = $this->container->get('router');
+
+        if (!empty($theme) && $this->container->getParameter('default_theme') !== $theme) {
+            $catalogue = $catalogueProvider->getThemeDomainCatalogue(
+                $locale,
+                $domain,
+                $theme,
+                $search
+            );
+        } else {
+            $catalogue = $catalogueProvider->getDomainCatalogue(
+                $locale,
+                $domain,
+                $search,
+                $theme,
+                $module
+            );
+        }
 
         return [
             'info' => [
                 'edit_url' => $router->generate('api_translation_value_edit'),
                 'reset_url' => $router->generate('api_translation_value_reset'),
             ],
-            'data' => $provider->getDomainCatalogue($locale, $domain, $search, $module, $theme),
+            'data' => $catalogue,
         ];
     }
 

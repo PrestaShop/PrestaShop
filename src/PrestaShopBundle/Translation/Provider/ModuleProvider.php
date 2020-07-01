@@ -40,17 +40,7 @@ class ModuleProvider implements ProviderInterface
     /**
      * @var string Path where translation files are found
      */
-    protected $resourceDirectory;
-
-    /**
-     * @var string locale
-     */
-    protected $locale;
-
-    /**
-     * @var string the module name
-     */
-    private $moduleName;
+    protected $defaultResourceDirectory;
     /**
      * @var DatabaseTranslationLoader
      */
@@ -58,22 +48,10 @@ class ModuleProvider implements ProviderInterface
 
     public function __construct(
         DatabaseTranslationLoader $databaseLoader,
-        string $resourceDirectory
+        string $defaultResourceDirectory
     ) {
         $this->databaseLoader = $databaseLoader;
-        $this->resourceDirectory = $resourceDirectory;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setModuleName($moduleName)
-    {
-        $this->moduleName = $moduleName;
-
-        $this->resourceDirectory = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
-
-        return $this;
+        $this->defaultResourceDirectory = $defaultResourceDirectory;
     }
 
     /**
@@ -85,109 +63,81 @@ class ModuleProvider implements ProviderInterface
     }
 
     /**
+     * @param string $defaultResourceDirectory
+     *
+     * @return ModuleProvider
+     */
+    public function setDefaultResourceDirectory(string $defaultResourceDirectory): ModuleProvider
+    {
+        $this->defaultResourceDirectory = $defaultResourceDirectory;
+
+        return $this;
+    }
+
+    /**
      * @param string $locale
-     *
-     * @return ModuleProvider
-     */
-    public function setLocale(string $locale): ModuleProvider
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * @param string $resourceDirectory
-     *
-     * @return ModuleProvider
-     */
-    public function setResourceDirectory(string $resourceDirectory): ModuleProvider
-    {
-        $this->resourceDirectory = $resourceDirectory;
-
-        return $this;
-    }
-
-    /**
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
-     */
-    public function getMessageCatalogue(): MessageCatalogueInterface
-    {
-        if (null === $this->locale) {
-            throw new \LogicException('Locale cannot be null. Call setLocale first');
-        }
-
-        $messageCatalogue = $this->getDefaultCatalogue();
-
-        // Merge catalogues
-
-        $xlfCatalogue = $this->getFileTranslatedCatalogue();
-        $messageCatalogue->addCatalogue($xlfCatalogue);
-        unset($xlfCatalogue);
-
-        $databaseCatalogue = $this->getUserTranslatedCatalogue();
-        $messageCatalogue->addCatalogue($databaseCatalogue);
-        unset($databaseCatalogue);
-
-        return $messageCatalogue;
-    }
-
-    /**
+     * @param string $moduleName
      * @param bool $empty
      *
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
      */
-    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
+    public function getDefaultCatalogue(string $locale, string $moduleName, bool $empty = true): MessageCatalogueInterface
     {
+        $resourceDirectory = $this->defaultResourceDirectory . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
+
         return (new DefaultCatalogueProvider(
-            $this->locale,
-            $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
-            $this->getFilenameFilters()
+            $resourceDirectory . DIRECTORY_SEPARATOR . 'default',
+            $this->getFilenameFilters($moduleName)
         ))
-            ->getCatalogue($empty);
+            ->getCatalogue($locale, $empty);
     }
 
     /**
+     * @param string $locale
+     * @param string $moduleName
+     *
      * @return MessageCatalogueInterface
      *
      * @throws FileNotFoundException
      */
-    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(string $locale, string $moduleName): MessageCatalogueInterface
     {
+        $resourceDirectory = $this->defaultResourceDirectory . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
+
         return (new FileTranslatedCatalogueProvider(
-            $this->locale,
-            $this->resourceDirectory,
-            $this->getFilenameFilters()
+            $resourceDirectory,
+            $this->getFilenameFilters($moduleName)
         ))
-            ->getCatalogue();
+            ->getCatalogue($locale);
     }
 
     /**
+     * @param string $locale
+     * @param string $moduleName
      * @param string|null $theme
      *
      * @return MessageCatalogueInterface
      */
-    public function getUserTranslatedCatalogue(string $theme = null): MessageCatalogueInterface
+    public function getUserTranslatedCatalogue(string $locale, string $moduleName, ?string $theme = null): MessageCatalogueInterface
     {
-        $translationDomains = ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
+        $translationDomains = ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($moduleName)) . '([A-Z]|$)'];
 
         return (new UserTranslatedCatalogueProvider(
             $this->databaseLoader,
-            $this->locale,
             $translationDomains
         ))
-            ->getCatalogue($theme);
+            ->getCatalogue($locale, $theme);
     }
 
     /**
+     * @param string $moduleName
+     *
      * @return string[]
      */
-    private function getFilenameFilters()
+    private function getFilenameFilters(string $moduleName)
     {
-        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
+        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($moduleName)) . '([A-Z]|\.|$)#'];
     }
 }
