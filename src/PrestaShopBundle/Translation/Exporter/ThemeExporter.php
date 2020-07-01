@@ -128,18 +128,15 @@ class ThemeExporter
      */
     public function exportCatalogues($themeName, $locale, $rootDir = false)
     {
-        $this->themeProvider->setLocale($locale);
-        $this->themeProvider->setThemeName($themeName);
-
         $mergedTranslations = $this->getCatalogueExtractedFromTemplates($themeName, $locale, $rootDir);
 
         try {
-            $themeCatalogue = $this->themeProvider->getFileTranslatedCatalogue();
+            $themeCatalogue = $this->themeProvider->getFileTranslatedCatalogue($locale, $themeName);
         } catch (FileNotFoundException $exception) {
             // if the theme doesn't have translation files (eg. the default theme)
             $themeCatalogue = new MessageCatalogue($locale);
         }
-        $databaseCatalogue = $this->themeProvider->getUserTranslatedCatalogue($themeName);
+        $databaseCatalogue = $this->themeProvider->getUserTranslatedCatalogue($locale, $themeName);
 
         $mergedTranslations->addCatalogue($themeCatalogue);
         $mergedTranslations->addCatalogue($databaseCatalogue);

@@ -59,8 +59,8 @@ class SearchProviderTest extends KernelTestCase
             ''
         );
 
-        $this->provider->setDomain('AdminActions');
-        $this->provider->setLocale('fr-FR');
+//        $this->provider->setDomain('AdminActions');
+//        $this->provider->setLocale('fr-FR');
 
         $langId = \Language::getIdByIso('fr');
         if (!$langId) {
@@ -74,7 +74,7 @@ class SearchProviderTest extends KernelTestCase
 
     public function testItExtractsOnlyTheSelectedCataloguesFromXliffFiles()
     {
-        $catalogue = $this->provider->getMessageCatalogue();
+        $catalogue = $this->provider->getDefaultCatalogue('fr-FR', 'AdminActions');
         $this->assertInstanceOf(MessageCatalogue::class, $catalogue);
 
         // Check that only the selected domain is in the catalogue
@@ -90,9 +90,11 @@ class SearchProviderTest extends KernelTestCase
 
     protected function tearDown()
     {
-        $langId = \Language::getIdByIso('fr');
+        $langId = \Language::getIdByIso('fr', true);
         if ($langId) {
-            (new \Language($langId))->delete();
+            \Db::getInstance()->execute(
+                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
+            );
         }
         self::$kernel->shutdown();
     }

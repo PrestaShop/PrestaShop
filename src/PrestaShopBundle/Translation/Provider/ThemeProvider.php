@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
@@ -40,26 +42,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
  */
 class ThemeProvider implements ProviderInterface
 {
-    /**
-     * @var string Catalogue domain
-     */
-    protected $domain;
-
-    /**
-     * @var string locale
-     */
-    protected $locale;
-
-    /**
-     * @var Theme
-     */
-    private $theme;
-
-    /**
-     * @var string the theme name
-     */
-    private $themeName;
-
     /**
      * @var string Path to the main "themes" directory
      */
@@ -113,106 +95,47 @@ class ThemeProvider implements ProviderInterface
         $this->databaseLoader = $databaseLoader;
     }
 
-    /**
-     * Get domain.
-     *
-     * @deprecated since 1.7.6, to be removed in the next major
-     *
-     * @return mixed
-     */
-    public function getDomain()
+    private function validateTheme(string $themeName)
     {
-        @trigger_error(
-            'getDomain function is deprecated and will be removed in the next major',
-            E_USER_DEPRECATED
-        );
+        $theme = $this->getThemeFromName($themeName);
 
-        return $this->domain;
-    }
-
-    /**
-     * @param string $themeName The theme name
-     *
-     * @return ThemeProvider
-     */
-    public function setThemeName($themeName): ThemeProvider
-    {
-        if (empty($themeName)) {
-            throw new \RuntimeException('Theme has not been defined yet for this provider');
+        if (!($theme instanceof Theme)) {
+            throw new \RuntimeException('Theme doesnt exist');
         }
-
-        // make sure the theme exists and store it cache
-        $this->theme = $this->themeRepository->getInstanceByName($themeName);
-
-        $this->themeName = $themeName;
-
-        return $this;
     }
 
-    /**
-     * @param string $locale
-     *
-     * @return ThemeProvider
-     */
-    public function setLocale(string $locale): ThemeProvider
+    private function getThemeFromName(string $themeName)
     {
-        $this->locale = $locale;
-
-        $this->frontOfficeProvider->setLocale($locale);
-
-        return $this;
-    }
-
-    /**
-     * @param string $domain
-     *
-     * @return ThemeProvider
-     */
-    public function setDomain(string $domain): ThemeProvider
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
-     * Returns the fully translated message catalogue
-     *
-     * @return MessageCatalogueInterface
-     */
-    public function getMessageCatalogue(?string $themeName = null): MessageCatalogueInterface
-    {
-        $messageCatalogue = $this->getDefaultCatalogue();
-
-        // Merge catalogues
-
-        $xlfCatalogue = $this->getFileTranslatedCatalogue($themeName);
-        $messageCatalogue->addCatalogue($xlfCatalogue);
-        unset($xlfCatalogue);
-
-        $databaseCatalogue = $this->getUserTranslatedCatalogue($themeName);
-        $messageCatalogue->addCatalogue($databaseCatalogue);
-        unset($databaseCatalogue);
-
-        return $messageCatalogue;
+        return $this->themeRepository->getInstanceByName($themeName);
     }
 
     /**
      * Returns the default (aka not translated) catalogue
      *
+     * @param string $locale
+     * @param string $themeName
      * @param bool $empty [default=true] Remove translations and return an empty catalogue
      * @param bool $refreshCache [default=false] Force cache to be refreshed
      *
      * @return MessageCatalogueInterface
      */
-    public function getDefaultCatalogue(bool $empty = true, $refreshCache = false): MessageCatalogueInterface
-    {
-        $defaultCatalogue = $this->frontOfficeProvider->getDefaultCatalogue();
+    public function getDefaultCatalogue(
+        string $locale,
+        string $themeName,
+        bool $empty = true,
+        $refreshCache = false
+    ): MessageCatalogueInterface {
+        $theme = $this->getThemeFromName($themeName);
+        if (!($theme instanceof Theme)) {
+            throw new \RuntimeException('Theme doesnt exist');
+        }
+
+        $defaultCatalogue = $this->frontOfficeProvider->getDefaultCatalogue($locale);
 
         $defaultCatalogue->addCatalogue(
             $this->extractDefaultCatalogueFromTheme(
-                $this->getTheme(),
-                $this->locale,
+                $theme,
+                $locale,
                 $refreshCache
             )
         );
@@ -227,59 +150,54 @@ class ThemeProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getFileTranslatedCatalogue(?string $themeName = null): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(string $locale, string $themeName): MessageCatalogueInterface
     {
-        $this->setThemeName($themeName);
+        $this->validateTheme($themeName);
 
         // load front office catalogue
-        $catalogue = $this->frontOfficeProvider->getFileTranslatedCatalogue();
+        $catalogue = $this->frontOfficeProvider->getFileTranslatedCatalogue($locale);
 
         try {
             $fileTranslatedCatalogue = (new FileTranslatedCatalogueProvider(
-                $this->locale,
-                $this->getResourceDirectory(),
+                $this->getResourceDirectory($themeName),
                 ['*']
             ))
-                ->getCatalogue();
+                ->getCatalogue($locale);
 
             // overwrite with the theme's own catalogue
             $catalogue->addCatalogue($fileTranslatedCatalogue);
         } catch (FileNotFoundException $e) {
             // there are no translation files, ignore them
-            return new MessageCatalogue($this->locale);
+            return new MessageCatalogue($locale);
         }
 
         return $catalogue;
     }
 
     /**
+     * @param string $locale
      * @param string|null $themeName
+     * @param string|null $domain
      *
      * @return MessageCatalogueInterface
      */
-    public function getUserTranslatedCatalogue(string $themeName = null): MessageCatalogueInterface
-    {
-        $this->setThemeName($themeName);
+    public function getUserTranslatedCatalogue(
+        string $locale,
+        string $themeName,
+        ?string $domain = null
+    ): MessageCatalogueInterface {
+        $this->validateTheme($themeName);
 
         $translationDomains = ['*'];
-        if (!empty($this->domain)) {
-            $translationDomains = ['^' . $this->domain];
+        if (!empty($domain)) {
+            $translationDomains = ['^' . $domain];
         }
 
         return (new UserTranslatedCatalogueProvider(
             $this->databaseLoader,
-            $this->locale,
             $translationDomains
         ))
-            ->getCatalogue($this->themeName);
-    }
-
-    /**
-     * Refresh the default catalogue cache
-     */
-    public function synchronizeTheme()
-    {
-        $this->extractDefaultCatalogueFromTheme($this->getTheme(), $this->locale, true);
+            ->getCatalogue($locale, $themeName);
     }
 
     /**
@@ -290,31 +208,17 @@ class ThemeProvider implements ProviderInterface
         return 'theme';
     }
 
-    private function getResourceDirectory()
+    private function getResourceDirectory(string $themeName)
     {
         $resourceDirectory = rtrim($this->themeResourcesDirectory, DIRECTORY_SEPARATOR) .
             DIRECTORY_SEPARATOR .
-            $this->themeName .
+            $themeName .
             DIRECTORY_SEPARATOR .
             'translations'
         ;
         $this->filesystem->mkdir($resourceDirectory);
 
         return $resourceDirectory;
-    }
-
-    /**
-     * @return Theme
-     *
-     * @throws \RuntimeException
-     */
-    private function getTheme(): Theme
-    {
-        if (empty($this->theme)) {
-            throw new \RuntimeException('Theme has not been defined yet for this provider');
-        }
-
-        return $this->theme;
     }
 
     /**
@@ -326,8 +230,11 @@ class ThemeProvider implements ProviderInterface
      *
      * @return MessageCatalogue
      */
-    private function extractDefaultCatalogueFromTheme(Theme $theme, $locale, $refreshCache): MessageCatalogue
-    {
+    private function extractDefaultCatalogueFromTheme(
+        Theme $theme,
+        string $locale,
+        bool $refreshCache
+    ): MessageCatalogue {
         return $this->themeExtractor->extract($theme, $locale, $refreshCache);
     }
 
