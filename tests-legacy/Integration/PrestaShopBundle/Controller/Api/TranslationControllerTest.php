@@ -32,6 +32,21 @@ namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
  */
 class TranslationControllerTest extends ApiTestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $langId = \Language::getIdByIso('fr', true);
+        if (!$langId) {
+            $lang = new \Language();
+            $lang->locale = 'fr-FR';
+            $lang->language_code = 'fr-FR';
+            $lang->iso_code = 'fr';
+            $lang->name = 'Français';
+            $lang->add();
+        }
+    }
+
     /**
      * @dataProvider getBadLocales
      * @test
@@ -144,7 +159,7 @@ class TranslationControllerTest extends ApiTestCase
             ),
             array(
                 array(
-                    'lang' => 'en',
+                    'lang' => 'fr',
                     'type' => 'front',
                     'selected' => 'classic',
                 ),
@@ -382,5 +397,18 @@ class TranslationControllerTest extends ApiTestCase
         $post = json_encode(array('translations' => array($params)));
         self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
         $this->assertResponseBodyValidJson(200);
+    }
+
+    protected function tearDown()
+    {
+        $langId = \Language::getIdByIso('fr', true);
+        if ($langId) {
+            \Db::getInstance()->execute(
+                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
+            );
+        }
+        self::$kernel->shutdown();
+
+        parent::tearDown();
     }
 }
