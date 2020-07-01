@@ -172,6 +172,8 @@ class SearchProvider implements SearchProviderInterface
             ))
                 ->getCatalogue($empty);
         } catch (FileNotFoundException $e) {
+            $this->externalModuleLegacySystemProvider->setLocale($this->locale);
+
             return $this->filterCatalogue(
                 $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty)
             );

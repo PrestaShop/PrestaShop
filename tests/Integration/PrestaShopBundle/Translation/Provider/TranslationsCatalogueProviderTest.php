@@ -197,9 +197,11 @@ class TranslationsCatalogueProviderTest extends KernelTestCase
 
     protected function tearDown()
     {
-        $langId = \Language::getIdByIso('fr');
+        $langId = \Language::getIdByIso('fr', true);
         if ($langId) {
-            (new \Language($langId))->delete();
+            \Db::getInstance()->execute(
+                'DELETE FROM `' . _DB_PREFIX_ . 'lang` WHERE id_lang = ' . $langId
+            );
         }
         self::$kernel->shutdown();
     }
