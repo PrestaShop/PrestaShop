@@ -34,7 +34,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 /**
  * Able to search translations for a specific translation domains across multiple sources
  */
-class SearchProvider implements SearchProviderInterface
+class SearchProvider
 {
     /**
      * @var string Path where translation files are found
@@ -45,11 +45,6 @@ class SearchProvider implements SearchProviderInterface
      * @var string Catalogue domain
      */
     protected $domain;
-
-    /**
-     * @var string locale
-     */
-    protected $locale;
 
     /**
      * @var string[]
@@ -83,42 +78,6 @@ class SearchProvider implements SearchProviderInterface
     }
 
     /**
-     * @param string $locale
-     *
-     * @return SearchProvider
-     */
-    public function setLocale(string $locale): SearchProvider
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * @param string $domain
-     *
-     * @return SearchProvider
-     */
-    public function setDomain(string $domain): SearchProvider
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
-     * @param string $moduleName
-     *
-     * @return SearchProvider
-     */
-    public function setModuleName($moduleName): SearchProvider
-    {
-        $this->externalModuleLegacySystemProvider->setModuleName($moduleName);
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getIdentifier(): string
@@ -127,99 +86,88 @@ class SearchProvider implements SearchProviderInterface
     }
 
     /**
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
-     */
-    public function getMessageCatalogue(): MessageCatalogueInterface
-    {
-        if (null === $this->locale) {
-            throw new \LogicException('Locale cannot be null. Call setLocale first');
-        }
-        if (null === $this->domain) {
-            throw new \LogicException('Domain cannot be null. Call setDomain first');
-        }
-
-        $messageCatalogue = $this->getDefaultCatalogue();
-
-        // Merge catalogues
-
-        $xlfCatalogue = $this->getFileTranslatedCatalogue();
-        $messageCatalogue->addCatalogue($xlfCatalogue);
-        unset($xlfCatalogue);
-
-        $databaseCatalogue = $this->getUserTranslatedCatalogue();
-        $messageCatalogue->addCatalogue($databaseCatalogue);
-        unset($databaseCatalogue);
-
-        return $messageCatalogue;
-    }
-
-    /**
+     * @param string $locale
+     * @param string $domain
+     * @param string|null $module
      * @param bool $empty
      *
-     * @return MessageCatalogueInterface
-     *
-     * @throws FileNotFoundException
+     * @return MessageCatalogueInterface|null
      */
-    public function getDefaultCatalogue(bool $empty = true): MessageCatalogueInterface
-    {
+    public function getDefaultCatalogue(
+        string $locale,
+        string $domain,
+        ?string $module = null,
+        bool $empty = true
+    ): ?MessageCatalogueInterface {
         try {
             return (new DefaultCatalogueProvider(
-                $this->locale,
                 $this->resourceDirectory . DIRECTORY_SEPARATOR . 'default',
-                $this->getFilenameFilters()
+                $this->getFilenameFilters($domain)
             ))
-                ->getCatalogue($empty);
+                ->getCatalogue($locale, $empty);
         } catch (FileNotFoundException $e) {
-            return $this->filterCatalogue(
-                $this->externalModuleLegacySystemProvider->getDefaultCatalogue($empty)
-            );
+            if (null !== $module) {
+                return $this->filterCatalogue(
+                    $locale,
+                    $this->externalModuleLegacySystemProvider->getDefaultCatalogue($locale, $module, $empty)
+                );
+            }
         }
+
+        return null;
     }
 
     /**
-     * @return MessageCatalogueInterface
+     * @param string $locale
+     * @param string $domain
+     * @param string|null $module
+     *
+     * @return MessageCatalogueInterface|null
      */
-    public function getFileTranslatedCatalogue(): MessageCatalogueInterface
+    public function getFileTranslatedCatalogue(string $locale, string $domain, ?string $module = null): ?MessageCatalogueInterface
     {
         try {
             return (new FileTranslatedCatalogueProvider(
-                $this->locale,
                 $this->resourceDirectory,
-                $this->getFilenameFilters()
+                $this->getFilenameFilters($domain)
             ))
-                ->getCatalogue();
+                ->getCatalogue($locale);
         } catch (FileNotFoundException $e) {
-            return $this->filterCatalogue(
-                $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue()
-            );
+            if (null !== $module) {
+                return $this->filterCatalogue(
+                    $locale,
+                    $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue($locale, $module)
+                );
+            }
         }
+
+        return null;
     }
 
     /**
+     * @param string $locale
+     * @param string $domain
      * @param string|null $theme
      *
      * @return MessageCatalogueInterface
      */
-    public function getUserTranslatedCatalogue(string $theme = null): MessageCatalogueInterface
+    public function getUserTranslatedCatalogue(string $locale, string $domain, ?string $theme = null): MessageCatalogueInterface
     {
-        $translationDomains = ['^' . preg_quote($this->domain) . '([A-Za-z]|$)'];
+        $translationDomains = ['^' . preg_quote($domain) . '([A-Za-z]|$)'];
 
         return (new UserTranslatedCatalogueProvider(
             $this->databaseLoader,
-            $this->locale,
             $translationDomains
         ))
-            ->getCatalogue($theme);
+            ->getCatalogue($locale, $theme);
     }
 
     /**
      * @return string[]
      */
-    private function getFilenameFilters()
+    private function getFilenameFilters(string $domain)
     {
-        return ['#^' . preg_quote($this->domain, '#') . '([A-Za-z]|\.|$)#'];
+        return ['#^' . preg_quote($domain, '#') . '([A-Za-z]|\.|$)#'];
     }
 
     /**
@@ -229,7 +177,7 @@ class SearchProvider implements SearchProviderInterface
      *
      * @return MessageCatalogueInterface
      */
-    private function filterCatalogue(MessageCatalogueInterface $catalogue)
+    private function filterCatalogue(string $locale, MessageCatalogueInterface $catalogue)
     {
         $allowedDomains = [];
 
@@ -243,7 +191,7 @@ class SearchProvider implements SearchProviderInterface
             }
         }
 
-        $catalogue = new MessageCatalogue($this->locale, $allowedDomains);
+        $catalogue = new MessageCatalogue($locale, $allowedDomains);
 
         return $catalogue;
     }

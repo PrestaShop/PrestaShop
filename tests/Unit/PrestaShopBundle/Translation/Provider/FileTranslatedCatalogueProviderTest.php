@@ -67,11 +67,10 @@ class FileTranslatedCatalogueProviderTest extends TestCase
     public function testGetCatalogueFilters()
     {
         $catalogue = (new FileTranslatedCatalogueProvider(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         ))
-            ->getCatalogue();
+            ->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -82,11 +81,10 @@ class FileTranslatedCatalogueProviderTest extends TestCase
         ], $domains);
 
         $provider = new FileTranslatedCatalogueProvider(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
             self::$tempDir,
             ['#^ShopSomething([A-Z]|\.|$)#']
         );
-        $catalogue = $provider->getCatalogue();
+        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $domains = $catalogue->getDomains();
         sort($domains);
@@ -95,7 +93,10 @@ class FileTranslatedCatalogueProviderTest extends TestCase
             'ShopSomethingElse',
         ], $domains);
 
-        $this->assertSame($catalogue->all(), $provider->getFileTranslatedCatalogue()->all());
+        $this->assertSame(
+            $catalogue->all(),
+            $provider->getFileTranslatedCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE)->all()
+        );
     }
 
     public function testGetCatalogueMessages()
@@ -112,12 +113,11 @@ class FileTranslatedCatalogueProviderTest extends TestCase
         ];
 
         $provider = new FileTranslatedCatalogueProvider(
-            DefaultCatalogueProvider::DEFAULT_LOCALE,
             self::$tempDir,
             ['#^Shop([A-Z]|\.|$)#']
         );
 
-        $catalogue = $provider->getCatalogue();
+        $catalogue = $provider->getCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
 
         $messages = $catalogue->all();
         sort($messages);
