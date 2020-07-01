@@ -77,8 +77,7 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
             $legacyFileLoader,
             $legacyModuleExtractor,
             $moduleProvider
-        ))
-        ->setLocale(DefaultCatalogueProvider::DEFAULT_LOCALE);
+        ));
     }
 
     public static function setUpBeforeClass()
@@ -96,20 +95,19 @@ class ExternalModuleLegacySystemProviderTest extends TestCase
 
     public function testGetDefaultCatalogue()
     {
-        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue();
+        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
         $this->assertSame(self::$wordings, $catalogue->all());
 
-        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(true);
+        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE, true);
         $this->assertSame(self::$wordings, $catalogue->all());
 
-        $this->externalModuleLegacySystemProvider->setLocale('fr-FR');
-        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue(true);
+        $catalogue = $this->externalModuleLegacySystemProvider->getDefaultCatalogue('fr-FR', true);
         $this->assertSame(self::$emptyWordings, $catalogue->all());
     }
 
     public function xtestGetFilesystemCatalogue()
     {
-        $catalogue = $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue();
+        $catalogue = $this->externalModuleLegacySystemProvider->getFileTranslatedCatalogue(DefaultCatalogueProvider::DEFAULT_LOCALE);
         $this->assertSame(self::$wordings, $catalogue->all());
     }
 }
