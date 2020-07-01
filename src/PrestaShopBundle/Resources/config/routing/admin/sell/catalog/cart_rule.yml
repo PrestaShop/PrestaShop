@@ -18,7 +18,7 @@ admin_cart_rules_search:
 
 admin_cart_rules_search_grid:
   path: /
-  methods: POST
+  methods: [POST]
   defaults:
     _controller: PrestaShopBundle:Admin\Common:searchGrid
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.cart_rule
@@ -27,7 +27,7 @@ admin_cart_rules_search_grid:
 
 admin_cart_rule_toggle_status:
   path: /{cartRuleId}/toggle-status
-  methods: POST
+  methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:toggleStatus'
     _legacy_controller: AdminCartRules
@@ -59,7 +59,7 @@ admin_cart_rules_bulk_delete:
 
 admin_cart_rules_bulk_enable_status:
   path: /bulk-enable
-  methods: POST
+  methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:bulkEnable'
     _legacy_controller: AdminCartRules
@@ -67,7 +67,7 @@ admin_cart_rules_bulk_enable_status:
 
 admin_cart_rules_bulk_disable_status:
   path: /bulk-disable
-  methods: POST
+  methods: [POST]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:bulkDisable'
     _legacy_controller: AdminCartRules
