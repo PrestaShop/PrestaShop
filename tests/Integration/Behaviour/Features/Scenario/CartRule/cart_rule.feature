@@ -245,7 +245,7 @@ Feature: Add cart rule
       | minimum_amount_tax_included               | true                  |
       | minimum_amount_shipping_included          | true                  |
     And I create cart rule "cart_rule_2" with following properties:
-      | id_cart_rule                              | 1                     |
+      | id_cart_rule                              | 2                     |
       | name_in_default_language                  | Cart Rule 2           |
       | highlight                                 | true                  |
       | active                                    | false                 |
