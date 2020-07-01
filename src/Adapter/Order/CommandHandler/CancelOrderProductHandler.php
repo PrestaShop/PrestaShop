@@ -27,15 +27,20 @@
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
+use Configuration;
 use Customization;
 use Hook;
 use Order;
 use OrderDetail;
+use OrderHistory;
+use OderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\CancelOrderProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\CancelOrderProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -48,14 +53,30 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
     private $orderProductQuantityUpdater;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * CancelOrderProductHandler constructor.
      *
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
+     * @param LoggerInterface $logger
+     * @param TranslatorInterface $translator
      */
     public function __construct(
-        OrderProductQuantityUpdater $orderProductQuantityUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        LoggerInterface $logger,
+        TranslatorInterface $translator
     ) {
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+        $this->logger = $logger;
+        $this->translator = $translator;
     }
 
     /**
@@ -111,7 +132,8 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             foreach ($orderDetails['productsOrderDetails'] as $orderDetail) {
                 $qty_cancel_product = $orderDetails['productCancelQuantity'][$orderDetail->id_order_detail];
                 $newQuantity = (int) $orderDetail->product_quantity - (int) $qty_cancel_product;
-                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, null);
+                $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
+                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
                 Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetail->id_order_detail], null, false, true, false, $order->id_shop);
             }
         }
@@ -119,9 +141,12 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             foreach ($orderDetails['customizedProductsOrderDetail'] as $orderDetail) {
                 $qtyCancelProduct = abs($orderDetails['customizedCancelQuantity'][$orderDetail->id_customization]);
                 $newQuantity = (int) $orderDetail->product_quantity - (int) $qtyCancelProduct;
-
-                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, null);
+                $orderInvoice = $orderDetail->id_order_invoice != 0 ? new OrderInvoice($orderDetail->id_order_invoice) : null;
+                $this->orderProductQuantityUpdater->update($order, $orderDetail, $newQuantity, $orderInvoice);
             }
+        }
+        if (empty($order->getOrderDetailList())) {
+            $this->cancelOrder($order);
         }
     }
 
@@ -172,6 +197,26 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
             throw new InvalidOrderStateException(
                 InvalidOrderStateException::ALREADY_PAID,
                 'Can not cancel product on an order which is already paid'
+            );
+        }
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function cancelOrder(Order $order)
+    {
+        $history = new OrderHistory();
+        $history->id_order = (int) $order->id;
+        $history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $order);
+        if (!$history->addWithemail()) {
+            // email failure must not block order update process
+            $this->logger->warning(
+                $this->translator->trans(
+                    'Order history email could not be sent, test your email configuration in the Advanced Parameters > E-mail section of your back office.',
+                    [],
+                    'Admin.Orderscustomers.Notification'
+                )
             );
         }
     }
