@@ -208,7 +208,7 @@ class OrderProductRemover
         float $shippingDiffTaxIncl,
         float $shippingDiffTaxExcl
     ) {
-        $orderDetail->product_quantity -= (int) $quantity;
+        $orderDetail->product_quantity = max($orderDetail->product_quantity - $quantity, 0);
         if ($orderDetail->product_quantity == 0) {
             if (!$orderDetail->delete()) {
                 throw new DeleteProductFromOrderException('Could not delete order detail');
