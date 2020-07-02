@@ -29,10 +29,10 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
+use RuntimeException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use RuntimeException;
 
 /**
  * Defines "Improve > International > Taxes" options form
@@ -80,7 +80,7 @@ class TaxOptionsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->translator ===null) {
+        if ($this->translator === null) {
             throw new RuntimeException('Translator variable must not be null');
         }
 
