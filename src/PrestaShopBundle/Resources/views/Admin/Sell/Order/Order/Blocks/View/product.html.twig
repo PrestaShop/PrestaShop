@@ -154,7 +154,6 @@
       {% if product.customizations.fileCustomizations %}
         <div class="d-flex flex-row flex-wrap">
           {% for customization in product.customizations.fileCustomizations %}
-
               <div class="mr-4">
                 <p><strong>{{ customization.name }}</strong></p>
                 <p>
@@ -163,7 +162,6 @@
                   </a>
                 </p>
               </div>
-            </a>
           {% endfor %}
         </div>
       {% endif %}
