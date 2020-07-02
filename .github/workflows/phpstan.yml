@@ -27,4 +27,4 @@ jobs:
           restore-keys: "php-7.3-phpstan-"
 
       - name: Run phpstan
-        run: phpstan analyse -c phpstan.neon.dist
+        run: phpstan analyse -c phpstan.neon.dist --error-format github
