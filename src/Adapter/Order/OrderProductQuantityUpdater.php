@@ -139,14 +139,11 @@ class OrderProductQuantityUpdater
             // Update product stocks
             $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
 
-            // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
-            $this->updateOrderCartRules($order, $cart);
-
-            // Update prices on the order
-            $order = $this->updateOrderAmounts($cart, $order, ($orderInvoice && !empty($orderInvoice->id)));
-
             // Update weight and shipping infos
             $order = $this->updateOrderShippingInfos($order, new Product((int) $orderDetail->product_id));
+
+            // Update prices on the order after cart rules are recomputed
+            $this->orderAmountUpdater->update($order, $cart, ($orderInvoice && !empty($orderInvoice->id)));
 
             $this->updateOrderInvoice($orderDetail, $orderInvoice);
         } finally {
@@ -386,89 +383,6 @@ class OrderProductQuantityUpdater
     }
 
     /**
-     * Remove previous cart rules applied to order
-     *
-     * @param Order $order
-     * @param Cart $cart
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateOrderCartRules(Order $order, Cart $cart): void
-    {
-        Context::getContext()->cart = $cart;
-        CartRule::resetStaticCache();
-        Cache::clean('getContextualValue_*');
-        CartRule::autoAddToCart();
-        CartRule::autoRemoveFromCart();
-
-        $computingPrecision = $this->getPrecisionFromCart($cart);
-        $newCartRules = $cart->getCartRules();
-        foreach ($order->getCartRules() as $orderCartRuleData) {
-            foreach ($newCartRules as $newCartRule) {
-                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
-                    // Cart rule is still in the cart no need to remove it, but we update it as the amount may have changed
-                    $cartRule = new CartRule($newCartRule['id_cart_rule']);
-
-                    $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
-                    $orderCartRule->id_order = $order->id;
-                    $orderCartRule->name = $newCartRule['name'];
-                    $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
-                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
-                    $orderCartRule->save();
-                    continue 2;
-                }
-            }
-
-            // This one is no longer in the new cart rules so we delete it
-            $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
-            if (!$orderCartRule->delete()) {
-                throw new OrderException('Could not delete order cart rule from database.');
-            }
-        }
-
-        // Finally add the new cart rules that are not in the Order
-        foreach ($newCartRules as $newCartRule) {
-            foreach ($order->getCartRules() as $orderCartRuleData) {
-                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
-                    // This cart rule is already present no need to add it
-                    continue 2;
-                }
-            }
-
-            // Add missing order cart rule
-            $cartRule = new CartRule($newCartRule['id_cart_rule']);
-
-            $orderCartRule = new OrderCartRule();
-            $orderCartRule->id_order = $order->id;
-            $orderCartRule->id_cart_rule = $newCartRule['id_cart_rule'];
-            $orderCartRule->id_order_invoice = $order->getInvoicesCollection()->getLast();
-            $orderCartRule->name = $newCartRule['name'];
-            $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
-            $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
-            $orderCartRule->save();
-        }
-    }
-
-    /**
-     * @param Cart $cart
-     * @param Order $order
-     * @param bool $hasInvoice
-     *
-     * @return Order
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateOrderAmounts(Cart $cart, Order $order, bool $hasInvoice): Order
-    {
-        $order = $this->orderAmountUpdater->update($order, $cart, $hasInvoice);
-        $order->update();
-
-        return $order;
-    }
-
-    /**
      * @param Order $order
      * @param Product $product
      *
@@ -529,19 +443,6 @@ class OrderProductQuantityUpdater
             $orderInvoice->update();
             $orderDetail->update();
         }
-    }
-
-    /**
-     * @param Cart $cart
-     *
-     * @return int
-     */
-    private function getPrecisionFromCart(Cart $cart): int
-    {
-        $computingPrecision = new ComputingPrecision();
-        $currency = new Currency((int) $cart->id_currency);
-
-        return $computingPrecision->getPrecision((int) $currency->precision);
     }
 
     /**

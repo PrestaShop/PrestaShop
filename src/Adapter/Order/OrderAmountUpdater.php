@@ -28,9 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
+use Cache;
 use Cart;
+use CartRule;
+use Context;
 use Currency;
 use Order;
+use OrderCartRule;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Tools;
 
@@ -45,14 +50,14 @@ class OrderAmountUpdater
         Order $order,
         Cart $cart,
         bool $hasInvoice
-    ): Order {
+    ): bool {
         // @todo: use https://github.com/PrestaShop/decimal for price computations
-
-        $currency = new Currency((int) $cart->id_currency);
-        $computingPrecision = new ComputingPrecision();
-        $precision = $computingPrecision->getPrecision((int) $currency->precision);
+        $computingPrecision = $this->getPrecisionFromCart($cart);
 
         $totalMethod = $hasInvoice ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
+
+        // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
+        $this->updateOrderCartRules($order, $cart, $computingPrecision);
 
         $orderProducts = $order->getCartProducts();
 
@@ -62,15 +67,15 @@ class OrderAmountUpdater
 
         $order->total_paid = Tools::ps_round(
             (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-            $precision
+            $computingPrecision
         );
         $order->total_paid_tax_excl = Tools::ps_round(
             (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
-            $precision
+            $computingPrecision
         );
         $order->total_paid_tax_incl = Tools::ps_round(
             (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
-            $precision
+            $computingPrecision
         );
 
         $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts);
@@ -84,6 +89,84 @@ class OrderAmountUpdater
         $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
         $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
 
-        return $order;
+        return $order->update();
+    }
+
+    /**
+     * Remove previous cart rules applied to order
+     *
+     * @param Order $order
+     * @param Cart $cart
+     * @param int $computingPrecision
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function updateOrderCartRules(Order $order, Cart $cart, int $computingPrecision): void
+    {
+        Context::getContext()->cart = $cart;
+        CartRule::resetStaticCache();
+        Cache::clean('getContextualValue_*');
+        CartRule::autoAddToCart();
+        CartRule::autoRemoveFromCart();
+
+        $newCartRules = $cart->getCartRules();
+        foreach ($order->getCartRules() as $orderCartRuleData) {
+            foreach ($newCartRules as $newCartRule) {
+                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
+                    // Cart rule is still in the cart no need to remove it, but we update it as the amount may have changed
+                    $cartRule = new CartRule($newCartRule['id_cart_rule']);
+
+                    $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
+                    $orderCartRule->id_order = $order->id;
+                    $orderCartRule->name = $newCartRule['name'];
+                    $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
+                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
+                    $orderCartRule->save();
+                    continue 2;
+                }
+            }
+
+            // This one is no longer in the new cart rules so we delete it
+            $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
+            if (!$orderCartRule->delete()) {
+                throw new OrderException('Could not delete order cart rule from database.');
+            }
+        }
+
+        // Finally add the new cart rules that are not in the Order
+        foreach ($newCartRules as $newCartRule) {
+            foreach ($order->getCartRules() as $orderCartRuleData) {
+                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
+                    // This cart rule is already present no need to add it
+                    continue 2;
+                }
+            }
+
+            // Add missing order cart rule
+            $cartRule = new CartRule($newCartRule['id_cart_rule']);
+
+            $orderCartRule = new OrderCartRule();
+            $orderCartRule->id_order = $order->id;
+            $orderCartRule->id_cart_rule = $newCartRule['id_cart_rule'];
+            $orderCartRule->id_order_invoice = $order->getInvoicesCollection()->getLast();
+            $orderCartRule->name = $newCartRule['name'];
+            $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
+            $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
+            $orderCartRule->save();
+        }
+    }
+
+    /**
+     * @param Cart $cart
+     *
+     * @return int
+     */
+    private function getPrecisionFromCart(Cart $cart): int
+    {
+        $computingPrecision = new ComputingPrecision();
+        $currency = new Currency((int) $cart->id_currency);
+
+        return $computingPrecision->getPrecision((int) $currency->precision);
     }
 }
