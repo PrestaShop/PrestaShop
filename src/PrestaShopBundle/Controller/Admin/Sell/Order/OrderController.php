@@ -98,6 +98,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationForViewing;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 
 /**
  * Manages "Sell > Orders" page
@@ -1458,6 +1462,40 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Method for downloading customization picture
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int      $type
+     * @param string   $name
+     * @param string   $value
+     *
+     * @return BinaryFileResponse
+     */
+    public function displayCustomizationImageAction(int $type, string $name, string $value)
+    {
+        $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
+        $customizationForViewing = new OrderProductCustomizationForViewing($type, $name, $value);
+        $file = $uploadDir . $customizationForViewing->getValue();
+        $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
+
+        $response = new BinaryFileResponse($file);
+
+        if($mimeTypeGuesser->isSupported()){
+            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($file));
+        }else{
+            $response->headers->set('Content-Type', 'image/jpeg');
+        }
+
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $customizationForViewing->getValue()
+        );
+
+        return $response;
     }
 
     /**
