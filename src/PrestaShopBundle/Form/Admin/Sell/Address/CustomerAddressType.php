@@ -136,7 +136,7 @@ class CustomerAddressType extends AbstractType
             'help' => $this->translator->trans(
                 'The national ID card number of this person, or a unique tax identification number.',
                 [],
-                'Admin.Orderscustomers.Help'
+                'Admin.Orderscustomers.Feature'
             ),
             'required' => false,
             'empty_data' => '',
