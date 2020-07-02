@@ -81,7 +81,7 @@ class TaxOptionsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($this->translator === null) {
-            throw new RuntimeException('Translator variable must not be null');
+            throw new RuntimeException('Translator variable must not be null.');
         }
 
         $builder->add(
