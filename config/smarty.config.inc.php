@@ -35,6 +35,7 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
 }
 
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
+$smarty->setCompileId(_THEME_NAME_);
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
 $smarty->use_sub_dirs = true;
 $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
