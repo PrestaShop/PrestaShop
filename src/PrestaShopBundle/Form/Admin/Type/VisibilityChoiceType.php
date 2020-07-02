@@ -35,7 +35,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class CountryChoiceType is responsible for providing country choices with -- symbol in front of array.
+ * Class VisibilityChoiceType adds visibility option to the ChoiceType
  */
 class VisibilityChoiceType extends AbstractType
 {
