@@ -35,8 +35,11 @@ use Context;
 use Currency;
 use Order;
 use OrderCartRule;
+use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Tools;
 
 class OrderAmountUpdater
@@ -45,6 +48,11 @@ class OrderAmountUpdater
      * @param Order $order
      * @param Cart $cart
      * @param bool $hasInvoice
+     *
+     * @return bool
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function update(
         Order $order,
@@ -93,17 +101,24 @@ class OrderAmountUpdater
     }
 
     /**
-     * Remove previous cart rules applied to order
+     * Update cart rules to be synced with current cart:
+     * - cart rules attached to new product may be added/removed
+     * - global shop cart rules may be added/removed
+     * - cart rules amount may vary because other cart rules have been added/removed
      *
      * @param Order $order
      * @param Cart $cart
      * @param int $computingPrecision
      *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
+     * @throws OrderException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
-    private function updateOrderCartRules(Order $order, Cart $cart, int $computingPrecision): void
-    {
+    private function updateOrderCartRules(
+        Order $order,
+        Cart $cart,
+        int $computingPrecision
+    ): void {
         Context::getContext()->cart = $cart;
         CartRule::resetStaticCache();
         Cache::clean('getContextualValue_*');
@@ -111,17 +126,22 @@ class OrderAmountUpdater
         CartRule::autoRemoveFromCart();
 
         $newCartRules = $cart->getCartRules();
-        foreach ($order->getCartRules() as $orderCartRuleData) {
-            foreach ($newCartRules as $newCartRule) {
-                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
-                    // Cart rule is still in the cart no need to remove it, but we update it as the amount may have changed
-                    $cartRule = new CartRule($newCartRule['id_cart_rule']);
+        // We need the calculator to compute the discuont on the whole products because they can interact with each
+        // other so they can't be computed independently
+        $calculator = $cart->newCalculator($order->getCartProducts(), $newCartRules, null);
+        $calculator->processCalculation($computingPrecision);
 
+        foreach ($order->getCartRules() as $orderCartRuleData) {
+            /** @var CartRuleData $cartRuleData */
+            foreach ($calculator->getCartRulesData() as $cartRuleData) {
+                $cartRule = $cartRuleData->getCartRule();
+                if ($cartRule->id == $orderCartRuleData['id_cart_rule']) {
+                    // Cart rule is still in the cart no need to remove it, but we update it as the amount may have changed
                     $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
                     $orderCartRule->id_order = $order->id;
-                    $orderCartRule->name = $newCartRule['name'];
-                    $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
-                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
+                    $orderCartRule->name = $cartRule->name;
+                    $orderCartRule->value = $cartRuleData->getDiscountApplied()->getTaxIncluded();
+                    $orderCartRule->value_tax_excl = $cartRuleData->getDiscountApplied()->getTaxExcluded();
                     $orderCartRule->save();
                     continue 2;
                 }
@@ -135,24 +155,23 @@ class OrderAmountUpdater
         }
 
         // Finally add the new cart rules that are not in the Order
-        foreach ($newCartRules as $newCartRule) {
+        foreach ($calculator->getCartRulesData() as $cartRuleData) {
+            $cartRule = $cartRuleData->getCartRule();
             foreach ($order->getCartRules() as $orderCartRuleData) {
-                if ($newCartRule['id_cart_rule'] == $orderCartRuleData['id_cart_rule']) {
+                if ($cartRule->id == $orderCartRuleData['id_cart_rule']) {
                     // This cart rule is already present no need to add it
                     continue 2;
                 }
             }
 
             // Add missing order cart rule
-            $cartRule = new CartRule($newCartRule['id_cart_rule']);
-
             $orderCartRule = new OrderCartRule();
             $orderCartRule->id_order = $order->id;
-            $orderCartRule->id_cart_rule = $newCartRule['id_cart_rule'];
+            $orderCartRule->id_cart_rule = $cartRule->id;
             $orderCartRule->id_order_invoice = $order->getInvoicesCollection()->getLast();
-            $orderCartRule->name = $newCartRule['name'];
-            $orderCartRule->value = Tools::ps_round($cartRule->getContextualValue(true), $computingPrecision);
-            $orderCartRule->value_tax_excl = Tools::ps_round($cartRule->getContextualValue(false), $computingPrecision);
+            $orderCartRule->name = $cartRule->name;
+            $orderCartRule->value = $cartRuleData->getDiscountApplied()->getTaxIncluded();
+            $orderCartRule->value_tax_excl = $cartRuleData->getDiscountApplied()->getTaxExcluded();
             $orderCartRule->save();
         }
     }

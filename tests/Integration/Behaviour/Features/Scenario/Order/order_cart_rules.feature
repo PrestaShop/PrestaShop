@@ -259,7 +259,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  Scenario: Add discount to all orders, I remove the discount from order, when I remove a product the generic discount is reapplied
+  Scenario: Add discount to every orders, I remove the discount from order, it is automatically added again until I inactivate it
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should have 0 invoices
@@ -277,8 +277,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_incl  | 7.42   |
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     And there is a product in the catalog named "Test Product Cart Rule On Order" with a price of 15.0 and 100 items in stock
-    Given there is a cart rule named "CartRuleAmountOnWholeOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
-    And cart rule "CartRuleAmountOnWholeOrder" is applied on every order
+    Given there is a cart rule named "CartRuleAmountOnEveryOrder" that applies a percent discount of 50.0% with priority 1, quantity of 1000 and quantity per user 1000
+    And cart rule "CartRuleAmountOnEveryOrder" is applied on every order
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Cart Rule On Order |
       | amount        | 1                               |
@@ -287,7 +287,7 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product Cart Rule On Order"
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnWholeOrder" with amount "$19.40"
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnEveryOrder" with amount "$19.40"
     Then order "bo_order1" should have following details:
       | total_products           | 38.800 |
       | total_products_wt        | 41.130 |
@@ -299,9 +299,26 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    When I remove cart rule "CartRuleAmountOnWholeOrder" from order "bo_order1"
+    # The cart rule is removed but added again automatically when the order is synced with cart and shop cart rules
+    When I remove cart rule "CartRuleAmountOnEveryOrder" from order "bo_order1"
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnEveryOrder" with amount "$19.40"
+    Then order "bo_order1" should have following details:
+      | total_products           | 38.800 |
+      | total_products_wt        | 41.130 |
+      | total_discounts_tax_excl | 19.400 |
+      | total_discounts_tax_incl | 20.570 |
+      | total_paid_tax_excl      | 26.4   |
+      | total_paid_tax_incl      | 27.980 |
+      | total_paid               | 27.980 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    # Now that the cart rule is disabled it can be removed
+    When cart rule "CartRuleAmountOnEveryOrder" is disabled
+    And I remove cart rule "CartRuleAmountOnEveryOrder" from order "bo_order1"
     Then order "bo_order1" should have 0 cart rule
-    And order "bo_order1" should not have cart rule "CartRuleAmountOnWholeOrder"
+    And order "bo_order1" should not have cart rule "CartRuleAmountOnEveryOrder"
     And order "bo_order1" should have 3 products in total
     And order "bo_order1" should have following details:
       | total_products           | 38.800 |
@@ -314,25 +331,24 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+    # Even after removing a product the cart rule is not automatically added
     When I remove product "Test Product Cart Rule On Order" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product Cart Rule On Order"
-    Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "CartRuleAmountOnWholeOrder" with amount "$11.90"
+    Then order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should not have cart rule "CartRuleAmountOnEveryOrder"
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 11.900 |
-      | total_discounts_tax_incl | 12.620 |
-      | total_paid_tax_excl      | 18.900 |
-      | total_paid_tax_incl      | 20.030 |
-      | total_paid               | 20.030 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  @test-order-discount
-  @test-order-discount-1
   Scenario: Add product with associated discount to order, Add discount to the specific order, when I remove a product the order specific discount is still present
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -379,15 +395,15 @@ Feature: Order from Back Office (BO)
       | value     | 5                     |
     Then order "bo_order1" should have 2 cart rule
     Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$175.00"
-    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$10.29"
+    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$9.94"
     Then order "bo_order1" should have following details:
       | total_products           | 373.80 |
       | total_products_wt        | 396.23 |
-      | total_discounts_tax_excl | 185.29 |
-      | total_discounts_tax_incl | 196.41 |
-      | total_paid_tax_excl      | 195.51 |
-      | total_paid_tax_incl      | 207.24 |
-      | total_paid               | 207.24 |
+      | total_discounts_tax_excl | 184.94 |
+      | total_discounts_tax_incl | 196.04 |
+      | total_paid_tax_excl      | 195.86 |
+      | total_paid_tax_incl      | 207.61 |
+      | total_paid               | 207.61 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
@@ -408,8 +424,6 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  @test-order-discount
-  @test-order-discount-2
   Scenario: Add discount to the specific order, then remove it When I perform add/remove product actions the discount is not reapplied
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -432,21 +446,15 @@ Feature: Order from Back Office (BO)
       | type      | percent               |
       | value     | 5                     |
     Then order "bo_order1" should have 1 cart rule
-#    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.19"
-    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.54"
+    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.19"
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-#      | total_discounts_tax_excl | 1.190  |
-#      | total_discounts_tax_incl | 1.260  |
-#      | total_paid_tax_excl      | 29.610 |
-#      | total_paid_tax_incl      | 31.390 |
-#      | total_paid               | 31.390 |
-      | total_discounts_tax_excl | 1.540  |
-      | total_discounts_tax_incl | 1.630  |
-      | total_paid_tax_excl      | 29.260 |
-      | total_paid_tax_incl      | 31.020 |
-      | total_paid               | 31.020 |
+      | total_discounts_tax_excl | 1.190  |
+      | total_discounts_tax_incl | 1.260  |
+      | total_paid_tax_excl      | 29.610 |
+      | total_paid_tax_incl      | 31.390 |
+      | total_paid               | 31.390 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
@@ -461,16 +469,16 @@ Feature: Order from Back Office (BO)
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should contain 1 product "Test Product With Percent Discount"
     Then order "bo_order1" should have 2 cart rule
-    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$175.00"
-    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$10.29"
+    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$18.69"
+    Then order "bo_order1" should have cart rule "CartRulePercentForSpecificProduct" with amount "$166.25"
     Then order "bo_order1" should have following details:
       | total_products           | 373.80 |
       | total_products_wt        | 396.23 |
-      | total_discounts_tax_excl | 185.29 |
-      | total_discounts_tax_incl | 196.41 |
-      | total_paid_tax_excl      | 195.51 |
-      | total_paid_tax_incl      | 207.24 |
-      | total_paid               | 207.24 |
+      | total_discounts_tax_excl | 184.94 |
+      | total_discounts_tax_incl | 196.04 |
+      | total_paid_tax_excl      | 195.86 |
+      | total_paid_tax_incl      | 207.61 |
+      | total_paid               | 207.61 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
