@@ -44,5 +44,5 @@ prestashop.themeSelectors = {
 };
 
 $(document).ready(() => {
-  prestashop.emit('selectorsInit');
+  prestashop.emit('themeSelectorsInit');
 });
