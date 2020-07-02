@@ -33,6 +33,14 @@ prestashop.themeSelectors = {
   fileInput: '.js-file-input',
   contentWrapper: '#content-wrapper',
   footer: '#footer',
+  modalContent: '.js-modal-content',
+  modal: '#modal',
+  checkout: {
+    termsLink: '.js-terms a',
+    giftCheckbox: '.js-gift-checkbox',
+    imagesLink: '.card-block .cart-summary-products p a',
+    carrierExtraContent: '.carrier-extra-content',
+  },
 };
 
 $(document).ready(() => {
