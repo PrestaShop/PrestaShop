@@ -349,6 +349,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  @test-order-discount
+  @test-order-discount-1
   Scenario: Add product with associated discount to order, Add discount to the specific order, when I remove a product the order specific discount is still present
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -424,7 +426,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  @test-discount-removal
+  @test-order-discount
+  @test-order-discount-2
   Scenario: Add discount to the specific order, then remove it When I perform add/remove product actions the discount is not reapplied
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
@@ -447,15 +450,21 @@ Feature: Order from Back Office (BO)
       | type      | percent               |
       | value     | 5                     |
     Then order "bo_order1" should have 1 cart rule
-    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.19"
+#    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.19"
+    Then order "bo_order1" should have cart rule "discount five-percent" with amount "$1.54"
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 1.190  |
-      | total_discounts_tax_incl | 1.260  |
-      | total_paid_tax_excl      | 29.610 |
-      | total_paid_tax_incl      | 31.390 |
-      | total_paid               | 31.390 |
+#      | total_discounts_tax_excl | 1.190  |
+#      | total_discounts_tax_incl | 1.260  |
+#      | total_paid_tax_excl      | 29.610 |
+#      | total_paid_tax_incl      | 31.390 |
+#      | total_paid               | 31.390 |
+      | total_discounts_tax_excl | 1.540  |
+      | total_discounts_tax_incl | 1.630  |
+      | total_paid_tax_excl      | 29.260 |
+      | total_paid_tax_incl      | 31.020 |
+      | total_paid               | 31.020 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |

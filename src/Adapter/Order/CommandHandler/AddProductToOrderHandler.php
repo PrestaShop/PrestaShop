@@ -196,15 +196,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
 
-            $this->updateOrderCartRules($order, $invoice, $cart->getCartRules());
-
             // Update totals amount of order
-            $order = $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
+            $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
 
             // Delete temporary specific prices
             $this->clearTemporarySpecificPrices($temporarySpecificPrices);
-
-            $order->update();
         } catch (Exception $e) {
             $this->clearTemporarySpecificPrices($temporarySpecificPrices);
             $this->contextStateManager->restoreContext();
@@ -212,45 +208,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         }
 
         $this->contextStateManager->restoreContext();
-    }
-
-    /**
-     * @param Order $order
-     * @param OrderInvoice|null $invoice
-     * @param array $cartCartRules
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateOrderCartRules(Order $order, ?OrderInvoice $invoice, array $cartCartRules)
-    {
-        CartRule::resetStaticCache();
-        Cache::clean('getContextualValue_*');
-
-        foreach ($cartCartRules as $cartCartRule) {
-            $rule = new CartRule($cartCartRule['id_cart_rule']);
-
-            // Search for existing order cart rule
-            $orderCartRule = null;
-            foreach ($order->getCartRules() as $existingCartRule) {
-                if ($existingCartRule['id_cart_rule'] === $cartCartRule['id_cart_rule']) {
-                    $orderCartRule = new OrderCartRule($existingCartRule['id_order_cart_rule']);
-
-                    break;
-                }
-            }
-
-            if (null === $orderCartRule) {
-                $orderCartRule = new OrderCartRule();
-            }
-            $orderCartRule->id_order = $order->id;
-            $orderCartRule->id_cart_rule = $cartCartRule['id_cart_rule'];
-            $orderCartRule->id_order_invoice = !empty($invoice->id) ? $invoice->id : 0;
-            $orderCartRule->name = $cartCartRule['name'];
-            $orderCartRule->value = Tools::ps_round($rule->getContextualValue(true), $this->computingPrecision);
-            $orderCartRule->value_tax_excl = Tools::ps_round($rule->getContextualValue(false), $this->computingPrecision);
-            $orderCartRule->save();
-        }
     }
 
     /**
