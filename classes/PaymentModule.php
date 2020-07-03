@@ -343,8 +343,8 @@ abstract class PaymentModuleCore extends Module
                         self::DEBUG_MODE,
                         $order_status,
                         $id_order_state,
-                        '',
-                        isset($package['id_carrier']) ? $package['id_carrier'] : null
+                        isset($package['id_carrier']) ? $package['id_carrier'] : null,
+                        ''
                     );
                     $order = $orderData['order'];
                     $order_list[] = $order;
@@ -949,8 +949,8 @@ abstract class PaymentModuleCore extends Module
         $debug,
         $order_status,
         $id_order_state,
-        $note,
-        $carrierId = null
+        $carrierId = null,
+        $note
     ) {
         $order = new Order();
         $order->product_list = $productList;
