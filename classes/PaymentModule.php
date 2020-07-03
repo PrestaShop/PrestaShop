@@ -950,7 +950,7 @@ abstract class PaymentModuleCore extends Module
         $order_status,
         $id_order_state,
         $carrierId = null,
-        $note
+        $note = ''
     ) {
         $order = new Order();
         $order->product_list = $productList;
