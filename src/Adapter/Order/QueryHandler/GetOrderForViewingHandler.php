@@ -180,7 +180,6 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $order->hasBeenDelivered(),
             $order->hasBeenShipped(),
             $invoiceManagementIsEnabled,
-            (string) $order->note,
             new DateTimeImmutable($order->date_add),
             $this->getOrderCustomer($order),
             $this->getOrderShippingAddress($order),
@@ -194,7 +193,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderMessages($order),
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
-            $this->getOrderSources($order)
+            $this->getOrderSources($order),
+            (string) $order->note
         );
     }
 

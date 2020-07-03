@@ -198,7 +198,6 @@ class OrderForViewing
      * @param bool $isDelivered
      * @param bool $isShipped
      * @param bool $invoiceManagementIsEnabled
-     * @param string $note
      * @param DateTimeImmutable $createdAt
      * @param OrderCustomerForViewing|null $customer
      * @param OrderShippingAddressForViewing $shippingAddress
@@ -213,6 +212,7 @@ class OrderForViewing
      * @param OrderPricesForViewing $prices
      * @param OrderDiscountsForViewing $discounts
      * @param OrderSourcesForViewing $sources
+     * @param string $note
      */
     public function __construct(
         int $orderId,
@@ -230,7 +230,6 @@ class OrderForViewing
         bool $isDelivered,
         bool $isShipped,
         bool $invoiceManagementIsEnabled,
-        string $note,
         DateTimeImmutable $createdAt,
         ?OrderCustomerForViewing $customer,
         OrderShippingAddressForViewing $shippingAddress,
@@ -244,7 +243,8 @@ class OrderForViewing
         OrderMessagesForViewing $messages,
         OrderPricesForViewing $prices,
         OrderDiscountsForViewing $discounts,
-        OrderSourcesForViewing $sources
+        OrderSourcesForViewing $sources,
+        string $note
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
