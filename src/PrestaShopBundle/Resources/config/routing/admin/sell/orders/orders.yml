@@ -351,5 +351,3 @@ admin_orders_display_customization_image:
     type: \d+
     name: \w+
     value: \w+
-  options:
-    expose: true
