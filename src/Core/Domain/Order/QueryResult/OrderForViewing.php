@@ -244,7 +244,7 @@ class OrderForViewing
         OrderPricesForViewing $prices,
         OrderDiscountsForViewing $discounts,
         OrderSourcesForViewing $sources,
-        string $note
+        string $note = ''
     ) {
         $this->reference = $reference;
         $this->customer = $customer;
