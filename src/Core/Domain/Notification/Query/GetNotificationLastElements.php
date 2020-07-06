@@ -42,7 +42,7 @@ class GetNotificationLastElements
     /**
      * GetNotificationLastElements constructor.
      *
-     * @param $employeeId
+     * @param int $employeeId
      *
      * @throws InvalidEmployeeIdException
      */

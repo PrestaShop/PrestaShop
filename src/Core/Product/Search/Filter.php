@@ -153,7 +153,7 @@ class Filter
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return $this
      */
@@ -233,7 +233,7 @@ class Filter
     }
 
     /**
-     * @param $nextEncodedFacets
+     * @param array $nextEncodedFacets
      *
      * @return $this
      */

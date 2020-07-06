@@ -41,7 +41,7 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
         ];
         $str = str_replace($replaceArray, [''], strip_tags($value));
 
-        if (iconv_strlen($str) > $constraint->max) {
+        if ($constraint instanceof TinyMceMaxLength && iconv_strlen($str) > $constraint->max) {
             $this->context->addViolation(
                 (new LegacyContext())->getContext()->getTranslator()->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
                 ['%limit%' => $constraint->max]

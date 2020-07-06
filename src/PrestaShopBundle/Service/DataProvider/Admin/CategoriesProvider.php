@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use stdClass;
 
 /**
@@ -65,7 +66,7 @@ class CategoriesProvider
     /**
      * Return the list of categories with the associated modules.
      *
-     * @param array|AddonsCollection the list of modules
+     * @param array|AddonsCollection $modules
      *
      * @return array the list of categories
      */
@@ -133,9 +134,9 @@ class CategoriesProvider
     /**
      * Considering a category name, return his category parent name.
      *
-     * @param string the category
+     * @param string $categoryName
      *
-     * @return string the category
+     * @return string
      */
     public function getParentCategory(string $categoryName): string
     {

@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Translation\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
@@ -63,13 +64,11 @@ class DatabaseTranslationLoader implements LoaderInterface
         }
 
         if (!array_key_exists($locale, $langs)) {
-            $langs[$locale] = $this->entityManager
-                ->getRepository('PrestaShopBundle:Lang')
-                ->findOneByLocale($locale);
+            $langs[$locale] = $this->entityManager->getRepository('PrestaShopBundle:Lang')->findOneBy(['locale' => $locale]);
         }
 
-        $translationRepository = $this->entityManager
-            ->getRepository('PrestaShopBundle:Translation');
+        /** @var EntityRepository $translationRepository */
+        $translationRepository = $this->entityManager->getRepository('PrestaShopBundle:Translation');
 
         $queryBuilder = $translationRepository->createQueryBuilder('t');
 

@@ -41,7 +41,7 @@ final class ImportDataFormatter
     private $configuration;
 
     /**
-     * @var Tools
+     * @vaPrestaShopBundle/Install/Upgrade.phpr Tools
      */
     private $tools;
 
@@ -54,7 +54,7 @@ final class ImportDataFormatter
     }
 
     /**
-     * @param $value
+     * @param string|int $value
      *
      * @return bool
      */

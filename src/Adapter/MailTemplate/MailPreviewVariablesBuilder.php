@@ -148,7 +148,7 @@ final class MailPreviewVariablesBuilder
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param array $parameters
      * @param null $domain
      * @param null $local

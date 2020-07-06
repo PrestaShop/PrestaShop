@@ -53,7 +53,7 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
 
     /**
      * @param Connection $connection
-     * @param $dbPrefix
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param array $contextShopIds
      * @param int $contextIdLang

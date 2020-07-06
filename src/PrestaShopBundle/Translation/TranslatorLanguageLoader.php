@@ -44,7 +44,7 @@ class TranslatorLanguageLoader
     /**
      * TranslatorLanguageLoader constructor.
      *
-     * @param $isAdminContext
+     * @param bool $isAdminContext
      */
     public function __construct($isAdminContext)
     {
@@ -54,36 +54,43 @@ class TranslatorLanguageLoader
     /**
      * Loads a language into a translator
      *
-     * @param TranslatorInterface $translator Translator to modifiy
+     * @param TranslatorInterface $translator Translator to modify
      * @param string $locale Locale code for the language to load
      * @param bool $withDB [default=true] Whether to load translations from the database or not
      * @param Theme|null $theme [default=false] Currently active theme (Front office only)
      */
     public function loadLanguage(TranslatorInterface $translator, $locale, $withDB = true, Theme $theme = null)
     {
-        if (!$translator->isLanguageLoaded($locale)) {
-            $translator->addLoader('xlf', new XliffFileLoader());
+        if (!method_exists($translator, 'isLanguageLoaded')) {
+            return;
+        }
+        if ($translator->isLanguageLoaded($locale)) {
+            return;
+        }
+        if (!$translator instanceof Translator) {
+            return;
+        }
+        $translator->addLoader('xlf', new XliffFileLoader());
 
-            if ($withDB) {
-                $sqlTranslationLoader = new SqlTranslationLoader();
-                if (null !== $theme) {
-                    $sqlTranslationLoader->setTheme($theme);
-                }
-                $translator->addLoader('db', $sqlTranslationLoader);
+        if ($withDB) {
+            $sqlTranslationLoader = new SqlTranslationLoader();
+            if (null !== $theme) {
+                $sqlTranslationLoader->setTheme($theme);
             }
+            $translator->addLoader('db', $sqlTranslationLoader);
+        }
 
-            $finder = Finder::create()
-                ->files()
-                ->name('*.' . $locale . '.xlf')
-                ->notName($this->isAdminContext ? '^Shop*' : '^Admin*')
-                ->in($this->getTranslationResourcesDirectories($theme));
+        $finder = Finder::create()
+            ->files()
+            ->name('*.' . $locale . '.xlf')
+            ->notName($this->isAdminContext ? '^Shop*' : '^Admin*')
+            ->in($this->getTranslationResourcesDirectories($theme));
 
-            foreach ($finder as $file) {
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-                $translator->addResource($format, $file, $locale, $domain);
-                if ($withDB) {
-                    $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
-                }
+        foreach ($finder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+            $translator->addResource($format, $file, $locale, $domain);
+            if ($withDB) {
+                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
             }
         }
     }

@@ -115,7 +115,7 @@ class LegacyContext
      *
      * @param string $controller the controller name
      * @param bool $withToken
-     * @param array[string] $extraParams
+     * @param array<string> $extraParams
      *
      * @return string
      */

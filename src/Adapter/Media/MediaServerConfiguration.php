@@ -126,7 +126,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @param $domainName
+     * @param string $domainName
      *
      * @return bool
      */

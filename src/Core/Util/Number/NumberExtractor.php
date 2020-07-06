@@ -118,7 +118,7 @@ class NumberExtractor
     /**
      * Check if object contains provided public property and extract it as a Number, else return null
      *
-     * @param $resource
+     * @param string|object $resource
      * @param string $property
      *
      * @return Number|null
@@ -141,7 +141,7 @@ class NumberExtractor
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return Number
      *

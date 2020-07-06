@@ -119,6 +119,8 @@ class ModuleCommand extends ContainerAwareCommand
         } else {
             $this->executeGenericModuleAction($action, $moduleName);
         }
+
+        return;
     }
 
     protected function executeConfigureModuleAction($moduleName, $file = null)
