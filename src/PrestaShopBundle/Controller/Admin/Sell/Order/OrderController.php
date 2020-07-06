@@ -102,6 +102,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Manages "Sell > Orders" page
@@ -1469,26 +1470,34 @@ class OrderController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param int $orderId
      * @param int $type
      * @param string $name
      * @param string $value
      *
-     * @return BinaryFileResponse
+     * @return BinaryFileResponse|RedirectResponse
      */
-    public function displayCustomizationImageAction(int $type, string $name, string $value)
+    public function displayCustomizationImageAction(int $orderId, int $type, string $name, string $value)
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
         $customizationForViewing = new OrderProductCustomizationForViewing($type, $name, $value);
         $file = $uploadDir . $customizationForViewing->getValue();
         $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
 
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists($file)) {
+            $this->addFlash('error', $this->trans('The product customization image file was not found.', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_orders_view', [
+                'orderId' => $orderId,
+            ]);
+        }
         $response = new BinaryFileResponse($file);
 
-        if ($mimeTypeGuesser->isSupported()) {
-            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($file));
-        } else {
-            $response->headers->set('Content-Type', 'image/jpeg');
-        }
+        $response->headers->set(
+            'Content-Type',
+            $mimeTypeGuesser->isSupported() ? $mimeTypeGuesser->guess($file) : 'image/jpeg'
+        );
 
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
