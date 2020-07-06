@@ -49,7 +49,7 @@ final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param $contextLanguageId
+     * @param int $contextLanguageId
      */
     public function __construct(
         Connection $connection,

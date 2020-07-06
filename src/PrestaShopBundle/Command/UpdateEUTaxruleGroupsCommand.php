@@ -180,6 +180,8 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
         $nUpdated = count($euLocalizationFiles);
 
         $output->writeln("<info>Updated the virtual tax groups for $nUpdated localization files</info>");
+
+        return;
     }
 
     protected function addTax(SimpleXMLElement $taxes, SimpleXMLElement $tax, array $attributesToUpdate = [], array $attributesToRemove = [])

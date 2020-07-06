@@ -35,6 +35,7 @@ use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use ReflectionClass;
 use ReflectionObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
@@ -57,7 +58,7 @@ class ModuleActivatedListener
     private $translator;
 
     /**
-     * @var SessionInterface
+     * @var Session
      */
     private $session;
 

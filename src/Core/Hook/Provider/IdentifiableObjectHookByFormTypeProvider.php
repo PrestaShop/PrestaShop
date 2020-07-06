@@ -32,7 +32,6 @@ use Logger;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormRegistryInterface;
 use Throwable;
 
 /**
@@ -52,7 +51,7 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
     const FORM_HANDLER_SUFFIX = 'FormHandler';
 
     /**
-     * @var FormRegistryInterface
+     * @var FormFactoryInterface
      */
     private $formFactory;
 

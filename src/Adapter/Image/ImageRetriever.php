@@ -26,12 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Image;
 
+use Category;
 use Image;
 use ImageManager;
 use ImageType;
 use Language;
 use Link;
+use PrestaShopDatabaseException;
 use Product;
+use Store;
 
 /**
  * This class is mainly responsible of Product images.
@@ -124,12 +127,12 @@ class ImageRetriever
     }
 
     /**
-     * @param $object
+     * @param Product|Store|Category $object
      * @param int $id_image
      *
      * @return array|null
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     public function getImage($object, $id_image)
     {
@@ -254,7 +257,7 @@ class ImageRetriever
      *
      * @return array
      *
-     * @throws \PrestaShopDatabaseException
+     * @throws PrestaShopDatabaseException
      */
     public function getNoPictureImage(Language $language)
     {

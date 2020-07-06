@@ -91,8 +91,8 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
     /**
      * Uploads resized image from temporary folder to image destination
      *
-     * @param $temporaryImageName
-     * @param $destination
+     * @param string $temporaryImageName
+     * @param string $destination
      *
      * @throws ImageOptimizationException
      * @throws MemoryLimitException

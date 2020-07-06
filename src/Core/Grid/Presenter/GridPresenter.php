@@ -113,6 +113,7 @@ final class GridPresenter implements GridPresenterInterface
     {
         $columns = $grid->getDefinition()->getColumns()->toArray();
 
+        /** @var ColumnInterface $positionColumn */
         $positionColumn = $this->getOrderingPosition($grid);
         if (null !== $positionColumn) {
             array_unshift($columns, [

@@ -97,6 +97,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         //get product
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+        /** @var Product $product */
         $product = $productAdapter->getProduct((int) $idProduct);
 
         if (!is_object($product) || empty($product->id) || empty($options) || !is_array($options)) {

@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use stdClass;
 
 /**
  * Provide the news from https://www.prestashop.com/blog/
@@ -138,6 +139,7 @@ class NewsDataProvider
             'utm_campaign' => 'back-office-' . $shop_default_iso_country,
         ];
 
+        /** @var stdClass $item */
         foreach ($rss->channel->item as $item) {
             if ($articles_limit == 0) {
                 break;

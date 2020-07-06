@@ -46,7 +46,7 @@ class OrderReturnPresenter implements PresenterInterface
     /**
      * OrderReturnPresenter constructor.
      *
-     * @param $prefix
+     * @param string $prefix
      * @param Link $link
      */
     public function __construct($prefix, Link $link)
@@ -56,7 +56,7 @@ class OrderReturnPresenter implements PresenterInterface
     }
 
     /**
-     * @param $orderReturn
+     * @param array $orderReturn
      *
      * @return OrderReturnLazyArray
      *

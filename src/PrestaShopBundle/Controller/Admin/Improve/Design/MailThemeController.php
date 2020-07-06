@@ -310,7 +310,7 @@ class MailThemeController extends FrameworkBundleAdminController
             $templatePath = _PS_MODULE_DIR_ . $module . '/mails/';
         }
 
-        /** @var MailPreviewVariablesBuilder $variableBuilder */
+        /** @var MailPreviewVariablesBuilder $variablesBuilder */
         $variablesBuilder = $this->get('prestashop.adapter.mail_template.preview_variables_builder');
         $mailLayout = $this->getMailLayout($theme, $layout, $module);
         $mailVariables = $variablesBuilder->buildTemplateVariables($mailLayout);
@@ -472,7 +472,7 @@ class MailThemeController extends FrameworkBundleAdminController
             throw new InvalidArgumentException(sprintf('Cannot find Language with locale or isoCode %s', $locale));
         }
 
-        /** @var MailPreviewVariablesBuilder $variableBuilder */
+        /** @var MailPreviewVariablesBuilder $variablesBuilder */
         $variablesBuilder = $this->get('prestashop.adapter.mail_template.preview_variables_builder');
         $mailLayoutVariables = $variablesBuilder->buildTemplateVariables($layout);
 

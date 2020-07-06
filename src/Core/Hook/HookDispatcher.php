@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Hook;
 
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
+use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -77,7 +78,7 @@ final class HookDispatcher implements HookDispatcherInterface
             $hook->getParameters()
         );
 
-        $content = $event->getContent();
+        $content = $event instanceof RenderingHookEvent ? $event->getContent() : [];
         array_walk($content, function (&$partialContent) {
             $partialContent = empty($partialContent) ? '' : current($partialContent);
         });

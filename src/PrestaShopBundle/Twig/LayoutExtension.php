@@ -237,9 +237,9 @@ EOF;
     /**
      * This is a Twig port of the Smarty {$link->getAdminLink()} function.
      *
-     * @param string $controller the controller name
+     * @param string $controllerName
      * @param bool $withToken
-     * @param array[string] $extraParams
+     * @param array<string> $extraParams
      *
      * @return string
      */

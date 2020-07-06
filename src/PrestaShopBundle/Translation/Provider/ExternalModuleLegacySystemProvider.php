@@ -43,7 +43,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class ExternalModuleLegacySystemProvider extends AbstractProvider implements UseDefaultCatalogueInterface, SearchProviderInterface, UseModuleInterface
 {
     /**
-     * @var SearchProviderInterface|ModuleProvider the module provider
+     * @var ModuleProvider the module provider
      */
     private $moduleProvider;
 
