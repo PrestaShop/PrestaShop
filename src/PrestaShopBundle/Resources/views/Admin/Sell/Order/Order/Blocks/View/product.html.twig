@@ -157,7 +157,7 @@
               <div class="mr-4">
                 <p><strong>{{ customization.name }}</strong></p>
                 <p>
-                  <a target="_blank" href="{{ path('admin_orders_display_customization_image', {'type': customization.type, "name": customization.name, "value": customization.value})}}">
+                  <a href="{{ path('admin_orders_display_customization_image', {'type': customization.type, "name": customization.name, "value": customization.value})}}">
                     <img src="{{ customization.image }}" alt="{{ customization.name }}">
                   </a>
                 </p>
