@@ -59,7 +59,7 @@ final class SupplierFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CommandBusInterface $queryBus
-     * @param $multistoreEnabled
+     * @param bool $multistoreEnabled
      * @param int[] $defaultShopAssociation
      * @param int $contextCountryId
      */

@@ -571,7 +571,7 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * The "Add to cart" button should be shown for products available for order.
      *
-     * @param $product
+     * @param array $product
      *
      * @return mixed
      */

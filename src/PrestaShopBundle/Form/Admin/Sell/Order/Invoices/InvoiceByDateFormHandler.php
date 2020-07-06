@@ -54,7 +54,7 @@ final class InvoiceByDateFormHandler extends Handler
      * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $formDataProvider
-     * @param array $formTypes
+     * @param string $form
      * @param string $hookName
      * @param OrderInvoiceDataProviderInterface $orderInvoiceDataProvider
      * @param PDFGeneratorInterface $pdfGenerator

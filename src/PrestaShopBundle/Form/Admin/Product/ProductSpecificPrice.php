@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use Currency;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;

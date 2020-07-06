@@ -27,6 +27,9 @@ use Defuse\Crypto\Key;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
+/**
+ * @property string $passwd
+ */
 class CookieCore
 {
     /** @var array Contain cookie content in a key => value format */
@@ -55,6 +58,7 @@ class CookieCore
 
     protected $_standalone;
 
+    /** @var bool */
     protected $_secure = false;
 
     /**

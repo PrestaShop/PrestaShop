@@ -51,7 +51,7 @@ class TimezoneRepository implements RepositoryInterface
 
     /**
      * @param Connection $connection
-     * @param $tablePrefix
+     * @param string $tablePrefix
      */
     public function __construct(Connection $connection, $tablePrefix)
     {

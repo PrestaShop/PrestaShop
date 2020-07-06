@@ -48,7 +48,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], 'ADMINPRODUCTS_')")
      *
-     * @param $idProduct The product ID
+     * @param string|int $idProduct The product ID
      *
      * @return JsonResponse
      */
@@ -166,7 +166,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['create', 'update'], 'ADMINPRODUCTS_')")
      *
-     * @param int idSpecificPrice
+     * @param int $idSpecificPrice
      * @param Request $request
      *
      * @return JsonResponse

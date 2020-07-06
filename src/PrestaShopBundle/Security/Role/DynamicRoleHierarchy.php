@@ -27,12 +27,18 @@
 namespace PrestaShopBundle\Security\Role;
 
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * Class DynamicRoleHierarchy is used for Symfony role hierarchy voter to load roles from database.
  */
 class DynamicRoleHierarchy implements RoleHierarchyInterface
 {
+    /**
+     * @param array<RoleInterface> $roles An array of directly assigned roles
+     *
+     * @return void An array of all reachable roles
+     */
     public function getReachableRoles(array $roles)
     {
     }

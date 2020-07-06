@@ -175,7 +175,7 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     /**
      * Retrieve group ID of a shop.
      *
-     * @param $shopId
+     * @param int $shopId
      * @param bool $asId
      *
      * @return int
@@ -186,7 +186,7 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     }
 
     /**
-     * @param $shopGroupId
+     * @param int $shopGroupId
      *
      * @return ShopGroup
      */

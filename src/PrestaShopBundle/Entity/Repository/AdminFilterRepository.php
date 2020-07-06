@@ -37,10 +37,10 @@ use PrestaShopBundle\Entity\AdminFilter;
 class AdminFilterRepository extends EntityRepository
 {
     /**
-     * @param $employeeId
-     * @param $shopId
-     * @param $controller
-     * @param $action
+     * @param int $employeeId
+     * @param int $shopId
+     * @param string $controller
+     * @param string $action
      *
      * @return AdminFilter|null
      */
@@ -71,10 +71,10 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
-     * @param $employeeId
-     * @param $shopId
-     * @param $controller
-     * @param $action
+     * @param int $employeeId
+     * @param int $shopId
+     * @param string $controller
+     * @param string $action
      *
      * @throws ORMInvalidArgumentException
      * @throws OptimisticLockException

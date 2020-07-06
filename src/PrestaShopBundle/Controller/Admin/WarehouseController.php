@@ -70,7 +70,7 @@ class WarehouseController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.tax'),
             $this->get('router')
         );
-        $allFormData = $modelMapper->getFormData();
+        $allFormData = $modelMapper->getFormData($product);
 
         $form = $this->createFormBuilder($allFormData);
         $simpleSubForm = $form->create('step4', 'form');

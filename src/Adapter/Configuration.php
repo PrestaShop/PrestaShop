@@ -169,9 +169,9 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * Removes a configuration key.
      *
-     * @param type $key
+     * @param string $key
      *
-     * @return type
+     * @return self
      */
     public function remove($key)
     {
@@ -189,9 +189,9 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     /**
      * Unset configuration value.
      *
-     * @param $key
+     * @param string $key
      *
-     * @return $this
+     * @return void
      *
      * @throws \Exception
      *

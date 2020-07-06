@@ -55,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
 use Product;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tools;
 
 /**
  * Handles GetCartInformation query using legacy object models
@@ -474,7 +475,6 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
      * @param Cart $cart
      * @param Currency $currency
      * @param array $product
-     * @param bool $isGift
      *
      * @return CartProduct
      */
@@ -489,9 +489,9 @@ final class GetCartInformationHandler extends AbstractCartHandler implements Get
             $product['name'],
             isset($product['attributes_small']) ? $product['attributes_small'] : '',
             $product['reference'],
-            \Tools::ps_round($product['price'], $currency->precision),
+            Tools::ps_round($product['price'], $currency->precision),
             $product['quantity'],
-            \Tools::ps_round($product['total'], $currency->precision),
+            Tools::ps_round($product['total'], $currency->precision),
             $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
             $this->getProductCustomizedData($cart, $product),
             !empty($product['is_gift'])

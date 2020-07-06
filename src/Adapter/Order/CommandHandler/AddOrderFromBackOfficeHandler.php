@@ -38,6 +38,7 @@ use Employee;
 use Exception;
 use Language;
 use Module;
+use PaymentModule;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddOrderFromBackOfficeHandlerInterface;
@@ -67,6 +68,7 @@ final class AddOrderFromBackOfficeHandler implements AddOrderFromBackOfficeHandl
      */
     public function handle(AddOrderFromBackOfficeCommand $command)
     {
+        /** @var PaymentModule $paymentModule */
         $paymentModule = !Configuration::get('PS_CATALOG_MODE') ?
             Module::getInstanceByName($command->getPaymentModuleName()) :
             new BoOrderCore();

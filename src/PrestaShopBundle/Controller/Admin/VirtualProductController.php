@@ -40,7 +40,7 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax Form to create/update virtual product.
      *
-     * @param $idProduct
+     * @param string|int $idProduct
      * @param Request $request
      *
      * @return JsonResponse
@@ -121,7 +121,7 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax Form to remove attached file.
      *
-     * @param $idProduct
+     * @param string|int $idProduct
      * @param Request $request
      *
      * @return JsonResponse
@@ -147,7 +147,7 @@ class VirtualProductController extends FrameworkBundleAdminController
     /**
      * Process Ajax remove action.
      *
-     * @param $idProduct
+     * @param string|int $idProduct
      * @param Request $request
      *
      * @return JsonResponse
