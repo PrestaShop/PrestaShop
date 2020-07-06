@@ -138,6 +138,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             if (!($cart instanceof Cart)) {
                 throw new OrderException('Cart linked to the order cannot be found.');
             }
+            $this->contextStateManager->setCart($cart);
             // Cart precision is more adapted
             $this->computingPrecision = $this->getPrecisionFromCart($cart);
 
