@@ -45,8 +45,10 @@ class RemoveCartRuleFromCartCommand
     private $cartRuleId;
 
     /**
-     * @param $cartId
-     * @param $cartRuleId
+     * @param int $cartId
+     * @param int $cartRuleId
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException
      */
     public function __construct(int $cartId, int $cartRuleId)
     {

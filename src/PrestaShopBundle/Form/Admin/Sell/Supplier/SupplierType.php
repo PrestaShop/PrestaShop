@@ -82,9 +82,9 @@ class SupplierType extends TranslatorAwareType
     /**
      * @param array $countryChoices
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
-     * @param $contextCountryId
+     * @param int $contextCountryId
      * @param TranslatorInterface $translator
-     * @param $isMultistoreEnabled
+     * @param bool $isMultistoreEnabled
      * @param array $locales
      */
     public function __construct(

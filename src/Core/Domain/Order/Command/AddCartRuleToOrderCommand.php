@@ -103,7 +103,7 @@ class AddCartRuleToOrderCommand
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getCartRuleType(): string
     {

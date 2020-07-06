@@ -159,7 +159,6 @@ class OrderRefundCalculator
      * @param array $orderDetailRefunds
      * @param bool $isTaxIncluded
      * @param array $orderDetails
-     * @param TaxCalculator $taxCalculator
      * @param int $precision
      *
      * @return array

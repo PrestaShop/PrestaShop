@@ -67,7 +67,7 @@ class StockRepository extends StockManagementRepository
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param StockManager $stockManager
-     * @param $tablePrefix
+     * @param string $tablePrefix
      */
     public function __construct(
         ContainerInterface $container,
@@ -204,8 +204,8 @@ class StockRepository extends StockManagementRepository
     }
 
     /**
-     * @param $offset int
-     * @param $limit int
+     * @param int $offset
+     * @param int $limit
      * @param QueryParamsCollection $queryParams
      *
      * @return array
@@ -284,7 +284,7 @@ class StockRepository extends StockManagementRepository
           LEFT JOIN {table_prefix}product_attribute_combination pac ON (pac.id_product_attribute = pa.id_product_attribute)
           LEFT JOIN {table_prefix}product_attribute_shop pas
             ON (pas.id_product = pa.id_product AND pas.id_product_attribute = pa.id_product_attribute AND
-                pas.id_shop = :shop_id)                     
+                pas.id_shop = :shop_id)
         WHERE
           p.state = :state
           {and_where}

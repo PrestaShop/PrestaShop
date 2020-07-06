@@ -73,7 +73,7 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
-     * @param $module_id
+     * @param int $module_id
      *
      * @return bool
      *

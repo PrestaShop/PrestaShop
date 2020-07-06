@@ -111,7 +111,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $modeType int
+     * @param int $modeType
      *
      * @return $this
      */
@@ -123,7 +123,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $start int
+     * @param int $start
      *
      * @return $this
      */
@@ -135,7 +135,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $limit int
+     * @param int $limit
      *
      * @return $this
      */
@@ -280,7 +280,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $handle, file pointer
+     * @param resource $handle file pointer
      */
     private function dumpFile($handle)
     {

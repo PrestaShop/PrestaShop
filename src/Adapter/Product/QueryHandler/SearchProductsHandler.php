@@ -185,7 +185,7 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
 
     /**
      * @param Product $product
-     * @param string $currencyCode
+     * @param string $currencyIsoCode
      *
      * @return ProductCombination[]
      */

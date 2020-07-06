@@ -69,7 +69,7 @@ abstract class AbstractCmsPageHandler extends AbstractObjectModelHandler
     /**
      * Checks whether cms page category exists by provided id.
      *
-     * @param $cmsCategoryId
+     * @param int $cmsCategoryId
      *
      * @throws CmsPageCategoryException
      */

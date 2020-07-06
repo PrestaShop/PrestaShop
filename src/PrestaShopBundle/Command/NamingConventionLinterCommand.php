@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShopBundle\Routing\Linter\Exception\LinterException;
+use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -64,7 +64,7 @@ final class NamingConventionLinterCommand extends ContainerAwareCommand
         foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
                 $namingConventionLinter->lint($routeName, $route);
-            } catch (LinterException $e) {
+            } catch (NamingConventionException $e) {
                 $ioTableRows[] = [$routeName, $e->getExpectedRouteName()];
             }
         }

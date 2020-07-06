@@ -54,7 +54,7 @@ class AdminProductDataUpdater implements ProductInterface
     /**
      * Constructor. HookDispatcher is injected by Sf container.
      *
-     * @param HookDispatcher $hookDispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(HookDispatcherInterface $hookDispatcher)
     {
