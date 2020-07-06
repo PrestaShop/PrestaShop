@@ -270,10 +270,16 @@ class CategoryController extends FrameworkBundleAdminController
             'subcategories' => $editableCategory->getSubCategories(),
         ];
 
-        $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
-        $categoryForm->handleRequest($request);
+        try {
+            $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_categories_index');
+        }
 
         try {
+            $categoryForm->handleRequest($request);
             $handlerResult = $categoryFormHandler->handleFor((int) $categoryId, $categoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
@@ -336,9 +342,16 @@ class CategoryController extends FrameworkBundleAdminController
         $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
         $rootCategoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
 
-        $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
-        $rootCategoryForm->handleRequest($request);
         try {
+            $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_categories_index');
+        }
+
+        try {
+            $rootCategoryForm->handleRequest($request);
             $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {

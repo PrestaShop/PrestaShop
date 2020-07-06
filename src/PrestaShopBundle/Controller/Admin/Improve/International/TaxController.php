@@ -154,12 +154,25 @@ class TaxController extends FrameworkBundleAdminController
         $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
         $taxFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_form_builder');
 
-        $taxForm = $taxFormBuilder->getForm();
-        $taxForm->handleRequest($request);
         try {
+            $taxForm = $taxFormBuilder->getForm();
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        try {
+            $taxForm->handleRequest($request);
             $result = $taxFormHandler->handle($taxForm);
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
 
                 return $this->redirectToRoute('admin_taxes_index');
             }
@@ -192,9 +205,19 @@ class TaxController extends FrameworkBundleAdminController
         $taxFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.tax_form_handler');
         $taxFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.tax_form_builder');
 
-        $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
-        $taxForm->handleRequest($request);
         try {
+            $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        try {
+            $taxForm->handleRequest($request);
             $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
 
             if ($result->isSubmitted() && $result->isValid()) {

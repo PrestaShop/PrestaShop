@@ -164,10 +164,19 @@ class ProfileController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.profile_form_handler');
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.profile_form_builder');
 
-        $form = $formBuilder->getFormFor((int) $profileId);
-        $form->handleRequest($request);
+        try {
+            $form = $formBuilder->getFormFor((int) $profileId);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_profiles_index');
+        }
 
         try {
+            $form->handleRequest($request);
             $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {

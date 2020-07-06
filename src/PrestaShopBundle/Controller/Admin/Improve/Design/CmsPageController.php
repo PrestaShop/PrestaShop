@@ -374,19 +374,31 @@ class CmsPageController extends FrameworkBundleAdminController
     public function editCmsCategoryAction($cmsCategoryId, Request $request)
     {
         $cmsPageCategoryFormBuilder = $this->getCmsPageCategoryFormBuilder();
-        $cmsCategoryParentId = null;
 
-        $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
-        $cmsPageCategoryForm->handleRequest($request);
         try {
+            $cmsPageCategoryForm = $cmsPageCategoryFormBuilder->getFormFor((int) $cmsCategoryId);
+            $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_cms_pages_index');
+        }
+
+        try {
+            $cmsPageCategoryForm->handleRequest($request);
             $result = $this->getCmsPageCategoryFormHandler()->handleFor((int) $cmsCategoryId, $cmsPageCategoryForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                );
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
             }
-            $cmsCategoryParentId = $this->getParentCategoryId((int) $cmsCategoryId)->getValue();
         } catch (Exception $exception) {
             $this->addFlash(
                 'error',
