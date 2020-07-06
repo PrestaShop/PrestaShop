@@ -41,14 +41,30 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     {
     }
 
+    /**
+     * @param string $eventName
+     * @param \Symfony\Component\EventDispatcher\Event|null $event
+     *
+     * @return \Symfony\Component\EventDispatcher\Event|void
+     */
     public function dispatch($eventName, \Symfony\Component\EventDispatcher\Event $event = null)
     {
     }
 
+    /**
+     * @param null $eventName
+     *
+     * @return array|void
+     */
     public function getListeners($eventName = null)
     {
     }
 
+    /**
+     * @param null $eventName
+     *
+     * @return bool|void
+     */
     public function hasListeners($eventName = null)
     {
     }
@@ -61,6 +77,12 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     {
     }
 
+    /**
+     * @param string $eventName
+     * @param callable $listener
+     *
+     * @return int|void|null
+     */
     public function getListenerPriority($eventName, $listener)
     {
     }
@@ -73,10 +95,21 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     {
     }
 
+    /**
+     * @param HookInterface $hook
+     *
+     * @return \PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface|void
+     */
     public function dispatchRendering(HookInterface $hook)
     {
     }
 
+    /**
+     * @param string $hookName
+     * @param array $hookParameters
+     *
+     * @return \PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface|void
+     */
     public function dispatchRenderingWithParameters($hookName, array $hookParameters = [])
     {
     }

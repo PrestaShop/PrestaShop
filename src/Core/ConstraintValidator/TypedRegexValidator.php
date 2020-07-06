@@ -143,9 +143,9 @@ class TypedRegexValidator extends ConstraintValidator
      * matches given subject, 0 if it does not, or FALSE
      * if an error occurred.
      *
-     * @param $pattern
-     * @param $type
-     * @param $value
+     * @param string $pattern
+     * @param string $type
+     * @param string $value
      *
      * @return false|int
      */

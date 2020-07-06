@@ -81,7 +81,7 @@ class OrderMessageForViewing
     /**
      * @param int $messageId
      * @param string $message
-     * @param DateTimeImmutable $messageDate
+     * @param OrderMessageDateForViewing $messageDate
      * @param int $employeeId
      * @param bool $isCurrentEmployeesMessage
      * @param string $employeeFirstName

@@ -57,7 +57,7 @@ class ContainerBuilder
     private static $containers;
 
     /**
-     * @var string
+     * @var EnvironmentInterface
      */
     private $environment;
 

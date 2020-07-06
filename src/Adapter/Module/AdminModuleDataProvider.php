@@ -30,6 +30,7 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use Employee;
 use Module as LegacyModule;
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
@@ -88,7 +89,7 @@ class AdminModuleDataProvider implements ModuleInterface
     private $router = null;
 
     /**
-     * @var AddonsInterface
+     * @var AddonsDataProvider
      */
     private $addonsDataProvider;
 
@@ -363,7 +364,7 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * @param $moduleId
+     * @param int $moduleId
      *
      * @return array
      */
@@ -458,6 +459,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     // so we know whether is bought
 
                     $addons = $this->addonsDataProvider->request($action, $params);
+                    /** @var \stdClass $addon */
                     foreach ($addons as $addonsType => $addon) {
                         if (empty($addon->name)) {
                             $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));

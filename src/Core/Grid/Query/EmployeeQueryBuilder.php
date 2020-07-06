@@ -52,7 +52,7 @@ final class EmployeeQueryBuilder extends AbstractDoctrineQueryBuilder
 
     /**
      * @param Connection $connection
-     * @param $dbPrefix
+     * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param string $contextIdLang
      * @param int[] $contextShopIds

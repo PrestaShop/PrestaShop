@@ -54,8 +54,6 @@ class LegacyRoute
     private $controllersActions;
 
     /**
-     * LegacyRoute constructor.
-     *
      * @param string $routeName
      * @param array $legacyLinks
      * @param array $routeParameters
@@ -81,7 +79,7 @@ class LegacyRoute
     }
 
     /**
-     * @param $routeName
+     * @param string $routeName
      * @param array $routeDefaults
      *
      * @return LegacyRoute

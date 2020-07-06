@@ -96,7 +96,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $locale
      */
     public function setLocale($locale)
     {
@@ -208,7 +208,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
         $databaseCatalogue = new MessageCatalogue($this->locale);
 
         foreach ($this->getTranslationDomains() as $translationDomain) {
-            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain, $theme);
+            $domainCatalogue = $this->getDatabaseLoader()->load(null, $this->locale, $translationDomain);
 
             if ($domainCatalogue instanceof MessageCatalogue) {
                 $databaseCatalogue->addCatalogue($domainCatalogue);

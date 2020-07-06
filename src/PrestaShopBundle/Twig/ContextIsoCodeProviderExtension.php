@@ -37,7 +37,7 @@ class ContextIsoCodeProviderExtension extends \Twig_Extension
     private $isoCode;
 
     /**
-     * @param $isoCode
+     * @param string $isoCode
      */
     public function __construct($isoCode)
     {

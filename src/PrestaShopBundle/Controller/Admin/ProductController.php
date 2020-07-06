@@ -40,8 +40,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Entity\Repository\AttributeRepository;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use PrestaShopBundle\Form\Admin\Product\ProductCombination;
@@ -132,7 +134,7 @@ class ProductController extends FrameworkBundleAdminController
         $request->getSession()->set('_locale', $language->locale);
         $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
 
-        /** @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
         // Set values from persistence and replace in the request
@@ -276,7 +278,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
-        /** @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
         $totalCount = 0;
@@ -398,7 +400,7 @@ class ProductController extends FrameworkBundleAdminController
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $languages = $this->get('prestashop.adapter.legacy.context')->getLanguages();
 
-        /** @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $productShopCategory = $this->getContext()->shop->id_category;
 
@@ -594,14 +596,14 @@ class ProductController extends FrameworkBundleAdminController
             throw $e;
         }
 
-        /** @var $stockManager StockInterface */
+        /** @var StockInterface $stockManager */
         $stockManager = $this->get('prestashop.core.data_provider.stock_interface');
 
         /** @var WarehouseDataProvider $warehouseProvider */
         $warehouseProvider = $this->get('prestashop.adapter.data_provider.warehouse');
 
         //If context shop is define to a group shop, disable the form
-        if ($shopContext->isShopGroupContext()) {
+        if ($shopContext->isGroupShopContext()) {
             return $this->render('@Product/ProductPage/disabled_form_alert.html.twig', ['showContentHeader' => false]);
         }
 
@@ -619,7 +621,9 @@ class ProductController extends FrameworkBundleAdminController
 
         $doctrine = $this->getDoctrine()->getManager();
         $language = empty($languages[0]) ? ['id_lang' => 1, 'id_shop' => 1] : $languages[0];
-        $attributeGroups = $doctrine->getRepository('PrestaShopBundle:Attribute')->findByLangAndShop((int) $language['id_lang'], (int) $language['id_shop']);
+        /** @var AttributeRepository $attributeRepository */
+        $attributeRepository = $doctrine->getRepository('PrestaShopBundle:Attribute');
+        $attributeGroups = $attributeRepository->findByLangAndShop((int) $language['id_lang'], (int) $language['id_shop']);
 
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
             ->setParams(['product' => $product])
@@ -732,10 +736,10 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $productIdList = $request->request->get('bulk_action_selected_products');
-        /** @var $productUpdater ProductInterfaceUpdater */
+        /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
-        /** @var $logger LoggerInterface */
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
 
         $hookEventParameters = ['product_list_id' => $productIdList];
@@ -908,13 +912,13 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
-        /** @var $productProvider ProductInterfaceProvider */
+        /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
-        /** @var $productUpdater ProductInterfaceUpdater */
+        /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
 
-        /** @var $logger LoggerInterface */
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
 
         /* @var HookDispatcher $hookDispatcher */
@@ -1014,10 +1018,10 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_catalog');
         }
 
+        /** @var ProductInterfaceUpdater $productUpdater */
         $productUpdater = $this->get('prestashop.core.admin.data_updater.product_interface');
-        /** @var $productUpdater ProductInterfaceUpdater */
 
-        /** @var $logger LoggerInterface */
+        /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
 
         $hookEventParameters = ['product_id' => $id];
@@ -1161,7 +1165,7 @@ class ProductController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this."
      * )
      *
-     * @param $productId
+     * @param int $productId
      *
      * @return JsonResponse
      */
@@ -1263,7 +1267,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.tax'),
             $this->get('router')
         );
-        $form = $this->createFormBuilder($modelMapper->getFormData());
+        $form = $this->createFormBuilder($modelMapper->getFormData($product));
         switch ($step) {
             case 'step1':
                 $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');

@@ -27,6 +27,9 @@ use Defuse\Crypto\Key;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
+/**
+ * @property string $passwd
+ */
 class CookieCore
 {
     const SAMESITE_NONE = 'None';
@@ -65,6 +68,7 @@ class CookieCore
 
     protected $_standalone;
 
+    /** @var bool */
     protected $_secure = false;
 
     /**

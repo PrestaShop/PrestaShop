@@ -138,11 +138,9 @@ class Formatter
     /**
      * Prepares a basic number (either a string, an integer or a float) to be formatted.
      *
-     * @param $number
-     *  The number to be prepared
+     * @param string|float|int $number The number to be prepared
      *
-     * @return DecimalNumber
-     *                       The prepared number
+     * @return DecimalNumber The prepared number
      */
     protected function prepareNumber($number)
     {
@@ -186,11 +184,9 @@ class Formatter
      * e.g.: Given the major digits "1234567", and major group size
      *  configured to 3 digits, the result would be "1 234 567"
      *
-     * @param $majorDigits
-     *  The major digits to be grouped
+     * @param string $majorDigits The major digits to be grouped
      *
-     * @return string
-     *                The grouped major digits
+     * @return string The grouped major digits
      */
     protected function splitMajorGroups($majorDigits)
     {
@@ -218,11 +214,9 @@ class Formatter
     /**
      * Adds or remove trailing zeroes, depending on specified min and max fraction digits numbers.
      *
-     * @param string $minorDigits
-     *                            Digits to be adjusted with (trimmed or padded) zeroes
+     * @param string $minorDigits Digits to be adjusted with (trimmed or padded) zeroes
      *
-     * @return string
-     *                The adjusted minor digits
+     * @return string The adjusted minor digits
      */
     protected function adjustMinorDigitsZeroes($minorDigits)
     {
@@ -338,10 +332,8 @@ class Formatter
      *
      * @see http://cldr.unicode.org/translation/number-patterns
      *
-     * @param $formattedNumber
-     *  Number to process
-     * @param $pattern
-     *  CLDR formatting pattern to use
+     * @param string $formattedNumber Number to process
+     * @param string $pattern CLDR formatting pattern to use
      *
      * @return string
      */
@@ -382,11 +374,9 @@ class Formatter
      *
      * Placeholder will be replaced either by the symbol or the ISO code, depending on price specification
      *
-     * @param $formattedNumber
-     *  The number to format
+     * @param string $formattedNumber The number to format
      *
-     * @return string
-     *                The number after currency replacement
+     * @return string The number after currency replacement
      */
     protected function tryCurrencyReplacement($formattedNumber)
     {

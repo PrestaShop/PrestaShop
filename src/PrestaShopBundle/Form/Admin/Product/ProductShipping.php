@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use Currency;
+use Language;
 use PrestaShop\PrestaShop\Adapter\Carrier\CarrierDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;

@@ -50,7 +50,7 @@ class ServiceLocator
     /**
      * Get a service depending on its given $serviceName.
      *
-     * @param $serviceName
+     * @param string $serviceName
      *
      * @return mixed|object
      *

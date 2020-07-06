@@ -272,7 +272,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
     }
 
     /**
-     * @param $pack_item
+     * @param array $pack_item
      */
     private function setProductImageInformation(&$pack_item): void
     {

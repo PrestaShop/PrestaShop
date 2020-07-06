@@ -75,9 +75,9 @@ class ObjectPresenter implements PresenterInterface
     /**
      * Execute filterHtml hook for html Content for objectPresenter.
      *
-     * @param $type
-     * @param $presentedObject
-     * @param $htmlFields
+     * @param string $type
+     * @param ObjectModel $presentedObject
+     * @param array $htmlFields
      */
     private function filterHtmlContent($type, &$presentedObject, $htmlFields)
     {

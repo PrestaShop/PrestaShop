@@ -32,9 +32,19 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TreeBuilder
 {
+    /**
+     * @var string
+     */
     private $locale;
+    /**
+     * @var string
+     */
     private $theme;
 
+    /**
+     * @param string $locale
+     * @param string $theme
+     */
     public function __construct($locale, $theme)
     {
         $this->locale = $locale;
@@ -98,8 +108,8 @@ class TreeBuilder
     /**
      * Check if data contains search word.
      *
-     * @param $search
-     * @param $data
+     * @param string|array $search
+     * @param array $data
      *
      * @return bool
      */
@@ -167,7 +177,7 @@ class TreeBuilder
     /**
      * Clean tree to use it with the new API system.
      *
-     * @param $tree
+     * @param array $tree
      * @param Router $router
      * @param null $theme
      * @param null $search
@@ -279,13 +289,13 @@ class TreeBuilder
 
     /**
      * @param Router $router
-     * @param $tree
-     * @param $index
-     * @param $name
-     * @param $fullName
+     * @param array $tree
+     * @param int $index
+     * @param string $name
+     * @param string $fullName
      * @param bool $theme
      * @param null $search
-     * @param null $module
+     * @param bool $module
      *
      * @return mixed
      */

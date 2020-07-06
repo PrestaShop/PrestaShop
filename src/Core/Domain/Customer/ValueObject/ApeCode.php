@@ -40,7 +40,7 @@ class ApeCode
     private $code;
 
     /**
-     * @param $code
+     * @param string $code
      */
     public function __construct($code)
     {

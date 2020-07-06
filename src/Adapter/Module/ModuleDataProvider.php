@@ -77,7 +77,7 @@ class ModuleDataProvider
     }
 
     /**
-     * @param $employeeID
+     * @param int $employeeID
      */
     public function setEmployeeId($employeeID)
     {
