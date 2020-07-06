@@ -114,7 +114,7 @@ class Order extends BOBasePage {
    * @returns fileName
    */
   async getFileName(page, rowChild = 1) {
-    await this.goToDocumentsTab();
+    await this.goToDocumentsTab(page);
 
     const fileName = await this.getTextContent(page, this.documentNumberLink(rowChild));
     return fileName.replace('#', '').trim();
