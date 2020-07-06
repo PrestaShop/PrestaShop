@@ -117,7 +117,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $combinationValues the posted values
      *
-     * @return AdminProductsController instance
+     * @return void
      */
     public function processProductAttribute($product, $combinationValues)
     {
@@ -259,7 +259,7 @@ class AdminProductWrapper
      *
      * @param int $id_product
      * @param array $specificPriceValues the posted values
-     * @param int (optional) $id_specific_price if this is an update of an existing specific price, null else
+     * @param int|null $idSpecificPrice if this is an update of an existing specific price, null else
      *
      * @return AdminProductsController instance
      */
@@ -519,7 +519,7 @@ class AdminProductWrapper
      *
      * @return SpecificPrice
      *
-     * @throws PrestaShopObjectNotFoundException
+     * @throws EntityNotFoundException
      */
     public function getSpecificPriceDataById($id)
     {

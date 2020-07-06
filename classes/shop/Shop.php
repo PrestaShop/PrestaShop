@@ -874,6 +874,7 @@ class ShopCore extends ObjectModel
      * Retrieve group ID of a shop.
      *
      * @param int $shop_id Shop ID
+     * @param bool $as_id
      *
      * @return int Group ID
      */

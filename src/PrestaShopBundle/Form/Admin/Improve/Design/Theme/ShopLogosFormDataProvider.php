@@ -69,7 +69,9 @@ final class ShopLogosFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $data
+     *
+     * @return void
      *
      * @throws ShopException
      */

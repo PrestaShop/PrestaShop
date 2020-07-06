@@ -184,7 +184,7 @@ class Translation
     }
 
     /**
-     * @param $theme
+     * @param string $theme
      *
      * @return \PrestaShopBundle\Entity\Translation
      */

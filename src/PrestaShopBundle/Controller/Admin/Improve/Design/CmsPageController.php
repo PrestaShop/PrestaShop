@@ -242,7 +242,7 @@ class CmsPageController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
-     * @param $cmsPageId
+     * @param int $cmsPageId
      *
      * @return Response
      */
@@ -1041,7 +1041,7 @@ class CmsPageController extends FrameworkBundleAdminController
     /**
      * Redirects to index page by given id.
      *
-     * @param $cmsPageCategoryId
+     * @param int $cmsPageCategoryId
      *
      * @return RedirectResponse
      */

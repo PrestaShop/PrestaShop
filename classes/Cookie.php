@@ -25,6 +25,9 @@
  */
 use Defuse\Crypto\Key;
 
+/**
+ * @property string $passwd
+ */
 class CookieCore
 {
     /** @var array Contain cookie content in a key => value format */
@@ -53,6 +56,7 @@ class CookieCore
 
     protected $_standalone;
 
+    /** @var bool */
     protected $_secure = false;
 
     /**

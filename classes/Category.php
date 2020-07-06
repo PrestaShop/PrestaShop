@@ -658,7 +658,7 @@ class CategoryCore extends ObjectModel
      * @param int|bool $idLang Language ID
      *                         `false` if language filter should not be applied
      * @param bool $active Only return active categories
-     * @param null $groups
+     * @param array|null $groups
      * @param bool $useShopRestriction Restrict to current Shop
      * @param string $sqlFilter Additional SQL clause(s) to filter results
      * @param string $orderBy Change the default order by

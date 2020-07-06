@@ -106,6 +106,8 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
                 $sqlUpgradeFile->getFileInfo()->getPathName()
             )
         );
+
+        return;
     }
 
     /**
@@ -184,7 +186,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
             return $sqlInfo;
         }
 
-        return null;
+        return;
     }
 
     /**

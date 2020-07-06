@@ -110,8 +110,8 @@ class Reduction
     }
 
     /**
-     * @param $type
-     * @param $value
+     * @param string $type
+     * @param float $value
      *
      * @throws DomainConstraintException
      */

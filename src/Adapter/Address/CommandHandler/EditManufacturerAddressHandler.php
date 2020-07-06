@@ -63,7 +63,7 @@ final class EditManufacturerAddressHandler extends AbstractManufacturerAddressHa
     /**
      * Populates Address object with given data
      *
-     * @param $address
+     * @param Address $address
      * @param EditManufacturerAddressCommand $command
      */
     private function populateAddressWithData(Address $address, $command)

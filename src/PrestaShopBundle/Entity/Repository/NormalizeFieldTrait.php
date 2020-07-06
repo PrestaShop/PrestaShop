@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Entity\Repository;
 trait NormalizeFieldTrait
 {
     /**
-     * @param $rows
+     * @param array $rows
      *
      * @return mixed
      */
@@ -47,7 +47,7 @@ trait NormalizeFieldTrait
     }
 
     /**
-     * @param $rows
+     * @param array $rows
      *
      * @return mixed
      */

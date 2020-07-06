@@ -113,7 +113,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $idCategory
+     * @param int $idCategory
      *
      * @return $this
      */
@@ -133,7 +133,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $idManufacturer
+     * @param int $idManufacturer
      *
      * @return $this
      */
@@ -153,7 +153,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $idSupplier
+     * @param int $idSupplier
      *
      * @return $this
      */
@@ -173,7 +173,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $resultsPerPage
+     * @param int $resultsPerPage
      *
      * @return $this
      */
@@ -193,7 +193,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $page
+     * @param int $page
      *
      * @return $this
      */
@@ -233,7 +233,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $searchString
+     * @param string $searchString
      *
      * @return $this
      */
@@ -253,7 +253,7 @@ class ProductSearchQuery
     }
 
     /**
-     * @param $searchTag
+     * @param string $searchTag
      *
      * @return $this
      */

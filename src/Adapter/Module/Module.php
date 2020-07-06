@@ -39,7 +39,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
-    /** @var LegacyModule Module The instance of the legacy module */
+    /**
+     * @var LegacyModule Module The instance of the legacy module
+     */
     public $instance = null;
 
     /**
@@ -171,7 +173,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return legacyInstance|void
+     * @return LegacyModule|void
      *
      * @throws \Exception
      */
@@ -340,7 +342,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->reset();
+        return method_exists($this->instance, 'reset') ? $this->instance->reset() : true;
     }
 
     /**
@@ -362,7 +364,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $attribute
+     * @param string $attribute
      *
      * @return mixed
      */
@@ -372,8 +374,8 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param string $attribute
+     * @param mixed $value
      */
     public function set($attribute, $value)
     {
@@ -381,7 +383,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return mixed|string
      */

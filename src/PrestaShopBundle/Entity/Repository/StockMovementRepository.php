@@ -44,7 +44,7 @@ class StockMovementRepository extends StockManagementRepository
      * @param EntityManager $entityManager
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
-     * @param $tablePrefix
+     * @param string $tablePrefix
      */
     public function __construct(
         ContainerInterface $container,

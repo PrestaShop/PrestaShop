@@ -130,7 +130,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
     /**
      * To be removed once the minimum version is PHP 7.1.
      *
-     * @param $domainName
+     * @param string $domainName
      *
      * @return bool
      */

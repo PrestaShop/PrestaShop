@@ -75,7 +75,7 @@ final class GridPositionUpdater implements GridPositionUpdaterInterface
     }
 
     /**
-     * @param $positions
+     * @param array $positions
      */
     private function sortByPositionValue(&$positions)
     {

@@ -87,8 +87,6 @@ class ModuleController extends ModuleAbstractController
      *
      * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function manageAction()
@@ -261,7 +259,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
+     * @param int $moduleId
      *
      * @return Response
      */

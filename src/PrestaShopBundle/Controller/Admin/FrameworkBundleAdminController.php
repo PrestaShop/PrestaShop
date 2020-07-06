@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Controller\Admin;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -42,7 +41,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
@@ -52,7 +50,7 @@ class FrameworkBundleAdminController extends Controller
     const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     protected $configuration;
 
@@ -221,7 +219,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * @param $lang
+     * @param string $lang
      *
      * @return mixed
      */
@@ -321,8 +319,8 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Check if the connected user is granted to actions on a specific object.
      *
-     * @param $action
-     * @param $object
+     * @param string $action
+     * @param string $object
      * @param string $suffix
      *
      * @return bool
@@ -345,7 +343,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Display a message about permissions failure according to an action.
      *
-     * @param $action
+     * @param string $action
      * @param string $suffix
      *
      * @return string

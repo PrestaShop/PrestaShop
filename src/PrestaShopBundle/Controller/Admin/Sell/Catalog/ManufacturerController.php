@@ -248,7 +248,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param $manufacturerId
+     * @param int|string $manufacturerId
      *
      * @return RedirectResponse
      */

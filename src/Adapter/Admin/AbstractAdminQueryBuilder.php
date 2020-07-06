@@ -117,11 +117,11 @@ abstract class AbstractAdminQueryBuilder
      * Format example for $order:
      * $order = array('name ASC', 'id_product DESC');
      *
-     * @param array[array[mixed]] $select
-     * @param array[mixed] $table
-     * @param array[mixed] $where
-     * @param array[string] $groupBy
-     * @param array[string] $order
+     * @param array<array<mixed>> $select
+     * @param array<mixed> $table
+     * @param array<mixed> $where
+     * @param array<string> $groupBy
+     * @param array<string> $order
      * @param string $limit
      *
      * @throws LogicException if SQL elements cannot be joined

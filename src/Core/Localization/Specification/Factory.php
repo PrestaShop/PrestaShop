@@ -77,19 +77,13 @@ class Factory
     /**
      * Build a Price specification from a CLDR Locale object and a Currency object.
      *
-     * @param string $localeCode
-     *                           The concerned locale
-     * @param CldrLocaleInterface $cldrLocale
-     *                                        This CldrLocale object is a low level data object extracted from CLDR data source
+     * @param string $localeCode The concerned locale
+     * @param CldrLocaleInterface $cldrLocale his CldrLocale object is a low level data object extracted from CLDR data source
      *                                        It contains data about the concerned locale
-     * @param Currency $currency
-     *                           This Currency object brings missing specification to format a number as a price
-     * @param bool $numberGroupingUsed
-     *                                 Should we group digits when formatting prices ?
-     * @param $currencyDisplayType
-     *  Type of display for currency symbol (symbol or ISO code)
-     * @param int $maxFractionDigits|null
-     *                                    The decimal precision of the price
+     * @param Currency $currency This Currency object brings missing specification to format a number as a price
+     * @param bool $numberGroupingUsed Should we group digits when formatting prices ?
+     * @param string $currencyDisplayType Type of display for currency symbol (symbol or ISO code)
+     * @param int $maxFractionDigits|null The decimal precision of the price
      *
      * @return PriceSpecification
      *

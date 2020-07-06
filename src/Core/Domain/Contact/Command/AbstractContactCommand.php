@@ -46,7 +46,7 @@ abstract class AbstractContactCommand
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return false|int
      */

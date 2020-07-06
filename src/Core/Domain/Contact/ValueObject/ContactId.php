@@ -51,7 +51,7 @@ class ContactId
     }
 
     /**
-     * @param $contactId
+     * @param int $contactId
      *
      * @throws ContactException
      */

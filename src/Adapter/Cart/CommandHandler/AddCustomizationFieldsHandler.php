@@ -54,7 +54,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
      *
      * @param AddCustomizationFieldsCommand $command
      *
-     * @return int
+     * @return CustomizationId|null
      *
      * @throws CartNotFoundException
      * @throws CustomizationConstraintException

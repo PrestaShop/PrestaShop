@@ -91,9 +91,9 @@ class StockManager implements StockInterface
     }
 
     /**
-     * @param $shopId
-     * @param $errorState
-     * @param $cancellationState
+     * @param int $shopId
+     * @param int $errorState
+     * @param int $cancellationState
      * @param int|null $idProduct
      * @param int|null $idOrder
      *
@@ -123,9 +123,9 @@ class StockManager implements StockInterface
     }
 
     /**
-     * @param $shopId
-     * @param $errorState
-     * @param $cancellationState
+     * @param int $shopId
+     * @param int $errorState
+     * @param int $cancellationState
      * @param int|null $idProduct
      * @param int|null $idOrder
      *
@@ -194,9 +194,9 @@ class StockManager implements StockInterface
     /**
      * Use legacy getStockAvailableIdByProductId.
      *
-     * @param $productId
-     * @param null $productAttributeId
-     * @param null $shopId
+     * @param int $productId
+     * @param int|null $productAttributeId
+     * @param int|null $shopId
      *
      * @return bool|int
      */
