@@ -103,6 +103,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Manages "Sell > Orders" page
@@ -1481,31 +1482,19 @@ class OrderController extends FrameworkBundleAdminController
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
         $customizationForViewing = new OrderProductCustomizationForViewing($type, $name, $value);
-        $file = $uploadDir . $customizationForViewing->getValue();
-        $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
+        $filePath = $uploadDir . $customizationForViewing->getValue();
         $filesystem = new Filesystem();
 
         try {
-            if (!$filesystem->exists($file)) {
+            if (!$filesystem->exists($filePath)) {
                 $this->addFlash('error', $this->trans('The product customization image file was not found.', 'Admin.Notifications.Error'));
 
                 return $this->redirectToRoute('admin_orders_view', [
                     'orderId' => $orderId,
                 ]);
             }
-            $response = new BinaryFileResponse($file);
 
-            $response->headers->set(
-                'Content-Type',
-                $mimeTypeGuesser->isSupported() ? $mimeTypeGuesser->guess($file) : 'image/jpeg'
-            );
-
-            $response->setContentDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $customizationForViewing->getValue()
-            );
-
-            return $response;
+            return $this->file($filePath);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
