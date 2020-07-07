@@ -1515,13 +1515,28 @@ class OrderController extends FrameworkBundleAdminController
                 'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
-            InvalidCartRuleDiscountValueException::class => sprintf(
-                '%s<ol><li>%s</li><li>%s</li><li>%s</li></ol>',
-                $this->trans('It looks like the value is invalid:', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Percent or amount value must be greater than 0.', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Percent value cannot exceed 100.', 'Admin.Orderscustomers.Notification'),
-                $this->trans('Discount value cannot exceed the total price of this order.', 'Admin.Orderscustomers.Notification')
-            ),
+            InvalidCartRuleDiscountValueException::class => [
+                InvalidCartRuleDiscountValueException::INVALID_MIN_PERCENT => $this->trans(
+                    'Percent value must be greater than 0.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MAX_PERCENT => $this->trans(
+                    'Percent value cannot exceed 100.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MIN_AMOUNT => $this->trans(
+                    'Amount value must be greater than 0.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT => $this->trans(
+                    'Discount value cannot exceed the total price of this order.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+                InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING => $this->trans(
+                    'Shipping discount value cannot exceed the total price of this order.',
+                    'Admin.Orderscustomers.Notification'
+                ),
+            ],
             InvalidCancelProductException::class => [
                 InvalidCancelProductException::INVALID_QUANTITY => $this->trans(
                     'Positive product quantity is required.',

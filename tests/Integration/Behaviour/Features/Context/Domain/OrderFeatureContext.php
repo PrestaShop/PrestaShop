@@ -35,6 +35,7 @@ use Order;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
@@ -800,12 +801,16 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
 
-        $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
-            $orderId,
-            $data['name'],
-            $data['type'],
-            $data['value']
-        ));
+        try {
+            $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
+                $orderId,
+                $data['name'],
+                $data['type'],
+                $data['value']
+            ));
+        } catch (InvalidCartRuleDiscountValueException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -832,6 +837,50 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $data['value'],
             (int) $invoices->getLast()->id
         ));
+    }
+
+    /**
+     * @Then I should get error that cart rule has invalid min percent
+     */
+    public function assertInvalidMinPercentCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::INVALID_MIN_PERCENT
+        );
+    }
+
+    /**
+     * @Then I should get error that cart rule has invalid max percent
+     */
+    public function assertInvalidMaxPercentCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::INVALID_MAX_PERCENT
+        );
+    }
+
+    /**
+     * @Then I should get error that cart rule has invalid max amount
+     */
+    public function assertInvalidMaxAmountCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT
+        );
+    }
+
+    /**
+     * @Then I should get error that cart rule has invalid min amount
+     */
+    public function assertInvalidMinAmountCartRule(): void
+    {
+        $this->assertLastErrorIs(
+            InvalidCartRuleDiscountValueException::class,
+            InvalidCartRuleDiscountValueException::INVALID_MIN_AMOUNT
+        );
     }
 
     /**

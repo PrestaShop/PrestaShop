@@ -212,3 +212,39 @@ Feature: Add discounts to order from Back Office (BO)
       | shipping tax included     | 7.42  |
       | total paid tax excluded   | 18.90 |
       | total paid tax included   | 20.03 |
+
+  Scenario: Add invalid percent value
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name      | invalid percent |
+      | type      | percent         |
+      | value     | -1              |
+    Then I should get error that cart rule has invalid min percent
+    When I add discount to order "bo_order1" with following details:
+      | name      | invalid percent |
+      | type      | percent         |
+      | value     | 0               |
+    Then I should get error that cart rule has invalid min percent
+    When I add discount to order "bo_order1" with following details:
+      | name      | invalid percent |
+      | type      | percent         |
+      | value     | 101             |
+    Then I should get error that cart rule has invalid max percent
+
+  Scenario: Add invalid amount value
+    Given order "bo_order1" does not have any invoices
+    When I add discount to order "bo_order1" with following details:
+      | name      | invalid amount |
+      | type      | amount         |
+      | value     | 0              |
+    Then I should get error that cart rule has invalid min amount
+    When I add discount to order "bo_order1" with following details:
+      | name      | invalid amount |
+      | type      | amount         |
+      | value     | -1             |
+    Then I should get error that cart rule has invalid min amount
+    When I add discount to order "bo_order1" with following details:
+      | name      | invalid amount |
+      | type      | amount         |
+      | value     | 10000          |
+    Then I should get error that cart rule has invalid max amount
