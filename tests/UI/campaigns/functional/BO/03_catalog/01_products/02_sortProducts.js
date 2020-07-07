@@ -7,9 +7,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ProductsPage = require('@pages/BO/catalog/products/index');
+const dashboardPage = require('@pages/BO/dashboard');
+const productsPage = require('@pages/BO/catalog/products/index');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -20,49 +19,41 @@ let browserContext;
 let page;
 let numberOfProducts = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    productsPage: new ProductsPage(page),
-  };
-};
 
 describe('Sort products', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to products page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.productsLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.productsLink,
     );
 
-    await this.pageObjects.productsPage.closeSfToolBar();
+    await productsPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.productsPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.productsPage.pageTitle);
+    const pageTitle = await productsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
   it('should reset all filters and get number of products', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfProducts = await this.pageObjects.productsPage.resetAndGetNumberOfLines();
+    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
   const tests = [
@@ -144,18 +135,18 @@ describe('Sort products', async () => {
     it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-      let nonSortedTable = await this.pageObjects.productsPage.getAllRowsColumnContent(test.args.sortBy);
+      let nonSortedTable = await productsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-      await this.pageObjects.productsPage.sortTable(test.args.sortBy, test.args.sortDirection);
+      await productsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-      let sortedTable = await this.pageObjects.productsPage.getAllRowsColumnContent(test.args.sortBy);
+      let sortedTable = await productsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       if (test.args.isFloat) {
         nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
         sortedTable = await sortedTable.map(text => parseFloat(text));
       }
 
-      const expectedResult = await this.pageObjects.productsPage.sortArray(nonSortedTable, test.args.isFloat);
+      const expectedResult = await productsPage.sortArray(nonSortedTable, test.args.isFloat);
 
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);
