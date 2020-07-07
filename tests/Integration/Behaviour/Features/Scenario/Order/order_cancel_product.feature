@@ -99,12 +99,12 @@ Feature: Cancel Order Product from Back Office (BO)
       | total_products_wt        | 0.0000 |
       | total_discounts_tax_excl | 0.0    |
       | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 7.0000 |
-      | total_paid_tax_incl      | 7.4200 |
-      | total_paid               | 7.4200 |
+      | total_paid_tax_excl      | 0.0000 |
+      | total_paid_tax_incl      | 0.0000 |
+      | total_paid               | 0.0000 |
       | total_paid_real          | 0.0    |
-      | total_shipping_tax_excl  | 7.0    |
-      | total_shipping_tax_incl  | 7.42   |
+      | total_shipping_tax_excl  | 0.0000   |
+      | total_shipping_tax_incl  | 0.0000   |
 
   Scenario: Quantity is required
     Given I add order "bo_order_cancel_product" with the following details:

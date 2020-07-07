@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
 use Attribute;
+use Cache;
 use Carrier;
 use Cart;
 use CartRule;
@@ -221,6 +222,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function updateOrderCartRules(Order $order, ?OrderInvoice $invoice, array $cartCartRules)
     {
+        CartRule::resetStaticCache();
+        Cache::clean('getContextualValue_*');
+
         foreach ($cartCartRules as $cartCartRule) {
             $rule = new CartRule($cartCartRule['id_cart_rule']);
 

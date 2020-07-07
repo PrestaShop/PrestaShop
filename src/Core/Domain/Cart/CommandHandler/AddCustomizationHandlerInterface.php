@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 
 /**
- * Interface for handling AddCustomizationFields command
+ * Defines contract to handle @var AddCustomizationCommand
  */
-interface AddCustomizationFieldsHandlerInterface
+interface AddCustomizationHandlerInterface
 {
     /**
-     * @param AddCustomizationFieldsCommand $command
+     * @param AddCustomizationCommand $command
      *
      * @return CustomizationId|null customizationId
      */
-    public function handle(AddCustomizationFieldsCommand $command): ?CustomizationId;
+    public function handle(AddCustomizationCommand $command): ?CustomizationId;
 }

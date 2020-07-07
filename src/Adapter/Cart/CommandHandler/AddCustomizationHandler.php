@@ -30,8 +30,8 @@ use Configuration;
 use CustomizationField;
 use ImageManager;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationFieldsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationFieldsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCustomizationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\AddCustomizationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationSettings;
@@ -43,16 +43,16 @@ use Product;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Adds product customization fields data using legacy object model
+ * Handles @var AddCustomizationCommand using legacy object model.
  */
-final class AddCustomizationFieldsHandler extends AbstractCartHandler implements AddCustomizationFieldsHandlerInterface
+final class AddCustomizationHandler extends AbstractCartHandler implements AddCustomizationHandlerInterface
 {
     /**
      * If customization fields are not required and none of them are provided
      *  then no customizations are saved and null returned.
      *  Else, saved customizationId is returned or exception is thrown.
      *
-     * @param AddCustomizationFieldsCommand $command
+     * @param AddCustomizationCommand $command
      *
      * @return int
      *
@@ -61,7 +61,7 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
      * @throws CustomizationException
      * @throws FileUploadException
      */
-    public function handle(AddCustomizationFieldsCommand $command): ?CustomizationId
+    public function handle(AddCustomizationCommand $command): ?CustomizationId
     {
         $productId = $command->getProductId()->getValue();
 
@@ -69,33 +69,33 @@ final class AddCustomizationFieldsHandler extends AbstractCartHandler implements
         $product = new Product($productId);
 
         $customizationFields = $product->getCustomizationFieldIds();
-        $customizations = $command->getCustomizationsByFieldIds();
+        $customizationValues = $command->getCustomizationValuesByFieldIds();
 
         foreach ($customizationFields as $customizationField) {
             $customizationFieldId = (int) $customizationField['id_customization_field'];
             $isRequired = (bool) $customizationField['required'];
 
-            if ($isRequired && empty($customizations[$customizationFieldId])) {
+            if ($isRequired && empty($customizationValues[$customizationFieldId])) {
                 throw new CustomizationConstraintException(sprintf('Customization field #%s is required', $customizationFieldId), CustomizationConstraintException::FIELD_IS_REQUIRED);
             }
 
-            if (empty($customizations[$customizationFieldId])) {
+            if (empty($customizationValues[$customizationFieldId])) {
                 continue;
             }
 
             try {
                 if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
-                    $this->assertCustomTextField($customizationFieldId, $customizations[$customizationFieldId]);
+                    $this->assertCustomTextField($customizationFieldId, $customizationValues[$customizationFieldId]);
 
                     $customizationId = $cart->addTextFieldToProduct(
                         $productId,
                         $customizationFieldId,
                         Product::CUSTOMIZE_TEXTFIELD,
-                        $customizations[$customizationFieldId],
+                        $customizationValues[$customizationFieldId],
                         true
                     );
                 } else {
-                    $fileName = $this->uploadImage($customizations[$customizationFieldId]);
+                    $fileName = $this->uploadImage($customizationValues[$customizationFieldId]);
 
                     $customizationId = $cart->addPictureToProduct(
                         $productId,
