@@ -198,24 +198,6 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     }
 
     /**
-     * @param OrderId $orderId
-     *
-     * @return Order
-     *
-     * @throws OrderNotFoundException
-     */
-    private function getOrder(OrderId $orderId): Order
-    {
-        $order = new Order($orderId->getValue());
-
-        if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException($orderId, sprintf('Order with id "%s" was not found.', $orderId->getValue()));
-        }
-
-        return $order;
-    }
-
-    /**
      * @param Order $order
      *
      * @return OrderCustomerForViewing|null
