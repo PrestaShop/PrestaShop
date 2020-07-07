@@ -8,11 +8,11 @@ const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const CategoriesPage = require('@pages/BO/catalog/categories');
-const AddCategoryPage = require('@pages/BO/catalog/categories/add');
-const MonitoringPage = require('@pages/BO/catalog/monitoring');
+const dashboardPage = require('@pages/BO/dashboard');
+const categoriesPage = require('@pages/BO/catalog/categories');
+const addCategoryPage = require('@pages/BO/catalog/categories/add');
+const monitoringPage = require('@pages/BO/catalog/monitoring');
+
 const CategoryFaker = require('@data/faker/category');
 
 // Import test context
@@ -28,17 +28,6 @@ const firstCreateCategoryData = new CategoryFaker({displayed: false});
 const secondCreateCategoryData = new CategoryFaker();
 const thirdCreateCategoryData = new CategoryFaker();
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    categoriesPage: new CategoriesPage(page),
-    addCategoryPage: new AddCategoryPage(page),
-    monitoringPage: new MonitoringPage(page),
-  };
-};
-
 /*
 Create new category
 Sort list of empty categories
@@ -48,8 +37,6 @@ describe('Sort list of empty categories', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
@@ -61,27 +48,29 @@ describe('Sort list of empty categories', async () => {
     await files.deleteFile(`${thirdCreateCategoryData.name}.jpg`);
   });
 
-  // Login into BO and go to categories page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'catalog > categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.catalogParentLink,
-      this.pageObjects.dashboardPage.categoriesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.catalogParentLink,
+      dashboardPage.categoriesLink,
     );
 
-    await this.pageObjects.dashboardPage.closeSfToolBar();
+    await dashboardPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
+    const pageTitle = await categoriesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(categoriesPage.pageTitle);
   });
 
   it('should reset all filters and get number of categories in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCategories = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
+    numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfCategories).to.be.above(0);
   });
 
@@ -97,18 +86,18 @@ describe('Sort list of empty categories', async () => {
       it('should go to add new category page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategoryPage${index}`, baseContext);
 
-        await this.pageObjects.categoriesPage.goToAddNewCategoryPage();
-        const pageTitle = await this.pageObjects.addCategoryPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.addCategoryPage.pageTitleCreate);
+        await categoriesPage.goToAddNewCategoryPage(page);
+        const pageTitle = await addCategoryPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
       });
 
       it('should create category and check the  number of categories', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index}`, baseContext);
 
-        const textResult = await this.pageObjects.addCategoryPage.createEditCategory(test.args.categoryToCreate);
-        await expect(textResult).to.equal(this.pageObjects.categoriesPage.successfulCreationMessage);
+        const textResult = await addCategoryPage.createEditCategory(page, test.args.categoryToCreate);
+        await expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
 
-        const numberOfCategoriesAfterCreation = await this.pageObjects.categoriesPage.getNumberOfElementInGrid();
+        const numberOfCategoriesAfterCreation = await categoriesPage.getNumberOfElementInGrid(page);
         await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
       });
     });
@@ -119,14 +108,16 @@ describe('Sort list of empty categories', async () => {
     it('should go to \'catalog > monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPageToSort', baseContext);
 
-      await this.pageObjects.categoriesPage.goToSubMenu(
-        this.pageObjects.dashboardPage.catalogParentLink,
-        this.pageObjects.dashboardPage.monitoringLink,
+      await categoriesPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.monitoringLink,
       );
 
-      const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
-      numberOfEmptyCategories = await this.pageObjects.monitoringPage.resetAndGetNumberOfLines('empty_category');
+      const pageTitle = await monitoringPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+
+      numberOfEmptyCategories = await monitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
       await expect(numberOfEmptyCategories).to.be.at.least(1);
     });
 
@@ -155,14 +146,16 @@ describe('Sort list of empty categories', async () => {
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-          let nonSortedTable = await this.pageObjects.monitoringPage.getAllRowsColumnContent(
+          let nonSortedTable = await monitoringPage.getAllRowsColumnContent(
+            page,
             'empty_category',
             test.args.sortBy,
           );
 
-          await this.pageObjects.monitoringPage.sortTable('empty_category', test.args.sortBy, test.args.sortDirection);
+          await monitoringPage.sortTable(page, 'empty_category', test.args.sortBy, test.args.sortDirection);
 
-          let sortedTable = await this.pageObjects.monitoringPage.getAllRowsColumnContent(
+          let sortedTable = await monitoringPage.getAllRowsColumnContent(
+            page,
             'empty_category',
             test.args.sortBy,
           );
@@ -172,7 +165,7 @@ describe('Sort list of empty categories', async () => {
             sortedTable = await sortedTable.map(text => parseFloat(text));
           }
 
-          const expectedResult = await this.pageObjects.monitoringPage.sortArray(nonSortedTable, test.args.isFloat);
+          const expectedResult = await monitoringPage.sortArray(nonSortedTable, test.args.isFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
@@ -196,44 +189,46 @@ describe('Sort list of empty categories', async () => {
       it('should filter categories grid', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
-        await this.pageObjects.monitoringPage.filterTable(
+        await monitoringPage.filterTable(
+          page,
           'empty_category',
           'input',
           'name',
           test.args.categoryToCreate.name,
         );
 
-        const textColumn = await this.pageObjects.monitoringPage.getTextColumnFromTable('empty_category', 1, 'name');
+        const textColumn = await monitoringPage.getTextColumnFromTable(page, 'empty_category', 1, 'name');
         await expect(textColumn).to.contains(test.args.categoryToCreate.name);
       });
 
       it('should delete category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCategory${index}`, baseContext);
 
-        const textResult = await this.pageObjects.monitoringPage.deleteCategoryInGrid('empty_category', 1, 1);
-        await expect(textResult).to.equal(this.pageObjects.monitoringPage.successfulDeleteMessage);
+        const textResult = await monitoringPage.deleteCategoryInGrid(page, 'empty_category', 1, 1);
+        await expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
 
-        const pageTitle = await this.pageObjects.categoriesPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.categoriesPage.pageTitle);
+        const pageTitle = await categoriesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(categoriesPage.pageTitle);
       });
 
       it('should reset filter and check number of categories', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete${index}`, baseContext);
 
-        const numberOfCategoriesAfterDelete = await this.pageObjects.categoriesPage.resetAndGetNumberOfLines();
+        const numberOfCategoriesAfterDelete = await categoriesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfCategories + 3 - index - 1);
       });
 
       it('should go to \'catalog > monitoring\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToMonitoringPageToDelete${index}`, baseContext);
 
-        await this.pageObjects.categoriesPage.goToSubMenu(
-          this.pageObjects.dashboardPage.catalogParentLink,
-          this.pageObjects.dashboardPage.monitoringLink,
+        await categoriesPage.goToSubMenu(
+          page,
+          dashboardPage.catalogParentLink,
+          dashboardPage.monitoringLink,
         );
 
-        const pageTitle = await this.pageObjects.monitoringPage.getPageTitle();
-        await expect(pageTitle).to.contains(this.pageObjects.monitoringPage.pageTitle);
+        const pageTitle = await monitoringPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(monitoringPage.pageTitle);
       });
     });
   });
