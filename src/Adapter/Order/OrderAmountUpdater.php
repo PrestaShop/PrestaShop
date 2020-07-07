@@ -34,22 +34,39 @@ use CartRule;
 use Context;
 use Currency;
 use Order;
+use OrderCarrier;
 use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Tools;
+use Validate;
 
 class OrderAmountUpdater
 {
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct(ConfigurationInterface $configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
     /**
      * @param Order $order
      * @param Cart $cart
      * @param int|null $orderInvoiceId
      *
+     * @throws OrderException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -63,43 +80,65 @@ class OrderAmountUpdater
 
         // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
         $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
+        // Update carrier weight for shipping cost
+        $this->updateCarrierWeight($order);
 
         $orderProducts = $order->getCartProducts();
 
-        $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
-        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
-        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
+        $carrierId = $order->id_carrier;
+        $order->total_discounts = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId));
+        $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId));
+        $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId));
 
         // We should always use Cart::BOTH for the order total since it contains all products, shipping fees and cart rules
         $order->total_paid = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts),
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId),
             $computingPrecision
         );
         $order->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, Cart::BOTH, $orderProducts),
+            (float) $cart->getOrderTotal(false, Cart::BOTH, $orderProducts, $carrierId),
             $computingPrecision
         );
         $order->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts),
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId),
             $computingPrecision
         );
 
-        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts);
-        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts);
+        $order->total_products = (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $orderProducts, $carrierId);
+        $order->total_products_wt = (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $orderProducts, $carrierId);
 
-        $order->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
-        $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts);
-        $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts);
+        $order->total_shipping = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
+        $order->total_shipping_tax_excl = $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
+        $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId);
 
-        $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
-        $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
-        $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
+        $order->total_wrapping = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
+        $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
+        $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts, $carrierId));
 
         if (!$order->update()) {
             throw new OrderException('Could not update order invoice in database.');
         }
         if (!empty($orderInvoiceId)) {
             $this->updateOrderInvoice($order, $cart, $orderInvoiceId, $computingPrecision);
+        }
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    private function updateCarrierWeight(Order $order): void
+    {
+        $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
+
+        if (Validate::isLoadedObject($orderCarrier)) {
+            $orderCarrier->weight = (float) $order->getTotalWeight();
+
+            if ($orderCarrier->update()) {
+                $order->weight = sprintf('%.3f ' . $this->configuration->get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
+            }
         }
     }
 
@@ -207,25 +246,28 @@ class OrderAmountUpdater
         $invoice = new OrderInvoice($orderInvoiceId);
 
         // Shipping are computed on first invoice only
+        $carrierId = $order->id_carrier;
         $totalMethod = $firstInvoice === null || $firstInvoice->id == $invoice->id ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
         $invoice->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, $totalMethod, $invoiceProducts),
+            (float) $cart->getOrderTotal(false, $totalMethod, $invoiceProducts, $carrierId),
             $computingPrecision
         );
         $invoice->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $invoiceProducts),
+            (float) $cart->getOrderTotal(true, $totalMethod, $invoiceProducts, $carrierId),
             $computingPrecision
         );
 
         $invoice->total_products = (float) $cart->getOrderTotal(
             false,
             Cart::ONLY_PRODUCTS,
-            $invoiceProducts
+            $invoiceProducts,
+            $carrierId
         );
         $invoice->total_products_wt = (float) $cart->getOrderTotal(
             true,
             Cart::ONLY_PRODUCTS,
-            $invoiceProducts
+            $invoiceProducts,
+            $carrierId
         );
 
         $invoice->total_discount_tax_excl = $invoice->total_discount_tax_incl = 0;

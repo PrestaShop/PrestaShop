@@ -244,6 +244,8 @@ services:
 
   prestashop.adapter.order.amount.updater:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.order.product_quantity.updater:
     class: PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater

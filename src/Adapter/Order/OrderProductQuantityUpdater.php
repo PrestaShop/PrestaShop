@@ -38,7 +38,6 @@ use Customer;
 use Db;
 use Language;
 use Order;
-use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
 use Pack;
@@ -50,7 +49,6 @@ use Product;
 use StockAvailable;
 use StockManagerFactory;
 use StockMvt;
-use Validate;
 use Warehouse;
 
 /**
@@ -133,9 +131,6 @@ class OrderProductQuantityUpdater
 
             // Update product stocks
             $this->updateStocks($cart, $orderDetail, $oldQuantity, $newQuantity);
-
-            // Update weight and shipping infos
-            $order = $this->updateOrderShippingInfos($order, new Product((int) $orderDetail->product_id));
 
             // Update prices on the order after cart rules are recomputed
             $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
@@ -375,34 +370,6 @@ class OrderProductQuantityUpdater
         if (!Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization` WHERE `quantity` = 0')) {
             throw new OrderException('Could not delete customization from database.');
         }
-    }
-
-    /**
-     * @param Order $order
-     * @param Product $product
-     *
-     * @return Order
-     *
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateOrderShippingInfos(Order $order, Product $product): Order
-    {
-        $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
-
-        if (Validate::isLoadedObject($orderCarrier)) {
-            $orderCarrier->weight = (float) $order->getTotalWeight();
-
-            if ($orderCarrier->update()) {
-                $order->weight = sprintf('%.3f ' . Configuration::get('PS_WEIGHT_UNIT'), $orderCarrier->weight);
-            }
-        }
-
-        if (!$product->is_virtual) {
-            $order = $order->refreshShippingCost();
-        }
-
-        return $order;
     }
 
     /**
