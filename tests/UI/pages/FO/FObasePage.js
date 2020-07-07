@@ -206,4 +206,13 @@ module.exports = class FOBasePage extends CommonPage {
   getDefaultCurrency(page) {
     return this.getTextContent(page, this.defaultCurrencySpan);
   }
+
+  /**
+   * CLick on siteMap link on footer and go to page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToSitemapPage(page) {
+    await this.clickAndWaitForNavigation(page, this.siteMapLink);
+  }
 };
