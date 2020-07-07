@@ -44,7 +44,7 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler imple
      */
     public function handle(ChangeOrderDeliveryAddressCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
         $address = new Address($command->getNewDeliveryAddressId()->getValue());
 
         $cart = Cart::getCartByOrderId($order->id);

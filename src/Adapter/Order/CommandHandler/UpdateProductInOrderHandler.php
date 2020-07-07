@@ -69,7 +69,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         $temporarySpecificPrices = [];
 
         try {
-            $order = $this->getOrderObject($command->getOrderId());
+            $order = $this->getOrder($command->getOrderId());
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
             if (!empty($command->getOrderInvoiceId())) {
@@ -106,7 +106,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 if (!($cart instanceof Cart)) {
                     throw new OrderException('Cart linked to the order cannot be found.');
                 }
-                $product = $this->getProductObject(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
+                $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
                 $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
 
                 // Add specific price for the product being added
