@@ -24,6 +24,7 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
+// eslint-disable-next-line
 import 'velocity-animate';
 
 import ProductMinitature from './components/product-miniature';
@@ -31,8 +32,8 @@ import ProductMinitature from './components/product-miniature';
 $(document).ready(() => {
   const history = window.location.href;
 
-  prestashop.on('clickQuickView', function (elm) {
-    let data = {
+  prestashop.on('clickQuickView', (elm) => {
+    const data = {
       action: 'quickview',
       id_product: elm.dataset.idProduct,
       id_product_attribute: elm.dataset.idProductAttribute,
@@ -50,7 +51,7 @@ $(document).ready(() => {
       .fail((resp) => {
         prestashop.emit('handleError', {
           eventType: 'clickQuickView',
-          resp: resp,
+          resp,
         });
       });
   });
@@ -92,16 +93,17 @@ $(document).ready(() => {
       max: 1000000,
     });
   };
-  var move = (direction) => {
+
+  const move = (direction) => {
     const THUMB_MARGIN = 20;
-    var $thumbnails = $('.js-qv-product-images');
-    var thumbHeight = $('.js-qv-product-images li img').height() + THUMB_MARGIN;
-    var currentPosition = $thumbnails.position().top;
+    const $thumbnails = $('.js-qv-product-images');
+    const thumbHeight = $('.js-qv-product-images li img').height() + THUMB_MARGIN;
+    const currentPosition = $thumbnails.position().top;
     $thumbnails.velocity(
       {
         translateY: direction === 'up' ? currentPosition + thumbHeight : currentPosition - thumbHeight,
       },
-      function () {
+      () => {
         if ($thumbnails.position().top >= 0) {
           $('.arrow-up').css('opacity', '.2');
         } else if ($thumbnails.position().top + $thumbnails.height() <= $('.js-qv-mask').height()) {
@@ -161,7 +163,7 @@ $(document).ready(() => {
 
   $('body').on('change', prestashop.themeSelectors.listing.searchFilters + ' select', function (event) {
     const form = $(event.target).closest('form');
-    prestashop.emit('updateFacets', '?' + form.serialize());
+    prestashop.emit('updateFacets', `?${form.serialize()}`);
   });
 
   prestashop.on('updateProductList', (data) => {
@@ -180,6 +182,6 @@ function updateProductListDOM(data) {
     $(prestashop.themeSelectors.listing.listHeader).replaceWith(data.rendered_products_header);
   }
 
-  let productMinitature = new ProductMinitature();
+  const productMinitature = new ProductMinitature();
   productMinitature.init();
 }

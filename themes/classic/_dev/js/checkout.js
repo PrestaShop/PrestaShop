@@ -28,16 +28,16 @@ import prestashop from 'prestashop';
 function setUpCheckout() {
   $(prestashop.themeSelectors.checkout.termsLink).on('click', (event) => {
     event.preventDefault();
-    var url = $(event.target).attr('href');
+    let url = $(event.target).attr('href');
     if (url) {
       // TODO: Handle request if no pretty URL
-      url += `?content_only=1`;
+      url += '?content_only=1';
       $.get(url, (content) => {
         $(prestashop.themeSelectors.modal)
           .find(prestashop.themeSelectors.modalContent)
           .html($(content).find('.page-cms').contents());
       }).fail((resp) => {
-        prestashop.emit('handleError', {eventType: 'clickTerms', resp: resp});
+        prestashop.emit('handleError', {eventType: 'clickTerms', resp});
       });
     }
 
