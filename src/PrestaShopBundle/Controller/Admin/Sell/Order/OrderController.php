@@ -1484,7 +1484,7 @@ class OrderController extends FrameworkBundleAdminController
 
         try {
             if (!$filesystem->exists($filePath)) {
-                $this->addFlash('error', $this->trans('The product customization image file was not found.', 'Admin.Notifications.Error'));
+                $this->addFlash('error', $this->trans('The product customization picture could not be found.', 'Admin.Notifications.Error'));
 
                 return $this->redirectToRoute('admin_orders_view', [
                     'orderId' => $orderId,
