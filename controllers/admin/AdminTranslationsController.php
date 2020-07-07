@@ -1582,9 +1582,9 @@ class AdminTranslationsControllerCore extends AdminController
         $conf = !$conf ? 4 : $conf;
         $url_base = self::$currentIndex . '&token=' . $this->token . '&conf=' . $conf;
         if ($modify_translation) {
-            Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&lang=' . Tools::getValue('langue') . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&theme=' . $this->theme_selected);
+            Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&lang=' . Tools::getValue('langue') . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&selected-theme=' . $this->theme_selected);
         } elseif ($save_and_stay) {
-            Tools::redirectAdmin($url_base . '&lang=' . $this->lang_selected->iso_code . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&theme=' . $this->theme_selected);
+            Tools::redirectAdmin($url_base . '&lang=' . $this->lang_selected->iso_code . '&type=' . $this->type_selected . '&module=' . Tools::getValue('module') . '&selected-theme=' . $this->theme_selected);
         } else {
             Tools::redirectAdmin($url_base . '&action=settings');
         }
