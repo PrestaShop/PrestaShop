@@ -456,8 +456,16 @@ class EmployeeCore extends ObjectModel
         if (!Cache::isStored('isLoggedBack' . $this->id)) {
             /* Employee is valid only if it can be load and if cookie password is the same as database one */
             $result = (
-                $this->id && Validate::isUnsignedId($this->id) && Context::getContext()->cookie && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
-                    && (!isset(Context::getContext()->cookie->remote_addr) || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'))
+                $this->id
+                && Validate::isUnsignedId($this->id)
+                && Context::getContext()->cookie
+                && Context::getContext()->cookie->isSessionAlive()
+                && Employee::checkPassword($this->id, Context::getContext()->cookie->passwd)
+                && (
+                    !isset(Context::getContext()->cookie->remote_addr)
+                    || Context::getContext()->cookie->remote_addr == ip2long(Tools::getRemoteAddr())
+                    || !Configuration::get('PS_COOKIE_CHECKIP')
+                )
             );
             Cache::store('isLoggedBack' . $this->id, $result);
 
@@ -476,6 +484,7 @@ class EmployeeCore extends ObjectModel
             Context::getContext()->cookie->logout();
             Context::getContext()->cookie->write();
         }
+
         $this->id = null;
     }
 

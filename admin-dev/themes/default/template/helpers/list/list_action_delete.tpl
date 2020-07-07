@@ -22,6 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<a href="{$href|escape:'html':'UTF-8'}"{if isset($confirm)} onclick="if (confirm('{$confirm}')){ldelim}return true;{rdelim}else{ldelim}event.stopPropagation(); event.preventDefault();{rdelim};"{/if} title="{$action|escape:'html':'UTF-8'}" class="delete">
-	<i class="icon-trash"></i> {$action|escape:'html':'UTF-8'}
+<a href="#"
+   title="{$action|escape:'html':'UTF-8'}"
+   class="delete"
+   onclick="{if $confirm}confirm_link('', '{$confirm|escape:'html':'UTF-8'}', '{l s='Yes' d='Admin.Global'}', '{l s='No' d='Admin.Global'}', '{$href|escape:'html':'UTF-8'}', '#'){else}event.stopPropagation();event.preventDefault(){/if}">
+  <i class="icon-trash"></i> {$action|escape:'html':'UTF-8'}
 </a>

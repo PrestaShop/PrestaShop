@@ -93,7 +93,7 @@ function showErrorNextToAddtoCartButton(errorMessage) {
   }
 
   showError(
-      $('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability'),
+      $('.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability, .page-product:not(.modal-open) .product-container #product-availability'),
       errorMessage
   );
 }
@@ -181,13 +181,37 @@ function updateProduct(event, eventType, updateUrl) {
           $('.images-container').replaceWith(data.product_cover_thumbnails);
         }
 
-        $('.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices').replaceWith(data.product_prices);
-        $('.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization').replaceWith(data.product_customization);
-        $('.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants').replaceWith(data.product_variants);
-        $('.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts').replaceWith(data.product_discounts);
-        $('.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info').replaceWith(data.product_additional_info);
+        $(
+          '.quickview .product-prices, .page-product:not(.modal-open) .row .product-prices, .page-product:not(.modal-open) .product-container .product-prices',
+        )
+          .first()
+          .replaceWith(data.product_prices);
+        $(
+          '.quickview .product-customization, .page-product:not(.modal-open) .row .product-customization, .page-product:not(.modal-open) .product-container .product-customization',
+        )
+          .first()
+          .replaceWith(data.product_customization);
+        $(
+          '.quickview .product-variants, .page-product:not(.modal-open) .row .product-variants, .page-product:not(.modal-open) .product-container .product-variants',
+        )
+          .first()
+          .replaceWith(data.product_variants);
+        $(
+          '.quickview .product-discounts, .page-product:not(.modal-open) .row .product-discounts, .page-product:not(.modal-open) .product-container .product-discounts',
+        )
+          .first()
+          .replaceWith(data.product_discounts);
+        $(
+          '.quickview .product-additional-info, .page-product:not(.modal-open) .row .product-additional-info, .page-product:not(.modal-open) .product-container .product-additional-info',
+        )
+          .first()
+          .replaceWith(data.product_additional_info);
         $('.quickview #product-details, #product-details').replaceWith(data.product_details);
-        $('.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags').replaceWith(data.product_flags)
+        $(
+          '.quickview .product-flags, .page-product:not(.modal-open) .row .product-flags, .page-product:not(.modal-open) .product-container .product-flags',
+        )
+          .first()
+          .replaceWith(data.product_flags);
         replaceAddToCartSections(data);
         const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
 

@@ -3484,6 +3484,30 @@ abstract class ModuleCore implements ModuleInterface
 
         return $this->container;
     }
+
+    /**
+     * Save dashboard configuration
+     *
+     * @param array $config
+     *
+     * @return array Array of errors
+     */
+    public function validateDashConfig(array $config)
+    {
+        return [];
+    }
+
+    /**
+     * Save dashboard configuration
+     *
+     * @param array $config
+     *
+     * @return bool Determines if the save returns an error
+     */
+    public function saveDashConfig(array $config)
+    {
+        return false;
+    }
 }
 
 function ps_module_version_sort($a, $b)
