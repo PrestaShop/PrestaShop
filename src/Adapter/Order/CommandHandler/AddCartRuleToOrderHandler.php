@@ -30,11 +30,9 @@ use Cart;
 use CartRule;
 use Configuration;
 use Currency;
-use OrderCartRule;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -124,6 +122,6 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
             throw new OrderException('An error occurred while adding CartRule to cart', 0, $e);
         }
 
-        $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice);
+        $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
     }
 }

@@ -664,7 +664,7 @@ class CartRuleCore extends ObjectModel
             // When checking the cart rules present in that cart the request result is accurate
             // When we check if using the cart rule one more time is valid then we increment this value
             if (!$alreadyInCart) {
-                $quantityUsed += 1;
+                ++$quantityUsed;
             }
             if ($quantityUsed > $this->quantity_per_user) {
                 return (!$display_error) ? false : $this->trans('You cannot use this voucher anymore (usage limit reached)', [], 'Shop.Notifications.Error');
