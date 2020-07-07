@@ -27,19 +27,19 @@ import prestashop from 'prestashop';
 import {psGetRequestParameter} from './common';
 
 // Used to be able to abort request if user modify something
-var currentRequest = null;
+let currentRequest = null;
 
 // Used to clearTimeout if user flood the product quantity input
-var currentRequestDelayedId = null;
+let currentRequestDelayedId = null;
 
 // Check for popState event
-var isOnPopStateEvent = false;
+let isOnPopStateEvent = false;
 
 // Register form of first update
-var firstFormData = [];
+const firstFormData = [];
 
 // Detect if the form has changed one time
-var formChanged = false;
+let formChanged = false;
 
 /**
  * Get product update URL from different
@@ -63,7 +63,7 @@ function getProductUpdateUrl() {
 
     return dfd.promise();
   }
-  let formData = {};
+  const formData = {};
 
   $($productActions.find('form:first').serializeArray()).each((k, v) => {
     formData[v.name] = v.value;
@@ -82,7 +82,7 @@ function getProductUpdateUrl() {
     ),
     dataType: 'json',
     success(data) {
-      let productUpdateUrl = data.productUrl;
+      const productUpdateUrl = data.productUrl;
       prestashop.page.canonical = productUpdateUrl;
       dfd.resolve(productUpdateUrl);
     },
@@ -102,10 +102,6 @@ function getProductUpdateUrl() {
  * @param {string} errorMessage
  */
 function showErrorNextToAddtoCartButton(errorMessage) {
-  if (errorMessage === undefined) {
-    errorMessage = 'An error occurred while processing your request';
-  }
-
   showError(
     $(
       '.quickview #product-availability, .page-product:not(.modal-open) .row #product-availability, .page-product:not(.modal-open) .product-container #product-availability'
@@ -130,7 +126,7 @@ function updateProduct(event, eventType, updateUrl) {
   const updateRatingEvent = new Event('updateRating');
 
   if (preview !== null) {
-    preview = '&preview=' + preview;
+    preview = `&preview=${preview}`;
   } else {
     preview = '';
   }
@@ -155,12 +151,11 @@ function updateProduct(event, eventType, updateUrl) {
   // Most update need to occur (almost) instantly, but in some cases (like keyboard actions)
   // we need to delay the update a bit more
   let updateDelay = 30;
-  if ('updatedProductQuantity' === eventType) {
+  if (eventType === 'updatedProductQuantity') {
     updateDelay = 750;
   }
 
-  currentRequestDelayedId = setTimeout(function updateProductRequest() {
-
+  currentRequestDelayedId = setTimeout(() => {
     if (formSerialized === '') {
       return;
     }
@@ -185,7 +180,7 @@ function updateProduct(event, eventType, updateUrl) {
           showErrorNextToAddtoCartButton();
         }
       },
-      success(data, textStatus, errorThrown) {
+      success(data) {
         // Avoid image to blink each time we modify the product quantity
         // Can not compare directly cause of HTML comments in data.
         const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
@@ -216,14 +211,12 @@ function updateProduct(event, eventType, updateUrl) {
         }
         prestashop.emit('updatedProduct', data, $form.serializeArray());
       },
-      complete(jqXHR, textStatus) {
+      complete() {
         currentRequest = null;
         currentRequestDelayedId = null;
       },
-      });
-    }.bind(currentRequest, currentRequestDelayedId),
-    updateDelay
-  );
+    });
+  }, updateDelay);
 }
 
 /**
@@ -241,6 +234,8 @@ function replaceAddToCartSections(data) {
 
       return false;
     }
+
+    return true;
   });
 
   if ($productAddToCart === null) {
@@ -359,10 +354,12 @@ $(document).ready(() => {
     let eventType = 'updatedProductCombination';
 
     if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
+      // eslint-disable-next-line
       eventType = extraParameters.eventType;
     }
+
     prestashop.emit('updateProduct', {
-      eventType: eventType,
+      eventType,
       event: e,
       // Following variables are not used anymore, but kept for backward compatibility
       resp: {},
@@ -425,7 +422,7 @@ $(document).ready(() => {
       return;
     }
     const $quantityWantedInput = $('#quantity_wanted');
-    //Force value to 1, it will automatically trigger updateProduct and reset the appropriate min value if needed
+    // Force value to 1, it will automatically trigger updateProduct and reset the appropriate min value if needed
     $quantityWantedInput.val(1);
   });
 

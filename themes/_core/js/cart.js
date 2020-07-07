@@ -29,7 +29,7 @@ import {refreshCheckoutPage} from './common';
 $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.resp.cart;
-    let getCartViewUrl = $('.js-cart').data('refresh-url');
+    const getCartViewUrl = $('.js-cart').data('refresh-url');
 
     if (!getCartViewUrl) {
       return;
@@ -76,13 +76,13 @@ $(document).ready(() => {
       });
   });
 
-  let $body = $('body');
+  const $body = $('body');
 
   $body.on('click', '[data-button-action="add-to-cart"]', (event) => {
     event.preventDefault();
-    
+
     $('[data-button-action="add-to-cart"]').prop('disabled', true);
-    
+
     const $form = $(event.target.form);
     const query = `${$form.serialize()}&add=1&action=update`;
     const actionURL = $form.attr('action');
