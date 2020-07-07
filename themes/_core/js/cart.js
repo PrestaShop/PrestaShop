@@ -29,7 +29,7 @@ import {refreshCheckoutPage} from './common';
 $(document).ready(() => {
   prestashop.on('updateCart', (event) => {
     prestashop.cart = event.resp.cart;
-    let getCartViewUrl = $('.js-cart').data('refresh-url');
+    const getCartViewUrl = $('.js-cart').data('refresh-url');
 
     if (!getCartViewUrl) {
       return;
@@ -76,7 +76,7 @@ $(document).ready(() => {
       });
   });
 
-  let $body = $('body');
+  const $body = $('body');
 
   $body.on('click', '[data-button-action="add-to-cart"]', (event) => {
     event.preventDefault();
@@ -94,10 +94,10 @@ $(document).ready(() => {
         let validInput = true;
 
         $input.each((index, input) => {
-          const $input = $(input);
-          const minimalValue = parseInt($input.attr('min'), 10);
-          if (minimalValue && $input.val() < minimalValue) {
-            onInvalidQuantity($input);
+          const $currentInput = $(input);
+          const minimalValue = parseInt($currentInput.attr('min'), 10);
+          if (minimalValue && $currentInput.val() < minimalValue) {
+            onInvalidQuantity($currentInput);
             validInput = false;
           }
         });

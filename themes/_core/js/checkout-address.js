@@ -26,8 +26,8 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 import {psGetRequestParameter} from './common';
 
-let editAddress = psGetRequestParameter('editAddress');
-let useSameAddress = psGetRequestParameter('use_same_address');
+const editAddress = psGetRequestParameter('editAddress');
+const useSameAddress = psGetRequestParameter('use_same_address');
 
 export default function () {
   $(prestashop.selectors.checkout.editAddresses).on('click', (event) => {

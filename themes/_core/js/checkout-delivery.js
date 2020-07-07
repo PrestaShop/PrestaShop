@@ -63,7 +63,7 @@ export default function () {
       });
   };
 
-  $body.on('change', deliveryFormSelector + ' input', updateDeliveryForm);
+  $body.on('change', `${deliveryFormSelector} input`, updateDeliveryForm);
 
   $body.on('click', editDeliveryButtonSelector, (event) => {
     event.stopPropagation();
