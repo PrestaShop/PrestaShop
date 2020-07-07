@@ -30,9 +30,11 @@ use Cart;
 use CartRule;
 use Configuration;
 use Currency;
+use Order;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\AddCartRuleToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -65,6 +67,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     public function handle(AddCartRuleToOrderCommand $command): void
     {
+        $this->validatePercentCartRule($command);
         $order = $this->getOrder($command->getOrderId());
 
         $computingPrecision = new ComputingPrecision();
@@ -79,6 +82,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 throw new OrderException('Can\'t load Order Invoice object');
             }
         }
+        $this->validateAmountCartRule($command, $order, $orderInvoice);
+        $this->validateFreeShippingCartRule($command, $order, $orderInvoice);
 
         $cart = Cart::getCartByOrderId($order->id);
         $cartRuleObj = new CartRule();
@@ -123,5 +128,112 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
 
         $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
+    }
+
+    /**
+     * @param AddCartRuleToOrderCommand $command
+     *
+     * @throws InvalidCartRuleDiscountValueException
+     */
+    private function validatePercentCartRule(AddCartRuleToOrderCommand $command): void
+    {
+        if (OrderDiscountType::DISCOUNT_PERCENT !== $command->getCartRuleType()) {
+            return;
+        }
+
+        $discountValue = (float) (string) $command->getDiscountValue();
+        if ($discountValue <= 0) {
+            throw new InvalidCartRuleDiscountValueException(
+                'Percent value must be greater than 0',
+                InvalidCartRuleDiscountValueException::INVALID_MIN_PERCENT
+            );
+        } elseif ($discountValue > 100) {
+            throw new InvalidCartRuleDiscountValueException(
+                'Percent value must be less than 100',
+                InvalidCartRuleDiscountValueException::INVALID_MAX_PERCENT
+            );
+        }
+    }
+
+    /**
+     * @param AddCartRuleToOrderCommand $command
+     * @param Order $order
+     * @param OrderInvoice|null $orderInvoice
+     *
+     * @throws InvalidCartRuleDiscountValueException
+     */
+    private function validateAmountCartRule(AddCartRuleToOrderCommand $command, Order $order, ?OrderInvoice $orderInvoice): void
+    {
+        if (OrderDiscountType::DISCOUNT_AMOUNT !== $command->getCartRuleType()) {
+            return;
+        }
+
+        if (null === $command->getDiscountValue() || $command->getDiscountValue()->isLowerOrEqualThanZero()) {
+            throw new InvalidCartRuleDiscountValueException(
+                'Discount amount specified is not positive',
+                InvalidCartRuleDiscountValueException::INVALID_MIN_AMOUNT
+            );
+        }
+
+        $discountValue = (float) (string) $command->getDiscountValue();
+        if (null !== $orderInvoice) {
+            $orderInvoices = [$orderInvoice];
+        } elseif ($order->hasInvoice()) {
+            $orderInvoices = $order->getInvoicesCollection()->getResults();
+        }
+        if (!empty($orderInvoices)) {
+            foreach ($orderInvoices as $invoice) {
+                if ($discountValue > $invoice->total_paid_tax_incl) {
+                    throw new InvalidCartRuleDiscountValueException(
+                        'Discount amount specified is too high',
+                        InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT
+                    );
+                }
+            }
+        } else {
+            if ($discountValue > $order->total_paid_tax_incl) {
+                throw new InvalidCartRuleDiscountValueException(
+                    'Discount amount specified is too high',
+                    InvalidCartRuleDiscountValueException::INVALID_MAX_AMOUNT
+                );
+            }
+        }
+    }
+
+    /**
+     * @param AddCartRuleToOrderCommand $command
+     * @param Order $order
+     * @param OrderInvoice|null $orderInvoice
+     *
+     * @throws InvalidCartRuleDiscountValueException
+     */
+    private function validateFreeShippingCartRule(AddCartRuleToOrderCommand $command, Order $order, ?OrderInvoice $orderInvoice): void
+    {
+        if (OrderDiscountType::FREE_SHIPPING !== $command->getCartRuleType()) {
+            return;
+        }
+
+        if (null !== $orderInvoice) {
+            $orderInvoices = [$orderInvoice];
+        } elseif ($order->hasInvoice()) {
+            $orderInvoices = $order->getInvoicesCollection()->getResults();
+        }
+        if (!empty($orderInvoices)) {
+            foreach ($orderInvoices as $invoice) {
+                if ($invoice->total_paid_tax_incl <= $invoice->total_shipping_tax_incl) {
+                    throw new InvalidCartRuleDiscountValueException(
+                        'Discount amount specified is too high',
+                        InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING
+                    );
+                }
+            }
+        } else {
+            if ($order->total_paid_tax_incl <= $order->total_shipping_tax_incl) {
+                throw new InvalidCartRuleDiscountValueException(
+                    'Discount amount specified is too high',
+                    InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING
+                );
+            }
+        }
     }
 }
