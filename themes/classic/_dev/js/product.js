@@ -26,13 +26,13 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 import ProductSelect from './components/product-select';
 
-$(document).ready(function () {
+$(document).ready(() => {
   createProductSpin();
   createInputFile();
   coverImage();
   imageScrollBox();
 
-  prestashop.on('updatedProduct', function (event) {
+  prestashop.on('updatedProduct', (event) => {
     createInputFile();
     coverImage();
     if (event && event.product_minimal_quantity) {
@@ -49,7 +49,7 @@ $(document).ready(function () {
     $($(prestashop.themeSelectors.product.activeTabs).attr('href')).addClass('active').removeClass('fade');
     $(prestashop.themeSelectors.product.imagesModal).replaceWith(event.product_images_modal);
 
-    let productSelect = new ProductSelect();
+    const productSelect = new ProductSelect();
     productSelect.init();
   });
 
@@ -87,6 +87,7 @@ $(document).ready(function () {
     $(prestashop.themeSelectors.fileInput).on('change', (event) => {
       let target, file;
 
+      // eslint-disable-next-line
       if ((target = $(event.currentTarget)[0]) && (file = target.files[0])) {
         $(target).prev().text(file.name);
       }

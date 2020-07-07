@@ -25,7 +25,7 @@
 import $ from 'jquery';
 
 export default class Form {
-  init(){
+  init() {
     this.parentFocus();
     this.togglePasswordVisibility();
   }
@@ -41,7 +41,7 @@ export default class Form {
 
   togglePasswordVisibility() {
     $('button[data-action="show-password"]').on('click', function () {
-      var elm = $(this).closest('.input-group').children('input.js-visible-password');
+      const elm = $(this).closest('.input-group').children('input.js-visible-password');
       if (elm.attr('type') === 'password') {
         elm.attr('type', 'text');
         $(this).text($(this).data('textHide'));
@@ -49,7 +49,6 @@ export default class Form {
         elm.attr('type', 'password');
         $(this).text($(this).data('textShow'));
       }
-
     });
   }
 }
