@@ -1977,6 +1977,7 @@ class FrontControllerCore extends Controller
     {
         $alternativeLangs = [];
         $languages = Language::getLanguages(true, $this->context->shop->id);
+        $default_language = Language::getLanguage(Configuration::get('PS_LANG_DEFAULT'));
 
         if (count($languages) < 2) {
             // No need to display alternative lang if there is only one enabled
@@ -1984,6 +1985,9 @@ class FrontControllerCore extends Controller
         }
 
         foreach ($languages as $lang) {
+            if ($lang['id_lang'] == $default_language['id_lang']) {
+                $alternativeLangs['x-default'] = $this->context->link->getLanguageLink($lang['id_lang']);
+            }
             $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
         }
 
