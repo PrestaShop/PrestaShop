@@ -79,8 +79,6 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
         $orderCartRule->delete();
         $cart->removeCartRule($orderCartRule->id_cart_rule);
 
-        // We udpate the order nad its cart rules, but we disble automatic add cart rule
-        // to avoid adding the on that was just added
-        $this->orderAmountUpdater->update($order, $cart, false, false);
+        $this->orderAmountUpdater->update($order, $cart, $orderCartRule->id_order_invoice);
     }
 }

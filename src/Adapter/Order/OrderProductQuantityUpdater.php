@@ -29,9 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use Address;
-use Cache;
 use Cart;
-use CartRule;
 use Configuration;
 use Context;
 use Country;
@@ -41,7 +39,6 @@ use Db;
 use Language;
 use Order;
 use OrderCarrier;
-use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use Pack;
@@ -49,12 +46,10 @@ use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Product;
 use StockAvailable;
 use StockManagerFactory;
 use StockMvt;
-use Tools;
 use Validate;
 use Warehouse;
 
@@ -143,7 +138,7 @@ class OrderProductQuantityUpdater
             $order = $this->updateOrderShippingInfos($order, new Product((int) $orderDetail->product_id));
 
             // Update prices on the order after cart rules are recomputed
-            $this->orderAmountUpdater->update($order, $cart, ($orderInvoice && !empty($orderInvoice->id)));
+            $this->orderAmountUpdater->update($order, $cart, null !== $orderInvoice ? (int) $orderInvoice->id : null);
 
             $this->updateOrderInvoice($orderDetail, $orderInvoice);
         } finally {
@@ -411,6 +406,12 @@ class OrderProductQuantityUpdater
     }
 
     /**
+     * @todo The invoice update is managed through the OrderAmountUpdater now, this method
+     * existed before. The only use case where it can be usefull is if the OrderDetail->id_order_invoice
+     * can be different from the Invoice fetched from the command value in the UpdateProductQuantityHandler
+     * This is the last use case that requires manual update of the invoice If it is not needed, this method
+     * along with the command should be cleaned so that the invoice id is ALWAYS the one from the OrderDetail
+     *
      * @param OrderDetail $orderDetail
      * @param OrderInvoice|null $orderInvoice
      *

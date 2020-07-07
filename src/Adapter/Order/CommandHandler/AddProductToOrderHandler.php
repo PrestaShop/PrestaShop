@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
 use Attribute;
-use Cache;
 use Carrier;
 use Cart;
 use CartRule;
@@ -41,7 +40,6 @@ use Exception;
 use Hook;
 use Order;
 use OrderCarrier;
-use OrderCartRule;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\Decimal\Number;
@@ -197,7 +195,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             Hook::exec('actionOrderEdited', ['order' => $order]);
 
             // Update totals amount of order
-            $this->orderAmountUpdater->update($order, $cart, $orderDetail->id_order_invoice != 0);
+            $this->orderAmountUpdater->update($order, $cart, (int) $orderDetail->id_order_invoice);
 
             // Delete temporary specific prices
             $this->clearTemporarySpecificPrices($temporarySpecificPrices);

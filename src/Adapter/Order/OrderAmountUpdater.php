@@ -35,6 +35,7 @@ use Context;
 use Currency;
 use Order;
 use OrderCartRule;
+use OrderInvoice;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
@@ -47,9 +48,7 @@ class OrderAmountUpdater
     /**
      * @param Order $order
      * @param Cart $cart
-     * @param bool $hasInvoice
-     *
-     * @return bool
+     * @param int|null $orderInvoiceId
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -57,15 +56,13 @@ class OrderAmountUpdater
     public function update(
         Order $order,
         Cart $cart,
-        bool $hasInvoice
-    ): bool {
+        ?int $orderInvoiceId
+    ): void {
         // @todo: use https://github.com/PrestaShop/decimal for price computations
         $computingPrecision = $this->getPrecisionFromCart($cart);
 
-        $totalMethod = $hasInvoice ? Cart::BOTH_WITHOUT_SHIPPING : Cart::BOTH;
-
         // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
-        $this->updateOrderCartRules($order, $cart, $computingPrecision);
+        $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
 
         $orderProducts = $order->getCartProducts();
 
@@ -73,16 +70,17 @@ class OrderAmountUpdater
         $order->total_discounts_tax_excl = (float) abs($cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $orderProducts));
         $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts));
 
+        // We should always use Cart::BOTH for the order total since it contains all products, shipping fees and cart rules
         $order->total_paid = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts),
             $computingPrecision
         );
         $order->total_paid_tax_excl = Tools::ps_round(
-            (float) $cart->getOrderTotal(false, $totalMethod, $orderProducts),
+            (float) $cart->getOrderTotal(false, Cart::BOTH, $orderProducts),
             $computingPrecision
         );
         $order->total_paid_tax_incl = Tools::ps_round(
-            (float) $cart->getOrderTotal(true, $totalMethod, $orderProducts),
+            (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts),
             $computingPrecision
         );
 
@@ -97,7 +95,12 @@ class OrderAmountUpdater
         $order->total_wrapping_tax_excl = abs($cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $orderProducts));
         $order->total_wrapping_tax_incl = abs($cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $orderProducts));
 
-        return $order->update();
+        if (!$order->update()) {
+            throw new OrderException('Could not update order invoice in database.');
+        }
+        if (!empty($orderInvoiceId)) {
+            $this->updateOrderInvoice($order, $cart, $orderInvoiceId, $computingPrecision);
+        }
     }
 
     /**
@@ -109,6 +112,7 @@ class OrderAmountUpdater
      * @param Order $order
      * @param Cart $cart
      * @param int $computingPrecision
+     * @param int|null $orderInvoiceId
      *
      * @throws OrderException
      * @throws PrestaShopDatabaseException
@@ -117,7 +121,8 @@ class OrderAmountUpdater
     private function updateOrderCartRules(
         Order $order,
         Cart $cart,
-        int $computingPrecision
+        int $computingPrecision,
+        ?int $orderInvoiceId
     ): void {
         Context::getContext()->cart = $cart;
         CartRule::resetStaticCache();
@@ -140,8 +145,8 @@ class OrderAmountUpdater
                     $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
                     $orderCartRule->id_order = $order->id;
                     $orderCartRule->name = $cartRule->name;
-                    $orderCartRule->value = $cartRuleData->getDiscountApplied()->getTaxIncluded();
-                    $orderCartRule->value_tax_excl = $cartRuleData->getDiscountApplied()->getTaxExcluded();
+                    $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
+                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
                     $orderCartRule->save();
                     continue 2;
                 }
@@ -168,11 +173,74 @@ class OrderAmountUpdater
             $orderCartRule = new OrderCartRule();
             $orderCartRule->id_order = $order->id;
             $orderCartRule->id_cart_rule = $cartRule->id;
-            $orderCartRule->id_order_invoice = $order->getInvoicesCollection()->getLast();
+            $orderCartRule->id_order_invoice = $orderInvoiceId ?? 0;
             $orderCartRule->name = $cartRule->name;
-            $orderCartRule->value = $cartRuleData->getDiscountApplied()->getTaxIncluded();
-            $orderCartRule->value_tax_excl = $cartRuleData->getDiscountApplied()->getTaxExcluded();
+            $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
+            $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
             $orderCartRule->save();
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param Cart $cart
+     * @param int $orderInvoiceId
+     * @param int $computingPrecision
+     *
+     * @throws OrderException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    private function updateOrderInvoice(Order $order, Cart $cart, int $orderInvoiceId, int $computingPrecision): void
+    {
+        $invoiceProducts = [];
+        foreach ($order->getCartProducts() as $orderProduct) {
+            if (!empty($orderProduct['id_order_invoice']) && $orderProduct['id_order_invoice'] == $orderInvoiceId) {
+                $invoiceProducts[] = $orderProduct;
+            }
+        }
+        if (empty($invoiceProducts)) {
+            return;
+        }
+
+        $firstInvoice = $order->getInvoicesCollection()->getFirst();
+        $invoice = new OrderInvoice($orderInvoiceId);
+
+        // Shipping are computed on first invoice only
+        $totalMethod = $firstInvoice === null || $firstInvoice->id == $invoice->id ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
+        $invoice->total_paid_tax_excl = Tools::ps_round(
+            (float) $cart->getOrderTotal(false, $totalMethod, $invoiceProducts),
+            $computingPrecision
+        );
+        $invoice->total_paid_tax_incl = Tools::ps_round(
+            (float) $cart->getOrderTotal(true, $totalMethod, $invoiceProducts),
+            $computingPrecision
+        );
+
+        $invoice->total_products = (float) $cart->getOrderTotal(
+            false,
+            Cart::ONLY_PRODUCTS,
+            $invoiceProducts
+        );
+        $invoice->total_products_wt = (float) $cart->getOrderTotal(
+            true,
+            Cart::ONLY_PRODUCTS,
+            $invoiceProducts
+        );
+
+        $invoice->total_discount_tax_excl = $invoice->total_discount_tax_incl = 0;
+        foreach ($order->getCartRules() as $orderCartRuleData) {
+            $orderCartRule = new OrderCartRule($orderCartRuleData['id_order_cart_rule']);
+            if ($orderCartRule->id_order_invoice == 0 || $orderCartRule->id_order_invoice == $invoice->id) {
+                $invoice->total_discount_tax_incl += $orderCartRule->value;
+                $invoice->total_discount_tax_excl += $orderCartRule->value_tax_excl;
+            }
+        }
+        $invoice->total_discount_tax_excl = Tools::ps_round($invoice->total_discount_tax_excl, $computingPrecision);
+        $invoice->total_discount_tax_incl = Tools::ps_round($invoice->total_discount_tax_incl, $computingPrecision);
+
+        if (!$invoice->update()) {
+            throw new OrderException('Could not update order invoice in database.');
         }
     }
 
