@@ -42,7 +42,7 @@ final class GenerateInvoiceHandler extends AbstractOrderHandler implements Gener
      */
     public function handle(GenerateInvoiceCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
 
         if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop)) {
             throw new OrderException('Invoice management has been disabled.');

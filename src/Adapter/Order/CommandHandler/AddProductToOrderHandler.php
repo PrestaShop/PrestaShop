@@ -88,11 +88,6 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $translator;
 
     /**
-     * @var array
-     */
-    private $temporarySpecificPrices;
-
-    /**
      * @var int
      */
     private $computingPrecision;
@@ -100,6 +95,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
+     * @param OrderAmountUpdater $orderAmountUpdater
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -117,7 +113,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     public function handle(AddProductToOrderCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
 
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
@@ -129,7 +125,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         try {
             $this->assertOrderWasNotShipped($order);
 
-            $product = $this->getProductObject($command->getProductId(), (int) $order->id_lang);
+            $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
             $combination = $this->getCombination($command->getCombinationId());
 
             $this->checkProductInStock($product, $command);

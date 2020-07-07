@@ -56,7 +56,7 @@ abstract class AbstractOrderHandler
      *
      * @return Order
      */
-    protected function getOrderObject(OrderId $orderId)
+    protected function getOrder(OrderId $orderId)
     {
         try {
             $order = new Order($orderId->getValue());
@@ -247,7 +247,7 @@ abstract class AbstractOrderHandler
      *
      * @return Product
      */
-    protected function getProductObject(ProductId $productId, $langId)
+    protected function getProduct(ProductId $productId, $langId)
     {
         $product = new Product($productId->getValue(), false, $langId);
 

@@ -44,7 +44,7 @@ final class AddPaymentHandler extends AbstractOrderHandler implements AddPayment
      */
     public function handle(AddPaymentCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
 
         $currency = new Currency($command->getPaymentCurrencyId()->getValue());
         $orderHasInvoice = $order->hasInvoice();

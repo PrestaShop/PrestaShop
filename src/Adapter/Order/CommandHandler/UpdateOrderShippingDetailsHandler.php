@@ -47,7 +47,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
      */
     public function handle(UpdateOrderShippingDetailsCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
 
         $trackingNumber = $command->getShippingTrackingNumber();
         $carrierId = $command->getNewCarrierId();
