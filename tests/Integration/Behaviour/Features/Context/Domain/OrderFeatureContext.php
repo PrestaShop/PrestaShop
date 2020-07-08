@@ -174,7 +174,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     (float) $data['price'],
                     (float) $data['price'],
                     (int) $data['amount'],
-                    $data['free_shipping']
+                    $data['free_shipping'] ?? false
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -414,6 +414,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
+            $this->lastException = $e;
+        } catch (ProductOutOfStockException $e) {
             $this->lastException = $e;
         }
     }

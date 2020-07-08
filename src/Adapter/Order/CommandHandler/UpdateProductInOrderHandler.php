@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
@@ -41,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrder
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use Product;
 use StockAvailable;
 use Validate;
 
@@ -211,10 +214,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
 //        }
 
         //check if product is available in stock
-        if (!\Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
+        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+            $productQuantity = $this->getProductQuantityInOrder($order, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
 
-            if ($availableQuantity < $command->getQuantity()) {
+            if ($availableQuantity < $command->getQuantity() - $productQuantity) {
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
         }

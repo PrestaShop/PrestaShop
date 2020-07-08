@@ -400,3 +400,41 @@ Feature: Order from Back Office (BO)
       | Postal code      | 12345                              |
     When I change order "bo_order1" shipping address to "test-address"
     Then order "bo_order1" shipping address should be "test-address"
+
+  @order-stock
+  Scenario: Update product in order with the exact amount of stock
+    Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
+    Then the available stock for product "Test Product Max Stock" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 80                      |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be 20
+    And order "bo_order1" should have 82 products in total
+    And order "bo_order1" should contain 80 products "Test Product Max Stock"
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then I should get error that product is out of stock
+    And the available stock for product "Test Product Max Stock" should be 20
+    And order "bo_order1" should have 82 products in total
+    And order "bo_order1" should contain 80 products "Test Product Max Stock"
+    # I can decrease the number in stock (note: 80 + 30 > 100 to check the available quantity considers the amount in the order)
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 30                     |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be 70
+    And order "bo_order1" should have 32 products in total
+    And order "bo_order1" should contain 30 products "Test Product Max Stock"
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 100                     |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be 0
+    And order "bo_order1" should have 102 products in total
+    And order "bo_order1" should contain 100 products "Test Product Max Stock"
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 99                      |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be 1
+    And order "bo_order1" should have 101 products in total
+    And order "bo_order1" should contain 99 products "Test Product Max Stock"
