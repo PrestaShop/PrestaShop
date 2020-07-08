@@ -115,7 +115,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
             )
             ->add(
                 (new DataColumn('product_name'))
-                    ->setName($this->trans('Product name', [], 'Admin.Global'))
+                    ->setName($this->trans('Product name', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
                         'field' => 'product_name',
                     ])
