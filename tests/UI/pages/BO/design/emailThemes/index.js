@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class EmailThemes extends BOBasePage {
-  constructor(page) {
-    super(page);
+class EmailThemes extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Email Theme •';
 
@@ -20,18 +20,19 @@ module.exports = class EmailThemes extends BOBasePage {
 
   /**
    * Preview email theme
+   * @param page
    * @param name
    * @return {Promise<void>}
    */
-  async previewEmailTheme(name) {
-    const tableRows = await this.page.$$(this.tableRows);
+  async previewEmailTheme(page, name) {
+    const tableRows = await page.$$(this.tableRows);
     let found = false;
     for (let i = 0; i < tableRows.length; i++) {
       const textColumnName = await tableRows[i].$eval(this.columnName, columnName => columnName.textContent);
       if (textColumnName.includes(name)) {
         await Promise.all([
           tableRows[i].$eval(this.columnActionPreviewLink, el => el.click()),
-          this.page.waitForNavigation(),
+          page.waitForNavigation(),
         ]);
         found = true;
         break;
@@ -41,4 +42,6 @@ module.exports = class EmailThemes extends BOBasePage {
       throw Error(`${name} was not found in theme emails table`);
     }
   }
-};
+}
+
+module.exports = new EmailThemes();
