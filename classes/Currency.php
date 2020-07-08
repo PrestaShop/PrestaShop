@@ -194,31 +194,31 @@ class CurrencyCore extends ObjectModel
     protected static $currencies = [];
     protected static $countActiveCurrencies = [];
 
-    protected $webserviceParameters = array(
+    protected $webserviceParameters = [
         'objectsNodeName' => 'currencies',
-        'fields' => array(
-            'names' => array(
+        'fields' => [
+            'names' => [
                 'getter' => 'getLocalizedNames',
                 'i18n' => true,
-            ),
-            'name' => array(
+            ],
+            'name' => [
                 'getter' => 'getName',
-                'modifier' => array(
+                'modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
                     'modifier' => 'setNameForWebservice',
-                ),
-            ),
-            'symbol' => array(
+                ],
+            ],
+            'symbol' => [
                 'getter' => 'getLocalizedSymbols',
-            ),
-            'iso_code' => array(
-                'modifier' => array(
+            ],
+            'iso_code' => [
+                'modifier' => [
                     'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
                     'modifier' => 'setIsoCodeForWebService',
-                ),
-            ),
-        ),
-    );
+                ],
+            ],
+        ],
+    ];
 
     /**
      * contains the sign to display before price, according to its format.

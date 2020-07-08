@@ -942,6 +942,7 @@ class CustomerController extends AbstractAdminController
 
     /**
      * Manage legacy flashes
+     *
      * @todo Remove this code when legacy edit will be migrated.
      *
      * @param int $messageId The message id from legacy context

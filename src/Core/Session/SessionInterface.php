@@ -42,7 +42,7 @@ interface SessionInterface
      * Set session user id
      *
      * @param int $id
-
+     *
      * @return void
      */
     public function setUserId($id);

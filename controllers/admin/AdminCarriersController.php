@@ -494,6 +494,7 @@ class AdminCarriersControllerCore extends AdminController
         } elseif (isset($_GET['isFree' . $this->table])) {
             if (!$this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
+
                 return;
             }
 
