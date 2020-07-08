@@ -36,8 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
-use PrestaShopBundle\Form\Admin\Type\VisibilityChoiceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -381,11 +381,10 @@ class CustomerAddressType extends AbstractType
                 'attr' => [
                     'data-states-url' => $this->router->generate('admin_country_states'),
                 ],
-            ])->add('id_state', VisibilityChoiceType::class, [
+            ])->add('id_state', ChoiceType::class, [
                 'label' => $this->translator->trans('State', [], 'Admin.Global'),
                 'required' => true,
                 'choices' => $stateChoices,
-                'visible' => $showStates,
                 'constraints' => [
                     new AddressStateRequired([
                         'id_country' => $countryId,
@@ -393,6 +392,7 @@ class CustomerAddressType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'js-address-state-select',
+                    'visible' => $showStates,
                 ],
             ])->add('phone', TextType::class, [
                 'label' => $this->translator->trans('Phone', [], 'Admin.Global'),
