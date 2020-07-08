@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use Product;
+use Shop;
 use StockAvailable;
 use StockManagerFactory;
 use StockMvt;
@@ -206,7 +207,7 @@ class OrderProductQuantityUpdater
                 false,
                 $deltaQuantity > 0 ? 'down' : 'up',
                 0,
-                null,
+                new Shop($cart->id_shop),
                 true,
                 true
             );
