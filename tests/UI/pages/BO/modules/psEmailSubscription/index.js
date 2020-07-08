@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class PsEmailSubscription extends BOBasePage {
-  constructor(page) {
-    super(page);
+class PsEmailSubscription extends BOBasePage {
+  constructor() {
+    super();
 
     // Header selectors
     this.pageHeadSubtitle = 'h4.page-subtitle';
@@ -24,34 +24,36 @@ module.exports = class PsEmailSubscription extends BOBasePage {
    * Get module name from page title
    * @return {Promise<string>}
    */
-  getPageTitle() {
-    return this.getTextContent(this.pageHeadSubtitle);
+  getPageTitle(page) {
+    return this.getTextContent(page, this.pageHeadSubtitle);
   }
 
   /**
    * Get number of newsletter registrations
    * @returns {Promise<number>}
    */
-  async getNumberOfNewsletterRegistration() {
-    if (await this.elementVisible(this.newsletterTableEmptyColumn, 1000)) {
+  async getNumberOfNewsletterRegistration(page) {
+    if (await this.elementVisible(page, this.newsletterTableEmptyColumn, 1000)) {
       return 0;
     }
-    return (await this.page.$$(this.newsletterTableRows)).length;
+    return (await page.$$(this.newsletterTableRows)).length;
   }
 
   /**
    * Get list of emails registered to newsletter
    * @return {Promise<[]>}
    */
-  async getListOfNewsletterRegistrationEmails() {
+  async getListOfNewsletterRegistrationEmails(page) {
     const emails = [];
-    const numberOfEmails = await this.getNumberOfNewsletterRegistration();
+    const numberOfEmails = await this.getNumberOfNewsletterRegistration(page);
 
     // Get email from each row
     for (let row = 1; row <= numberOfEmails; row++) {
-      await emails.push(await this.getTextContent(this.newsletterTableEmailColumn(row)));
+      await emails.push(await this.getTextContent(page, this.newsletterTableEmailColumn(row)));
     }
 
     return emails;
   }
-};
+}
+
+module.exports = new PsEmailSubscription();

@@ -7,12 +7,10 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const CustomersPage = require('@pages/BO/customers');
-const FOLoginPage = require('@pages/FO/login');
-const FOBasePage = require('@pages/FO/FObasePage');
-const LoginFOPage = require('@pages/FO/login');
+const dashboardPage = require('@pages/BO/dashboard');
+const customersPage = require('@pages/BO/customers');
+const foLoginPage = require('@pages/FO/login');
+const foHomePage = require('@pages/FO/home');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -23,46 +21,34 @@ const baseContext = 'functional_BO_customers_customers_setRequiredFields';
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    customersPage: new CustomersPage(page),
-    foLoginPage: new FOLoginPage(page),
-    foBasePage: new FOBasePage(page),
-    loginFOPage: new LoginFOPage(page),
-  };
-};
-
 describe('Set required fields for customers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to customers page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Customers > Customers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.customersParentLink,
-      this.pageObjects.dashboardPage.customersLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.customersParentLink,
+      dashboardPage.customersLink,
     );
 
-    await this.pageObjects.customersPage.closeSfToolBar();
+    await customersPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.customersPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.customersPage.pageTitle);
+    const pageTitle = await customersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   const tests = [
@@ -74,8 +60,8 @@ describe('Set required fields for customers', async () => {
     it(`should ${test.args.action} 'Partner offers' as required fields`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}PartnersOffers`, baseContext);
 
-      const textResult = await this.pageObjects.customersPage.setRequiredFields(0, test.args.exist);
-      await expect(textResult).to.equal(this.pageObjects.customersPage.successfulUpdateMessage);
+      const textResult = await customersPage.setRequiredFields(page, 0, test.args.exist);
+      await expect(textResult).to.equal(customersPage.successfulUpdateMessage);
     });
 
     it('should go to create account FO and check \'Receive offers from our partners\' checkbox', async function () {
@@ -87,23 +73,21 @@ describe('Set required fields for customers', async () => {
       );
 
       // View shop
-      page = await this.pageObjects.customersPage.viewMyShop();
-      this.pageObjects = await init();
+      page = await customersPage.viewMyShop(page);
 
       // Change language in FO
-      await this.pageObjects.foBasePage.changeLanguage('en');
+      await foHomePage.changeLanguage(page, 'en');
 
       // Go to create account page
-      await this.pageObjects.foBasePage.goToLoginPage();
-      await this.pageObjects.loginFOPage.goToCreateAccountPage();
+      await foHomePage.goToLoginPage(page);
+      await foLoginPage.goToCreateAccountPage(page);
 
       // Check partner offer required
-      const isPartnerOfferRequired = await this.pageObjects.loginFOPage.isPartnerOfferRequired();
+      const isPartnerOfferRequired = await foLoginPage.isPartnerOfferRequired(page);
       await expect(isPartnerOfferRequired).to.be.equal(test.args.exist);
 
       // Go back to BO
-      page = await this.pageObjects.loginFOPage.closePage(browserContext, 0);
-      this.pageObjects = await init();
+      page = await foLoginPage.closePage(browserContext, page, 0);
     });
   });
 });
