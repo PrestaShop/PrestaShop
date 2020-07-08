@@ -52,7 +52,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
      */
     public function handle(ChangeOrderCurrencyCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
 
         if ($command->getNewCurrencyId()->getValue() === (int) $order->id_currency || $order->valid) {
             throw new OrderException('You cannot change the currency.');

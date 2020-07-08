@@ -80,7 +80,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
-  Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice And update the product quantity
+  Scenario: Add product linked to a cart rule to an existing Order without invoice with free shipping and new invoice And update the product quantity and price
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should have 0 invoices
@@ -133,6 +133,24 @@ Feature: Order from Back Office (BO)
       | total_products_wt        | 72.930 |
       | total_discounts_tax_excl | 45.000 |
       | total_discounts_tax_incl | 47.7 |
+      | total_paid_tax_excl      | 30.8   |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I edit product "Test Product Cart Rule On Select Product" to order "bo_order1" with following products details:
+      | amount        | 3                       |
+      | price         | 10                      |
+    Then order "bo_order1" should have 5 products in total
+    Then order "bo_order1" should contain 3 products "Test Product Cart Rule On Select Product"
+    Then order "bo_order1" should have 1 cart rule
+    Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "$30.00"
+    Then order "bo_order1" should have following details:
+      | total_products           | 53.800 |
+      | total_products_wt        | 57.03  |
+      | total_discounts_tax_excl | 30.000 |
+      | total_discounts_tax_incl | 31.8   |
       | total_paid_tax_excl      | 30.8   |
       | total_paid_tax_incl      | 32.650 |
       | total_paid               | 32.650 |

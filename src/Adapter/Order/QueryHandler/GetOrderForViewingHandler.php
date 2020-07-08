@@ -46,7 +46,6 @@ use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
@@ -195,24 +194,6 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderDiscounts($order),
             $this->getOrderSources($order)
         );
-    }
-
-    /**
-     * @param OrderId $orderId
-     *
-     * @return Order
-     *
-     * @throws OrderNotFoundException
-     */
-    private function getOrder(OrderId $orderId): Order
-    {
-        $order = new Order($orderId->getValue());
-
-        if ($order->id !== $orderId->getValue()) {
-            throw new OrderNotFoundException($orderId, sprintf('Order with id "%s" was not found.', $orderId->getValue()));
-        }
-
-        return $order;
     }
 
     /**

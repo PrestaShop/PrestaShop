@@ -44,7 +44,7 @@ final class DeleteCartRuleFromOrderHandler extends AbstractOrderHandler implemen
      */
     public function handle(DeleteCartRuleFromOrderCommand $command)
     {
-        $order = $this->getOrderObject($command->getOrderId());
+        $order = $this->getOrder($command->getOrderId());
         $orderCartRule = new OrderCartRule($command->getOrderCartRuleId());
 
         if (!Validate::isLoadedObject($orderCartRule) || $orderCartRule->id_order != $order->id) {
