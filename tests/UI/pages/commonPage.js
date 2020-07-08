@@ -84,7 +84,7 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async updateCheckboxValue(page, selector, expectedValue) {
-    const actualValue = await this.elementChecked(selector);
+    const actualValue = await this.elementChecked(page, selector);
     if (actualValue !== expectedValue) {
       await page.click(selector);
     }

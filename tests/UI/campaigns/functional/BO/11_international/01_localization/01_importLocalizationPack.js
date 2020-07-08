@@ -6,12 +6,11 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const LocalizationPage = require('@pages/BO/international/localization');
-const CurrenciesPage = require('@pages/BO/international/currencies');
-const LanguagesPage = require('@pages/BO/international/languages');
-const FOBasePage = require('@pages/FO/FObasePage');
+const dashboardPage = require('@pages/BO/dashboard');
+const localizationPage = require('@pages/BO/international/localization');
+const currenciesPage = require('@pages/BO/international/currencies');
+const languagesPage = require('@pages/BO/international/languages');
+const foHomePage = require('@pages/FO/home');
 
 // Import Data
 const {Currencies} = require('@data/demo/currencies');
@@ -33,18 +32,6 @@ const contentToImport = {
   updatePriceDisplayForGroups: false,
 };
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    localizationPage: new LocalizationPage(page),
-    currenciesPage: new CurrenciesPage(page),
-    languagesPage: new LanguagesPage(page),
-    foBasePage: new FOBasePage(page),
-  };
-};
-
 /*
 Import localization pack for 'chile' in BO
 Check Language 'Spanish' and currency 'Chilean Peso' in FO
@@ -56,55 +43,54 @@ describe('Import a localization pack including a language and a currency', async
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to localization page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to localization page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.localizationLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.localizationLink,
     );
 
-    await this.pageObjects.localizationPage.closeSfToolBar();
+    await localizationPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.localizationPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.localizationPage.pageTitle);
+    const pageTitle = await localizationPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   describe('Import localization pack and check existence of language and currency in FO', async () => {
     it('should import localization pack', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importLocalizationPack', baseContext);
 
-      const textResult = await this.pageObjects.localizationPage.importLocalizationPack('Chile', contentToImport);
-      await expect(textResult).to.equal(this.pageObjects.localizationPage.importLocalizationPackSuccessfulMessage);
+      const textResult = await localizationPage.importLocalizationPack(page, 'Chile', contentToImport);
+      await expect(textResult).to.equal(localizationPage.importLocalizationPackSuccessfulMessage);
     });
 
     it('should go to FO and check the existence of currency and language added', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCurrencyAndLanguageInFO', baseContext);
 
       // Go to FO and init pages
-      page = await this.pageObjects.localizationPage.viewMyShop();
-      this.pageObjects = await init();
+      page = await localizationPage.viewMyShop(page);
 
-      await this.pageObjects.foBasePage.changeCurrency(
+      await foHomePage.changeCurrency(
+        page,
         `${Currencies.chileanPeso.isoCode} ${Currencies.chileanPeso.symbol}`,
       );
 
-      await this.pageObjects.foBasePage.changeLanguage(Languages.spanish.isoCode);
+      await foHomePage.changeLanguage(page, Languages.spanish.isoCode);
 
       // Go back to BO
-      page = await this.pageObjects.foBasePage.closePage(browserContext, 0);
-      this.pageObjects = await init();
+      page = await foHomePage.closePage(browserContext, page, 0);
     });
   });
 
@@ -112,34 +98,34 @@ describe('Import a localization pack including a language and a currency', async
     it('should go to languages page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
 
-      await this.pageObjects.localizationPage.goToSubTabLanguages();
-      const pageTitle = await this.pageObjects.languagesPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.languagesPage.pageTitle);
+      await localizationPage.goToSubTabLanguages(page);
+      const pageTitle = await languagesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(languagesPage.pageTitle);
     });
 
     it(`should filter language by name '${Languages.spanish.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterLanguages', baseContext);
 
-      await this.pageObjects.languagesPage.filterTable('input', 'name', Languages.spanish.name);
+      await languagesPage.filterTable(page, 'input', 'name', Languages.spanish.name);
 
-      const numberOfLanguagesAfterFilter = await this.pageObjects.languagesPage.getNumberOfElementInGrid();
+      const numberOfLanguagesAfterFilter = await languagesPage.getNumberOfElementInGrid(page);
       await expect(numberOfLanguagesAfterFilter).to.be.at.least(1);
 
-      const textColumn = await this.pageObjects.languagesPage.getTextColumnFromTable(1, 'name');
+      const textColumn = await languagesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textColumn).to.contains(Languages.spanish.name);
     });
 
     it('should delete language', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLanguage', baseContext);
 
-      const textResult = await this.pageObjects.languagesPage.deleteLanguage(1);
-      await expect(textResult).to.to.contains(this.pageObjects.languagesPage.successfulDeleteMessage);
+      const textResult = await languagesPage.deleteLanguage(page, 1);
+      await expect(textResult).to.to.contains(languagesPage.successfulDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetLanguages', baseContext);
 
-      const numberOfLanguagesAfterReset = await this.pageObjects.languagesPage.resetAndGetNumberOfLines();
+      const numberOfLanguagesAfterReset = await languagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfLanguagesAfterReset).to.be.at.least(1);
     });
   });
@@ -148,31 +134,31 @@ describe('Import a localization pack including a language and a currency', async
     it('should go to currencies page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
-      await this.pageObjects.localizationPage.goToSubTabCurrencies();
-      const pageTitle = await this.pageObjects.currenciesPage.getPageTitle();
-      await expect(pageTitle).to.contains(this.pageObjects.currenciesPage.pageTitle);
+      await localizationPage.goToSubTabCurrencies(page);
+      const pageTitle = await currenciesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
 
     it(`should filter by iso code of currency '${Currencies.chileanPeso.isoCode}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterCurrencies', baseContext);
 
-      await this.pageObjects.currenciesPage.filterTable('input', 'iso_code', Currencies.chileanPeso.isoCode);
+      await currenciesPage.filterTable(page, 'input', 'iso_code', Currencies.chileanPeso.isoCode);
 
-      const textColumn = await this.pageObjects.currenciesPage.getTextColumnFromTableCurrency(1, 'iso_code');
+      const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
       await expect(textColumn).to.contains(Currencies.chileanPeso.isoCode);
     });
 
     it('should delete currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
 
-      const result = await this.pageObjects.currenciesPage.deleteCurrency(1);
-      await expect(result).to.be.equal(this.pageObjects.currenciesPage.successfulDeleteMessage);
+      const result = await currenciesPage.deleteCurrency(page, 1);
+      await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
     });
 
     it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetCurrencies', baseContext);
 
-      const numberOfCurrenciesAfterReset = await this.pageObjects.currenciesPage.resetAndGetNumberOfLines();
+      const numberOfCurrenciesAfterReset = await currenciesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCurrenciesAfterReset).to.be.at.least(1);
     });
   });

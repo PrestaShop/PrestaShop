@@ -6,10 +6,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const LocalisationPage = require('@pages/BO/international/localization');
-const CurrenciesPage = require('@pages/BO/international/currencies');
+const dashboardPage = require('@pages/BO/dashboard');
+const localizationPage = require('@pages/BO/international/localization');
+const currenciesPage = require('@pages/BO/international/currencies');
 
 // Import text context
 const testContext = require('@utils/testContext');
@@ -20,67 +19,57 @@ const baseContext = 'functional_BO_international_localization_currencies_helpCar
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    localizationPage: new LocalisationPage(page),
-    currenciesPage: new CurrenciesPage(page),
-  };
-};
-
 // Check that help card is in english in currencies page
 describe('Currencies help card', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to currencies page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to localization page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocalisationPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.localizationLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.localizationLink,
     );
 
-    const pageTitle = await this.pageObjects.localizationPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.localizationPage.pageTitle);
+    const pageTitle = await localizationPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(localizationPage.pageTitle);
   });
 
   it('should go to currencies page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
-    await this.pageObjects.localizationPage.goToSubTabCurrencies();
-    const pageTitle = await this.pageObjects.currenciesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.currenciesPage.pageTitle);
+    await localizationPage.goToSubTabCurrencies(page);
+    const pageTitle = await currenciesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(currenciesPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await this.pageObjects.currenciesPage.openHelpSideBar();
+    const isHelpSidebarVisible = await currenciesPage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
 
-    const documentURL = await this.pageObjects.currenciesPage.getHelpDocumentURL();
+    const documentURL = await currenciesPage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await this.pageObjects.currenciesPage.closeHelpSideBar();
+    const isHelpSidebarVisible = await currenciesPage.closeHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
   });
 });
