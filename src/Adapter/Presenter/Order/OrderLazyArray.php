@@ -298,6 +298,8 @@ class OrderLazyArray extends AbstractLazyArray
         $historyList = $order->getHistory($context->language->id, false, true);
 
         foreach ($historyList as $historyId => $history) {
+            // HistoryList only contains order states that are not hidden to customers, the last visible order state,
+            // that is to say the one we get in the first iteration
             if ($historyId === array_key_first($historyList)) {
                 $historyId = 'current';
             }
