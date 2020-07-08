@@ -170,7 +170,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->trans('Search Reference', [], 'Admin.Actions'),
+                    'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
                 ],
             ])
             ->setAssociatedColumn('product_reference')
