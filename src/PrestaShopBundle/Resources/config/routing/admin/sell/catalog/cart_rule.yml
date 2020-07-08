@@ -1,7 +1,7 @@
 #@todo: add legacy links after page is fully migrated
 admin_cart_rules_index:
   path: /
-  methods: GET
+  methods: [GET]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:index'
     _legacy_controller: AdminCartRules
@@ -9,7 +9,7 @@ admin_cart_rules_index:
 
 admin_cart_rules_search:
     path: /search
-    methods: GET
+    methods: [GET]
     defaults:
         _controller: 'PrestaShopBundle:Admin/Sell/Catalog/CartRule:search'
         _legacy_controller: AdminCartRules
