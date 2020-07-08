@@ -163,3 +163,9 @@ services:
       tags:
         - name: tactician.handler
           command: PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand
+
+    prestashop.adapter.product.command_handler.update_product_shipping_handler:
+      class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductShippingHandler
+      tags:
+        - name: tactician.handler
+          command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand
