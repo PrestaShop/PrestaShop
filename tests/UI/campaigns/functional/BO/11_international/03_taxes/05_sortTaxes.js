@@ -6,9 +6,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const TaxesPage = require('@pages/BO/international/taxes');
+const dashboardPage = require('@pages/BO/dashboard');
+const taxesPage = require('@pages/BO/international/taxes');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -19,47 +18,38 @@ let browserContext;
 let page;
 let numberOfTaxes = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    taxesPage: new TaxesPage(page),
-  };
-};
-
 describe('Sort taxes', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to taxes page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to Taxes page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.internationalParentLink,
-      this.pageObjects.dashboardPage.taxesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.taxesLink,
     );
 
-    const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
+    const pageTitle = await taxesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   it('should reset all filters and get Number of Taxes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
+    numberOfTaxes = await taxesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfTaxes).to.be.above(0);
   });
 
@@ -107,11 +97,11 @@ describe('Sort taxes', async () => {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
       // Get non sorted table
-      let nonSortedTable = await this.pageObjects.taxesPage.getAllRowsColumnContent(test.args.sortBy);
+      let nonSortedTable = await taxesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       // Get sorted table
-      await this.pageObjects.taxesPage.sortTable(test.args.sortBy, test.args.sortDirection);
-      let sortedTable = await this.pageObjects.taxesPage.getAllRowsColumnContent(test.args.sortBy);
+      await taxesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+      let sortedTable = await taxesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       if (test.args.isFloat) {
         nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
@@ -119,7 +109,7 @@ describe('Sort taxes', async () => {
       }
 
       // Sort Array with javascript
-      const expectedResult = await this.pageObjects.taxesPage.sortArray(nonSortedTable, test.args.isFloat);
+      const expectedResult = await taxesPage.sortArray(nonSortedTable, test.args.isFloat);
 
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);

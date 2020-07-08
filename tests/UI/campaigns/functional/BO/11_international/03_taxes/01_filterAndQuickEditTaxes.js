@@ -8,9 +8,8 @@ const loginCommon = require('@commonTests/loginBO');
 const {DefaultFrTax} = require('@data/demo/tax');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const TaxesPage = require('@pages/BO/international/taxes');
+const dashboardPage = require('@pages/BO/dashboard');
+const taxesPage = require('@pages/BO/international/taxes');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -21,47 +20,39 @@ let browserContext;
 let page;
 let numberOfTaxes = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    taxesPage: new TaxesPage(page),
-  };
-};
-
 // Filter And Quick Edit taxes
 describe('Filter And Quick Edit taxes', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-  // Login into BO and go to taxes page
-  loginCommon.loginBO();
+
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to Taxes page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-    await this.pageObjects.taxesPage.goToSubMenu(
-      this.pageObjects.taxesPage.internationalParentLink,
-      this.pageObjects.taxesPage.taxesLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.internationalParentLink,
+      dashboardPage.taxesLink,
     );
 
-    const pageTitle = await this.pageObjects.taxesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.taxesPage.pageTitle);
+    const pageTitle = await taxesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(taxesPage.pageTitle);
   });
 
   it('should reset all filters and get Number of Taxes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfTaxes = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
+    numberOfTaxes = await taxesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfTaxes).to.be.above(0);
   });
 
@@ -101,14 +92,14 @@ describe('Filter And Quick Edit taxes', async () => {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         // Filter and check number of element
-        await this.pageObjects.taxesPage.filterTaxes(test.args.filterType, test.args.filterBy, test.args.filterValue);
+        await taxesPage.filterTaxes(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
 
-        const numberOfTaxesAfterFilter = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
+        const numberOfTaxesAfterFilter = await taxesPage.getNumberOfElementInGrid(page);
         await expect(numberOfTaxesAfterFilter).to.be.at.most(numberOfTaxes);
 
         // Check value in table
         for (let i = 1; i <= numberOfTaxesAfterFilter; i++) {
-          const textColumn = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(i, test.args.filterBy);
+          const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, i, test.args.filterBy);
 
           if (test.expected !== undefined) {
             await expect(textColumn).to.contains(test.expected);
@@ -121,7 +112,7 @@ describe('Filter And Quick Edit taxes', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
+        const numberOfTaxesAfterReset = await taxesPage.resetAndGetNumberOfLines(page);
         await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
       });
     });
@@ -131,12 +122,12 @@ describe('Filter And Quick Edit taxes', async () => {
     it('should filter by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
 
-      await this.pageObjects.taxesPage.filterTaxes('input', 'name', DefaultFrTax.name);
+      await taxesPage.filterTaxes(page, 'input', 'name', DefaultFrTax.name);
 
-      const numberOfTaxesAfterFilter = await this.pageObjects.taxesPage.getNumberOfElementInGrid();
+      const numberOfTaxesAfterFilter = await taxesPage.getNumberOfElementInGrid(page);
       await expect(numberOfTaxesAfterFilter).to.be.at.most(numberOfTaxes);
 
-      const textColumn = await this.pageObjects.taxesPage.getTextColumnFromTableTaxes(1, 'name');
+      const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
       await expect(textColumn).to.contains(DefaultFrTax.name);
     });
 
@@ -149,20 +140,22 @@ describe('Filter And Quick Edit taxes', async () => {
       it(`should ${test.args.action} first tax`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Tax`, baseContext);
 
-        const isActionPerformed = await this.pageObjects.taxesPage.updateEnabledValue(
+        const isActionPerformed = await taxesPage.updateEnabledValue(
+          page,
           1,
           test.args.enabledValue,
         );
 
         if (isActionPerformed) {
-          const resultMessage = await this.pageObjects.taxesPage.getTextContent(
-            this.pageObjects.taxesPage.alertSuccessBlockParagraph,
+          const resultMessage = await taxesPage.getTextContent(
+            page,
+            taxesPage.alertSuccessBlockParagraph,
           );
 
-          await expect(resultMessage).to.contains(this.pageObjects.taxesPage.successfulUpdateStatusMessage);
+          await expect(resultMessage).to.contains(taxesPage.successfulUpdateStatusMessage);
         }
 
-        const taxStatus = await this.pageObjects.taxesPage.getToggleColumnValue(1, 'active');
+        const taxStatus = await taxesPage.getToggleColumnValue(page, 1, 'active');
         await expect(taxStatus).to.be.equal(test.args.enabledValue);
       });
     });
@@ -170,7 +163,7 @@ describe('Filter And Quick Edit taxes', async () => {
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterQuickEdit', baseContext);
 
-      const numberOfTaxesAfterReset = await this.pageObjects.taxesPage.resetAndGetNumberOfLines();
+      const numberOfTaxesAfterReset = await taxesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfTaxesAfterReset).to.equal(numberOfTaxes);
     });
   });

@@ -238,7 +238,7 @@ class Taxes extends BOBasePage {
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllLabel, el => el.click()),
-      this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
     await Promise.all([
