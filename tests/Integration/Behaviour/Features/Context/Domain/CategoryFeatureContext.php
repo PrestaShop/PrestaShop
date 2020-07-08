@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Category;
 use Configuration;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
@@ -454,6 +455,27 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $categoryIds[] = SharedStorage::getStorage()->get($categoryReference);
         }
         $this->getCommandBus()->handle(new BulkUpdateCategoriesStatusCommand($categoryIds, false));
+    }
+
+    /**
+     * @Given category :categoryReference in default language named :categoryName exists
+     *
+     * @param string $categoryReference
+     * @param string $categoryName
+     */
+    public function assertCategoryExistsByName(string $categoryReference, string $categoryName)
+    {
+        $foundCategory = Category::searchByName($this->defaultLanguageId, $categoryName, true);
+
+        if (!isset($foundCategory['name']) || $foundCategory['name'] !== $categoryName) {
+            throw new RuntimeException(sprintf(
+                'Category "%s" named "%s" was not found',
+                $categoryReference,
+                $categoryName
+            ));
+        }
+
+        $this->getSharedStorage()->set($categoryReference, (int) $foundCategory['id_category']);
     }
 
     /**

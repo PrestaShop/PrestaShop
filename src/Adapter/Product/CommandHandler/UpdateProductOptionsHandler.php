@@ -33,8 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsComman
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShopException;
 use Product;
 
 /**
@@ -53,7 +51,7 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         $this->fillUpdatableFieldsWithCommandData($product, $command);
         $product->setFieldsToUpdate($this->fieldsToUpdate);
 
-        $this->performUpdate($product);
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
     }
 
     /**
@@ -111,37 +109,6 @@ final class UpdateProductOptionsHandler extends AbstractProductHandler implement
         if (null !== $command->getUpc()) {
             $product->upc = $command->getUpc()->getValue();
             $this->fieldsToUpdate['upc'] = true;
-        }
-    }
-
-    /**
-     * @param Product $product
-     * @param array|null $localizedTags
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
-     */
-    private function performUpdate(Product $product)
-    {
-        try {
-            if (false === $product->update()) {
-                throw new CannotUpdateProductException(
-                    sprintf(
-                        'Failed to update product #%s options',
-                        $product->id
-                    ),
-                    CannotUpdateProductException::FAILED_UPDATE_OPTIONS
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductException(
-                sprintf(
-                    'Error occurred during product #%s options update',
-                    $product->id
-                ),
-                0,
-                $e
-            );
         }
     }
 }

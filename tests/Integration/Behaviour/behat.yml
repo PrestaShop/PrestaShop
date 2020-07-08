@@ -189,3 +189,4 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext

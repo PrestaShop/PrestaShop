@@ -34,10 +34,12 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
@@ -155,7 +157,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
             /**
              * @var int
-             * @var PackedProduct $packedProduct */
+             * @var PackedProduct $packedProduct
+             */
             foreach ($packedProducts as $key => $packedProduct) {
                 //@todo: check && combination id when asserting combinations.
                 if ($packedProduct->getProductId() === $expectedPackedProductId) {
@@ -297,6 +300,148 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productReference should be assigned to following categories:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertProductCategories(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
+        $actualCategoryIds = $productForEditing->getCategoriesInformation()->getCategoryIds();
+        sort($actualCategoryIds);
+
+        $expectedCategoriesRef = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
+        $expectedCategoryIds = array_map(function (string $categoryReference) {
+            return $this->getSharedStorage()->get($categoryReference);
+        }, $expectedCategoriesRef);
+        sort($expectedCategoryIds);
+
+        $expectedDefaultCategoryId = $this->getSharedStorage()->get($data['default category']);
+        $actualDefaultCategoryId = $productForEditing->getCategoriesInformation()->getDefaultCategoryId();
+
+        Assert::assertEquals($expectedDefaultCategoryId, $actualDefaultCategoryId, 'Unexpected default category assigned to product');
+        Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
+    }
+
+    /**
+     * @When I assign product :productReference to following categories:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assignToCategoriesIncludingNonExistingOnes(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $categoryReferences = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
+
+        // this random number is used on purpose to mimic non existing category id
+        $nonExistingCategoryId = 50000;
+        $categoryIds = [];
+        foreach ($categoryReferences as $categoryReference) {
+            if ($this->getSharedStorage()->exists($categoryReference)) {
+                $categoryIds[] = $this->getSharedStorage()->get($categoryReference);
+            } else {
+                $categoryIds[] = $nonExistingCategoryId;
+                ++$nonExistingCategoryId;
+            }
+        }
+
+        if ($this->getSharedStorage()->exists($data['default category'])) {
+            $defaultCategoryId = $this->getSharedStorage()->get($data['default category']);
+        } else {
+            $defaultCategoryId = $nonExistingCategoryId;
+        }
+
+        $this->assignProductToCategories(
+            $this->getSharedStorage()->get($productReference),
+            $defaultCategoryId,
+            $categoryIds
+        );
+    }
+
+    /**
+     * @Then I should get error that assigning product to categories failed
+     */
+    public function assertFailedUpdateCategoriesError()
+    {
+        $this->assertLastErrorIs(
+            CannotUpdateProductException::class,
+            CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
+        );
+    }
+
+    /**
+     * Product tags differs from other localized properties, because each locale can have an array of tags
+     * (whereas common property will have one value per language)
+     * This is why it needs some additional parsing
+     *
+     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
+     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
+     * @param ProductForEditing $productForEditing
+     */
+    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
+    {
+        $fieldName = 'tags';
+        /** @var LocalizedTagsDto[] $actualLocalizedTags */
+        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+
+        foreach ($localizedTagStrings as $langId => $tagsString) {
+            $langIso = Language::getIsoById($langId);
+
+            if (empty($tagsString)) {
+                // if tags string is empty, then we should not have any actual value in this language
+                /** @var LocalizedTagsDto $actualLocalizedTags */
+                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                    if ($actualLocalizedTags->getLanguageId() === $langId) {
+                        throw new RuntimeException(sprintf(
+                                'Expected no tags in %s language, but got "%s"',
+                                $langIso,
+                                var_export($actualLocalizedTags->getTags(), true))
+                        );
+                    }
+                }
+
+                // if above code passed it means tags in this lang is empty as expected and we can continue
+                continue;
+            }
+
+            // convert filled tags to array
+            $expectedTags = array_map('trim', explode(',', $tagsString));
+            $valueInLangExists = false;
+            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                if ($actualLocalizedTags->getLanguageId() !== $langId) {
+                    continue;
+                }
+
+                Assert::assertEquals(
+                    $expectedTags,
+                    $actualLocalizedTags->getTags(),
+                    sprintf(
+                        'Expected %s in "%s" language was "%s", but got "%s"',
+                        $fieldName,
+                        $langIso,
+                        var_export($expectedTags, true),
+                        var_export($actualLocalizedTags->getTags(), true)
+                    )
+                );
+                $valueInLangExists = true;
+            }
+
+            // All empty values have ben filtered out above,
+            // so if this lang value doesn't exist, it means it didn't meet the expectations
+            if (!$valueInLangExists) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized tags value "%s" is not set in %s language',
+                    var_export($expectedTags, true),
+                    $langIso
+                ));
+            }
+        }
+    }
+
+    /**
      * @Then product :productReference should have following values:
      * @Then product :productReference has following values:
      *
@@ -433,7 +578,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($productCategoriesInfo->getDefaultCategoryId() !== $defaultCategoryId || !$belongsToDefaultCategory) {
-            throw new RuntimeException('Default category is not assigned to product');
+            throw new RuntimeException('Product is not assigned to default category');
         }
     }
 
@@ -720,75 +865,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * Product tags differs from other localized properties, because each locale can have an array of tags
-     * (whereas common property will have one value per language)
-     * This is why it needs some additional parsing
-     *
-     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
-     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
-     * @param ProductForEditing $productForEditing
-     */
-    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
-    {
-        $fieldName = 'tags';
-        /** @var LocalizedTagsDto[] $actualLocalizedTags */
-        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
-
-        foreach ($localizedTagStrings as $langId => $tagsString) {
-            $langIso = Language::getIsoById($langId);
-
-            if (empty($tagsString)) {
-                // if tags string is empty, then we should not have any actual value in this language
-                /** @var LocalizedTagsDto $actualLocalizedTags */
-                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
-                    if ($actualLocalizedTags->getLanguageId() === $langId) {
-                        throw new RuntimeException(sprintf(
-                                'Expected no tags in %s language, but got "%s"',
-                                $langIso,
-                                var_export($actualLocalizedTags->getTags(), true))
-                        );
-                    }
-                }
-
-                // if above code passed it means tags in this lang is empty as expected and we can continue
-                continue;
-            }
-
-            // convert filled tags to array
-            $expectedTags = array_map('trim', explode(',', $tagsString));
-            $valueInLangExists = false;
-            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
-                if ($actualLocalizedTags->getLanguageId() !== $langId) {
-                    continue;
-                }
-
-                Assert::assertEquals(
-                    $expectedTags,
-                    $actualLocalizedTags->getTags(),
-                    sprintf(
-                        'Expected %s in "%s" language was "%s", but got "%s"',
-                        $fieldName,
-                        $langIso,
-                        var_export($expectedTags, true),
-                        var_export($actualLocalizedTags->getTags(), true)
-                    )
-                );
-                $valueInLangExists = true;
-            }
-
-            // All empty values have ben filtered out above,
-            // so if this lang value doesn't exist, it means it didn't meet the expectations
-            if (!$valueInLangExists) {
-                throw new RuntimeException(sprintf(
-                    'Expected localized tags value "%s" is not set in %s language',
-                    var_export($expectedTags, true),
-                    $langIso
-                ));
-            }
-        }
-    }
-
-    /**
      * Extracts corresponding field value from ProductForEditing DTO
      *
      * @param ProductForEditing $productForEditing
@@ -853,5 +929,23 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId
         ));
+    }
+
+    /**
+     * @param int $productId
+     * @param int $defaultCategoryId
+     * @param array $categoryIds
+     */
+    private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateProductCategoriesCommand(
+                $productId,
+                $defaultCategoryId,
+                $categoryIds
+            ));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 }
