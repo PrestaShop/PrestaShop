@@ -410,6 +410,16 @@ class AdminShopControllerCore extends AdminController
             }
 
             $this->fields_form['input'][] = [
+                'type' => 'color',
+                'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
+                'name' => 'color',
+                'desc' => [
+                    $this->trans('It will apply to the multistore header to underline your shop context.', [], 'Admin.Shopparameters.Feature')
+                ],
+                'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
+            ];
+
+            $this->fields_form['input'][] = [
                 'type' => 'select',
                 'label' => $this->trans('Shop group', [], 'Admin.Shopparameters.Feature'),
                 'desc' => $group_desc,
