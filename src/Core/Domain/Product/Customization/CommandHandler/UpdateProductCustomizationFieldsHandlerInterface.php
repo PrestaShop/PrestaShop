@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 
 /**
  * Defines contract to handle @var UpdateProductCustomizationFieldsCommand
@@ -37,6 +38,8 @@ interface UpdateProductCustomizationFieldsHandlerInterface
 {
     /**
      * @param UpdateProductCustomizationFieldsCommand $command
+     *
+     * @return CustomizationField[]
      */
-    public function handle(UpdateProductCustomizationFieldsCommand $command): void;
+    public function handle(UpdateProductCustomizationFieldsCommand $command): array;
 }
