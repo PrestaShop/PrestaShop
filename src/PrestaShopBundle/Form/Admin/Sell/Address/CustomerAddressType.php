@@ -74,6 +74,10 @@ class CustomerAddressType extends AbstractType
     private $router;
 
     /**
+     * CustomerAddressType constructor.
+     *
+     * Backwards compatibility break due to addition of Router
+     *
      * @param TranslatorInterface $translator
      * @param ConfigurableFormChoiceProviderInterface $stateChoiceProvider
      * @param $contextCountryId
