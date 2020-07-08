@@ -62,7 +62,13 @@
 
   <div class="card-footer">
     <div class="d-inline-flex">
-      <a href="{{ path('admin_addresses_index') }}" class="btn btn-outline-secondary">
+        {#  Form appears not only in address controller but in order creation page as well. This if is needed in order
+        to correctly close form when it's a popup instead of redirecting to addresses page. #}
+        {% if (displayInIframe is defined and displayInIframe == true) %}
+          <a href="javascript:window.parent.$.fancybox.close();" class="btn btn-outline-secondary">
+        {% else %}
+          <a href="{{ cancelPath|default(path('admin_addresses_index')) }}" class="btn btn-outline-secondary">
+        {% endif %}
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
     </div>
