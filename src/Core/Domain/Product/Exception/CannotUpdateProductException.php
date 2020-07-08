@@ -52,7 +52,12 @@ class CannotUpdateProductException extends ProductException
     const FAILED_UPDATE_TAGS = 40;
 
     /**
-     * When failed to assign product categories
+     * When product categories update fails
      */
     const FAILED_UPDATE_CATEGORIES = 50;
+
+    /**
+     * When product shipping options update fails
+     */
+    const FAILED_UPDATE_SHIPPING_OPTIONS = 60;
 }

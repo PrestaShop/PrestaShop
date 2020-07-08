@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductShippingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use Product;
 
 /**
@@ -46,7 +47,7 @@ final class UpdateProductShippingHandler extends AbstractProductHandler implemen
         $product = $this->getProduct($command->getProductId());
         $this->fillUpdatableFieldsWithCommandData($product, $command);
 
-        //@todo: performUpdate after rebase.
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_SHIPPING_OPTIONS);
     }
 
     /**
