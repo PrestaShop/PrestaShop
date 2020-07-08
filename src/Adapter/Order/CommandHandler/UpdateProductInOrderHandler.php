@@ -205,4 +205,24 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             }
         }
     }
+
+    /**
+     * @param Order $order
+     * @param int $productId
+     * @param int $productAttributeId
+     *
+     * @return int
+     */
+    private function getProductQuantityInOrder(Order $order, int $productId, int $productAttributeId): int
+    {
+        $productQuantity = 0;
+        foreach ($order->getOrderDetailList() as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === (int) $productId
+                && (int) $orderDetail['product_attribute_id'] === (int) $productAttributeId) {
+                $productQuantity += (int) $orderDetail['product_quantity'];
+            }
+        }
+
+        return $productQuantity;
+    }
 }
