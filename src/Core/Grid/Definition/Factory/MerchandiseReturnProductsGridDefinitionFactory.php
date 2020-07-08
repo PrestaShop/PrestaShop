@@ -150,7 +150,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                                     'merchandiseReturnDetailId' => 'id_order_detail',
                                     'customizationId' => 'id_customization',
                                 ],
-                                'confirm_message' => $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
+                                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
                             ])
                             ),
                     ])
