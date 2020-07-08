@@ -298,7 +298,7 @@ class OrderLazyArray extends AbstractLazyArray
         $historyList = $order->getHistory($context->language->id, false, true);
 
         foreach ($historyList as $historyId => $history) {
-            if ($history['id_order_state'] == $order->current_state) {
+            if ($historyId === array_key_first($historyList)) {
                 $historyId = 'current';
             }
             $orderHistory[$historyId] = $history;
