@@ -99,10 +99,10 @@ class CustomerAddressType extends AbstractType
         $data = $builder->getData();
         $countryId = 0 !== $data['id_country'] ? $data['id_country'] : $this->contextCountryId;
         $genericInvalidCharsMessage = $this->translator->trans(
-            'Invalid characters: %s',
-            [TypedRegexValidator::GENERIC_NAME_CHARS],
+            'Invalid characters:',
+            [],
             'Admin.Notifications.Info'
-        );
+        ) . ' ' . TypedRegexValidator::GENERIC_NAME_CHARS;
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
 
         $showStates = !empty($stateChoices);
@@ -182,10 +182,10 @@ class CustomerAddressType extends AbstractType
             ->add('first_name', TextType::class, [
                 'label' => $this->translator->trans('First name', [], 'Admin.Global'),
                 'help' => $this->translator->trans(
-                    'Invalid characters: %s',
-                    [TypedRegexValidator::NAME_CHARS],
+                    'Invalid characters:',
+                    [],
                     'Admin.Notifications.Info'
-                ),
+                ) . ' ' . TypedRegexValidator::NAME_CHARS,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -210,10 +210,10 @@ class CustomerAddressType extends AbstractType
             ->add('last_name', TextType::class, [
                 'label' => $this->translator->trans('Last name', [], 'Admin.Global'),
                 'help' => $this->translator->trans(
-                    'Invalid characters: %s',
-                    [TypedRegexValidator::NAME_CHARS],
+                    'Invalid characters:',
+                    [],
                     'Admin.Notifications.Info'
-                ),
+                ) . ' ' . TypedRegexValidator::NAME_CHARS,
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -431,10 +431,10 @@ class CustomerAddressType extends AbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Other', [], 'Admin.Global'),
                 'help' => $this->translator->trans(
-                    'Invalid characters: %s',
-                    [TypedRegexValidator::MESSAGE_CHARS],
+                    'Invalid characters:',
+                    [],
                     'Admin.Notifications.Info'
-                ),
+                ) . ' ' . TypedRegexValidator::MESSAGE_CHARS,
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
