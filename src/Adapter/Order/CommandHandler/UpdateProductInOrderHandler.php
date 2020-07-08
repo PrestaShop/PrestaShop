@@ -87,63 +87,45 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
                 $customization->quantity = $command->getQuantity();
                 $customization->save();
             }
-            $product_quantity = $command->getQuantity();
 
+            $productQuantity = $command->getQuantity();
             // @todo: use https://github.com/PrestaShop/decimal for price computations
-            $product_price_tax_incl = (float) $command->getPriceTaxIncluded()->round(2);
-            $product_price_tax_excl = (float) $command->getPriceTaxExcluded()->round(2);
-            $total_products_tax_incl = $product_price_tax_incl * $product_quantity;
-            $total_products_tax_excl = $product_price_tax_excl * $product_quantity;
 
-            // Calculate differences of price (Before / After)
-            $diff_price_tax_incl = $total_products_tax_incl - $orderDetail->total_price_tax_incl;
-            $diff_price_tax_excl = $total_products_tax_excl - $orderDetail->total_price_tax_excl;
-            if ($diff_price_tax_incl != 0 && $diff_price_tax_excl != 0) {
-                $orderDetail->unit_price_tax_excl = $product_price_tax_excl;
-                $orderDetail->unit_price_tax_incl = $product_price_tax_incl;
+            // Update OrderDetail prices
+            $unitProductPriceTaxIncl = (float) $command->getPriceTaxIncluded()->round(2);
+            $unitProductPriceTaxExcl = (float) $command->getPriceTaxExcluded()->round(2);
 
-                $orderDetail->total_price_tax_incl += $diff_price_tax_incl;
-                $orderDetail->total_price_tax_excl += $diff_price_tax_excl;
+            $orderDetail->unit_price_tax_incl = $unitProductPriceTaxIncl;
+            $orderDetail->unit_price_tax_excl = $unitProductPriceTaxExcl;
+            $orderDetail->total_price_tax_incl = $unitProductPriceTaxIncl * $productQuantity;
+            $orderDetail->total_price_tax_excl = $unitProductPriceTaxExcl * $productQuantity;
+            if (!$orderDetail->save()) {
+                throw new OrderException('An error occurred while editing the product line.');
+            }
 
-                $cart = Cart::getCartByOrderId($order->id);
-                if (!($cart instanceof Cart)) {
-                    throw new OrderException('Cart linked to the order cannot be found.');
-                }
-                $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
-                $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
+            $cart = Cart::getCartByOrderId($order->id);
+            if (!($cart instanceof Cart)) {
+                throw new OrderException('Cart linked to the order cannot be found.');
+            }
+            $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
+            $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
 
-                // Add specific price for the product being added
-                $specificPrice = $this->createSpecificPriceIfNeeded(
-                    $command->getPriceTaxIncluded(),
-                    $command->getPriceTaxExcluded(),
-                    $order,
-                    $cart,
-                    $product,
-                    $combination
-                );
+            // Add specific price for the product being added
+            $specificPrice = $this->createSpecificPriceIfNeeded(
+                $command->getPriceTaxIncluded(),
+                $command->getPriceTaxExcluded(),
+                $order,
+                $cart,
+                $product,
+                $combination
+            );
 
-                if (null !== $specificPrice) {
-                    $temporarySpecificPrices[] = $specificPrice;
-                }
-
-                // Apply changes on Order
-                $order = new Order($orderDetail->id_order);
-                $order->total_products += $diff_price_tax_excl;
-                $order->total_products_wt += $diff_price_tax_incl;
-
-                $order->total_paid += $diff_price_tax_incl;
-                $order->total_paid_tax_excl += $diff_price_tax_excl;
-                $order->total_paid_tax_incl += $diff_price_tax_incl;
-
-                $res &= $order->update();
+            if (null !== $specificPrice) {
+                $temporarySpecificPrices[] = $specificPrice;
             }
 
             // Update quantity and amounts
-            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $product_quantity, $orderInvoice);
-
-            if (!$res) {
-                throw new OrderException('An error occurred while editing the product line.');
-            }
+            $order = $this->orderProductQuantityUpdater->update($order, $orderDetail, $productQuantity, $orderInvoice);
 
             Hook::exec('actionOrderEdited', ['order' => $order]);
 
