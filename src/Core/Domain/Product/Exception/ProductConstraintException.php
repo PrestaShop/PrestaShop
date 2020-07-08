@@ -120,4 +120,9 @@ class ProductConstraintException extends ProductException
      * When product tag value is invalid
      */
     const INVALID_TAG = 180;
+
+    /**
+     * When product additional time notes type is invalid
+     */
+    const INVALID_ADDITIONAL_TIME_NOTES_TYPE = 190;
 }
