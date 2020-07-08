@@ -35,6 +35,7 @@ use Context;
 use Country;
 use Currency;
 use Customer;
+use Customization;
 use Db;
 use Language;
 use Order;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Adapter\StockManager;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use Product;
 use StockAvailable;
 use StockManagerFactory;
@@ -119,11 +121,18 @@ class OrderProductQuantityUpdater
                 $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $oldQuantity);
                 $this->updateCustomizationOnProductDelete($order, $orderDetail, $oldQuantity);
             } else {
+                $this->assertValidProductQuantity($order, $orderDetail, $newQuantity);
                 $orderDetail->product_quantity = $newQuantity;
                 $orderDetail->reduction_percent = 0;
                 // update taxes
                 $orderDetail->updateTaxAmount($order);
                 $orderDetail->update();
+
+                if ($orderDetail->id_customization > 0) {
+                    $customization = new Customization($orderDetail->id_customization);
+                    $customization->quantity = $newQuantity;
+                    $customization->save();
+                }
             }
 
             // Update quantity on the cart and stock
@@ -164,13 +173,23 @@ class OrderProductQuantityUpdater
             return $cart;
         }
 
-        // Update product and customization in the cart
+        /**
+         * Update product and customization in the cart, last argument skip quantity check
+         * is true because the quantity has already been checked, and mainly because when the
+         * cart checks the availability it substracts its own quantity because a product in a
+         * cart is not really out of the stock. In this case we are editing an order so the
+         * product are already substracted from the stock.
+         */
         $updateQuantityResult = $cart->updateQty(
             abs($deltaQuantity),
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
             false,
-            $deltaQuantity > 0 ? 'down' : 'up'
+            $deltaQuantity > 0 ? 'down' : 'up',
+            0,
+            null,
+            true,
+            true
         );
 
         if (-1 === $updateQuantityResult) {
@@ -428,5 +447,45 @@ class OrderProductQuantityUpdater
         $taxAddress = new Address($taxAddressId);
 
         return new Country($taxAddress->id_country);
+    }
+
+    /**
+     * @param Order $order
+     * @param OrderDetail $orderDetail
+     * @param int $newQuantity
+     *
+     * @throws ProductOutOfStockException
+     */
+    private function assertValidProductQuantity(Order $order, OrderDetail $orderDetail, int $newQuantity)
+    {
+        //check if product is available in stock
+        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+            $productQuantity = $this->getProductQuantityInOrder($order, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
+
+            if ($availableQuantity < $newQuantity - $productQuantity) {
+                throw new ProductOutOfStockException('Not enough products in stock');
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param int $productId
+     * @param int $productAttributeId
+     *
+     * @return int
+     */
+    private function getProductQuantityInOrder(Order $order, int $productId, int $productAttributeId): int
+    {
+        $productQuantity = 0;
+        foreach ($order->getOrderDetailList() as $orderDetail) {
+            if ((int) $orderDetail['product_id'] === (int) $productId
+                && (int) $orderDetail['product_attribute_id'] === (int) $productAttributeId) {
+                $productQuantity += (int) $orderDetail['product_quantity'];
+            }
+        }
+
+        return $productQuantity;
     }
 }
