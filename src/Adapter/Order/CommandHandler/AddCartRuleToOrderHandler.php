@@ -67,7 +67,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      */
     public function handle(AddCartRuleToOrderCommand $command): void
     {
-        $this->validatePercentCartRule($command);
+        $this->assertPercentCartRule($command);
         $order = $this->getOrder($command->getOrderId());
 
         $computingPrecision = new ComputingPrecision();
@@ -82,8 +82,8 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 throw new OrderException('Can\'t load Order Invoice object');
             }
         }
-        $this->validateAmountCartRule($command, $order, $orderInvoice);
-        $this->validateFreeShippingCartRule($command, $order, $orderInvoice);
+        $this->assertAmountCartRule($command, $order, $orderInvoice);
+        $this->assertFreeShippingCartRule($command, $order, $orderInvoice);
 
         $cart = Cart::getCartByOrderId($order->id);
         $cartRuleObj = new CartRule();
@@ -135,7 +135,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      *
      * @throws InvalidCartRuleDiscountValueException
      */
-    private function validatePercentCartRule(AddCartRuleToOrderCommand $command): void
+    private function assertPercentCartRule(AddCartRuleToOrderCommand $command): void
     {
         if (OrderDiscountType::DISCOUNT_PERCENT !== $command->getCartRuleType()) {
             return;
@@ -162,7 +162,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      *
      * @throws InvalidCartRuleDiscountValueException
      */
-    private function validateAmountCartRule(AddCartRuleToOrderCommand $command, Order $order, ?OrderInvoice $orderInvoice): void
+    private function assertAmountCartRule(AddCartRuleToOrderCommand $command, Order $order, ?OrderInvoice $orderInvoice): void
     {
         if (OrderDiscountType::DISCOUNT_AMOUNT !== $command->getCartRuleType()) {
             return;
@@ -207,7 +207,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
      *
      * @throws InvalidCartRuleDiscountValueException
      */
-    private function validateFreeShippingCartRule(AddCartRuleToOrderCommand $command, Order $order, ?OrderInvoice $orderInvoice): void
+    private function assertFreeShippingCartRule(AddCartRuleToOrderCommand $command, Order $order, ?OrderInvoice $orderInvoice): void
     {
         if (OrderDiscountType::FREE_SHIPPING !== $command->getCartRuleType()) {
             return;

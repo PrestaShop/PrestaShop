@@ -247,7 +247,7 @@ class OrderAmountUpdater
 
         // Shipping are computed on first invoice only
         $carrierId = $order->id_carrier;
-        $totalMethod = $firstInvoice === null || $firstInvoice->id == $invoice->id ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
+        $totalMethod = ($firstInvoice === null || $firstInvoice->id == $invoice->id) ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
         $invoice->total_paid_tax_excl = Tools::ps_round(
             (float) $cart->getOrderTotal(false, $totalMethod, $invoiceProducts, $carrierId),
             $computingPrecision
