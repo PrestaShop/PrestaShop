@@ -40,10 +40,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
@@ -569,17 +569,19 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $customizationFields = $table->getColumnsHash();
         $fieldsForUpdate = [];
+        $fieldReferences = [];
 
         foreach ($customizationFields as $customizationField) {
-            $fieldId = empty($customizationField['customization id']) ? null : (int) $customizationField['customization id'];
-
             $addedByModule = isset($customizationField['added by module']) ?
                 PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']) :
                 false
             ;
+            $fieldReference = $customizationField['reference'];
+            $id = $this->getSharedStorage()->exists($fieldReference) ? $this->getSharedStorage()->get($fieldReference) : null;
 
+            $fieldReferences[] = $fieldReference;
             $fieldsForUpdate[] = [
-                'id' => $fieldId,
+                'id' => $id,
                 'type' => $customizationField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT,
                 'localized_names' => $this->parseLocalizedArray($customizationField['name']),
                 'is_required' => PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['is required']),
@@ -588,10 +590,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         }
 
         try {
-            $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
+            $newCustomizationFields = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
                 $this->getSharedStorage()->get($productReference),
                 $fieldsForUpdate
             ));
+
+            Assert::assertSameSize(
+                $fieldReferences,
+                $newCustomizationFields,
+                'Cannot set references in shared storage. References and actual customization fields doesn\'t match.'
+            );
+
+            /** @var CustomizationField $customizationField */
+            foreach ($newCustomizationFields as $key => $customizationField) {
+                $this->getSharedStorage()->set($fieldReferences[$key], $customizationField->getCustomizationFieldId());
+            }
         } catch (ProductException $e) {
             $this->lastException = $e;
         }
@@ -614,7 +627,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $notFoundExpectedFields = [];
 
         foreach ($data as $expectedField) {
-            $expectedId = (int) $expectedField['customization id'];
+            $expectedId = $this->getSharedStorage()->get($expectedField['reference']);
             $foundExpectedField = false;
 
             foreach ($actualFields as $key => $actualField) {
