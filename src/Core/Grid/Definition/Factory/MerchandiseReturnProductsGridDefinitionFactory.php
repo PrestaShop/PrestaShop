@@ -218,7 +218,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setName($this->trans('Delete selection', [], 'Admin.Actions'))
                     ->setOptions([
                         'submit_route' => 'admin_merchandise_returns_delete_product_bulk',
                         'route_params' => [
