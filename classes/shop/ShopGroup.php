@@ -30,6 +30,7 @@
 class ShopGroupCore extends ObjectModel
 {
     public $name;
+    public $color;
     public $active = true;
     public $share_customer;
     public $share_stock;
@@ -44,6 +45,7 @@ class ShopGroupCore extends ObjectModel
         'primary' => 'id_shop_group',
         'fields' => [
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
             'share_customer' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'share_order' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'share_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
