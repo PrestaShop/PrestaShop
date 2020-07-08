@@ -8,9 +8,8 @@ const loginCommon = require('@commonTests/loginBO');
 const {moduleCategories} = require('@data/demo/moduleCategories');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ModuleManagerPage = require('@pages/BO/modules/moduleManager');
+const dashboardPage = require('@pages/BO/dashboard');
+const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -21,43 +20,34 @@ const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategory
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    moduleManagerPage: new ModuleManagerPage(page),
-  };
-};
-
 describe('Filter modules by Categories', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO and go to module manager page
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to module manager page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.modulesParentLink,
-      this.pageObjects.dashboardPage.moduleManagerLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.modulesParentLink,
+      dashboardPage.moduleManagerLink,
     );
 
-    await this.pageObjects.moduleManagerPage.closeSfToolBar();
+    await moduleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.moduleManagerPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.moduleManagerPage.pageTitle);
+    const pageTitle = await moduleManagerPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   describe('Filter modules by categories', async () => {
@@ -66,10 +56,10 @@ describe('Filter modules by Categories', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
 
         // Filter modules by categories
-        await this.pageObjects.moduleManagerPage.filterByCategory(category);
+        await moduleManagerPage.filterByCategory(page, category);
 
         // Check first category displayed
-        const firstBlockTitle = await this.pageObjects.moduleManagerPage.getBlockModuleTitle(1);
+        const firstBlockTitle = await moduleManagerPage.getBlockModuleTitle(page, 1);
         await expect(firstBlockTitle).to.equal(category);
       });
     });

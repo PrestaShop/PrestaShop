@@ -7,9 +7,8 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const ModuleManagerPage = require('@pages/BO/modules/moduleManager');
+const dashboardPage = require('@pages/BO/dashboard');
+const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -20,41 +19,34 @@ const baseContext = 'functional_BO_modules_moduleManager_filterModulesByStatus';
 let browserContext;
 let page;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    moduleManagerPage: new ModuleManagerPage(page),
-  };
-};
-
 describe('Filter modules by status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
+
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-  // Login into BO and go to module manager page
-  loginCommon.loginBO();
+
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to module manager page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.modulesParentLink,
-      this.pageObjects.dashboardPage.moduleManagerLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.modulesParentLink,
+      dashboardPage.moduleManagerLink,
     );
 
-    await this.pageObjects.moduleManagerPage.closeSfToolBar();
+    await moduleManagerPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.moduleManagerPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.moduleManagerPage.pageTitle);
+    const pageTitle = await moduleManagerPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
   describe('Filter modules by status', async () => {
@@ -71,9 +63,9 @@ describe('Filter modules by status', async () => {
       it(`should filter by status enabled : '${test.enabled}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterByStatus${test.enabled}`, baseContext);
 
-        await this.pageObjects.moduleManagerPage.filterByStatus(test.enabled);
+        await moduleManagerPage.filterByStatus(page, test.enabled);
 
-        const modules = await this.pageObjects.moduleManagerPage.getAllModulesStatus();
+        const modules = await moduleManagerPage.getAllModulesStatus(page);
 
         await modules.map(
           module => expect(
