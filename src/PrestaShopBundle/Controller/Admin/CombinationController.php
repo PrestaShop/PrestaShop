@@ -53,6 +53,7 @@ class CombinationController extends FrameworkBundleAdminController
         $combinations = $combinationDataProvider->getFormCombinations($combinationIds, (int) $this->getContext()->language->id);
 
         $formFactory = $this->get('form.factory');
+        $forms = [];
         foreach ($combinations as $combinationId => $combination) {
             $forms[] = $formFactory->createNamed(
                 "combination_$combinationId",

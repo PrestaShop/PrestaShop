@@ -262,18 +262,24 @@ class CategoryController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_categories_index');
         }
 
+        $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
+        $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
+
+        $categoryFormOptions = [
+            'id_category' => (int) $categoryId,
+            'subcategories' => $editableCategory->getSubCategories(),
+        ];
+
         try {
-            $categoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_form_builder');
-            $categoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.category_form_handler');
-
-            $categoryFormOptions = [
-                'id_category' => (int) $categoryId,
-                'subcategories' => $editableCategory->getSubCategories(),
-            ];
-
             $categoryForm = $categoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
-            $categoryForm->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 
+            return $this->redirectToRoute('admin_categories_index');
+        }
+
+        try {
+            $categoryForm->handleRequest($request);
             $handlerResult = $categoryFormHandler->handleFor((int) $categoryId, $categoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
@@ -338,8 +344,14 @@ class CategoryController extends FrameworkBundleAdminController
 
         try {
             $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
-            $rootCategoryForm->handleRequest($request);
+        } catch (Exception $exception) {
+            $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 
+            return $this->redirectToRoute('admin_categories_index');
+        }
+
+        try {
+            $rootCategoryForm->handleRequest($request);
             $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {

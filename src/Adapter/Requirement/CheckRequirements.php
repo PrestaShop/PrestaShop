@@ -58,9 +58,7 @@ class CheckRequirements
 
         $isHostMode = defined('_PS_HOST_MODE_');
 
-        if (!$isHostMode) {
-            $paramsOptionalResults = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
-        }
+        $paramsOptionalResults = !$isHostMode ? ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp()) : [];
 
         $failRequired = in_array('fail', $paramsRequiredResults);
 
