@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Translations extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Translations extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Translations • ';
 
@@ -21,19 +21,22 @@ module.exports = class Translations extends BOBasePage {
 
   /**
    * Export language
+   * @param page
    * @param language
    * @param theme
    * @return {Promise<*>}
    */
-  async exportLanguage(language, theme) {
-    await this.selectByVisibleText(this.exportLanguageSelect, language);
-    await this.selectByVisibleText(this.exportLanguageThemeSelect, theme);
+  async exportLanguage(page, language, theme) {
+    await this.selectByVisibleText(page, this.exportLanguageSelect, language);
+    await this.selectByVisibleText(page, this.exportLanguageThemeSelect, theme);
 
     const [download] = await Promise.all([
-      this.page.waitForEvent('download'),
-      this.page.click(this.exportLanguageButton),
+      page.waitForEvent('download'),
+      page.click(this.exportLanguageButton),
     ]);
 
     return download.path();
   }
-};
+}
+
+module.exports = new Translations();
