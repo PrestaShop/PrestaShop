@@ -249,43 +249,50 @@ export default class ModuleCard {
     }).done(function (result) {
       if (typeof result === undefined) {
         $.growl.error({message: "No answer received from server"});
-      } else {
-        var moduleTechName = Object.keys(result)[0];
-
-        if (result[moduleTechName].status === false) {
-          if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
-            self._confirmPrestaTrust(result[moduleTechName]);
-          }
-
-          $.growl.error({message: result[moduleTechName].msg});
-        } else {
-          $.growl.notice({message: result[moduleTechName].msg});
-
-          var alteredSelector = self._getModuleItemSelector().replace('.', '');
-          var mainElement = null;
-
-          if (action == "uninstall") {
-            mainElement = jqElementObj.closest('.' + alteredSelector);
-            mainElement.remove();
-
-            BOEvent.emitEvent("Module Uninstalled", "CustomEvent");
-          } else if (action == "disable") {
-            mainElement = jqElementObj.closest('.' + alteredSelector);
-            mainElement.addClass(alteredSelector + '-isNotActive');
-            mainElement.attr('data-active', '0');
-
-            BOEvent.emitEvent("Module Disabled", "CustomEvent");
-          } else if (action == "enable") {
-            mainElement = jqElementObj.closest('.' + alteredSelector);
-            mainElement.removeClass(alteredSelector + '-isNotActive');
-            mainElement.attr('data-active', '1');
-
-            BOEvent.emitEvent("Module Enabled", "CustomEvent");
-          }
-
-          jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
-        }
+        return;
       }
+
+      if (typeof result.status !== 'undefined' && result.status === false) {
+        $.growl.error({message: result.msg});
+        return;
+      }
+
+      var moduleTechName = Object.keys(result)[0];
+
+      if (result[moduleTechName].status === false) {
+        if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
+          self._confirmPrestaTrust(result[moduleTechName]);
+        }
+
+        $.growl.error({message: result[moduleTechName].msg});
+        return;
+      }
+
+      $.growl.notice({message: result[moduleTechName].msg});
+
+      var alteredSelector = self._getModuleItemSelector().replace('.', '');
+      var mainElement = null;
+
+      if (action == "uninstall") {
+        mainElement = jqElementObj.closest('.' + alteredSelector);
+        mainElement.remove();
+
+        BOEvent.emitEvent("Module Uninstalled", "CustomEvent");
+      } else if (action == "disable") {
+        mainElement = jqElementObj.closest('.' + alteredSelector);
+        mainElement.addClass(alteredSelector + '-isNotActive');
+        mainElement.attr('data-active', '0');
+
+        BOEvent.emitEvent("Module Disabled", "CustomEvent");
+      } else if (action == "enable") {
+        mainElement = jqElementObj.closest('.' + alteredSelector);
+        mainElement.removeClass(alteredSelector + '-isNotActive');
+        mainElement.attr('data-active', '1');
+
+        BOEvent.emitEvent("Module Enabled", "CustomEvent");
+      }
+
+      jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
     }).fail(function() {
       const moduleItem = jqElementObj.closest('module-item-list');
       const techName = moduleItem.data('techName');
