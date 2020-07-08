@@ -345,7 +345,7 @@ class CustomerAddressType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
+                            'This field is required', [], 'Admin.Notifications.Error'
                         ),
                     ]),
                     new CleanHtml(),
