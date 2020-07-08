@@ -74,6 +74,14 @@ class DeliveryTimeNotesType
     }
 
     /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->value;
+    }
+
+    /**
      * @param int $type
      *
      * @throws ProductConstraintException

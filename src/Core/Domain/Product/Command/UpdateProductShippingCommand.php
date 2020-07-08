@@ -68,9 +68,9 @@ class UpdateProductShippingCommand
     private $additionalShippingCost;
 
     /**
-     * @var int|null
+     * @var int[]|null
      */
-    private $carrierReferenceId;
+    private $carrierReferences;
 
     /**
      * @var DeliveryTimeNotesType
@@ -204,21 +204,21 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @return int|null
+     * @return int[]|null
      */
-    public function getCarrierReferenceId(): ?int
+    public function getCarrierReferences(): ?array
     {
-        return $this->carrierReferenceId;
+        return $this->carrierReferences;
     }
 
     /**
-     * @param int $carrierReferenceId
+     * @param int $carrierReferences
      *
      * @return UpdateProductShippingCommand
      */
-    public function setCarrierReferenceId(int $carrierReferenceId): UpdateProductShippingCommand
+    public function setCarrierReferences(int $carrierReferences): UpdateProductShippingCommand
     {
-        $this->carrierReferenceId = $carrierReferenceId;
+        $this->carrierReferences = $carrierReferences;
 
         return $this;
     }
