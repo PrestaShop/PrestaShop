@@ -1,9 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-module.exports = class Preferences extends BOBasePage {
-  constructor(page) {
-    super(page);
+class Preferences extends BOBasePage {
+  constructor() {
+    super();
 
     this.pageTitle = 'Preferences •';
 
@@ -24,62 +24,69 @@ module.exports = class Preferences extends BOBasePage {
    */
   /**
    * Set currency restrictions
+   * @param page
    * @param paymentModule
    * @param valueWanted
    * @returns {Promise<string>}
    */
-  async setCurrencyRestriction(paymentModule, valueWanted) {
-    await this.page.waitForSelector(
+  async setCurrencyRestriction(page, paymentModule, valueWanted) {
+    await page.waitForSelector(
       this.euroCurrencyRestrictionsCheckbox(paymentModule),
       {state: 'attached'},
     );
     const isCheckboxSelected = await this.isCheckboxSelected(
+      page,
       this.euroCurrencyRestrictionsCheckbox(paymentModule),
     );
     if (valueWanted !== isCheckboxSelected) {
-      await this.page.$eval(`${this.euroCurrencyRestrictionsCheckbox(paymentModule)} + i`, el => el.click());
+      await page.$eval(`${this.euroCurrencyRestrictionsCheckbox(paymentModule)} + i`, el => el.click());
     }
-    await this.page.click(this.currencyRestrictionsSaveButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await page.click(this.currencyRestrictionsSaveButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set group restrictions
+   * @param page
    * @param group
    * @param paymentModule
    * @param valueWanted
    * @returns {Promise<string>}
    */
-  async setGroupRestrictions(group, paymentModule, valueWanted) {
+  async setGroupRestrictions(page, group, paymentModule, valueWanted) {
     const selector = this.paymentModuleCheckbox(paymentModule, group);
-    await this.page.waitForSelector(`${selector} + i`, {state: 'attached'});
-    const isCheckboxSelected = await this.isCheckboxSelected(selector);
+    await page.waitForSelector(`${selector} + i`, {state: 'attached'});
+    const isCheckboxSelected = await this.isCheckboxSelected(page, selector);
     if (valueWanted !== isCheckboxSelected) {
-      await this.page.$eval(`${selector} + i`, el => el.click());
+      await page.$eval(`${selector} + i`, el => el.click());
     }
-    await this.page.click(this.groupRestrictionsSaveButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await page.click(this.groupRestrictionsSaveButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 
   /**
    * Set country restrictions
+   * @param page
    * @param countryID
    * @param paymentModule
    * @param valueWanted
    * @returns {Promise<string>}
    */
-  async setCountryRestriction(countryID, paymentModule, valueWanted) {
-    await this.page.waitForSelector(
+  async setCountryRestriction(page, countryID, paymentModule, valueWanted) {
+    await page.waitForSelector(
       `${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`,
       {state: 'attached'},
     );
     const isCheckboxSelected = await this.isCheckboxSelected(
+      page,
       this.countryRestrictionsCheckbox(paymentModule, countryID),
     );
     if (valueWanted !== isCheckboxSelected) {
-      await this.page.$eval(`${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`, el => el.click());
+      await page.$eval(`${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`, el => el.click());
     }
-    await this.page.click(this.currencyRestrictionsSaveButton);
-    return this.getTextContent(this.alertSuccessBlock);
+    await page.click(this.currencyRestrictionsSaveButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
-};
+}
+
+module.exports = new Preferences();
