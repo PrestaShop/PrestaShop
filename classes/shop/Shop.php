@@ -42,6 +42,9 @@ class ShopCore extends ObjectModel
     /** @var string Shop name */
     public $name;
 
+    /** @var string Shop color */
+    public $color;
+
     public $active = true;
     public $deleted;
 
@@ -70,6 +73,7 @@ class ShopCore extends ObjectModel
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
             'id_category' => ['type' => self::TYPE_INT, 'required' => true],
             'theme_name' => ['type' => self::TYPE_STRING, 'validate' => 'isThemeName'],
             'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
