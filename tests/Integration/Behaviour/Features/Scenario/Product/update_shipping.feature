@@ -9,13 +9,12 @@ Feature: Update product shipping options from Back Office (BO)
       | name       | en-US:Last samurai dvd |
       | is_virtual | false                  |
     And product product1 should have following values:
-    #@todo: following values arent handled yet int context
-      | width                       | 0                 |
-      | height                      | 0                 |
-      | depth                       | 0                 |
-      | weight                      | 0                 |
-      | additional_shipping_cost    | 0                 |
-      | additional_delivery_times   | default           |
-      | delivery_in_stock           | en-US:            |
-      | delivery_out_stock          | en-US:            |
+      | width                            | 0                 |
+      | height                           | 0                 |
+      | depth                            | 0                 |
+      | weight                           | 0                 |
+      | additional_shipping_cost         | 0                 |
+      | delivery time notes type         | default           |
+      | delivery time in stock notes     | en-US:            |
+      | delivery time out of stock notes | en-US:            |
     And product product1 should have no carriers assigned
