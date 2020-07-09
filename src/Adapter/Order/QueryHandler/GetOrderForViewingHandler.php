@@ -42,6 +42,7 @@ use Order;
 use OrderInvoice;
 use OrderPayment;
 use OrderSlip;
+use OrderState;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -51,6 +52,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderProductsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderProductsForViewingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\LinkedOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\LinkedOrdersForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCarrierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderCustomerForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
@@ -192,7 +195,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderMessages($order),
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
-            $this->getOrderSources($order)
+            $this->getOrderSources($order),
+            $this->getLinkedOrders($order)
         );
     }
 
@@ -762,6 +766,37 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         }
 
         return new OrderSourcesForViewing($sources);
+    }
+
+    /**
+     * @return LinkedOrdersForViewing
+     */
+    private function getLinkedOrders(Order $order): LinkedOrdersForViewing
+    {
+        $brothersData = $order->getBrother();
+        $brothers = [];
+        /** @var Order $brotherItem */
+        foreach ($brothersData as $brotherItem) {
+            $isTaxExcluded = !$this->isTaxIncludedInOrder($brotherItem);
+
+            $currency = new Currency($brotherItem->id_currency);
+
+            if ($isTaxExcluded) {
+                $totalAmount = $this->locale->formatPrice($brotherItem->total_paid_tax_excl, $currency->iso_code);
+            } else {
+                $totalAmount = $this->locale->formatPrice($brotherItem->total_paid_tax_incl, $currency->iso_code);
+            }
+
+            $orderState = new OrderState($brotherItem->current_state);
+
+            $brothers[] = new LinkedOrderForViewing(
+                $brotherItem->id,
+                $orderState->name[$this->context->language->getId()],
+                $totalAmount
+            );
+        }
+
+        return new LinkedOrdersForViewing($brothers);
     }
 
     /**
