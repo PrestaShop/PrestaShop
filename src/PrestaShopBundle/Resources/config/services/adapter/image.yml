@@ -13,6 +13,9 @@ services:
         arguments:
             - '@prestashop.adapter.cache_clearer'
 
+    prestashop.adapter.image.uploader.employee_image_uploader:
+      class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\EmployeeImageUploader'
+
     prestashop.adapter.image.uploader.manufacturer_image_uploader:
       class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\ManufacturerImageUploader'
 

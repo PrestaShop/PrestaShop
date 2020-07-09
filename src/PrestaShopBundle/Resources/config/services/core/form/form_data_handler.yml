@@ -84,6 +84,7 @@ services:
       - '@prestashop.adapter.employee.form_access_checker'
       - '@prestashop.adapter.employee.data_provider'
       - '@prestashop.core.crypto.hashing'
+      - '@prestashop.adapter.image.uploader.employee_image_uploader'
 
   prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'
