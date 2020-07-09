@@ -263,7 +263,6 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | 2                       |
       | price         | 16                      |
-      | free_shipping | true                    |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
     Then order "bo_order1" should have 1 invoices
 

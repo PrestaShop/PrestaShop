@@ -67,6 +67,7 @@ use stdClass;
 use Tax;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class OrderFeatureContext extends AbstractDomainFeatureContext
 {
@@ -179,10 +180,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                     $orderId,
                     $productId,
                     $combinationId,
-                    (float) $data['price'],
-                    (float) $data['price'],
+                    $data['price'],
+                    $data['price'],
                     (int) $data['amount'],
-                    $data['free_shipping'] ?? false
+                    PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping'] ?? false)
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -253,14 +254,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
-                    $orderId,
-                    $lastInvoice->id,
-                    $productId,
+                    (int) $orderId,
+                    (int) $lastInvoice->id,
+                    (int) $productId,
                     0,
-                    (float) $data['price'],
-                    (float) $data['price'],
-                    (int) $data['amount'],
-                    $data['free_shipping']
+                    $data['price'],
+                    $data['price'],
+                    (int) $data['amount']
                 )
             );
         } catch (InvalidProductQuantityException $e) {
@@ -442,10 +442,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductInOrderCommand(
-                    $orderId,
-                    $productOrderDetail['id_order_detail'],
-                    (float) $data['price'],
-                    (float) $data['price'],
+                    (int) $orderId,
+                    (int) $productOrderDetail['id_order_detail'],
+                    $data['price'],
+                    $data['price'],
                     (int) $data['amount']
                 )
             );
