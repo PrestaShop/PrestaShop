@@ -97,6 +97,6 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
         }
 
         $product->customizable = false;
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZABILITY);
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
     }
 }

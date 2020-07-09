@@ -57,7 +57,7 @@ class CannotUpdateProductException extends ProductException
     const FAILED_UPDATE_CATEGORIES = 50;
 
     /**
-     * When product customization fields update fails
+     * When product properties associated with customization fields update fails
      */
-    const FAILED_UPDATE_CUSTOMIZABILITY = 60;
+    const FAILED_UPDATE_CUSTOMIZATION_FIELDS = 60;
 }

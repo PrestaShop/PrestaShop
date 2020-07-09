@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCu
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
@@ -75,7 +76,9 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
             ));
         }
 
-        $this->updateProductCustomizability($product, (bool) $customizationField->required);
+        $this->updateCustomizableValue($product, $command->isRequired());
+        $this->incrementCustomizationFieldsCount($product, $command->getType());
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
 
         return new CustomizationFieldId((int) $customizationField->id);
     }
@@ -87,7 +90,7 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
      * @throws CannotUpdateProductException
      * @throws ProductException
      */
-    private function updateProductCustomizability(Product $product, bool $isCustomizationRequired): void
+    private function updateCustomizableValue(Product $product, bool $isCustomizationRequired): void
     {
         $previousCustomizability = (int) $product->customizable;
         $alreadyRequiresCustomization = $previousCustomizability === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
@@ -104,6 +107,22 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
             ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION
         ;
         $this->fieldsToUpdate['customizable'] = true;
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZABILITY);
+    }
+
+    /**
+     * @param Product $product
+     * @param CustomizationFieldType $customizationFieldType
+     */
+    private function incrementCustomizationFieldsCount(Product $product, CustomizationFieldType $customizationFieldType): void
+    {
+        if ($customizationFieldType->isTextType()) {
+            ++$product->text_fields;
+            $this->fieldsToUpdate['text_fields'] = true;
+
+            return;
+        }
+
+        ++$product->uploadable_files;
+        $this->fieldsToUpdate['uploadable_files'] = true;
     }
 }
