@@ -26,14 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product;
 
 /**
  * Holds value which represents how customizable the product is
  */
-class ProductCustomizability
+class ProductCustomizabilitySettings
 {
     /**
      * The product does not have any customiztion fields, so it is not customizable at all
@@ -51,48 +49,9 @@ class ProductCustomizability
     const REQUIRES_CUSTOMIZATION = 2;
 
     /**
-     * Allowed customizability values
+     * This class shouldn't be instantiated as its purpose is to hold some setting values
      */
-    const ALLOWED_CUSTOMIZABILITY_VALUES = [
-        self::NOT_CUSTOMIZABLE => self::NOT_CUSTOMIZABLE,
-        self::ALLOWS_CUSTOMIZATION => self::ALLOWS_CUSTOMIZATION,
-        self::REQUIRES_CUSTOMIZATION => self::REQUIRES_CUSTOMIZATION,
-    ];
-
-    /**
-     * @var int
-     */
-    private $value;
-
-    /**
-     * @param int $value
-     *
-     * @throws ProductConstraintException
-     */
-    public function __construct(int $value)
+    private function __construct()
     {
-        $this->assertIsValidCustomizabilityValue($value);
-        $this->value = $value;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws ProductConstraintException
-     */
-    private function assertIsValidCustomizabilityValue(int $value): void
-    {
-        if (in_array($value, self::ALLOWED_CUSTOMIZABILITY_VALUES)) {
-            return;
-        }
-
-        throw new ProductConstraintException(
-            sprintf(
-                'Invalid product customizability value "%d". Allowed values are: %s',
-                $value,
-                implode(',', self::ALLOWED_CUSTOMIZABILITY_VALUES)
-            ),
-            ProductConstraintException::INVALID_CUSTOMIZABILITY
-        );
     }
 }
