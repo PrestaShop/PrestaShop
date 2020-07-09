@@ -72,24 +72,17 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
 
     /**
      * @param Product $product
-     * @param bool $isRequiredAdded
      */
-    protected function setProductCustomizability(Product $product, bool $isRequiredAdded): void
+    protected function setProductCustomizability(Product $product): void
     {
-        $previousCustomizability = (int) $product->customizable;
-        $alreadyRequiresCustomization = $previousCustomizability === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
-        $alreadyAllowsCustomization = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION && !$isRequiredAdded;
-
-        if ($alreadyRequiresCustomization) {
-            return;
-        } elseif ($alreadyAllowsCustomization) {
-            return;
+        if ($product->hasActivatedRequiredCustomizableFields()) {
+            $product->customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
+        } elseif (!empty($product->getNonDeletedCustomizationFieldIds())) {
+            $product->customizable = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
+        } else {
+            $product->customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
         }
 
-        $product->customizable = $isRequiredAdded ?
-            ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION :
-            ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION
-        ;
         $this->fieldsToUpdate['customizable'] = true;
     }
 }

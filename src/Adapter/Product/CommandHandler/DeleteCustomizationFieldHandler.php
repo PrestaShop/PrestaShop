@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDele
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 use Product;
@@ -80,37 +79,9 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
             );
         }
 
-        $this->setCustomizability($product, (bool) $fieldEntity->required);
+        $this->setProductCustomizability($product);
         $this->decrementCustomizationFieldsCount($product, (int) $fieldEntity->type);
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
-    }
-
-    /**
-     * @param Product $product
-     * @param bool $requiredWasDeleted
-     */
-    private function setCustomizability(Product $product, bool $requiredWasDeleted): void
-    {
-        $previousCustomizability = (int) $product->customizable;
-        $stillRequires = $previousCustomizability === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION && !$requiredWasDeleted;
-
-        if ($stillRequires) {
-            return;
-        }
-
-        $productIsCustomizable = !empty($product->getNonDeletedCustomizationFieldIds());
-        $stillAllows = $previousCustomizability === ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION && $productIsCustomizable;
-
-        if ($stillAllows) {
-            return;
-        }
-
-        if ($productIsCustomizable) {
-            return;
-        }
-
-        $product->customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
-        $this->fieldsToUpdate['customizable'] = true;
     }
 
     /**
