@@ -82,16 +82,9 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             // Check fields validity
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
 
-            if (0 < $orderDetail->id_customization) {
-                $customization = new Customization($orderDetail->id_customization);
-                $customization->quantity = $command->getQuantity();
-                $customization->save();
-            }
-
-            $productQuantity = $command->getQuantity();
             // @todo: use https://github.com/PrestaShop/decimal for price computations
-
             // Update OrderDetail prices
+            $productQuantity = $command->getQuantity();
             $unitProductPriceTaxIncl = (float) $command->getPriceTaxIncluded()->round(2);
             $unitProductPriceTaxExcl = (float) $command->getPriceTaxExcluded()->round(2);
 
