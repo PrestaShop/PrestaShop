@@ -130,9 +130,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-        }
 
-        if (!isset($form)) {
             return $this->redirectToRoute('admin_merchandise_returns_index');
         }
 
