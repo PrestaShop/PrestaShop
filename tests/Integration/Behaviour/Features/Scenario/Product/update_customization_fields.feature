@@ -47,3 +47,4 @@ Feature: Update product customization fields in Back Office (BO)
     Then product product1 should have following customization fields:
       | reference             | type    | name                    | is required |
       | customField2          | text    | en-US:bottom-text       | true        |
+#@TODO: add assertions for product->customizable, text_fields, uploadable_files
