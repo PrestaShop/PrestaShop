@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField as CustomizationFieldEntity;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractCustomizationFieldHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
@@ -41,7 +41,7 @@ use PrestaShopException;
 /**
  * Handles @var AddCustomizationFieldCommand using legacy object model
  */
-final class AddCustomizationFieldHandler extends AbstractProductHandler implements AddCustomizationFieldHandlerInterface
+final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements AddCustomizationFieldHandlerInterface
 {
     /**
      * {@inheritdoc}

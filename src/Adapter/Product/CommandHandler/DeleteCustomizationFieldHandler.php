@@ -33,8 +33,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustom
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
+use Product;
 
 /**
  * Handles @var DeleteCustomizationFieldCommand using legacy object model
@@ -75,5 +78,25 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
                 )
             );
         }
+
+        $this->updateProductCustomizableProperty($product);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws CannotUpdateProductException
+     * @throws ProductException
+     */
+    private function updateProductCustomizableProperty(Product $product): void
+    {
+        $productIsCustomizable = !empty($product->getNonDeletedCustomizationFieldIds());
+
+        if ($productIsCustomizable) {
+            return;
+        }
+
+        $product->customizable = false;
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
     }
 }
