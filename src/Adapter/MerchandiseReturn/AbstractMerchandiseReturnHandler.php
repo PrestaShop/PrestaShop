@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\DeleteMerchand
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MerchandiseReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\Exception\MissingMerchandiseReturnRequiredFieldsException;
-use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnDetailId;
 use PrestaShop\PrestaShop\Core\Domain\MerchandiseReturn\ValueObject\MerchandiseReturnId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShopException;
 
 /**
