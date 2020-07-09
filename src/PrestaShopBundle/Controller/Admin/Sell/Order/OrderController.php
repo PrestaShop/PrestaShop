@@ -101,6 +101,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Manages "Sell > Orders" page
@@ -1491,7 +1492,10 @@ class OrderController extends FrameworkBundleAdminController
                 ]);
             }
 
-            return $this->file($filePath);
+            $imageFile  = new File($filePath);
+            $fileName = sprintf('%s-customization-%s.%s', $orderId, $name, $imageFile->guessExtension() ?? 'jpg');
+
+            return $this->file($filePath, $fileName);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
