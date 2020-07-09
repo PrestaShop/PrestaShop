@@ -51,6 +51,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as Local
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNotesType;
 use Product;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -467,6 +469,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
         $this->assertTaxRulesGroup($data, $productForEditing);
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
+        $this->assertShippingInformation($data, $productForEditing->getShippingInformation());
     }
 
     /**
@@ -599,6 +602,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $productTypeName,
                 $editableProduct->getBasicInformation()->getType()->getValue()
             )
+        );
+    }
+
+    /**
+     * @Then product :productReference should have no carriers assigned
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCarriers(string $productReference)
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+
+        Assert::assertEmpty(
+            $productForEditing->getShippingInformation()->getCarrierReferences(),
+            sprintf('Expected product "%s" to have no carriers assigned', $productReference)
         );
     }
 
@@ -827,6 +845,81 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                     );
                 }
             }
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param ProductShippingInformation $productShippingInformation
+     */
+    private function assertShippingInformation(array $data, ProductShippingInformation $productShippingInformation): void
+    {
+        $this->assertNumberShippingFields($data, $productShippingInformation);
+        $this->assertDeliveryTimeNotes($data, $productShippingInformation);
+    }
+
+    /**
+     * @param array $expectedValues
+     * @param ProductShippingInformation $actualValues
+     */
+    private function assertNumberShippingFields(array $expectedValues, ProductShippingInformation $actualValues)
+    {
+        $numberShippingFields = [
+            'width',
+            'height',
+            'depth',
+            'weight',
+            'additional_shipping_cost',
+        ];
+
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($numberShippingFields as $field) {
+            if (isset($expectedValues[$field])) {
+                $expectedNumber = new Number((string) $expectedValues[$field]);
+                $actualNumber = $propertyAccessor->getValue($actualValues, $field);
+
+                if (!$expectedNumber->equals($actualNumber)) {
+                    throw new RuntimeException(
+                        sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
+                    );
+                }
+            }
+        }
+    }
+
+    private function assertDeliveryTimeNotes(array $data, ProductShippingInformation $productShippingInformation)
+    {
+        $notesTypeNamedValues = [
+            'none' => DeliveryTimeNotesType::TYPE_NONE,
+            'default' => DeliveryTimeNotesType::TYPE_DEFAULT,
+            'specific' => DeliveryTimeNotesType::TYPE_SPECIFIC,
+        ];
+
+        if (isset($data['delivery time notes type'])) {
+            $expectedType = $notesTypeNamedValues[$data['delivery time notes type']];
+            $actualType = $productShippingInformation->getDeliveryTimeNotesType();
+            Assert::assertEquals($expectedType, $actualType, 'Unexpected delivery time notes type value');
+        }
+
+        if (isset($data['delivery time in stock notes '])) {
+            $expectedLocalizedOutOfStockNotes = $this->parseLocalizedArray($data['delivery time in stock notes ']);
+            $actualLocalizedOutOfStockNotes = $productShippingInformation->getLocalizedDeliveryTimeInStockNotes();
+            Assert::assertEquals(
+                $expectedLocalizedOutOfStockNotes,
+                $actualLocalizedOutOfStockNotes,
+                'Unexpected product delivery time in stock notes'
+            );
+        }
+
+        if (isset($data['delivery time out of stock notes'])) {
+            $expectedLocalizedOutOfStockNotes = $this->parseLocalizedArray($data['delivery time out of stock notes']);
+            $actualLocalizedOutOfStockNotes = $productShippingInformation->getLocalizedDeliveryTimeOutOfStockNotes();
+            Assert::assertEquals(
+                $expectedLocalizedOutOfStockNotes,
+                $actualLocalizedOutOfStockNotes,
+                'Unexpected product delivery time out of stock notes'
+            );
         }
     }
 
