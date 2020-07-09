@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Combination;
 use Configuration;
@@ -164,6 +165,19 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->products[$productName]->id, null);
         if ($productQuantity != $nbProduct) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $productQuantity, $nbProduct));
+        }
+    }
+
+    /**
+     * @Then /^the available stock for combination "(.+)" of product "(.+)" should be ([\-\d]+)$/
+     */
+    public function actualQuantityOfCombinationNamedShouldBe($combinationName, $productName, $combinationQuantity)
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
+        $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->products[$productName]->id, $this->combinations[$productName][$combinationName]->id);
+        if ($combinationQuantity != $nbProduct) {
+            throw new \RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct));
         }
     }
 
@@ -316,6 +330,39 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $combination->add();
         StockAvailable::setQuantity((int) $this->products[$productName]->id, $combination->id, $combination->quantity);
         $this->combinations[$productName][$combinationName] = $combination;
+    }
+
+    /**
+     * @Given /^product "(.+)" has combinations with following details:$/
+     */
+    public function productWithNameHasCombinationsWithFollowingDetails($productName, TableNode $table)
+    {
+        $this->checkProductWithNameExists($productName);
+        $productId = (int) $this->products[$productName]->id;
+        $combinationsList = $table->getColumnsHash();
+        $attributesList = \Attribute::getAttributes((int) Configuration::get('PS_LANG_DEFAULT'));
+        foreach ($combinationsList as $combinationDetails) {
+            $combinationName = $combinationDetails['reference'];
+            $combination = new Combination();
+            $combination->reference = $combinationName;
+            $combination->id_product = $productId;
+            $combination->quantity = (int) $combinationDetails['quantity'];
+            $combination->add();
+            StockAvailable::setQuantity($productId, $combination->id, (int) $combination->quantity);
+            $this->combinations[$productName][$combinationName] = $combination;
+            $combinationAttributes = explode(';', $combinationDetails['attributes']);
+            $combinationAttributesIds = [];
+            foreach ($combinationAttributes as $combinationAttribute) {
+                list($attributeGroup, $attributeName) = explode(':', $combinationAttribute);
+                foreach ($attributesList as $attributeDetail) {
+                    if ($attributeDetail['attribute_group'] == $attributeGroup && $attributeDetail['name'] == $attributeName) {
+                        $combinationAttributesIds[] = (int) $attributeDetail['id_attribute'];
+                        continue 2;
+                    }
+                }
+            }
+            $combination->setAttributes($combinationAttributesIds);
+        }
     }
 
     /**
