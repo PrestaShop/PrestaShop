@@ -37,8 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\Customizat
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShopException;
 use Product;
 
@@ -76,37 +74,11 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
             ));
         }
 
-        $this->updateCustomizableValue($product, $command->isRequired());
+        $this->setProductCustomizability($product, $command->isRequired());
         $this->incrementCustomizationFieldsCount($product, $command->getType());
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
 
         return new CustomizationFieldId((int) $customizationField->id);
-    }
-
-    /**
-     * @param Product $product
-     * @param bool $isCustomizationRequired
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
-     */
-    private function updateCustomizableValue(Product $product, bool $isCustomizationRequired): void
-    {
-        $previousCustomizability = (int) $product->customizable;
-        $alreadyRequiresCustomization = $previousCustomizability === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
-        $alreadyAllowsCustomization = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION && !$isCustomizationRequired;
-
-        if ($alreadyRequiresCustomization) {
-            return;
-        } elseif ($alreadyAllowsCustomization) {
-            return;
-        }
-
-        $product->customizable = $isCustomizationRequired ?
-            ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION :
-            ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION
-        ;
-        $this->fieldsToUpdate['customizable'] = true;
     }
 
     /**
