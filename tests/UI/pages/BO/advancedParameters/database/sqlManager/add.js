@@ -20,7 +20,7 @@ module.exports = class AddSQLQuery extends BOBasePage {
   /**
    * Fill form for add/edit sql query
    * @param sqlQueryData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditSQLQuery(sqlQueryData) {
     await this.setValue(this.sqlQueryNameInput, sqlQueryData.name);

@@ -69,7 +69,7 @@ class PrestaShopExtension extends Extension
      */
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
-        return new AddOnsConfiguration($this->getAlias());
+        return new AddOnsConfiguration();
     }
 
     /**

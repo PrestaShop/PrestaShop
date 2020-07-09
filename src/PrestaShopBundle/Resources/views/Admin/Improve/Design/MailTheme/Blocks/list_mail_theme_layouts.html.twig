@@ -109,7 +109,7 @@
         </div>
 
         <div class="card-footer">
-          <a href="{{ path('admin_mail_theme_index', params|default({})) }}" class="btn btn-outline-secondary">
+          <a href="{{ path('admin_mail_theme_index', params|default({})) }}" class="btn btn-outline-secondary" id="back-to-configuration-link">
             <i class="material-icons">arrow_back</i>
             {{ 'Back to configuration'|trans({}, 'Admin.Actions') }}
           </a>

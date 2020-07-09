@@ -42,7 +42,7 @@
   {% set route_params = route_params|merge({ (name) : (record[field] ?? field) }) %}
 {% endfor %}
 
-<a class="{{ class }}"
+<a class="{{ class }} grid-{{ action.name|lower }}-row-link"
    href="#"
    data-confirm-message="{{ confirmation_message }}"
    data-url="{{ path(action.options.route, route_params) }}"

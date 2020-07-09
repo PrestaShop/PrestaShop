@@ -11,7 +11,7 @@ module.exports = class Order extends BOBasePage {
     // Order page
     this.orderProductsTable = '#orderProductsTable';
     this.orderProductsRowTable = row => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
-    this.editProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Edit']`;
+    this.editProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
     this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input#edit_product_row_quantity`;
@@ -39,9 +39,9 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Modify the product quantity
-   * @param row, product row
-   * @param quantity, new quantity
-   * @returns {Promise<void>}
+   * @param row
+   * @param quantity
+   * @returns {Promise<number>}
    */
   async modifyProductQuantity(row, quantity) {
     this.dialogListener();
@@ -158,7 +158,7 @@ module.exports = class Order extends BOBasePage {
    * @param quantity
    * @param amount
    * @param shipping
-   * @returns {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async addPartialRefundProduct(productRow, quantity = 0, amount = 0, shipping = 0) {
     await this.setValue(this.refundProductQuantity(productRow), quantity.toString());

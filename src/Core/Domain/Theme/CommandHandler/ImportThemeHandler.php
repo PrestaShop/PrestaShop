@@ -78,6 +78,7 @@ final class ImportThemeHandler implements ImportThemeHandlerInterface
         $type = $command->getImportSource()->getSourceType();
         $source = $command->getImportSource()->getSource();
 
+        $themePath = '';
         if (ThemeImportSource::FROM_ARCHIVE === $type) {
             $themePath = $this->themeUploader->upload($source);
         } elseif (ThemeImportSource::FROM_WEB === $type) {

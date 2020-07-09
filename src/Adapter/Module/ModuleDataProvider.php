@@ -247,7 +247,7 @@ class ModuleDataProvider
         // -> We use an anonymous function here because if a test is made twice
         // on the same module, the test on require_once would immediately return true
         // (as the file would have already been evaluated).
-        $require_correct = function ($name) use ($file_path, $logger) {
+        $require_correct = function ($name) use ($file_path, $logger, $log_context_data) {
             try {
                 require_once $file_path;
             } catch (\Exception $e) {

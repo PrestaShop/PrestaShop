@@ -2749,5 +2749,10 @@
       <title>Modify checkout process</title>
       <description>This hook is called when constructing the checkout process</description>
     </hook>
+    <hook id="actionPresentProductListing">
+      <name>actionPresentProductListing</name>
+      <title>Product Listing Presenter</title>
+      <description>This hook is called before a product listing is presented</description>
+    </hook>
   </entities>
 </entity_hook>

@@ -26,11 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
-use Configuration;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkToggleLanguagesStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\BulkToggleLanguagesStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\DefaultLanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 
 /**
@@ -55,21 +53,6 @@ final class BulkToggleLanguagesStatusHandler extends AbstractLanguageHandler imp
             if (false === $language->update()) {
                 throw new LanguageException(sprintf('Failed to toggle language "%s" to status %s', $language->id, var_export($command->getStatus(), true)));
             }
-        }
-    }
-
-    /**
-     * @param Language $language
-     * @param BulkToggleLanguagesStatusCommand $command
-     */
-    private function assertLanguageIsNotDefault(Language $language, BulkToggleLanguagesStatusCommand $command)
-    {
-        if (true === $command->getStatus()) {
-            return;
-        }
-
-        if ($language->id === (int) Configuration::get('PS_LANG_DEFAULT')) {
-            throw new DefaultLanguageException(sprintf('Default language "%s" cannot be disabled', $language->iso_code), DefaultLanguageException::CANNOT_DISABLE_ERROR);
         }
     }
 }

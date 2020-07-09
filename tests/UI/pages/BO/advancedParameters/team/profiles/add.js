@@ -10,7 +10,7 @@ module.exports = class AddProfile extends BOBasePage {
 
     // Selectors
     this.nameInput = '#profile_name_1';
-    this.saveButton = 'div.card-footer button';
+    this.saveButton = '#save-button';
   }
 
   /*

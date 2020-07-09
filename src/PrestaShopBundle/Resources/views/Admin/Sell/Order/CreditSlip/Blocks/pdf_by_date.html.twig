@@ -28,7 +28,8 @@
 
 {{ form_start(pdfByDateForm, {
   'method': 'GET',
-  'action': path('_admin_credit_slips_pdf_by_date')})
+  'action': path('_admin_credit_slips_pdf_by_date'),
+  attr: {id: 'form-generate-credit-slips-by-date'}})
 }}
 <div class="card">
   <h3 class="card-header">
@@ -55,7 +56,7 @@
 
   <div class="card-footer">
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary">
+      <button class="btn btn-primary" id="generate-credit-slip-by-date">
         {{ 'Generate PDF file by date'|trans({}, 'Admin.Orderscustomers.Feature') }}
       </button>
     </div>

@@ -113,6 +113,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
                             ->add(
                                 (new LinkRowAction('edit'))
                                     ->setIcon('edit')
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                     ->setOptions([
                                         'route' => 'admin_metas_edit',
                                         'route_param_name' => 'metaId',

@@ -182,6 +182,7 @@ class CartControllerCore extends FrontController
             'cart_summary_totals' => $this->render('checkout/_partials/cart-summary-totals'),
             'cart_detailed_actions' => $this->render('checkout/_partials/cart-detailed-actions'),
             'cart_voucher' => $this->render('checkout/_partials/cart-voucher'),
+            'cart_summary_top' => $this->render('checkout/_partials/cart-summary-top'),
         ]));
     }
 

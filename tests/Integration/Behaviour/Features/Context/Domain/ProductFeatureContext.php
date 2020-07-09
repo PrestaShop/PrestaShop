@@ -34,12 +34,21 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductPackException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags as LocalizedTagsDto;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\PackedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
 use Product;
@@ -92,6 +101,103 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update pack :packReference with following product quantities:
+     *
+     * @param string $packReference
+     * @param TableNode $table
+     */
+    public function updateProductPack(string $packReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+
+        $products = [];
+        foreach ($data as $productReference => $quantity) {
+            $products[] = [
+                'product_id' => $this->getSharedStorage()->get($productReference),
+                'quantity' => (int) $quantity,
+            ];
+        }
+
+        $packId = $this->getSharedStorage()->get($packReference);
+
+        $this->upsertPack($packId, $products);
+    }
+
+    /**
+     * @When I clean pack :packReference
+     */
+    public function cleanPack(string $packReference)
+    {
+        $packId = $this->getSharedStorage()->get($packReference);
+
+        try {
+            $this->getCommandBus()->handle(UpdateProductPackCommand::cleanPack($packId));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then pack :packReference should contain products with following quantities:
+     *
+     * @param string $packReference
+     * @param TableNode $table
+     */
+    public function assertPackContents(string $packReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $packId = $this->getSharedStorage()->get($packReference);
+        $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
+        $notExistingProducts = [];
+
+        foreach ($data as $productReference => $quantity) {
+            $expectedQty = (int) $quantity;
+            $expectedPackedProductId = $this->getSharedStorage()->get($productReference);
+            $foundProduct = false;
+
+            /**
+             * @var int
+             * @var PackedProduct $packedProduct
+             */
+            foreach ($packedProducts as $key => $packedProduct) {
+                //@todo: check && combination id when asserting combinations.
+                if ($packedProduct->getProductId() === $expectedPackedProductId) {
+                    $foundProduct = true;
+                    Assert::assertEquals(
+                        $expectedQty,
+                        $packedProduct->getQuantity(),
+                        sprintf('Unexpected quantity of packed product "%s"', $productReference)
+                    );
+
+                    //unset asserted product to check if there was any excessive actual products after loops
+                    unset($packedProducts[$key]);
+                    break;
+                }
+            }
+
+            if (!$foundProduct) {
+                $notExistingProducts[$productReference] = $quantity;
+            }
+        }
+
+        if (!empty($notExistingProducts)) {
+            throw new RuntimeException(sprintf(
+                'Failed to find following packed products: %s',
+                implode(',', array_keys($notExistingProducts))
+            ));
+        }
+
+        if (!empty($packedProducts)) {
+            throw new RuntimeException(sprintf(
+                'Following packed products were not expected: %s',
+                implode(',', array_map(function ($packedProduct) {
+                    return $packedProduct->name;
+                }, $packedProducts))
+            ));
+        }
+    }
+
+    /**
      * @When I update product :productReference basic information with following values:
      *
      * @param string $productReference
@@ -127,6 +233,26 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update product :productReference options with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductOptions(string $productReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $command = new UpdateProductOptionsCommand($productId);
+            $this->setUpdateOptionsCommandData($data, $command);
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
      * @Then /^product "(.+)" localized "(.+)" should be "(.+)"$/
      * @Given /^product "(.+)" localized "(.+)" is "(.+)"$/
      *
@@ -139,21 +265,178 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $expectedLocalizedValues = $this->parseLocalizedArray($localizedValues);
 
+        if ('tags' === $fieldName) {
+            $this->assertLocalizedTags($expectedLocalizedValues, $productForEditing);
+
+            return;
+        }
+
         foreach ($expectedLocalizedValues as $langId => $expectedValue) {
-            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $fieldName)[$langId];
+            $actualValues = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+            $langIso = Language::getIsoById($langId);
+
+            if (!isset($actualValues[$langId])) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized %s value is not set in %s language',
+                    $fieldName,
+                    $langIso
+                ));
+            }
+
+            $actualValue = $actualValues[$langId];
 
             if ($expectedValue !== $actualValue) {
-                $langIso = Language::getIsoById($langId);
-
                 throw new RuntimeException(
                     sprintf(
                         'Expected %s in "%s" language was "%s", but got "%s"',
                         $fieldName,
                         $langIso,
-                        $expectedValue,
-                        $actualValue
+                        var_export($expectedValue, true),
+                        var_export($actualValue, true)
                     )
                 );
+            }
+        }
+    }
+
+    /**
+     * @Then product :productReference should be assigned to following categories:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertProductCategories(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
+        $actualCategoryIds = $productForEditing->getCategoriesInformation()->getCategoryIds();
+        sort($actualCategoryIds);
+
+        $expectedCategoriesRef = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
+        $expectedCategoryIds = array_map(function (string $categoryReference) {
+            return $this->getSharedStorage()->get($categoryReference);
+        }, $expectedCategoriesRef);
+        sort($expectedCategoryIds);
+
+        $expectedDefaultCategoryId = $this->getSharedStorage()->get($data['default category']);
+        $actualDefaultCategoryId = $productForEditing->getCategoriesInformation()->getDefaultCategoryId();
+
+        Assert::assertEquals($expectedDefaultCategoryId, $actualDefaultCategoryId, 'Unexpected default category assigned to product');
+        Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
+    }
+
+    /**
+     * @When I assign product :productReference to following categories:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assignToCategoriesIncludingNonExistingOnes(string $productReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $categoryReferences = PrimitiveUtils::castStringArrayIntoArray($data['categories']);
+
+        // this random number is used on purpose to mimic non existing category id
+        $nonExistingCategoryId = 50000;
+        $categoryIds = [];
+        foreach ($categoryReferences as $categoryReference) {
+            if ($this->getSharedStorage()->exists($categoryReference)) {
+                $categoryIds[] = $this->getSharedStorage()->get($categoryReference);
+            } else {
+                $categoryIds[] = $nonExistingCategoryId;
+                ++$nonExistingCategoryId;
+            }
+        }
+
+        if ($this->getSharedStorage()->exists($data['default category'])) {
+            $defaultCategoryId = $this->getSharedStorage()->get($data['default category']);
+        } else {
+            $defaultCategoryId = $nonExistingCategoryId;
+        }
+
+        $this->assignProductToCategories(
+            $this->getSharedStorage()->get($productReference),
+            $defaultCategoryId,
+            $categoryIds
+        );
+    }
+
+    /**
+     * @Then I should get error that assigning product to categories failed
+     */
+    public function assertFailedUpdateCategoriesError()
+    {
+        $this->assertLastErrorIs(
+            CannotUpdateProductException::class,
+            CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
+        );
+    }
+
+    /**
+     * Product tags differs from other localized properties, because each locale can have an array of tags
+     * (whereas common property will have one value per language)
+     * This is why it needs some additional parsing
+     *
+     * @param array $localizedTagStrings key value pairs where key is language id and value is string representation of array separated by comma
+     *                                   e.g. [1 => 'hello,goodbye', 2 => 'bonjour,Au revoir']
+     * @param ProductForEditing $productForEditing
+     */
+    private function assertLocalizedTags(array $localizedTagStrings, ProductForEditing $productForEditing)
+    {
+        $fieldName = 'tags';
+        /** @var LocalizedTagsDto[] $actualLocalizedTags */
+        $actualLocalizedTagsList = $this->extractValueFromProductForEditing($productForEditing, $fieldName);
+
+        foreach ($localizedTagStrings as $langId => $tagsString) {
+            $langIso = Language::getIsoById($langId);
+
+            if (empty($tagsString)) {
+                // if tags string is empty, then we should not have any actual value in this language
+                /** @var LocalizedTagsDto $actualLocalizedTags */
+                foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                    if ($actualLocalizedTags->getLanguageId() === $langId) {
+                        throw new RuntimeException(sprintf(
+                                'Expected no tags in %s language, but got "%s"',
+                                $langIso,
+                                var_export($actualLocalizedTags->getTags(), true))
+                        );
+                    }
+                }
+
+                // if above code passed it means tags in this lang is empty as expected and we can continue
+                continue;
+            }
+
+            // convert filled tags to array
+            $expectedTags = array_map('trim', explode(',', $tagsString));
+            $valueInLangExists = false;
+            foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
+                if ($actualLocalizedTags->getLanguageId() !== $langId) {
+                    continue;
+                }
+
+                Assert::assertEquals(
+                    $expectedTags,
+                    $actualLocalizedTags->getTags(),
+                    sprintf(
+                        'Expected %s in "%s" language was "%s", but got "%s"',
+                        $fieldName,
+                        $langIso,
+                        var_export($expectedTags, true),
+                        var_export($actualLocalizedTags->getTags(), true)
+                    )
+                );
+                $valueInLangExists = true;
+            }
+
+            // All empty values have ben filtered out above,
+            // so if this lang value doesn't exist, it means it didn't meet the expectations
+            if (!$valueInLangExists) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized tags value "%s" is not set in %s language',
+                    var_export($expectedTags, true),
+                    $langIso
+                ));
             }
         }
     }
@@ -170,17 +453,45 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $productForEditing = $this->getProductForEditing($productReference);
         $data = $table->getRowsHash();
 
-        if (isset($data['active'])) {
-            $status = PrimitiveUtils::castStringBooleanIntoBoolean($data['active']);
-            $statusInWords = $status ? 'enabled' : 'disabled';
-
-            if ((bool) $productForEditing->isActive() !== $status) {
-                throw new RuntimeException(sprintf('Product expected to be %s', $statusInWords));
-            }
-        }
+        $this->assertBoolProperty($productForEditing, $data, 'available_for_order');
+        $this->assertBoolProperty($productForEditing, $data, 'online_only');
+        $this->assertBoolProperty($productForEditing, $data, 'show_price');
+        $this->assertBoolProperty($productForEditing, $data, 'active');
+        $this->assertStringProperty($productForEditing, $data, 'visibility');
+        $this->assertStringProperty($productForEditing, $data, 'condition');
+        $this->assertStringProperty($productForEditing, $data, 'isbn');
+        $this->assertStringProperty($productForEditing, $data, 'upc');
+        $this->assertStringProperty($productForEditing, $data, 'ean13');
+        $this->assertStringProperty($productForEditing, $data, 'mpn');
+        $this->assertStringProperty($productForEditing, $data, 'reference');
 
         $this->assertTaxRulesGroup($data, $productForEditing);
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
+    }
+
+    /**
+     * @When I update product :productReference tags with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductTags(string $productReference, TableNode $table)
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $data = $table->getRowsHash();
+
+        $localizedTagStrings = $this->parseLocalizedArray($data['tags']);
+        $localizedTagsList = [];
+
+        foreach ($localizedTagStrings as $langId => $localizedTagString) {
+            $localizedTagsList[$langId] = explode(',', $localizedTagString);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new UpdateProductTagsCommand($productId, $localizedTagsList));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**
@@ -245,6 +556,190 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productReference should be assigned to default category
+     *
+     * @param string $productReference
+     */
+    public function assertProductAssignedToDefaultCategory(string $productReference)
+    {
+        $context = $this->getContainer()->get('prestashop.adapter.legacy.context')->getContext();
+        $defaultCategoryId = (int) $context->shop->id_category;
+
+        $productForEditing = $this->getProductForEditing($productReference);
+        $productCategoriesInfo = $productForEditing->getCategoriesInformation();
+
+        $belongsToDefaultCategory = false;
+        foreach ($productCategoriesInfo->getCategoryIds() as $categoryId) {
+            if ($categoryId === $defaultCategoryId) {
+                $belongsToDefaultCategory = true;
+
+                break;
+            }
+        }
+
+        if ($productCategoriesInfo->getDefaultCategoryId() !== $defaultCategoryId || !$belongsToDefaultCategory) {
+            throw new RuntimeException('Product is not assigned to default category');
+        }
+    }
+
+    /**
+     * @Then product :productReference type should be :productType
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertProductType(string $productReference, string $productTypeName)
+    {
+        $editableProduct = $this->getProductForEditing($productReference);
+        Assert::assertEquals(
+            $productTypeName,
+            $editableProduct->getBasicInformation()->getType()->getValue(),
+            sprintf(
+                'Product type is not as expected. Expected %s but got %s instead',
+                $productTypeName,
+                $editableProduct->getBasicInformation()->getType()->getValue()
+            )
+        );
+    }
+
+    /**
+     * @Then I should get error that product for packing quantity is invalid
+     */
+    public function assertPackProductQuantityError()
+    {
+        $this->assertLastErrorIs(
+            ProductPackException::class,
+            ProductPackException::INVALID_QUANTITY
+        );
+    }
+
+    /**
+     * @Then I should get error that I cannot add pack into a pack
+     */
+    public function assertAddingPackToPackError()
+    {
+        $this->assertLastErrorIs(
+            ProductPackException::class,
+            ProductPackException::CANNOT_ADD_PACK_INTO_PACK
+        );
+    }
+
+    /**
+     * @Then I should get error that product :fieldName is invalid
+     */
+    public function assertConstraintError(string $fieldName): void
+    {
+        $this->assertLastErrorIs(
+            ProductConstraintException::class,
+            $this->getConstraintErrorCode($fieldName)
+        );
+    }
+
+    /**
+     * @param array $data
+     * @param UpdateProductOptionsCommand $command
+     */
+    private function setUpdateOptionsCommandData(array $data, UpdateProductOptionsCommand $command): void
+    {
+        if (isset($data['visibility'])) {
+            $command->setVisibility($data['visibility']);
+        }
+
+        if (isset($data['available_for_order'])) {
+            $command->setAvailableForOrder(PrimitiveUtils::castStringBooleanIntoBoolean($data['available_for_order']));
+        }
+
+        if (isset($data['online_only'])) {
+            $command->setOnlineOnly(PrimitiveUtils::castStringBooleanIntoBoolean($data['online_only']));
+        }
+
+        if (isset($data['show_price'])) {
+            $command->setShowPrice(PrimitiveUtils::castStringBooleanIntoBoolean($data['show_price']));
+        }
+
+        if (isset($data['condition'])) {
+            $command->setCondition($data['condition']);
+        }
+
+        if (isset($data['isbn'])) {
+            $command->setIsbn($data['isbn']);
+        }
+
+        if (isset($data['upc'])) {
+            $command->setUpc($data['upc']);
+        }
+
+        if (isset($data['ean13'])) {
+            $command->setEan13($data['ean13']);
+        }
+
+        if (isset($data['mpn'])) {
+            $command->setMpn($data['mpn']);
+        }
+
+        if (isset($data['reference'])) {
+            $command->setReference($data['reference']);
+        }
+
+        if (isset($data['mpn'])) {
+            $command->setMpn($data['mpn']);
+        }
+    }
+
+    /**
+     * @param int $packId
+     * @param array $products
+     */
+    private function upsertPack(int $packId, array $products): void
+    {
+        try {
+            $this->getCommandBus()->handle(UpdateProductPackCommand::upsertPack(
+                $packId,
+                $products
+            ));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    private function assertBoolProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+        }
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     * @param array $data
+     * @param string $propertyName
+     */
+    private function assertStringProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    {
+        if (isset($data[$propertyName])) {
+            $expectedValue = $data[$propertyName];
+            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+            Assert::assertEquals(
+                $expectedValue,
+                $actualValue,
+                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+            );
+        }
+    }
+
+    /**
      * @param array $data
      * @param ProductForEditing $productForEditing
      */
@@ -288,17 +783,6 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $expectedOnSale,
                 $pricesInfo->isOnSale(),
                 sprintf('Expected product %s', $onSaleInWords)
-            );
-        }
-
-        if (isset($data['tax_rules_group_id'])) {
-            $expectedGroup = (int) $data['tax_rules_group_id'];
-            $actualGroup = $pricesInfo->getTaxRulesGroupId();
-
-            Assert::assertEquals(
-                $expectedGroup,
-                $actualGroup,
-                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedGroup, $actualGroup)
             );
         }
 
@@ -347,119 +831,37 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productReference should be assigned to default category
+     * @param string $fieldName
      *
-     * @param string $productReference
+     * @return int
      */
-    public function assertProductAssignedToDefaultCategory(string $productReference)
+    private function getConstraintErrorCode(string $fieldName): int
     {
-        $context = $this->getContainer()->get('prestashop.adapter.legacy.context')->getContext();
-        $defaultCategoryId = (int) $context->shop->id_category;
-
-        $productForEditing = $this->getProductForEditing($productReference);
-        $productCategoriesInfo = $productForEditing->getCategoriesInformation();
-
-        $belongsToDefaultCategory = false;
-        foreach ($productCategoriesInfo->getCategoryIds() as $categoryId) {
-            if ($categoryId === $defaultCategoryId) {
-                $belongsToDefaultCategory = true;
-
-                break;
-            }
-        }
-
-        if ($productCategoriesInfo->getDefaultCategoryId() !== $defaultCategoryId || !$belongsToDefaultCategory) {
-            throw new RuntimeException('Default category is not assigned to product');
-        }
-    }
-
-    /**
-     * @Then product :productReference type should be :productType
-     *
-     * @param string $productReference
-     * @param string $productTypeName
-     */
-    public function assertProductType(string $productReference, string $productTypeName)
-    {
-        $editableProduct = $this->getProductForEditing($productReference);
-        if ($productTypeName !== $editableProduct->getBasicInformation()->getType()->getValue()) {
-            throw new RuntimeException(
-                sprintf(
-                    'Product type is not as expected. Expected %s but go %s instead',
-                    $productTypeName,
-                    $editableProduct->getBasicInformation()->getType()->getValue()
-                )
-            );
-        }
-    }
-
-    /**
-     * @Then I should get error that product name is invalid
-     */
-    public function assertLastErrorIsInvalidNameConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_NAME
-        );
-    }
-
-    /**
-     * @Then I should get error that product type is invalid
-     */
-    public function assertLastErrorIsInvalidTypeConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_PRODUCT_TYPE
-        );
-    }
-
-    /**
-     * @Then /^I should get error that product "(.+)" is invalid$/
-     *
-     * @param string $priceField
-     */
-    public function assertLastPriceErrorConstraint(string $priceField)
-    {
-        $priceFieldErrorMap = [
+        $constraintErrorFieldMap = [
+            'type' => ProductConstraintException::INVALID_PRODUCT_TYPE,
+            'name' => ProductConstraintException::INVALID_NAME,
+            'description' => ProductConstraintException::INVALID_DESCRIPTION,
+            'description_short' => ProductConstraintException::INVALID_SHORT_DESCRIPTION,
+            'visibility' => ProductConstraintException::INVALID_VISIBILITY,
+            'condition' => ProductConstraintException::INVALID_CONDITION,
+            'isbn' => ProductConstraintException::INVALID_ISBN,
+            'upc' => ProductConstraintException::INVALID_UPC,
+            'ean13' => ProductConstraintException::INVALID_EAN_13,
+            'mpn' => ProductConstraintException::INVALID_MPN,
+            'reference' => ProductConstraintException::INVALID_REFERENCE,
             'price' => ProductConstraintException::INVALID_PRICE,
             'ecotax' => ProductConstraintException::INVALID_ECOTAX,
             'wholesale_price' => ProductConstraintException::INVALID_WHOLESALE_PRICE,
             'unit_price' => ProductConstraintException::INVALID_UNIT_PRICE,
             'tax rules group' => ProductConstraintException::INVALID_TAX_RULES_GROUP_ID,
+            'tag' => ProductConstraintException::INVALID_TAG,
         ];
 
-        if (!array_key_exists($priceField, $priceFieldErrorMap)) {
-            throw new RuntimeException(sprintf('"%s" doesn\'t exist in priceField-errorCode map.', $priceField));
+        if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
+            throw new RuntimeException(sprintf('"%s" is not mapped with constraint error code', $fieldName));
         }
 
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            $priceFieldErrorMap[$priceField]
-        );
-    }
-
-    /**
-     * @Then I should get error that product description is invalid
-     */
-    public function assertLastErrorIsInvalidDescriptionConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_DESCRIPTION
-        );
-    }
-
-    /**
-     * @Then I should get error that product short description is invalid
-     */
-    public function assertLastErrorIsInvalidShortDescriptionConstraint()
-    {
-        $this->assertLastErrorIs(
-            ProductConstraintException::class,
-            ProductConstraintException::INVALID_SHORT_DESCRIPTION
-        );
+        return $constraintErrorFieldMap[$fieldName];
     }
 
     /**
@@ -476,6 +878,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             'name' => 'basicInformation.localizedNames',
             'description' => 'basicInformation.localizedDescriptions',
             'description_short' => 'basicInformation.localizedShortDescriptions',
+            'active' => 'active',
+            'visibility' => 'options.visibility',
+            'available_for_order' => 'options.availableForOrder',
+            'online_only' => 'options.onlineOnly',
+            'show_price' => 'options.showPrice',
+            'condition' => 'options.condition',
+            'isbn' => 'options.isbn',
+            'upc' => 'options.upc',
+            'ean13' => 'options.ean13',
+            'mpn' => 'options.mpn',
+            'reference' => 'options.reference',
+            'tags' => 'options.localizedTags',
         ];
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
@@ -515,5 +929,23 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId
         ));
+    }
+
+    /**
+     * @param int $productId
+     * @param int $defaultCategoryId
+     * @param array $categoryIds
+     */
+    private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateProductCategoriesCommand(
+                $productId,
+                $defaultCategoryId,
+                $categoryIds
+            ));
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 }

@@ -67,6 +67,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         // Clean all cache values
         Cache::clean('*');
 
+        Shop::initialize();
         Context::getContext()->shop = new Shop(1);
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
         Configuration::loadConfiguration();
@@ -114,7 +115,14 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 $this->model_database->createDatabase($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password);
             }
 
-            if (!$this->model_database->testDatabaseSettings($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password, $this->datas->database_prefix, $this->datas->database_engine, $this->datas->database_clear)) {
+            if (!$this->model_database->testDatabaseSettings(
+                $this->datas->database_server,
+                $this->datas->database_name,
+                $this->datas->database_login,
+                $this->datas->database_password,
+                $this->datas->database_prefix,
+                $this->datas->database_clear
+            )) {
                 $this->printErrors();
             }
             if (!$this->processInstallDatabase()) {

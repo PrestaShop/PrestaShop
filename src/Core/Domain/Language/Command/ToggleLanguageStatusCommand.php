@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 /**
  * Enables or disables language based in given status
  */
-class ToggleLanguageStatusCommand
+class ToggleLanguageStatusCommand implements ToggleLanguageStatusCommandInterface
 {
     /**
      * @var bool

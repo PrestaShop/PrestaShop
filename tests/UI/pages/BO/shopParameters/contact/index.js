@@ -18,15 +18,15 @@ module.exports = class Contacts extends BOBasePage {
     this.contactsListTableColumn = (row, column) => `${this.contactsListTableRow(row)} td.column-${column}`;
     // Filters
     this.contactFilterInput = filterBy => `${this.contactsListForm} #contact_${filterBy}`;
-    this.filterSearchButton = `${this.contactsListForm} button[name='contact[actions][search]']`;
-    this.filterResetButton = `${this.contactsListForm} button[name='contact[actions][reset]']`;
+    this.filterSearchButton = `${this.contactsListForm} .grid-search-button`;
+    this.filterResetButton = `${this.contactsListForm} .grid-reset-button`;
     // Actions buttons in Row
     this.contactsListTableActionsColumn = row => this.contactsListTableColumn(row, 'actions');
     this.listTableToggleDropDown = row => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;
-    this.listTableEditLink = row => `${this.contactsListTableActionsColumn(row)} a[href*='edit']`;
-    this.deleteRowLink = row => `${this.contactsListTableActionsColumn(row)} a[data-method='POST']`;
+    this.listTableEditLink = row => `${this.contactsListTableActionsColumn(row)} a.grid-edit-row-link`;
+    this.deleteRowLink = row => `${this.contactsListTableActionsColumn(row)} a.grid-delete-row-link`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.contactsGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#contact_grid_bulk_action_delete_all';
     // Sort Selectors
@@ -44,7 +44,7 @@ module.exports = class Contacts extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
@@ -53,8 +53,8 @@ module.exports = class Contacts extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.contactsGridTitle);
@@ -62,7 +62,7 @@ module.exports = class Contacts extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -82,10 +82,10 @@ module.exports = class Contacts extends BOBasePage {
   }
 
   /**
-   * get text from a column
+   * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableContacts(row, column) {
     return this.getTextContent(this.contactsListTableColumn(row, column));
@@ -126,7 +126,7 @@ module.exports = class Contacts extends BOBasePage {
   /**
    * Delete Contact
    * @param row, row in table
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteContact(row) {
     // Click on dropDown

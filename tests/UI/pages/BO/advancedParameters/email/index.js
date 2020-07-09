@@ -16,23 +16,23 @@ module.exports = class Email extends BOBasePage {
     this.emailsListForm = '#email_logs_grid_table';
     // Filters
     this.emailFilterColumnInput = filterBy => `#email_logs_${filterBy}`;
-    this.filterSearchButton = `${this.emailsListForm} button[name='email_logs[actions][search]']`;
-    this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
+    this.filterSearchButton = `${this.emailsListForm} .grid-search-button`;
+    this.filterResetButton = `${this.emailsListForm} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.emailsListForm} tbody`;
     this.tableRows = `${this.tableBody} tr`;
     this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
-    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a[data-url*='delete']`;
+    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a.grid-delete-row-link`;
     this.confirmDeleteModal = '#email_logs-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
     // Email form
-    this.logEmailsLabel = toggle => `label[for='form_email_config_log_emails_${toggle}']`;
-    this.saveEmailFormButton = 'form[name=\'form\'] button.btn-primary';
+    this.logEmailsLabel = toggle => `label[for='form_log_emails_${toggle}']`;
+    this.saveEmailFormButton = '#form-log-email-save-button';
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
     this.sendTestEmailInput = '#test_email_sending_send_email_to';
@@ -55,7 +55,7 @@ module.exports = class Email extends BOBasePage {
 
   /**
    * Get total of email created
-   * @return {Promise<int>}
+   * @returns {Promise<number>}
    */
   async getTotalElementInGrid() {
     return this.getNumberFromText(this.emailGridTitle);
@@ -63,7 +63,7 @@ module.exports = class Email extends BOBasePage {
 
   /**
    * Get number of elements in grid (displayed in one page)
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return (await this.page.$$(`${this.tableRows}:not(.empty_row)`)).length;
@@ -71,7 +71,7 @@ module.exports = class Email extends BOBasePage {
 
   /**
    * Reset and get number of lines
-   * @returns {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
@@ -85,7 +85,7 @@ module.exports = class Email extends BOBasePage {
    * @param filterType, input or select to choose method of filter
    * @param filterBy, column to filter
    * @param value, value to filter with
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async filterEmailLogs(filterType, filterBy, value = '') {
     await this.resetFilter();
@@ -107,7 +107,7 @@ module.exports = class Email extends BOBasePage {
    * Get text from column
    * @param columnName
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   getTextColumn(columnName, row) {
     return this.getTextContent(this.tableColumn(row, columnName === 'id_lang' ? 'language' : columnName));
@@ -165,7 +165,7 @@ module.exports = class Email extends BOBasePage {
   /**
    * Send a test email
    * @param email
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async sendTestEmail(email) {
     await this.setValue(this.sendTestEmailInput, email);

@@ -28,7 +28,8 @@
 
 {{ form_start(creditSlipOptionsForm, {
   'method': 'POST',
-  'action': path('admin_credit_slips_process_options')})
+  'action': path('admin_credit_slips_process_options'),
+  attr: {id: 'form-credit-slips-options'}})
 }}
 <div class="card">
 
@@ -50,7 +51,7 @@
 
   <div class="card-footer">
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary">
+      <button class="btn btn-primary" id="save-credit-slip-options-button">
         {{ 'Save'|trans({}, 'Admin.Actions') }}
       </button>
     </div>

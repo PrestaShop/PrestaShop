@@ -5,6 +5,7 @@
 npm-debug.log.*
 .sass-cache/
 *.swp
+*.swo
 .cache/
 
 # Cache

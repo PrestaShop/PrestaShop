@@ -84,8 +84,8 @@ final class InvoiceByDateFormHandler extends Handler
 
         // Get invoices by submitted date interval
         $invoiceCollection = $this->orderInvoiceDataProvider->getByDateInterval(
-            new DateTime($data['generate_by_date']['date_from']),
-            new DateTime($data['generate_by_date']['date_to'])
+            new DateTime($data['date_from']),
+            new DateTime($data['date_to'])
         );
 
         // Generate PDF out of found invoices

@@ -19,7 +19,7 @@ module.exports = class AddSeoUrl extends BOBasePage {
     // Selectors for Meta keywords
     this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
     this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
-    this.saveButton = 'div.card-footer button';
+    this.saveButton = '#save-button';
   }
 
   /* Methods */
@@ -66,7 +66,7 @@ module.exports = class AddSeoUrl extends BOBasePage {
   }
 
   /**
-   *
+   * Create/Edit seo page
    * @param seoPageData
    * @return {Promise<void>}
    */

@@ -99,6 +99,21 @@
 		<?php echo $this->displayError('shop_timezone') ?>
 	</div>
 
+    <!-- Enable SSL -->
+    <div class="field clearfix">
+        <label class="aligned"><?php echo $this->translator->trans('Enable SSL', array(), 'Install'); ?></label>
+        <div class="contentinput">
+            <label>
+                <input value="1" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '1'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
+                <?php echo $this->translator->trans('Yes', array(), 'Install'); ?>
+            </label>
+            <label>
+                <input value="0" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '0'): ?>checked="checked"<?php endif; ?> autocomplete="off" />
+                <?php echo $this->translator->trans('No', array(), 'Install'); ?>
+            </label>
+        </div>
+    </div>
+
 	<h2 style="margin-top:20px"><?php echo $this->translator->trans('Your Account', array(), 'Install'); ?></h2>
 
 	<!-- Admin firstname -->

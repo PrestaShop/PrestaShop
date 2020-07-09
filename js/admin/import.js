@@ -30,14 +30,14 @@ $(document).ready(function(){
 
 	$('#saveImportMatchs').unbind('click').click(function(){
 
-	var newImportMatchs = $('#newImportMatchs').attr('value');
+	var newImportMatchs = $('#newImportMatchs').val();
 	if (newImportMatchs == '')
 		jAlert(errorEmpty);
 	else
 	{
 		var matchFields = '';
 		$('.type_value').each( function () {
-			matchFields += '&'+$(this).attr('id')+'='+$(this).attr('value');
+			matchFields += '&'+$(this).attr('id')+'='+$(this).val();
 		});
 		$.ajax({
 	       type: 'POST',
@@ -45,7 +45,7 @@ $(document).ready(function(){
 	       async: false,
 	       cache: false,
 	       dataType : "json",
-	       data: 'ajax=1&action=saveImportMatchs&tab=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').attr('value') + '&newImportMatchs=' + newImportMatchs + matchFields,
+	       data: 'ajax=1&action=saveImportMatchs&tab=AdminImport&token=' + token + '&skip=' + $('input[name=skip]').val() + '&newImportMatchs=' + newImportMatchs + matchFields,
 	       success: function(jsonData)
 	       {
 				$('#valueImportMatchs').append('<option id="'+jsonData.id+'" value="'+matchFields+'" selected="selected">'+newImportMatchs+'</option>');

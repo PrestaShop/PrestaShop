@@ -24,17 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDescriptionCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
 /**
- * Defines contract for UpdateProductDescriptionHandler
+ * Thrown when some product packing actions fails
  */
-interface UpdateProductDescriptionHandlerInterface
+class ProductPackException extends ProductException
 {
     /**
-     * @param UpdateProductDescriptionCommand $command
+     * When fails to add product to pack
      */
-    public function handle(UpdateProductDescriptionCommand $command): void;
+    const FAILED_ADDING_TO_PACK = 10;
+
+    /**
+     * When fails to delete products from a pack
+     */
+    const FAILED_DELETING_PRODUCTS_FROM_PACK = 20;
+
+    /**
+     * When trying to pack a product which is already a pack itself
+     */
+    const CANNOT_ADD_PACK_INTO_PACK = 30;
+
+    /**
+     * When product for packing quantity is invalid
+     */
+    const INVALID_QUANTITY = 40;
 }

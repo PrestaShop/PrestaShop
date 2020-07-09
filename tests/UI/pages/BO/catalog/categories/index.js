@@ -23,21 +23,21 @@ module.exports = class Categories extends BOBasePage {
     this.categoriesListTableToggleDropDown = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a[data-toggle='dropdown']`;
     this.categoriesListTableDeleteLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[data-category-delete-url]`;
+    } a.grid-delete-row-link`;
     this.categoriesListTableViewLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[data-original-title='View']`;
+    } a.grid-view-row-link`;
     this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[href*='edit']`;
+    } a.grid-edit-row-link`;
     this.categoriesListColumnValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
     } i.grid-toggler-icon-valid`;
     this.categoriesListColumnNotValidIcon = (row, column) => `${this.categoriesListTableColumn(row, column)
     } i.grid-toggler-icon-not-valid`;
     // Filters
     this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
-    this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
-    this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
+    this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.categoriesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters div.md-checkbox`;
+    this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
@@ -52,8 +52,8 @@ module.exports = class Categories extends BOBasePage {
     this.deleteCategoryModalModeInput = id => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
     // Grid Actions
     this.categoryGridActionsButton = '#category-grid-actions-button';
-    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'category-grid-actions-button\']';
-    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    this.gridActionDropDownMenu = '#category-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#category-grid-action-export';
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.categoryGridPanel} .col-form-label`;
@@ -74,7 +74,7 @@ module.exports = class Categories extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
@@ -83,8 +83,8 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.categoryGridTitle);
@@ -92,7 +92,7 @@ module.exports = class Categories extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -125,7 +125,7 @@ module.exports = class Categories extends BOBasePage {
    * Get Value of column Displayed
    * @param row, row in table
    * @param column, column to check
-   * @return {Promise<boolean|true>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(row, column) {
     return this.elementVisible(this.categoriesListColumnValidIcon(row, column), 100);
@@ -156,10 +156,10 @@ module.exports = class Categories extends BOBasePage {
   }
 
   /**
-   * get text from a column
+   * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableCategories(row, column) {
     return this.getTextContent(this.categoriesListTableColumn(row, column));
@@ -168,7 +168,7 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Get all information from categories table
    * @param row
-   * @return {Promise<{object}>}
+   * @returns {Promise<{name: string, description: string, id: string, position: *, status: boolean}>}
    */
   async getCategoryFromTable(row) {
     return {
@@ -229,7 +229,7 @@ module.exports = class Categories extends BOBasePage {
    * Delete Category
    * @param row, row in table
    * @param modeID, Deletion method to choose in modal
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCategory(row, modeID = '0') {
     // Click on dropDown
@@ -262,12 +262,12 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Enable / disable categories by Bulk Actions
    * @param enable
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async changeCategoriesEnabledColumnBulkActions(enable = true) {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
+      this.page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -283,12 +283,12 @@ module.exports = class Categories extends BOBasePage {
   /**
    * Delete all Categories with Bulk Actions
    * @param modeID, Deletion mode ID to choose in modal
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteCategoriesBulkActions(modeID = '0') {
     // Click on Select All
     await Promise.all([
-      this.page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
+      this.page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(`${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -332,7 +332,7 @@ module.exports = class Categories extends BOBasePage {
     let i = 0;
     while (await this.elementNotVisible(sortColumnDiv, 500) && i < 2) {
       await this.page.hover(this.sortColumnDiv(sortBy));
-      await this.clickAndWaitForNavigation(sortColumnSpanButton, 'networkidle');
+      await this.clickAndWaitForNavigation(sortColumnSpanButton);
       i += 1;
     }
     await this.waitForVisibleSelector(sortColumnDiv);

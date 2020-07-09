@@ -18,16 +18,16 @@ module.exports = class SiteMap extends FOBasePage {
   Methods
    */
   /**
-   *
+   * Get category name
    * @param categoryID
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
   async getCategoryName(categoryID) {
     return this.getTextContent(this.categoryNameSelect(categoryID));
   }
 
   /**
-   * check if category is visible
+   * Check if category is visible
    * @param categoryID
    * @return {Promise<boolean>}
    */
@@ -36,9 +36,9 @@ module.exports = class SiteMap extends FOBasePage {
   }
 
   /**
-   *
+   * Get page category name
    * @param pageCategoryID
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
   async getPageCategoryName(pageCategoryID) {
     return this.getTextContent(this.categoryPageNameSelect(pageCategoryID));

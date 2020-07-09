@@ -520,7 +520,7 @@ class CartPresenter implements PresenterInterface
 
             $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
 
-            if (isset($deliveryOptionList) && count($deliveryOptionList) > 0) {
+            if (count($deliveryOptionList) > 0) {
                 foreach ($deliveryOptionList as $option) {
                     foreach ($option as $currentCarrier) {
                         if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {

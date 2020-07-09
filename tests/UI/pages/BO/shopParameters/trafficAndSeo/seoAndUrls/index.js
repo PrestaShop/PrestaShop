@@ -9,7 +9,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
 
     // Header selectors
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
-    this.successfulSettingsUpdateMessage = 'The settings have been successfully updated.';
+    this.successfulSettingsUpdateMessage = 'Update successful';
 
     // Selectors grid panel
     this.gridPanel = '#meta_grid_panel';
@@ -17,8 +17,8 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='meta[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='meta[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -26,14 +26,14 @@ module.exports = class SeoAndUrls extends BOBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     // Set up URL form
-    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_friendly_url_${toggle}']`;
-    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_accented_url_${toggle}']`;
-    this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
+    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_set_up_urls_form_friendly_url_${toggle}']`;
+    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_set_up_urls_form_accented_url_${toggle}']`;
+    this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
     // Delete modal
     this.confirmDeleteModal = '#meta-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
@@ -53,7 +53,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
    * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTable(row, column) {
     return this.getTextContent(this.tableColumn(row, column));
@@ -71,7 +71,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteSeoUrlPage(row = 1) {
     await Promise.all([
@@ -110,7 +110,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -118,7 +118,7 @@ module.exports = class SeoAndUrls extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();

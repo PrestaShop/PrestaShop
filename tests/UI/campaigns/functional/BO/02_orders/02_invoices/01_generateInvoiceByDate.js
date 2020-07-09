@@ -1,27 +1,3 @@
-/**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
@@ -46,7 +22,11 @@ let page;
 let filePath;
 
 const today = new Date();
-// Create a future date that there is no invoices (yyy-mm-dd)
+
+// Get today date format (yyyy-mm-dd
+const todayDate = today.toISOString().slice(0, 10);
+
+// Create a future date that there is no invoices (yyyy-mm-dd)
 today.setFullYear(today.getFullYear() + 1);
 const futureDate = today.toISOString().slice(0, 10);
 
@@ -133,7 +113,7 @@ describe('Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGeneratedInvoicesPdfFile', baseContext);
 
       // Generate PDF
-      filePath = await this.pageObjects.invoicesPage.generatePDFByDateAndDownload();
+      filePath = await this.pageObjects.invoicesPage.generatePDFByDateAndDownload(todayDate, todayDate);
 
       const exist = await files.doesFileExist(filePath);
       await expect(exist, 'File does not exist').to.be.true;

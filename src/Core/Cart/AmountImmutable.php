@@ -91,11 +91,11 @@ class AmountImmutable
     }
 
     /**
-     * sums another amount object.
+     * Sums another amount object.
      *
-     * @param \PrestaShop\PrestaShop\Core\Cart\AmountImmutable $amount
+     * @param AmountImmutable $amount
      *
-     * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
+     * @return AmountImmutable
      */
     public function add(AmountImmutable $amount)
     {
@@ -106,11 +106,11 @@ class AmountImmutable
     }
 
     /**
-     * substract another amount object.
+     * Substract another amount object.
      *
-     * @param \PrestaShop\PrestaShop\Core\Cart\AmountImmutable $amount
+     * @param AmountImmutable $amount
      *
-     * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
+     * @return AmountImmutable
      */
     public function sub(AmountImmutable $amount)
     {

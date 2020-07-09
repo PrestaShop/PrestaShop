@@ -13,8 +13,8 @@ module.exports = class Order extends BOBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #order_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='order[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='order[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -27,15 +27,15 @@ module.exports = class Order extends BOBasePage {
       + ` button[data-value='${statusId}']`;
     // Column actions selectors
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.viewRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View']`;
-    this.viewInvoiceRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View invoice']`;
-    this.viewDeliverySlipsRowLink = row => `${this.actionsColumn(row)} a[data-original-title='View delivery slip']`;
+    this.viewRowLink = row => `${this.actionsColumn(row)} a.grid-view-row-link`;
+    this.viewInvoiceRowLink = row => `${this.actionsColumn(row)} a.grid-view-invoice-row-link`;
+    this.viewDeliverySlipsRowLink = row => `${this.actionsColumn(row)} a.grid-view-delivery-slip-row-link`;
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
-    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'order-grid-actions-button\']';
-    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    this.gridActionDropDownMenu = '#order-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#order-grid-action-export';
     // Bulk actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
     this.tableColumnOrderBulk = row => `${this.tableRow(row)} td.column-orders_bulk`;
@@ -100,7 +100,7 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -109,7 +109,7 @@ module.exports = class Order extends BOBasePage {
 
   /**
    * Get number of orders in grid
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -128,7 +128,7 @@ module.exports = class Order extends BOBasePage {
    * Get text from Column
    * @param columnName
    * @param row
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumn(columnName, row) {
     if (columnName === 'osname') {
@@ -140,7 +140,8 @@ module.exports = class Order extends BOBasePage {
   /**
    * Get all row information from orders table
    * @param row
-   * @return {Promise<object>}
+   * @returns {Promise<{reference: string, newClient: string, delivery: string,
+   * totalPaid: string, payment: string, id: *, customer: string, status: string}>}
    */
   async getOrderFromTable(row) {
     return {

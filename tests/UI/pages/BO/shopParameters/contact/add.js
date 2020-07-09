@@ -17,7 +17,7 @@ module.exports = class AddContact extends BOBasePage {
     this.enableSaveMessagesLabel = id => `label[for='contact_is_messages_saving_enabled_${id}']`;
     this.descriptionTextareaEN = '#contact_description_1';
     this.descriptionTextareaFR = '#contact_description_2';
-    this.saveContactButton = 'div.card-footer button';
+    this.saveContactButton = '#save-button';
   }
 
   /*
@@ -43,7 +43,7 @@ module.exports = class AddContact extends BOBasePage {
   /**
    * Fill form for add/edit contact
    * @param contactData
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async createEditContact(contactData) {
     await this.setValue(this.titleInputEN, contactData.title);

@@ -16,8 +16,8 @@ module.exports = class OrderMessages extends BOBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #order_message_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='order_message[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='order_message[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -25,12 +25,12 @@ module.exports = class OrderMessages extends BOBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[data-original-title='Edit']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#order_message_grid_bulk_action_delete_selection';
     // Delete modal
@@ -70,7 +70,7 @@ module.exports = class OrderMessages extends BOBasePage {
 
   /**
    * get number of elements in grid
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.gridHeaderTitle);
@@ -78,7 +78,7 @@ module.exports = class OrderMessages extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -110,7 +110,7 @@ module.exports = class OrderMessages extends BOBasePage {
   /**
    * Delete Row in table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteOrderMessage(row = 1) {
     this.dialogListener(true);
@@ -125,10 +125,10 @@ module.exports = class OrderMessages extends BOBasePage {
   }
 
   /**
-   * get text from a column
+   * Get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTable(row, column) {
     return this.getTextContent(this.tableColumn(row, column));
@@ -137,7 +137,7 @@ module.exports = class OrderMessages extends BOBasePage {
   /* Bulk Actions Methods */
   /**
    * Delete with bulk actions
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async deleteWithBulkActions() {
     // Click on Select All
@@ -171,7 +171,7 @@ module.exports = class OrderMessages extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   getPaginationLabel() {
     return this.getTextContent(this.paginationLabel);
@@ -180,7 +180,7 @@ module.exports = class OrderMessages extends BOBasePage {
   /**
    * Select pagination limit
    * @param number
-   * @returns {Promise<string >}
+   * @returns {Promise<string>}
    */
   async selectPaginationLimit(number) {
     await this.selectByVisibleText(this.paginationLimitSelect, number);

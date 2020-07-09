@@ -187,9 +187,7 @@ class AdminProductWrapper
 
         if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
             Product::updateDefaultAttribute((int) $product->id);
-            if (isset($id_product_attribute)) {
-                $product->cache_default_attribute = (int) $id_product_attribute;
-            }
+            $product->cache_default_attribute = (int) $id_product_attribute;
 
             // We need to reload the product because some other calls have modified the database
             // It's done just for the setAvailableDate to avoid side effects
@@ -268,7 +266,7 @@ class AdminProductWrapper
     public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
         // ---- data formatting ----
-        $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
+        $id_product_attribute = $specificPriceValues['sp_id_product_attribute'] ?? 0;
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
         $id_currency = $specificPriceValues['sp_id_currency'] ? $specificPriceValues['sp_id_currency'] : 0;
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;

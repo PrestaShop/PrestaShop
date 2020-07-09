@@ -20,14 +20,14 @@ module.exports = class Addresses extends BOBasePage {
     this.addressesListTableColumnAction = row => this.addressesListTableColumn(row, 'actions');
     this.addressesListTableToggleDropDown = row => `${this.addressesListTableColumnAction(row)}`
       + ' a[data-toggle=\'dropdown\']';
-    this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a[data-url]`;
-    this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a[href*='edit']`;
+    this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a.grid-edit-row-link`;
     // Filters
     this.addressFilterColumnInput = filterBy => `${this.addressesListForm} #address_${filterBy}`;
-    this.filterSearchButton = `${this.addressesListForm} button[name='address[actions][search]']`;
-    this.filterResetButton = `${this.addressesListForm} button[name='address[actions][reset]']`;
+    this.filterSearchButton = `${this.addressesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.addressesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
     // Modal Dialog
@@ -49,7 +49,7 @@ module.exports = class Addresses extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (!(await this.elementNotVisible(this.filterResetButton, 2000))) {
@@ -58,8 +58,8 @@ module.exports = class Addresses extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.addressGridTitle);
@@ -67,7 +67,7 @@ module.exports = class Addresses extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -97,7 +97,7 @@ module.exports = class Addresses extends BOBasePage {
   }
 
   /**
-   * get text from a column
+   * Get text from a column
    * @param row, row in table
    * @param column, which column
    * @return {Promise<string>}
@@ -140,8 +140,8 @@ module.exports = class Addresses extends BOBasePage {
 
   /**
    * Delete address
-   * @param row, row in table
-   * @return {Promise<textContent>}
+   * @param row
+   * @returns {Promise<string>}
    */
   async deleteAddress(row) {
     this.dialogListener();

@@ -13,8 +13,8 @@ module.exports = class Monitoring extends BOBasePage {
     this.gridHeaderTitle = table => `${this.gridPanel(table)} div.card-header h3`;
     // Filters
     this.filterColumn = (table, filterBY) => `${this.gridTable(table)} #${table}_${filterBY}`;
-    this.filterSearchButton = table => `${this.gridTable(table)} button[name='${table}[actions][search]']`;
-    this.filterResetButton = table => `${this.gridTable(table)} button[name='${table}[actions][reset]']`;
+    this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
     // Table
     this.tableBody = table => `${this.gridTable(table)} tbody`;
     this.tableRow = (table, row) => `${this.tableBody(table)} tr:nth-child(${row})`;
@@ -25,15 +25,15 @@ module.exports = class Monitoring extends BOBasePage {
     this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
     // Actions buttons in Row
     this.actionsColumn = (table, row) => `${this.tableRow(table, row)} td.column-actions`;
-    this.editRowLink = (table, row) => `${this.actionsColumn(table, row)} a[data-original-title='Edit']`;
+    this.editRowLink = (table, row) => `${this.actionsColumn(table, row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = (table, row) => `${this.actionsColumn(table, row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = (table, row) => `${this.actionsColumn(table, row)} div.dropdown-menu`;
-    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a[data-confirm-button-label='Delete']`;
+    this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
     // Category selectors
-    this.viewCategoryRowLink = row => `${this.actionsColumn('empty_category', row)} a[data-original-title='View']`;
-    this.editCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)} a[href*='/edit']`;
+    this.viewCategoryRowLink = row => `${this.actionsColumn('empty_category', row)} a.grid-view-row-link`;
+    this.editCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)} a.grid-edit-row-link`;
     this.deleteCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)
-    } a.js-delete-category-row-action`;
+    } a.grid-delete-row-link`;
     this.deleteModeCategoryModal = '#empty_category_grid_delete_categories_modal';
     this.deleteModeInput = position => `#delete_categories_delete_mode_${position}`;
     this.deleteModeCategoryModalDiv = '#delete_categories_delete_mode';
@@ -53,7 +53,7 @@ module.exports = class Monitoring extends BOBasePage {
   /**
    * Get number of element in table grid
    * @param table, which table to get number of element from
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(table) {
     return this.getNumberFromText(this.gridHeaderTitle(table));
@@ -73,7 +73,7 @@ module.exports = class Monitoring extends BOBasePage {
   /**
    * Reset Filter And get number of elements in list
    * @param table, which table to reset
-   * @return {Promise<integer>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(table) {
     await this.resetFilter(table);
@@ -111,20 +111,10 @@ module.exports = class Monitoring extends BOBasePage {
    * @param table, which table to get text from
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async getTextColumnFromTable(table, row, column) {
     return this.getTextContent(this.tableColumn(table, row, column));
-  }
-
-  /**
-   * Go to edit element page in table
-   * @param table
-   * @param row, Which row of the list
-   * @return {Promise<void>}
-   */
-  async goToEditElementPage(table, row) {
-    await this.clickAndWaitForNavigation(this.editRowLink(table, row));
   }
 
   /**
@@ -144,7 +134,7 @@ module.exports = class Monitoring extends BOBasePage {
    * Delete Row in table
    * @param table
    * @param row, row to delete
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteProductInGrid(table, row) {
     await this.openDropdownMenu(table, row);
@@ -189,7 +179,7 @@ module.exports = class Monitoring extends BOBasePage {
    * @param table
    * @param row, row to delete
    * @param deletionModePosition, which mode to choose for delete
-   * @return {Promise<textContent>}
+   * @return {Promise<string>}
    */
   async deleteCategoryInGrid(table, row, deletionModePosition) {
     this.dialogListener(true);
@@ -206,8 +196,9 @@ module.exports = class Monitoring extends BOBasePage {
 
   /**
    * Get toggle column value for a row
+   * @param table
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
   async getToggleColumnValue(table, row = 1) {
     return this.elementVisible(this.enableColumnValidIcon(table, row), 100);
@@ -216,6 +207,7 @@ module.exports = class Monitoring extends BOBasePage {
   // Sort methods
   /**
    * Get content from all rows
+   * @param table
    * @param column
    * @return {Promise<[]>}
    */
@@ -234,6 +226,7 @@ module.exports = class Monitoring extends BOBasePage {
 
   /**
    * Sort table
+   * @param table
    * @param sortBy, column to sort with
    * @param sortDirection, asc or desc
    * @return {Promise<void>}

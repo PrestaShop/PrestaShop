@@ -20,14 +20,14 @@ module.exports = class SqlManager extends BOBasePage {
     this.sqlQueryListTableColumnActions = row => `${this.sqlQueryListTableRow(row)} td.column-actions`;
     this.sqlQueryListTableToggleDropDown = row => `${this.sqlQueryListTableColumnActions(row)
     } a[data-toggle='dropdown']`;
-    this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/view']`;
-    this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/edit']`;
-    this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a[data-method='DELETE']`;
+    this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-view-row-link`;
+    this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
+    this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
     this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
     // Filters
     this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
-    this.filterSearchButton = `${this.sqlQueryListForm} button[name='sql_request[actions][search]']`;
-    this.filterResetButton = `${this.sqlQueryListForm} button[name='sql_request[actions][reset]']`;
+    this.filterSearchButton = `${this.sqlQueryListForm} .grid-search-button`;
+    this.filterResetButton = `${this.sqlQueryListForm} .grid-reset-button`;
 
     // Delete modal
     this.confirmDeleteModal = '#sql_request-grid-confirm-modal';
@@ -62,8 +62,8 @@ module.exports = class SqlManager extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.sqlQueryGridTitle);
@@ -71,7 +71,7 @@ module.exports = class SqlManager extends BOBasePage {
 
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();

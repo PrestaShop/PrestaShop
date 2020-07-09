@@ -156,10 +156,23 @@ class TaxController extends FrameworkBundleAdminController
 
         try {
             $taxForm = $taxFormBuilder->getForm();
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        try {
             $taxForm->handleRequest($request);
             $result = $taxFormHandler->handle($taxForm);
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash(
+                    'success',
+                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                );
 
                 return $this->redirectToRoute('admin_taxes_index');
             }
@@ -194,6 +207,16 @@ class TaxController extends FrameworkBundleAdminController
 
         try {
             $taxForm = $taxFormBuilder->getFormFor((int) $taxId);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_taxes_index');
+        }
+
+        try {
             $taxForm->handleRequest($request);
             $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
 

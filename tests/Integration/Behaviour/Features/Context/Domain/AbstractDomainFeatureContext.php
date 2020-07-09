@@ -135,7 +135,7 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function parseLocalizedArray(string $parsedArray): array
     {
-        $arrayValues = explode(';', $parsedArray);
+        $arrayValues = array_map('trim', explode(';', $parsedArray));
         $localizedArray = [];
         foreach ($arrayValues as $arrayValue) {
             $data = explode(':', $arrayValue);

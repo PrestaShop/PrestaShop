@@ -203,14 +203,24 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
+        /** @var ViewableCustomer $customerInformation */
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+        $customerFormOptions = [
+            'is_password_required' => false,
+        ];
         try {
-            /** @var ViewableCustomer $customerInformation */
-            $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
-            $customerFormOptions = [
-                'is_password_required' => false,
-            ];
             $customerForm = $this->get('prestashop.core.form.identifiable_object.builder.customer_form_builder')
                 ->getFormFor((int) $customerId, [], $customerFormOptions);
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages($exception))
+            );
+
+            return $this->redirectToRoute('admin_customers_index');
+        }
+
+        try {
             $customerForm->handleRequest($request);
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);

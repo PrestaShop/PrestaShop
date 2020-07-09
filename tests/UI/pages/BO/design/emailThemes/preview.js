@@ -11,14 +11,14 @@ module.exports = class PreviewEmailTheme extends BOBasePage {
     this.emailThemeTable = 'table.grid-table';
     this.tableBody = `${this.emailThemeTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
-    this.backToConfigurationLink = '.card-footer a';
+    this.backToConfigurationLink = '#back-to-configuration-link';
   }
 
   /* Methods */
 
   /**
    * Get number of layouts in grid
-   * @return {Promise<*>}
+   * @return {Promise<number>}
    */
   async getNumberOfLayoutInGrid() {
     return (await this.page.$$(this.tableRows)).length;

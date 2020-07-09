@@ -147,6 +147,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
                             ->add(
                                 (new LinkRowAction('edit'))
                                     ->setIcon('edit')
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
                                     ->setOptions([
                                         'route' => 'admin_webservice_keys_edit',
                                         'route_param_name' => 'webserviceKeyId',

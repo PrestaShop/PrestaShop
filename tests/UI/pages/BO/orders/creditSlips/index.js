@@ -14,21 +14,23 @@ module.exports = class CreditSlips extends BOBasePage {
     this.creditSlipGridPanel = '#credit_slip_grid_panel';
     this.creditSlipsGridTitle = `${this.creditSlipGridPanel} h3.card-header-title`;
     this.creditSlipGridTable = '#credit_slip_grid_table';
-    this.filterResetButton = `${this.creditSlipGridTable} button[name='credit_slip[actions][reset]']`;
-    this.filterSearchButton = `${this.creditSlipGridTable} button[name='credit_slip[actions][search]']`;
+    this.filterResetButton = `${this.creditSlipGridTable} .grid-reset-button`;
+    this.filterSearchButton = `${this.creditSlipGridTable} .grid-search-button`;
     this.creditSlipsFilterColumnInput = filterBy => `#credit_slip_${filterBy}`;
     this.creditSlipsTableRow = row => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
     this.creditSlipDownloadButton = id => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
+
     // By date form
-    this.generateByDateForm = '[name=\'generate_pdf_by_date\']';
+    this.generateByDateForm = '#form-generate-credit-slips-by-date';
     this.dateFromInput = '#generate_pdf_by_date_from';
     this.dateToInput = '#generate_pdf_by_date_to';
-    this.generatePdfByDateButton = `${this.generateByDateForm} .btn.btn-primary`;
+    this.generatePdfByDateButton = `${this.generateByDateForm} #generate-credit-slip-by-date`;
+
     // Credit slip options form
-    this.creditSlipOptionsForm = '[name=\'form\']';
-    this.invoicePrefixInput = '#form_options_slip_prefix_1';
-    this.saveCreditSlipOptionsButton = `${this.creditSlipOptionsForm} .btn.btn-primary`;
+    this.creditSlipOptionsForm = '#form-credit-slips-options';
+    this.invoicePrefixInput = '#form_slip_prefix_1';
+    this.saveCreditSlipOptionsButton = `${this.creditSlipOptionsForm} #save-credit-slip-options-button`;
   }
 
   /*
@@ -36,7 +38,7 @@ module.exports = class CreditSlips extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @return {Promise<integer>}
+   * @returns {Promise<void>}
    */
   async resetFilter() {
     if (await this.elementVisible(this.filterResetButton, 2000)) {
@@ -45,8 +47,8 @@ module.exports = class CreditSlips extends BOBasePage {
   }
 
   /**
-   * get number of elements in grid
-   * @return {Promise<integer>}
+   * Get number of elements in grid
+   * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid() {
     return this.getNumberFromText(this.creditSlipsGridTitle);
@@ -54,7 +56,7 @@ module.exports = class CreditSlips extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @return {Promise<integer>}
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines() {
     await this.resetFilter();
@@ -90,7 +92,7 @@ module.exports = class CreditSlips extends BOBasePage {
    * get text from a column
    * @param row, row in table
    * @param column, which column
-   * @return {Promise<textContent>}
+   * @returns {Promise<string>}
    */
   async getTextColumnFromTableCreditSlips(row, column) {
     return this.getTextContent(this.creditSlipsTableColumn(row, column));
