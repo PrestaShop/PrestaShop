@@ -798,10 +798,12 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         foreach ($brothersData as $brotherItem) {
             $isTaxExcluded = !$this->isTaxIncludedInOrder($brotherItem);
 
+            $currency = new Currency($brotherItem->id_currency);
+
             if ($isTaxExcluded) {
-                $totalAmount = (string) $brotherItem->total_paid_tax_excl;
+                $totalAmount = $this->locale->formatPrice($brotherItem->total_paid_tax_excl, $currency->iso_code);
             } else {
-                $totalAmount = (string) $brotherItem->total_paid_tax_incl;
+                $totalAmount = $this->locale->formatPrice($brotherItem->total_paid_tax_incl, $currency->iso_code);
             }
 
             $orderState = new OrderState($brotherItem->current_state);
