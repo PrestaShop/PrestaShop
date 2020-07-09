@@ -32,7 +32,9 @@ use CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShopException;
+use Product;
 
 abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
 {
@@ -66,5 +68,28 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
         }
 
         return $field;
+    }
+
+    /**
+     * @param Product $product
+     * @param bool $isCustomizationRequired
+     */
+    protected function setProductCustomizability(Product $product, bool $isCustomizationRequired): void
+    {
+        $previousCustomizability = (int) $product->customizable;
+        $alreadyRequiresCustomization = $previousCustomizability === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
+        $alreadyAllowsCustomization = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION && !$isCustomizationRequired;
+
+        if ($alreadyRequiresCustomization) {
+            return;
+        } elseif ($alreadyAllowsCustomization) {
+            return;
+        }
+
+        $product->customizable = $isCustomizationRequired ?
+            ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION :
+            ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION
+        ;
+        $this->fieldsToUpdate['customizable'] = true;
     }
 }
