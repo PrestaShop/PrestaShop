@@ -175,11 +175,17 @@ class OrderProductQuantityUpdater
         }
 
         /**
-         * Update product and customization in the cart, last argument skip quantity check
-         * is true because the quantity has already been checked, and mainly because when the
-         * cart checks the availability it substracts its own quantity because a product in a
-         * cart is not really out of the stock. In this case we are editing an order so the
-         * product are already substracted from the stock.
+         * Here we update product and customization in the cart.
+         *
+         * The last argument "skip quantity check" is set to true because
+         * 1) the quantity has already been checked,
+         * 2) (main reason) when the cart checks the availability ; it substracts
+         * its own quantity from available stock.
+         *
+         * This is because a product in a cart is not really out of the stock, because it is not checked out yet.
+         *
+         * Here we are editing an order, not a cart, so what has been ordered
+         * has already been substracted from the stock.
          */
         $updateQuantityResult = $cart->updateQty(
             abs($deltaQuantity),
