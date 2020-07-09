@@ -115,7 +115,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
             )
             ->add(
                 (new DataColumn('product_name'))
-                    ->setName($this->trans('Product name', [], 'Admin.Global'))
+                    ->setName($this->trans('Product name', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
                         'field' => 'product_name',
                     ])
@@ -150,7 +150,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
                                     'merchandiseReturnDetailId' => 'id_order_detail',
                                     'customizationId' => 'id_customization',
                                 ],
-                                'confirm_message' => $this->trans('Are you sure you want to delete the selected item?', [], 'Admin.Notifications.Warning'),
+                                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
                             ])
                             ),
                     ])
@@ -170,7 +170,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->trans('Search Reference', [], 'Admin.Actions'),
+                    'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
                 ],
             ])
             ->setAssociatedColumn('product_reference')
@@ -179,7 +179,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->trans('Search Name', [], 'Admin.Actions'),
+                    'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
                 ],
             ])
             ->setAssociatedColumn('product_name')
@@ -218,7 +218,7 @@ final class MerchandiseReturnProductsGridDefinitionFactory extends AbstractFilte
         return (new BulkActionCollection())
             ->add(
                 (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setName($this->trans('Delete selection', [], 'Admin.Actions'))
                     ->setOptions([
                         'submit_route' => 'admin_merchandise_returns_delete_product_bulk',
                         'route_params' => [

@@ -125,7 +125,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($merchandiseReturnId, $form);
 
             if ($result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_merchandise_returns_index');
             }
@@ -140,7 +140,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA) ', 'Admin.Orderscustomers.Feature')),
+            'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA)', 'Admin.Orderscustomers.Feature')),
             'merchandiseReturnForm' => $form->createView(),
             'editableMerchandiseReturn' => $editableMerchandiseReturn,
             'merchandiseReturnsProductsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),

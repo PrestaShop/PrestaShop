@@ -27,7 +27,7 @@
   <div class="card">
   <h3 class="card-header">
     <i class="material-icons">person</i>
-    {{ 'Merchandise Return'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
   <div class="card-block row">
     <div class="card-text">
@@ -39,7 +39,7 @@
         <div class="col-sm form-control-value">
           <p>{{ editableMerchandiseReturn.customerFullName }}</p>
           <a href="{{ path('admin_customers_view', {'customerId': editableMerchandiseReturn.customerId.value }) }}" class="btn btn-outline-secondary">
-            {{ 'View details on the customer page'|trans({}, 'Admin.Actions') }}
+            {{ 'View details on the customer page.'|trans({}, 'Admin.Orderscustomers.Help') }}
           </a>
         </div>
       </div>
@@ -51,14 +51,14 @@
         <div class="col-sm form-control-value">
           <p>#{{ editableMerchandiseReturn.orderId.value }} from {{ editableMerchandiseReturn.orderDate.format('d/m/y') }}</p>
           <a href="{{ path('admin_orders_view', {'orderId': editableMerchandiseReturn.orderId.value }) }}" class="btn btn-outline-secondary">
-            {{ 'View details on the order page'|trans({}, 'Admin.Actions') }}
+            {{ 'View details on the order page.'|trans({}, 'Admin.Orderscustomers.Help') }}
           </a>
         </div>
       </div>
 
       <div class="form-group row">
         <label for="merchandise_return_merchandise_return_order_state" class="form-control-label">
-          {{ 'Customer Explanation'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          {{ 'Customer explanation'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </label>
         <div class="col-sm form-control-value">
           <p>{{ editableMerchandiseReturn.question }}</p>
