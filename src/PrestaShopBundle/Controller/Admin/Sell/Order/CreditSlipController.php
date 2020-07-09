@@ -84,6 +84,7 @@ class CreditSlipController extends FrameworkBundleAdminController
         $pdfByDateForm = $this->createForm(GeneratePdfByDateType::class, [], [
             'method' => Request::METHOD_GET,
         ]);
+        $pdfByDateForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Sell/Order/CreditSlip/index.html.twig', [
             'enableSidebar' => true,
@@ -166,9 +167,7 @@ class CreditSlipController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_credit_slips_index', [
-            $pdfByDateForm->getName() => $pdfByDateForm->getData(),
-        ]);
+        return $this->redirectToRoute('admin_credit_slips_index');
     }
 
     /**
