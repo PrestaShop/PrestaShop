@@ -74,8 +74,8 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
             ));
         }
 
-        $this->setProductCustomizability($product, $command->isRequired());
-        $this->incrementCustomizationFieldsCount($product, $command->getType());
+        $this->setProductCustomizability($product, (bool) $customizationField->required);
+        $this->incrementCustomizationFieldsCount($product, (int) $customizationField->type);
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
 
         return new CustomizationFieldId((int) $customizationField->id);
@@ -83,11 +83,11 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
 
     /**
      * @param Product $product
-     * @param CustomizationFieldType $customizationFieldType
+     * @param int $customizationFieldType
      */
-    private function incrementCustomizationFieldsCount(Product $product, CustomizationFieldType $customizationFieldType): void
+    private function incrementCustomizationFieldsCount(Product $product, int $customizationFieldType): void
     {
-        if ($customizationFieldType->isTextType()) {
+        if ($customizationFieldType === CustomizationFieldType::TYPE_TEXT) {
             ++$product->text_fields;
             $this->fieldsToUpdate['text_fields'] = true;
 

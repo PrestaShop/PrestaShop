@@ -72,13 +72,13 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
 
     /**
      * @param Product $product
-     * @param bool $isCustomizationRequired
+     * @param bool $isRequiredAdded
      */
-    protected function setProductCustomizability(Product $product, bool $isCustomizationRequired): void
+    protected function setProductCustomizability(Product $product, bool $isRequiredAdded): void
     {
         $previousCustomizability = (int) $product->customizable;
         $alreadyRequiresCustomization = $previousCustomizability === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
-        $alreadyAllowsCustomization = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION && !$isCustomizationRequired;
+        $alreadyAllowsCustomization = ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION && !$isRequiredAdded;
 
         if ($alreadyRequiresCustomization) {
             return;
@@ -86,7 +86,7 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
             return;
         }
 
-        $product->customizable = $isCustomizationRequired ?
+        $product->customizable = $isRequiredAdded ?
             ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION :
             ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION
         ;

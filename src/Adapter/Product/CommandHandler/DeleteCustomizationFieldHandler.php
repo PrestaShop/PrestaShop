@@ -33,8 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustom
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
 use Product;
@@ -79,24 +80,53 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
             );
         }
 
-        $this->updateProductCustomizableProperty($product);
+        $this->setCustomizability($product, (bool) $fieldEntity->required);
+        $this->decrementCustomizationFieldsCount($product, (int) $fieldEntity->type);
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
     }
 
     /**
      * @param Product $product
-     *
-     * @throws CannotUpdateProductException
-     * @throws ProductException
+     * @param bool $requiredWasDeleted
      */
-    private function updateProductCustomizableProperty(Product $product): void
+    private function setCustomizability(Product $product, bool $requiredWasDeleted): void
     {
+        $previousCustomizability = (int) $product->customizable;
+        $stillRequires = $previousCustomizability === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION && !$requiredWasDeleted;
+
+        if ($stillRequires) {
+            return;
+        }
+
         $productIsCustomizable = !empty($product->getNonDeletedCustomizationFieldIds());
+        $stillAllows = $previousCustomizability === ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION && $productIsCustomizable;
+
+        if ($stillAllows) {
+            return;
+        }
 
         if ($productIsCustomizable) {
             return;
         }
 
-        $product->customizable = false;
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
+        $product->customizable = ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
+        $this->fieldsToUpdate['customizable'] = true;
+    }
+
+    /**
+     * @param Product $product
+     * @param int $customizationFieldType
+     */
+    private function decrementCustomizationFieldsCount(Product $product, int $customizationFieldType): void
+    {
+        if ($customizationFieldType === CustomizationFieldType::TYPE_TEXT) {
+            --$product->text_fields;
+            $this->fieldsToUpdate['text_fields'] = true;
+
+            return;
+        }
+
+        --$product->uploadable_files;
+        $this->fieldsToUpdate['uploadable_files'] = true;
     }
 }
