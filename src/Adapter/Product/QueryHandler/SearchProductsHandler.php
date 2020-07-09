@@ -214,7 +214,8 @@ final class SearchProductsHandler implements SearchProductsHandlerInterface
                     $this->contextLocale->formatPrice($priceTaxExcluded, $currencyIsoCode),
                     $priceTaxExcluded,
                     $priceTaxIncluded,
-                    $combination['location']
+                    $combination['location'],
+                    $combination['reference']
                 );
 
                 $productCombinations[$productCombination->getAttributeCombinationId()] = $productCombination;

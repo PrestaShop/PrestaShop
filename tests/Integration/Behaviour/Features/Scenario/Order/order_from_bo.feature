@@ -438,6 +438,61 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 101 products in total
     And order "bo_order1" should contain 99 products "Test Product Max Stock"
 
+  @update-combi
+  Scenario: Update combination in order with the exact amount of stock
+    Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
+    And product "Test Product Max Stock" has combinations with following details:
+      | reference | quantity | attributes         |
+      | whiteM    | 150      | Size:M;Color:White |
+      | whiteL    | 150      | Size:L;Color:White |
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 150
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 300
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | combination   | whiteM                  |
+      | amount        | 100                     |
+      | price         | 15                      |
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 50
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 200
+    And order "bo_order1" should have 102 products in total
+    And order "bo_order1" should contain 100 products "Test Product Max Stock - Size : M- Color : White"
+    When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 160                     |
+      | price         | 15                      |
+    Then I should get error that product is out of stock
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 50
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 200
+    And order "bo_order1" should have 102 products in total
+    And order "bo_order1" should contain 100 products "Test Product Max Stock - Size : M- Color : White"
+    # I can decrease the number in stock (note: 100 + 60 > 150 to check the available quantity considers the amount in the order)
+    When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 60                     |
+      | price         | 15                     |
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 90
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 240
+    And order "bo_order1" should have 62 products in total
+    And order "bo_order1" should contain 60 products "Test Product Max Stock - Size : M- Color : White"
+    When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 150                     |
+      | price         | 15                      |
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 0
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 150
+    And order "bo_order1" should have 152 products in total
+    And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
+    When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 149                     |
+      | price         | 15                      |
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 1
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 151
+    And order "bo_order1" should have 151 products in total
+    And order "bo_order1" should contain 149 products "Test Product Max Stock - Size : M- Color : White"
+
   Scenario: Add product in order with the exact amount of stock (first add)
     Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
     Then the available stock for product "Test Product Max Stock" should be 100
