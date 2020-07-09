@@ -29,29 +29,52 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use CustomizationField as CustomizationFieldEntity;
+use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\AddCustomizationFieldCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCustomizationFieldHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShopException;
 
 /**
  * Handles @var AddCustomizationFieldCommand using legacy object model
  */
-final class AddCustomizationFieldHandler implements AddCustomizationFieldHandlerInterface
+final class AddCustomizationFieldHandler extends AbstractProductHandler implements AddCustomizationFieldHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
     public function handle(AddCustomizationFieldCommand $command): CustomizationFieldId
     {
+        $product = $this->getProduct($command->getProductId());
+
         $customizationField = new CustomizationFieldEntity();
 
-        $customizationField->id_product = $command->getProductId()->getValue();
+        $customizationField->id_product = $product->id;
         $customizationField->type = $command->getType()->getValue();
         $customizationField->required = $command->isRequired();
         $customizationField->is_module = $command->isAddedByModule();
         $customizationField->name = $command->getLocalizedNames();
 
-        $customizationField->add();
+        try {
+            if (false === $customizationField->add()) {
+                throw new CannotAddCustomizationFieldException(sprintf(
+                    'Failed adding new customization field to product "#%d"',
+                    $product->id
+                ));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CustomizationException(sprintf(
+                'Error occurred when adding new customization field to product "#%d"',
+                $product->id
+            ));
+        }
+
+        $product->customizable = true;
+        $this->fieldsToUpdate['customizable'] = true;
+        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
 
         return new CustomizationFieldId((int) $customizationField->id);
     }
