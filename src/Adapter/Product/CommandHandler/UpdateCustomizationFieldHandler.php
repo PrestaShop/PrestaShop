@@ -70,7 +70,7 @@ class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler 
         }
 
         $product = $this->getProduct(new ProductId((int) $fieldEntity->id_product));
-        $this->setProductCustomizability($product, $command->isRequired());
+        $this->setProductCustomizability($product);
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
     }
 
