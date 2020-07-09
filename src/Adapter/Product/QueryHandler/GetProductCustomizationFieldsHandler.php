@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 
 /**
- * Defines cotnract to handle @var GetProductCustomizationFields query
+ * Defines contract to handle @var GetProductCustomizationFields query
  */
 final class GetProductCustomizationFieldsHandler extends AbstractCustomizationFieldHandler implements GetProductCustomizationFieldsHandlerInterface
 {
