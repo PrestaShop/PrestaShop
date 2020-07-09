@@ -475,6 +475,11 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         $this->assertTaxRulesGroup($data, $productForEditing);
         $this->assertPriceFields($data, $productForEditing->getPricesInformation());
         $this->assertShippingInformation($data, $productForEditing->getShippingInformation());
+
+        // Assertions checking isset() which can hide some errors if it doesn't find array key,
+        // to make sure all provided fields were checked we need to unset every asserted field
+        // and finally, if provided data is not empty, it means there are some unnasserted values left
+        Assert::assertEmpty($data, sprintf('Some provided fields haven\'t been asserted: %s', implode(',', $data)));
     }
 
     /**
@@ -993,7 +998,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      * @param string $propertyName
      */
-    private function assertBoolProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    private function assertBoolProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
@@ -1003,6 +1008,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
+
+            unset($data[$propertyName]);
         }
     }
 
@@ -1011,7 +1018,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      * @param string $propertyName
      */
-    private function assertStringProperty(ProductForEditing $productForEditing, array $data, string $propertyName): void
+    private function assertStringProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = $data[$propertyName];
@@ -1022,6 +1029,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualValue,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
             );
+
+            unset($data[$propertyName]);
         }
     }
 
@@ -1029,7 +1038,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      * @param ProductForEditing $productForEditing
      */
-    private function assertTaxRulesGroup(array $data, ProductForEditing $productForEditing)
+    private function assertTaxRulesGroup(array &$data, ProductForEditing $productForEditing)
     {
         if (!isset($data['tax rules group'])) {
             return;
@@ -1053,13 +1062,15 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         }
+
+        unset($data['tax rules group']);
     }
 
     /**
      * @param array $data
      * @param ProductPricesInformation $pricesInfo
      */
-    private function assertPriceFields(array $data, ProductPricesInformation $pricesInfo): void
+    private function assertPriceFields(array &$data, ProductPricesInformation $pricesInfo): void
     {
         if (isset($data['on_sale'])) {
             $expectedOnSale = PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']);
@@ -1070,6 +1081,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $pricesInfo->isOnSale(),
                 sprintf('Expected product %s', $onSaleInWords)
             );
+
+            unset($data['on_sale']);
         }
 
         if (isset($data['unity'])) {
@@ -1081,6 +1094,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualUnity,
                 sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedUnity, $actualUnity)
             );
+
+            unset($data['unity']);
         }
 
         $this->assertNumberPriceFields($data, $pricesInfo);
@@ -1090,7 +1105,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $expectedPrices
      * @param ProductPricesInformation $actualPrices
      */
-    private function assertNumberPriceFields(array $expectedPrices, ProductPricesInformation $actualPrices)
+    private function assertNumberPriceFields(array &$expectedPrices, ProductPricesInformation $actualPrices)
     {
         $numberPriceFields = [
             'price',
@@ -1112,6 +1127,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                         sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
                     );
                 }
+
+                unset($expectedPrices[$field]);
             }
         }
     }
@@ -1120,7 +1137,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $data
      * @param ProductShippingInformation $productShippingInformation
      */
-    private function assertShippingInformation(array $data, ProductShippingInformation $productShippingInformation): void
+    private function assertShippingInformation(array &$data, ProductShippingInformation $productShippingInformation): void
     {
         $this->assertNumberShippingFields($data, $productShippingInformation);
         $this->assertDeliveryTimeNotes($data, $productShippingInformation);
@@ -1130,7 +1147,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
      * @param array $expectedValues
      * @param ProductShippingInformation $actualValues
      */
-    private function assertNumberShippingFields(array $expectedValues, ProductShippingInformation $actualValues)
+    private function assertNumberShippingFields(array &$expectedValues, ProductShippingInformation $actualValues)
     {
         $numberShippingFields = [
             'width',
@@ -1152,11 +1169,17 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                         sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
                     );
                 }
+
+                unset($expectedValues[$field]);
             }
         }
     }
 
-    private function assertDeliveryTimeNotes(array $data, ProductShippingInformation $productShippingInformation)
+    /**
+     * @param array $data
+     * @param ProductShippingInformation $productShippingInformation
+     */
+    private function assertDeliveryTimeNotes(array &$data, ProductShippingInformation $productShippingInformation)
     {
         $notesTypeNamedValues = [
             'none' => DeliveryTimeNotesType::TYPE_NONE,
@@ -1168,16 +1191,20 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             $expectedType = $notesTypeNamedValues[$data['delivery time notes type']];
             $actualType = $productShippingInformation->getDeliveryTimeNotesType();
             Assert::assertEquals($expectedType, $actualType, 'Unexpected delivery time notes type value');
+
+            unset($data['delivery time notes type']);
         }
 
-        if (isset($data['delivery time in stock notes '])) {
-            $expectedLocalizedOutOfStockNotes = $this->parseLocalizedArray($data['delivery time in stock notes ']);
+        if (isset($data['delivery time in stock notes'])) {
+            $expectedLocalizedOutOfStockNotes = $this->parseLocalizedArray($data['delivery time in stock notes']);
             $actualLocalizedOutOfStockNotes = $productShippingInformation->getLocalizedDeliveryTimeInStockNotes();
             Assert::assertEquals(
                 $expectedLocalizedOutOfStockNotes,
                 $actualLocalizedOutOfStockNotes,
                 'Unexpected product delivery time in stock notes'
             );
+
+            unset($data['delivery time in stock notes']);
         }
 
         if (isset($data['delivery time out of stock notes'])) {
@@ -1188,6 +1215,8 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
                 $actualLocalizedOutOfStockNotes,
                 'Unexpected product delivery time out of stock notes'
             );
+
+            unset($data['delivery time out of stock notes']);
         }
     }
 
