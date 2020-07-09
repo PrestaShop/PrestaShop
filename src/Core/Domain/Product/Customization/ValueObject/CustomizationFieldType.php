@@ -73,6 +73,14 @@ class CustomizationFieldType
     }
 
     /**
+     * @return bool
+     */
+    public function isTextType(): bool
+    {
+        return $this->value === self::TYPE_TEXT;
+    }
+
+    /**
      * @param int $value
      *
      * @throws CustomizationFieldConstraintException
