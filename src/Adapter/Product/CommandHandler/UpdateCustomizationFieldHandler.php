@@ -49,7 +49,6 @@ class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler 
     public function handle(UpdateCustomizationFieldCommand $command): void
     {
         $customizationField = $this->getCustomizationField($command->getCustomizationFieldId());
-        $previousType = $customizationField->type;
         $this->fillEntityWithCommandData($command, $customizationField);
 
         if (!$customizationField->validateFields(false) || !$customizationField->validateFieldsLang(false)) {
