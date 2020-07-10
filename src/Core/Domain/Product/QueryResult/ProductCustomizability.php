@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 
 /**
- * Transfers data of product customizability value
+ * Transfers data of product customization options
  */
 class ProductCustomizability
 {
