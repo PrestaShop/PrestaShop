@@ -975,7 +975,7 @@ class HookCore extends ObjectModel
         if (Module::isEnabled($module->name)) {
             return $module->renderWidget($hook_name, $params);
         }
-        
+
         return null;
     }
 
