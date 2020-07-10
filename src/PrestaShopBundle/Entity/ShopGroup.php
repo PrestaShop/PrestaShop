@@ -55,7 +55,7 @@ class ShopGroup
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=50)
+     * @ORM\Column(name="color", type="string", length=50)
      */
     private $color;
 
