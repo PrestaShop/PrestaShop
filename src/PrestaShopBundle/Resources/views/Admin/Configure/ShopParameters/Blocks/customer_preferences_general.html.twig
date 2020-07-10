@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    {{ ps.label_with_help(('Send an email after registration'|trans), ('Send an email with summary of the account information (email) after registration.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ ps.label_with_help(('Send an email after registration'|trans), ('Send an email with summary of the account information after registration.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     <div class="col-sm">
                       {{ form_errors(generalForm.send_email_after_registration) }}
                       {{ form_widget(generalForm.send_email_after_registration) }}
