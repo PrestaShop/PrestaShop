@@ -132,6 +132,7 @@ class ShopGroup
      * Set color
      *
      * @param string $color
+     *
      * @return ShopGroup
      */
     public function setColor(string $color): ShopGroup
