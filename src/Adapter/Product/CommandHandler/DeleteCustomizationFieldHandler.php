@@ -93,8 +93,6 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
         if ($customizationFieldType === CustomizationFieldType::TYPE_TEXT && (int) $product->text_fields !== 0) {
             --$product->text_fields;
             $this->fieldsToUpdate['text_fields'] = true;
-
-            return;
         } elseif ($customizationFieldType === CustomizationFieldType::TYPE_FILE && (int) $product->uploadable_files !== 0) {
             --$product->uploadable_files;
             $this->fieldsToUpdate['uploadable_files'] = true;
