@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 /**
  * Transfers data of product customization options
  */
-class ProductCustomizability
+class ProductCustomizationOptions
 {
     /**
      * @var int
@@ -43,56 +43,52 @@ class ProductCustomizability
     /**
      * @var int
      */
-    private $availableTextCustomizations;
+    private $availableTextCustomizationsCount;
 
     /**
      * @var int
      */
-    private $availableFileCustomizations;
+    private $availableFileCustomizationsCount;
 
     /**
-     * @return ProductCustomizability
+     * @return ProductCustomizationOptions
      */
-    public static function createNotCustomizable(): ProductCustomizability
+    public static function createNotCustomizable(): ProductCustomizationOptions
     {
-        return new self(
-            ProductCustomizabilitySettings::NOT_CUSTOMIZABLE,
-            0,
-            0
-        );
+        return new self(ProductCustomizabilitySettings::NOT_CUSTOMIZABLE, 0, 0);
     }
 
     /**
-     * @param int $availableTextCustomizations
-     * @param int $availableFileCustomizations
+     * @param int $availableTextCustomizationsCount
+     * @param int $availableFileCustomizationsCount
      *
-     * @return ProductCustomizability
+     * @return ProductCustomizationOptions
      */
     public static function createAllowsCustomization(
-        int $availableTextCustomizations,
-        int $availableFileCustomizations
-    ): ProductCustomizability {
+        int $availableTextCustomizationsCount,
+        int $availableFileCustomizationsCount
+    ): ProductCustomizationOptions {
         return new self(
             ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION,
-            $availableTextCustomizations,
-            $availableFileCustomizations
+            $availableTextCustomizationsCount,
+            $availableFileCustomizationsCount
         );
     }
 
     /**
-     * @param int $availableTextCustomizations
-     * @param int $availableFileCustomizations
+     * @param int $availableTextCustomizationsCount
+     * @param int $availableFileCustomizationsCount
      *
-     * @return ProductCustomizability
+     * @return ProductCustomizationOptions
      */
     public static function createRequiresCustomization(
-        int $availableTextCustomizations,
-        int $availableFileCustomizations
-    ): ProductCustomizability {
+        int $availableTextCustomizationsCount,
+        int $availableFileCustomizationsCount
+    ): ProductCustomizationOptions {
         return new self(
             ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION,
-            $availableTextCustomizations,
-            $availableFileCustomizations
+            $availableTextCustomizationsCount,
+            $availableFileCustomizationsCount
         );
     }
 
@@ -107,17 +103,17 @@ class ProductCustomizability
     /**
      * @return int
      */
-    public function getAvailableTextCustomizations(): int
+    public function getAvailableTextCustomizationsCount(): int
     {
-        return $this->availableTextCustomizations;
+        return $this->availableTextCustomizationsCount;
     }
 
     /**
      * @return int
      */
-    public function getAvailableFileCustomizations(): int
+    public function getAvailableFileCustomizationsCount(): int
     {
-        return $this->availableFileCustomizations;
+        return $this->availableFileCustomizationsCount;
     }
 
     /**
@@ -154,7 +150,7 @@ class ProductCustomizability
     private function __construct(int $value, int $availableTextCustomizations, int $availableFileCustomizations)
     {
         $this->value = $value;
-        $this->availableTextCustomizations = $availableTextCustomizations;
-        $this->availableFileCustomizations = $availableFileCustomizations;
+        $this->availableTextCustomizationsCount = $availableTextCustomizations;
+        $this->availableFileCustomizationsCount = $availableFileCustomizations;
     }
 }
