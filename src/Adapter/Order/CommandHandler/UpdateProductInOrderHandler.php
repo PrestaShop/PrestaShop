@@ -190,31 +190,11 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         //check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
-            $productQuantity = $this->getProductQuantityInOrder($order, (int) $orderDetail->product_id, (int) $orderDetail->product_attribute_id);
+            $quantityDiff = $command->getQuantity() - (int) $orderDetail->product_quantity;
 
-            if ($availableQuantity < $command->getQuantity() - $productQuantity) {
+            if ($quantityDiff > $availableQuantity) {
                 throw new ProductOutOfStockException('Not enough products in stock');
             }
         }
-    }
-
-    /**
-     * @param Order $order
-     * @param int $productId
-     * @param int $productAttributeId
-     *
-     * @return int
-     */
-    private function getProductQuantityInOrder(Order $order, int $productId, int $productAttributeId): int
-    {
-        $productQuantity = 0;
-        foreach ($order->getOrderDetailList() as $orderDetail) {
-            if ((int) $orderDetail['product_id'] === (int) $productId
-                && (int) $orderDetail['product_attribute_id'] === (int) $productAttributeId) {
-                $productQuantity += (int) $orderDetail['product_quantity'];
-            }
-        }
-
-        return $productQuantity;
     }
 }

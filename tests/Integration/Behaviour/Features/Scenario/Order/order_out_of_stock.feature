@@ -231,3 +231,67 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 102 products in total
     And order "bo_order1" should contain 100 products "Test Product Max Stock - Size : M- Color : White"
 
+  Scenario: Add product two times and empty stock but edit the first one after
+    Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
+    Then the available stock for product "Test Product Max Stock" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 1                       |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be 99
+    And order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 products "Test Product Max Stock"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 99                      |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be 0
+    And order "bo_order1" should have 102 products in total
+    And order "bo_order1" should contain 100 products "Test Product Max Stock"
+    # We can't target a specific OrderDetail but the first one is used so it matches our use case
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 100                     |
+      | price         | 15                      |
+    Then I should get error that product is out of stock
+    Then the available stock for product "Test Product Max Stock" should be 0
+    And order "bo_order1" should have 102 products in total
+    And order "bo_order1" should contain 100 products "Test Product Max Stock"
+
+  Scenario: Add combination two times and empty stock but edit the first one after
+    Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
+    And product "Test Product Max Stock" has combinations with following details:
+      | reference | quantity | attributes         |
+      | whiteM    | 150      | Size:M;Color:White |
+      | whiteL    | 150      | Size:L;Color:White |
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 150
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 300
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | combination   | whiteM                  |
+      | amount        | 1                       |
+      | price         | 15                      |
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 149
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 299
+    And order "bo_order1" should have 3 products in total
+    And order "bo_order1" should contain 1 products "Test Product Max Stock - Size : M- Color : White"
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | combination   | whiteM                  |
+      | amount        | 149                     |
+      | price         | 15                      |
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 0
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 150
+    And order "bo_order1" should have 152 products in total
+    And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
+    When I edit combination "whiteM" of product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 150                     |
+      | price         | 15                      |
+    Then I should get error that product is out of stock
+    Then the available stock for combination "whiteM" of product "Test Product Max Stock" should be 0
+    And the available stock for combination "whiteL" of product "Test Product Max Stock" should be 150
+    And the available stock for product "Test Product Max Stock" should be 150
+    And order "bo_order1" should have 152 products in total
+    And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
