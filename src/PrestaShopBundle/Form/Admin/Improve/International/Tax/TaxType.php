@@ -85,7 +85,7 @@ class TaxType extends TranslatorAwareType
                 ],
             ])
             ->add('rate', TextType::class, [
-                'label' => $this->trans('Rate', [], 'Admin.International.Feature'),
+                'label' => $this->trans('Rate', 'Admin.International.Feature'),
                 'help' => $this->trans(
                     'Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)',
                     'Admin.International.Help'
