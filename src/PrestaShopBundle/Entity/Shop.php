@@ -129,6 +129,7 @@ class Shop
 
     /**
      * @param string $color
+     *
      * @return Shop
      */
     public function setColor(string $color): Shop
