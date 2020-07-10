@@ -36,9 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 class ProductCustomizationOptions
 {
     /**
-     * @var int
+     * @var int value representing if product requires, allows, disallows customizations
+     *          see @var ProductCustomizabilitySettings for more info
      */
-    private $value;
+    private $customizabilityValue;
 
     /**
      * @var int
@@ -95,9 +96,9 @@ class ProductCustomizationOptions
     /**
      * @return int
      */
-    public function getValue(): int
+    public function getCustomizabilityValue(): int
     {
-        return $this->value;
+        return $this->customizabilityValue;
     }
 
     /**
@@ -121,7 +122,7 @@ class ProductCustomizationOptions
      */
     public function isNotCustomizable(): bool
     {
-        return $this->value === ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
+        return $this->customizabilityValue === ProductCustomizabilitySettings::NOT_CUSTOMIZABLE;
     }
 
     /**
@@ -129,7 +130,7 @@ class ProductCustomizationOptions
      */
     public function allowsCustomization(): bool
     {
-        return $this->value === ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
+        return $this->customizabilityValue === ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION;
     }
 
     /**
@@ -137,7 +138,7 @@ class ProductCustomizationOptions
      */
     public function requiresCustomization(): bool
     {
-        return $this->value === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
+        return $this->customizabilityValue === ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
     }
 
     /**
@@ -149,7 +150,7 @@ class ProductCustomizationOptions
      */
     private function __construct(int $value, int $availableTextCustomizations, int $availableFileCustomizations)
     {
-        $this->value = $value;
+        $this->customizabilityValue = $value;
         $this->availableTextCustomizationsCount = $availableTextCustomizations;
         $this->availableFileCustomizationsCount = $availableFileCustomizations;
     }
