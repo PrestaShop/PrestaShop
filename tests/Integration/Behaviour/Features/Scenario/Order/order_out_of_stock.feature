@@ -295,3 +295,93 @@ Feature: Order from Back Office (BO)
     And the available stock for product "Test Product Max Stock" should be 150
     And order "bo_order1" should have 152 products in total
     And order "bo_order1" should contain 150 products "Test Product Max Stock - Size : M- Color : White"
+
+  Scenario: Update product that is allowed out of stock in order
+    Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
+    Then the available stock for product "Test Product Max Stock" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 80                      |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be 20
+    And order "bo_order1" should have 82 products in total
+    And order "bo_order1" should contain 80 products "Test Product Max Stock"
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then I should get error that product is out of stock
+    And the available stock for product "Test Product Max Stock" should be 20
+    And order "bo_order1" should have 82 products in total
+    And order "bo_order1" should contain 80 products "Test Product Max Stock"
+    Given product "Test Product Max Stock" can be ordered out of stock
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be -10
+    And order "bo_order1" should have 112 products in total
+    And order "bo_order1" should contain 110 products "Test Product Max Stock"
+
+  Scenario: Add product that is allowed out of stock in order
+    Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
+    Then the available stock for product "Test Product Max Stock" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then I should get error that product is out of stock
+    Then the available stock for product "Test Product Max Stock" should be 100
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should contain 0 products "Test Product Max Stock"
+    Given product "Test Product Max Stock" can be ordered out of stock
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be -10
+    And order "bo_order1" should have 112 products in total
+    And order "bo_order1" should contain 110 products "Test Product Max Stock"
+
+  Scenario: Update product in order when shop configuration allows out of stock
+    Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
+    Then the available stock for product "Test Product Max Stock" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 80                      |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be 20
+    And order "bo_order1" should have 82 products in total
+    And order "bo_order1" should contain 80 products "Test Product Max Stock"
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then I should get error that product is out of stock
+    And the available stock for product "Test Product Max Stock" should be 20
+    And order "bo_order1" should have 82 products in total
+    And order "bo_order1" should contain 80 products "Test Product Max Stock"
+    Given order out of stock products is allowed
+    When I edit product "Test Product Max Stock" to order "bo_order1" with following products details:
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be -10
+    And order "bo_order1" should have 112 products in total
+    And order "bo_order1" should contain 110 products "Test Product Max Stock"
+
+  Scenario: Add product in order when shop configuration allows out of stock
+    Given there is a product in the catalog named "Test Product Max Stock" with a price of 15.0 and 100 items in stock
+    Then the available stock for product "Test Product Max Stock" should be 100
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then I should get error that product is out of stock
+    Then the available stock for product "Test Product Max Stock" should be 100
+    And order "bo_order1" should have 2 products in total
+    And order "bo_order1" should contain 0 products "Test Product Max Stock"
+    Given order out of stock products is allowed
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product Max Stock  |
+      | amount        | 110                     |
+      | price         | 15                      |
+    Then the available stock for product "Test Product Max Stock" should be -10
+    And order "bo_order1" should have 112 products in total
+    And order "bo_order1" should contain 110 products "Test Product Max Stock"

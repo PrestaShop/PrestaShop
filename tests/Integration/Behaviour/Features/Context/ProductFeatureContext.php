@@ -244,6 +244,17 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^product "(.+)" can be ordered out of stock$/
+     *
+     * @param string $productName
+     */
+    public function productWithNameCanBeOrderedOutOfStock($productName)
+    {
+        $this->checkProductWithNameExists($productName);
+        StockAvailable::setProductOutOfStock($this->products[$productName]->id, 1);
+    }
+
+    /**
      * @param $productName
      */
     public function checkProductWithNameExists($productName)
