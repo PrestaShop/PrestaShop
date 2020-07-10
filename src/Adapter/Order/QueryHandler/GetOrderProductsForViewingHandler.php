@@ -226,7 +226,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     null,
                     '',
                     $packItemType,
-                    (bool) Product::isAvailableWhenOutOfStock($pack_item['out_of_stock'])
+                    (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($pack_item['id_product']))
                 );
             }
 
@@ -252,7 +252,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
                 !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
                 $productType,
-                (bool) Product::isAvailableWhenOutOfStock($product['out_of_stock']),
+                (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'])),
                 $packItems,
                 $product['customizations']
             );
