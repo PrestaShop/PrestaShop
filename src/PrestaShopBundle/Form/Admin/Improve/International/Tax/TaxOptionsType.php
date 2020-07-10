@@ -28,19 +28,17 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Translation\TranslatorAwareTrait;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use RuntimeException;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Defines "Improve > International > Taxes" options form
  */
-class TaxOptionsType extends AbstractType
+class TaxOptionsType extends TranslatorAwareType
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var bool
      */
@@ -61,15 +59,20 @@ class TaxOptionsType extends AbstractType
      *
      * Backwards compatibility break due to addition of translator via TranslatorAwareTrait
      *
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param bool $ecoTaxEnabled
      * @param FormChoiceProviderInterface $taxAddressTypeChoiceProvider
      * @param FormChoiceProviderInterface $taxRuleGroupChoiceProvider
      */
     public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
         $ecoTaxEnabled,
         FormChoiceProviderInterface $taxAddressTypeChoiceProvider,
         FormChoiceProviderInterface $taxRuleGroupChoiceProvider
     ) {
+        parent::__construct($translator, $locales);
         $this->ecoTaxEnabled = $ecoTaxEnabled;
         $this->taxAddressTypeChoiceProvider = $taxAddressTypeChoiceProvider;
         $this->taxRuleGroupChoiceProvider = $taxRuleGroupChoiceProvider;
@@ -80,18 +83,13 @@ class TaxOptionsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->translator === null) {
-            throw new RuntimeException('Translator variable must not be null.');
-        }
-
         $builder->add(
             'enable_tax',
             SwitchType::class,
             [
-                'label' => $this->trans('Enable tax', [], 'Admin.International.Feature'),
+                'label' => $this->trans('Enable tax','Admin.International.Feature'),
                 'help' => $this->trans(
                     'Select whether or not to include tax on purchases.',
-                    [],
                     'Admin.International.Help'
                 ),
                 'required' => false,
@@ -103,12 +101,10 @@ class TaxOptionsType extends AbstractType
             ->add('display_tax_in_cart', SwitchType::class, [
                 'label' => $this->trans(
                     'Display tax in the shopping cart',
-                    [],
                     'Admin.International.Feature'
                 ),
                 'help' => $this->trans(
                     'Select whether or not to display tax on a distinct line in the cart.',
-                    [],
                     'Admin.International.Help'
                 ),
                 'required' => false,
@@ -117,15 +113,14 @@ class TaxOptionsType extends AbstractType
                 ],
             ])
             ->add('tax_address_type', ChoiceType::class, [
-                'label' => $this->trans('Based on', [], 'Admin.International.Feature'),
+                'label' => $this->trans('Based on', 'Admin.International.Feature'),
                 'choices' => $this->taxAddressTypeChoiceProvider->getChoices(),
             ])
             ->add('use_eco_tax', SwitchType::class, [
-                'label' => $this->trans('Use ecotax', [], 'Admin.International.Feature'),
+                'label' => $this->trans('Use ecotax','Admin.International.Feature'),
                 'required' => false,
                 'help' => $this->trans(
                     'If you disable the ecotax, the ecotax for all your products will be set to 0.',
-                    [],
                     'Admin.International.Help'),
             ])
         ;
@@ -134,11 +129,9 @@ class TaxOptionsType extends AbstractType
             $builder->add('eco_tax_rule_group', ChoiceType::class, [
                 'label' => $this->trans(
                     'Ecotax',
-                    [],
                     'Admin.International.Feature'),
                 'help' => $this->trans(
                     'Define the ecotax (e.g. French ecotax: 19.6%).',
-                    [],
                     'Admin.International.Help'),
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
             ]);

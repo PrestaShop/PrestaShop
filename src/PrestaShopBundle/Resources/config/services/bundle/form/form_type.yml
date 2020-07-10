@@ -776,12 +776,12 @@ services:
 
     form.type.international.tax_options:
       class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsType'
+      parent: 'form.type.translatable.aware'
+      public: true
       arguments:
         - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_USE_ECOTAX")'
         - '@=service("prestashop.core.form.choice_provider.tax_address_type_choice_provider")'
         - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider")'
-      calls:
-        - { method: setTranslator, arguments: ['@translator'] }
       tags:
         - { name: form.type }
 
@@ -807,8 +807,8 @@ services:
 
     form.type.international.tax:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxType'
-        arguments:
-            - '@translator'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 

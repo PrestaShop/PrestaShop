@@ -31,10 +31,9 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -42,21 +41,8 @@ use Symfony\Component\Validator\Constraints\Type;
 /**
  * Form type for tax add/edit
  */
-class TaxType extends AbstractType
+class TaxType extends TranslatorAwareType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -64,13 +50,12 @@ class TaxType extends AbstractType
     {
         $invalidCharsText = sprintf(
             '%s ' . TypedRegexValidator::CATALOG_CHARS,
-            $this->translator->trans('Invalid characters:', [], 'Admin.Notifications.Info')
+            $this->trans('Invalid characters:', 'Admin.Notifications.Info')
         );
 
         $nameHintText =
-            $this->translator->trans(
+            $this->trans(
                 'Tax name to display in carts and on invoices (e.g. "VAT").',
-                [],
                 'Admin.International.Help'
             )
             . PHP_EOL
@@ -78,16 +63,16 @@ class TaxType extends AbstractType
 
         $builder
             ->add('name', TranslatableType::class, [
-                'label' => $this->translator->trans('Name', [], 'Admin.Global'),
+                'label' => $this->trans('Name', 'Admin.Global'),
                 'help' => $nameHintText,
                 'options' => [
                     'constraints' => [
                         new Length([
                             'max' => 32,
-                            'maxMessage' => $this->translator->trans(
+                            'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters',
-                                ['%limit%' => 32],
-                                'Admin.Notifications.Error'
+                                'Admin.Notifications.Error',
+                                ['%limit%' => 32]
                             ),
                         ]),
                         new TypedRegex([
@@ -100,44 +85,42 @@ class TaxType extends AbstractType
                 ],
             ])
             ->add('rate', TextType::class, [
-                'label' => $this->translator->trans('Rate', [], 'Admin.International.Feature'),
-                'help' => $this->translator->trans(
+                'label' => $this->trans('Rate', [], 'Admin.International.Feature'),
+                'help' => $this->trans(
                     'Format: XX.XX or XX.XXX (e.g. 19.60 or 13.925)',
-                    [],
                     'Admin.International.Help'
                 ),
                 'constraints' => [
                     new NotBlank([
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'The %s field is required.',
+                            'Admin.Notifications.Error',
                             [
-                                sprintf('"%s"', $this->translator->trans(
-                                    'Rate', [], 'Admin.International.Feature'
+                                sprintf('"%s"', $this->trans(
+                                    'Rate','Admin.International.Feature'
                                 )),
-                            ],
-                            'Admin.Notifications.Error'
+                            ]
                         ),
                     ]),
                     new Length([
                         'max' => 6,
-                        'maxMessage' => $this->translator->trans(
+                        'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
-                            ['%limit%' => 6],
-                            'Admin.Notifications.Error'
+                            'Admin.Notifications.Error',
+                            ['%limit%' => 6]
                         ),
                     ]),
                     new Type([
                         'type' => 'numeric',
-                        'message' => $this->translator->trans(
+                        'message' => $this->trans(
                             'This field is invalid, it must contain numeric values',
-                            [],
                             'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
             ])
             ->add('is_enabled', SwitchType::class, [
-                'label' => $this->translator->trans('Enable', [], 'Admin.Actions'),
+                'label' => $this->trans('Enable', 'Admin.Actions'),
                 'required' => false,
             ])
         ;
