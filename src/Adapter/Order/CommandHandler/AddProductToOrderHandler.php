@@ -48,6 +48,7 @@ use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
@@ -124,6 +125,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $temporarySpecificPrices = [];
         try {
             $this->assertOrderWasNotShipped($order);
+            $this->assertProductUnicity($order, $command);
 
             $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
             $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
@@ -557,6 +559,37 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             if ($availableQuantity < $command->getProductQuantity()) {
                 throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
             }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param AddProductToOrderCommand $command
+     *
+     * @throws DuplicateProductInOrderException
+     */
+    private function assertProductUnicity(Order $order, AddProductToOrderCommand $command): void
+    {
+        $invoicesContainingProduct = [];
+        foreach ($order->getOrderDetailList() as $orderDetail) {
+            if ($command->getProductId() !== (int) $orderDetail['product_id']) {
+                continue;
+            }
+            if (null === $command->getCombinationId() || $command->getCombinationId() !== (int) $orderDetail['product_attribute_id']) {
+                continue;
+            }
+            $invoicesContainingProduct[] = (int) $orderDetail['id_order_invoice'];
+        }
+
+        if (empty($invoicesContainingProduct)) {
+            return;
+        }
+
+        // If we are targeting a specific invoice check that the ID has not been found in the OrderDetail list
+        // If it's a new one (or no invoice), the ID is null so we check that there is no OrderDetail not assigned to
+        // an invoice (with id_order_invoice == 0)
+        if (in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
+            throw new DuplicateProductInOrderException('You cannot add this product in the order has it is already present');
         }
     }
 }
