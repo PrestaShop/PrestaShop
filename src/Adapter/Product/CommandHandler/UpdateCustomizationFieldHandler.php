@@ -48,29 +48,31 @@ class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler 
      */
     public function handle(UpdateCustomizationFieldCommand $command): void
     {
-        $fieldEntity = $this->getCustomizationField($command->getCustomizationFieldId());
-        $this->fillEntityWithCommandData($command, $fieldEntity);
+        $customizationField = $this->getCustomizationField($command->getCustomizationFieldId());
+        $previousType = $customizationField->type;
+        $this->fillEntityWithCommandData($command, $customizationField);
 
-        if (!$fieldEntity->validateFields(false) || !$fieldEntity->validateFieldsLang(false)) {
+        if (!$customizationField->validateFields(false) || !$customizationField->validateFieldsLang(false)) {
             throw new CannotUpdateCustomizationFieldException('Customization field contains invalid values');
         }
 
         try {
-            if (false === $fieldEntity->update()) {
+            if (false === $customizationField->update()) {
                 throw new CannotUpdateCustomizationFieldException(sprintf(
                     'Failed to update customization field #%s',
-                    $fieldEntity->id
+                    $customizationField->id
                 ));
             }
         } catch (PrestaShopException $e) {
             throw new CustomizationFieldException(sprintf(
                 'Error occurred when trying to update customization field #%d',
-                $fieldEntity->id
+                $customizationField->id
             ));
         }
 
-        $product = $this->getProduct(new ProductId((int) $fieldEntity->id_product));
-        $this->setProductCustomizability($product);
+        $product = $this->getProduct(new ProductId((int) $customizationField->id_product));
+        $this->refreshProductCustomizability($product);
+        $this->refreshCustomizationFieldsCount($product);
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
     }
 

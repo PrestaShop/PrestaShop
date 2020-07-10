@@ -33,11 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\DeleteCustom
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\DeleteCustomizationFieldHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotDeleteCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopException;
-use Product;
 
 /**
  * Handles @var DeleteCustomizationFieldCommand using legacy object model
@@ -79,23 +77,8 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
             );
         }
 
-        $this->setProductCustomizability($product);
-        $this->decrementCustomizationFieldsCount($product, (int) $fieldEntity->type);
+        $this->refreshProductCustomizability($product);
+        $this->refreshCustomizationFieldsCount($product);
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
-    }
-
-    /**
-     * @param Product $product
-     * @param int $customizationFieldType
-     */
-    private function decrementCustomizationFieldsCount(Product $product, int $customizationFieldType): void
-    {
-        if ($customizationFieldType === CustomizationFieldType::TYPE_TEXT && (int) $product->text_fields !== 0) {
-            --$product->text_fields;
-            $this->fieldsToUpdate['text_fields'] = true;
-        } elseif ($customizationFieldType === CustomizationFieldType::TYPE_FILE && (int) $product->uploadable_files !== 0) {
-            --$product->uploadable_files;
-            $this->fieldsToUpdate['uploadable_files'] = true;
-        }
     }
 }

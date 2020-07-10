@@ -48,7 +48,10 @@ class CustomizationFieldType
     /**
      * Available customization types
      */
-    const AVAILABLE_TYPES = [self::TYPE_FILE, self::TYPE_TEXT];
+    const AVAILABLE_TYPES = [
+        'file' => self::TYPE_FILE,
+        'text' => self::TYPE_TEXT,
+    ];
 
     /**
      * @var int

@@ -6134,6 +6134,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @return array
+     * @todo: filter multishop customizations
      */
     public function getNonDeletedCustomizationFieldIds()
     {
@@ -6151,6 +6152,34 @@ class ProductCore extends ObjectModel
         return array_map(function ($result) {
             return (int) $result['id_customization_field'];
         }, $results);
+    }
+
+    /**
+     * @param int $fieldType
+     * @todo: filter multishop customizations
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function countCustomizationFields(?int $fieldType = null): int
+    {
+        $query = '
+            SELECT COUNT(`id_customization_field`) as customizations_count
+            FROM `' . _DB_PREFIX_ . 'customization_field`
+            WHERE `is_deleted` = 0
+            AND `id_product` = ' . (int) $this->id
+        ;
+
+        if (null !== $fieldType) {
+            $query .= sprintf(' AND type = %d', $fieldType);
+        }
+
+        $results = Db::getInstance()->executeS($query);
+
+        if (empty($results)) {
+            return 0;
+        }
+
+        return (int) reset($results)['customizations_count'];
     }
 
     /**

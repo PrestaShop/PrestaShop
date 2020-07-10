@@ -118,7 +118,7 @@ class ProductCustomizationOptions
     }
 
     /**
-     * @return bool
+     * @return bool true if product does not have any customizations
      */
     public function isNotCustomizable(): bool
     {
@@ -126,7 +126,7 @@ class ProductCustomizationOptions
     }
 
     /**
-     * @return bool
+     * @return bool true if product has customizations, but none of them are required
      */
     public function allowsCustomization(): bool
     {
@@ -134,7 +134,7 @@ class ProductCustomizationOptions
     }
 
     /**
-     * @return bool
+     * @return bool true if product has at least one required customization
      */
     public function requiresCustomization(): bool
     {

@@ -35,10 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\AddCu
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CannotAddCustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShopException;
-use Product;
 
 /**
  * Handles @var AddCustomizationFieldCommand using legacy object model
@@ -74,27 +72,10 @@ final class AddCustomizationFieldHandler extends AbstractCustomizationFieldHandl
             ));
         }
 
-        $this->setProductCustomizability($product);
-        $this->incrementCustomizationFieldsCount($product, (int) $customizationField->type);
+        $this->refreshProductCustomizability($product);
+        $this->refreshCustomizationFieldsCount($product);
         $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_CUSTOMIZATION_FIELDS);
 
         return new CustomizationFieldId((int) $customizationField->id);
-    }
-
-    /**
-     * @param Product $product
-     * @param int $customizationFieldType
-     */
-    private function incrementCustomizationFieldsCount(Product $product, int $customizationFieldType): void
-    {
-        if ($customizationFieldType === CustomizationFieldType::TYPE_TEXT) {
-            ++$product->text_fields;
-            $this->fieldsToUpdate['text_fields'] = true;
-
-            return;
-        }
-
-        ++$product->uploadable_files;
-        $this->fieldsToUpdate['uploadable_files'] = true;
     }
 }
