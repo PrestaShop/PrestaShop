@@ -32,6 +32,7 @@ use CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShopException;
 use Product;
@@ -73,7 +74,7 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
     /**
      * @param Product $product
      */
-    protected function setProductCustomizability(Product $product): void
+    protected function refreshProductCustomizability(Product $product): void
     {
         if ($product->hasActivatedRequiredCustomizableFields()) {
             $product->customizable = ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION;
@@ -84,5 +85,19 @@ abstract class AbstractCustomizationFieldHandler extends AbstractProductHandler
         }
 
         $this->fieldsToUpdate['customizable'] = true;
+    }
+
+    /**
+     * @param Product $product
+     */
+    protected function refreshCustomizationFieldsCount(Product $product): void
+    {
+        $textFieldsCount = $product->countCustomizationFields(CustomizationFieldType::TYPE_TEXT);
+        $fileFieldsCount = $product->countCustomizationFields(CustomizationFieldType::TYPE_FILE);
+
+        $product->text_fields = $textFieldsCount;
+        $product->uploadable_files = $fileFieldsCount;
+        $this->fieldsToUpdate['text_fields'] = true;
+        $this->fieldsToUpdate['uploadable_files'] = true;
     }
 }
