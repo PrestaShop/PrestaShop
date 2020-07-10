@@ -5,6 +5,9 @@ Feature: Update product customization fields in Back Office (BO)
   As a BO user
   I need to be able to update product customization fields in the BO
 
+  Background:
+    Given customization feature is enabled
+
   Scenario: I add customization fields to product
     When I add product "product1" with following information:
       | name       | en-US: nice customizable t-shirt  |
@@ -56,4 +59,3 @@ Feature: Update product customization fields in Back Office (BO)
     And product product1 should have following customization fields:
       | reference             | type    | name                    | is required |
       | customField2          | text    | en-US:bottom-text       | true        |
-    #@todo: scenario to delete all customizations
