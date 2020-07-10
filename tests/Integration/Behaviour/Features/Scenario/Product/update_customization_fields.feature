@@ -14,7 +14,10 @@ Feature: Update product customization fields in Back Office (BO)
       | reference             | type    | name                    | is required |
       | customField1          | text    | en-US:front-text        | true        |
       | customField2          | text    | en-US:back-text         | false       |
-    Then product product1 should have following customization fields:
+    Then product "product1" should require customization
+    And product product1 should have 2 customizable text fields
+    And product product1 should have 0 customizable file fields
+    And product product1 should have following customization fields:
       | reference             | type    | name                    | is required |
       | customField1          | text    | en-US:front-text        | true        |
       | customField2          | text    | en-US:back-text         | false       |
@@ -27,24 +30,30 @@ Feature: Update product customization fields in Back Office (BO)
     When I update product product1 with following customization fields:
       | reference             | type    | name                    | is required |
       | customField1          | text    | en-US:front-text        | false       |
-      | customField2          | text    | en-US:bottom-text       | true        |
+      | customField2          | text    | en-US:bottom-text       | false       |
       | customField3          | file    | en-US:back image        | false       |
-    Then product product1 should have following customization fields:
+    Then product "product1" should allow customization
+    And product product1 should have 2 customizable text fields
+    And product product1 should have 1 customizable file fields
+    And product product1 should have following customization fields:
       | reference             | type    | name                    | is required |
       | customField1          | text    | en-US:front-text        | false       |
-      | customField2          | text    | en-US:bottom-text       | true        |
+      | customField2          | text    | en-US:bottom-text       | false       |
       | customField3          | file    | en-US:back image        | false       |
 
   Scenario: I delete some product customization fields
     Given product product1 should have following customization fields:
       | reference             | type    | name                    | is required |
       | customField1          | text    | en-US:front-text        | false       |
-      | customField2          | text    | en-US:bottom-text       | true        |
+      | customField2          | text    | en-US:bottom-text       | false       |
       | customField3          | file    | en-US:back image        | false       |
     When I update product product1 with following customization fields:
       | reference             | type    | name                    | is required |
-      | customField2          | text    | en-US:bottom-text        | true       |
-    Then product product1 should have following customization fields:
+      | customField2          | text    | en-US:bottom-text       | true        |
+    Then product "product1" should require customization
+    And product product1 should have 1 customizable text fields
+    And product product1 should have 0 customizable file fields
+    And product product1 should have following customization fields:
       | reference             | type    | name                    | is required |
       | customField2          | text    | en-US:bottom-text       | true        |
-#@TODO: add assertions for product->customizable, text_fields, uploadable_files
+    #@todo: scenario to delete all customizations
