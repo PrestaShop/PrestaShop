@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingH
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizability;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
@@ -74,7 +74,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         return new ProductForEditing(
             (int) $product->id,
             (bool) $product->active,
-            $this->getCustomizability($product),
+            $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
@@ -198,12 +198,12 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     /**
      * @param Product $product
      *
-     * @return ProductCustomizability
+     * @return ProductCustomizationOptions
      */
-    public function getCustomizability(Product $product): ProductCustomizability
+    public function getCustomizationOptions(Product $product): ProductCustomizationOptions
     {
         if (!Customization::isFeatureActive()) {
-            return ProductCustomizability::createNotCustomizable();
+            return ProductCustomizationOptions::createNotCustomizable();
         }
 
         $textFieldsCount = (int) $product->text_fields;
@@ -211,15 +211,15 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
 
         switch ((int) $product->customizable) {
             case ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION:
-                return ProductCustomizability::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
+                return ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
 
                 break;
             case ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION:
-                return ProductCustomizability::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
+                return ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
 
                 break;
             default:
-                return ProductCustomizability::createNotCustomizable();
+                return ProductCustomizationOptions::createNotCustomizable();
         }
     }
 }
