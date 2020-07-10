@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCo
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\ChangeOrderStatusException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
@@ -1663,6 +1664,10 @@ class OrderController extends FrameworkBundleAdminController
             ],
             InvalidProductQuantityException::class => $this->trans(
                 'Positive product quantity is required.',
+                'Admin.Notifications.Error'
+            ),
+            DuplicateProductInOrderException::class => $this->trans(
+                'This product is already in your order, please edit the quantity instead.',
                 'Admin.Notifications.Error'
             ),
         ];
