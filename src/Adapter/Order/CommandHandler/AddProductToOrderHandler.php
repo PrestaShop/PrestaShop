@@ -125,7 +125,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $temporarySpecificPrices = [];
         try {
             $this->assertOrderWasNotShipped($order);
-            $this->assertProductUnicity($order, $command);
+            $this->assertProductDuplicate($order, $command);
 
             $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
             $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
@@ -568,14 +568,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      *
      * @throws DuplicateProductInOrderException
      */
-    private function assertProductUnicity(Order $order, AddProductToOrderCommand $command): void
+    private function assertProductDuplicate(Order $order, AddProductToOrderCommand $command): void
     {
         $invoicesContainingProduct = [];
         foreach ($order->getOrderDetailList() as $orderDetail) {
-            if ($command->getProductId() !== (int) $orderDetail['product_id']) {
+            if ($command->getProductId()->getValue() !== (int) $orderDetail['product_id']) {
                 continue;
             }
-            if (null === $command->getCombinationId() || $command->getCombinationId() !== (int) $orderDetail['product_attribute_id']) {
+            if (!empty($command->getCombinationId()) && $command->getCombinationId() !== (int) $orderDetail['product_attribute_id']) {
                 continue;
             }
             $invoicesContainingProduct[] = (int) $orderDetail['id_order_invoice'];
@@ -585,10 +585,14 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             return;
         }
 
+        // If it's a new invoice (or no invoice), the ID is null, so we check if the Order has invoice (in which case
+        // a new one is going to be created) If it doesn't have invoices we do'nt allow adding duplicate OrderDetail
+        if (empty($command->getOrderInvoiceId()) && !$order->hasInvoice()) {
+            throw new DuplicateProductInOrderException('You cannot add this product in the order has it is already present');
+        }
+
         // If we are targeting a specific invoice check that the ID has not been found in the OrderDetail list
-        // If it's a new one (or no invoice), the ID is null so we check that there is no OrderDetail not assigned to
-        // an invoice (with id_order_invoice == 0)
-        if (in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
+        if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
             throw new DuplicateProductInOrderException('You cannot add this product in the order has it is already present');
         }
     }

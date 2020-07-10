@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -157,6 +158,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I add products to order :orderReference with new invoice and the following products details:
+     * @When I add products to order :orderReference without invoice and the following products details:
      *
      * @param string $orderReference
      * @param TableNode $table
@@ -175,6 +177,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $combinationId = 0;
         }
 
+        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
@@ -190,6 +193,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } catch (InvalidProductQuantityException $e) {
             $this->lastException = $e;
         } catch (ProductOutOfStockException $e) {
+            $this->lastException = $e;
+        } catch (DuplicateProductInOrderException $e) {
             $this->lastException = $e;
         }
     }
@@ -226,6 +231,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
+        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
@@ -236,22 +242,23 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add products to order :orderReference to last invoice and the following products details:
+     * @When /^I add products to order "(.+)" to (first|last) invoice and the following products details:$/
      *
      * @param string $orderReference
      * @param TableNode $table
      */
-    public function addProductsToOrderWithExistingInvoiceAndTheFollowingDetails(string $orderReference, TableNode $table)
+    public function addProductsToOrderWithExistingInvoiceAndTheFollowingDetails(string $orderReference, string $invoicePosition, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $order = new Order($orderId);
         $invoicesCollection = $order->getInvoicesCollection();
-        $lastInvoice = $invoicesCollection->getLast();
+        $lastInvoice = 'first' === $invoicePosition ? $invoicesCollection->getFirst() : $invoicesCollection->getLast();
 
         $data = $table->getRowsHash();
         $productName = $data['name'];
         $productId = $this->getProductIdByName($productName);
 
+        $this->lastException = null;
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
@@ -265,6 +272,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         } catch (InvalidProductQuantityException $e) {
+            $this->lastException = $e;
+        } catch (DuplicateProductInOrderException $e) {
             $this->lastException = $e;
         }
     }
@@ -464,6 +473,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsNegativeProductQuantity()
     {
         $this->assertLastErrorIs(InvalidProductQuantityException::class);
+    }
+
+    /**
+     * @Then I should get error that adding duplicate product is forbidden
+     */
+    public function assertDuplicateProductIsForbidden()
+    {
+        $this->assertLastErrorIs(DuplicateProductInOrderException::class);
     }
 
     /**
