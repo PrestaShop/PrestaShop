@@ -76,7 +76,7 @@ class CustomerAddressType extends AbstractType
     /**
      * CustomerAddressType constructor.
      *
-     * Backwards compatibility break due to addition of Router
+     * Backwards compatibility break introduced in 1.7.8.0 due to addition of Router as mandatory constructor argument
      *
      * @param TranslatorInterface $translator
      * @param ConfigurableFormChoiceProviderInterface $stateChoiceProvider
