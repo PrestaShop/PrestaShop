@@ -2119,6 +2119,7 @@ class ProductCore extends ObjectModel
 
         $price = str_replace(',', '.', $price);
         $weight = str_replace(',', '.', $weight);
+        $wholesale_price = str_replace(',', '.', $wholesale_price);
 
         $combination->price = (float) $price;
         $combination->wholesale_price = (float) $wholesale_price;
