@@ -972,9 +972,10 @@ class HookCore extends ObjectModel
 
     public static function coreRenderWidget($module, $hook_name, $params)
     {
-        if(Module::isEnabled($module->name)) {
+        if (Module::isEnabled($module->name)) {
             return $module->renderWidget($hook_name, $params);
         }
+        
         return null;
     }
 
