@@ -111,7 +111,7 @@ class CheckoutProcessCore implements RenderableInterface
     /**
      * @param array $steps
      */
-    public function overrideSteps(array $steps)
+    public function setSteps(array $steps)
     {
         $this->steps = $steps;
     }
