@@ -113,6 +113,8 @@ class TaxOptionsType extends TranslatorAwareType
             ])
             ->add('tax_address_type', ChoiceType::class, [
                 'label' => $this->trans('Based on', 'Admin.International.Feature'),
+                'required' => false,
+                'placeholder' => false,
                 'choices' => $this->taxAddressTypeChoiceProvider->getChoices(),
             ])
             ->add('use_eco_tax', SwitchType::class, [
