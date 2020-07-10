@@ -589,25 +589,21 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ];
         }
 
-        try {
-            $newCustomizationFields = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
-                $this->getSharedStorage()->get($productReference),
-                $fieldsForUpdate
-            ));
+        $this->updateProductCustomizationFields(
+            $productReference,
+            $fieldReferences,
+            $fieldsForUpdate
+        );
+    }
 
-            Assert::assertSameSize(
-                $fieldReferences,
-                $newCustomizationFields,
-                'Cannot set references in shared storage. References and actual customization fields doesn\'t match.'
-            );
-
-            /** @var CustomizationField $customizationField */
-            foreach ($newCustomizationFields as $key => $customizationField) {
-                $this->getSharedStorage()->set($fieldReferences[$key], $customizationField->getCustomizationFieldId());
-            }
-        } catch (ProductException $e) {
-            $this->lastException = $e;
-        }
+    /**
+     * @When I delete all customization fields from product :productReference
+     *
+     * @param string $productReference
+     */
+    public function updateCustomizationFieldsWithEmptyArray(string $productReference)
+    {
+        $this->updateProductCustomizationFields($productReference, [], []);
     }
 
     /**
@@ -774,7 +770,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
 
                 break;
             default:
-                throw new RuntimeException(spritnf('Invalid customizability "%s" provided in test scenario', $customizability));
+                throw new RuntimeException(sprintf('Invalid customizability "%s" provided in test scenario', $customizability));
         }
     }
 
@@ -839,6 +835,34 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
             ProductConstraintException::class,
             $this->getConstraintErrorCode($fieldName)
         );
+    }
+
+    /**
+     * @param string $productReference
+     * @param array $fieldReferences
+     * @param array $fieldsForUpdate
+     */
+    private function updateProductCustomizationFields(string $productReference, array $fieldReferences, array $fieldsForUpdate): void
+    {
+        try {
+            $newCustomizationFields = $this->getCommandBus()->handle(new UpdateProductCustomizationFieldsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $fieldsForUpdate
+            ));
+
+            Assert::assertSameSize(
+                $fieldReferences,
+                $newCustomizationFields,
+                'Cannot set references in shared storage. References and actual customization fields doesn\'t match.'
+            );
+
+            /** @var CustomizationField $customizationField */
+            foreach ($newCustomizationFields as $key => $customizationField) {
+                $this->getSharedStorage()->set($fieldReferences[$key], $customizationField->getCustomizationFieldId());
+            }
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
     }
 
     /**

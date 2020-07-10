@@ -41,7 +41,7 @@ use PrestaShopException;
 /**
  * Updates single customization field using legacy object model
  */
-class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements UpdateCustomizationFieldHandlerInterface
+final class UpdateCustomizationFieldHandler extends AbstractCustomizationFieldHandler implements UpdateCustomizationFieldHandlerInterface
 {
     /**
      * {@inheritdoc}
