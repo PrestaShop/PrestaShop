@@ -56,7 +56,7 @@ class TaxOptionsType extends TranslatorAwareType
     /**
      * TaxOptionsType constructor.
      *
-     * Backwards compatibility break due to addition of translator via TranslatorAwareTrait
+     * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslatorAwareType
      *
      * @param TranslatorInterface $translator
      * @param array $locales
