@@ -23,6 +23,8 @@ Contributors should follow the following process:
 
 That's it: you have contributed to this open source project! Congratulations!
 
+You don't exactly know where to start? Pick one of our [good first issues](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) to get the list of all beginner-friendly improvements and bugs to fix. Read more about this label on [Build](https://build.prestashop.com/news/a-definition-of-the-good-first-issue-label).
+
 The PrestaShop documentation features a thorough explanation of the [complete process to your first pull request][4].
 
 If you don't feel comfortable forking the project or using Git, you can also either:
