@@ -59,6 +59,13 @@ class Shop
     private $name;
 
     /**
+     * @var string
+     *
+     *  @ORM\Column(name="color", type="string", length=50)
+     */
+    private $color;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id_category", type="integer")
@@ -118,6 +125,25 @@ class Shop
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $color
+     * @return Shop
+     */
+    public function setColor(string $color): Shop
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor(): string
+    {
+        return $this->color;
     }
 
     /**
