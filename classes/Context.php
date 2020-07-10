@@ -376,7 +376,7 @@ class ContextCore
      */
     public function getTranslator($isInstaller = false)
     {
-        if (null !== $this->translator) {
+        if (null !== $this->translator && $this->language->locale === $this->translator->getLocale()) {
             return $this->translator;
         }
 
