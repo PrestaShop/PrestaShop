@@ -26,14 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
+use Customization;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizability;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
@@ -71,6 +74,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         return new ProductForEditing(
             (int) $product->id,
             (bool) $product->active,
+            $this->getCustomizability($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
@@ -189,5 +193,33 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         }
 
         return $localizedTagsList;
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductCustomizability
+     */
+    public function getCustomizability(Product $product): ProductCustomizability
+    {
+        if (!Customization::isFeatureActive()) {
+            return ProductCustomizability::createNotCustomizable();
+        }
+
+        $textFieldsCount = (int) $product->text_fields;
+        $fileFieldsCount = (int) $product->uploadable_files;
+
+        switch ((int) $product->customizable) {
+            case ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION:
+                return ProductCustomizability::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
+
+                break;
+            case ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION:
+                return ProductCustomizability::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
+
+                break;
+            default:
+                return ProductCustomizability::createNotCustomizable();
+        }
     }
 }

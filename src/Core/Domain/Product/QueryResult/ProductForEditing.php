@@ -62,8 +62,14 @@ class ProductForEditing
     private $options;
 
     /**
+     * @var ProductCustomizability
+     */
+    private $customizability;
+
+    /**
      * @param int $productId
      * @param bool $active
+     * @param ProductCustomizability $productCustomizability
      * @param ProductBasicInformation $basicInformation
      * @param ProductCategoriesInformation $categoriesInformation
      * @param ProductPricesInformation $pricesInformation
@@ -72,6 +78,7 @@ class ProductForEditing
     public function __construct(
         int $productId,
         bool $active,
+        ProductCustomizability $productCustomizability,
         ProductBasicInformation $basicInformation,
         ProductCategoriesInformation $categoriesInformation,
         ProductPricesInformation $pricesInformation,
@@ -79,6 +86,7 @@ class ProductForEditing
     ) {
         $this->productId = $productId;
         $this->active = $active;
+        $this->customizability = $productCustomizability;
         $this->basicInformation = $basicInformation;
         $this->categoriesInformation = $categoriesInformation;
         $this->pricesInformation = $pricesInformation;
@@ -99,6 +107,14 @@ class ProductForEditing
     public function isActive(): bool
     {
         return $this->active;
+    }
+
+    /**
+     * @return ProductCustomizability
+     */
+    public function getCustomizability(): ProductCustomizability
+    {
+        return $this->customizability;
     }
 
     /**
