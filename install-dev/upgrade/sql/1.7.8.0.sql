@@ -11,5 +11,3 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionModuleUninstallAfter', 'Module uninstall after', 'This hook is called at the end of module uninstall process', '1'),
   (NULL, 'actionPresentProductListing', 'Product Listing Presenter', 'This hook is called before a product listing is presented', '1')
 ;
-
-ALTER TABLE `PREFIX_shop_group` ADD `color` VARCHAR(50) NULL DEFAULT NULL AFTER `name`;
