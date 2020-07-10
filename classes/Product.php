@@ -6134,7 +6134,6 @@ class ProductCore extends ObjectModel
 
     /**
      * @return array
-     * @todo: filter multishop customizations
      */
     public function getNonDeletedCustomizationFieldIds()
     {
@@ -6156,7 +6155,6 @@ class ProductCore extends ObjectModel
 
     /**
      * @param int $fieldType
-     * @todo: filter multishop customizations
      *
      * @throws PrestaShopDatabaseException
      */
