@@ -39,6 +39,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
+ * Backwards compatibility break due to addition of translator via TranslatorAwareTrait
  * Form type for tax add/edit
  */
 class TaxType extends TranslatorAwareType
