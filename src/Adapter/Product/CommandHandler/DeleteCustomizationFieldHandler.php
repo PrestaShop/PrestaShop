@@ -47,16 +47,16 @@ final class DeleteCustomizationFieldHandler extends AbstractCustomizationFieldHa
      */
     public function handle(DeleteCustomizationFieldCommand $command): void
     {
-        $fieldEntity = $this->getCustomizationField($command->getCustomizationFieldId());
-        $fieldId = (int) $fieldEntity->id;
-        $product = $this->getProduct(new ProductId($fieldId));
+        $customizationField = $this->getCustomizationField($command->getCustomizationFieldId());
+        $fieldId = (int) $customizationField->id;
+        $product = $this->getProduct(new ProductId((int) $customizationField->id_product));
         $usedFieldIds = array_map('intval', $product->getUsedCustomizationFieldsIds());
 
         try {
             if (in_array($fieldId, $usedFieldIds)) {
-                $successfullyDeleted = $fieldEntity->softDelete();
+                $successfullyDeleted = $customizationField->softDelete();
             } else {
-                $successfullyDeleted = $fieldEntity->delete();
+                $successfullyDeleted = $customizationField->delete();
             }
         } catch (PrestaShopException $e) {
             throw new CustomizationFieldException(
