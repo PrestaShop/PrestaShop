@@ -59,10 +59,10 @@ final class EmployeeImageUploader extends AbstractImageUploader
         $employee = new Employee($id);
         $employee->deleteImage();
 
-        $currentLogo = _PS_TMP_IMG_DIR_ . 'employee_mini_' . $id . '.jpg';
+        $currentImage = _PS_TMP_IMG_DIR_ . 'employee_mini_' . $id . '.jpg';
 
-        if (file_exists($currentLogo)) {
-            unlink($currentLogo);
+        if (file_exists($currentImage) && is_file($currentImage)) {
+            unlink($currentImage);
         }
     }
 }
