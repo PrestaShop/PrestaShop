@@ -742,6 +742,73 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^product "(.+)" should (be not customizable|allow customization|require customization)$/
+     *
+     * @param string $productReference
+     * @param string $customizability
+     */
+    public function assertCustomizability(string $productReference, string $customizability)
+    {
+        $customizationOptions = $this->getProductForEditing($productReference)->getCustomizationOptions();
+
+        switch ($customizability) {
+            case 'be not customizable':
+                Assert::assertTrue(
+                    $customizationOptions->isNotCustomizable(),
+                    sprintf('Expected product "%s" to be not customizable', $productReference)
+                );
+
+                break;
+            case 'allow customization':
+                Assert::assertTrue(
+                    $customizationOptions->allowsCustomization(),
+                    sprintf('Expected product "%s" to allow customization', $productReference)
+                );
+
+                break;
+            case 'require customization':
+                Assert::assertTrue(
+                    $customizationOptions->requiresCustomization(),
+                    sprintf('Expected product "%s" to require customization', $productReference)
+                );
+
+                break;
+            default:
+                throw new RuntimeException(spritnf('Invalid customizability "%s" provided in test scenario', $customizability));
+        }
+    }
+
+    /**
+     * @Then product :productReference should have :expectedCount customizable :customizationType fields
+     *
+     * @param string $productReference
+     * @param int $expectedCount
+     * @param string $customizationType
+     */
+    public function assertCustomizationOptions(string $productReference, int $expectedCount, string $customizationType)
+    {
+        if (!in_array($customizationType, array_keys(CustomizationFieldType::AVAILABLE_TYPES))) {
+            throw new RuntimeException(sprintf('Invalid customization type "%s" provided in test scenario', $customizationType));
+        }
+
+        $productForEditing = $this->getProductForEditing($productReference);
+
+        if ('file' === $customizationType) {
+            Assert::assertEquals(
+                $expectedCount,
+                $productForEditing->getCustomizationOptions()->getAvailableFileCustomizationsCount(),
+                'Unexpected customizable file fields count'
+            );
+        } else {
+            Assert::assertEquals(
+                $expectedCount,
+                $productForEditing->getCustomizationOptions()->getAvailableTextCustomizationsCount(),
+                'Unexpected customizable text fields count'
+            );
+        }
+    }
+
+    /**
      * @Then I should get error that product for packing quantity is invalid
      */
     public function assertPackProductQuantityError()
