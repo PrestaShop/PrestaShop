@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -87,7 +86,7 @@ class TaxOptionsType extends TranslatorAwareType
             'enable_tax',
             SwitchType::class,
             [
-                'label' => $this->trans('Enable tax','Admin.International.Feature'),
+                'label' => $this->trans('Enable tax', 'Admin.International.Feature'),
                 'help' => $this->trans(
                     'Select whether or not to include tax on purchases.',
                     'Admin.International.Help'
@@ -117,7 +116,7 @@ class TaxOptionsType extends TranslatorAwareType
                 'choices' => $this->taxAddressTypeChoiceProvider->getChoices(),
             ])
             ->add('use_eco_tax', SwitchType::class, [
-                'label' => $this->trans('Use ecotax','Admin.International.Feature'),
+                'label' => $this->trans('Use ecotax', 'Admin.International.Feature'),
                 'required' => false,
                 'help' => $this->trans(
                     'If you disable the ecotax, the ecotax for all your products will be set to 0.',
