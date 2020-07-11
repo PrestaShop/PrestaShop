@@ -301,7 +301,7 @@ class AddressController extends FrameworkBundleAdminController
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            if($customerId){
+            if ($customerId){
                 return $this->redirectToRoute('admin_customers_view', ['customerId' => $customerId]);
             }
 
