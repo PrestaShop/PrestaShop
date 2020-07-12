@@ -4745,6 +4745,7 @@ class ProductCore extends ObjectModel
             WHERE pa.`id_product` = ' . (int) $id_product_old
         );
         $combinations = [];
+        $product_supplier_keys = [];
 
         foreach ($result as $row) {
             $id_product_attribute_old = (int) $row['id_product_attribute'];
@@ -4799,6 +4800,14 @@ class ProductCore extends ObjectModel
             AND `id_product` = ' . (int) $id_product_old);
 
             foreach ($result3 as $row3) {
+                $current_supplier_key = $id_product_new . '_' . $id_product_attribute_new . '_' . $row3['id_supplier'];
+
+                if (in_array($current_supplier_key, $product_supplier_keys)) {
+                    continue;
+                } else {
+                    $product_supplier_keys[] = $current_supplier_key;
+                }
+
                 unset($row3['id_product_supplier']);
                 $row3['id_product'] = $id_product_new;
                 $row3['id_product_attribute'] = $id_product_attribute_new;
