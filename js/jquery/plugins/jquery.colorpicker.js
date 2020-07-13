@@ -67,7 +67,7 @@
         'color': $.fn.mColorPicker.textColor(element.css('background-color'))
       }).trigger('change');
     } catch (r) {}
-    };
+  };
 
   $.fn.mColorPicker.currentColor = false;
   $.fn.mColorPicker.currentValue = false;
