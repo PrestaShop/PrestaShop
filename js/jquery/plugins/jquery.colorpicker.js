@@ -62,12 +62,12 @@
  $.fn.mColorPicker.setTextColor = function(element) {
     try {
       element.css({
-      'background-color': element.val()
-    }).css({
-      'color': $.fn.mColorPicker.textColor(element.css('background-color'))
+        'background-color': element.val()
+      }).css({
+        'color': $.fn.mColorPicker.textColor(element.css('background-color'))
       }).trigger('change');
     } catch (r) {}
-  };
+    };
 
   $.fn.mColorPicker.currentColor = false;
   $.fn.mColorPicker.currentValue = false;
