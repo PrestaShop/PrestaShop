@@ -288,11 +288,13 @@ class ModuleTabRegister
         }
 
         $routingControllers = [];
-        $moduleRoutes = $this->routingConfigLoader->import($routingFile, 'yaml');
-        foreach ($moduleRoutes->getIterator() as $route) {
-            $legacyController = $route->getDefault('_legacy_controller');
-            if (!empty($legacyController)) {
-                $routingControllers[] = $legacyController;
+        if (is_callable([$this->routingConfigLoader, 'import'])) {
+            $moduleRoutes = $this->routingConfigLoader->import($routingFile, 'yaml');
+            foreach ($moduleRoutes->getIterator() as $route) {
+                $legacyController = $route->getDefault('_legacy_controller');
+                if (!empty($legacyController)) {
+                    $routingControllers[] = $legacyController;
+                }
             }
         }
 

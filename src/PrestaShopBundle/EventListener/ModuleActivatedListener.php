@@ -58,7 +58,7 @@ class ModuleActivatedListener
     private $translator;
 
     /**
-     * @var Session
+     * @var SessionInterface
      */
     private $session;
 
@@ -141,6 +141,9 @@ class ModuleActivatedListener
      */
     private function showNotificationMessage(ModuleActivated $moduleActivated)
     {
+        if (!($this->session instanceof Session)) {
+            return;
+        }
         $this->session->getFlashBag()->add(
             'error',
             $this->translator->trans(

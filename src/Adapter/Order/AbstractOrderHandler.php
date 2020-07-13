@@ -121,7 +121,7 @@ abstract class AbstractOrderHandler
      * @param Product $product
      * @param Combination|null $combination
      *
-     * @return SpecificPrice|void
+     * @return SpecificPrice|null
      */
     protected function createSpecificPriceIfNeeded(
         Number $priceTaxIncluded,
