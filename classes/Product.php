@@ -4804,9 +4804,9 @@ class ProductCore extends ObjectModel
 
                 if (in_array($current_supplier_key, $product_supplier_keys)) {
                     continue;
-                } else {
-                    $product_supplier_keys[] = $current_supplier_key;
                 }
+
+                $product_supplier_keys[] = $current_supplier_key;
 
                 unset($row3['id_product_supplier']);
                 $row3['id_product'] = $id_product_new;
