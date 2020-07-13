@@ -1,7 +1,7 @@
 module.exports = {
   hooks: {
     displayFooter: {
-      id: 36,
+      id: 37,
       name: 'displayFooter',
     },
   },
