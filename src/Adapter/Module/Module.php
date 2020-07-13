@@ -351,7 +351,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return method_exists($this->instance, 'reset') ? $this->instance->reset() : true;
+        return is_callable([$this->instance, 'reset']) ? $this->instance->reset() : true;
     }
 
     /**

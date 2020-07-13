@@ -25,17 +25,6 @@ require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
 require_once _PS_ROOT_DIR_ . '/var/SymfonyRequirements.php';
-$moduleCronJobs = _PS_ROOT_DIR_ . '/modules/cronjobs/cronjobs.php';
-if (file_exists($moduleCronJobs)) {
-    require_once $moduleCronJobs;
-} else {
-    class CronJobs extends Module
-    {
-        public static function addOneShotTask($task, $description, $execution = array())
-        {
-        }
-    }
-}
 
 // Make sure loader php-parser is coming from php stan composer
 

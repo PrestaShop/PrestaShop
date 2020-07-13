@@ -789,7 +789,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * @param string $pageVoter
      *
-     * @return JsonResponse
+     * @return JsonResponse|void
      */
     private function checkPermission($pageVoter)
     {
