@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -288,11 +289,13 @@ class ModuleTabRegister
         }
 
         $routingControllers = [];
-        $moduleRoutes = $this->routingConfigLoader->import($routingFile, 'yaml');
-        foreach ($moduleRoutes->getIterator() as $route) {
-            $legacyController = $route->getDefault('_legacy_controller');
-            if (!empty($legacyController)) {
-                $routingControllers[] = $legacyController;
+        if ($this->routingConfigLoader instanceof Loader) {
+            $moduleRoutes = $this->routingConfigLoader->import($routingFile, 'yaml');
+            foreach ($moduleRoutes->getIterator() as $route) {
+                $legacyController = $route->getDefault('_legacy_controller');
+                if (!empty($legacyController)) {
+                    $routingControllers[] = $legacyController;
+                }
             }
         }
 

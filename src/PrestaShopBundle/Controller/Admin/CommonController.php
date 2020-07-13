@@ -373,6 +373,7 @@ class CommonController extends FrameworkBundleAdminController
             // using ::GRID_ID (that has been replaced by AbstractFilterableGridDefinitionFactory)
             $reflect = new ReflectionClass($definitionFactory);
             if (array_key_exists('GRID_ID', $reflect->getConstants())) {
+                /* @phpstan-ignore-next-line Check of constant is done with ReflectionClass */
                 $filterId = $definitionFactory::GRID_ID;
             }
         }
