@@ -585,7 +585,7 @@ class EmployeeCore extends ObjectModel
     public function getImage()
     {
         $imagePath = $this->image_dir . $this->id . '.jpg';
-        if (file_exists($imagePath) && is_file($imagePath)) {
+        if (file_exists($imagePath)) {
             return Context::getContext()->link->getMediaLink(
                 str_replace($this->image_dir, _THEME_EMPLOYEE_DIR_, $imagePath)
             );

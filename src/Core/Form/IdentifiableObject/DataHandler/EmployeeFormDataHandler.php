@@ -128,8 +128,8 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         ));
 
         /** @var UploadedFile $uploadedAvatar */
-        $uploadedAvatar = $data['avatarUrl'];
-        if ($uploadedAvatar instanceof UploadedFile) {
+        $uploadedAvatar = $data['avatarUrl'] ?? null;
+        if (!empty($uploadedAvatar) && $uploadedAvatar instanceof UploadedFile) {
             $this->imageUploader->upload($employeeId->getValue(), $uploadedAvatar);
         }
 

@@ -37,6 +37,28 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 final class EmployeeImageUploader extends AbstractImageUploader
 {
     /**
+     * @var string
+     */
+    private $employeeImageDir;
+
+    /**
+     * @var string
+     */
+    private $tmpImageDir;
+
+    /**
+     * @param string $employeeImageDir
+     * @param string $tmpImageDir
+     */
+    public function __construct(
+        string $employeeImageDir = _PS_EMPLOYEE_IMG_DIR_,
+        string $tmpImageDir = _PS_TMP_IMG_DIR_
+    ) {
+        $this->employeeImageDir = $employeeImageDir;
+        $this->tmpImageDir = $tmpImageDir;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function upload($employeeId, UploadedFile $image)
@@ -45,7 +67,7 @@ final class EmployeeImageUploader extends AbstractImageUploader
         $tempImageName = $this->createTemporaryImage($image);
         $this->deleteOldImage($employeeId);
 
-        $destination = _PS_EMPLOYEE_IMG_DIR_ . $employeeId . '.jpg';
+        $destination = $this->employeeImageDir . $employeeId . '.jpg';
         $this->uploadFromTemp($tempImageName, $destination);
     }
 
@@ -59,9 +81,9 @@ final class EmployeeImageUploader extends AbstractImageUploader
         $employee = new Employee($id);
         $employee->deleteImage();
 
-        $currentImage = _PS_TMP_IMG_DIR_ . 'employee_mini_' . $id . '.jpg';
+        $currentImage = $this->tmpImageDir . 'employee_mini_' . $id . '.jpg';
 
-        if (file_exists($currentImage) && is_file($currentImage)) {
+        if (file_exists($currentImage)) {
             unlink($currentImage);
         }
     }
