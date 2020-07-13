@@ -59,7 +59,7 @@
     return this;
   };
 
- $.fn.mColorPicker.setTextColor = function(element) {
+  $.fn.mColorPicker.setTextColor = function(element) {
     try {
       element.css({
         'background-color': element.val()
