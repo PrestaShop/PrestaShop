@@ -54,7 +54,7 @@ class AccessDeniedListener
     private $translator;
 
     /**
-     * @var Session
+     * @var SessionInterface
      */
     private $session;
 
@@ -105,7 +105,9 @@ class AccessDeniedListener
             ], Response::HTTP_FORBIDDEN);
         }
 
-        $this->session->getFlashBag()->add('error', $this->getErrorMessage($adminSecurity));
+        if ($this->session instanceof Session) {
+            $this->session->getFlashBag()->add('error', $this->getErrorMessage($adminSecurity));
+        }
 
         return new RedirectResponse(
             $this->computeRedirectionUrl($adminSecurity, $request)
