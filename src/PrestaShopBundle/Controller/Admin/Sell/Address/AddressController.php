@@ -292,16 +292,20 @@ class AddressController extends FrameworkBundleAdminController
                     );
                 }
 
-                return $this->redirectToRoute('admin_customers_view', [
-                    'customerId' => $customerId,
-                ]);
+                if ($customerId) {
+                    return $this->redirectToRoute('admin_customers_view', ['customerId' => $customerId]);
+                }
+
+                return $this->redirectToRoute('admin_addresses_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirectToRoute('admin_customers_view', [
-                'customerId' => $customerId,
-            ]);
+            if ($customerId) {
+                return $this->redirectToRoute('admin_customers_view', ['customerId' => $customerId]);
+            }
+
+            return $this->redirectToRoute('admin_addresses_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Address/add.html.twig', [
