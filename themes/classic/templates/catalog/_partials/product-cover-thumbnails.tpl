@@ -72,4 +72,5 @@
     </div>
   {/block}
 </div>
-{hook h='displayAfterProductThumbs'}
+{hook h='displayAfterProductThumbs' product=$product}
+
