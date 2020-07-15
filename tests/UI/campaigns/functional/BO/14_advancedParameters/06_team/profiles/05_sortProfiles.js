@@ -7,10 +7,9 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-const LoginPage = require('@pages/BO/login');
-const DashboardPage = require('@pages/BO/dashboard');
-const EmployeesPage = require('@pages/BO/advancedParameters/team/index');
-const ProfilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
+const dashboardPage = require('@pages/BO/dashboard');
+const employeesPage = require('@pages/BO/advancedParameters/team/index');
+const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -22,59 +21,49 @@ let page;
 
 let numberOfProfiles = 0;
 
-// Init objects needed
-const init = async function () {
-  return {
-    loginPage: new LoginPage(page),
-    dashboardPage: new DashboardPage(page),
-    employeesPage: new EmployeesPage(page),
-    profilesPage: new ProfilesPage(page),
-  };
-};
-
 // Sort profiles by id, name
 describe('Sort Profiles', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    this.pageObjects = await init();
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Login into BO
-  loginCommon.loginBO();
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
   it('should go to \'Advanced parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
-    await this.pageObjects.dashboardPage.goToSubMenu(
-      this.pageObjects.dashboardPage.advancedParametersLink,
-      this.pageObjects.dashboardPage.teamLink,
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.advancedParametersLink,
+      dashboardPage.teamLink,
     );
 
-    await this.pageObjects.dashboardPage.closeSfToolBar();
+    await dashboardPage.closeSfToolBar(page);
 
-    const pageTitle = await this.pageObjects.employeesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.employeesPage.pageTitle);
+    const pageTitle = await employeesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
   it('should go to \'Profiles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
 
-    await this.pageObjects.employeesPage.goToProfilesPage();
-    const pageTitle = await this.pageObjects.profilesPage.getPageTitle();
-    await expect(pageTitle).to.contains(this.pageObjects.profilesPage.pageTitle);
+    await employeesPage.goToProfilesPage(page);
+    const pageTitle = await profilesPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(profilesPage.pageTitle);
   });
 
   it('should reset all filters and get number of profiles', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    numberOfProfiles = await this.pageObjects.profilesPage.resetAndGetNumberOfLines();
+    numberOfProfiles = await profilesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProfiles).to.be.above(0);
   });
 
@@ -89,17 +78,17 @@ describe('Sort Profiles', async () => {
     it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-      let nonSortedTable = await this.pageObjects.profilesPage.getAllRowsColumnContent(test.args.sortBy);
-      await this.pageObjects.profilesPage.sortTable(test.args.sortBy, test.args.sortDirection);
+      let nonSortedTable = await profilesPage.getAllRowsColumnContent(page, test.args.sortBy);
+      await profilesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-      let sortedTable = await this.pageObjects.profilesPage.getAllRowsColumnContent(test.args.sortBy);
+      let sortedTable = await profilesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
       if (test.args.isFloat) {
         nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
         sortedTable = await sortedTable.map(text => parseFloat(text));
       }
 
-      const expectedResult = await this.pageObjects.profilesPage.sortArray(nonSortedTable, test.args.isFloat);
+      const expectedResult = await profilesPage.sortArray(nonSortedTable, test.args.isFloat);
 
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);
