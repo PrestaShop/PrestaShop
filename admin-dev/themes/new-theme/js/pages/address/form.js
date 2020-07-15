@@ -40,13 +40,11 @@ $(document).ready(() => {
       company: addressFormMap.addressCompanyInput,
     },
   );
-
   new CountryStateSelectionToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressStateSelect,
     addressFormMap.addressStateBlock,
   );
-
   new CountryDniRequiredToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressDniInput,

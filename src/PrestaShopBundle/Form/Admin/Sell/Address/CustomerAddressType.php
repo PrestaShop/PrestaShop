@@ -384,10 +384,9 @@ class CustomerAddressType extends TranslatorAwareType
                     ]),
                 ],
                 'row_attr' => [
-                    'class' => 'js-address-state-block',
+                    'class' => 'js-address-state-select',
                 ],
                 'attr' => [
-                    'class' => 'js-address-state-select',
                     'visible' => $showStates,
                 ],
             ])->add('phone', TextType::class, [
