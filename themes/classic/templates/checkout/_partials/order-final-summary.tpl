@@ -56,7 +56,8 @@
     </div>
   </div>
 
-  <div class="row">
+  {if !$cart.is_virtual}
+    <div class="row">
     <div class="col-md-12">
       <h4 class="h4">
       {l s='Shipping Method' d='Shop.Theme.Checkout'}
@@ -87,6 +88,7 @@
       </div>
     </div>
   </div>
+  {/if}
 
   <div class="row">
     {block name='order_confirmation_table'}
