@@ -329,9 +329,9 @@ export default class ModuleCard {
         jqElementObj.hide();
         jqElementObj.after(spinnerObj);
       },
-    }).done(function (result) {
-      if (typeof result === undefined) {
-        $.growl.error({message: "No answer received from server"});
+    }).done((result) => {
+      if (result === undefined) {
+        $.growl.error({message: 'No answer received from server'});
         return;
       }
 
@@ -344,7 +344,7 @@ export default class ModuleCard {
 
       if (result[moduleTechName].status === false) {
         if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
-          self._confirmPrestaTrust(result[moduleTechName]);
+          self.confirmPrestaTrust(result[moduleTechName]);
         }
 
         $.growl.error({message: result[moduleTechName].msg});
@@ -353,7 +353,7 @@ export default class ModuleCard {
 
       $.growl.notice({message: result[moduleTechName].msg});
 
-      const alteredSelector = self._getModuleItemSelector().replace('.', '');
+      const alteredSelector = self.getModuleItemSelector().replace('.', '');
       let mainElement = null;
 
       if (action === 'uninstall') {
@@ -376,7 +376,7 @@ export default class ModuleCard {
       }
 
       jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
-    }).fail(function () {
+    }).fail(() => {
       const moduleItem = jqElementObj.closest('module-item-list');
       const techName = moduleItem.data('techName');
       $.growl.error({message: `Could not perform action ${action} for module ${techName}`});
