@@ -6154,7 +6154,9 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @param int $fieldType
+     * @param int $fieldType |null
+     *
+     * @return int
      *
      * @throws PrestaShopDatabaseException
      */
