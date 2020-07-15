@@ -81,14 +81,16 @@ export default class CurrencyForm {
       return;
     }
 
+    const i18n = new VueI18n({
+      locale: 'en',
+      formatter: new ReplaceFormatter(),
+      messages: {en: this.translations},
+    });
+
     $(`<div id="${this.currencyFormatterId}"></div>`).insertBefore(this.$currencyFormFooter);
     this.currencyFormatter = new Vue({
       el: this.map.currencyFormatter,
-      i18n: new VueI18n({
-        locale: 'en',
-        formatter: new ReplaceFormatter(),
-        messages: {en: this.translations},
-      }),
+      i18n,
       components: {CurrencyFormatter},
       data: this.state,
       template: `<currency-formatter
