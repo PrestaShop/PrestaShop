@@ -24,7 +24,7 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme optionsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block content %}
   {{ form_start(pdfForm, {
@@ -78,28 +78,10 @@
             </h3>
             <div class="card-block row">
               <div class="card-text">
-                <div class="form-group row">
-                  {{ ps.label_with_help(('Delivery prefix'|trans), ('Prefix used for delivery slips.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-                  <div class="col-sm">
-                    {{ form_errors(optionsForm.prefix) }}
-                    {{ form_widget(optionsForm.prefix) }}
-                  </div>
-                </div>
-                <div class="form-group row">
-                  {{ ps.label_with_help(('Delivery number'|trans), ('The next delivery slip will begin with this number and then increase with each additional slip.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-                  <div class="col-sm">
-                    {{ form_errors(optionsForm.number) }}
-                    {{ form_widget(optionsForm.number) }}
-                  </div>
-                </div>
-                <div class="form-group row">
-                  {{ ps.label_with_help(('Enable product image'|trans), ('Add an image before product name on delivery slip'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-                  <div class="col-sm">
-                    {{ form_errors(optionsForm.enable_product_image) }}
-                    {{ form_widget(optionsForm.enable_product_image) }}
-                  </div>
-                </div>
-                {{ form_rest(optionsForm) }}
+                {{ form_errors(optionsForm) }}
+                {% block slip_options_form_widget %}
+                  {{ form_widget(optionsForm) }}
+                {% endblock %}
               </div>
             </div>
             <div class="card-footer">

@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,16 +49,32 @@ class SlipOptionsType extends TranslatorAwareType
                 'prefix',
                 TranslatableType::class,
                 [
+                    'label' => $this->trans('Delivery prefix', 'Admin.Orderscustomers.Help'),
+                    'help' => $this->trans('Prefix used for delivery slips.', 'Admin.Orderscustomers.Help'),
                     'type' => TextType::class,
                 ]
             )
             ->add(
                 'number',
-                FormType\NumberType::class
+                FormType\NumberType::class,
+                [
+                    'label' => $this->trans('Delivery number', 'Admin.Orderscustomers.Help'),
+                    'tooltip' => $this->trans(
+                        'The next delivery slip will begin with this number and then increase with each additional slip.',
+                        'Admin.Orderscustomers.Help'
+                    ),
+                ]
             )
             ->add(
                 'enable_product_image',
-                SwitchType::class
+                SwitchType::class,
+                [
+                    'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Help'),
+                    'help' => $this->trans(
+                        'Add an image before product name on delivery slip.',
+                        'Admin.Orderscustomers.Help'
+                    ),
+                ]
             );
     }
 
