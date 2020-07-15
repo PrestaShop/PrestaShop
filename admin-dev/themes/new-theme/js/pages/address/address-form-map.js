@@ -33,7 +33,7 @@ export default {
   addressCompanyInput: '#customer_address_company',
   addressCountrySelect: '#customer_address_id_country',
   addressStateSelect: '#customer_address_id_state',
-  addressStateBlock: '.js-address-state-select',
+  addressStateBlock: '.js-address-state-block',
   addressDniInput: '#customer_address_dni',
   addressDniInputLabel: 'label[for="customer_address_dni"]',
   addressPostcodeInput: '#customer_address_postcode',

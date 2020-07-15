@@ -41,12 +41,10 @@ $(document).ready(() => {
     },
   );
 
-  const addressStateBlock = $(addressFormMap.addressStateBlock).closest('.form-group.row');
-
   new CountryStateSelectionToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressStateSelect,
-    addressStateBlock,
+    addressFormMap.addressStateBlock,
   );
 
   new CountryDniRequiredToggler(

@@ -382,6 +382,9 @@ class CustomerAddressType extends TranslatorAwareType
                         'id_country' => $countryId,
                     ]),
                 ],
+                'row_attr' => [
+                    'class' => 'js-address-state-block',
+                ],
                 'attr' => [
                     'class' => 'js-address-state-select',
                     'visible' => $showStates,
