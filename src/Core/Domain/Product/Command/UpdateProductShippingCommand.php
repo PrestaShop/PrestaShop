@@ -112,11 +112,11 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @param string|null $width
+     * @param string $width
      *
      * @return UpdateProductShippingCommand
      */
-    public function setWidth(?string $width): UpdateProductShippingCommand
+    public function setWidth(string $width): UpdateProductShippingCommand
     {
         $this->width = new Number($width);
 
@@ -132,11 +132,11 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @param string|null $height
+     * @param string $height
      *
      * @return UpdateProductShippingCommand
      */
-    public function setHeight(?string $height): UpdateProductShippingCommand
+    public function setHeight(string $height): UpdateProductShippingCommand
     {
         $this->height = new Number($height);
 
@@ -152,11 +152,11 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @param string|null $depth
+     * @param string $depth
      *
      * @return UpdateProductShippingCommand
      */
-    public function setDepth(?string $depth): UpdateProductShippingCommand
+    public function setDepth(string $depth): UpdateProductShippingCommand
     {
         $this->depth = new Number($depth);
 
@@ -212,13 +212,13 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @param int $carrierReferences
+     * @param int[] $carrierReferences
      *
      * @return UpdateProductShippingCommand
      */
-    public function setCarrierReferences(int $carrierReferences): UpdateProductShippingCommand
+    public function setCarrierReferences(array $carrierReferences): UpdateProductShippingCommand
     {
-        $this->carrierReferences = $carrierReferences;
+        $this->carrierReferences = array_map('intval', $carrierReferences);
 
         return $this;
     }

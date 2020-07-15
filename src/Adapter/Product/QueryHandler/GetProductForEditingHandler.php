@@ -192,8 +192,8 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
         return new ProductShippingInformation(
             $this->numberExtractor->extract($product, 'width'),
             $this->numberExtractor->extract($product, 'height'),
-            $this->numberExtractor->extract($product, 'weight'),
             $this->numberExtractor->extract($product, 'depth'),
+            $this->numberExtractor->extract($product, 'weight'),
             $this->numberExtractor->extract($product, 'additional_shipping_cost'),
             $carrierReferences,
             (int) $product->additional_delivery_times,

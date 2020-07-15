@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCom
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\UpdateProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationFieldConstraintException;
@@ -253,6 +254,72 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
         try {
             $command = new UpdateProductOptionsCommand($productId);
             $this->setUpdateOptionsCommandData($data, $command);
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @When I update product :productReference shipping information with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductShipping(string $productReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $command = new UpdateProductShippingCommand($productId);
+
+            if (isset($data['width'])) {
+                $command->setWidth($data['width']);
+                unset($data['width']);
+            }
+
+            if (isset($data['height'])) {
+                $command->setHeight($data['height']);
+                unset($data['height']);
+            }
+
+            if (isset($data['depth'])) {
+                $command->setDepth($data['depth']);
+                unset($data['depth']);
+            }
+
+            if (isset($data['weight'])) {
+                $command->setWeight($data['weight']);
+                unset($data['weight']);
+            }
+
+            if (isset($data['additional_shipping_cost'])) {
+                $command->setAdditionalShippingCost($data['additional_shipping_cost']);
+                unset($data['additional_shipping_cost']);
+            }
+
+            if (isset($data['delivery time notes type'])) {
+                $command->setDeliveryTimeNotesType(DeliveryTimeNotesType::ALLOWED_TYPES[$data['delivery time notes type']]);
+                unset($data['delivery time notes type']);
+            }
+
+            if (isset($data['delivery time in stock notes'])) {
+                $command->setLocalizedDeliveryTimeInStockNotes(
+                    $this->parseLocalizedArray($data['delivery time in stock notes'])
+                );
+                unset($data['delivery time in stock notes']);
+            }
+
+            if (isset($data['delivery time out of stock notes'])) {
+                $command->setLocalizedDeliveryTimeOutOfStockNotes(
+                    $this->parseLocalizedArray($data['delivery time out of stock notes'])
+                );
+                unset($data['delivery time out of stock notes']);
+            }
+
+            Assert::assertEmpty($data, sprintf('Not all provided values handled in scenario. %s', var_export($data)));
+
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->lastException = $e;
