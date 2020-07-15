@@ -54,9 +54,9 @@ class DeliveryTimeNotesType
      * A list of allowed type values
      */
     const ALLOWED_TYPES = [
-        self::TYPE_NONE => self::TYPE_NONE,
-        self::TYPE_DEFAULT => self::TYPE_DEFAULT,
-        self::TYPE_SPECIFIC => self::TYPE_SPECIFIC,
+        'none' => self::TYPE_NONE,
+        'default' => self::TYPE_DEFAULT,
+        'specific' => self::TYPE_SPECIFIC,
     ];
 
     /**
